@@ -28,7 +28,7 @@ import play.api.modules.spring.Spring;
  * @author ejacoby
  *
  */
-public class CommonInfoType extends Model<CommonInfoType>{
+public class CommonInfoType extends Model<CommonInfoType> {
 
 	public String name; //used as label
 	
@@ -36,8 +36,7 @@ public class CommonInfoType extends Model<CommonInfoType>{
 	
 	public List<State> states = new ArrayList<State>();
 	
-
-	public List<PropertyDefinition> propertiesDefinitions=new ArrayList<PropertyDefinition>();
+	public List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 
 	public ObjectType objectType;
 	
@@ -47,7 +46,6 @@ public class CommonInfoType extends Model<CommonInfoType>{
 	
 	public static CommonInfoTypeFinder find = new CommonInfoTypeFinder();	
 	
-
 	public CommonInfoType() {
 		super(CommonInfoTypeDAO.class.getName());
 	}
@@ -57,8 +55,7 @@ public class CommonInfoType extends Model<CommonInfoType>{
 	}
 
 	@JsonIgnore
-	public Map<String, PropertyDefinition> getMapPropertyDefinition()
-	{
+	public Map<String, PropertyDefinition> getMapPropertyDefinition() {
 		Map<String, PropertyDefinition> mapProperties = new HashMap<String, PropertyDefinition>();
 		for(PropertyDefinition propertyDefinition : propertiesDefinitions){
 			mapProperties.put(propertyDefinition.code, propertyDefinition);
@@ -66,8 +63,7 @@ public class CommonInfoType extends Model<CommonInfoType>{
 		return mapProperties;
 	}
 
-	public void setCommonInfoType(CommonInfoType commonInfoType)
-	{
+	public void setCommonInfoType(CommonInfoType commonInfoType) {
 		this.id=commonInfoType.id;
 		this.name=commonInfoType.name;
 		this.code=commonInfoType.code;
@@ -86,11 +82,11 @@ public class CommonInfoType extends Model<CommonInfoType>{
 	 * @param levels
 	 * @return
 	 */
-	public List<PropertyDefinition> getPropertyDefinitionByLevel(Level.CODE...levels){
+	public List<PropertyDefinition> getPropertyDefinitionByLevel(Level.CODE...levels) {
 
 		List<PropertyDefinition> proDefinitions=new ArrayList<PropertyDefinition>();
 
-		for(PropertyDefinition propertyDefinition:this.propertiesDefinitions){
+		for(PropertyDefinition propertyDefinition:this.propertiesDefinitions) {
 			boolean containsAll = true;
 			for(int i=0;i<levels.length;i++){
 				Level level = new Level(levels[i]);
@@ -107,7 +103,7 @@ public class CommonInfoType extends Model<CommonInfoType>{
 		return proDefinitions;
 	}
 	
-	public static class CommonInfoTypeFinder extends Finder<CommonInfoType>{ 
+	public static class CommonInfoTypeFinder extends Finder<CommonInfoType> {
 
 		public CommonInfoTypeFinder() {
 			super(CommonInfoTypeDAO.class.getName());
@@ -121,10 +117,9 @@ public class CommonInfoType extends Model<CommonInfoType>{
 			return ((CommonInfoTypeDAO)getInstance()).findByExperimentTypeId(id);
 		}
 		
-	
 	}
 
-	public static class AbstractCommonInfoTypeFinder<T> extends Finder<T>{ 
+	public static class AbstractCommonInfoTypeFinder<T> extends Finder<T> { 
 	
 		public AbstractCommonInfoTypeFinder(Class<? extends AbstractDAOCommonInfoType> type) {
 			super(type.getName());

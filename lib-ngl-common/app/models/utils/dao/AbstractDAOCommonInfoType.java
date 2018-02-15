@@ -25,8 +25,8 @@ public abstract class AbstractDAOCommonInfoType<T extends CommonInfoType> extend
 			Class<? extends MappingSqlQuery<T>> classMapping, String sqlCommonSelect, String sqlCommonFrom,
 					boolean useGeneratedKey) {
 		super(tableName, entityClass, classMapping, sqlCommonSelect+sqlCommonFrom+DAOHelpers.getCommonInfoTypeDefaultSQLForInstitute(), useGeneratedKey);
-		this.sqlCommonFrom=sqlCommonFrom+DAOHelpers.getCommonInfoTypeDefaultSQLForInstitute();
-		this.sqlCommonSelect=sqlCommonSelect;		
+		this.sqlCommonFrom   = sqlCommonFrom + DAOHelpers.getCommonInfoTypeDefaultSQLForInstitute();
+		this.sqlCommonSelect = sqlCommonSelect;		
 	}
 	
 	public Boolean isCodeExist(String code) throws DAOException {

@@ -216,3 +216,4 @@ public class UserDAOAuthorizator implements IAuthorizator {
     }
    
 }
+

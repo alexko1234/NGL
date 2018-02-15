@@ -12,61 +12,47 @@ import views.html.samples.search;
 
 import javax.inject.Inject;
 
-//import controllers.NGLBaseController;
-import fr.cea.ig.authentication.Authenticated;
-import fr.cea.ig.authorization.Authorized;
-import fr.cea.ig.lfw.Historized;
-import fr.cea.ig.ngl.NGLApplication;
-import fr.cea.ig.ngl.NGLController;
-import fr.cea.ig.ngl.support.NGLJavascript;
+import controllers.NGLBaseController;
 import fr.cea.ig.play.NGLContext;
+// import controllers.CommonController;
 import play.routing.JavaScriptReverseRouter;
-
 
 // TODO: clean, comment
 
 //import controllers.CommonController;             // done
 // public class Samples extends -CommonController{ // done
 
-public class Samples extends NGLController implements NGLJavascript  { // NGLBaseController {
+public class Samples extends NGLController 
+                    implements NGLJavascript  { // NGLBaseController {
 
 	private final home home;
 	private final search search;
 	private final details details;
 	
 	@Inject
-	public Samples(NGLApplication app, home home, search search, details details) {
-		super(app);
+	public Samples(NGLContext ctx, home home, search search, details details) {
+		super(ctx);
 		this.home = home;
 		this.search = search;
 		this.details = details;
 	}
 	
-	@Authenticated
-	@Historized
-	@Authorized.Read
 	public Result home(String code) {
 		return ok(home.render(code));
 	}
 
-	@Authenticated
-	@Historized
-	@Authorized.Read
-	public Result get(String code) {
-		return ok(home.render("search"));
-	}
-
-	// tpl
 	public Result search() {
 		return ok(search.render());
 	}
 
-	// tpl
+	public Result get(String code) {
+		return ok(home.render("search"));
+	}
+
 	public Result details() {
 		return ok(details.render());
 	}
 
-	// tpl
 	public Result javascriptRoutes() {
 		return jsRoutes(controllers.processes.api.routes.javascript.ProcessTypes.list(),
 						controllers.containers.api.routes.javascript.Containers.list(),
@@ -84,6 +70,7 @@ public class Samples extends NGLController implements NGLJavascript  { // NGLBas
 						controllers.samples.tpl.routes.javascript.Samples.search(),
 						controllers.samples.tpl.routes.javascript.Samples.details(),
 						controllers.samples.tpl.routes.javascript.Samples.home(),
+
 
 						controllers.containers.api.routes.javascript.Containers.get(),
 

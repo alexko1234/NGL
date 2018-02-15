@@ -1,7 +1,7 @@
 package validation.common.instance;
 
 import static validation.utils.ValidationHelper.required;
-
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -24,6 +24,7 @@ import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
@@ -41,26 +42,25 @@ public class CommonValidationHelper {
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(CommonValidationHelper.class);
 	
-	private static final String nameRules="validations";
+	private static final String nameRules                              = "validations";
 
-	public static final String FIELD_CODE = "code";
-	public static final String FIELD_TYPE_CODE = "typeCode";
-	public static final String FIELD_STATE_CODE = "stateCode";
-	public static final String FIELD_PREVIOUS_STATE_CODE = "previousStateCode";
-	public static final String FIELD_EXPERIMENT = "experiment";
-	public static final String FIELD_INST_USED = "instrumentUsed";
-	public static final String FIELD_OBJECT_TYPE_CODE = "objectTypeCode";
-	public static final String FIELD_IMPORT_TYPE_CODE = "importTypeCode";
-	public static final String FIELD_STATE_CONTAINER_CONTEXT = "stateContainerContext";
-	public static final String FIELD_UPDATE_CONTAINER_SUPPORT_STATE = "updateContainerSupportState";
-	public static final String FIELD_UPDATE_CONTAINER_STATE = "updateContainerState";
-	
-	public static final String FIELD_PROCESS_CREATION_CONTEXT = "processCreationContext"; //value : COMMON, SPECIFIC
-	public static final String VALUE_PROCESS_CREATION_CONTEXT_COMMON ="COMMON";
-	public static final String VALUE_PROCESS_CREATION_CONTEXT_SPECIFIC ="SPECIFIC";
-	
+	public static final String FIELD_CODE                              = "code";
+	public static final String FIELD_TYPE_CODE                         = "typeCode";
+	public static final String FIELD_STATE_CODE                        = "stateCode";
+	public static final String FIELD_PREVIOUS_STATE_CODE               = "previousStateCode";
+	public static final String FIELD_EXPERIMENT                        = "experiment";
+	public static final String FIELD_INST_USED                         = "instrumentUsed";
+	public static final String FIELD_OBJECT_TYPE_CODE                  = "objectTypeCode";
+	public static final String FIELD_IMPORT_TYPE_CODE                  = "importTypeCode";
+	public static final String FIELD_STATE_CONTAINER_CONTEXT           = "stateContainerContext";
+	public static final String FIELD_UPDATE_CONTAINER_SUPPORT_STATE    = "updateContainerSupportState";
+	public static final String FIELD_UPDATE_CONTAINER_STATE            = "updateContainerState";	
+	public static final String FIELD_PROCESS_CREATION_CONTEXT          = "processCreationContext"; //value : COMMON, SPECIFIC
+	public static final String VALUE_PROCESS_CREATION_CONTEXT_COMMON   = "COMMON";
+	public static final String VALUE_PROCESS_CREATION_CONTEXT_SPECIFIC = "SPECIFIC";
 	
 	public static final String OBJECT_IN_DB = "objectInDB";
+	
 	/*
 	 * Validate if code is unique in MongoDB collection
 	 * Unique code is validate if key "_id" not in map contextObjects or if value of key "_id" is null else no code validation
@@ -71,7 +71,6 @@ public class CommonValidationHelper {
 	 */
 	public static <T extends DBObject> boolean validateUniqueInstanceCode(ContextValidation contextValidation,
 			String code, Class<T> type, String collectionName){
-	
 		if (null != code) {
 			if (MongoDBDAO.checkObjectExistByCode(collectionName, type, code)) {
 				contextValidation.addErrors(FIELD_CODE,	ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG, code);
@@ -81,11 +80,8 @@ public class CommonValidationHelper {
 			}
 		} else {
 			throw new IllegalArgumentException("code is null");
-		}
-		
-		
+		}	
 	}
-	
 	
 	/*
 	 * Validate if field value is unique in MongoDB collection
@@ -97,25 +93,34 @@ public class CommonValidationHelper {
 	 * @param returnObject
 	 * @return boolean
 	 */
-	
 	public static <T extends DBObject> boolean validateUniqueFieldValue(ContextValidation contextValidation,
-			String key, String keyValue, Class<T> type, String collectionName){
-		if(null != key && null != keyValue){
-			if(MongoDBDAO.checkObjectExist(collectionName, type, key, keyValue)){
-				contextValidation.addErrors(key, ValidationConstants.ERROR_NOTUNIQUE_MSG, keyValue);
-				return false;
-			}else {
-				return true;
-			}
+			                                                            String key, 
+			                                                            String keyValue, 
+			                                                            Class<T> type, 
+			                                                            String collectionName) {
+		if (key == null)
+			throw new IllegalArgumentException(key + " is null");
+		if (keyValue == null)
+			throw new IllegalArgumentException(keyValue + " is null");	
+		if (MongoDBDAO.checkObjectExist(collectionName, type, key, keyValue)) {
+			contextValidation.addErrors(key, ValidationConstants.ERROR_NOTUNIQUE_MSG, keyValue);
+			return false;
 		} else {
-			throw new IllegalArgumentException(key+" is null");
-		}
-
+			return true;
+		}		
+//		if(null != key && null != keyValue){
+//			if(MongoDBDAO.checkObjectExist(collectionName, type, key, keyValue)){
+//				contextValidation.addErrors(key, ValidationConstants.ERROR_NOTUNIQUE_MSG, keyValue);
+//				return false;
+//			}else {
+//				return true;
+//			}
+//		} else {
+//			throw new IllegalArgumentException(key+" is null");
+//		}
 	}
-	
-	
-	public static <T> void validateRequiredDescriptionCode(ContextValidation contextValidation, String code, String key,
-			Finder<T> find) {
+		
+	public static <T> void validateRequiredDescriptionCode(ContextValidation contextValidation, String code, String key, Finder<T> find) {
 		 validateRequiredDescriptionCode(contextValidation, code, key, find,false);
 	}
 
@@ -128,15 +133,16 @@ public class CommonValidationHelper {
 	 * @param returnObject
 	 * @return object de T or null if returnObject is false
 	 */
-	public static <T> T validateRequiredDescriptionCode(ContextValidation contextValidation, String code, String key,
-			Finder<T> find, boolean returnObject) {
+	public static <T> T validateRequiredDescriptionCode(ContextValidation contextValidation, 
+			                                            String code, 
+			                                            String key, 
+			                                            Finder<T> find, 
+			                                            boolean returnObject) {
 		T o = null;
-		if(required(contextValidation, code, key)){
+		if (required(contextValidation, code, key))
 			o = validateExistDescriptionCode(contextValidation, code, key, find, returnObject);
-		}
 		return o;		
 	}
-
 
 	/*
 	 * Validate if a code in a description table exist
@@ -147,9 +153,7 @@ public class CommonValidationHelper {
 	 * @param returnObject
 	 * @return void
 	 */
-	public static <T> void validateExistDescriptionCode(
-			ContextValidation contextValidation, String code, String key,
-			Finder<T> find) {
+	public static <T> void validateExistDescriptionCode(ContextValidation contextValidation, String code, String key, Finder<T> find) {
 		 validateExistDescriptionCode(contextValidation, code, key, find, false);
 	}
 
@@ -162,9 +166,26 @@ public class CommonValidationHelper {
 	 * @param returnObject
 	 * @return object de T or null if returnObject is false
 	 */
-	public static <T> T validateExistDescriptionCode(
-			ContextValidation contextValidation, String code, String key,
-			Finder<T> find, boolean returnObject) {
+	public static <T> T validateExistDescriptionCode(ContextValidation contextValidation, 
+			                                         String code, 
+			                                         String key, 
+			                                         Finder<T> find, 
+			                                         boolean returnObject) {
+//		if (StringUtils.isBlank(code))
+//			throw new IllegalArgumentException("code '" + code + "'");
+//		T o = null;
+//		try {
+//			if (returnObject) {
+//				o = find.findByCode(code);
+//				if(o == null)
+//					contextValidation.addErrors(key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);				
+//			} else if (!find.isCodeExist(code)) {
+//				contextValidation.addErrors(key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
+//			}
+//		} catch (DAOException e) {
+//			throw new RuntimeException(e);
+//		}
+//		return o;
 		T o = null;
 		try {
 			if(code != "" && null != code && returnObject){
@@ -181,13 +202,13 @@ public class CommonValidationHelper {
 		return o;
 	}
 
-	
-	
-	public static <T extends DBObject> void validateRequiredInstanceCode(String code, String key, Class<T> type, 
-			String collectionName,ContextValidation contextValidation) {
-		if(required(contextValidation, code, key)){
+	public static <T extends DBObject> void validateRequiredInstanceCode(String code, 
+			                                                             String key, 
+			                                                             Class<T> type, 
+			                                                             String collectionName, 
+			                                                             ContextValidation contextValidation) {
+		if(required(contextValidation, code, key))
 			validateExistInstanceCode(contextValidation, code, key, type,collectionName);
-		}
 	}
 
 	/*
@@ -200,15 +221,17 @@ public class CommonValidationHelper {
 	 * @param returnObject
 	 * @return
 	 */
-	public static <T extends DBObject> T validateRequiredInstanceCode(String code, String key, Class<T> type, String collectionName, 
-			ContextValidation contextValidation, boolean returnObject) {
+	public static <T extends DBObject> T validateRequiredInstanceCode(String code, 
+			                                                          String key, 
+			                                                          Class<T> type, 
+			                                                          String collectionName, 
+			                                                          ContextValidation contextValidation, 
+			                                                          boolean returnObject) {
 		T o = null;
-		if(required(contextValidation, code, key)){
+		if (required(contextValidation, code, key))
 			o = validateExistInstanceCode(contextValidation, code, key, type,collectionName, returnObject);
-		}
 		return o;	
 	}
-
 
 	/*
 	 * Validate if list is not null and code exist
@@ -228,11 +251,8 @@ public class CommonValidationHelper {
 		if(required(contextValidation, codes, key)){
 			l = validateExistInstanceCodes(contextValidation, codes, key, type, collectionName, returnObject);
 		}
-		return l;
-		
+		return l;		
 	}
-	
-	
 	
 	/*
 	 * Validate a code of a MongoDB Collection
@@ -260,8 +280,6 @@ public class CommonValidationHelper {
 		return l;
 	}
 
-	
-	
 	public static <T extends DBObject> void validateExistInstanceCode(ContextValidation contextValidation,
 			String code, String key, Class<T> type, String collectionName) {
 		validateExistInstanceCode(contextValidation, code, key, type, collectionName, false);
@@ -296,7 +314,6 @@ public class CommonValidationHelper {
 		}
 	}	
 	
-	
 	/*
 	 * Validate a code of a MongoDB Collection
 	 * @param errors
@@ -322,7 +339,6 @@ public class CommonValidationHelper {
 	public static <T extends DBObject> T validateExistInstanceCode(ContextValidation contextValidation,
 			String code, Class<T> type, String collectionName, boolean returnObject) {
 		return validateExistInstanceCode(contextValidation, code, FIELD_CODE, type, collectionName, returnObject);
-		
 	}
 	
 	/*
@@ -337,6 +353,7 @@ public class CommonValidationHelper {
     		contextValidation.addErrors("_id", ValidationConstants.ERROR_ID_NOTNULL_MSG);
     	}
 	}
+	
 	/*
 	 * Validate the code of an dbObject. the code is the NGL identifier
 	 * @param dbObject
@@ -350,8 +367,7 @@ public class CommonValidationHelper {
 			}else if(contextValidation.isUpdateMode()){
 				validateExistInstanceCode(contextValidation, dbObject.code, dbObject.getClass(), collectionName);
 			}
-		}
-		
+		}	
 	}
 
 	public static void validateTraceInformation(TraceInformation traceInformation, ContextValidation contextValidation) {
@@ -406,7 +422,6 @@ public class CommonValidationHelper {
 		}
 	}
 	
-	
 	protected static void validateStateCode(ObjectType.CODE objectType, String stateCode, ContextValidation contextValidation) {
 		try {
 			if (required(contextValidation, stateCode, "code")) {
@@ -416,11 +431,9 @@ public class CommonValidationHelper {
 			}
 		} catch(DAOException e) {
 			throw new RuntimeException(e);
-		}
-		
+		}	
 	}
 
-	
 	public static void validateResolutionCodes(Set<String> resoCodes,ContextValidation contextValidation){
 		if (contextValidation.getContextObjects().containsKey(FIELD_TYPE_CODE)) {
 			String typeCode = getObjectFromContext(FIELD_TYPE_CODE, String.class, contextValidation);
@@ -539,7 +552,6 @@ public class CommonValidationHelper {
 		}
 	}
 
-
 	public static void validateContainerCode(String containerCode, ContextValidation contextValidation, String propertyName) {
 		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, containerCode, propertyName, Container.class,InstanceConstants.CONTAINER_COLL_NAME);
 	}
@@ -547,8 +559,7 @@ public class CommonValidationHelper {
 	public static void validateContainerSupportCode (String containerSupportCode, ContextValidation contextValidation, String propertyName) {
 		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, containerSupportCode, propertyName, ContainerSupport.class,InstanceConstants.CONTAINER_SUPPORT_COLL_NAME);		
 	}
-	
-	
+		
 	public static void validateRules(List<Object> objects,ContextValidation contextValidation) {
 		ArrayList<Object> facts = new ArrayList<Object>();
 		facts.addAll(objects);
@@ -592,8 +603,5 @@ public class CommonValidationHelper {
 	public static void validateExperimenCode(String expCode, ContextValidation contextValidation) {
 		BusinessValidationHelper.validateExistInstanceCode(contextValidation, "experimentCode",expCode, Experiment.class, InstanceConstants.EXPERIMENT_COLL_NAME);
 	}
-	
-	
-		
 
 }

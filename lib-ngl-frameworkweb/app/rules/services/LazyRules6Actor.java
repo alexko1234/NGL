@@ -38,7 +38,7 @@ public class LazyRules6Actor extends LazyLambdaSupplier<ActorRef> {
 		this.rulesKey = rulesKey;
 	}
 	
-	public void tellMessage(String rulesCode, List objects) {
+	public void tellMessage(String rulesCode, List<Object> objects) {
 		get().tell(new RulesMessage(rulesKey.get(), rulesCode, objects),null);
 	}
 	

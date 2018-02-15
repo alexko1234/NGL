@@ -27,7 +27,7 @@ public class DAOHelpers {
 	 * @return
 	 * @throws DAOException
 	 */
-	public static <T extends Model> Map<String,List<ValidationError>>  saveModels(Class<T> type,Map<String, T > models) throws DAOException {
+	public static <T extends Model> Map<String,List<ValidationError>> saveModels(Class<T> type,Map<String, T > models) throws DAOException {
 
 		Map<String,List<ValidationError>>errors = new HashMap<String, List<ValidationError>>();
 
@@ -44,7 +44,6 @@ public class DAOHelpers {
 		}	
 		return errors;
 	}
-
 
 	public static <T extends Model> void removeAll(Class<T> type, Finder<T> finder) throws DAOException {
 		List<T> list = finder.findAll();
@@ -66,6 +65,7 @@ public class DAOHelpers {
 		}
 		return l;
 	}
+	
 	/*
 	 * Save an object Model in the description DB if not exist also nothing
 	 * Used the code to find the object
@@ -149,7 +149,6 @@ public class DAOHelpers {
 			return SQLInstitute+=") ";
 		}		
 	}
-	
 	
 	public static String getInstrumentSQLForInstitute(String tableAlias){		 
 		return getSQLForInstitute("instrument", tableAlias);		

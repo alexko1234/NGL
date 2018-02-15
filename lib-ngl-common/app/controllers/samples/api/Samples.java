@@ -131,8 +131,7 @@ class Samples2 extends DocumentController<Sample> {
 					      "comments",
 					      "traceInformation");
 	
-	private static final List<String> authorizedUpdateFields = 
-			Arrays.asList("comments");
+	private static final List<String> authorizedUpdateFields = Arrays.asList("comments");
 	
 	@Inject
 	public Samples2(NGLContext ctx) {

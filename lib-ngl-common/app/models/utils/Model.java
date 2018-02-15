@@ -27,7 +27,7 @@ public class Model<T> {
 
 	@JsonIgnore
 	public Model() {
-		super();
+		// super(); // ??
 	}
 
 	@JsonIgnore
@@ -45,7 +45,6 @@ public class Model<T> {
 	@SuppressWarnings("unchecked")
 	public long save() throws DAOException {
 		return getInstance().save((T) this);
-
 	}
 
 	@JsonIgnore
@@ -58,11 +57,9 @@ public class Model<T> {
 	@SuppressWarnings("unchecked")
 	public AbstractDAO<T> getInstance() throws DAOException {
 		try {
-			return (AbstractDAO<T>) Spring.getBeanOfType(Class
-					.forName(classNameDAO));
+			return (AbstractDAO<T>) Spring.getBeanOfType(Class.forName(classNameDAO));
 		} catch (ClassNotFoundException e) {
 			Logger.error("Class error: " + e.getMessage(), e);
-			;
 			throw new DAOException(e);
 		} catch (Exception e) {
 			Logger.error("DAO error: " + e.getMessage(), e);

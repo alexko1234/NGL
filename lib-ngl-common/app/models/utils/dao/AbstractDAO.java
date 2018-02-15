@@ -1,5 +1,7 @@
 package models.utils.dao;
 
+import static fr.cea.ig.lfw.utils.FunCollections.repeat;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -19,7 +21,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
-import fr.cea.ig.play.NGLContext;
+// import fr.cea.ig.play.NGLContext;
 
 // import play.Logger;
 // import play.cache.Cache;
@@ -42,12 +44,12 @@ import static fr.cea.ig.play.IGGlobals.cache;
 @Transactional(readOnly=false, rollbackFor=DAOException.class)
 public abstract class AbstractDAO<T> {
 
-
-	protected String tableName;
-	protected DataSource dataSource;
+	protected String             tableName;
+	protected DataSource         dataSource;
 	protected SimpleJdbcTemplate jdbcTemplate;
-	protected SimpleJdbcInsert jdbcInsert;
-	protected Class<T> entityClass;
+	protected SimpleJdbcInsert   jdbcInsert;
+	protected Class<T>           entityClass;
+	
 	//Use automatic key id generation 
 	//False for type because id provided by commonInfoType
 	protected boolean useGeneratedKey;
@@ -63,7 +65,7 @@ public abstract class AbstractDAO<T> {
 	@Autowired
 	@Qualifier("ngl")
 	public void setDataSource(DataSource dataSource) {
-		this.dataSource=dataSource;
+		this.dataSource = dataSource;
 		jdbcTemplate = new SimpleJdbcTemplate(dataSource);   
 		if(useGeneratedKey)
 			jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName(tableName).usingGeneratedKeyColumns("id");
@@ -89,6 +91,7 @@ public abstract class AbstractDAO<T> {
 
 	public abstract void update(T value) throws DAOException;
 
+	// findByCode(code) != null ?
 	public Boolean isCodeExist(String code) throws DAOException	{
 		if (code == null) {
 			throw new DAOException("code is mandatory");
@@ -108,8 +111,13 @@ public abstract class AbstractDAO<T> {
 				return false;
 			}
 		} catch (DataAccessException e) {
+			// TODO: throw a DAOException
 			throw new RuntimeException(e);
 		}
+	}
+	
+	protected String listToParameters(int count) {
+		return String.join(",", repeat("?",count));
 	}
 	
 	protected String listToParameters(List<?> parameters) {

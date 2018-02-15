@@ -1,5 +1,7 @@
 package models.utils.dao;
 
+import static models.utils.dao.DAOException.daoAssertNotNull;
+
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +18,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.jdbc.support.MetaDataAccessException;
 
-import fr.cea.ig.play.NGLContext;
+// import fr.cea.ig.play.NGLContext;
 import play.Logger;
 
 
@@ -29,12 +31,13 @@ import play.Logger;
  */
 public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 
-	protected String sqlCommon;
+	protected String  sqlCommon;
 	protected boolean usedInstitute = false;
 	
 	@Inject
 	protected AbstractDAODefault(String tableName, Class<T> entityClass, boolean useGeneratedKey) {
-		super(tableName, entityClass,useGeneratedKey);		
+		super(tableName, entityClass, useGeneratedKey);	
+		// this(tableName, entityClass, useGeneratedKey, false);
 	}
 	
 	protected AbstractDAODefault(String tableName, Class<T> entityClass, boolean useGeneratedKey, boolean usedInstitute) {
@@ -60,11 +63,12 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 		try {
 			String sql = "SELECT ";
 			if (usedInstitute) sql += "distinct ";
+			// sql += String.join(map(getColumns(),x -> "t." + x).intercalate(","));
 			for (String column : getColumns()) {
 				sql += "t." + column + ", ";
 			}
 			sql = sql.substring(0, sql.lastIndexOf(","));
-			sql += " FROM "+tableName+" as t";
+			sql += " FROM " + tableName + " as t";
 			return sql;
 		} catch (MetaDataAccessException e) {
 			throw new DAOException(e);
@@ -106,9 +110,8 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 	
 	// TODO: fix silent error handling	
 	public T findById(Long id) throws DAOException {
-		if (null == id) {
-			throw new DAOException("id is mandatory");
-		}
+		// if (id == null) throw new DAOIllegalArgumentException("id",id); //("id is mandatory");
+		daoAssertNotNull("id",id);
 		try {
 			String sql = getSqlCommon()+" WHERE t.id=?";
 			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
@@ -120,9 +123,8 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 
 	// TODO: fix silent error handling		
 	public T findByCode(String code) throws DAOException {
-		if (null == code) {
-			throw new DAOException("code is mandatory");
-		}
+		// if (code == null) throw new DAOIllegalArgumentException("code",code); // ("code is mandatory");
+		daoAssertNotNull("code",code);
 		T o = getObjectInCache(code);
 		if (null != o) {
 			//Logger.debug("find in cache "+entityClass.getCanonicalName() + " : "+code);
@@ -142,9 +144,8 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 	}
 	
 	public List<T> findByCodes(List<String> codes) throws DAOException {
-		if(null == codes){
-			throw new DAOException("codes is mandatory");
-		}
+		// if (codes == null) throw new DAOIllegalArgumentException("codes",codes); // "codes is mandatory");
+		daoAssertNotNull("codes",codes);
 		try {
 			String sql = getSqlCommon() + " WHERE t.code in (" + listToParameters(codes) + ")";
 			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
@@ -156,18 +157,16 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 	}
 
 	public long save(T value) throws DAOException {
-		if (null == value) {
-			throw new DAOException("value is mandatory");
-		}
+		// if (value == null) throw new DAOIllegalArgumentException("value",value); //"value is mandatory");
+		daoAssertNotNull("value",value);
 		SqlParameterSource ps = new BeanPropertySqlParameterSource(value);
 		long id  = (Long) jdbcInsert.executeAndReturnKey(ps);
 		return id;
 	}
 
 	public void update(T value) throws DAOException	{
-		if (null == value) {
-			throw new DAOException("value is mandatory");
-		}
+		// if (null == value) {	throw new DAOException("value is mandatory"); }
+		daoAssertNotNull("value",value);
 		SqlParameterSource ps = new BeanPropertySqlParameterSource(value);
 		jdbcTemplate.update(getSQLUpdate(), ps);
 	}
