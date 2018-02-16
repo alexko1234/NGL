@@ -276,13 +276,18 @@ search.tab.addcolumns = Colonnes supplémentaires
 #processes
 processes.title = Processus
 processes.menu = Processus
-processes.menu.creation = Création
+processes.menu.new-from-containers = Création avec des containers
+processes.menu.new-from-samples = Création avec des échantillons
+processes.menu.assign-to-container = Assigner processus aux containers
 processes.menu.state = Changement d''Etat
 processes.menu.search = Rechercher
 processes.menu.remove = Suppression
 processes.tabs.search = Recherche Processus
 processes.tabs.state = Changement d''Etat Processus
-processes.tabs.create = Création Processus
+processes.tabs.create = Création processus
+processes.tabs.create.new-from-containers  = Création processus depuis des containers
+processes.tabs.create.new-from-samples  = Création processus depuis des échantillons
+processes.tabs.assign-to-container  = Assigner processus aux containers
 processes.tabs.remove = Suppression Processus
 processes.create = Créé un processus
 processes.save = Sauvegarder
@@ -333,6 +338,8 @@ processes.table.sampleOnInputContainer.volume = Volume
 processes.table.sampleOnInputContainer.concentration = Concentration
 processes.table.sampleOnInputContainer.unit.volume = Unité de volume
 processes.table.sampleOnInputContainer.unit.concentration = Unité de concentration
+processes.table.availableProcesses = Sélectionnez un processus ?
+
 
 processes.select.processType = Type processus
 processes.select.processCategory = Catégorie processus

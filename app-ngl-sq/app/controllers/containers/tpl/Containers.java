@@ -54,8 +54,7 @@ public class Containers extends CommonController {
     public /*static*/ Result javascriptRoutes() {
         response().setContentType("text/javascript");
         return ok(
-          // Routes.javascriptRouter("jsRoutes",
-        		JavaScriptReverseRouter.create("jsRoutes", 
+        	JavaScriptReverseRouter.create("jsRoutes", 
             // Routes
                 controllers.projects.api.routes.javascript.Projects.list(),
                 controllers.containers.tpl.routes.javascript.Containers.get(),

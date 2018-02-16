@@ -1,11 +1,316 @@
 "use strict";
 
 
-angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable','basket','lists','$filter','$http','mainService','tabService','$parse', 
-                                                          function($scope, datatable,basket, lists,$filter,$http,mainService, tabService, $parse) {
+angular.module('home').controller('SearchContainersCtrl', ['$scope','$filter','$http','$parse','$location','basket','mainService','tabService','containersSearchService', 'processGraphService',
+    function($scope, $filter,$http,$parse,$location,basket, mainService, tabService, containersSearchService,processGraphService) {
+
+	
+	var isAssign = ($location.path() === "/processes/assign-to-container/home");
+	
+	
+	var datatableConfig = {
+			
+	     search:{
+	    	 url:jsRoutes.controllers.containers.api.Containers.list()
+	     },
+	     group:{
+			active:true,
+			showOnlyGroups:true,
+			enableLineSelection:true,
+			showButton:true,
+			by:"support.code"
+		},
+	     pagination:{
+			mode:'local'
+	 	 },
+	 	 hide:{
+	 		 active:true
+	 	 },
+	 	 order:{
+	 		active:true,
+	 		by:'traceInformation.creationDate',
+	 		reverse : true,
+			mode:'local'
+		 },
+	     otherButtons :{
+				active:true,
+				template:'<button class="btn" ng-disabled="!searchService.datatable.isSelect() && !searchService.datatable.isSelectGroup()" ng-click="addToBasket(searchService.datatable.getSelection(true))" data-toggle="tooltip" title="'+Messages("button.addbasket")+'">'
+						+'<i class="fa fa-shopping-cart fa-lg"></i> ({{basket.length()}})</button>'
+	     }
+	};
+
+
+	$scope.changeProcessCategory = function(){
+		$scope.searchService.form.nextProcessTypeCode = undefined;
+		$scope.searchService.lists.clear("processTypes");
+
+		if($scope.searchService.form.processCategory !== undefined && $scope.searchService.form.processCategory !== null){
+			$scope.searchService.lists.refresh.processTypes({"categoryCode":$scope.searchService.form.processCategory,isActive:true});
+		}
+	};
+
+	$scope.changeProcessType = function(){
+		$scope.removeTab(1);
+		$scope.basket.reset();
+		$scope.searchService.datatable.setData([]);
+		$scope.processGraphService.changeProcessType($scope.searchService.form.nextProcessTypeCode);
+	};
+	
+	$scope.selectDefaultFromExperimentType = function(){
+		var selectionList = {};	
+		$scope.searchService.form.fromTransformationTypeCodes=[];
+			
+		if($scope.searchService.form.nextProcessTypeCode){
+			
+			selectionList = angular.copy($scope.searchService.lists.get('transformation',true));
+			$http.get(jsRoutes.controllers.experiments.api.ExperimentTypes.getDefaultFirstExperiments($scope.searchService.form.nextProcessTypeCode).url)
+			.success(function(data, status, headers, config) {
+				
+				data = data.filter(function(exp){
+					return !exp.code.startsWith("ext");
+				});
+				
+				data.unshift({name: "None", code: "none"});				
+				$scope.defaultFirstExperimentTypes = data;
+			});
+		}else{
+			$scope.defaultFirstExperimentTypes = [];
+		}		
+	};
+
+	$scope.reset = function(){
+		$scope.searchService.resetForm();		
+	};
+	
+	$scope.search = function(){		
+		if(this.containersSearchForm.$valid  || $scope.searchService.form.createUser){
+			$scope.searchService.form.stateCode = 'IW-P';
+			if(isAssign){
+				$parse("form['existingFields[contents.1]']").assign($scope.searchService,false); //not pool on assign
+			}
+			$scope.searchService.search();
+		}else{
+			enableValidation = true;
+			console.log("searchForm invalid !!")				
+		}
+	};
+	
+	$scope.addToBasket  = function(containers){
+		containers.forEach(function(container){
+			var codes = [];
+			if(container.group){
+				codes = codes.concat($scope.searchService.datatable.getGroupColumnValue(container, "code"));				
+			}else if($scope.basket.get().indexOf(container.code) === -1){
+				codes[0] = container.code;												
+			}	
+			
+			codes.forEach(function(code){
+				if($scope.basket.get().indexOf(code) === -1){
+					$scope.basket.add(code);	
+				}	
+			});
+		});	
+		if(($scope.searchService.form.nextProcessTypeCode) && this.basket.length() > 0 && tabService.getTabs().length === 1){
+			tabService.addTabs({label:$filter('codes')($scope.searchService.form.nextProcessTypeCode,"type"),href:$scope.searchService.form.nextProcessTypeCode,remove:false});
+		}
+	};
+	
+	if(angular.isUndefined($scope.getHomePage()) && !isAssign){
+		mainService.setHomePage('new');
+		tabService.addTabs({label:Messages('processes.tabs.create.new-from-containers'),href:jsRoutes.controllers.processes.tpl.Processes.home("new-from-containers").url,remove:false});
+		tabService.activeTab(0);
+	}else if(angular.isUndefined($scope.getHomePage()) && isAssign){
+		mainService.setHomePage('new');
+		tabService.addTabs({label:Messages('processes.tabs.assign-to-container'),href:jsRoutes.controllers.processes.tpl.Processes.home("assign-to-container").url,remove:false});
+		tabService.activeTab(0);
+	}
+
+	if(angular.isUndefined($scope.getBasket())){
+		$scope.basket = basket();			
+		mainService.setBasket($scope.basket);
+	}else{
+		$scope.basket = mainService.getBasket();
+	}
+	
+	$scope.searchService = containersSearchService;
+	$scope.searchService.init(null, datatableConfig);
+	$scope.searchService.lists.refresh.experimentTypes({categoryCode:"transformation", withoutOneToVoid:true},'transformation');
+	$scope.searchService.lists.refresh.reportConfigs({pageCodes:["containers-search"]});
+	
+	$scope.processGraphService = processGraphService;
+	$scope.processGraphService.init(document);
+	
+	var enableValidation = false;
+	$scope.getHasErrorClass = function(formName, property){
+		if( enableValidation
+			&& this[formName] 
+			&& this[formName][property] 
+			&& this[formName][property].$error 
+			&& this[formName][property].$error.required){
+			return 'has-error';
+		}else{
+			return undefined;
+		}
+	}
+}]);
+
+angular.module('home').controller('SearchSamplesCtrl', ['$scope','$filter','basket','mainService','tabService','samplesSearchService',  'processGraphService',
+    function($scope, $filter,basket, mainService, tabService, samplesSearchService, processGraphService) {
+	var datatableConfig = {
+			group:{active:true},
+			search:{
+				url:jsRoutes.controllers.samples.api.Samples.list()
+			},
+			pagination:{
+				mode:'local'
+			},
+			group:{
+				active:false
+			},
+			hide:{
+				active:true
+			},
+			order:{
+				by:'code',
+				mode:'local'
+			},
+			exportCSV:{
+				active:false
+			},
+			show:{
+				active:false
+			},
+			edit:{
+				active:false
+			},
+			save:{
+				active:false			
+			},
+			otherButtons :{
+    			active:true,
+    			template:'<button class="btn" ng-disabled="!searchService.datatable.isSelect()" ng-click="addToBasket(searchService.datatable.getSelection(true))" data-toggle="tooltip" title="'+Messages("button.addbasket")+'">'
+    					+'<i class="fa fa-shopping-cart fa-lg"></i> ({{basket.length()}})</button>'
+			}
+		}
+
+		
+		
+		$scope.search = function(){		
+			if(this.samplesSearchForm.$valid){
+				$scope.searchService.search();
+			}else{
+				enableValidation = true;
+				console.log("searchForm invalid !!")				
+			}
+		};
+		
+		$scope.reset = function(){
+			$scope.searchService.resetForm();		
+		};
+	
+		$scope.changeProcessCategory = function(){
+			$scope.processForm.nextProcessTypeCode = undefined;
+			$scope.searchService.lists.clear("processTypes");
+
+			if($scope.processForm.processCategory !== undefined && $scope.processForm.processCategory !== null){
+				$scope.searchService.lists.refresh.processTypes({categoryCode:$scope.processForm.processCategory,isActive:true});
+			}
+		};
+		
+		$scope.changeProcessType = function(){
+			$scope.removeTab(1);
+			$scope.basket.reset();
+			$scope.searchService.datatable.setData([]);
+			$scope.processGraphService.changeProcessType($scope.processForm.nextProcessTypeCode);
+		};
+		
+		$scope.addToBasket  = function(samples){
+			samples.forEach(function(sample){
+				$scope.basket.add(sample);	
+			});
+			if(($scope.processForm.nextProcessTypeCode) && this.basket.length() > 0 && tabService.getTabs().length === 1){
+				tabService.addTabs({label:$filter('codes')($scope.processForm.nextProcessTypeCode,"type"),href:$scope.processForm.nextProcessTypeCode,remove:false});
+			}
+		};
+		
+		if(angular.isUndefined($scope.getHomePage())){
+			mainService.setHomePage('new');
+			tabService.addTabs({label:Messages('processes.tabs.create.new-from-samples'),href:jsRoutes.controllers.processes.tpl.Processes.home("new-from-samples").url,remove:false});
+			tabService.activeTab(0);
+		}
+		
+		$scope.searchService = samplesSearchService;
+		$scope.searchService.init(null, datatableConfig);
+		
+		$scope.searchService.lists.refresh.processCategories();
+		$scope.processForm = {};
+		
+		$scope.processGraphService = processGraphService;
+		$scope.processGraphService.init(document);
+		
+		
+		if(angular.isUndefined(mainService.getBasket())){
+			$scope.basket = basket();			
+			mainService.setBasket($scope.basket);
+		}else{
+			$scope.basket = mainService.getBasket();
+		}
+		
+		
+		var enableValidation = false;
+		$scope.getHasErrorClass = function(formName, property){
+			if( enableValidation
+				&& this[formName] 
+				&& this[formName][property] 
+				&& this[formName][property].$error 
+				&& this[formName][property].$error.required){
+				return 'has-error';
+			}else{
+				return undefined;
+			}
+		}
+}]);
+angular.module('home').controller('NewFromSamplesCtrl', ['$scope','$routeParams','processesNewFromSamplesService', 
+	function($scope,$routeParams,processesNewService) {
+	
+	if($routeParams.processTypeCode){
+		$scope.newService = processesNewService;
+		$scope.newService.init($routeParams.processTypeCode);
+	}
+	
+}]);
+angular.module('home').controller('NewFromContainersCtrl', ['$scope','$routeParams','processesNewFromContainersService', 
+	function($scope,$routeParams,processesNewService) {
+	
+	if($routeParams.processTypeCode){
+		$scope.newService = processesNewService;
+		$scope.newService.init($routeParams.processTypeCode);
+	}
+	
+}]);
+angular.module('home').controller('AssignToContainerCtrl', ['$scope','$routeParams','assignToContainerService', 
+	function($scope,$routeParams,assignService) {
+	
+	if($routeParams.processTypeCode){
+		$scope.assignService = assignService;
+		$scope.assignService.init($routeParams.processTypeCode);
+	}
+	
+}]);
+
+
+
+
+
+//old controllers not used
+
+angular.module('home').controller('SearchContainersCtrlOld', ['$scope', 'datatable','basket','lists','$filter','$http','mainService','tabService','$parse', 
+    function($scope, datatable,basket, lists,$filter,$http,mainService, tabService, $parse) {
+	
 	$scope.lists = lists;	
 	$scope.searchService = {};
 	$scope.searchService.lists = lists;
+
 
 	var datatableConfig = {
 			columns:[
@@ -469,7 +774,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 
 	if(angular.isUndefined($scope.getHomePage())){
 		mainService.setHomePage('new');
-		tabService.addTabs({label:Messages('processes.tabs.create'),href:jsRoutes.controllers.processes.tpl.Processes.home("new").url,remove:false});
+		tabService.addTabs({label:Messages('processes.tabs.create.new-from-containers'),href:jsRoutes.controllers.processes.tpl.Processes.home("new-from-containers").url,remove:false});
 		tabService.activeTab(0);
 	}
 
@@ -508,9 +813,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	
 	
 }]);
-
-
-angular.module('home').controller('ListNewCtrl', ['$scope','$http','$q','$filter','$parse','$routeParams', 'mainService','tabService', 'datatable', 
+angular.module('home').controller('ListNewCtrlOld', ['$scope','$http','$q','$filter','$parse','$routeParams', 'mainService','tabService', 'datatable', 
                                                      function($scope,$http,$q,$filter,$parse,$routeParams,mainService,tabService,datatable) {
 
 	
@@ -1049,3 +1352,5 @@ angular.module('home').controller('ListNewCtrl', ['$scope','$http','$q','$filter
 	init();
 	
 }]);
+
+
