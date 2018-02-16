@@ -439,12 +439,13 @@ public class Processes extends DocumentController<Process> {
 		if (process == null) {
 			return notFound("Process with code "+code+" does not exist");
 		}
-		
-		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,process.inputContainerCode);
-		if(container==null) {
-			return notFound("Container process "+code+"with code "+process.inputContainerCode+" does not exist");
+		Container container = null;
+		if(process.inputContainerCode != null && process.state.code.equals("IW-C")){
+			container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,process.inputContainerCode);
+			if(container==null) {
+				return notFound("Container process "+code+"with code "+process.inputContainerCode+" does not exist");
+			}
 		}
-		
 		DynamicForm deleteForm = form();
 		ContextValidation contextValidation=new ContextValidation(getCurrentUser(),deleteForm.errors());
 		
@@ -452,7 +453,7 @@ public class Processes extends DocumentController<Process> {
 			contextValidation.addErrors("process.state.code", ValidationConstants.ERROR_BADSTATE_MSG, container.code);
 		} else if(CollectionUtils.isNotEmpty(process.experimentCodes)) {
 			contextValidation.addErrors("process.experimentCodes", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, process.experimentCodes);
-		} else if(!"IS".equals(container.state.code) && !"UA".equals(container.state.code)
+		} else if(container != null && !"IS".equals(container.state.code) && !"UA".equals(container.state.code)
 				 && !"IW-P".equals(container.state.code)) {
 			contextValidation.addErrors("process.inputContainerCode", ValidationConstants.ERROR_BADSTATE_MSG, container.state.code);
 		}

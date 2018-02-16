@@ -87,6 +87,7 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$filter','$
 			$scope.searchService.form.stateCode = 'IW-P';
 			if(isAssign){
 				$parse("form['existingFields[contents.1]']").assign($scope.searchService,false); //not pool on assign
+				$scope.searchService.form.sampleCodesFromIWCProcess = true;
 			}
 			$scope.searchService.search();
 		}else{

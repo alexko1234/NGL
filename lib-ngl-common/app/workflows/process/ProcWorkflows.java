@@ -29,7 +29,7 @@ public class ProcWorkflows extends Workflows<Process> {
 			Process process, State nextState) {
 		process.traceInformation = updateTraceInformation(process.traceInformation, nextState); 			
 		if("N".equals(nextState.code)){
-			procWorkflowsHelper.updateSampleOnContainer(validation ,process);
+			procWorkflowsHelper.updateSampleOnContainer(validation ,process);			
 		}
 	}
 

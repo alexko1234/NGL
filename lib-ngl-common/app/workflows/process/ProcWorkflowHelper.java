@@ -28,8 +28,10 @@ import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.run.instance.ReadSet;
+import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
+import models.utils.instance.SampleHelper;
 import play.Logger;
 import play.Logger.ALogger;
 import validation.ContextValidation;
@@ -221,14 +223,21 @@ public class ProcWorkflowHelper {
 	public void updateSampleOnContainer(ContextValidation validation, Process process) {
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,process.inputContainerCode);
 		if(container.contents.size() == 1 && process.sampleOnInputContainer == null){
+			process.sampleCodes = SampleHelper.getSampleParent(container.contents.get(0).sampleCode);
+			process.projectCodes = SampleHelper.getProjectParent(process.sampleCodes);
+			
 			process.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(container.contents.get(0), container);
 			MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("code", process.code)
-					,DBUpdate.set("sampleOnInputContainer", process.sampleOnInputContainer));
+					,DBUpdate.set("sampleOnInputContainer", process.sampleOnInputContainer)
+								.set("projectCodes", process.projectCodes)
+								.set("sampleCodes", process.sampleCodes));
 		} else if(container.contents.size() > 1 && process.sampleOnInputContainer == null){
 			logger.error("container is a pool, sampleOnInputContainer cannot be updated : "+process.code);
 		}
 	}
 
+
+	
 
 	
 

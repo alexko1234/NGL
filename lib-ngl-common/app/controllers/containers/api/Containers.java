@@ -392,12 +392,6 @@ class Containers2 extends DocumentController<Container> {
 			queryElts.add(DBQuery.regex("contents.ncbiScientificName", Pattern.compile(containersSearch.ncbiScientificNameRegex)));
 		}
 		
-		if(CollectionUtils.isNotEmpty(containersSearch.projectCodes)){
-			queryElts.add(DBQuery.in("projectCodes", containersSearch.projectCodes));
-		}else if(StringUtils.isNotBlank(containersSearch.projectCode)){
-			queryElts.add(DBQuery.in("projectCodes", containersSearch.projectCode));
-		}
-
 		if(CollectionUtils.isNotEmpty(containersSearch.codes)){
 			queryElts.add(DBQuery.in("code", containersSearch.codes));
 		}else if(StringUtils.isNotBlank(containersSearch.code)){
@@ -419,24 +413,55 @@ class Containers2 extends DocumentController<Container> {
 		if(StringUtils.isNotBlank(containersSearch.categoryCode)){
 			queryElts.add(DBQuery.is("categoryCode", containersSearch.categoryCode));
 		}
-		/* ?? used to assign container on process
-		if(containersSearch.sampleCodesFromIWCProcess
-				&& StringUtils.isNotBlank(containersSearch.nextProcessTypeCode)){
-			Set<String> sampleCodes = new TreeSet<String>();
-			
-			List<Process> processes = MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
-					DBQuery.is("state.code", "IW-C").is("typeCode", containersSearch.nextProcessTypeCode)).toList();
-			for(Process p : processes){
-				sampleCodes.addAll(p.sampleCodes);
-			}
-			queryElts.add(DBQuery.in("sampleCodes", sampleCodes));
-			
-		}else */
 		
-		if(CollectionUtils.isNotEmpty(containersSearch.sampleCodes)){
-			queryElts.add(DBQuery.in("sampleCodes", containersSearch.sampleCodes));
-		}else if(StringUtils.isNotBlank(containersSearch.sampleCode)){
-			queryElts.add(DBQuery.in("sampleCodes", containersSearch.sampleCode));
+		if(containersSearch.sampleCodesFromIWCProcess){
+		
+			if(StringUtils.isBlank(containersSearch.nextProcessTypeCode))
+				throw new RuntimeException("Missing nextProcessTypeCode to search container if sampleCodesFromIWCProcess");
+			
+			//1 extract all sampleCode from process in IW-C
+			Set<String> sampleCodes = new TreeSet<String>();
+			List<Pattern> samplePathRegex = new ArrayList<Pattern>();
+			MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
+					DBQuery.is("state.code", "IW-C").is("typeCode", containersSearch.nextProcessTypeCode))
+			.cursor.forEach(p ->{
+				sampleCodes.addAll(p.sampleCodes);
+				String regexPath = ","+p.sampleCodes.iterator().next();
+				samplePathRegex.add(Pattern.compile(regexPath));
+			});
+			
+			if(sampleCodes.size() > 0){
+				//2 search all sample childs from previous sample
+				List<Query> l = samplePathRegex.stream().map(r -> DBQuery.regex("life.path", r)).collect(Collectors.toList());
+				MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, 
+						DBQuery.or(l.toArray(new Query[0]))).cursor.forEach(s -> sampleCodes.add(s.code));
+				
+				if(CollectionUtils.isNotEmpty(containersSearch.sampleCodes)){
+					containersSearch.sampleCodes.retainAll(sampleCodes);
+					if(CollectionUtils.isNotEmpty(containersSearch.sampleCodes)){
+						queryElts.add(DBQuery.in("sampleCodes", containersSearch.sampleCodes));
+					}else{
+						queryElts.add(DBQuery.is("sampleCodes", "-1")); // none results
+					}
+					
+				}else if(CollectionUtils.isNotEmpty(sampleCodes)){
+					queryElts.add(DBQuery.in("sampleCodes", sampleCodes));
+				}else{
+					queryElts.add(DBQuery.is("sampleCodes", "-1")); // none results
+				}
+			}
+		}else {
+			if(CollectionUtils.isNotEmpty(containersSearch.projectCodes)){
+				queryElts.add(DBQuery.in("projectCodes", containersSearch.projectCodes));
+			}else if(StringUtils.isNotBlank(containersSearch.projectCode)){
+				queryElts.add(DBQuery.in("projectCodes", containersSearch.projectCode));
+			}
+			
+			if(CollectionUtils.isNotEmpty(containersSearch.sampleCodes)){
+				queryElts.add(DBQuery.in("sampleCodes", containersSearch.sampleCodes));
+			}else if(StringUtils.isNotBlank(containersSearch.sampleCode)){
+				queryElts.add(DBQuery.in("sampleCodes", containersSearch.sampleCode));
+			}
 		}
 		
 		if(CollectionUtils.isNotEmpty(containersSearch.supportCodes)){
