@@ -50,7 +50,7 @@ rule "Copy NovaSeq properties from Container to Run illumina"
 	salience 100
 	no-loop
 	when
-		$run : Run(typeCode=="rsillumina")		
+		$run : Run(categoryCode=="rsillumina", typeCode == "RNVS6000")		
 	then
 		Logger.debug("Copy properties to Run "+$run.code);
 		ContainerSupport cs = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, $run.containerSupportCode);
