@@ -93,6 +93,11 @@ public class QualityControl extends AbstractDeclaration {
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
+		l.add(newExperimentType("Ext to Evaluation ADN HPM", "ext-to-hmw-dna-sample-valuation",null,-1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+		
 		l.add(newExperimentType("Spectrophotométrie UV","uv-spectrophotometry", null,22000,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsUvQuantification(), 
 				getInstrumentUsedTypes("nanodrop"),"OneToVoid", true, 
@@ -152,17 +157,24 @@ public class QualityControl extends AbstractDeclaration {
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(DescriptionFactory.newProcessType("Evaluation ARN à réception", "rna-sample-valuation", 
-				ProcessCategory.find.findByCode("sample-valuation"), 1010,
+				ProcessCategory.find.findByCode("sample-valuation"), 1011,
 				getPropertyDefinitionsEvalAReception(), 
 				Arrays.asList(getPET("ext-to-rna-sample-valuation",-1)), 
 				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(DescriptionFactory.newProcessType("Evaluation Amplicon à réception", "amplicon-sample-valuation", 
-				ProcessCategory.find.findByCode("sample-valuation"), 1010,
+				ProcessCategory.find.findByCode("sample-valuation"), 1012,
 				getPropertyDefinitionsEvalAReception(), 
 				Arrays.asList(getPET("ext-to-amplicon-sample-valuation",-1)), 
 				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(DescriptionFactory.newProcessType("Evaluation ADN HPM", "hmw-dna-sample-valuation", 
+				ProcessCategory.find.findByCode("sample-valuation"), 1013,
+				getPropertyDefinitionsEvalAReception(), 
+				Arrays.asList(getPET("ext-to-hmw-dna-sample-valuation",-1)), 
+				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-hmw-dna-sample-valuation").get(0), getExperimentTypes("ext-to-hmw-dna-sample-valuation").get(0), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 			
@@ -217,6 +229,8 @@ public class QualityControl extends AbstractDeclaration {
 		newExperimentTypeNode("ext-to-amplicon-sample-valuation", AbstractExperimentService.getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), false, false, false, 
 				null, getExperimentTypes("dnase-treatment","rrna-depletion"), getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();		
 	
+		newExperimentTypeNode("ext-to-hmw-dna-sample-valuation", AbstractExperimentService.getExperimentTypes("ext-to-hmw-dna-sample-valuation").get(0), false, false, false, 
+				null, getExperimentTypes("dnase-treatment","rrna-depletion"), getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();		
 		
 		//GA 07/11/2016 USED FOR PROCESS who start with ampure
 		newExperimentTypeNode("fluo-quantification",getExperimentTypes("fluo-quantification").get(0),false, false,false,
