@@ -1784,10 +1784,20 @@ angular.module('ngl-sq.processesServices', [])
 				var graphElements = [];
 				
 				var getFaveColor = function(processExperimentTypes, key){
-					if(processExperimentTypes === undefined)return '#6FB1FC';
-					else if(processExperimentTypes.get(key)[0] > -1 )return '#6FB1FC';
-					else return '#F5A45D';
+					if(processExperimentTypes.get(key)[0] > -1 )return '#6FB1FC';
+					else return '#BDBDBD';
 				}
+				
+				var getFaveWith = function(processExperimentTypes, key){
+					if(processExperimentTypes.get(key)[0] > -1 )return '150';
+					else return '100';
+				}
+				
+				var getFaveFontSize = function(processExperimentTypes, key){
+					if(processExperimentTypes.get(key)[0] > -1 )return '11';
+					else return '9';
+				}
+				
 				for(var [key, value] of processExperimentTypes.entries()){
 					var currentNode = graphNodes[key];
 					var currentExperimentType = graphNodes[key].experimentType;
@@ -1796,7 +1806,16 @@ angular.module('ngl-sq.processesServices', [])
 						currentExperimentType.label = currentExperimentType.name;
 						currentExperimentType.faveColor = getFaveColor(processExperimentTypes, key);
 						currentExperimentType.faveShape="ellipse";
-						
+						currentExperimentType.faveWith = getFaveWith(processExperimentTypes, key);
+						currentExperimentType.faveFontSize = getFaveFontSize(processExperimentTypes, key);
+						graphElements.push({"data":currentExperimentType,"group":"nodes"});
+					}else if(currentExperimentType.category.code === 'voidprocess'){
+						currentExperimentType.id = currentExperimentType.code;
+						currentExperimentType.label = 'None';
+						currentExperimentType.faveColor = getFaveColor(processExperimentTypes, key);
+						currentExperimentType.faveShape="ellipse";
+						currentExperimentType.faveWith = getFaveWith(processExperimentTypes, key);
+						currentExperimentType.faveFontSize = getFaveFontSize(processExperimentTypes, key);
 						graphElements.push({"data":currentExperimentType,"group":"nodes"});
 					}
 					
@@ -1815,7 +1834,8 @@ angular.module('ngl-sq.processesServices', [])
 				for(var [key, value] of processExperimentTypes.entries()){
 					var currentNode = graphNodes[key];
 					var currentExperimentType = graphNodes[key].experimentType;
-					if(currentExperimentType.category.code === 'transformation'){
+					if(currentExperimentType.category.code === 'transformation'
+						|| currentExperimentType.category.code === 'voidprocess'){
 						angular.forEach(currentNode.childNodes, function(childNode){
 							var childExperimentType = childNode;
 							if(childExperimentType.category.code === 'transformation' 
@@ -1853,20 +1873,20 @@ angular.module('ngl-sq.processesServices', [])
 							            name: 'breadthfirst',
 							            directed:true,
 							            padding:5,
-							            spacingFactor:0.5,					           
+							            spacingFactor:0.6,					           
 							          },
 							          style: cytoscape.stylesheet()
 								          .selector('node')
 								            .css({
 								              'shape': 'data(faveShape)',
-								              'width': '150',
+								              'width': 'data(faveWith)',
 								              'label': 'data(label)',
 								              'text-valign': 'center',
 								              //'text-outline-width': 2,
 								              //'text-outline-color': 'data(faveColor)',
 								              'background-color': 'data(faveColor)',
 								              'color': '#fff',
-								              'font-size':11,  
+								              'font-size':'data(faveFontSize)'  
 								            })
 								          .selector(':selected')
 								            .css({
@@ -1875,6 +1895,7 @@ angular.module('ngl-sq.processesServices', [])
 								            })
 								          .selector('edge')
 								            .css({
+								              'curve-style': 'bezier',
 								              'opacity': 0.666,
 								              'width': '3',
 								              'label': 'data(label)',
