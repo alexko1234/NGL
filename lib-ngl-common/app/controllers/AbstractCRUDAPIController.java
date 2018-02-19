@@ -1,18 +1,18 @@
 package controllers;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
+// import java.util.ArrayList;
+// import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+// import java.util.Map;
 
 import org.mongojack.DBQuery;
 
 // import controllers.samples.api.SamplesSearchForm;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.mongo.MongoStreamer;
+// import fr.cea.ig.MongoDBResult;
+// import fr.cea.ig.mongo.MongoStreamer;
 import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.ITracingAccess;
 //import models.laboratory.container.instance.Container;
@@ -20,7 +20,7 @@ import models.laboratory.common.instance.ITracingAccess;
 // import models.laboratory.sample.instance.Sample;
 // import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
-import models.utils.ListObject;
+// import models.utils.ListObject;
 // import models.utils.instance.SampleHelper;
 import play.Logger;
 import play.data.Form;
@@ -33,7 +33,9 @@ import views.components.datatable.DatatableForm;
 
 import org.mongojack.DBUpdate.Builder;
 
-import com.mongodb.BasicDBObject;
+// import com.mongodb.BasicDBObject;
+
+// Aborted prototype implementation.
 
 /**
  * CRUD API controller base for DBObject subclasses.
@@ -119,8 +121,8 @@ public abstract class AbstractCRUDAPIController<T extends DBObject> extends Docu
 		// If it's a IValidatable, set context mode to creation and 
 		// call the validate.
 		if (t instanceof ICRUDValidatable) {
-			((ICRUDValidatable)t).validateInvariants(ctx);
-			((ICRUDValidatable)t).validateCreation(ctx);
+			((ICRUDValidatable<?>)t).validateInvariants(ctx);
+			((ICRUDValidatable<?>)t).validateCreation(ctx);
 		} else if (t instanceof IValidation) {
 			ctx.setCreationMode();
 			((IValidation)t).validate(ctx);
@@ -148,8 +150,6 @@ public abstract class AbstractCRUDAPIController<T extends DBObject> extends Docu
 		t = create(ctx,t);
 		return checkedResult(ctx,t);
 	}
-
-	
 
 	// --------------------------------- READ -----------------------------------
 	// -- expected method : return MongoDBDAO.findByCode(collectionName, type, code, keys);
@@ -434,51 +434,50 @@ public abstract class AbstractCRUDAPIController<T extends DBObject> extends Docu
 	
 	public <F extends ListForm> Result list(Class<F> clazz) {
 		
-		if (true)
-			throw new RuntimeException();
+		throw new RuntimeException();
 		
 		// Voir Experiments
 		
-		F searchForm = filledFormQueryString(clazz);
-		if (searchForm.reporting)
-			return nativeMongoDBQuery(searchForm);
-		
-		ContextValidation ctx = new ContextValidation(getCurrentUser());
-		DBQuery.Query query = getQuery(ctx,searchForm);
-		
-		if (searchForm.datatable) {
-			BasicDBObject keys = getKeys(updateForm(searchForm));
-			MongoDBResult<T> results = mongoDBFinder(searchForm,query, keys);
-			// return ok(MongoStreamer.streamUDT(results)).as("application/json");
-			return MongoStreamer.okStreamUDT(results);
-		} else if (searchForm.count) {
-			// This really should be some almost plain mongo access and plain json generation
-			BasicDBObject keys = new BasicDBObject();
-			keys.put("_id",  0); //Don't need the _id field
-			keys.put("code", 1);
-			// MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
-			MongoDBResult<T> results = mongoDBFinder(searchForm, query, keys);
-			int count = results.count();
-			// Map<String, Integer> m = new HashMap<String, Integer>(1);
-			// m.put("result", count);
-			// return ok(Json.toJson(m));
-			return ok("{ \"result\" : " + count + " }");
-		} else if (searchForm.list) {
-			BasicDBObject keys = getKeys(updateForm(searchForm));
-			// MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
-			MongoDBResult<T> results = mongoDBFinder(searchForm, query, keys);
-			List<T> containers = results.toList();
-			List<ListObject> los = new ArrayList<ListObject>();
-			for (T p: containers) {
-				los.add(new ListObject(p.code, p.code));
-			}
-			return ok(Json.toJson(los));
-		} else {
-			// DBQuery.Query query = getQuery(ctx,searchForm);
-			if (ctx.hasErrors())
-				return badRequest(errorsAsJson(ctx.getErrors()));			
-			return mongoJackQuery(searchForm, query);			
-		}		
+//		F searchForm = filledFormQueryString(clazz);
+//		if (searchForm.reporting)
+//			return nativeMongoDBQuery(searchForm);
+//		
+//		ContextValidation ctx = new ContextValidation(getCurrentUser());
+//		DBQuery.Query query = getQuery(ctx,searchForm);
+//		
+//		if (searchForm.datatable) {
+//			BasicDBObject keys = getKeys(updateForm(searchForm));
+//			MongoDBResult<T> results = mongoDBFinder(searchForm,query, keys);
+//			// return ok(MongoStreamer.streamUDT(results)).as("application/json");
+//			return MongoStreamer.okStreamUDT(results);
+//		} else if (searchForm.count) {
+//			// This really should be some almost plain mongo access and plain json generation
+//			BasicDBObject keys = new BasicDBObject();
+//			keys.put("_id",  0); //Don't need the _id field
+//			keys.put("code", 1);
+//			// MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
+//			MongoDBResult<T> results = mongoDBFinder(searchForm, query, keys);
+//			int count = results.count();
+//			// Map<String, Integer> m = new HashMap<String, Integer>(1);
+//			// m.put("result", count);
+//			// return ok(Json.toJson(m));
+//			return ok("{ \"result\" : " + count + " }");
+//		} else if (searchForm.list) {
+//			BasicDBObject keys = getKeys(updateForm(searchForm));
+//			// MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
+//			MongoDBResult<T> results = mongoDBFinder(searchForm, query, keys);
+//			List<T> containers = results.toList();
+//			List<ListObject> los = new ArrayList<ListObject>();
+//			for (T p: containers) {
+//				los.add(new ListObject(p.code, p.code));
+//			}
+//			return ok(Json.toJson(los));
+//		} else {
+//			// DBQuery.Query query = getQuery(ctx,searchForm);
+//			if (ctx.hasErrors())
+//				return badRequest(errorsAsJson(ctx.getErrors()));			
+//			return mongoJackQuery(searchForm, query);			
+//		}		
 	}
 	
 	
