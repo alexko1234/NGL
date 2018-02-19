@@ -306,7 +306,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		checkAbstractCategory(protocolCategory);
 	}
 	
-	private void checkAbstractCategory(AbstractCategory abstractCategory) {
+	private void checkAbstractCategory(AbstractCategory<?> abstractCategory) {
 		Assert.assertNotNull(abstractCategory);
 		Assert.assertNotNull(abstractCategory.id);
 		Assert.assertNotNull(abstractCategory.code);
