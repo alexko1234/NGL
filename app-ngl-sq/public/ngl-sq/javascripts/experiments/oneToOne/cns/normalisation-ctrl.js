@@ -795,21 +795,42 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 	var generateSampleSheetNormalisationPostPCR = function(){
 		$scope.fileUtils.generateSampleSheet({"type":"normalisation-post-pcr"});
 	};
+	var generateSampleSheetNormalisationBuffer = function(){
+		$scope.fileUtils.generateSampleSheet({"type":"normalisation-buffer"});
+	};
 	
 	if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube" 
 		|| $scope.experiment.instrument.inContainerSupportCategoryCode !== "tube"){
-		
-		$scope.setAdditionnalButtons([{
-			isDisabled : function(){return $scope.isNewState();} ,
-			isShow:function(){return !$scope.isNewState();},
-			click:generateSampleSheetNormalisation,
-			label:Messages("experiments.sampleSheet")+" normalisation"
-		},{
-			isDisabled : function(){return $scope.isNewState();} ,
-			isShow:function(){return !$scope.isNewState();},
-			click:generateSampleSheetNormalisationPostPCR,
-			label:Messages("experiments.sampleSheet")+" normalisation post PCR"
-		}]);
+
+	if($scope.experiment.instrument.typeCode === "brand-lhs"){
+			$scope.setAdditionnalButtons([{
+				isDisabled : function(){return $scope.isNewState();} ,
+				isShow:function(){return !$scope.isNewState();},
+				click:generateSampleSheetNormalisation,
+				label:Messages("experiments.sampleSheet")+" normalisation ADN"
+			},{
+				isDisabled : function(){return $scope.isNewState();} ,
+				isShow:function(){return !$scope.isNewState();},
+				click:generateSampleSheetNormalisationBuffer,
+				label:Messages("experiments.sampleSheet")+" normalisation Tampon"
+			}]);	
+		}else if ($scope.experiment.instrument.typeCode === "hand"){
+
+
+		}else{		
+			$scope.setAdditionnalButtons([{
+				isDisabled : function(){return $scope.isNewState();} ,
+				isShow:function(){return !$scope.isNewState();},
+				click:generateSampleSheetNormalisation,
+				label:Messages("experiments.sampleSheet")+" normalisation"
+			},{
+				isDisabled : function(){return $scope.isNewState();} ,
+				isShow:function(){return !$scope.isNewState();},
+				click:generateSampleSheetNormalisationPostPCR,
+				label:Messages("experiments.sampleSheet")+" normalisation post PCR"
+			}]);
+		}
+
 	}
 	
 	
