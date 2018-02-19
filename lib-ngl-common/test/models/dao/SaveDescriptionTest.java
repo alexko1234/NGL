@@ -1,9 +1,7 @@
 package models.dao;
 
-
 import java.util.ArrayList;
 import java.util.List;
-
 import models.laboratory.common.description.AbstractCategory;
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.MeasureCategory;
@@ -26,20 +24,18 @@ import models.laboratory.processes.description.ProcessExperimentType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
-import models.laboratory.reagent.description.ReagentCatalog;
+// import models.laboratory.reagent.description.ReagentCatalog;
 import models.laboratory.sample.description.ImportCategory;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;
-
 import org.junit.Assert;
-
 import utils.AbstractTests;
-
 
 /**
  * Test sur base vide avec dump.sql
+ * 
  * @author ejacoby
  *
  */
@@ -537,11 +533,10 @@ public class SaveDescriptionTest extends AbstractTests{
 		List<InstrumentUsedType> instrumentUsedTypes = new ArrayList<InstrumentUsedType>();
 		instrumentUsedTypes.add(InstrumentUsedType.find.findByCode("inst1"));
 
-		List<ReagentCatalog> reagentTypes = new ArrayList<ReagentCatalog>();
+		// List<ReagentCatalog> reagentTypes = new ArrayList<ReagentCatalog>();
 		//ReagentCategory reagentType = ReagentCategory.find.findByCode("reagent1");
 		//reagentTypes.add(reagentType);
 		ExperimentCategory experimentCategory = ExperimentCategory.find.findByCode("expCat1");
-		
 		
 		ExperimentType qualityControlType = createExperimentType(commonInfoType, instrumentUsedTypes,experimentCategory);
 		qualityControlType.id = qualityControlType.save();
@@ -869,7 +864,6 @@ public class SaveDescriptionTest extends AbstractTests{
 		checkAbstractCategory(containerCategory);
 	}
 	
-	
 	public ContainerCategory createContainerCategory(String name, String code) {
 		ContainerCategory containerCategory = new ContainerCategory();
 		containerCategory.name=name;
@@ -883,8 +877,5 @@ public class SaveDescriptionTest extends AbstractTests{
 		importCategory.code=code;
 		return importCategory;
 	}
-
-
 	
-
 }
