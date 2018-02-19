@@ -120,7 +120,7 @@ public class DBQueryBuilder {
 	public static Query query(Query q) {
 		if (q == null)
 			return DBQuery.empty();
-		return null;
+		return q;
 	}
 	public static Query generateQueriesForProperties(Map<String, List<String>> properties, Level.CODE level, String prefixPropertyPath) {
 		List<Query> qs = NGLControllerHelper.generateQueriesForProperties(properties,level,prefixPropertyPath);
