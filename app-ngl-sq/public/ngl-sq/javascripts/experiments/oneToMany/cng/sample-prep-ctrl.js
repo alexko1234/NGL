@@ -183,18 +183,18 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 				//l'utilisateur a reduit le nombre de output...tronquer le tableau
 				$scope.outputContainerSupportCodes = previousOutputContainerSupportCodes.splice(0, nbOutputSupport);
 				$scope.outputContainerSupportStorageCodes = previousOutputContainerSupportStorageCodes.splice(0, nbOutputSupport);// idem pour storageCodes
-				//$scope.outputContainerSupportStates = previousOutputContainerSupportStates.splice(0, nbOutputSupport);//idem pour state 16/02/2018
+				//$scope.outputContainerSupportStates = previousOutputContainerSupportStates.splice(0, nbOutputSupport)
 				
 			}else if(previousOutputContainerSupportCodes.length < nbOutputSupport){
 				//l'utilisateur a augmenté completer le tableau avec des null
 				$scope.outputContainerSupportCodes=previousOutputContainerSupportCodes;
 				$scope.outputContainerSupportStorageCodes=previousOutputContainerSupportStorageCodes; //idem pour storageCodes
-				//$scope.outputContainerSupportStates=previousOutputContainerSupportStates; //idem pour state 16/02/2018
+				//$scope.outputContainerSupportStates=previousOutputContainerSupportStates; 
 				
 				for (var j=previousOutputContainerSupportCodes.length ; j<  nbOutputSupport; j++){
 					$scope.outputContainerSupportCodes.push(null);
 					$scope.outputContainerSupportStorageCodes.push(null);
-					$scope.outputContainerSupportStates.push(null);
+					//$scope.outputContainerSupportStates.push(null);
 				}
 			}
 		} 
@@ -213,11 +213,7 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 		   $scope.messages.text = Messages("experiments.input.error.only-1-plate");
 		   $scope.messages.showDetails = false;
 		   $scope.messages.open();
-	   } /*else {
-		   // 19/02 necessaire ??
-		   $scope.outputContainerSupportStates=[];
-		   $scope.outputContainerSupportStorageCodes=[];
-	   }*/
+	   } 
 	} else {
 		 getExperimentData();
 	}
@@ -254,7 +250,7 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 				var stateCode=results.data.state.code;
 				var storageCode=results.data.storageCode;
 				
-				console.log("PROMISE OK for "+supportCode +"=>"+storageCode +"/"+stateCode );
+				console.log(supportCode +"=>"+storageCode +"/"+stateCode );
 	
 				$scope.outputContainerSupportStorageCodes.push(storageCode);
 				$scope.outputContainerSupportStates.push(stateCode);
