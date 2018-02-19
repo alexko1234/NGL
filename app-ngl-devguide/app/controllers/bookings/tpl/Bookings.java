@@ -4,6 +4,7 @@ import controllers.CommonController;
 import play.mvc.Result;
 import play.routing.JavaScriptReverseRouter;
 
+import views.html.bookings.home;
 
 public class Bookings extends CommonController {
 	

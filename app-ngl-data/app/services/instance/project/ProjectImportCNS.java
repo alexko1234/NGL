@@ -47,7 +47,8 @@ public class ProjectImportCNS extends AbstractImportDataCNS{
 				.map(p -> p.code)
 				.collect(Collectors.toList());
 		
-		MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).getCursor().forEach(p -> {
+		// MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).getCursor().forEach(p -> {
+		MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).cursor.forEach(p -> {
 			
 			if(!availableProjectCodes.contains(p.code)){
 				logger.info("delete project : "+p.code);
@@ -99,7 +100,8 @@ public class ProjectImportCNS extends AbstractImportDataCNS{
 
 	
 	private void lastNGLSampleCode(ContextValidation contextError) {
-		MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).getCursor().forEach(p -> {
+		// MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).getCursor().forEach(p -> {
+		MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).cursor.forEach(p -> {
 				String lastNGLSampleCode = getLastSample(p.code);
 				if(null != lastNGLSampleCode){
 					p.lastSampleCode = lastNGLSampleCode;
@@ -118,9 +120,9 @@ public class ProjectImportCNS extends AbstractImportDataCNS{
 	
 	private static String getLastSample(String code) {
 		String[] last = new String[]{null};
-		MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("projectCodes", code))
-			.sort("code").getCursor().forEach(s -> {
-				if(last[0] == null || s.code.length() > last[0].length()){
+		// MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("projectCodes", code)).sort("code").getCursor().forEach(s -> {
+		MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("projectCodes", code)).sort("code").cursor.forEach(s -> {	
+			if(last[0] == null || s.code.length() > last[0].length()){
 					last[0] = s.code;
 				}else if(s.code.length() == last[0].length() && s.code.compareTo(last[0]) > 0){
 					last[0] = s.code;
@@ -129,4 +131,5 @@ public class ProjectImportCNS extends AbstractImportDataCNS{
 			});
 		return last[0];
 	}
+	
 }

@@ -21,3 +21,4 @@
 ngl.logs*/*
 /authentication
 /playSpringModule
+/mongoDBPlugin
