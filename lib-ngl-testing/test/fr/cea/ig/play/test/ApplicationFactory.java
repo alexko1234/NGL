@@ -3,7 +3,7 @@ package fr.cea.ig.play.test;
 import play.inject.Bindings;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+// import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;

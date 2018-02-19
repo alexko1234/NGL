@@ -5,7 +5,7 @@ import fr.cea.ig.play.test.WSHelper;
 // import static fr.cea.ig.play.test.WSHelper.*;
 import static fr.cea.ig.play.test.JsonHelper.*;
 
-import static org.junit.Assert.assertEquals;
+// import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 import java.util.function.Consumer;

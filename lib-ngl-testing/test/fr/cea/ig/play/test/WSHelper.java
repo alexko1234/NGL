@@ -6,7 +6,7 @@ import java.util.concurrent.CompletionStage;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import play.Logger;
+// import play.Logger;
 import play.libs.Json;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSResponse;
@@ -20,7 +20,7 @@ import play.mvc.Http.Status;
  */
 public class WSHelper {
 	
-	private static final play.Logger.ALogger logger = play.Logger.of(WSHelper.class);
+	// private static final play.Logger.ALogger logger = play.Logger.of(WSHelper.class);
 	
 	/**
 	 * Shorcut for http get. Exceptions are converted to runtime

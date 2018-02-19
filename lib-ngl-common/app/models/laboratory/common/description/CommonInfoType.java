@@ -10,13 +10,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import models.laboratory.common.description.ObjectType.CODE;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
-import models.laboratory.common.description.dao.StateDAO;
+// import models.laboratory.common.description.dao.StateDAO;
 import models.utils.ListObject;
 import models.utils.Model;
-import models.utils.Model.Finder;
+// import models.utils.Model.Finder;
 import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.DAOException;
-import play.api.modules.spring.Spring;
+// import play.api.modules.spring.Spring;
 
 /**
  * Class attributes common types
@@ -64,17 +64,16 @@ public class CommonInfoType extends Model<CommonInfoType> {
 	}
 
 	public void setCommonInfoType(CommonInfoType commonInfoType) {
-		this.id=commonInfoType.id;
-		this.name=commonInfoType.name;
-		this.code=commonInfoType.code;
-		this.states=commonInfoType.states;
-		this.propertiesDefinitions=commonInfoType.propertiesDefinitions;
-		this.objectType=commonInfoType.objectType;
-		
-		this.institutes=commonInfoType.institutes;
+		this.id                    = commonInfoType.id;
+		this.name                  = commonInfoType.name;
+		this.code                  = commonInfoType.code;
+		this.states                = commonInfoType.states;
+		this.propertiesDefinitions = commonInfoType.propertiesDefinitions;
+		this.objectType            = commonInfoType.objectType;
+		this.institutes            = commonInfoType.institutes;
 		//position on display
-		this.displayOrder=commonInfoType.displayOrder;
-		this.active=commonInfoType.active;
+		this.displayOrder          = commonInfoType.displayOrder;
+		this.active                = commonInfoType.active;
 	}
 
 	/*
@@ -82,10 +81,8 @@ public class CommonInfoType extends Model<CommonInfoType> {
 	 * @param levels
 	 * @return
 	 */
-	public List<PropertyDefinition> getPropertyDefinitionByLevel(Level.CODE...levels) {
-
-		List<PropertyDefinition> proDefinitions=new ArrayList<PropertyDefinition>();
-
+	public List<PropertyDefinition> getPropertyDefinitionByLevel(Level.CODE... levels) {
+		List<PropertyDefinition> proDefinitions = new ArrayList<PropertyDefinition>();
 		for(PropertyDefinition propertyDefinition:this.propertiesDefinitions) {
 			boolean containsAll = true;
 			for(int i=0;i<levels.length;i++){
@@ -95,11 +92,10 @@ public class CommonInfoType extends Model<CommonInfoType> {
 					break;
 				}						
 			}
-			if(containsAll){
+			if (containsAll) {
 				proDefinitions.add(propertyDefinition);
 			}
 		}	
-		
 		return proDefinitions;
 	}
 	
@@ -125,7 +121,7 @@ public class CommonInfoType extends Model<CommonInfoType> {
 			super(type.getName());
 		}
 	
-		public List<ListObject> findAllForList() throws DAOException{
+		public List<ListObject> findAllForList() throws DAOException {
 			return ((AbstractDAOCommonInfoType) getInstance()).findAllForList();
 		}
 		
