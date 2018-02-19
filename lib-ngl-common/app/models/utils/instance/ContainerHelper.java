@@ -2,15 +2,15 @@ package models.utils.instance;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.SimpleDateFormat;
+// import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
+// import java.util.Collections;
+// import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+// import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -18,15 +18,15 @@ import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
-import models.laboratory.container.description.ContainerSupportCategory;
+// import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
-import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.InputContainerUsed;
-import models.laboratory.instrument.description.InstrumentUsedType;
-import models.laboratory.processes.description.ProcessType;
+// import models.laboratory.experiment.description.ExperimentType;
+// import models.laboratory.experiment.instance.Experiment;
+// import models.laboratory.experiment.instance.InputContainerUsed;
+// import models.laboratory.instrument.description.InstrumentUsedType;
+// import models.laboratory.processes.description.ProcessType;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
@@ -34,46 +34,51 @@ import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
+// import org.apache.commons.collections.CollectionUtils;
+// import org.mongojack.DBQuery;
+// import org.mongojack.DBUpdate;
 
-import play.Logger;
+// import play.Logger;
 
-import com.google.common.collect.Multiset.Entry;
+// import com.google.common.collect.Multiset.Entry;
 
 import validation.ContextValidation;
 import validation.utils.BusinessValidationHelper;
 import fr.cea.ig.MongoDBDAO;
 
+/**
+ * Has to be moved in the ContainerAPI.  
+ * 
+ * @author vrd
+ *
+ */
 public class ContainerHelper {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(ContainerHelper.class);
+	
+	// Unused, would crash
+//	public static void addContent(Container container, Sample sample) throws DAOException {
+//		addContent(container,sample,null);
+//	}
 
-	public static void addContent(Container container, Sample sample) throws DAOException{
-		addContent(container,sample,null);
-	}
-
-	public static void addContent(Container container,Sample sample, Content content) throws DAOException{
-
-		Content finalContent =new Content(sample.code, sample.typeCode, sample.categoryCode);
-		finalContent.projectCode = content.projectCode;
-		finalContent.percentage=content.percentage;
-		finalContent.referenceCollab=content.referenceCollab;
-		finalContent.taxonCode=content.taxonCode;
-		finalContent.ncbiScientificName=content.ncbiScientificName;
+	// Would be error in the validation context will trigger null pointer exceptions
+	// as the ContextValidation is passed as a null value.
+	public static void addContent(Container container, Sample sample, Content content) throws DAOException {
+		Content finalContent            = new Content(sample.code, sample.typeCode, sample.categoryCode);
+		finalContent.projectCode        = content.projectCode;
+		finalContent.percentage         = content.percentage;
+		finalContent.referenceCollab    = content.referenceCollab;
+		finalContent.taxonCode          = content.taxonCode;
+		finalContent.ncbiScientificName = content.ncbiScientificName;
 		
-		SampleType sampleType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.typeCode, "typeCode", SampleType.find,true);
-		ImportType importType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.importTypeCode, "importTypeCode", ImportType.find,true);
+		SampleType sampleType = BusinessValidationHelper.validateExistDescriptionCode(null, sample.typeCode, "typeCode", SampleType.find,true);
+		ImportType importType = BusinessValidationHelper.validateExistDescriptionCode(null, sample.importTypeCode, "importTypeCode", ImportType.find,true);
 
-		if(importType !=null){
+		if (importType != null)
 			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(importType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,finalContent.properties);
-		}
-		
-		if(sampleType !=null){
+		if (sampleType != null)
 			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(sampleType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,finalContent.properties);
-		}
-
-		if(content.properties!=null)
+		if (content.properties != null)
 			finalContent.properties.putAll(content.properties);
 
 		container.contents.add(finalContent);
@@ -114,7 +119,7 @@ public class ContainerHelper {
 		
 		contentsByKeyWithOneValues.putAll(contentsByKeyWithSeveralValues);
 		
-		return new ArrayList(contentsByKeyWithOneValues.values());
+		return new ArrayList<>(contentsByKeyWithOneValues.values());
 	}
 
 	private static Content cloneContent(Content content) {
@@ -138,16 +143,16 @@ public class ContainerHelper {
 	private static Content fusionSameContents(List<Content> contents) {
 		Content finalContent = new Content();
 		
-		finalContent.projectCode = contents.get(0).projectCode;
-		finalContent.sampleCode = contents.get(0).sampleCode;
+		finalContent.projectCode        = contents.get(0).projectCode;
+		finalContent.sampleCode         = contents.get(0).sampleCode;
 		finalContent.sampleCategoryCode = contents.get(0).sampleCategoryCode;
-		finalContent.sampleTypeCode = contents.get(0).sampleTypeCode;
-		finalContent.referenceCollab = contents.get(0).referenceCollab;
-		finalContent.taxonCode = contents.get(0).taxonCode;
+		finalContent.sampleTypeCode     = contents.get(0).sampleTypeCode;
+		finalContent.referenceCollab    = contents.get(0).referenceCollab;
+		finalContent.taxonCode          = contents.get(0).taxonCode;
 		finalContent.ncbiScientificName = contents.get(0).ncbiScientificName;
-		finalContent.percentage = new BigDecimal(contents.stream().mapToDouble((Content c) -> c.percentage).sum()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-		finalContent.processProperties = new HashMap<String, PropertyValue>();
-		finalContent.processComments = new ArrayList<Comment>();
+		finalContent.percentage         = new BigDecimal(contents.stream().mapToDouble((Content c) -> c.percentage).sum()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+		finalContent.processProperties  = new HashMap<>(); // String, PropertyValue>();
+		finalContent.processComments    = new ArrayList<Comment>();
 				
 		for(Content c : contents){
 			if(null != c.properties){
@@ -230,12 +235,12 @@ public class ContainerHelper {
 		HashMap<String,ContainerSupport> mapSupports = new HashMap<String,ContainerSupport>();
 
 		for (Container container : containers) {
-			Logger.debug(" createSupportFromContainers; container.code "+ container.code );
+			logger.debug(" createSupportFromContainers; container.code "+ container.code );
 			
 			if (container.support != null) {
 				ContainerSupport newSupport = null;
 				
-				Logger.debug(" createSupportFromContainers; creating support "+ container.support.code );
+				logger.debug(" createSupportFromContainers; creating support "+ container.support.code );
 				
 				// mapSupportsCodeSeq n'existe que pour les flowcell...
 				// NW utilisation d'un operateur ternaire
@@ -359,8 +364,7 @@ public class ContainerHelper {
 		}
 	}
 
-	public static Set<Content> contentFromSampleCode(List<Content> contents,
-			String sampleCode) {
+	public static Set<Content> contentFromSampleCode(List<Content> contents, String sampleCode) {
 		Set<Content> contentsFind=new HashSet<Content>();
 		for(Content content:contents){
 			if(content.sampleCode.equals(sampleCode)){
@@ -370,8 +374,7 @@ public class ContainerHelper {
 		return contentsFind;
 	}
 
-	public static void save(Container outputContainer,
-			ContextValidation contextValidation) {
+	public static void save(Container outputContainer, ContextValidation contextValidation) {
 		contextValidation.addKeyToRootKeyName("container["+outputContainer.code+"]");
 		contextValidation.setCreationMode();
 		InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME,outputContainer, contextValidation);
@@ -382,4 +385,5 @@ public class ContainerHelper {
 		BigDecimal p = (new BigDecimal(100.00/size)).setScale(2, RoundingMode.HALF_UP);						
 		return p.doubleValue();
 	}
+	
 }

@@ -1,24 +1,28 @@
 package models.utils.dao;
 
-import java.sql.Types;
+// import java.sql.Types;
 import java.util.List;
 
 import models.laboratory.common.description.CommonInfoType;
 import models.utils.ListObject;
 
-import org.springframework.asm.Type;
+// import org.springframework.asm.Type;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.SqlParameter;
+// import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
-import play.Logger;
+// import play.Logger;
 
 public abstract class AbstractDAOCommonInfoType<T extends CommonInfoType> extends AbstractDAOMapping<T> {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(AbstractDAOCommonInfoType.class);
+	
 	protected final static String sqlCommonInfoType="INNER JOIN common_info_type as t ON t.id=c.fk_common_info_type ";
+	
 	protected String sqlCommonFrom;
+	
 	protected String sqlCommonSelect;
 
 	protected AbstractDAOCommonInfoType(String tableName, Class<T> entityClass,
@@ -30,9 +34,8 @@ public abstract class AbstractDAOCommonInfoType<T extends CommonInfoType> extend
 	}
 	
 	public Boolean isCodeExist(String code) throws DAOException {
-		if(null == code){
+		if (code == null) 
 			throw new DAOException("code is mandatory");
-		}
 		try {
 			String	sql = "SELECT t.id FROM common_info_type t "+DAOHelpers.getCommonInfoTypeDefaultSQLForInstitute()+" where t.code=?";
 			try {
@@ -46,10 +49,11 @@ public abstract class AbstractDAOCommonInfoType<T extends CommonInfoType> extend
 				return Boolean.FALSE;
 			}
 		} catch (DataAccessException e) {
-			Logger.warn(e.getMessage());
+			logger.warn(e.getMessage());
 			return null;
 		}
 	}
+	
 /*
 	public T findById(Long id) throws DAOException {
 		if(null == id){

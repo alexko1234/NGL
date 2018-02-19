@@ -13,14 +13,14 @@ import org.springframework.jdbc.object.MappingSqlQuery;
 import models.administration.authorisation.Role;
 import models.administration.authorisation.User;
 import models.utils.dao.DAOException;
-import play.Logger;
+// import play.Logger;
 
 /**
  * 
  * @author michieli
  *
  */
-public class UserMappingQuery extends MappingSqlQuery<User>{
+public class UserMappingQuery extends MappingSqlQuery<User> {
 
 	public UserMappingQuery(){
 		super();
@@ -36,15 +36,15 @@ public class UserMappingQuery extends MappingSqlQuery<User>{
 	@Override
 	protected User mapRow(ResultSet rs, int rowNum) throws SQLException {
 		User user = new User();
-		user.id = rs.getLong("id");
-		user.login = rs.getString("login");
-		user.firstname = rs.getString("firstname");
-		user.lastname = rs.getString("lastname");
-		user.email = rs.getString("email");
+		user.id            = rs.getLong("id");
+		user.login         = rs.getString("login");
+		user.firstname     = rs.getString("firstname");
+		user.lastname      = rs.getString("lastname");
+		user.email         = rs.getString("email");
 		user.technicaluser = rs.getInt("technicaluser");
 		
-		List<Long> someIds = new ArrayList();
-		List<String> someLabels = new ArrayList();
+		List<Long> someIds = new ArrayList<>();
+		// List<String> someLabels = new ArrayList<>();
 		try {
 			List<Role> roles = Role.find.findByUserLogin(user.login);
 			for(Role r:roles){
