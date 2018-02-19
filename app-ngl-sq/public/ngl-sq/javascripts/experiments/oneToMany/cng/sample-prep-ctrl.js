@@ -1,15 +1,11 @@
-// 11/08/2017 GA/FDS experience One to Many 
-// 16/10/2017 finalement il faut qd meme un datatable 
+// 11/08/2017 GA/FDS experience One to Many => Il faut refaire un atmService "allégé" par rapport a celui dans atomicTransfereServices.js
+// 16/10/2017 finalement il faut qd meme un datatable...
 
-/* 20/10/2017 FDS essai ajout '$q','$routeParams', $http pour les promises
-angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', '$filter','commonAtomicTransfertMethod','mainService','datatable',
-                                                               function($scope, $parse, $filter, commonAtomicTransfertMethod, mainService, datatable ) {
-*/
+// 20/10/2017 FDS ajout '$q','$routeParams', $http pour les promises
 angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse', '$filter','$q','$routeParams','commonAtomicTransfertMethod','mainService','datatable',
                                                                function($scope, $http, $parse, $filter, $q, $routeParams, commonAtomicTransfertMethod, mainService, datatable ) {
 	
 	var inputExtraHeaders=Messages("experiments.inputs");
-	var outputExtraHeaders=Messages("experiments.outputs");	
 	
 	var inputContainerDatatableConfig = {
 			columns:[   
@@ -21,7 +17,7 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":1,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
 			         { // Ligne
 			        	 "header":Messages("containers.table.support.line"),
@@ -30,7 +26,7 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":2,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
 			         { // colonne
 			        	 "header":Messages("containers.table.support.column"),
@@ -40,7 +36,7 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":3,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
 			         { // Projet(s)
 				        "header":Messages("containers.table.projectCodes"),
@@ -152,11 +148,14 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 	};
 	
 	
-   $scope.values=[1,2,3];
+   $scope.values=[1,2];
    //reunion 12/02/2018 => plus de sciclone 
-   // => tout ce mecanisme ne sert plus a rien
+   // => tout ce mecanisme ne sert plus a rien...pour l'instant
    
-  //16/02/2018 TEST dynamique en fonction instrument
+   /* 16/02/2018 dynamique en fonction instrument
+    * mais reunion 12/02/2018 => plus de sciclone
+    *  => tout ce mecanisme ne sert plus a rien...pour l'instant
+   */
    if ($scope.experiment.instrument.typeCode === 'bravo-workstation') {
 	   $scope.nbOutputSupport=1;
    } else {
@@ -173,7 +172,7 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 			// efface  l'existant !!! ????
 			$scope.outputContainerSupportCodes= new Array(nbOutputSupport*1);// *1 pour forcer en numerique nbOutputSupport qui est est un input type text
 			$scope.outputContainerSupportStorageCodes= new Array(nbOutputSupport*1);
-			// l'etat des support n'est necessaire que qd les support auront ete crees....$scope.outputContainerSupportStates= new Array(nbOutputSupport*1);
+			$scope.outputContainerSupportStates= new Array(nbOutputSupport*1);
 		} else {
 		    //en mode edition récupérer les codes des outputContainers et reinjecter si possible ce qu'il y avait avant
 			previousOutputContainerSupportCodes=$scope.$eval("atomicTransfertMethods|flatArray:'outputContainerUseds'|getArray:'locationOnContainerSupport.code'|unique",$scope.experiment);
@@ -184,13 +183,13 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 				//l'utilisateur a reduit le nombre de output...tronquer le tableau
 				$scope.outputContainerSupportCodes = previousOutputContainerSupportCodes.splice(0, nbOutputSupport);
 				$scope.outputContainerSupportStorageCodes = previousOutputContainerSupportStorageCodes.splice(0, nbOutputSupport);// idem pour storageCodes
-				$scope.outputContainerSupportStates = previousOutputContainerSupportStates.splice(0, nbOutputSupport);//idem pour state 16/02/2018
+				//$scope.outputContainerSupportStates = previousOutputContainerSupportStates.splice(0, nbOutputSupport);//idem pour state 16/02/2018
 				
 			}else if(previousOutputContainerSupportCodes.length < nbOutputSupport){
 				//l'utilisateur a augmenté completer le tableau avec des null
 				$scope.outputContainerSupportCodes=previousOutputContainerSupportCodes;
 				$scope.outputContainerSupportStorageCodes=previousOutputContainerSupportStorageCodes; //idem pour storageCodes
-				$scope.outputContainerSupportStates=previousOutputContainerSupportStates; //idem pour state 16/02/2018
+				//$scope.outputContainerSupportStates=previousOutputContainerSupportStates; //idem pour state 16/02/2018
 				
 				for (var j=previousOutputContainerSupportCodes.length ; j<  nbOutputSupport; j++){
 					$scope.outputContainerSupportCodes.push(null);
@@ -214,7 +213,11 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 		   $scope.messages.text = Messages("experiments.input.error.only-1-plate");
 		   $scope.messages.showDetails = false;
 		   $scope.messages.open();
-	   } 
+	   } /*else {
+		   // 19/02 necessaire ??
+		   $scope.outputContainerSupportStates=[];
+		   $scope.outputContainerSupportStorageCodes=[];
+	   }*/
 	} else {
 		 getExperimentData();
 	}
@@ -243,7 +246,7 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 	    });   
 	}
 	
-    // NGL-1670  recuperer l'etat d'un containerSupport ==> utiliser promise   ( voir containerSupport/details.js )
+    // NGL-1670  recuperer l'etat d'un containerSupport ==> utiliser promise (voir containerSupport/details.js)
 	function getOutputContainerSupportState(supportCode){
 		if (undefined !== supportCode ){
 			$http.get(jsRoutes.controllers.containers.api.ContainerSupports.get(supportCode).url).then(function(results){ 
@@ -251,7 +254,7 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 				var stateCode=results.data.state.code;
 				var storageCode=results.data.storageCode;
 				
-				//console.log("PROMISE OK for "+supportCode +"=>"+storageCode +"/"+stateCode );
+				console.log("PROMISE OK for "+supportCode +"=>"+storageCode +"/"+stateCode );
 	
 				$scope.outputContainerSupportStorageCodes.push(storageCode);
 				$scope.outputContainerSupportStates.push(stateCode);

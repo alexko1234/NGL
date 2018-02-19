@@ -20,14 +20,14 @@
 		     <tr>
 		       <td class="col-md-2 col-lg-2"><strong>@Messages("containerSupports.table.codeSupport")</strong></td>
 		       <td class="col-md-2 col-lg-2"><strong>@Messages("containers.table.storageCode")</strong></td>
-		       <!-- TODO <td class="col-md-2 col-lg-2"><strong>@Messages("containerSupports.table.state.code")</strong></td>-->
+		       <td class="col-md-2 col-lg-2"><strong>@Messages("containerSupports.table.state.code")</strong></td><!-- NGL-1670 -->
 		     </tr>
 		   </thead>
 		   <tbody>
 		   <tr ng-repeat="code in outputContainerSupportCodes track by $index">
 		      <td><input id="outputContainerSupportCodes{{$index}}" class="form-control input-sm" type="text" ng-model="outputContainerSupportCodes[$index]" /></td>
-		      <td><input id="storageCodes{{$index}}" class="form-control input-sm" type="text" ng-model="storageCodes[$index]" /></td>
-		      <!--  TODO <td>{{ outputContainerSupportStates[$index] }}</td>-->
+		      <td><input id="outputContainerSupportStorageCodes{{$index}}" class="form-control input-sm" type="text" ng-model="outputContainerSupportStorageCodes[$index]" /></td>
+		      <td>{{ outputContainerSupportStates[$index] | codes:'state' }}</td><!-- NGL-1670 -->
 		   </tr>
 		   </tbody>
 		</table>
