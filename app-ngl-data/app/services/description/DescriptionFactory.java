@@ -339,7 +339,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, List<Value> values, String propertyValueType, int displayOrder) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
@@ -468,9 +469,20 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
-	@Deprecated
-	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, 
-			List<Value> values, MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit, String propertyValueType, int displayOrder, Boolean editable) throws DAOException{
+	// TODO: propose fix
+	// @Deprecated
+	public static PropertyDefinition newPropertiesDefinition(String name, 
+			                                                 String code, 
+			                                                 List<Level> levels, 
+			                                                 Class<?> type, 
+			                                                 Boolean required, 
+			                                                 List<Value> values, 
+			                                                 MeasureCategory measureCategory, 
+			                                                 MeasureUnit displayMeasureUnit, 
+			                                                 MeasureUnit saveMeasureUnit, 
+			                                                 String propertyValueType, 
+			                                                 int displayOrder, 
+			                                                 Boolean editable) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
 		pd.code = code;
@@ -479,7 +491,7 @@ public class DescriptionFactory {
 		pd.valueType = type.getName();
 		pd.required = required;
 		pd.choiceInList = false;
-		if(values!=null){ 
+		if (values!=null) { 
 			pd.choiceInList=true;
 			pd.possibleValues = values;
 		}

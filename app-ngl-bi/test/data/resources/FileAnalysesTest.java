@@ -13,7 +13,7 @@ import org.mongojack.DBQuery;
 
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.test.WSHelper;
-import models.laboratory.common.instance.property.PropertySingleValue;
+// import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.run.instance.Analysis;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.ReadSet;
@@ -32,10 +32,9 @@ public class FileAnalysesTest extends AbstractBIServerTest{
 	static String jsonFile;
 	
 	@BeforeClass
-	public static void initData()
-	{	
+	public static void initData() {	
 		List<Analysis> analysisList = MongoDBDAO.find("ngl_bi.Analysis_dataWF", Analysis.class, DBQuery.size("files", 2)).toList();
-		for(Analysis a : analysisList){
+		for (Analysis a : analysisList) {
 			analysis=a;
 			boolean existReadSetCode=true;
 			for(String rsCode : a.masterReadSetCodes){

@@ -384,7 +384,7 @@ public class SubmissionServices {
 		int countError = 0;
 		String errorMessage = "";
 	
-		for(ReadSet readSet : readSets) {
+		for (ReadSet readSet : readSets) {
 			System.out.println("readSet :" + readSet.code);
 			// Verifier que c'est une premiere soumission pour ce readSet
 			// Verifiez qu'il n'existe pas d'objet experiment referencant deja ce readSet
@@ -520,7 +520,7 @@ public class SubmissionServices {
 			} else { // strategie internal_sample
 				System.out.println ("Dans init, cas strategy_internal_sample");
 
-				Sample sample= null;
+				Sample sample = null;
 
 				if (StringUtils.isNotBlank(acSample)){
 					sample = MongoDBDAO.findOne(InstanceConstants.SRA_SAMPLE_COLL_NAME,
@@ -528,9 +528,7 @@ public class SubmissionServices {
 					if (sample == null){
 						// bug
 					}
-					
 				} else {
-				
 					// Recuperer le sample existant avec son state.code ou bien en creer un nouveau avec state.code='N'
 					sample = fetchSample(readSet, config.strategySample, scientificName, user);
 					// Renseigner l'objet submission :
@@ -557,8 +555,7 @@ public class SubmissionServices {
 						}	
 						// Le champs scientificName est rempli automatiquement et n'est pas surchargeable.
 					}
-				
-}
+				}
 				// Mise a jour de l'objet submission pour les samples references
 				if(!submission.refSampleCodes.contains(sample.code)){
 					submission.refSampleCodes.add(sample.code);
@@ -757,8 +754,9 @@ public class SubmissionServices {
 		}
 		// Updater les readSets pour le status dans la base: 
 		for (ReadSet readSet : readSets) {
-			if (readSet == null){
-				throw new SraException("readSet " + readSet.code + " n'existe pas dans database");
+			if (readSet == null) {
+				// throw new SraException("readSet " + readSet.code + " n'existe pas dans database");
+				throw new SraException("bad readSet"); // does not occur, no null in readSets
 			} else {
 				readSet.submissionState.code = "N";
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,
@@ -1295,7 +1293,8 @@ public class SubmissionServices {
 
 					for(String k: listKeysSampleOnContainerProperties){
 						//System.out.print("MA cle = '" + k +"'");
-						PropertyValue propertyValue = sampleOnContainerProperties.get(k);
+						// PropertyValue propertyValue = 
+								sampleOnContainerProperties.get(k);
 						//System.out.print(propertyValue.toString());
 						//System.out.println(", MA value  => "+propertyValue.value);
 					} 

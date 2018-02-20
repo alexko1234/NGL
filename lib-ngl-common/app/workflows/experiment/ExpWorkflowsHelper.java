@@ -935,7 +935,7 @@ public class ExpWorkflowsHelper {
 		ExperimentType expType = ExperimentType.find.findByCode(exp.typeCode);
 		Set<String> experimentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevelFilterObject(expType.propertiesDefinitions, level);
 
-		if(null != ocu && ocu.experimentProperties != null && experimentPropertyDefinitionCodes.size() > 0){
+		if (null != ocu && ocu.experimentProperties != null && experimentPropertyDefinitionCodes.size() > 0) {
 			propertiesForALevel.putAll(ocu.experimentProperties.entrySet().stream()
 						.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()) && entry.getValue() != null)
 						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));					
@@ -1157,9 +1157,9 @@ public class ExpWorkflowsHelper {
 
 	
 	private PropertyValue PropertiesMerger(PropertyValue u, PropertyValue v) {
-		if(u.value.equals(v.value)){
+		if (u.value.equals(v.value)) {
 			return u;
-		}else{
+		} else {
 			throw new IllegalStateException(String.format("Duplicate key %s with different values", u)); 
 		}
     }

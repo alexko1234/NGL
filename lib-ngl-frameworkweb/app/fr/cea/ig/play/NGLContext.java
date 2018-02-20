@@ -12,17 +12,17 @@ import javax.inject.Singleton;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import akka.actor.ActorRef;
-import akka.actor.ActorRefFactory;
+//import akka.actor.ActorRef;
+//import akka.actor.ActorRefFactory;
 import akka.actor.ActorSystem;
-import akka.actor.Props;
+//import akka.actor.Props;
 import play.i18n.Lang;
 import play.i18n.MessagesApi;
 import play.inject.Injector;
 import play.libs.Json;
 import play.libs.ws.WSClient;
 import rules.services.LazyRules6Actor;
-import rules.services.RulesActor6;
+// import rules.services.RulesActor6;
 import rules.services.RulesServices6;
 import play.i18n.Messages;
 import play.cache.SyncCacheApi;
@@ -32,7 +32,7 @@ import play.data.FormFactory;
 import play.data.validation.ValidationError;
 import play.data.Form;
 
-import fr.cea.ig.play.NGLConfig;
+//import fr.cea.ig.play.NGLConfig;
 // import io.jsonwebtoken.lang.Collections;
 import jsmessages.JsMessages;
 import jsmessages.JsMessagesFactory;

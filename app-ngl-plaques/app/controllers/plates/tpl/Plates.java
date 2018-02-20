@@ -1,11 +1,9 @@
 package controllers.plates.tpl;
 
-import java.util.ArrayList;
-import java.util.List;
-
+//import java.util.ArrayList;
+//import java.util.List;
 import javax.inject.Inject;
-
-import controllers.plates.tpl.routes.javascript;
+// import controllers.plates.tpl.routes.javascript;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
@@ -13,7 +11,7 @@ import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.support.NGLJavascript;
 //import play.Routes;
-import play.routing.JavaScriptReverseRouter;
+// import play.routing.JavaScriptReverseRouter;
 import play.mvc.Result;
 
 import views.html.plates.home;

@@ -18,8 +18,9 @@ import fr.cea.ig.MongoDBDAO;
 
 public abstract class AbstractUpdate<T extends DBObject> {
 	
-	protected String collectionName;
+	protected String   collectionName;
 	protected Class<T> type;
+	
 	protected AbstractUpdate(String collectionName, Class<T> type) {
 		this.collectionName = collectionName;
 		this.type = type;
@@ -39,16 +40,14 @@ public abstract class AbstractUpdate<T extends DBObject> {
 	
 	public abstract Query getQuery(NGLObjectsSearchForm form);
 
-	
 	protected List<Query> getContentPropertiesQuery(NGLObjectsSearchForm form, String prefix) {
 		return NGLControllerHelper.generateQueriesForProperties(form.contentProperties,Level.CODE.Content, prefix+"properties");
 	}
-	
-	
+		
 	protected Query getSampleCodeQuery(NGLObjectsSearchForm form, String prefix) {
-		if(StringUtils.isNotBlank(form.sampleCode)){
+		if (StringUtils.isNotBlank(form.sampleCode)) {
 			return DBQuery.in(prefix+"sampleCode", form.sampleCode);
-		}else{
+		} else {
 			return DBQuery.empty();
 		}
 	}
@@ -60,7 +59,6 @@ public abstract class AbstractUpdate<T extends DBObject> {
 			return DBQuery.empty();
 		}
 	}
-
 
 	public abstract void update(NGLObject input, ContextValidation cv) ;
 
