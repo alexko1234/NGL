@@ -4,9 +4,15 @@ import java.util.Map;
 
 import models.sra.submit.util.SraException;
 
-// Should probably be generic and return a properly type object. 
-public interface IUserObjectFactory {
+public interface IUserObjectFactory<T> {
 	
-	public Object create(Map<String, String> line) throws SraException;
+	public T create(Map<String, String> line) throws SraException;
 
 }
+
+//// Should probably be generic and return a properly type object. 
+//public interface IUserObjectFactory {
+//	
+//	public Object create(Map<String, String> line) throws SraException;
+//
+//}

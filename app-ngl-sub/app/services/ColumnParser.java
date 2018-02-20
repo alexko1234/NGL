@@ -117,7 +117,7 @@ public class ColumnParser {
 //	public List load(File file, IUserObjectFactory factory) throws SraException {
 //	public List<Object> load(InputStream inputStream, IUserObjectFactory factory) throws SraException {
 	// Should accept a properly typed IUserObjectFactory<T>
-	public <T> List<T> load(InputStream inputStream, IUserObjectFactory factory) throws SraException {
+	public <T> List<T> load(InputStream inputStream, IUserObjectFactory<T> factory) throws SraException {
 //		List<Object> userCnsObject = new ArrayList<Object>();
 		List<T> userCnsObject = new ArrayList<>();
 		if (inputStream == null) {
@@ -175,7 +175,7 @@ public class ColumnParser {
 						mapLine.put(nameFieldsInFile[i], tools.clean(valFieldsInFile[i]));
 						System.out.println("Champ '" + nameFieldsInFile[i] + "' et valeur '" + tools.clean(valFieldsInFile[i]) + "'");
 					} 	
-					userCnsObject.add((T)factory.create(mapLine));
+					userCnsObject.add(factory.create(mapLine));
 				}
 			}	
 		} catch (IOException e) {
@@ -189,7 +189,7 @@ public class ColumnParser {
 	
 //	public Map loadMap(InputStream inputStream, IUserObjectFactory factory) throws SraException {
 //		Map<String, Object> mapUserObject = new HashMap<String, Object>(); 
-	public <T> Map<String,T> loadMap(InputStream inputStream, IUserObjectFactory factory) throws SraException {
+	public <T> Map<String,T> loadMap(InputStream inputStream, IUserObjectFactory<T> factory) throws SraException {
 //		Map<String, Object> mapUserObject = new HashMap<String, Object>(); 
 		if (inputStream == null)
 			throw new SraException("le flux '" + inputStream + "'n'existe pas ou n'est pas lisible");
@@ -244,7 +244,7 @@ public class ColumnParser {
 						//System.out.println("Champ '" + nameFieldsInFile[i] + "' et valeur '"+tools.clean(valFieldsInFile[i])+"'");
 					} 
 					//System.out.println("cle de mapLine='"+mapLine.get(keyField)+"'");
-					mapUserObject.put(mapLine.get(keyField), (T)factory.create(mapLine));
+					mapUserObject.put(mapLine.get(keyField), factory.create(mapLine));
 				}
 			}	
 		} catch (IOException e) {
