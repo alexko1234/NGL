@@ -137,6 +137,7 @@ public class Variables extends NGLController
 	private Result list(VariablesSearchForm variableSearch) {
 		logger.debug("variableSearch type " + variableSearch.type);
 		// if (variableSearch.type != null && variableSearch.type.equalsIgnoreCase("strategySample")) {
+		// type 'strategyStudy' and 'strategySample' are not in SraParameters table
 		if ("strategySample".equalsIgnoreCase(variableSearch.type)) {
 			// return ok(Json.toJson(toListObjects(VariableSRA.mapStrategySample)));
 			return okAsJson(CodeAndNameList.from(VariableSRA.mapStrategySample).sort());
@@ -154,7 +155,7 @@ public class Variables extends NGLController
 				valuesListObject.add(new ListObject(s.code, s.value));
 			}
 			return ok(Json.toJson(valuesListObject));*/
-			return result(() -> { return okAsJson(CodeAndNameList.from(getSraParameterAPI().find(getQuery(variableSearch)), x -> x.code, x -> x.value)); },
+			return result(() -> { return okAsJson(CodeAndNameList.from(getSraParameterAPI().getParameter(variableSearch.type))); },
 					      "error while retrieving SraParameter collection");
 			/*try {
 				return okAsJson(CodeAndNameList.from(getSraParameterAPI().find(getQuery(variableSearch)),
