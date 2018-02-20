@@ -147,8 +147,9 @@ object ApplicationBuild extends Build {
 	    // -- Java compilation options are not defined as there are too many warnings
 	    // TODO: enable java compilation warnings
 			// javacOptions  ++= Seq("-Xlint:deprecation","-Xlint:unchecked")
-			// javacOptions += "-verbose"
-			// javacOptions += "-Xlint",
+			// javacOptions         += "-verbose",
+			javacOptions         += "-Xlint",
+			// javacOptions         += "-Werror", // warnings as errors
 			version              := buildVersion,  
 			credentials          += Credentials(new File(sys.env.getOrElse("NEXUS_CREDENTIALS","") + "/nexus.credentials")),
 			publishMavenStyle    := true,

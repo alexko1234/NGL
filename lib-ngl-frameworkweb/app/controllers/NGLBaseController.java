@@ -7,8 +7,8 @@ import javax.inject.Inject;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import fr.cea.ig.authentication.Authentication;
-import fr.cea.ig.lfw.utils.JavascriptGeneration.Permissions;
+//import fr.cea.ig.authentication.Authentication;
+//import fr.cea.ig.lfw.utils.JavascriptGeneration.Permissions;
 import fr.cea.ig.play.NGLContext;
 import play.data.validation.ValidationError;
 import play.libs.Scala;
