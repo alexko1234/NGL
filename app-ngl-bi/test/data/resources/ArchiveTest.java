@@ -32,9 +32,8 @@ public class ArchiveTest extends AbstractBIServerTest {
 	
 	@BeforeClass
 	public static void initData() {	
-
 		List<Run> runs  = MongoDBDAO.find("ngl_bi.RunIllumina_dataWF", Run.class, DBQuery.exists("properties.libProcessTypeCodes")).toList();
-		for(Run runDB : runs){
+		for (Run runDB : runs) {
 			readSets = MongoDBDAO.find("ngl_bi.ReadSetIllumina_dataWF", ReadSet.class, DBQuery.is("runCode", runDB.code).exists("treatments.ngsrg").exists("treatments.taxonomy")).toList();
 			if(readSets.size()>0){
 				break;
@@ -45,20 +44,17 @@ public class ArchiveTest extends AbstractBIServerTest {
 		readSet = readSets.remove(0);
 		readSet.treatments= new HashMap<String,Treatment>();
 		MongoDBDAO.save(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSet);
-		
 	}
 	
 	@AfterClass
-	public static void deleteData()
-	{
-		if(MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code)!=null){
+	public static void deleteData()	{
+		if(MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code) != null) {
 			MongoDBDAO.deleteByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 		}
 	}
 	
 	@Test
-	public void test1update()
-	{
+	public void test1update() {
 		Logger.debug("update Archive");
 		//Get Treatment ngsrg
 		readSet.archiveId="testArchive";
@@ -68,10 +64,10 @@ public class ArchiveTest extends AbstractBIServerTest {
 	}
 	
 	@Test
-	public void test2list()
-	{
+	public void test2list()	{
 		Logger.debug("list Archive");
 		WSResponse response = WSHelper.get(ws, "/api/archives/readsets", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
+	
 }
