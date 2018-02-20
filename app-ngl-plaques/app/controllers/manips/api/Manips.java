@@ -35,7 +35,7 @@ public class Manips extends CommonController {
 		Logger.debug("Manip Form :"+filledForm.toString());
 		List<Manip> manips = limsManipDAO.findManips(filledForm.get().etmanip,filledForm.get().emateriel, filledForm.get().project);
 		Logger.debug("Manips nb "+manips.size());
-		return ok(Json.toJson(new DatatableResponse(manips, manips.size())));
+		return ok(Json.toJson(new DatatableResponse<Manip>(manips, manips.size())));
 	}
 
 	

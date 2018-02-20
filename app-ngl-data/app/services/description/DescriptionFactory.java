@@ -129,7 +129,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, String propertyValueType) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
