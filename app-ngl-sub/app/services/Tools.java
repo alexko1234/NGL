@@ -19,12 +19,9 @@ import org.apache.xerces.impl.dv.util.Base64;
 
 import models.sra.submit.util.SraException;
 
-
 public class Tools {
 	
-
-	public List<String> loadReadSet(InputStream inputStream) throws SraException {
-		
+	public List<String> loadReadSet(InputStream inputStream) throws SraException {	
 		List<String> listReadSet = new ArrayList<String>();
 		if (inputStream==null) {
 			return listReadSet;

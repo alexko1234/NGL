@@ -49,7 +49,8 @@ public class UserSampleTypeParser {
 		if (inputStream != null) {
 			ColumnParser parser = new ColumnParser(keyField, separator);
 			if (parser.setAllowedFields(allowedFields)) {
-				listUserSamples = (List<UserSampleType>)parser.load(inputStream, new UserSampleTypeParserFactory());
+				// listUserSamples = (List<UserSampleType>)parser.load(inputStream, new UserSampleTypeParserFactory());
+				listUserSamples = parser.load(inputStream, new UserSampleTypeParserFactory());
 			} else {
 				throw new SraException("Probleme lors de l'installation des champs autorises");
 			}
@@ -62,11 +63,13 @@ public class UserSampleTypeParser {
 		if (inputStream != null) {
 			ColumnParser parser = new ColumnParser(keyField, separator);
 			if (parser.setAllowedFields(allowedFields)) {
-				mapUserSamples = (Map<String, UserSampleType>)parser.loadMap(inputStream, new UserSampleTypeParserFactory());
+				// mapUserSamples = (Map<String, UserSampleType>)parser.loadMap(inputStream, new UserSampleTypeParserFactory());
+				mapUserSamples = parser.loadMap(inputStream, new UserSampleTypeParserFactory());
 			} else {
 				throw new SraException("Probleme lors de l'installation des champs autorises");
 			}
 		}
 		return mapUserSamples;
 	}
+	
 }

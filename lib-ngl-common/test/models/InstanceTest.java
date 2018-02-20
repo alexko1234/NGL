@@ -85,11 +85,9 @@ public class InstanceTest extends AbstractTests{
 
 
 	//@Test 
-	public void saveInstanceMongo() throws InstantiationException, IllegalAccessException, ClassNotFoundException{
-
-		for(Class t:classTest){
+	public void saveInstanceMongo() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		for (Class<DBObject> t : classTest)
 			saveDBOject(t);
-		}
 	}
 
 
@@ -323,32 +321,29 @@ public class InstanceTest extends AbstractTests{
 
 	////@Test
 	public void removeInstanceMongo(){
-		for(Class t:classTest){
+		for (Class<DBObject> t : classTest)
 			removeDBOject(t);
-		}
 	}
 
-
-	public <T extends DBObject> T saveDBOject(Class<T> type) throws InstantiationException, IllegalAccessException, ClassNotFoundException{
-
-		String collection=type.getSimpleName();
-		String code=type.getSimpleName()+"Code";
-		T object = (T) Class.forName (type.getName()).newInstance ();
-		object.code=code;
-		object=MongoDBDAO.save(collection, object);
-		id=object._id;
+	public <T extends DBObject> T saveDBOject(Class<T> t) throws InstantiationException, IllegalAccessException, ClassNotFoundException{
+		String collection = t.getSimpleName();
+		String code       = t.getSimpleName()+"Code";
+		T object          = (T) Class.forName (t.getName()).newInstance();
+		object.code  = code;
+		object       = MongoDBDAO.save(collection, object);
+		id           = object._id;
 		assertThat(object._id).isNotNull();
 		return object;
 	}
 
-	public <T extends DBObject> void removeDBOject(Class<T> type){
-		String collection=type.getSimpleName();
-		String code=type.getSimpleName()+"Code";
-		T object=MongoDBDAO.findByCode(collection, type, code);
+	// public <T extends DBObject> void removeDBOject(Class<T> type) {
+	public <T extends DBObject> void removeDBOject(Class<T> type) {
+		String collection = type.getSimpleName();
+		String code       = type.getSimpleName() + "Code";
+		T object = MongoDBDAO.findByCode(collection, type, code);
 		MongoDBDAO.delete(collection, object);
-		object=MongoDBDAO.findByCode(collection, type, code);
+		object = MongoDBDAO.findByCode(collection, type, code);
 		assertThat(object).isNull();
-
 	}
 
 	public <T extends DBObject> T findObject(Class<T> type){

@@ -170,7 +170,7 @@ public class XmlServices {
 				System.out.println("sampleCode = '" + sampleCode +"'");
 				// Recuperer objet sample dans la base :
 				Sample sample = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.submit.common.instance.Sample.class, sampleCode);
-				if (sample == null){
+				if (sample == null) {
 					throw new SraException("sample impossible à recuperer dans base :"+ sampleCode);
 				}
 				//output_buffer.write("//\n");

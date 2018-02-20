@@ -81,7 +81,7 @@ public class SampleFactory extends DBObjectFactory {
 		sample.importTypeCode = "dna-reception"; 
 		sample.categoryCode   = "DNA";
 		sample.projectCodes   = new HashSet<String>(Arrays.asList("BXL"));
-		sample.properties     = new HashMap<String,PropertyValue>();
+		sample.properties     = new HashMap<>(); // <String,PropertyValue>();
 		sample.properties.put("meta", new PropertySingleValue(false));
 		init.accept(sample);
 		WSHelper.postObject(ws,samplesUrl,sample,OK);

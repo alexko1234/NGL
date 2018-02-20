@@ -67,7 +67,7 @@ public class NGLObjects extends APICommonController<NGLObject> {
 		NGLObjectsSearchForm form = filledFormQueryString(NGLObjectsSearchForm.class);
 		
 		//Form d = Form.form(); //just used to have errors
-		Form d = getNGLContext().form();
+		Form<?> d = getNGLContext().form();
 		ContextValidation cv = new ContextValidation(getCurrentUser(), d.errors());
 		form.validate(cv);
 		if (cv.hasErrors()) {

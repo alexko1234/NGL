@@ -39,12 +39,13 @@ public class UserCloneTypeParser {
 		if (inputStream != null) {
 			ColumnParser parser = new ColumnParser(keyField, separator);
 			if (parser.setAllowedFields(allowedFields)) {
-				listUserClones = (List<UserCloneType>)parser.load(inputStream, new UserCloneTypeParserFactory());
+				// listUserClones = (List<UserCloneType>)parser.load(inputStream, new UserCloneTypeParserFactory());
+				listUserClones = parser.load(inputStream, new UserCloneTypeParserFactory());
 			} else {
 				throw new SraException("Probleme lors de l'installation des champs autorises");
 			}
 		}
-			return listUserClones;
+		return listUserClones;
 	}
 	
 	
@@ -54,7 +55,8 @@ public class UserCloneTypeParser {
 		if (inputStream!=null) {
 			ColumnParser parser = new ColumnParser(keyField, separator);
 			if (parser.setAllowedFields(allowedFields)) {
-				mapUserClones = (Map<String, UserCloneType>)parser.loadMap(inputStream, new UserCloneTypeParserFactory());
+				// mapUserClones = (Map<String, UserCloneType>)parser.loadMap(inputStream, new UserCloneTypeParserFactory());
+				mapUserClones = parser.loadMap(inputStream, new UserCloneTypeParserFactory());
 			} else {
 				throw new SraException("Probleme lors de l'installation des champs autorises");
 			}

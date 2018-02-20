@@ -49,7 +49,8 @@ public class UserExperimentTypeParser {
 		if (inputStream != null) {
 			ColumnParser parser = new ColumnParser(keyField, separator);
 			if (parser.setAllowedFields(allowedFields)) {
-				listExperiments = (List<UserExperimentType>)parser.load(inputStream, new UserExperimentTypeParserFactory());
+				// listExperiments = (List<UserExperimentType>)parser.load(inputStream, new UserExperimentTypeParserFactory());
+				listExperiments = parser.load(inputStream, new UserExperimentTypeParserFactory());
 			} else {
 				throw new SraException("Probleme lors de l'installation des champs autorises");
 			}
@@ -62,7 +63,8 @@ public class UserExperimentTypeParser {
 		if (inputStream != null) {
 			ColumnParser parser = new ColumnParser(keyField, separator);
 			if (parser.setAllowedFields(allowedFields)) {
-				mapExperiments = (Map<String, UserExperimentType>)parser.loadMap(inputStream, new UserExperimentTypeParserFactory());
+				// mapExperiments = (Map<String, UserExperimentType>)parser.loadMap(inputStream, new UserExperimentTypeParserFactory());
+				mapExperiments = parser.loadMap(inputStream, new UserExperimentTypeParserFactory());
 			} else {
 				throw new SraException("Probleme lors de l'installation des champs autorises");
 			}

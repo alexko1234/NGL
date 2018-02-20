@@ -8,9 +8,10 @@ public class ScriptExample extends AbstractScript {
 	public void execute() {
 		println("toto");
 		println("titi");
-		if (true) throw new RuntimeException("crash");
-		println("tutu");
-		println("tata");
+//		if (true) 
+		throw new RuntimeException("crash");
+//		println("tutu");
+//		println("tata");
 	}
 	
 	@Override

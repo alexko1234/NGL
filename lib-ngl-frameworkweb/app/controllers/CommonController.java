@@ -107,23 +107,21 @@ public abstract class CommonController extends Controller {
 	protected static <T> Form<T> filledFormQueryString(Form<T> form, Class<T> clazz) {		
 		Map<String, String[]> queryString = request().queryString();
 		Map<String, Object> transformMap = new HashMap<String, Object>();
-		for(String key :queryString.keySet()){
+		for (String key :queryString.keySet()) {
 			try {
 				if(isNotEmpty(queryString.get(key))){				
 					Field field = clazz.getField(key);
-					Class type = field.getType();
-					if(type.isArray() || Collection.class.isAssignableFrom(type)){
+					Class<?> type = field.getType();
+					if (type.isArray() || Collection.class.isAssignableFrom(type)) {
 						transformMap.put(key, queryString.get(key));						
-					}else{
+					} else {
 						transformMap.put(key, queryString.get(key)[0]);						
 					}
 				}
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			} 
-
 		}
-
 		JsonNode json = Json.toJson(transformMap);
 		T input = Json.fromJson(json, clazz);
 		Form<T> filledForm = form.fill(input); 
@@ -139,7 +137,7 @@ public abstract class CommonController extends Controller {
 	 * @throws InstantiationException 
 	 */
 	protected static <T> T filledFormQueryString(Class<T> clazz) {		
-		try{
+		try {
 			Map<String, String[]> queryString = request().queryString();
 			
 			BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(clazz.newInstance());
@@ -151,9 +149,9 @@ public abstract class CommonController extends Controller {
 					if(isNotEmpty(queryString.get(key))){
 						Object value = queryString.get(key);
 						if(wrapper.isWritableProperty(key)){
-							Class c = wrapper.getPropertyType(key);
+							Class<?> c = wrapper.getPropertyType(key);
 							//TODO used conversion spring system
-							if(null != c && Date.class.isAssignableFrom(c)){
+							if (c != null && Date.class.isAssignableFrom(c)) {
 								//wrapper.setPropertyValue(key, new Date(Long.valueOf(value[0])));
 								value = new Date(Long.valueOf(((String[])value)[0]));
 							}							
@@ -170,14 +168,12 @@ public abstract class CommonController extends Controller {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} 
-
 	}
 	
-	
 	private static boolean isNotEmpty(String[] strings) {
-		if(null == strings)return false;
-		if(strings.length == 0)return false;
-		if(strings.length == 1 && StringUtils.isBlank(strings[0]))return false;
+		if (strings == null) return false;
+		if (strings.length == 0) return false;
+		if (strings.length == 1 && StringUtils.isBlank(strings[0])) return false;
 		return true;
 	}
 
@@ -272,7 +268,7 @@ public abstract class CommonController extends Controller {
 	 * @param clazz
 	 * @return
 	 */
-	protected static Builder getBuilder(Object value, List<String> fields, Class clazz) {
+	protected static Builder getBuilder(Object value, List<String> fields, Class<?> clazz) {
 		return getBuilder(value, fields, clazz, null);
 	}
 	
@@ -284,7 +280,7 @@ public abstract class CommonController extends Controller {
 	 * @param clazz
 	 * @return
 	 */
-	protected static Builder getBuilder(Object value, List<String> fields, Class clazz, String prefix) {
+	protected static Builder getBuilder(Object value, List<String> fields, Class<?> clazz, String prefix) {
 		Builder builder = new Builder();
 		try {
 			for(String field: fields){
