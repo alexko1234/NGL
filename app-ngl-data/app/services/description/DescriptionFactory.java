@@ -405,7 +405,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, 
 			List<Value> values, MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit, String propertyValueType, int displayOrder) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
@@ -445,7 +446,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, 
 			List<Value> values, String defaultValue, MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit, String propertyValueType, int displayOrder) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
@@ -504,7 +506,8 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
-	@Deprecated
+	// TODO: suggest fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, 
 			List<Value> values, MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit,
 			String propertyValueType, int displayOrder, Boolean editable,String defaultValue, String displayFormat) throws DAOException{

@@ -3,7 +3,7 @@ package services.description.experiment;
 import static services.description.DescriptionFactory.newExperimentType;
 import static services.description.DescriptionFactory.newExperimentTypeNode;
 import static services.description.DescriptionFactory.newPropertiesDefinition;
-import static services.description.DescriptionFactory.newValues;
+// import static services.description.DescriptionFactory.newValues;
 
 import java.awt.Image;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import models.laboratory.common.description.Value;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.ProtocolCategory;
-import models.laboratory.instrument.description.InstrumentUsedType;
+// import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ExperimentTypeNode;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
@@ -33,12 +33,11 @@ import services.description.common.MeasureService;
 import services.description.experiment.AbstractExperimentService;
 import services.description.declaration.cng.Nanopore;
 
-import com.typesafe.config.ConfigFactory;
+// import com.typesafe.config.ConfigFactory;
 
 public class ExperimentServiceCNG extends AbstractExperimentService{
 	
-	
-	@SuppressWarnings("unchecked")
+	// @SuppressWarnings("unchecked")
 	public void saveProtocolCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ProtocolCategory> l = new ArrayList<ProtocolCategory>();
 		l.add(DescriptionFactory.newSimpleCategory(ProtocolCategory.class, "Developpement", "development"));
