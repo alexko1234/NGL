@@ -235,7 +235,7 @@ public class ColumnParser {
 				valFieldsInFile = ligne.split(separator);
 				if (valFieldsInFile.length != nameFieldsInFile.length) {
 					//System.out.println("!!!!!!!!!!!!!!!!!ligne  :" + ligne);
-					throw new SraException("no match pour la ligne : '" + ligne+"'");
+					throw new SraException("no match pour la ligne : '" + ligne + "'");
 				} else {
 					Map<String, String> mapLine =  new HashMap<String, String>();
 					Tools tools = new Tools();

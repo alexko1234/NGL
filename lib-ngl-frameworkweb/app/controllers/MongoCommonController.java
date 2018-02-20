@@ -195,7 +195,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 	 * @param clazz
 	 * @return
 	 */
-	protected Builder getBuilder(Object value, List<String> fields, Class clazz) {
+	protected Builder getBuilder(Object value, List<String> fields, Class<?> clazz) {
 		return getBuilder(value, fields, clazz, null);
 	}
 	
@@ -207,7 +207,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 	 * @param clazz
 	 * @return
 	 */
-	protected Builder getBuilder(Object value, List<String> fields, Class clazz, String prefix) {
+	protected Builder getBuilder(Object value, List<String> fields, Class<?> clazz, String prefix) {
 		Builder builder = new Builder();
 		try {
 			for (String field: fields) {

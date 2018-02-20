@@ -1,9 +1,9 @@
 package validation.container.instance;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+// import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
+// import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +21,7 @@ import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.container.instance.QualityControlResult;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.instance.Experiment;
+// import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.sample.description.ImportType;
@@ -29,7 +29,7 @@ import models.utils.InstanceConstants;
 
 import org.apache.commons.collections.CollectionUtils;
 
-import play.Logger;
+// import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
@@ -228,8 +228,8 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 		}
 	}
 	
-	public static void validateConcentration(PropertyValue concentration, ContextValidation contextValidation) {
-		if(concentration!=null && concentration.value!=null){
+	public static void validateConcentration(PropertyValue<?> concentration, ContextValidation contextValidation) {
+		if (concentration != null && concentration.value != null) {
 			Collection<PropertyDefinition> pdefs = new ArrayList<>();
 			PropertyDefinition pd = new PropertyDefinition();
 			pd.code = "concentration";
@@ -238,16 +238,13 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 			pdefs.add(pd);
 			contextValidation.putObject("propertyDefinitions", pdefs);
 			concentration.validate(contextValidation);
-			contextValidation.removeObject("propertyDefinitions");	
-			
+			contextValidation.removeObject("propertyDefinitions");		
 			ValidationHelper.required(contextValidation, ((PropertySingleValue)concentration).unit, "concentration.unit");
-			
 		}
-		
 	}
 	
-	public static void validateQuantity(PropertyValue quantity,	ContextValidation contextValidation) {
-		if(quantity != null && quantity.value != null){
+	public static void validateQuantity(PropertyValue<?> quantity,	ContextValidation contextValidation) {
+		if (quantity != null && quantity.value != null) {
 			Collection<PropertyDefinition> pdefs = new ArrayList<>();
 			PropertyDefinition pd = new PropertyDefinition();
 			pd.code = "quantity";
@@ -258,14 +255,11 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 			quantity.validate(contextValidation);
 			contextValidation.removeObject("propertyDefinitions");
 			ValidationHelper.required(contextValidation, ((PropertySingleValue)quantity).unit, "quantity.unit");
-			
 		}
-		
 	}
 
-	
-	public static void validateSize(PropertyValue size, ContextValidation contextValidation) {
-		if(size!=null && size.value!=null){
+	public static void validateSize(PropertyValue<?> size, ContextValidation contextValidation) {
+		if (size != null && size.value != null) {
 			Collection<PropertyDefinition> pdefs = new ArrayList<>();		
 			PropertyDefinition pd = new PropertyDefinition();			
 			pd.code = "size";
@@ -276,7 +270,6 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 			size.validate(contextValidation);
 			contextValidation.removeObject("propertyDefinitions");	
 			ValidationHelper.required(contextValidation, ((PropertySingleValue)size).unit, "size.unit");
-			
 		}
 	}
 	
