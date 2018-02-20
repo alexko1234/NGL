@@ -62,7 +62,7 @@ public class Output extends AbstractOutput {
 	
 	private String getFileName(Experiment experiment) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyMMdd");
-		return experiment.typeCode.toUpperCase()+"_"+experiment.atomicTransfertMethods.get(0).outputContainerUseds.get(0).locationOnContainerSupport.code+"_"+sdf.format(new Date());
+		return experiment.code.toUpperCase();
 	}
 
 	

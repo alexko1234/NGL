@@ -32,19 +32,20 @@ public class Output extends AbstractOutput {
 		String adnContent=null;
 		String bufferContent=null;
 		File file;
-
+		Boolean isPlaque = "96-well-plate".equals(experiment.instrument.inContainerSupportCategoryCode);	
+		
 		//tube / 96-well-plate
 		if("96-well-plate".equals(experiment.instrument.outContainerSupportCategoryCode)){
 			if ("normalisation".equals(type) ){
 				List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
-				pssl = checkPlateSampleSheetLines(pssl);
+				pssl = checkPlateSampleSheetLines(pssl, isPlaque);
 
 				adnContent = OutputHelper.format(normalisation_x_to_plate.render(pssl).body());
 				file = new File(getFileName(experiment)+"_ADN.csv", adnContent);
 
 			}else if("normalisation-buffer".equals(type)){
 				List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
-				pssl = checkPlateSampleSheetLines(pssl);
+				pssl = checkPlateSampleSheetLines(pssl, isPlaque);
 
 				bufferContent = OutputHelper.format(normalisation_x_to_plate_buffer.render(pssl).body());
 				file = new File(getFileName(experiment)+"_Buffer.csv", bufferContent);
@@ -62,7 +63,8 @@ public class Output extends AbstractOutput {
 
 	private String getFileName(Experiment experiment) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyMMdd");
-		return experiment.typeCode.toUpperCase()+"_"+experiment.atomicTransfertMethods.get(0).outputContainerUseds.get(0).locationOnContainerSupport.code+"_"+sdf.format(new Date());
+		return experiment.code.toUpperCase();
+		
 	}
 
 
@@ -78,7 +80,7 @@ public class Output extends AbstractOutput {
 	private PlateSampleSheetLine getPlateSampleSheetLine(AtomicTransfertMethod atm, String inputContainerCategory,Experiment experiment) {
 		Map<String, String> sourceMapping = getSourceMapping(experiment);
 		Map<String, String> destPositionMapping = getDestMapping(experiment);
-
+		
 		InputContainerUsed icu = atm.inputContainerUseds.get(0);
 		OutputContainerUsed ocu = atm.outputContainerUseds.get(0);
 		PlateSampleSheetLine pssl = new PlateSampleSheetLine();
@@ -98,23 +100,30 @@ public class Output extends AbstractOutput {
 
 		return pssl;
 	}
-	private List<PlateSampleSheetLine> checkPlateSampleSheetLines (List<PlateSampleSheetLine> psslList){
+	private List<PlateSampleSheetLine> checkPlateSampleSheetLines (List<PlateSampleSheetLine> psslList, Boolean isPlaque){
 
 		PlateSampleSheetLine psslTemplate = new PlateSampleSheetLine();
-		List<PlateSampleSheetLine> psslListNew = new LinkedList();
-		String plateLines []= {"A","B","C","D","E","F","G","H"};
-
+		List<PlateSampleSheetLine> psslListNew = new LinkedList<PlateSampleSheetLine>();
+		List<String> plateLines ;
+		int colNum;	
+		if (isPlaque){
+			plateLines = Arrays.asList("A","B","C","D","E","F","G","H"); 	
+			colNum=12;
+		}else{
+			plateLines = Arrays.asList("A","B","C","D");
+			colNum=6;
+		}
 		boolean found =false;	
 		int sampleNum=0;
-		for(int line = 0; line < plateLines.length; line++){
+		for(int line = 0; line < plateLines.size(); line++){
 
-			for(int plateCol = 1; plateCol <= 12 ;plateCol++){
+			for(int plateCol = 1; plateCol <= colNum ;plateCol++){
 				found = false;
 				sampleNum ++;
-				ListIterator psslListItr = psslList.listIterator();	
+				ListIterator<PlateSampleSheetLine> psslListItr = psslList.listIterator();	
 				while(psslListItr.hasNext()) {
 					PlateSampleSheetLine pssl =(PlateSampleSheetLine) psslListItr.next();					
-					if (pssl.dwell.equals(plateLines[line]+plateCol)){
+					if (pssl.dwell.equals(plateLines.get(line)+plateCol)){
 						found=true;	
 						pssl.dwellNum=sampleNum;
 						pssl.sampleName = "Sample "+sampleNum;
@@ -124,7 +133,7 @@ public class Output extends AbstractOutput {
 
 				if (! found){
 					PlateSampleSheetLine psslBlank = new PlateSampleSheetLine();
-					psslBlank.dwell=plateLines[line]+plateCol;
+					psslBlank.dwell=plateLines.get(line)+plateCol;
 					psslBlank.dwellNum=sampleNum;
 
 					psslBlank.sampleName = "Sample "+sampleNum;
