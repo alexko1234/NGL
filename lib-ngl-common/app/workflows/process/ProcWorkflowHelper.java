@@ -180,7 +180,7 @@ public class ProcWorkflowHelper {
 		if(null != outputContainerCodes && outputContainerCodes.size() > 0 
 				&& process.properties != null && process.properties.size() > 0 && propertyCodes.size() > 0){
 			Process oldProcess = (Process) validation.getObject(OBJECT_IN_DB);
-			Map<String, Pair<PropertyValue,PropertyValue>> updatedProperties = InstanceHelpers.getUpdatedPropertiesForSomePropertyCodes(propertyCodes, oldProcess.properties, process.properties);
+			Map<String, Pair<PropertyValue<?>,PropertyValue<?>>> updatedProperties = InstanceHelpers.getUpdatedPropertiesForSomePropertyCodes(propertyCodes, oldProcess.properties, process.properties);
 			Set<String> deletedPropertyCodes = InstanceHelpers.getDeletedPropertiesForSomePropertyCodes(propertyCodes, oldProcess.properties, process.properties);
 			logger.debug("updatedProperties "+updatedProperties);
 			logger.debug("deletedPropertyCodes "+deletedPropertyCodes);

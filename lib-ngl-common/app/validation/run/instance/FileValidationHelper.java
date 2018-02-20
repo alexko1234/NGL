@@ -25,9 +25,8 @@ import fr.cea.ig.MongoDBDAO;
 
 public class FileValidationHelper extends CommonValidationHelper {
 	
-	
 	public static void validationFiles(List<File> files, ContextValidation contextValidation) {
-		if((null != files) && (files.size() > 0)) {
+		if ((null != files) && (files.size() > 0)) {
 			int index = 0;
 			List<String> lstFullName = new ArrayList<String>();
 			for (File file : files) {
@@ -43,7 +42,6 @@ public class FileValidationHelper extends CommonValidationHelper {
 		}
 	}
 	
-	
 	private static ReadSet getReadSetFromContext(ContextValidation contextValidation) {
 		return getObjectFromContext("readSet", ReadSet.class, contextValidation);
 	}
@@ -53,10 +51,10 @@ public class FileValidationHelper extends CommonValidationHelper {
 	}
 	
 	public static void validateFileFullName(String fullname, ContextValidation contextValidation) {
-		Class objectClass =  getObjectFromContext("objectClass", Class.class, contextValidation);
-		if(ReadSet.class.isAssignableFrom(objectClass)){
+		Class<?> objectClass =  getObjectFromContext("objectClass", Class.class, contextValidation);
+		if (ReadSet.class.isAssignableFrom(objectClass)) {
 			validateReadSetFileFullName(fullname, contextValidation);
-		}else if(Analysis.class.equals(objectClass)){
+		} else if(Analysis.class.equals(objectClass)) {
 			validateAnalysisFileFullName(fullname, contextValidation);
 		}
 	}
@@ -91,20 +89,20 @@ public class FileValidationHelper extends CommonValidationHelper {
 		
 	}
 	
-	public static void validateFileProperties(Map<String, PropertyValue> properties, ContextValidation contextValidation) {
-		Class objectClass =  getObjectFromContext("objectClass", Class.class, contextValidation);
-		if(ReadSet.class.isAssignableFrom(objectClass)){
+	public static void validateFileProperties(Map<String, PropertyValue<?>> properties, ContextValidation contextValidation) {
+		Class<?> objectClass =  getObjectFromContext("objectClass", Class.class, contextValidation);
+		if (ReadSet.class.isAssignableFrom(objectClass)) { 
 			validateReadSetFileProperties(properties, contextValidation);
-		}else if(Analysis.class.equals(objectClass)){
+		} else if(Analysis.class.equals(objectClass)) {
 			validateAnalysisFileProperties(properties, contextValidation);
 		}
 	}
 	
-	private static void validateReadSetFileProperties(Map<String, PropertyValue> properties, ContextValidation contextValidation) {
+	private static void validateReadSetFileProperties(Map<String, PropertyValue<?>> properties, ContextValidation contextValidation) {
 		ReadSet readSet = getReadSetFromContext(contextValidation);
 		try {
 			ReadSetType readSetType = ReadSetType.find.findByCode(readSet.typeCode);
-			if(null != readSetType){
+			if (null != readSetType) {
 				contextValidation.addKeyToRootKeyName("properties");
 				ValidationHelper.validateProperties(contextValidation, properties, readSetType.getPropertyDefinitionByLevel(Level.CODE.File), true);
 				contextValidation.removeKeyFromRootKeyName("properties");
@@ -114,11 +112,11 @@ public class FileValidationHelper extends CommonValidationHelper {
 		}		
 	}
 	
-	private static void validateAnalysisFileProperties(Map<String, PropertyValue> properties, ContextValidation contextValidation) {
+	private static void validateAnalysisFileProperties(Map<String, PropertyValue<?>> properties, ContextValidation contextValidation) {
 		Analysis analysis = getAnalysisFromContext(contextValidation);
 		try {
 			AnalysisType analysisType = AnalysisType.find.findByCode(analysis.typeCode);
-			if(null != analysisType){
+			if (null != analysisType) {
 				contextValidation.addKeyToRootKeyName("properties");
 				ValidationHelper.validateProperties(contextValidation, properties, analysisType.getPropertyDefinitionByLevel(Level.CODE.File), true);
 				contextValidation.removeKeyFromRootKeyName("properties");
@@ -127,4 +125,5 @@ public class FileValidationHelper extends CommonValidationHelper {
 			throw new RuntimeException(e);
 		}		
 	}
+	
 }

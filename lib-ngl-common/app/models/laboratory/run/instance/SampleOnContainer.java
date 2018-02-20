@@ -33,7 +33,7 @@ public class SampleOnContainer implements IValidation{
 	// Reference to the container
 	public String containerCode;
 	// Properties of the content in the container
-	public Map<String,PropertyValue> properties;
+	public Map<String,PropertyValue<?>> properties;
 	//Percentage of content on the container
 	public Double percentage;
 	//Collaborator's reference

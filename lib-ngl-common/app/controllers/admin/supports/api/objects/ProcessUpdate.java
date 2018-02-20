@@ -51,10 +51,10 @@ public class ProcessUpdate extends AbstractUpdate<Process>{
 		PropertyDefinition pd = PropertyDefinition.find.findUnique(input.contentPropertyNameUpdated, Level.CODE.Content);
 		Object newValue = ValidationHelper.convertStringToType(pd.valueType, input.newValue);
 		
-		if(NGLObject.Action.replace.equals(NGLObject.Action.valueOf(input.action))){
-			process.sampleOnInputContainer.properties.get(input.contentPropertyNameUpdated).value = newValue;
-			
-		}else{
+		if (NGLObject.Action.replace.equals(NGLObject.Action.valueOf(input.action))) {
+			// process.sampleOnInputContainer.properties.get(input.contentPropertyNameUpdated).value = newValue;	
+			 process.sampleOnInputContainer.properties.get(input.contentPropertyNameUpdated).assignValue(newValue);	
+		} else {
 			throw new RuntimeException(input.action+" not implemented");
 		}
 		process.validate(cv);

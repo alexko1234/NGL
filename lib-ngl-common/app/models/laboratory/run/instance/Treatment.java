@@ -21,7 +21,7 @@ import validation.utils.ValidationHelper;
 import fr.cea.ig.MongoDBDAO;
 
 
-public class Treatment implements IValidation{
+public class Treatment implements IValidation {
 	
 	public Treatment() {
 		super();
@@ -33,15 +33,15 @@ public class Treatment implements IValidation{
 	public String categoryCode;
 	
 	@JsonIgnore
-	public Map<String, Map<String, PropertyValue>> results = new HashMap<String, Map<String, PropertyValue>>();
+	public Map<String, Map<String, PropertyValue<?>>> results = new HashMap<>(); // String, Map<String, PropertyValue>>();
 
 	@JsonAnyGetter
-    public Map<String,Map<String,PropertyValue>> results() {
+    public Map<String,Map<String,PropertyValue<?>>> results() {
         return results;
     }
 
     @JsonAnySetter
-    public void set(String name, Map<String,PropertyValue> value) {
+    public void set(String name, Map<String,PropertyValue<?>> value) {
     	results.put(name, value);
     }
 

@@ -183,11 +183,10 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 		}		
 	}
 	
-	public static void validateImportType(String importTypeCode, Map<String, PropertyValue> properties,
-			ContextValidation contextValidation){
+	public static void validateImportType(String importTypeCode, Map<String, PropertyValue<?>> properties,	ContextValidation contextValidation){
 		
 		ImportType importType = BusinessValidationHelper.validateExistDescriptionCode(contextValidation, importTypeCode,"importTypeCode", ImportType.find,true);
-		if(null != importType){
+		if (importType != null) {
 			List<PropertyDefinition> proDefinitions=new ArrayList<PropertyDefinition>();
 			proDefinitions.addAll(importType.getPropertiesDefinitionContainerLevel());
 			
@@ -198,10 +197,9 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 		
 	};
 	
-	public static void validateQualityControlResults(List<QualityControlResult> qualityControlResults,
-			ContextValidation contextValidation){
+	public static void validateQualityControlResults(List<QualityControlResult> qualityControlResults, ContextValidation contextValidation) {
 		contextValidation.addKeyToRootKeyName("qualityControlResults");
-		if(qualityControlResults!=null){
+		if (qualityControlResults != null) {
 			qualityControlResults.stream().forEach(qcr -> {
 				contextValidation.addKeyToRootKeyName("["+qcr.typeCode+"]");
 				ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, qcr.typeCode, "typeCode", ExperimentType.find,true);
@@ -214,8 +212,8 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 		contextValidation.removeKeyFromRootKeyName("qualityControlResults");		
 	};
 	
-	public static void validateVolume(PropertyValue volume, ContextValidation contextValidation) {
-		if(volume!=null && volume.value!=null){
+	public static void validateVolume(PropertyValue<?> volume, ContextValidation contextValidation) {
+		if(volume != null && volume.value != null) {
 			Collection<PropertyDefinition> pdefs = new ArrayList<>();		
 			PropertyDefinition pd = new PropertyDefinition();			
 			pd.code = "volume";

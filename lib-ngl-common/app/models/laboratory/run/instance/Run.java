@@ -52,7 +52,7 @@ public class Run extends DBObject implements IValidation {
     public TraceInformation traceInformation;
     public InstrumentUsed instrumentUsed; //Instrument used to obtain the run
     public Map<String,Treatment> treatments = new HashMap<String,Treatment>();
-    public Map<String, PropertyValue> properties = new HashMap<String, PropertyValue>();
+    public Map<String, PropertyValue<?>> properties = new HashMap<>(); // <String, PropertyValue>();
     public List<Lane> lanes;
     
     @JsonIgnore
@@ -95,13 +95,8 @@ public class Run extends DBObject implements IValidation {
 		//WARN DON'T CHANGE THE ORDER OF VALIDATION
 		TreatmentValidationHelper.validationTreatments(this.treatments, contextValidation);
 
-		LaneValidationHelper.validationLanes(this.lanes, contextValidation);
-		
+		LaneValidationHelper.validationLanes(this.lanes, contextValidation);		
     }
-
-
-	
-
 
     /*
         nbClusterIlluminaFilter

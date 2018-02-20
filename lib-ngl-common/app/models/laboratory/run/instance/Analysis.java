@@ -37,7 +37,7 @@ public class Analysis extends DBObject implements IValidation{
 	public List<File> files;
 	public Map<String, Treatment> treatments = new HashMap<String, Treatment>();
 	public List<ReadSetProperties> masterReadSetProperties = null; //used to add with drools readset properties need to evaluate anaysis
-	public Map<String, PropertyValue> properties= new HashMap<String, PropertyValue>();
+	public Map<String, PropertyValue<?>> properties = new HashMap<>(); // <String, PropertyValue>();
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {

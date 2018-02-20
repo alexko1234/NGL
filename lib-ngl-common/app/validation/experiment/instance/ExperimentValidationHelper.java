@@ -3,7 +3,7 @@ package validation.experiment.instance;
 import static validation.utils.ValidationHelper.required;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+//import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,7 +31,7 @@ import models.utils.InstanceConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 
-import play.Logger;
+// import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
@@ -57,7 +57,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 		}
 	}
 	
-	public static void validationExperimentType(String typeCode, Map<String,PropertyValue> properties, ContextValidation contextValidation) {
+	public static void validationExperimentType(String typeCode, Map<String,PropertyValue<?>> properties, ContextValidation contextValidation) {
 		ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ExperimentType.find,true);
 		if(exType!=null){
 			String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
@@ -212,7 +212,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 		});
 	}
 	
-	public static void validateInstrumentUsed(InstrumentUsed instrumentUsed, Map<String,PropertyValue> properties, ContextValidation contextValidation) {
+	public static void validateInstrumentUsed(InstrumentUsed instrumentUsed, Map<String,PropertyValue<?>> properties, ContextValidation contextValidation) {
 		if(ValidationHelper.required(contextValidation, instrumentUsed, "instrumentUsed")){
 			contextValidation.addKeyToRootKeyName("instrumentUsed");
 			instrumentUsed.validate(contextValidation);

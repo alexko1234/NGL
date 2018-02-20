@@ -181,7 +181,7 @@ public class LimsCNGDAO {
 				sample.comments.add(new Comment(rs.getString("comments"), "ngl-data"));
 			}
 			
-			sample.properties=new HashMap<String, PropertyValue>();
+			sample.properties = new HashMap<>(); // <String, PropertyValue>();
 			sample.properties.put("limsCode", new PropertySingleValue(rs.getInt("lims_code")));		
 			
 			return sample;
@@ -289,7 +289,7 @@ public class LimsCNGDAO {
 			Logger.error("[commonContainerMapRow] Can't get container support !"); 
 		}
 		
-		container.properties = new HashMap<String, PropertyValue>();
+		container.properties = new HashMap<>(); // <String, PropertyValue>();
 		container.properties.put("limsCode",new PropertySingleValue(rs.getInt("lims_code")));
 			
 		if (rs.getString("project")!=null) {
@@ -321,23 +321,20 @@ public class LimsCNGDAO {
 			content.sampleTypeCode = sampleType.code;
 			content.sampleCategoryCode = sampleType.category.code;
 			
-			content.properties = new HashMap<String, PropertyValue>();
+			content.properties = new HashMap<>(); // <String, PropertyValue>();
 			
 			//FDS 20/01/2016 ne pas ajouter ces proprietes pour sample-well, elle ne peuvent pas exister...
-			if (! "sample-well".equals(specialContainerCategoryCode))
-			{
-				if (rs.getString("tag")!=null) { 
+			if (! "sample-well".equals(specialContainerCategoryCode)) {
+				if (rs.getString("tag") != null) { 
 					content.properties.put("tag", new PropertySingleValue(rs.getString("tag")));
 					content.properties.put("tagCategory", new PropertySingleValue(rs.getString("tagcategory")));
-				}
-				else {
+				} else {
 					content.properties.put("tag",new PropertySingleValue("-1")); // specific value for making comparison, suppressed in demultiplexContainer
 					content.properties.put("tagCategory",new PropertySingleValue("-1"));// specific value for making comparison, suppressed in demultiplexContainer
 				}				
 				if (rs.getString("exp_short_name")!=null) {
 					content.properties.put("libProcessTypeCode", new PropertySingleValue(rs.getString("exp_short_name")));
-				}
-				else {
+				} else {
 					Logger.warn("[commonContainerMapRow] content exp_short_name : null !!!!!!");
 					content.properties.put("libProcessTypeCode", new PropertySingleValue("-1"));// specific value for making comparison, suppressed in demultiplexContainer
 				}
@@ -345,12 +342,11 @@ public class LimsCNGDAO {
 				// FDS 15/06/2015 JIRA NGL-673 Ajout du barcode de la librairie solexa initiale ( aliquot )=> nouvelle propriété de content 
 				if (rs.getString("aliquote_code")!=null) { 
 					content.properties.put("sampleAliquoteCode", new PropertySingleValue(rs.getString("aliquote_code")));
-				}
-				else {
+				} else {
 					Logger.warn("[commonContainerMapRow] content aliquote code : null !!!!!");
 					content.properties.put("sampleAliquoteCode", new PropertySingleValue("-1"));// specific value for making comparison, suppressed in demultiplexContainer
 				}
-			}else if ("sample-well".equals(specialContainerCategoryCode)){
+			} else if ("sample-well".equals(specialContainerCategoryCode)) {
 				if (rs.getString("aliquote_code")!=null) { 
 					content.properties.put("sampleAliquoteCode", new PropertySingleValue(rs.getString("aliquote_code")));
 				}
@@ -381,7 +377,7 @@ public class LimsCNGDAO {
 		containerSupport.code = rs.getString("support_code");
 		
 		if (rs.getString("seq_program_type").equals("PE") || rs.getString("seq_program_type").equals("SR")) {
-			containerSupport.properties= new HashMap<String, PropertyValue>();
+			containerSupport.properties= new HashMap<>(); // <String, PropertyValue>();
 			containerSupport.properties.put("sequencingProgramType", new PropertySingleValue(rs.getString("seq_program_type")));
 		}
 		else {
@@ -757,7 +753,7 @@ public class LimsCNGDAO {
 		content.sampleTypeCode =results.get(posNext).contents.toArray(new Content[0])[0].sampleTypeCode;
 		content.sampleCategoryCode =results.get(posNext).contents.toArray(new Content[0])[0].sampleCategoryCode;
 		
-		content.properties = new HashMap<String, PropertyValue>();
+		content.properties = new HashMap<>(); // <String, PropertyValue>();
 		// FDS: il peut ne pas y avoir d'index et pourtant pas de pb de null pointer exception ici ???
 		content.properties.put("tag", new PropertySingleValue(results.get(posNext).contents.toArray(new Content[0])[0].properties.get("tag").value));
 		content.properties.put("tagCategory", new PropertySingleValue(results.get(posNext).contents.toArray(new Content[0])[0].properties.get("tagCategory").value));
@@ -1129,11 +1125,12 @@ public class LimsCNGDAO {
 			}
 		});
 		
-		//map data
-		HashMap<String,PropertyValue<String>> mapCodeSupportSequencing = new HashMap<String,PropertyValue<String>>();
+		// map data
+		HashMap<String,PropertyValue<String>> mapCodeSupportSequencing = new HashMap<>(); // <String,PropertyValue<String>>();
 		for (ContainerSupport result : results) {
 			if (!mapCodeSupportSequencing.containsKey(result.code)) {
-				mapCodeSupportSequencing.put(result.code, result.properties.get("sequencingProgramType"));
+				// mapCodeSupportSequencing.put(result.code, result.properties.get("sequencingProgramType"));
+				mapCodeSupportSequencing.put(result.code, (PropertyValue<String>)result.properties.get("sequencingProgramType"));
 			}
 		}	
 		return mapCodeSupportSequencing;

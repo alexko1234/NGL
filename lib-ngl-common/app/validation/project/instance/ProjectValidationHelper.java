@@ -24,20 +24,18 @@ import validation.utils.ValidationHelper;
 public class ProjectValidationHelper extends CommonValidationHelper {
 
 	public static void validateProjectType(String typeCode,
-			Map<String, PropertyValue> properties,
-			ContextValidation contextValidation) {
+			                               Map<String, PropertyValue<?>> properties,
+			                               ContextValidation contextValidation) {
 		ProjectType projectType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ProjectType.find,true);
-		if(projectType!=null){
+		if (projectType != null) {
 			ValidationHelper.validateProperties(contextValidation, properties, projectType.getPropertiesDefinitionDefaultLevel());
 		}		
 	}
 
-	public static void validateProjectCategoryCode(String categoryCode,
-			ContextValidation contextValidation) {
+	public static void validateProjectCategoryCode(String categoryCode, ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "categoryCode", ProjectCategory.find);	
 	}
 	
-
 	public static void validateUmbrellaProjectCode (String umbrellaProjectCode, ContextValidation contextValidation) {		
 		//TODO : temporary unset if
 		//if (ValidationHelper.required(contextValidation, umbrellaProjectCode, "umbrellaProjectCode")) {
@@ -47,11 +45,9 @@ public class ProjectValidationHelper extends CommonValidationHelper {
 		//}		 
 	}
 
-	public static void validateBioformaticParameters(BioinformaticParameters bioinformaticParameters,ContextValidation contextValidation) {
-		if(ValidationHelper.required(contextValidation, bioinformaticParameters, "bioinformaticParameters")){
+	public static void validateBioformaticParameters(BioinformaticParameters bioinformaticParameters, ContextValidation contextValidation) {
+		if (ValidationHelper.required(contextValidation, bioinformaticParameters, "bioinformaticParameters"))
 			bioinformaticParameters.validate(contextValidation);
-		}
 	}
 	
-
 }

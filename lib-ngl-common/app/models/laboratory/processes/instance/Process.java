@@ -37,7 +37,7 @@ public class Process extends DBObject implements IValidation{
 	public TraceInformation traceInformation;
 	public List<Comment> comments = new ArrayList<Comment>(0);
 
-	public Map<String,PropertyValue> properties;
+	public Map<String,PropertyValue<?>> properties;
 
 	// Projects ref
 	public Set<String> projectCodes;
@@ -93,25 +93,22 @@ public class Process extends DBObject implements IValidation{
 			ProcessValidationHelper.validateSampleOnInputContainer(sampleOnInputContainer, contextValidation);
 
 		}
-		
-		
-
 		//ProcessValidationHelper.validateExperimentCodes(experimentCodes, contextValidation);
 	}
+	
 	@JsonIgnore
 	public Process cloneCommon() {
 		Process p = new Process();
-		p.typeCode = this.typeCode;
+		p.typeCode     = this.typeCode;
 		p.categoryCode = this.categoryCode;
-		
-		if(null != this.properties && this.properties.size() > 0){
-			p.properties = new HashMap<String, PropertyValue>(this.properties);
+		if(this.properties != null && this.properties.size() > 0){
+			p.properties = new HashMap<String, PropertyValue<?>>(this.properties);
 		}
-		p.traceInformation = this.traceInformation;
+		p.traceInformation          = this.traceInformation;
 		p.inputContainerSupportCode = this.inputContainerSupportCode;
-		p.inputContainerCode = this.inputContainerCode;
-		p.state = this.state;
-		p.comments = this.comments;
+		p.inputContainerCode        = this.inputContainerCode;
+		p.state                     = this.state;
+		p.comments                  = this.comments;
 		return p;
 	}
 

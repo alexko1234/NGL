@@ -47,7 +47,7 @@ public class ReadSetValidationHelper extends CommonValidationHelper {
 								DBQuery.in("readSetCodes", readSetCode)))));
 	}
 	
-	public static void validateReadSetType(String typeCode,	Map<String, PropertyValue> properties, ContextValidation contextValidation) {
+	public static void validateReadSetType(String typeCode,	Map<String, PropertyValue<?>> properties, ContextValidation contextValidation) {
 		ReadSetType readSetType = validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ReadSetType.find,true);
 		if(null != readSetType){
 			contextValidation.addKeyToRootKeyName("properties");

@@ -28,7 +28,7 @@ public class Lane implements IValidation{
 	// dnoisett, the lane doesn't contain the entire readset anymore, just a code to refer it;
 	public List<String> readSetCodes;
 
-	public Map<String, PropertyValue> properties= new HashMap<String, PropertyValue>();
+	public Map<String, PropertyValue<?>> properties = new HashMap<>(); // <String, PropertyValue>();
 	public Map<String,Treatment> treatments = new HashMap<String,Treatment>();
 	
 	/*

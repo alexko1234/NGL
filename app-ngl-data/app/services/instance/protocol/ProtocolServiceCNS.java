@@ -343,17 +343,10 @@ public class ProtocolServiceCNS {
 		
 		lp.add(newProtocol("qcard-qc","QC_qcard","path7","1","production", InstanceFactory.setExperimentTypeCodes("qcard")));	
 
-		
-		
-		if(ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-			
-		}else if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
-			
-				
-		}else if(ConfigFactory.load().getString("ngl.env").equals("UAT") ){	
-				
+		if (ConfigFactory.load().getString("ngl.env").equals("PROD")) {
+		} else if(ConfigFactory.load().getString("ngl.env").equals("DEV")) {
+		} else if(ConfigFactory.load().getString("ngl.env").equals("UAT")) {	
 		}
-		
 		for(Protocol protocole:lp){
 			InstanceHelpers.save(InstanceConstants.PROTOCOL_COLL_NAME, protocole,ctx);
 			Logger.debug(" Protocole "+protocole.code);
@@ -367,19 +360,12 @@ strandOrientation	?	?	reverse	reverse	forward	reverse
 cDNAsynthesisType	?	?	?	?	?	?
  */
 	@SafeVarargs
-	private static Map<String, PropertyValue> concatMap(
-			Map<String, PropertyValue>...map) {
-		Map<String, PropertyValue> mapFinal = new HashMap<String, PropertyValue>(map.length);
+	private static Map<String, PropertyValue<?>> concatMap(Map<String, PropertyValue<?>>...map) {
+		Map<String, PropertyValue<?>> mapFinal = new HashMap<>(map.length); // <String, PropertyValue>(map.length);
 		for(int i = 0 ; i < map.length; i++){
 			mapFinal.putAll(map[i]);
 		}
 		return mapFinal;
 	}
-	
-	
-
-
-
-
 
 }

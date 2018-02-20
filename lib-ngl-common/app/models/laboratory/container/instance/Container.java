@@ -86,7 +86,7 @@ public class Container extends DBObject implements IValidation, ITracingAccess, 
 	/**
 	 * Properties.
 	 */
-	public Map<String, PropertyValue> properties;
+	public Map<String, PropertyValue<?>> properties;
 	
 	/**
 	 * Comments.

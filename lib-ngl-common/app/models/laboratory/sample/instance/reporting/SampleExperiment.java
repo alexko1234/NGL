@@ -8,6 +8,7 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 
 public class SampleExperiment {
+	
 	public String code;
 	public String typeCode;
 	public String categoryCode;
@@ -16,6 +17,6 @@ public class SampleExperiment {
 	
 	public TraceInformation traceInformation;
 	public String protocolCode;
-	public Map<String,PropertyValue> properties;
+	public Map<String,PropertyValue<?>> properties;
 	
 }

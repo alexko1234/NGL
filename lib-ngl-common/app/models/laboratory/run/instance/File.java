@@ -21,7 +21,7 @@ public class File implements IValidation {
 	public String typeCode; //id du type de fichier
 	@JsonIgnore
 	public State state; //TODO remove later
-	public Map<String, PropertyValue> properties = new HashMap<String, PropertyValue>();
+	public Map<String, PropertyValue<?>> properties = new HashMap<>(); // <String, PropertyValue>();
 
 	/*
 	asciiEncoding	encodage ascii du fichier

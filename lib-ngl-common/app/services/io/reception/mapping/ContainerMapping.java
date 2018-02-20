@@ -144,8 +144,7 @@ public class ContainerMapping extends Mapping<Container> {
 	}
 
 	
-	private Map<String, PropertyValue> computeProperties(
-			Map<String, PropertyValue> properties, Sample sample, String containerCode) {
+	private Map<String, PropertyValue<?>> computeProperties(Map<String, PropertyValue<?>> properties, Sample sample, String containerCode) {
 		setPropertiesFromSample(properties, sample);
 		if(sample.life != null && sample.life.from != null && sample.life.from.sampleCode != null && sample.life.from.projectCode != null){
 			PropertySingleValue fromSampleTypeCode = new PropertySingleValue(sample.life.from.sampleTypeCode);
@@ -158,10 +157,9 @@ public class ContainerMapping extends Mapping<Container> {
 			Sample parentSample = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, 
 					DBQuery.is("code",sample.life.from.sampleCode).in("projectCodes", sample.life.from.projectCode));
 			setPropertiesFromSample(properties, parentSample);
-			
 		}
 		
-		//HACK to have the original container on the readset
+		// HACK to have the original container on the readset
 		if(Action.save.equals(action) && !properties.containsKey("sampleAliquoteCode")){
 			PropertySingleValue psv = new PropertySingleValue(containerCode);
 			properties.put("sampleAliquoteCode", psv);
@@ -170,7 +168,7 @@ public class ContainerMapping extends Mapping<Container> {
 		return properties;
 	}
 
-	private void setPropertiesFromSample(Map<String, PropertyValue> properties, Sample sample) {
+	private void setPropertiesFromSample(Map<String, PropertyValue<?>> properties, Sample sample) {
 		SampleType sampleType = SampleType.find.findByCode(sample.typeCode);
 		if(sampleType !=null){
 			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(sampleType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,properties);

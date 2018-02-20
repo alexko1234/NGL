@@ -106,7 +106,8 @@ public class ReadSetUpdate extends AbstractUpdate<ReadSet>{
 			PropertyDefinition pd = PropertyDefinition.find.findUnique(input.contentPropertyNameUpdated, Level.CODE.Content);
 			Object newValue = ValidationHelper.convertStringToType(pd.valueType, input.newValue);
 			
-			readSet.sampleOnContainer.properties.get(input.contentPropertyNameUpdated).value = newValue;
+			// readSet.sampleOnContainer.properties.get(input.contentPropertyNameUpdated).value = newValue;
+			readSet.sampleOnContainer.properties.get(input.contentPropertyNameUpdated).assignValue(newValue);
 			readSet.validate(cv);
 			if(!cv.hasErrors()){
 				updateObject(readSet);				

@@ -9,7 +9,7 @@ import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import validation.IValidation;
 
-public abstract class AbstractContainerUsed implements IValidation{
+public abstract class AbstractContainerUsed implements IValidation {
 	public String code;
 	public String categoryCode;
 	public List<Content> contents;
@@ -20,8 +20,8 @@ public abstract class AbstractContainerUsed implements IValidation{
 	public PropertySingleValue quantity; 	
 	public PropertySingleValue size; 	
 	
-	public Map<String,PropertyValue> experimentProperties;
-	public Map<String,PropertyValue> instrumentProperties;
+	public Map<String,PropertyValue<?>> experimentProperties;
+	public Map<String,PropertyValue<?>> instrumentProperties;
 	
 	public AbstractContainerUsed() {
 		super();

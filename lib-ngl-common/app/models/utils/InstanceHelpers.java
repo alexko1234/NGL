@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import models.laboratory.common.description.Level;
+// import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
@@ -143,14 +143,16 @@ public class InstanceHelpers {
 	}
 
 	public static void copyPropertyValueFromPropertiesDefinition(List<PropertyDefinition> propertyDefinitions,
-			Map<String, PropertyValue> propertiesInput, Map<String, PropertyValue> propertiesOutPut) {
-		
+			                                                     Map<String, PropertyValue<?>> propertiesInput, 
+			                                                     Map<String, PropertyValue<?>> propertiesOutPut) {
+		// TODO: fix as it i is a meaningless creation and could as well return
+		//       immediately without doing anything.
 		if (propertiesOutPut == null) {
-			propertiesOutPut = new HashMap<String, PropertyValue>();
+			propertiesOutPut = new HashMap<>(); // <String, PropertyValue>();
 		}
 		
 		for (PropertyDefinition propertyDefinition : propertyDefinitions) {
-			PropertyValue propertyValue = propertiesInput.get(propertyDefinition.code);
+			PropertyValue<?> propertyValue = propertiesInput.get(propertyDefinition.code);
 			if (propertyValue != null) {
 				propertiesOutPut.put(propertyDefinition.code, propertyValue);
 			}
@@ -158,8 +160,7 @@ public class InstanceHelpers {
 
 	}
 	
-	public static Set<String> getDeletedPropertyDefinitionCode(List<PropertyDefinition> propertyDefinitions,
-			Map<String, PropertyValue> propertiesInput) {
+	public static Set<String> getDeletedPropertyDefinitionCode(List<PropertyDefinition> propertyDefinitions, Map<String, PropertyValue<?>> propertiesInput) {
 		return propertyDefinitions.stream()
 			.filter(pd -> !propertiesInput.containsKey(pd.code))
 			.map(pd -> pd.code)
@@ -244,12 +245,12 @@ public class InstanceHelpers {
 	public static SampleOnInputContainer getSampleOnInputContainer(Content content,Container container) {
 
 		SampleOnInputContainer sampleOnInputContainer = new SampleOnInputContainer();
-		sampleOnInputContainer.projectCode = content.projectCode;
-		sampleOnInputContainer.sampleCode = content.sampleCode;
+		sampleOnInputContainer.projectCode        = content.projectCode;
+		sampleOnInputContainer.sampleCode         = content.sampleCode;
 		sampleOnInputContainer.sampleCategoryCode = content.sampleCategoryCode;
-		sampleOnInputContainer.sampleTypeCode = content.sampleTypeCode;
-		sampleOnInputContainer.percentage = content.percentage;
-		sampleOnInputContainer.properties = content.properties;
+		sampleOnInputContainer.sampleTypeCode     = content.sampleTypeCode;
+		sampleOnInputContainer.percentage         = content.percentage;
+		sampleOnInputContainer.properties         = content.properties;
 
 		Sample sample = getSample(content.sampleCode);
 		
@@ -294,15 +295,15 @@ public class InstanceHelpers {
 	{
 		SampleOnContainer sampleOnContainer = readSet.sampleOnContainer;
 		Sample sample = new Sample();
-		sample.code=sampleOnContainer.sampleCode;
-		sample.name=sampleOnContainer.sampleCode;
-		sample.typeCode=sampleOnContainer.sampleTypeCode;
-		sample.categoryCode=sampleOnContainer.sampleCategoryCode;
-		sample.properties=sampleOnContainer.properties;
-		sample.referenceCollab=sampleOnContainer.referenceCollab;
-		sample.projectCodes = new HashSet<>();
+		sample.code            = sampleOnContainer.sampleCode;
+		sample.name            = sampleOnContainer.sampleCode;
+		sample.typeCode        = sampleOnContainer.sampleTypeCode;
+		sample.categoryCode    = sampleOnContainer.sampleCategoryCode;
+		sample.properties      = sampleOnContainer.properties;
+		sample.referenceCollab = sampleOnContainer.referenceCollab;
+		sample.projectCodes    = new HashSet<>();
 		sample.projectCodes.add(readSet.projectCode);
-		sample.importTypeCode="external";
+		sample.importTypeCode  = "external";
 		InstanceHelpers.getUpdateTraceInformation(sample.traceInformation, "ngl-bi");
 		return sample;
 	}
@@ -375,6 +376,7 @@ public class InstanceHelpers {
 				.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code", readSet.runCode), keys);
 		return r.containerSupportCode;
 	}
+	
 	/*
 	 * Used to update content properties 
 	 * @param properties
@@ -382,12 +384,15 @@ public class InstanceHelpers {
 	 * @param deletedPropertyCodes
 	 * @return
 	 */
-	public static Map<String, PropertyValue> updateProperties(Map<String, PropertyValue> properties, Map<String, PropertyValue> newProperties, Set<String> deletedPropertyCodes){
+	public static Map<String, PropertyValue<?>> updateProperties(Map<String, PropertyValue<?>> properties, 
+			                                                     Map<String, PropertyValue<?>> newProperties, 
+			                                                     Set<String> deletedPropertyCodes) {
 		properties.replaceAll((k,v) -> (newProperties.containsKey(k))?newProperties.get(k):v);							
 		newProperties.forEach((k,v)-> properties.putIfAbsent(k, v));
 		deletedPropertyCodes.forEach(code -> properties.remove(code));
 		return properties;
 	}
+	
 	/*
 	 * Update properties with using the oldValue to check if update is needed
 	 * @param properties
@@ -395,7 +400,10 @@ public class InstanceHelpers {
 	 * @param deletedPropertyCodes
 	 * @return
 	 */
-	public static Map<String, PropertyValue> updatePropertiesWithOldValueComparison(Map<String, PropertyValue> properties, Map<String, Pair<PropertyValue,PropertyValue>> newProperties, Set<String> deletedPropertyCodes){
+	public static Map<String, PropertyValue<?>> 
+	              updatePropertiesWithOldValueComparison(Map<String, PropertyValue<?>> properties, 
+	            		                                 Map<String, Pair<PropertyValue<?>,PropertyValue<?>>> newProperties, 
+	            		                                 Set<String> deletedPropertyCodes) {
 		//1 replace if old value equals old value
 		properties.replaceAll((k,v) -> (newProperties.containsKey(k) && ((newProperties.get(k).getLeft() != null && newProperties.get(k).getLeft().equals(v)) || newProperties.get(k).getLeft() == null))?newProperties.get(k).getRight():v);							
 		//2 add new properties
@@ -405,10 +413,13 @@ public class InstanceHelpers {
 		return properties;
 	}
 	
-	
-	public static void updateContentProperties(Set<String> projectCodes, Set<String> sampleCodes, Set<String> containerCodes,
-			Set<String> tags, Map<String, Pair<PropertyValue,PropertyValue>> updatedProperties, Set<String> deletedPropertyCodes,
-			ContextValidation validation) {
+	public static void updateContentProperties(Set<String> projectCodes, 
+			                                   Set<String> sampleCodes, 
+			                                   Set<String> containerCodes,
+			                                   Set<String> tags, 
+			                                   Map<String, Pair<PropertyValue<?>,PropertyValue<?>>> updatedProperties, 
+			                                   Set<String> deletedPropertyCodes,
+			                                   ContextValidation validation) {
 		MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,  DBQuery.in("code", containerCodes))
 			.cursor
 			.forEach(container -> {
@@ -438,7 +449,7 @@ public class InstanceHelpers {
 						.forEach(content -> {
 							content.properties = InstanceHelpers.updatePropertiesWithOldValueComparison(content.properties, updatedProperties, deletedPropertyCodes);							
 						});
-					if(null != atm.outputContainerUseds){
+					if (atm.outputContainerUseds != null) {
 						atm.outputContainerUseds
 							.stream()
 							.filter(ocu -> containerCodes.contains(ocu.code))							
@@ -484,9 +495,11 @@ public class InstanceHelpers {
 				}
 		});	
 	}
-	public static void updateContentProperties(Sample sample, Map<String, PropertyValue> updatedProperties, Set<String> deletedPropertyCodes,
-			ContextValidation validation) {
-		
+	
+	public static void updateContentProperties(Sample sample, 
+			                                   Map<String, PropertyValue<?>> updatedProperties, 
+			                                   Set<String> deletedPropertyCodes,
+			                                   ContextValidation validation) {
 		MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, 
 				DBQuery.is("life.from.sampleCode",sample.code).in("life.from.projectCode", sample.projectCodes))
 			.cursor.forEach(updatedSample -> {
@@ -595,9 +608,10 @@ public class InstanceHelpers {
 	 * @param newProperties
 	 * @return a pair with left element is the old propertyValue and right the new propertyValue
 	 */
-	public static Map<String, Pair<PropertyValue,PropertyValue>> getUpdatedPropertiesForSomePropertyCodes(Set<String> propertyCodes, Map<String, PropertyValue> oldProperties,
-			Map<String, PropertyValue> newProperties) {
-		
+	public static Map<String, Pair<PropertyValue<?>,PropertyValue<?>>> 
+	              getUpdatedPropertiesForSomePropertyCodes(Set<String> propertyCodes, 
+	            		                                   Map<String, PropertyValue<?>> oldProperties,
+	            		                                   Map<String, PropertyValue<?>> newProperties) {
 		return propertyCodes.stream()
 					 .filter(code -> newProperties.containsKey(code))
 					 .filter(code -> !newProperties.get(code).equals(oldProperties.get(code)))
@@ -611,9 +625,9 @@ public class InstanceHelpers {
 	 * @param newProperties
 	 * @return
 	 */
-	public static Set<String> getDeletedPropertiesForSomePropertyCodes(Set<String> propertyCodes, Map<String, PropertyValue> dbProperties,
-			Map<String, PropertyValue> newProperties) {
-		
+	public static Set<String> getDeletedPropertiesForSomePropertyCodes(Set<String> propertyCodes, 
+			                                                           Map<String, PropertyValue<?>> dbProperties,
+			                                                           Map<String, PropertyValue<?>> newProperties) {
 		return propertyCodes.stream()
 					 .filter(code -> dbProperties.containsKey(code) && !newProperties.containsKey(code))
 					 .collect(Collectors.toSet());		

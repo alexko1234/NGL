@@ -43,17 +43,16 @@ public class RunValidationHelper extends CommonValidationHelper {
 		}
 	}
 
-	public static void validateRunType(String typeCode,	Map<String, PropertyValue> properties,	ContextValidation contextValidation) {
+	public static void validateRunType(String typeCode,	Map<String, PropertyValue<?>> properties,	ContextValidation contextValidation) {
 		RunType runType = validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", RunType.find,true);
-		if(null != runType){
+		if (runType != null) {
 			contextValidation.addKeyToRootKeyName("properties");
 			ValidationHelper.validateProperties(contextValidation, properties, runType.getPropertyDefinitionByLevel(Level.CODE.Run), true);
 			contextValidation.removeKeyFromRootKeyName("properties");
 		}		
 	}
 	
-	public static void validationRunCategoryCode(String categoryCode,
-			ContextValidation contextValidation) {
+	public static void validationRunCategoryCode(String categoryCode, ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "categoryCode", RunCategory.find,false);
 	}
 	

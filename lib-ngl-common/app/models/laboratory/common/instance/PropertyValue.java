@@ -64,6 +64,13 @@ public abstract class PropertyValue<T> implements IValidation {
 		return value;
 	}
 	
+	// This is an obviously bad method that should be abstract 
+	// and defined in subclasses so the proper value type is enforced.
+	@SuppressWarnings("unchecked")
+	public void assignValue(Object value) {
+		this.value = (T)value;
+	}
+	
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		//Validate type of property against propertyDefinition
@@ -86,7 +93,7 @@ public abstract class PropertyValue<T> implements IValidation {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		PropertyValue other = (PropertyValue) obj;
+		PropertyValue<?> other = (PropertyValue<?>) obj;
 		if (_type == null) {
 			if (other._type != null)
 				return false;
@@ -99,7 +106,5 @@ public abstract class PropertyValue<T> implements IValidation {
 			return false;
 		return true;
 	}
-	
-	
 	
 }

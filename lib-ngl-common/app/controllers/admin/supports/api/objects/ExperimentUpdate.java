@@ -24,7 +24,7 @@ import validation.utils.ValidationHelper;
 import controllers.admin.supports.api.NGLObject;
 import controllers.admin.supports.api.NGLObjectsSearchForm;
 
-public class ExperimentUpdate extends AbstractUpdate<Experiment>{
+public class ExperimentUpdate extends AbstractUpdate<Experiment> {
 
 	public ExperimentUpdate() {
 		super(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class);		
@@ -81,23 +81,24 @@ public class ExperimentUpdate extends AbstractUpdate<Experiment>{
 			.map(icu -> icu.contents)
 			.flatMap(List::stream)
 			.filter(content -> {
+				// Return condition
 				if(input.projectCode.equals(content.projectCode) &&
 						input.sampleCode.equals(content.sampleCode) &&
 						content.properties.containsKey(input.contentPropertyNameUpdated) && 
 						currentValue.equals(ValidationHelper.convertStringToType(pd.valueType, content.properties.get(input.contentPropertyNameUpdated).value.toString()))){
 							return true;
-					}else{
+					} else {
 						return false;
 					}
 			})
-			.forEach(content ->{
-				content.properties.get(input.contentPropertyNameUpdated).value = newValue;
+			.forEach(content -> {
+				// content.properties.get(input.contentPropertyNameUpdated).value = newValue;
+				content.properties.get(input.contentPropertyNameUpdated).assignValue(newValue);
 			});
 		
 	}
 	
-	private void updateOutputContainers(Experiment exp,
-			NGLObject input, PropertyDefinition pd, Object currentValue, Object newValue) {
+	private void updateOutputContainers(Experiment exp,	NGLObject input, PropertyDefinition pd, Object currentValue, Object newValue) {
 		exp.atomicTransfertMethods
 			.stream()
 			.filter(atm -> atm.outputContainerUseds != null)
@@ -106,23 +107,23 @@ public class ExperimentUpdate extends AbstractUpdate<Experiment>{
 			.map(ocu -> ocu.contents)
 			.flatMap(List::stream)
 			.filter(content -> {
-				if(input.projectCode.equals(content.projectCode) &&
+				// return cond instead
+				if (input.projectCode.equals(content.projectCode) &&
 						input.sampleCode.equals(content.sampleCode) &&
 						content.properties.containsKey(input.contentPropertyNameUpdated) && 
 						currentValue.equals(ValidationHelper.convertStringToType(pd.valueType, content.properties.get(input.contentPropertyNameUpdated).value.toString()))){
 							return true;
-					}else{
+					} else {
 						return false;
 					}
 			})
 			.forEach(content ->{
-				content.properties.get(input.contentPropertyNameUpdated).value = newValue;
+				// content.properties.get(input.contentPropertyNameUpdated).value = newValue;
+				content.properties.get(input.contentPropertyNameUpdated).assignValue(newValue);
 			});
-		
 	}
 	
-	private void updateOutputExperimentProperties(Experiment exp,
-			NGLObject input, PropertyDefinition pd, Object currentValue, Object newValue) {
+	private void updateOutputExperimentProperties(Experiment exp, NGLObject input, PropertyDefinition pd, Object currentValue, Object newValue) {
 		exp.atomicTransfertMethods
 			.stream()
 			.filter(atm -> atm.outputContainerUseds != null)			
@@ -133,7 +134,8 @@ public class ExperimentUpdate extends AbstractUpdate<Experiment>{
 			.flatMap(Set::stream)
 			.filter(entry -> (entry.getKey().equals(input.contentPropertyNameUpdated) && ValidationHelper.convertStringToType(pd.valueType, entry.getValue().value.toString()).equals(currentValue)))
 			.forEach(entry ->{
-				entry.getValue().value = newValue;
+				// entry.getValue().value = newValue;
+				entry.getValue().assignValue(newValue);
 			});					
 	}
 

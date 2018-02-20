@@ -21,28 +21,24 @@ import validation.utils.ValidationHelper;
 
 public class SampleValidationHelper extends CommonValidationHelper {
 
-	public static void validateSampleCategoryCode(String categoryCode,
-			                                      ContextValidation contextValidation) {
+	public static void validateSampleCategoryCode(String categoryCode, ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "categoryCode", SampleCategory.find,false);
 	}
 
 	public static void validateSampleType(String typeCode,
 										  String importTypeCode, 
-										  Map<String, PropertyValue> properties,
+										  Map<String, PropertyValue<?>> properties,
 										  ContextValidation contextValidation) {
 
 		List<PropertyDefinition> proDefinitions = new ArrayList<PropertyDefinition>();
-
 		SampleType sampleType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", SampleType.find,true);
-		if(sampleType!=null ){
+		if (sampleType != null) {
 			proDefinitions.addAll(sampleType.getPropertiesDefinitionDefaultLevel());				
 		}
-
 		ImportType importType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, importTypeCode,"importTypeCode", ImportType.find,true);
-		if(importType!=null){
+		if (importType != null) {
 			proDefinitions.addAll(importType.getPropertiesDefinitionSampleLevel());			
 		}
-
 		if(proDefinitions.size() > 0){
 			ValidationHelper.validateProperties(contextValidation,properties, proDefinitions,false); //need false because we generate sample from another sample
 		}

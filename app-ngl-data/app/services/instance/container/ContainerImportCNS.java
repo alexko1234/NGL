@@ -125,7 +125,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 	 * @throws DAOException
 	 */
 	public	static void createContainers(ContextValidation contextError, String sqlContainer,String containerCategoryCode,  String containerStateCode, String experimentTypeCode, String sqlContent) throws SQLException, DAOException{
-		String rootKeyName=null;
+		String rootKeyName = null;
 	
 		List<Container> containers=	limsServices.findContainersToCreate(sqlContainer,contextError, containerCategoryCode,containerStateCode,experimentTypeCode);
 	
@@ -134,15 +134,14 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		ContainerImportCNS.saveSampleFromContainer(contextError,containers,sqlContent);
 		
 		Map<String,PropertyValue<String>> propertiesContainerSupports=new HashMap<String, PropertyValue<String>>();
-		Set<String> supportContainers=new HashSet<String>();
-		for(Container container : containers){
+		Set<String> supportContainers = new HashSet<String>();
+		for (Container container : containers) {
 			if(!propertiesContainerSupports.containsKey(container.support.code) && container.properties.get("sequencingProgramType")!=null){
-				propertiesContainerSupports.put(container.support.code, container.properties.get("sequencingProgramType"));
+				// propertiesContainerSupports.put(container.support.code, container.properties.get("sequencingProgramType"));
+				propertiesContainerSupports.put(container.support.code, (PropertyValue<String>)container.properties.get("sequencingProgramType"));
 				container.properties.remove("sequencingProgramType");
 			}
-			
 			supportContainers.add(container.support.code);
-			
 		}
 
 		//List of other containers also in NGL associed to support to create 
@@ -154,7 +153,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 	
 		List<Container> newContainers=new ArrayList<Container>();
 		
-		for(Container container:containers){
+		for (Container container:containers) {
 			//Logger.debug("Container :"+container.code+ "nb sample code"+container.sampleCodes.size());
 			rootKeyName="container["+container.code+"]";
 			contextError.addKeyToRootKeyName(rootKeyName);
@@ -164,7 +163,6 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 			}
 			contextError.removeKeyFromRootKeyName(rootKeyName);
 		}
-		
 		
 		//Update traceInformation.creationDate
 		//for(ContainerSupport cs:containerSupports){
@@ -272,7 +270,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		
 		container.support=ContainerSupportHelper.getContainerSupport(container.categoryCode, rs.getInt("nbContainer"), rs.getString("codeSupport"), rs.getString("column"), rs.getString("line"),storageCode);
 
-		container.properties= new HashMap<String, PropertyValue>();
+		container.properties = new HashMap<>(); // <String, PropertyValue>();
 		container.properties.put("limsCode",new PropertySingleValue(rs.getInt("limsCode")));
 		if(rs.getString("sequencingProgramType")!=null)
 			container.properties.put("sequencingProgramType", new PropertySingleValue(rs.getString("sequencingProgramType")));
@@ -312,74 +310,56 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 			if(rs.getString("measuredSize")!=null){
 			container.size=new PropertySingleValue(rs.getInt("measuredSize"), mesuredSizeUnit);
 			}
-		}catch(SQLException e){
-			
+		} catch(SQLException e) {	
 		}
-
-		List<QualityControlResult> qualityControlResults=new ArrayList<QualityControlResult>();
-		try{
+		// List<QualityControlResult> qualityControlResults = new ArrayList<QualityControlResult>();
+		try {
 			if(rs.getString("concentrationTypeCode")!=null){
-				QualityControlResult qcConcentrationResult=new QualityControlResult();
-				qcConcentrationResult.typeCode=rs.getString("concentrationTypeCode");
+				QualityControlResult qcConcentrationResult = new QualityControlResult();
+				qcConcentrationResult.typeCode   = rs.getString("concentrationTypeCode");
 				qcConcentrationResult.code=qcConcentrationResult.typeCode+"_"+container.code;
-				qcConcentrationResult.properties=new HashMap<String, PropertyValue>();
+				qcConcentrationResult.properties = new HashMap<>(); // <String, PropertyValue>();
 				qcConcentrationResult.properties.put("concentration1", container.concentration);
-				qcConcentrationResult.date=rs.getDate("concentrationDate");
+				qcConcentrationResult.date       = rs.getDate("concentrationDate");
 				container.qualityControlResults.add(qcConcentrationResult);
 				}
 			}catch(SQLException e){
 			
 		}
-		try{
-			
-			if(rs.getString("sizeTypeCode")!=null){
-			
-				QualityControlResult qcSizeResult=new QualityControlResult();
-				qcSizeResult.typeCode=rs.getString("sizeTypeCode");
-				qcSizeResult.code=qcSizeResult.typeCode+"_"+container.code;
-				qcSizeResult.properties=new HashMap<String, PropertyValue>();
+		try {
+			if (rs.getString("sizeTypeCode") != null) {
+				QualityControlResult qcSizeResult = new QualityControlResult();
+				qcSizeResult.typeCode   = rs.getString("sizeTypeCode");
+				qcSizeResult.code       = qcSizeResult.typeCode + "_" + container.code;
+				qcSizeResult.properties = new HashMap<>(); // <String, PropertyValue>();
 				qcSizeResult.properties.put("insertSize", container.size);
-				qcSizeResult.date=rs.getDate("sizeDate");
+				qcSizeResult.date       = rs.getDate("sizeDate");
 				container.qualityControlResults.add(qcSizeResult);
 			}
-		}catch(SQLException e){
-			
+		} catch(SQLException e) {
 		}
-		
-		
-		if(null != experimentTypeCode){
-			container.fromTransformationTypeCodes=new HashSet<String>();
+		if (experimentTypeCode != null) {
+			container.fromTransformationTypeCodes = new HashSet<String>();
 			container.fromTransformationTypeCodes.add(experimentTypeCode);	
 		}
-		
-		container.projectCodes=new HashSet<String>();					
-
-		if(rs.getString("project")!=null)
-		{					
+		container.projectCodes = new HashSet<String>();					
+		if (rs.getString("project") != null) 					
 			container.projectCodes.add(rs.getString("project"));
-		}
-		
-		if(rs.getString("controlLane")!=null){
+		if (rs.getString("controlLane") != null)
 			container.properties.put("controlLane",new PropertySingleValue(rs.getBoolean("controlLane")));
-		}
-			
-
 		container.sampleCodes=new HashSet<String>();
-
-		if(rs.getString("sampleCode")!=null){
-			
-			Content sampleUsed=new Content();
-			sampleUsed.percentage=100.0;
-			sampleUsed.sampleCode=rs.getString("sampleCode");
-			if(rs.getString("project")!=null) {					
+		if (rs.getString("sampleCode") != null) {
+			Content sampleUsed = new Content();
+			sampleUsed.percentage = 100.0;
+			sampleUsed.sampleCode = rs.getString("sampleCode");
+			if (rs.getString("project") != null)					
 				sampleUsed.projectCode = rs.getString("project");
-			}
 			//TODO add projectCode
 			//Todo replace by method in containerHelper who update sampleCodes from contents
 			container.sampleCodes.add(rs.getString("sampleCode"));
 
 			if(rs.getString("tag")!=null){
-				sampleUsed.properties = new HashMap<String, PropertyValue>();
+				sampleUsed.properties = new HashMap<>(); // <String, PropertyValue<?>>();
 				sampleUsed.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
 				sampleUsed.properties.put("tagCategory",new PropertySingleValue(rs.getString("tagCategory")));
 			}
@@ -395,12 +375,9 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 			if(rs.getString("sampleAliquoteCode") !=null){
 				sampleUsed.properties.put("sampleAliquoteCode", new PropertySingleValue(rs.getString("sampleAliquoteCode")));
 			}
-			
 			container.contents.add(sampleUsed);
-
 		}
 		return container;
-
 	}
 
 }

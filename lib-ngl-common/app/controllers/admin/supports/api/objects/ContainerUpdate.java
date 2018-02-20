@@ -83,7 +83,8 @@ public class ContainerUpdate extends AbstractUpdate<Container>{
 				}
 			})
 			.forEach(c -> {
-				c.properties.get(input.contentPropertyNameUpdated).value = newValue;
+				// c.properties.get(input.contentPropertyNameUpdated).value = newValue;
+				c.properties.get(input.contentPropertyNameUpdated).assignValue(newValue);
 			});
 		
 	}

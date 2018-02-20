@@ -87,11 +87,11 @@ public class LaneValidationHelper extends CommonValidationHelper {
 		
 	}
 
-	public static void validationLaneProperties(Map<String, PropertyValue> properties,	ContextValidation contextValidation) {
+	public static void validationLaneProperties(Map<String, PropertyValue<?>> properties,	ContextValidation contextValidation) {
 		Run run = getRunFromContext(contextValidation);
 		try {
 			RunType  runType = RunType.find.findByCode(run.typeCode);
-			if(null != runType){
+			if (runType != null) {
 				contextValidation.addKeyToRootKeyName("properties");
 				ValidationHelper.validateProperties(contextValidation, properties, runType.getPropertyDefinitionByLevel(Level.CODE.Lane), true);
 				contextValidation.removeKeyFromRootKeyName("properties");
@@ -105,8 +105,7 @@ public class LaneValidationHelper extends CommonValidationHelper {
 		return getObjectFromContext("run", Run.class, contextValidation);
 	}
 
-	public static void validateLaneValuation(Valuation valuation,
-			ContextValidation contextValidation) {
+	public static void validateLaneValuation(Valuation valuation, ContextValidation contextValidation) {
 		Run run = getRunFromContext(contextValidation);
 		validateValuation(run.typeCode, valuation, contextValidation);	
 		

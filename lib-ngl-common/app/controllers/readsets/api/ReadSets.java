@@ -696,7 +696,7 @@ public class ReadSets extends ReadSetsController {
         Form<ReadSet> filledForm = getFilledForm(readSetForm, ReadSet.class);
         ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 
-        Map<String, PropertyValue> properties = filledForm.get().properties;
+        Map<String, PropertyValue<?>> properties = filledForm.get().properties;
         ctxVal.setUpdateMode();
         ReadSetValidationHelper.validateReadSetType(readSet.typeCode, properties, ctxVal);
 
@@ -738,7 +738,7 @@ public class ReadSets extends ReadSetsController {
                     ReadSet readSet = getReadSet(element.data.code);
                     if(null != readSet){
                         ContextValidation ctxVal = new ContextValidation(user, filledForm.errors()); 
-                        Map<String, PropertyValue> properties = element.data.properties;
+                        Map<String, PropertyValue<?>> properties = element.data.properties;
                         ctxVal.setUpdateMode();
                         ReadSetValidationHelper.validateReadSetType(readSet.typeCode, properties, ctxVal);
 

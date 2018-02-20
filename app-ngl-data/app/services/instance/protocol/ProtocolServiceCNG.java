@@ -220,15 +220,12 @@ public class ProtocolServiceCNG {
 	strandOrientation	?	?	reverse	reverse	forward	reverse
 	cDNAsynthesisType	?	?	?	?	?	?
 	 */
-		@SafeVarargs
-		private static Map<String, PropertyValue> concatMap(
-				Map<String, PropertyValue>...map) {
-			Map<String, PropertyValue> mapFinal = new HashMap<String, PropertyValue>(map.length);
-			for(int i = 0 ; i < map.length; i++){
-				mapFinal.putAll(map[i]);
-			}
-			return mapFinal;
-		}
-	
-	
+	@SafeVarargs
+	private static Map<String, PropertyValue<?>> concatMap(Map<String, PropertyValue<?>>... map) {
+		Map<String, PropertyValue<?>> mapFinal = new HashMap<>(map.length); // <String, PropertyValue<?>>(map.length);
+		for (int i = 0 ; i < map.length; i++)
+			mapFinal.putAll(map[i]);
+		return mapFinal;
+	}
+		
 }

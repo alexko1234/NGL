@@ -403,7 +403,7 @@ public class Analyses extends DocumentController<Analysis> {
 		}
 			
 		Form<Analysis> filledForm = getMainFilledForm();
-		Map<String, PropertyValue> properties = filledForm.get().properties;
+		Map<String, PropertyValue<?>> properties = filledForm.get().properties;
 		
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 		ctxVal.setUpdateMode();
@@ -433,7 +433,7 @@ public class Analyses extends DocumentController<Analysis> {
 			Analysis objectInDB = getObject(element.data.code);
 			if(null != objectInDB){
 				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
-				Map<String, PropertyValue> properties = element.data.properties;
+				Map<String, PropertyValue<?>> properties = element.data.properties;
 				ctxVal.setUpdateMode();
 				//TODO AnalysisValidationHelper.validateAnalysisType(objectInDB.typeCode, properties, ctxVal);
 				if (!ctxVal.hasErrors()) {

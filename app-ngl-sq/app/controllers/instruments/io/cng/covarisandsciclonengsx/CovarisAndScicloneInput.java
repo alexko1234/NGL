@@ -132,7 +132,7 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 				.stream()
 				.map(atm -> atm.inputContainerUseds.get(0))
 				.forEach(icu -> {
-					if(!results.containsKey(getCodePosition(icu.code))){
+					if (!results.containsKey(getCodePosition(icu.code))) {
 						contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.tag.missing",getCodePosition(icu.code));
 					}
 				});
@@ -140,7 +140,7 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 		
 		// set tag et tag Categorie ...
 		Logger.info ("updating experimentProperties => set tag and tagCatgory");
-		if(!contextValidation.hasErrors()){
+		if (!contextValidation.hasErrors()) {
 			experiment.atomicTransfertMethods
 				.stream()
 				.forEach(atm -> {	
@@ -149,7 +149,8 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 					String icupos=getCodePosition(icu.code);
 					
 					// BUG: 25/01/2017 !! verifier d'abord si experimentProperties existe ! sinon la creer
-					if(null == ocu.experimentProperties) ocu.experimentProperties = new HashMap<String,PropertyValue>(0);
+					if (ocu.experimentProperties == null) 
+						ocu.experimentProperties = new HashMap<>(); // <String,PropertyValue>(0);
 					
 					PropertySingleValue tagPsv = new PropertySingleValue();
 					// !!! ce n'est pas le nom de l'index qui est dans results mais le code.
