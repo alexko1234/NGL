@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
+//import javax.inject.Inject;
 
 import play.Logger;
 import play.data.validation.ValidationError;
@@ -26,8 +26,8 @@ import services.description.run.TreatmentService;
 import services.description.sample.ImportService;
 import services.description.sample.SampleService;
 // import controllers.APICommonController;
-import fr.cea.ig.ngl.NGLApplication;
-import fr.cea.ig.ngl.NGLController;
+//import fr.cea.ig.ngl.NGLApplication;
+//import fr.cea.ig.ngl.NGLController;
 // import controllers.CommonController;
 // import controllers.NGLBaseController;
 // import fr.cea.ig.play.NGLContext;
