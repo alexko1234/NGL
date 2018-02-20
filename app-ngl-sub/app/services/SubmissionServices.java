@@ -1,16 +1,14 @@
 package services;
 
 //import static fr.cea.ig.play.IGGlobals.ws;
-
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+//import java.text.DateFormat;
+//import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
+// import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+// import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
@@ -25,7 +23,7 @@ import workflows.sra.submission.SubmissionWorkflowsHelper;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
-import models.laboratory.common.instance.TraceInformation;
+// import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.InstrumentUsed;
 import models.laboratory.run.instance.Lane;
@@ -47,7 +45,7 @@ import models.sra.submit.sra.instance.ReadSpec;
 import models.sra.submit.sra.instance.Run;
 import models.sra.submit.util.SraCodeHelper;
 import models.sra.submit.util.SraException;
-import models.sra.submit.util.SraParameter;
+// import models.sra.submit.util.SraParameter;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import fr.cea.ig.MongoDBDAO;
@@ -62,8 +60,8 @@ import java.nio.file.Paths;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.time.DateUtils;
+// import org.apache.commons.collections.CollectionUtils;
+// import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -85,8 +83,6 @@ import org.xml.sax.SAXException;
 // import play.libs.ws.WS;
 import play.libs.ws.WSResponse;
 //import specs2.run;
-
-
 
 public class SubmissionServices {
 	
@@ -180,7 +176,8 @@ public class SubmissionServices {
 		
 		// equivalent de activate :
 		
-		File dirSubmission = createDirSubmission(submission);
+		// File dirSubmission = 
+				createDirSubmission(submission);
 		// Avancer le status de submission et study à IW-SUB-R
 		State state = new State("IW-SUB-R", user);
 		submissionWorkflows.setState(contextValidation, submission, state);
@@ -200,11 +197,10 @@ public class SubmissionServices {
 	}
 	
 	private Submission createSubmissionEntityforRelease(Study study, String user, List<String> projectCodes) throws SraException{
-		
 		Submission submission = null;
-		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
+		// DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
 		Date courantDate = new java.util.Date();
-		String st_my_date = dateFormat.format(courantDate);	
+		// String st_my_date = dateFormat.format(courantDate);	
 		submission = new Submission(user, projectCodes);
 		submission.code = SraCodeHelper.getInstance().generateSubmissionCode(projectCodes);
 		submission.creationDate = courantDate;
@@ -276,7 +272,7 @@ public class SubmissionServices {
 		Configuration config = MongoDBDAO.findByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, configCode);
 		
 		Study study = null;
-		ExternalStudy uniqExternalStudy = null;
+		// ExternalStudy uniqExternalStudy = null;
 		
 		if (config == null) {
 			throw new SraException("Configuration " + configCode + " n'existe pas dans database");
@@ -310,7 +306,8 @@ public class SubmissionServices {
 			}
 		} else if (config.strategyStudy.equalsIgnoreCase("strategy_external_study")) {
 			if (StringUtils.isNotBlank(acStudy)) {
-				uniqExternalStudy = fetchExternalStudy(acStudy, user);
+//				uniqExternalStudy = 
+						fetchExternalStudy(acStudy, user);
 			} else {
 				if (StringUtils.isNotBlank(studyCode)){
 					throw new SraException("Configuration " + config.code + " avec strategy_external_study incompatible avec studyCode renseigne : '" + studyCode +"'");
@@ -323,13 +320,14 @@ public class SubmissionServices {
 			throw new SraException("Configuration " + config.code + " avec strategy_study = '"+ config.strategyStudy + "' (valeur non attendue)");
 		}
 		
-		ExternalSample uniqExternalSample = null;
-		Sample uniqSample = null;
+//		ExternalSample uniqExternalSample = null;
+//		Sample uniqSample = null;
 
 		if (config.strategySample.equalsIgnoreCase("strategy_external_sample")) {
 			//System.out.println ("Dans init, cas strategy_external_sample");
 			if (StringUtils.isNotBlank(acSample)) {
-				uniqExternalSample = fetchExternalSample(acSample, user);
+//				uniqExternalSample = 
+						fetchExternalSample(acSample, user);
 			} else {
 				if (mapUserClones== null || mapUserClones.isEmpty()){
 					throw new SraException("Configuration " + config.code + "avec configuration.strategy_sample='strategy_external_sample' incompatible avec acSample nul et mapUserClone non renseigné");
@@ -340,8 +338,11 @@ public class SubmissionServices {
 		if (config.strategySample.equalsIgnoreCase("strategy_internal_sample")) {
 			if (StringUtils.isNotBlank(acSample)) {
 				//System.out.println ("Dans init, cas strategy_internal_sample");
-				uniqSample = MongoDBDAO.findOne(InstanceConstants.SRA_SAMPLE_COLL_NAME,
-						Sample.class, DBQuery.and(DBQuery.is("accession", acSample)));
+//				uniqSample =
+							 MongoDBDAO.findOne(InstanceConstants.SRA_SAMPLE_COLL_NAME,
+						                        Sample.class, 
+//						                        DBQuery.and(DBQuery.is("accession", acSample)));
+						                        DBQuery.is("accession", acSample));
 			} /*else {
 				if (mapUserClones== null || mapUserClones.isEmpty()){
 					throw new SraException("Configuration " + config.code + "avec configuration.strategy_sample='strategy_external_sample' incompatible avec mapUserClone non renseigné");
@@ -349,7 +350,6 @@ public class SubmissionServices {
 			}*/
 		} 
 		
-
 		// Verifier que tous les readSetCode passes en parametres correspondent bien a des objets en base avec
 		// submissionState='NONE' cad des readSets qui n'interviennent dans aucune soumission.
 		List <ReadSet> readSets = new ArrayList<ReadSet>();
@@ -412,7 +412,7 @@ public class SubmissionServices {
 			// des samples et des experiments 
 			String laboratorySampleCode = readSet.sampleCode;
 			models.laboratory.sample.instance.Sample laboratorySample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, models.laboratory.sample.instance.Sample.class, laboratorySampleCode);
-			String taxonId = laboratorySample.taxonCode;
+//			String taxonId = laboratorySample.taxonCode;
 			String scientificName = laboratorySample.ncbiScientificName;
 			if (StringUtils.isBlank(scientificName)){
 				//scientificName=updateLaboratorySampleForNcbiScientificName(taxonId, contextValidation);
@@ -830,11 +830,11 @@ public class SubmissionServices {
 	
 	public File createDirSubmission(Submission submission) throws SraException{
 		// Determiner le repertoire de soumission:
-		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
-		Date courantDate = new java.util.Date();
-		String st_my_date = dateFormat.format(courantDate);
+		//DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
+		//Date courantDate = new java.util.Date();
+		//String st_my_date = dateFormat.format(courantDate);
 					
-		String syntProjectCode = submission.code;
+		//String syntProjectCode = submission.code;
 		/*
 		for (String projectCode: submission.projectCodes) {
 			if (StringUtils.isNotBlank(projectCode)) {
@@ -875,7 +875,8 @@ public class SubmissionServices {
 		String user = contextValidation.getUser();
 		try {
 			// creation repertoire de soumission :
-			File dataRep = createDirSubmission(submission);
+//			File dataRep = 
+					createDirSubmission(submission);
 			// creation liens donnees brutes vers repertoire de soumission
 			for (String experimentCode: submission.experimentCodes) {
 				Experiment expElt =  MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
@@ -982,14 +983,14 @@ public class SubmissionServices {
 		
 	
 	//private Submission createSubmissionEntity(Configuration config, String studyCode, String user, Map<String, UserCloneType> mapUserClones) throws SraException{
-	private Submission createSubmissionEntity(Configuration config, String studyCode, String studyAc, String user) throws SraException{
+	private Submission createSubmissionEntity(Configuration config, String studyCode, String studyAc, String user) throws SraException {
 		if (config==null) {
 			throw new SraException("SubmissionServices::createSubmissionEntity::configuration : config null ???");
 		}
 		Submission submission = null;
-		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
+		//DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
 		Date courantDate = new java.util.Date();
-		String st_my_date = dateFormat.format(courantDate);	
+		//String st_my_date = dateFormat.format(courantDate);	
 		submission = new Submission(user, config.projectCodes);
 		submission.code = SraCodeHelper.getInstance().generateSubmissionCode(config.projectCodes);
 		submission.creationDate = courantDate;
@@ -1000,15 +1001,11 @@ public class SubmissionServices {
 		submission.configCode = config.code;
 		// Creation de la map deportéé dans methode initPrimarySubmission pour ne mettre dans la map
 		// que les noms de clones utilisee par la soumission
-
-		
 		if (config.strategyStudy.equalsIgnoreCase("strategy_external_study")) {
 			// pas de study à soumettre et par defaut pas de release.
 			// ok submission.release == false et submission sans studyCode.
 		} else if (config.strategyStudy.equalsIgnoreCase("strategy_internal_study")) {
-		
 			Study study = null;
-			
 			if (StringUtils.isNotBlank(studyAc)) {
 				study = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME,
 						Study.class, DBQuery.and(DBQuery.is("accession", studyAc)));
@@ -1017,11 +1014,10 @@ public class SubmissionServices {
 			} else {
 				// rien : cela peut etre une soumission avec mapCloneToAc
 			}
-			if (study!=null){
+			if (study != null) {
 				if (study.state == null) {
 					throw new SraException("study.state== null incompatible avec soumission. =>  study.state.code in ('N','F-SUB')");
 				}
-			
 				// mettre à jour l'objet submission pour le study  :
 				if (! submission.refStudyCodes.contains("study.code")){
 					submission.refStudyCodes.add(study.code);
@@ -1096,8 +1092,8 @@ public class SubmissionServices {
 		String clone = laboratorySample.referenceCollab;
 		String taxonId = laboratorySample.taxonCode;
 
-		String laboratoryRunCode = readSet.runCode;
-		models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
+		//String laboratoryRunCode = readSet.runCode;
+		// models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
 
 		String codeSample = SraCodeHelper.getInstance().generateSampleCode(readSet, readSet.projectCode, strategySample);
 		Sample sample = null;
@@ -1122,7 +1118,6 @@ public class SubmissionServices {
 			sample.state = new State("N", user);
 			sample.traceInformation.setTraceInformation(user);			
 		}
-		
 		System.out.println("readSetCode = " + readSet.code);
 		System.out.println("laboratorySampleCode = " + laboratorySampleCode);
 		System.out.println("laboratorySampleName = " + laboratorySampleName);
@@ -1264,12 +1259,12 @@ public class SubmissionServices {
 				if ( resultsMapping != null && (resultsMapping.containsKey("pairs"))){
 					Map<String, PropertyValue<?>> pairs = resultsMapping.get("pairs");
 					if (pairs != null) {
-						Set <String> listKeysMapping = pairs.keySet();  // Obtenir la liste des clés
-						for(String k: listKeysMapping) {
-							//System.out.print("coucou cle = '" + k+"'  => ");
-							PropertyValue<?> propertyValue = pairs.get(k);
-							//System.out.println(propertyValue.value);
-						}
+//						Set <String> listKeysMapping = pairs.keySet();  // Obtenir la liste des clés
+//						for(String k: listKeysMapping) {
+//							//System.out.print("coucou cle = '" + k+"'  => ");
+//							// PropertyValue<?> propertyValue = pairs.get(k);
+//							//System.out.println(propertyValue.value);
+//						}
 						if (pairs.containsKey("estimatedPEInsertSize")) {
 							PropertyValue<?> estimatedInsertSize = pairs.get("estimatedPEInsertSize");
 							experiment.libraryLayoutNominalLength = (Integer) estimatedInsertSize.value;
@@ -1282,8 +1277,7 @@ public class SubmissionServices {
 						}	
 					}
 				}
-			}
-			
+			}		
 			if (experiment.libraryLayoutNominalLength == null) {
 				// mettre valeur theorique de libraryLayoutNominalLength (valeur a prendre dans readSet.sampleOnContainer.properties.nominalLength) 
 				// voir recup un peu plus bas:
@@ -1301,7 +1295,7 @@ public class SubmissionServices {
 
 					if (sampleOnContainerProperties.containsKey("libLayoutNominalLength")) {	
 						//System.out.println("recherche valeur theorique possible");
-						PropertyValue nominalLengthTypeCode = sampleOnContainerProperties.get("libLayoutNominalLength");
+						PropertyValue<?> nominalLengthTypeCode = sampleOnContainerProperties.get("libLayoutNominalLength");
 						Integer nominalLengthCodeValue = (Integer) nominalLengthTypeCode.value;
 						if ((nominalLengthCodeValue != null) && (nominalLengthCodeValue!= -1)){
 							experiment.libraryLayoutNominalLength = nominalLengthCodeValue;
@@ -1314,13 +1308,14 @@ public class SubmissionServices {
 		//System.out.println("valeur de experiment.libLayoutExpLength"+ experiment.libraryLayoutNominalLength);			
 		experiment.state = new State("N", user); 
 		String laboratorySampleCode = readSet.sampleCode;
-		models.laboratory.sample.instance.Sample laboratorySample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, models.laboratory.sample.instance.Sample.class, laboratorySampleCode);
-		String taxonId = laboratorySample.taxonCode;
+		// models.laboratory.sample.instance.Sample laboratorySample = 
+				MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, models.laboratory.sample.instance.Sample.class, laboratorySampleCode);
+		// String taxonId = laboratorySample.taxonCode;
 		//System.out.println("sampleCode=" +laboratorySampleCode); 
 		//System.out.println("taxonId=" +taxonId); 
 		//String laboratoryRunCode = readSet.runCode;
 		//models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
-		String technology = laboratoryRun.instrumentUsed.typeCode;
+		// String technology = laboratoryRun.instrumentUsed.typeCode;
 		
 		if( ! "rsnanopore".equalsIgnoreCase(readSet.typeCode)){
 			// Recuperer l'information spotLength pour les illumina
@@ -1329,7 +1324,7 @@ public class SubmissionServices {
 				Map <String, Map<String, PropertyValue<?>>> resultsNgsrg = treatmentNgsrg.results();
 				if (resultsNgsrg != null && resultsNgsrg.containsKey("default")) {
 					Map<String, PropertyValue<?>> ngsrg = resultsNgsrg.get("default");
-					Set <String> listKeys = ngsrg.keySet();  // Obtenir la liste des clés
+					//Set <String> listKeys = ngsrg.keySet();  // Obtenir la liste des clés
 					/*for(String k: listKeys){
 					System.out.print("cle = " + k);
 					PropertyValue propertyValue = ngsrg.get(k);
@@ -1377,7 +1372,7 @@ public class SubmissionServices {
 						} */
 							
 							if (sampleOnContainerProperties.containsKey("libProcessTypeCode")) {					
-								PropertyValue libProcessTypeCode = sampleOnContainerProperties.get("libProcessTypeCode");
+								PropertyValue<?> libProcessTypeCode = sampleOnContainerProperties.get("libProcessTypeCode");
 								String libProcessTypeCodeValue = (String) libProcessTypeCode.value;
 								/*if(libProcessTypeCodeValue.equalsIgnoreCase("A")||libProcessTypeCodeValue.equalsIgnoreCase("C")||libProcessTypeCodeValue.equalsIgnoreCase("N")){
 									experiment.libraryLayoutOrientation = "reverse-forward";
@@ -1427,7 +1422,7 @@ public class SubmissionServices {
 						models.laboratory.run.instance.Treatment laneTreatment = (ll.treatments.get("ngsrg"));
 						Map<String, Map<String, PropertyValue<?>>> laneResults = laneTreatment.results();
 						Map<String, PropertyValue<?>> lanengsrg = laneResults.get("default");
-						Set<String> laneListKeys = lanengsrg.keySet();  // Obtenir la liste des clés
+						// Set<String> laneListKeys = lanengsrg.keySet();  // Obtenir la liste des clés
 						/*for(String k: laneListKeys) {
 							System.out.println("attention cle = " + k);
 							PropertyValue propertyValue = lanengsrg.get(k);
@@ -1440,9 +1435,8 @@ public class SubmissionServices {
 				}
 			}
 		}
-		System.out.println("'"+readSet.code+"'");
+		System.out.println("'" + readSet.code + "'");
 		experiment.readSpecs = new ArrayList<ReadSpec>();
-		
 		if( ! "rsnanopore".equalsIgnoreCase(readSet.typeCode)){
 			// IF ILLUMINA ET SINGLE  Attention != si nanopore et SINGLE
 			if (StringUtils.isNotBlank(experiment.libraryLayout) && experiment.libraryLayout.equalsIgnoreCase("SINGLE") ) {
@@ -1454,7 +1448,6 @@ public class SubmissionServices {
 				readSpec_1.baseCoord = (Integer) 1;
 				experiment.readSpecs.add(readSpec_1);
 			}
-
 			// IF ILLUMINA ET PAIRED ET "forward-reverse"
 			if (StringUtils.isNotBlank(experiment.libraryLayout) && experiment.libraryLayout.equalsIgnoreCase("PAIRED") 
 					&& StringUtils.isNotBlank(experiment.libraryLayoutOrientation) && experiment.libraryLayoutOrientation.equalsIgnoreCase("forward-reverse") ) {
@@ -1500,9 +1493,6 @@ public class SubmissionServices {
 		return experiment;
 	}
 
-	
-
-
 	public Run createRunEntity(ReadSet readSet) {
 		// On cree le run pour le readSet demandé.
 		// La validite du readSet doit avoir été testé avant.
@@ -1510,8 +1500,9 @@ public class SubmissionServices {
 		// Recuperer pour le readSet la liste des fichiers associés:
 
 		String laboratoryRunCode = readSet.runCode;
-		models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
-		InstrumentUsed instrumentUsed = laboratoryRun.instrumentUsed;
+//		models.laboratory.run.instance.Run  laboratoryRun = 
+				MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
+		// InstrumentUsed instrumentUsed = laboratoryRun.instrumentUsed;
 		
 		List <models.laboratory.run.instance.File> list_files =  readSet.files;
 		if (list_files == null) {
@@ -1552,14 +1543,13 @@ public class SubmissionServices {
 						System.out.println("Recuperation du md5 pour" + rawData.relatifName +"= " + rawData.md5);
 					}
 					run.listRawData.add(rawData);
-					Set<String> listKeys = runInstanceFile.properties.keySet();
-					
-					for(String k: listKeys) {
-						//System.out.println("attention cle = " + k);
-						PropertyValue propertyValue = runInstanceFile.properties.get(k);
-						//System.out.println(propertyValue.toString());
-						//System.out.println(propertyValue.value);
-					}
+//					Set<String> listKeys = runInstanceFile.properties.keySet();					
+//					for(String k: listKeys) {
+//						//System.out.println("attention cle = " + k);
+//						PropertyValue<?> propertyValue = runInstanceFile.properties.get(k);
+//						//System.out.println(propertyValue.toString());
+//						//System.out.println(propertyValue.value);
+//					}
 			}
 		}
 		return run;

@@ -14,25 +14,24 @@ import org.mongojack.DBQuery;
 
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.test.WSHelper;
-import models.laboratory.common.instance.property.PropertySingleValue;
+//import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
 import ngl.bi.AbstractBIServerTest;
 import play.Logger;
-import play.libs.Json;
+//import play.libs.Json;
 import play.libs.ws.WSResponse;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class ArchiveTest extends AbstractBIServerTest{
+public class ArchiveTest extends AbstractBIServerTest {
 
 	static List<ReadSet> readSets;
 	static ReadSet readSet;
 	
 	@BeforeClass
-	public static void initData()
-	{	
+	public static void initData() {	
 
 		List<Run> runs  = MongoDBDAO.find("ngl_bi.RunIllumina_dataWF", Run.class, DBQuery.exists("properties.libProcessTypeCodes")).toList();
 		for(Run runDB : runs){

@@ -61,7 +61,7 @@ public class TraceInformation implements IValidation {
 	 * @deprecated bogus behavior when the creation user has not been properly set, replaced by {@link #creationStamp(ContextValidation,String)} {@link #modificationStamp(ContextValidation,String)}
 	 * @param user user name
 	 */
-	@Deprecated 
+	// @Deprecated 
 	@JsonIgnore
 	public void setTraceInformation(String user) {
 		if (createUser == null) {
