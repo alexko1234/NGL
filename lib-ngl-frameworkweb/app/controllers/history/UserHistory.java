@@ -2,7 +2,7 @@ package controllers.history;
 
 // import play.api.Configuration;
 // import com.typesafe.config.Config;
-import fr.cea.ig.play.IGConfig;
+// import fr.cea.ig.play.IGConfig;
 // import play.Logger;
 // import play.Play;
 import play.libs.Json;
@@ -19,6 +19,7 @@ import fr.cea.ig.MongoDBDAO;
 // import play.libs.F;
 //import play.libs.F.Function0;
 //import play.libs.F.Promise;
+import fr.cea.ig.lfw.LFWConfig;
 
 import javax.inject.Inject;
 
@@ -45,20 +46,21 @@ public class UserHistory extends Action.Simple {
 	 * Configuration path for user action tracing.
 	 */
 	public static final String USER_ACTION_TRACE_PATH = "useraction.trace";
+	
 	/**
 	 * Configuration.
 	 */
-	private final IGConfig config;
+	// private final IGConfig config;
+	private final LFWConfig config;
 	
 	/**
 	 * Constructor.
 	 * @param config play configuration to use
 	 */
 	@Inject
-	public UserHistory(IGConfig config) {
+	public UserHistory(LFWConfig config) {
 		this.config = config;
 	}
-	
 	
 	@Override
 	//function called by play
