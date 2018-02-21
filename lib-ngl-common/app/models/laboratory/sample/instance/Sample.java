@@ -22,9 +22,9 @@ import validation.ContextValidation;
 import validation.IValidation;
 import validation.sample.instance.SampleValidationHelper;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+//import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonValue;
+//import com.fasterxml.jackson.annotation.JsonValue;
 
 import controllers.ICommentable;
 import fr.cea.ig.DBObject;

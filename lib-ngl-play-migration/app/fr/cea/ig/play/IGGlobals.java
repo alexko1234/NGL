@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 // import play.Application;
 // TODO: use something like:
-// import com.typesafe.config.Config;
+import com.typesafe.config.Config;
 import play.Configuration;
 import play.Environment;
 

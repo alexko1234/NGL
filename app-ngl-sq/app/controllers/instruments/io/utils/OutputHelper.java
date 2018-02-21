@@ -1,7 +1,5 @@
 package controllers.instruments.io.utils;
 
-
-
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -26,27 +24,29 @@ import models.utils.dao.DAOException;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 
-import play.Logger;
+// import play.Logger;
+// TODO : remove application acccess 
 import play.Play;
 import scala.io.Codec;
 import fr.cea.ig.MongoDBDAO;
 
 public class OutputHelper {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(OutputHelper.class); 
 	
-	public static String getInstrumentPath(String instrumentCode, boolean addSampleSheet){
+	public static String getInstrumentPath(String instrumentCode, boolean addSampleSheet) {
 		Instrument instrument = null;
 		try {
 			instrument = Instrument.find.findByCode(instrumentCode);
 		} catch (DAOException e) {
-			Logger.error("DAO error: "+e.getMessage(),e);
+			logger.error("DAO error: " + e.getMessage(),e);
 		}
-		if(instrument != null){
-			if(Play.application().configuration().getString("ngl.path.instrument") != null){
+		if (instrument != null) {
+			if (Play.application().configuration().getString("ngl.path.instrument") != null) {
 				return Play.application().configuration().getString("ngl.path.instrument")+java.io.File.separator;
-			}else if(addSampleSheet){
-				return instrument.path+java.io.File.separator+"SampleSheet"+java.io.File.separator;
-			}else {
+			} else if(addSampleSheet) {
+				return instrument.path + java.io.File.separator + "SampleSheet" + java.io.File.separator;
+			} else {
 				return instrument.path+java.io.File.separator;
 			}
 		}
@@ -60,17 +60,15 @@ public class OutputHelper {
 	public static void writeFile(File file) {
 		Writer writer = null;
 		try {
-			
 			FileOutputStream fos = new FileOutputStream(file.filename);
 			writer = new OutputStreamWriter(fos, Codec.UTF8().name());			
 			writer.write(file.content);
 			writer.append("\r\n");
 			writer.close();
 			fos.close();
-			
 		} catch (Exception e) {
-			Logger.error("Problem to create sample sheet",e);
-			Logger.error("DAO error: "+e.getMessage(),e);
+			logger.error("Problem to create sample sheet",e);
+			logger.error("DAO error: "+e.getMessage(),e);
 		}
 		
 	}
@@ -78,7 +76,7 @@ public class OutputHelper {
 	// FDS 07/02/2018 il faut dans certains cas des lignes vides dans le fichier de sortie 
 	// => rajout d'un traitement spécifique pour "#" seul sur une ligne
 	public static String format(String content){
-		if(content != null){
+		if (content != null) {
 			return content.trim().replaceAll("(?m)^\\s{1,}", "").replaceAll("\n{2,}", "\n").replaceAll("(?m)^#$","");
 		}
 		return "";
@@ -107,7 +105,6 @@ public class OutputHelper {
 	public static String getSequence(Index index, TagModel tagModel, String instrumentTypeCode) {
 		return 	getSequence(index, tagModel, instrumentTypeCode, null);
 	}
-	
 	
 	public static String getSequence(Index index, TagModel tagModel, String instrumentTypeCode, Integer position){
 		
@@ -155,8 +152,6 @@ public class OutputHelper {
 		}
 	}
 	
-	
-	
 	public static String getSequence(Index index){
 		if(index != null && !index.categoryCode.equals("MID")){
 			return index.sequence;
@@ -195,8 +190,6 @@ public class OutputHelper {
 		}
 		return "N";
 	}
-	
-	
 	
 	public static String getContainerProperty(Container container, String propertyName){
 		if(container.properties.get(propertyName) != null && Boolean.class.isInstance(container.properties.get(propertyName).value)){
@@ -247,27 +240,26 @@ public class OutputHelper {
 	}
 	
 	public static TagModel getTagModel(List<Container> containers) {
-		List<PropertyValue> tags = containers.stream().map((Container container) -> container.contents)
+		List<PropertyValue<?>> tags = containers.stream().map((Container container) -> container.contents)
 			.flatMap(List::stream)
 			.filter(c -> c.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME))
 			.filter(c -> !c.properties.get("tagCategory").equals("MID"))
 			.map((Content c) -> c.properties.get(InstanceConstants.TAG_PROPERTY_NAME))
-			.collect(Collectors.toList())
-			;
+			.collect(Collectors.toList());
 		TagModel tagModel = new TagModel();
-		if(tags.size() > 0){
+		if (tags.size() > 0) {
 			tagModel.maxTag1Size = 0;
 			tagModel.maxTag2Size = 0;
 			tagModel.tagType = "SINGLE-INDEX";
-			for(PropertyValue _tag : tags){
+			for (PropertyValue<?> _tag : tags) {
 				PropertySingleValue tag = (PropertySingleValue)_tag;
 				Index index = getIndex("index-illumina-sequencing", tag.value.toString());
 				
-				if("SINGLE-INDEX".equals(index.categoryCode)) {
+				if ("SINGLE-INDEX".equals(index.categoryCode)) {
 					if(index.sequence.length() > tagModel.maxTag1Size){
 						tagModel.maxTag1Size = index.sequence.length();
 					}
-				}else if("DUAL-INDEX".equals(index.categoryCode)) {
+				} else if("DUAL-INDEX".equals(index.categoryCode)) {
 					tagModel.tagType = "DUAL-INDEX";
 					
 					String[] sequences = index.sequence.split("-",2);
@@ -279,11 +271,10 @@ public class OutputHelper {
 						tagModel.maxTag2Size = sequences[1].length();
 					}
 				}						
-			};
-		}else{
+			}
+		} else {
 			tagModel.tagType = "NONE";
-		}
-				
+		}	
 		return tagModel;
 	}
 	
@@ -305,15 +296,14 @@ public class OutputHelper {
 		return (asciiValue-64)*12-12+columnValue;
 	}
 	
-	
 	// Cet algorithme est utile pour les robots qui numerotent les plaques 96 en colonne 
 	// 1=A1, 2=B1...9=A2
 	// FDS a tester !!
 	public static String getLineColumnInPlateBycolumn(int position){
-		String line  = Integer.toString((position -1) % 8) +'A';
-		String column= Integer.toString((position -1) / 8);
+		String line   = Integer.toString((position -1) % 8) +'A';
+		String column = Integer.toString((position -1) / 8);
 		
-		return line+column;
+		return line + column;
 	}
 	
 	public static String getTag(InputContainerUsed container) {
@@ -331,34 +321,28 @@ public class OutputHelper {
 	public static String getContentPropertyIfOne(InputContainerUsed container, String propertyName) {
 		List<String> l = container.contents.stream().map((Content c) -> c.properties.get(propertyName).value.toString())
 				.collect(Collectors.toList());
-		
-		if(l.size() == 1 ){
+		if (l.size() == 1 ) {
 			return l.get(0);
 		}
 		return null;
-		
 	}
 	
 	public static String getProjectCodeIfOne(InputContainerUsed container) {
 		List<String> l = container.contents.stream().map((Content c) -> c.projectCode)
 				.collect(Collectors.toList());
-		
-		if(l.size() == 1 ){
+		if (l.size() == 1 ) { 
 			return l.get(0);
 		}
 		return null;
-		
 	}
 	
 	public static String getSampleCodeIfOne(InputContainerUsed container) {
 		List<String> l = container.contents.stream().map((Content c) -> c.sampleCode)
 				.collect(Collectors.toList());
-		
-		if(l.size() == 1 ){
+		if (l.size() == 1 ) {
 			return l.get(0);
 		}
 		return null;
-		
 	}
 	
 }
