@@ -149,8 +149,6 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 	
 	
    $scope.values=[1,2];
-   //reunion 12/02/2018 => plus de sciclone 
-   // => tout ce mecanisme ne sert plus a rien...pour l'instant
    
    /* 16/02/2018 dynamique en fonction instrument
     * mais reunion 12/02/2018 => plus de sciclone
@@ -169,7 +167,6 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 	   $scope.nbOutputSupport=nbOutputSupport;//necessaire si pas de preselection
 	   
 		if($scope.isCreationMode() ){
-			// efface  l'existant !!! ????
 			$scope.outputContainerSupportCodes= new Array(nbOutputSupport*1);// *1 pour forcer en numerique nbOutputSupport qui est est un input type text
 			$scope.outputContainerSupportStorageCodes= new Array(nbOutputSupport*1);
 			$scope.outputContainerSupportStates= new Array(nbOutputSupport*1);
@@ -204,7 +201,7 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 	   // trouver LE/LES codes des supports de tous les containers en entree de l'experience (il peut y en avoir plusieurs..)
 	   $scope.inputSupportCodes = $scope.$eval("getBasket().get()|getArray:'support.code'|unique", mainService); 
 	   
-	   //16/02/2018 TEST dynamic en fonction instrument $scope.initOutputContainerSupportCodes(0);
+	   //16/02/2018 en fonction instrument
 	   $scope.initOutputContainerSupportCodes($scope.nbOutputSupport);
 	   
 	   if ($scope.inputSupportCodes.length > 1){
@@ -254,6 +251,10 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 	
 				$scope.outputContainerSupportStorageCodes.push(storageCode);
 				$scope.outputContainerSupportStates.push(stateCode);
+				
+				// test 1 change rien
+				//console.log("test 1 $emit refresh...");
+				//$scope.$emit('refresh');
 			});		
 	    }
 	}
@@ -263,6 +264,7 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 		console.log("call event save");
 
 		$scope.atmService.viewToExperimentOneToMany($scope.experiment);
+		
 		if ( $scope.experiment.atomicTransfertMethods[0].outputContainerUseds.length === 0){
 			$scope.$emit('childSavedError', callbackFunction);
 			
@@ -272,6 +274,16 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 			$scope.messages.open(); 
 		} else {
 			$scope.$emit('childSaved', callbackFunction);
+			   // test 2 l'information etat du support n'est pas rafraichie apres le save...forcer ?? change rien
+			   //console.log("test 2 refreshViewFromExperiment...");
+			   //$scope.atmService.refreshViewFromExperiment($scope.experiment);
+			
+		       //test 3
+			   //console.log("test 3 getOutputContainerSupportState...");
+			   //    $scope.outputContainerSupportCodes.forEach(function(code) {
+		    	//getOutputContainerSupportState(code);
+		       //}); 
+			   //==>angular_1.4.6.js:10695 GET http://localhost:9000/api/supports/plPrepcap2002-4 404 (Not Found)
 		}
 	});
 	
@@ -285,7 +297,20 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 		dtConfig.edit.start = false;
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.setConfig(dtConfig);
+		
+		//test 5 (avant refreshView)=> change rien
+		//console.log("TEST 5 getOutputContainerSupportState...");
+		//$scope.outputContainerSupportCodes.forEach(function(code) {
+	    //	getOutputContainerSupportState(code);
+	    //}); 
+		
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
+		
+		//test 4 (apres refreshView)=> change rien
+		//console.log("TEST 4 getOutputContainerSupportState...");
+		//$scope.outputContainerSupportCodes.forEach(function(code) {
+	    //	getOutputContainerSupportState(code);
+	    //}); 
 		
 		$scope.$emit('viewRefeshed');
 	});
@@ -293,7 +318,6 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 	$scope.$on('cancel', function(e) {
 		console.log("call event cancel");		
 		getExperimentData();
-
 	});
 	
 	$scope.$on('activeEditMode', function(e) {
@@ -301,7 +325,6 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 		// rien  ????
 	});
 	
-
 	
 	//init data
 	//GA 16/10/2017 Cette experience est la seule qui fait du one to many avec plaque en entre/ plaques en sortie.
