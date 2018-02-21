@@ -7,7 +7,8 @@ import java.util.ArrayList;
 // import java.util.concurrent.Callable;
 
 // import play.Application;
-// TODO: use play.api.Configuration
+// TODO: use something like:
+// import com.typesafe.config.Config;
 import play.Configuration;
 import play.Environment;
 
@@ -31,6 +32,7 @@ import akka.actor.ActorSystem;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+
 /**
  * Allows access to some globals that are hard to removed due to the
  * play application life cycle and mostly static initializers. 
@@ -50,6 +52,7 @@ import javax.inject.Singleton;
 @Singleton
 public class IGGlobals {
 // class UNUSED_IGGlobals {
+	
 	private static final play.Logger.ALogger logger = play.Logger.of(IGGlobals.class);
 	
 	// This is started as a component and before any other that requires 

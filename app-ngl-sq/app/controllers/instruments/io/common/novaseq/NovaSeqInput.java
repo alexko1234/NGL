@@ -7,32 +7,32 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory; 
-import javax.xml.xpath.XPathConstants;
+// import javax.xml.xpath.XPathConstants;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException; //ajout pour essai catch
+// import org.xml.sax.SAXParseException; //ajout pour essai catch
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
+// import org.w3c.dom.NodeList;
+// import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 
 import org.mongojack.DBQuery;
 
-import java.io.BufferedReader;
+// import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+// import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
+// import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.instance.PropertyValue;
+// import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertyFileValue;
-import models.laboratory.common.instance.property.PropertySingleValue;
+// import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.InputContainerUsed;
+// import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.reagent.instance.ReagentUsed;
 import models.laboratory.reagent.description.BoxCatalog;
 import models.laboratory.reagent.description.KitCatalog;
@@ -41,12 +41,11 @@ import models.laboratory.reagent.description.ReagentCatalog;
 import models.utils.InstanceConstants;
 import play.Logger;
 import validation.ContextValidation;
-import validation.utils.ValidationHelper;
+// import validation.utils.ValidationHelper;
 import controllers.instruments.io.utils.AbstractInput;
-import controllers.instruments.io.utils.InputHelper;
+// import controllers.instruments.io.utils.InputHelper;
 
 import fr.cea.ig.MongoDBDAO;
-
 
 public class NovaSeqInput extends AbstractInput {
 	
@@ -107,11 +106,11 @@ public class NovaSeqInput extends AbstractInput {
 	           
 		     // verifier le node RfidsInfo avant de faire le reste...
 		     String expression="RfidsInfo";
-		     String info = (String)xpath.evaluate(expression, root);
+//		     String info = (String)xpath.evaluate(expression, root);
+		     String info = xpath.evaluate(expression, root);
 		     checkMandatoryXMLTag (contextValidation, expression, info); 
-		     if ( contextValidation.hasErrors() ){
+		     if (contextValidation.hasErrors())
 		    	 return experiment;
-		     }
 		     
 	         checkConsistancy(root, xpath, experiment, contextValidation);
 	         importReagents(root, xpath, experiment, contextValidation);
@@ -123,13 +122,10 @@ public class NovaSeqInput extends AbstractInput {
 	    	  
 	      } catch (SAXException | ParserConfigurationException e) {
 	    	  contextValidation.addErrors("Erreurs fichier", "fichier XML incorrect :" + e.getMessage());
-	    	  
 	      } catch (IOException e) {
 	    	  contextValidation.addErrors("Erreurs fichier", e.getMessage());
-	    	  
-	      } catch ( XPathExpressionException  e) {
+	      } catch (XPathExpressionException  e) {
 	    	  contextValidation.addErrors("Erreurs interne", e.getMessage());
-	   
 	      } 
  
 		  return experiment;
