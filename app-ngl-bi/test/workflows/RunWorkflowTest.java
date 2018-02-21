@@ -3,45 +3,42 @@ package workflows;
 import static fr.cea.ig.play.test.DevAppTesting.testInServer;
 import static ngl.bi.Global.devapp;
 import static org.fest.assertions.Assertions.assertThat;
-import static play.mvc.Http.Status.OK;
-import static play.test.Helpers.fakeRequest;
-
+//import static play.mvc.Http.Status.OK;
+//import static play.test.Helpers.fakeRequest;
 import java.util.List;
 import java.util.TreeSet;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mongojack.DBQuery;
-
 import com.mongodb.BasicDBObject;
-
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.test.RoutesTest;
+//import fr.cea.ig.play.test.RoutesTest;
 import fr.cea.ig.play.test.WSHelper;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
-import models.laboratory.container.instance.Content;
-import models.laboratory.project.instance.Project;
-import models.laboratory.run.instance.Analysis;
+//import models.laboratory.container.instance.Content;
+//import models.laboratory.project.instance.Project;
+//import models.laboratory.run.instance.Analysis;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
-import models.laboratory.sample.instance.Sample;
+//import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import play.Logger;
-import play.mvc.Result;
+//import play.mvc.Result;
 import utils.AbstractTests;
 import utils.RunMockHelper;
 
-public class RunWorkflowTest extends AbstractTests{
+public class RunWorkflowTest extends AbstractTests {
 
 	static Run run;
 	static Run runInvalidLane;
 	static ContainerSupport cs;
 	static List<Container> containers;
+	
 	@BeforeClass
 	public static void initData()
 	{
@@ -224,6 +221,7 @@ public class RunWorkflowTest extends AbstractTests{
 		keys.put("treatments", 0);
 		return keys;
 	}
+	
 }
 
 
