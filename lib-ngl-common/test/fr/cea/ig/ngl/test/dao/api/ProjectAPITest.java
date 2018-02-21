@@ -32,7 +32,7 @@ public class ProjectAPITest extends AbstractTests {
 	private static final String currentUser = "ngsrg";
 	
 	@Before
-	public void setup() {
+	public void setUp() {
 		assertTrue(app.isDev());
 		api = app.injector().instanceOf(ProjectAPI.class);
 		assertNotNull(api);
@@ -58,7 +58,7 @@ public class ProjectAPITest extends AbstractTests {
 	}
 	
 	@Test
-	public void ListTest() {
+	public void getProjectTest() {
 		try {
 			Project proj = this.api.get("A");
 			assertNotNull(proj);
@@ -67,5 +67,15 @@ public class ProjectAPITest extends AbstractTests {
 			logger.error(e.getMessage());
 			fail(e.getMessage());
 		}
+	}
+	
+	@Test
+	public void listProjectTest() {
+		fail("Not implemented");
+	}
+	
+	@Test
+	public void updateTest() {
+		fail("Not implemented");
 	}
 }
