@@ -1,4 +1,4 @@
-package fr.cea.ig.ngl.daoapi;
+package fr.cea.ig.ngl.dao.api;
 
 public class APIException extends Exception {
 

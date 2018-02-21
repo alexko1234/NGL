@@ -1,4 +1,4 @@
-package fr.cea.ig.ngl.daoapi;
+package fr.cea.ig.ngl.dao.api;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

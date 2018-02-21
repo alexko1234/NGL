@@ -1,8 +1,9 @@
-package fr.cea.ig.ngl.dao;
+package fr.cea.ig.ngl.dao.protocols;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import fr.cea.ig.ngl.dao.GenericMongoDAO;
 // import fr.cea.ig.MongoDBDAO;
 import models.laboratory.protocol.instance.Protocol;
 import models.utils.InstanceConstants;

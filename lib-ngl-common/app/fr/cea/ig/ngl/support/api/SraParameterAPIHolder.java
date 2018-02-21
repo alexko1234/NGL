@@ -1,7 +1,7 @@
 package fr.cea.ig.ngl.support.api;
 
 import fr.cea.ig.ngl.NGLApplicationHolder;
-import fr.cea.ig.ngl.daoapi.SraParameterAPI;
+import fr.cea.ig.ngl.dao.api.SraParameterAPI;
 
 public interface SraParameterAPIHolder extends NGLApplicationHolder {
 	

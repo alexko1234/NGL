@@ -1,4 +1,4 @@
-package fr.cea.ig.ngl.dao;
+package fr.cea.ig.ngl.dao.permissions;
 
 import java.util.List;
 

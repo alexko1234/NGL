@@ -7,8 +7,7 @@ import com.google.inject.Provider;
 
 import fr.cea.ig.authorization.IAuthorizator;
 import fr.cea.ig.lfw.LFWApplication;
-// import fr.cea.ig.ngl.dao.DAOs;
-import fr.cea.ig.ngl.daoapi.APIs;
+import fr.cea.ig.ngl.dao.api.APIs;
 
 @Singleton
 public class NGLApplication extends LFWApplication {

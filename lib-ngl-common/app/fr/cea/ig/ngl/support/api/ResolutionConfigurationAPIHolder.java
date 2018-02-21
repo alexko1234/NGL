@@ -1,7 +1,7 @@
 package fr.cea.ig.ngl.support.api;
 
 import fr.cea.ig.ngl.NGLApplicationHolder;
-import fr.cea.ig.ngl.daoapi.ResolutionConfigurationAPI;
+import fr.cea.ig.ngl.dao.api.ResolutionConfigurationAPI;
 
 public interface ResolutionConfigurationAPIHolder extends NGLApplicationHolder {
 	

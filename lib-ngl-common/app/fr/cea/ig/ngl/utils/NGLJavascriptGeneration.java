@@ -1,7 +1,7 @@
 package fr.cea.ig.ngl.utils;
 
-import fr.cea.ig.ngl.daoapi.APIException;
-import fr.cea.ig.ngl.daoapi.CodeLabelAPI;
+import fr.cea.ig.ngl.dao.api.APIException;
+import fr.cea.ig.ngl.dao.codelabels.CodeLabelAPI;
 import models.utils.dao.DAOException;
 
 public class NGLJavascriptGeneration {

@@ -1,7 +1,13 @@
-package fr.cea.ig.ngl.daoapi;
+package fr.cea.ig.ngl.dao.api;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import fr.cea.ig.ngl.dao.codelabels.CodeLabelAPI;
+import fr.cea.ig.ngl.dao.permissions.PermissionAPI;
+import fr.cea.ig.ngl.dao.projects.ProjectAPI;
+import fr.cea.ig.ngl.dao.protocols.ProtocolAPI;
+import fr.cea.ig.ngl.dao.users.UserAPI;
 
 @Singleton
 public class APIs {
