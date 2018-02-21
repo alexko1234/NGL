@@ -3,14 +3,14 @@ package services.instance.protocol;
 import static services.instance.InstanceFactory.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+//import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.mongojack.DBQuery;
 
-import com.google.common.collect.Maps;
+//import com.google.common.collect.Maps;
 import com.typesafe.config.ConfigFactory;
 
 import fr.cea.ig.MongoDBDAO;

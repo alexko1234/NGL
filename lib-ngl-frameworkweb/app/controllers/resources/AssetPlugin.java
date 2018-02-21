@@ -1,13 +1,12 @@
 package controllers.resources;
 
-import play.Application;
+// import play.Application;
+import com.typesafe.config.Config;
 import play.Logger;
-import play.Play;
-
+// import play.Play;
 // import play.Plugin;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 // import fr.cea.ig.authentication.AuthenticatePlugin;
 
 @Singleton
@@ -29,20 +28,21 @@ public class AssetPlugin { // extends play.Plugin {
 	private static String url; 
 	
 	@Inject
-	public AssetPlugin(Application app)	{
-		super();
-		logger.debug("injecting " + app);
-		url = app.configuration().getString(ASSET_URL);
-		if (url == null)
-			logger.error("missing " + ASSET_URL + " in application.conf");
-		else
-			logger.info("asset url : " + url);
-		logger.debug("injected");
+	// public AssetPlugin(Application app)	{
+	public AssetPlugin(Config config) {
+		// rl = app.configuration().getString(ASSET_URL);
+		if (config.hasPath(ASSET_URL)) {
+			url = config.getString(ASSET_URL);
+			logger.info("using asset url '{}'",url);
+		} else {
+			url = "notConfigured";
+			logger.error("no asset url at {} in configuration",ASSET_URL);
+		}
 	}
 
 	public static String getServer() {
 		if (url == null) {
-			logger.warn("accessing url that is not set");
+			logger.warn("accessing url that has not been initialized");
 			return "assetPathNotSet";
 		}
 		logger.debug("getServer() : " + url); 
