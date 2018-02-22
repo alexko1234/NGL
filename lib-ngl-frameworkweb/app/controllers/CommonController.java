@@ -136,19 +136,18 @@ public abstract class CommonController extends Controller {
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
 	 */
+	@SuppressWarnings("unchecked")
 	protected static <T> T filledFormQueryString(Class<T> clazz) {		
 		try {
 			Map<String, String[]> queryString = request().queryString();
-			
 			BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(clazz.newInstance());
 			wrapper.setAutoGrowNestedPaths(true);
-			
 			for(String key :queryString.keySet()){
 				
 				try {
-					if(isNotEmpty(queryString.get(key))){
+					if (isNotEmpty(queryString.get(key))) {
 						Object value = queryString.get(key);
-						if(wrapper.isWritableProperty(key)){
+						if (wrapper.isWritableProperty(key)) {
 							Class<?> c = wrapper.getPropertyType(key);
 							//TODO used conversion spring system
 							if (c != null && Date.class.isAssignableFrom(c)) {

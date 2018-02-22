@@ -58,9 +58,15 @@ import fr.cea.ig.MongoDBDAO;
 
 public class InstanceTest extends AbstractTests{
 
-	static final Class<DBObject>[] classTest= new  Class[]{Process.class,Sample.class,Experiment.class,Project.class,Container.class};
+	static final Class<DBObject>[] classTest = new Class[]
+			{ Process.class
+		    , Sample.class
+		    , Experiment.class
+		    , Project.class
+		    , Container.class
+		    };
 
-	private static final Map<String, List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
+	// private static final Map<String, List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
 
 	static String id;
 	static ProjectType sProjectType;
@@ -73,7 +79,6 @@ public class InstanceTest extends AbstractTests{
 
 	@AfterClass
 	public static  void deleteData() {
-		
 	}
 
 	@BeforeClass
@@ -83,65 +88,56 @@ public class InstanceTest extends AbstractTests{
 			
 	}	
 
-
 	//@Test 
 	public void saveInstanceMongo() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		for (Class<DBObject> t : classTest)
 			saveDBOject(t);
 	}
 
-
 	//@Test
-	public void updateProject() throws DAOException{
+	public void updateProject() throws DAOException {
 
-		Project project=findObject(Project.class);
-
-		project.name="projectName";
-		project.comments=new ArrayList<Comment>();
+		Project project = findObject(Project.class);
+		project.name             = "projectName";
+		project.comments         = new ArrayList<Comment>();
 		project.comments.add(new Comment("comment", "ngl-test"));
-		project.traceInformation=new TraceInformation();
+		project.traceInformation = new TraceInformation();
 		project.traceInformation.setTraceInformation("test");
-		project.typeCode="projectType";
-		project.categoryCode="categoryProject";
+		project.typeCode         = "projectType";
+		project.categoryCode     = "categoryProject";
 		
-		project.state = new State(); 
-		project.state.code="EtatprojectType";
-		project.state.user = "test";
-		project.state.date = new Date();
+		project.state            = new State(); 
+		project.state.code       = "EtatprojectType";
+		project.state.user       = "test";
+		project.state.date       = new Date();
 				
-
 		MongoDBDAO.save(InstanceConstants.PROJECT_COLL_NAME, project);
 
-		project=findObject(Project.class);
-
+		project = findObject(Project.class);
 		assertThat(project.code).isEqualTo("ProjectCode");
 		assertThat(project.name).isEqualTo("projectName");
-
-		ProjectCategory projectCategory=ProjectCategory.find.findByCode(project.categoryCode);
+		ProjectCategory projectCategory = ProjectCategory.find.findByCode(project.categoryCode);
 		assertThat(projectCategory).isNotNull();
 
-		ProjectType projectType=ProjectType.find.findByCode(project.typeCode);
+		ProjectType projectType = ProjectType.find.findByCode(project.typeCode);
 		assertThat(projectType).isNotNull();
-
 		assertThat(project.state).isNotNull();
 		assertThat(project.state.code).isEqualTo("EtatprojectType");
 		assertThat(project.state.user).isEqualTo("test");
 	}
 
 	//@Test
-	public void updateSample(){
+	public void updateSample() {
 		Sample sample=findObject(Sample.class);
 
-		sample.name="sampleName";
-		sample.referenceCollab="Ref collab";
+		sample.name            = "sampleName";
+		sample.referenceCollab = "Ref collab";
 		
-		sample.valuation= new Valuation(); 
+		sample.valuation = new Valuation(); 
 		sample.valuation.valid = TBoolean.UNSET;
 		
-
-		sample.categoryCode="sampleCategory";
-		sample.typeCode="sampleType";
-		
+		sample.categoryCode    = "sampleCategory";
+		sample.typeCode        = "sampleType";
 		sample.projectCodes.add("ProjectCode");
 
 		/*sample.comments=InstanceHelpers.addComment("comment", sample.comments);
@@ -162,9 +158,6 @@ public class InstanceTest extends AbstractTests{
 		assertThat(sample.categoryCode).isEqualTo("sampleCategory");
 		assertThat(sample.typeCode).isEqualTo("sampleType");
 		assertThat(sample.projectCodes.size()).isEqualTo(1);
-		
-
-
 	}
 
 	//@Test
@@ -186,8 +179,6 @@ public class InstanceTest extends AbstractTests{
 		container.state.user = Constants.TEST_USER;
 		container.state.date = new Date();
 
-		
-		
 		container.valuation = new Valuation();
 		container.valuation.valid = TBoolean.FALSE;
 		container.valuation.user = Constants.TEST_USER;
@@ -197,7 +188,6 @@ public class InstanceTest extends AbstractTests{
 
 		container.fromTransformationTypeCodes=new HashSet<String>();
 		container.fromTransformationTypeCodes.add("experimentType");
-		 
 			
 		//public List<QualityControlResult> qualityControlResults; 
 		//public List<Proper> volume;
@@ -236,9 +226,7 @@ public class InstanceTest extends AbstractTests{
 		assertThat(container.fromTransformationTypeCodes).isNotEmpty();
 		assertThat(container.fromTransformationTypeCodes.size()).isEqualTo(1);
 		assertThat(container.fromTransformationTypeCodes.toArray(new String[0])[0]).isEqualTo("experimentType");
-
 	}
-
 
 	@Test
 	public void updateExperience(){
@@ -315,10 +303,8 @@ public class InstanceTest extends AbstractTests{
 		assertThat(sdf.format(d)).isEqualTo(sdf.format(sampleOnInputContainer.lastUpdateDate));
 		assertThat(sampleOnInputContainer.properties).isNotEmpty().isNotNull();			
 		assertThat(sampleOnInputContainer.properties.get(InstanceConstants.TAG_PROPERTY_NAME)).isNotNull();;
-		
 	}
 	
-
 	////@Test
 	public void removeInstanceMongo(){
 		for (Class<DBObject> t : classTest)
@@ -327,8 +313,9 @@ public class InstanceTest extends AbstractTests{
 
 	public <T extends DBObject> T saveDBOject(Class<T> t) throws InstantiationException, IllegalAccessException, ClassNotFoundException{
 		String collection = t.getSimpleName();
-		String code       = t.getSimpleName()+"Code";
-		T object          = (T) Class.forName (t.getName()).newInstance();
+		String code       = t.getSimpleName() + "Code";
+//		T object          = (T) Class.forName (t.getName()).newInstance();
+		T object          = t.newInstance();
 		object.code  = code;
 		object       = MongoDBDAO.save(collection, object);
 		id           = object._id;
@@ -347,8 +334,8 @@ public class InstanceTest extends AbstractTests{
 	}
 
 	public <T extends DBObject> T findObject(Class<T> type){
-		String collection=type.getSimpleName();
-		String code=type.getSimpleName()+"Code";
+		String collection = type.getSimpleName();
+		String code       = type.getSimpleName()+"Code";
 		return MongoDBDAO.findByCode(collection, type, code);		
 	}
 	
@@ -356,11 +343,9 @@ public class InstanceTest extends AbstractTests{
 	public void generateExperimentCode() throws InterruptedException{
 		Experiment e = new Experiment();
 		e.typeCode = "test-tt";
-		for(int i = 0; i < 120; i++){
-		
+		for (int i = 0; i < 120; i++) {	
 			System.out.println(CodeHelper.getInstance().generateExperimentCode(e));			
 		}
 	}
-	
 	
 }

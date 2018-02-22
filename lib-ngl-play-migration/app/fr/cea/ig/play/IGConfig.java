@@ -13,7 +13,7 @@ import javax.inject.Singleton;
  * @author vrd
  *
  */
-@Deprecated
+// @Deprecated
 @Singleton
 public class IGConfig {
 	

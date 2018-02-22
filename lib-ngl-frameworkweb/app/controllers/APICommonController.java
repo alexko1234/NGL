@@ -134,7 +134,9 @@ public abstract class APICommonController<T> extends NGLBaseController {
 	protected <U> U filledFormQueryString(Class<U> clazz) {		
 		try {
 			Map<String, String[]> queryString = request().queryString();
-			BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(clazz.newInstance());
+//			BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(clazz.newInstance());
+			U wrapped = clazz.newInstance();
+			BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(wrapped);
 			wrapper.setAutoGrowNestedPaths(true);
 			for (String key :queryString.keySet()) {
 				try {
@@ -154,7 +156,8 @@ public abstract class APICommonController<T> extends NGLBaseController {
 					throw new RuntimeException(e);
 				} 
 			}
-			return (U)wrapper.getWrappedInstance();
+//			return (U)wrapper.getWrappedInstance();
+			return wrapped;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} 

@@ -13,7 +13,7 @@ import fr.cea.ig.play.IGConfig;
  * @author vrd
  *
  */
-@Deprecated
+// @Deprecated
 @Singleton
 public class NGLConfig {
 

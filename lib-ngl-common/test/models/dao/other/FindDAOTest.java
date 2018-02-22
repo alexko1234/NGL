@@ -347,7 +347,8 @@ public class FindDAOTest extends AbstractTests {
 
 	@Test(expected = RuntimeException.class)
 	public void treatmentTypeContextFindTest() throws DAOException {
-		TreatmentTypeContext type = TreatmentTypeContext.find.findAll().get(0);
+		// TreatmentTypeContext type = 
+				TreatmentTypeContext.find.findAll().get(0);
 	}
 
 	@Test(expected=UnsupportedOperationException.class)

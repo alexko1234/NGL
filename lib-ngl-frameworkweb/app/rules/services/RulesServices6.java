@@ -49,14 +49,16 @@ public class RulesServices6 {
 	
 	// @Inject
 	private RulesServices6(Application app) {
-		kbasename = app.configuration().getString("rules.kbasename");
+//		kbasename = app.configuration().getString("rules.kbasename");
+		kbasename = app.config().getString("rules.kbasename");
 		buildKnowledgeBase(app);
 	}
 	
  
 	public static void initSingleton(Application app) {
 		logger.debug("initializing singleton");
-		String kbasename = app.configuration().getString("rules.kbasename");
+//		String kbasename = app.configuration().getString("rules.kbasename");
+		String kbasename = app.config().getString("rules.kbasename");
 		SingletonHolder.instance = instances.get(kbasename);
 		if (SingletonHolder.instance == null) {
 			SingletonHolder.instance = new RulesServices6(app);
