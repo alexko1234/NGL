@@ -354,10 +354,10 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
 		
 		// 16/11/2017 NGL-1691 ajout "Covaris LE220 + Bravo Workstation" 
-		// Covaris 2 ; ET Bravo Workstation 1, 2 et 3
+		// Covaris 2 
 		l.add(newInstrumentUsedType("Covaris LE220 + Bravo WS", "covaris-le220-and-bravows", InstrumentCategory.find.findByCode("covaris-and-liquid-handling-robot"), getCovarisAndBravoWsProperties(), 
 				getInstruments(
-						createInstrument("covaris2-and-bravows1", "Covaris 2 / Bravo Workstation 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)), 
+						createInstrument("covaris2-and-bravows1", "Covaris 2 / Bravo Workstation 1", null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)), // FDS 22/02/2018 NGL-1860: inactiver le bravows1
 						createInstrument("covaris2-and-bravows2", "Covaris 2 / Bravo Workstation 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("covaris2-and-bravows3", "Covaris 2 / Bravo Workstation 3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
 				getContainerSupportCategories(new String[]{"96-well-plate"}), 
@@ -366,10 +366,10 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		
 		// 16/11/2017 NGL-1691 ajout "Covaris E220 + Bravo Workstation"
-		// Covaris 3 ; ET Bravo Workstation 1, 2 et 3
+		// Covaris 3
 		l.add(newInstrumentUsedType("Covaris E220 + Bravo WS", "covaris-e220-and-bravows", InstrumentCategory.find.findByCode("covaris-and-liquid-handling-robot"), getCovarisAndBravoWsProperties(), 
 				getInstruments(
-						createInstrument("covaris3-and-bravows1", "Covaris 3 / Bravo Workstation 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)), 
+						createInstrument("covaris3-and-bravows1", "Covaris 3 / Bravo Workstation 1", null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),  // FDS 22/02/2018 NGL-1860: inactiver le bravows1
 						createInstrument("covaris3-and-bravows2", "Covaris 3 / Bravo Workstation 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("covaris3-and-bravows3", "Covaris 3 / Bravo Workstation 3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"96-well-plate"}), 

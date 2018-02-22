@@ -372,8 +372,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			l.add(newExperimentType("PCR+indexing (post-capture)","pcr-and-indexing",null,720,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsPcrIndexing(),
-					getInstrumentUsedTypes("mastercycler-nexus-and-bravows",
-							               "mastercycler-epg-and-bravows"),
+					getInstrumentUsedTypes("mastercycler-nexus-and-bravows"),
+							               // "mastercycler-epg-and-bravows"),  22/02/2018 NGL-1860 supression
 					"OneToOne",
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 			
