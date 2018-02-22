@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import com.typesafe.config.Config;
 // import play.Configuration;
 import com.typesafe.config.Config;
+
+import play.Application;
 import play.Environment;
 
 import play.cache.SyncCacheApi;
@@ -79,7 +81,8 @@ public class IGGlobals {
 	// be injected when needed but this sets up globals as static component
 	// require that.
 	@Inject
-	public IGGlobals(Config conf, Environment env, Injector inj, SyncCacheApi cac) {
+	public IGGlobals(Application app, Config conf, Environment env, Injector inj, SyncCacheApi cac) {
+		application   = app;
 		config        = conf; // app.configuration();
 		environment   = env;  // app.environment();
 		injector      = inj;  // app.injector();
@@ -87,6 +90,7 @@ public class IGGlobals {
 		logger.debug("setup globals");
 	}
 	
+	private static Application application;
 	/**
 	 * Play configuration.
 	 */
@@ -106,6 +110,10 @@ public class IGGlobals {
 	 * Default cache.
 	 */
 	private static SyncCacheApi cache;
+	
+	public static Application application() {
+		return assertInitialized("application",application);
+	}
 	
 	/**
 	 * Play configuration. 

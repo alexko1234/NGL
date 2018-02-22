@@ -16,10 +16,10 @@ import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
 import org.drools.io.ResourceFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
-
 // import play.Logger;
 // import play.Play;
 import static fr.cea.ig.play.IGGlobals.configuration;
+import static fr.cea.ig.play.IGGlobals.application;
 
 public class RulesServices {
 	
@@ -36,7 +36,8 @@ public class RulesServices {
 //	}
 	
 	public void buildKnowledgeBase() throws RulesException {
-		KnowledgeBuilderConfiguration kBuilderConfiguration = KnowledgeBuilderFactory.newKnowledgeBuilderConfiguration(null, play.Play.application().classloader());
+//		KnowledgeBuilderConfiguration kBuilderConfiguration = KnowledgeBuilderFactory.newKnowledgeBuilderConfiguration(null, play.Play.application().classloader());
+		KnowledgeBuilderConfiguration kBuilderConfiguration = KnowledgeBuilderFactory.newKnowledgeBuilderConfiguration(null, application().classloader());
 		KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder(kBuilderConfiguration);
 		URL url;
 		try {
@@ -54,7 +55,8 @@ public class RulesServices {
 			}
 			throw new RulesException("Could not parse knowledge.");
 		}
-		KnowledgeBaseConfiguration kbaseConfig = KnowledgeBaseFactory.newKnowledgeBaseConfiguration(null, play.Play.application().classloader()); 
+//		KnowledgeBaseConfiguration kbaseConfig = KnowledgeBaseFactory.newKnowledgeBaseConfiguration(null, play.Play.application().classloader()); 
+		KnowledgeBaseConfiguration kbaseConfig = KnowledgeBaseFactory.newKnowledgeBaseConfiguration(null, application().classloader()); 
 		knowledgeBase = KnowledgeBaseFactory.newKnowledgeBase(kbaseConfig);
 		knowledgeBase.addKnowledgePackages(kbuilder.getKnowledgePackages());
 	}
