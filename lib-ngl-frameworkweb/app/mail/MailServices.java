@@ -12,17 +12,21 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 //import play.Logger;
-import play.Play;
+// import play.Play;
+import static fr.cea.ig.play.IGGlobals.configuration;
 
 public class MailServices {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(MailServices.class);
 	
-	private static final String mailSmtpHost = Play.application().configuration().getString("mail.smtp.host");
+	// private static final String mailSmtpHost = Play.application().configuration().getString("mail.smtp.host");
+	private static final String mailSmtpHost() {
+		return configuration().getString("mail.smtp.host");
+	}
 	
 	public void sendMail(String from, Set<String> to, String subject, String message) throws MailServiceException {
 		Properties properties = System.getProperties();
-		properties.put("mail.smtp.host", mailSmtpHost);
+		properties.put("mail.smtp.host", mailSmtpHost());
 		Session session = Session.getInstance(properties, null);
 		try {
 			Message msg = new MimeMessage(session);

@@ -9,7 +9,8 @@ import java.util.ArrayList;
 // import play.Application;
 // TODO: use something like:
 import com.typesafe.config.Config;
-import play.Configuration;
+// import play.Configuration;
+import com.typesafe.config.Config;
 import play.Environment;
 
 import play.cache.SyncCacheApi;
@@ -55,13 +56,31 @@ public class IGGlobals {
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(IGGlobals.class);
 	
+//	// This is started as a component and before any other that requires 
+//	// access to globals. This component or part of this component should
+//	// be injected when needed but this sets up globals as static component
+//	// require that.
+//	@Inject
+//	public IGGlobals(Configuration conf, Environment env, Injector inj, SyncCacheApi cac) {
+//		configuration = conf; // app.configuration();
+//		environment   = env;  // app.environment();
+//		injector      = inj;  // app.injector();
+//		cache         = cac;
+//		logger.debug("setup globals");
+//	}
+//	
+//	/**
+//	 * Play configuration.
+//	 */
+//	private static Configuration configuration;
+
 	// This is started as a component and before any other that requires 
 	// access to globals. This component or part of this component should
 	// be injected when needed but this sets up globals as static component
 	// require that.
 	@Inject
-	public IGGlobals(Configuration conf, Environment env, Injector inj, SyncCacheApi cac) {
-		configuration = conf; // app.configuration();
+	public IGGlobals(Config conf, Environment env, Injector inj, SyncCacheApi cac) {
+		config        = conf; // app.configuration();
 		environment   = env;  // app.environment();
 		injector      = inj;  // app.injector();
 		cache         = cac;
@@ -71,7 +90,7 @@ public class IGGlobals {
 	/**
 	 * Play configuration.
 	 */
-	private static Configuration configuration;
+	private static Config config;
 	
 	/**
 	 * Play environment.
@@ -92,8 +111,8 @@ public class IGGlobals {
 	 * Play configuration. 
 	 * @return Play configuration
 	 */
-	public static Configuration configuration() {
-		return assertInitialized("configuration",configuration);
+	public static Config configuration() {
+		return assertInitialized("configuration",config);
 	}
 	
 	/**
