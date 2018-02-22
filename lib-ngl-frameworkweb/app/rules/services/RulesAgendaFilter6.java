@@ -1,16 +1,10 @@
 package rules.services;
 
-
-
 import java.util.HashMap;
 import java.util.Map;
-
 import org.kie.api.runtime.rule.AgendaFilter;
 import org.kie.api.runtime.rule.Match;
-
-import play.Logger;
-
-
+//import play.Logger;
 
 public class RulesAgendaFilter6 implements AgendaFilter{
 
@@ -43,8 +37,5 @@ public class RulesAgendaFilter6 implements AgendaFilter{
 		}
 		
 	}
-
-	
-	
 
 }

@@ -15,7 +15,7 @@ import fr.cea.ig.play.NGLContext;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import services.ncbi.TaxonomyServices;
-import play.Logger;
+// import play.Logger;
 import play.mvc.Result;
 import services.instance.sample.UpdateSampleNCBITaxonCNS;
 
@@ -26,7 +26,10 @@ import services.instance.sample.UpdateSampleNCBITaxonCNS;
  */
 // import controllers.CommonController;
 public class MigrationUpdateNCBITaxonSample extends DocumentController<Sample> { //CommonController {
-	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmm");
+	
+	private static final play.Logger.ALogger logger = play.Logger.of(MigrationUpdateNCBITaxonSample.class);
+	
+//	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmm");
 	private TaxonomyServices taxonomyServices;
 	private final NGLConfig config;
 	
@@ -37,11 +40,8 @@ public class MigrationUpdateNCBITaxonSample extends DocumentController<Sample> {
 		this.config = config;
 	}
 
-
-
-	public /*static*/ Result migration(String code, Boolean onlyNull){
-
-		Logger.info("Migration sample start");
+	public /*static*/ Result migration(String code, Boolean onlyNull) {
+		logger.info("Migration sample start");
 		//backupSample(code);
 		List<Sample> samples = null;
 		if(!"all".equals(code)) {
@@ -52,19 +52,17 @@ public class MigrationUpdateNCBITaxonSample extends DocumentController<Sample> {
 		} else {
 			samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.exists("code")).toList();
 		}
-		Logger.debug("migre "+samples.size()+" samples");
+		logger.debug("migre "+samples.size()+" samples");
 		int size = samples.size();
 		int nb = 1;
 		for(Sample sample : samples){
-			Logger.debug("Sample code: "+sample.code+" : "+nb+"/"+size);
+			logger.debug("Sample code: "+sample.code+" : "+nb+"/"+size);
 			migreSample(sample);
 			nb++;
 		}
-		Logger.info("Migration sample finish");
+		logger.info("Migration sample finish");
 		return ok("Migration Finish");
 	}
-
-
 
 	private /*static*/ void migreSample(Sample sample) {
 		String ncbiScientificName=null;
@@ -80,26 +78,22 @@ public class MigrationUpdateNCBITaxonSample extends DocumentController<Sample> {
 		}
 		MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME,  Sample.class, 
 				DBQuery.is("code", sample.code), DBUpdate.set("ncbiScientificName", ncbiScientificName).set("ncbiLineage", ncbiLineage));
-		if(ncbiScientificName==null) {
-			Logger.error("no scientific name "+ncbiScientificName);
+		if (ncbiScientificName == null) {
+			logger.error("no scientific name {}",ncbiScientificName);
 		}
 	}
 
-	private /*static*/ void backupSample(String code) {
-		String backupName = InstanceConstants.SAMPLE_COLL_NAME+"_BCK_NCBI_"+sdf.format(new java.util.Date());
-		Logger.info("\tCopie "+InstanceConstants.SAMPLE_COLL_NAME+" to "+backupName+" start");
-		List<Sample> samples = null;
-		if(!"all".equals(code)) {
-			samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code",code)).toList();						
-		} else {
-			samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.exists("code")).toList();						
-		}
-
-		MongoDBDAO.save(backupName, samples);
-		Logger.info("\tCopie "+InstanceConstants.SAMPLE_COLL_NAME+" to "+backupName+" end");
-
-	}
-
-
+//	private /*static*/ void backupSample(String code) {
+//		String backupName = InstanceConstants.SAMPLE_COLL_NAME+"_BCK_NCBI_"+sdf.format(new java.util.Date());
+//		Logger.info("\tCopie "+InstanceConstants.SAMPLE_COLL_NAME+" to "+backupName+" start");
+//		List<Sample> samples = null;
+//		if(!"all".equals(code)) {
+//			samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code",code)).toList();						
+//		} else {
+//			samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.exists("code")).toList();						
+//		}
+//		MongoDBDAO.save(backupName, samples);
+//		Logger.info("\tCopie "+InstanceConstants.SAMPLE_COLL_NAME+" to "+backupName+" end");
+//	}
 
 }
