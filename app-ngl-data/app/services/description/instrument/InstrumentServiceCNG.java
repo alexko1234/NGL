@@ -367,7 +367,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		// 16/11/2017 NGL-1691 ajout "Covaris E220 + Bravo Workstation"
 		// Covaris 3 ; ET Bravo Workstation 1, 2 et 3
-		l.add(newInstrumentUsedType("Covaris E220 +  Bravo WS", "covaris-e220-and-bravows", InstrumentCategory.find.findByCode("covaris-and-liquid-handling-robot"), getCovarisAndBravoWsProperties(), 
+		l.add(newInstrumentUsedType("Covaris E220 + Bravo WS", "covaris-e220-and-bravows", InstrumentCategory.find.findByCode("covaris-and-liquid-handling-robot"), getCovarisAndBravoWsProperties(), 
 				getInstruments(
 						createInstrument("covaris3-and-bravows1", "Covaris 3 / Bravo Workstation 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)), 
 						createInstrument("covaris3-and-bravows2", "Covaris 3 / Bravo Workstation 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -427,31 +427,46 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS 17/07/2017 NGL-1201 : pseudo instrument Masterycler Nexus SX-1 + Bravo
-		// Mastercycler Nexus 5 + bravo 1 ou 2
+		// FDS 22/02/2018 NGL-1860 : correction: les combinaisons utilisees sont Mastercycler Nexus 5 + bravo 1  Et    Mastercycler Nexus 7ou8  + bravo 2
 		l.add(newInstrumentUsedType("Mastercycler Nexus SX1 + Bravo Workstation", "mastercycler-nexus-and-bravows", InstrumentCategory.find.findByCode("thermocycler-and-liquid-handling-robot"), getMastercyclerNexusAndBravoWsProperties(), 
 				getInstruments(
 						createInstrument("mastercycler5-and-bravows1", "Mastercycler 5 (Nexus SX-1) / Bravo Workstation 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("mastercycler5-and-bravows2", "Mastercycler 5 (Nexus SX-1) / Bravo Workstation 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+						createInstrument("mastercycler7-and-bravows2", "Mastercycler 7 (Nexus SX-1) / Bravo Workstation 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("mastercycler8-and-bravows2", "Mastercycler 8 (Nexus SX-1) / Bravo Workstation 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"96-well-plate"}), 
 				getContainerSupportCategories(new String[]{"96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		// FDS 15/11/2017 NGL-1691 en fait il faut aussi un instrument  "hybride Bravo Workstation + Mastercycler EP-Gradient" (dans l'autre sens) avec des propriétés differentes ( juste celles du bravo seul)...
+		// FDS 15/11/2017 NGL-1691 en fait il faut aussi un pseudo instrument "Bravo Workstation + Mastercycler EP-Gradient" (dans l'autre sens) avec des propriétés differentes ( juste celles du bravo seul)...
 		// pour l'instant creer toutes les combinaisons quitte a en supprimer plus tard...
+		// 22/02/2018 suprimer ce qui n'est pas utilisé
 		l.add(newInstrumentUsedType("Bravo Workstation + Mastercycler EP-Gradient", "bravows-and-mastercycler-epg", InstrumentCategory.find.findByCode("thermocycler-and-liquid-handling-robot"), getBravoWsProperties(), 
 				getInstruments(
 						createInstrument("bravows1-and-mastercycler1", "Bravo Workstation 1 / Mastercycler 1 (EP-Gradient)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("bravows1-and-mastercycler2", "Bravo Workstation 1 / Mastercycler 2 (EP-Gradient)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("bravows1-and-mastercycler4", "Bravo Workstation 1 / Mastercycler 4 (EP-Gradient)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						
-						createInstrument("bravows2-and-mastercycler1", "Bravo Workstation 2 / Mastercycler 1 (EP-Gradient)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("bravows2-and-mastercycler2", "Bravo Workstation 2 / Mastercycler 2 (EP-Gradient)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("bravows2-and-mastercycler4", "Bravo Workstation 2 / Mastercycler 4 (EP-Gradient)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						// a garder au cas ou le bravows1 est indisponible ???=> les inactiver
+						createInstrument("bravows2-and-mastercycler1", "Bravo Workstation 2 / Mastercycler 1 (EP-Gradient)", null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("bravows2-and-mastercycler2", "Bravo Workstation 2 / Mastercycler 2 (EP-Gradient)", null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("bravows2-and-mastercycler4", "Bravo Workstation 2 / Mastercycler 4 (EP-Gradient)", null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 						
+						/* le bravows3 est actuellement en pre-prcr=> ne peut etre couplé avec un Mastercycler !!
 						createInstrument("bravows3-and-mastercycler1", "Bravo Workstation 3 / Mastercycler 1 (EP-Gradient)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("bravows3-and-mastercycler2", "Bravo Workstation 3 / Mastercycler 2 (EP-Gradient)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("bravows3-and-mastercycler4", "Bravo Workstation 3 / Mastercycler 4 (EP-Gradient)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+						createInstrument("bravows3-and-mastercycler4", "Bravo Workstation 3 / Mastercycler 4 (EP-Gradient)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))
+						*/
 
+				getContainerSupportCategories(new String[]{"96-well-plate"}), 
+				getContainerSupportCategories(new String[]{"96-well-plate"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
+		// FDS 22/02/2018 NGL-1860 il faut aussi un pseudo instrument "Bravo Workstation + Mastercycler Nexus" (dans l'autre sens) avec des propriétés differentes ( juste celles du bravo seul)..
+		l.add(newInstrumentUsedType("Bravo Workstation + Mastercycler Nexus SX-1", "bravows-and-mastercycler-nexus", InstrumentCategory.find.findByCode("thermocycler-and-liquid-handling-robot"), getBravoWsProperties(), 
+				getInstruments(
+						createInstrument("bravows1-and-mastercycler5", "Bravo Workstation 1 / Mastercycler 5 (Nexus SX-1)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("bravows2-and-mastercycler7", "Bravo Workstation 2 / Mastercycler 7 (Nexus SX-1)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("bravows2-and-mastercycler8", "Bravo Workstation 2 / Mastercycler 8 (Nexus SX-1)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),	
 				getContainerSupportCategories(new String[]{"96-well-plate"}), 
 				getContainerSupportCategories(new String[]{"96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));

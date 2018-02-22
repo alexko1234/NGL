@@ -250,7 +250,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getPropertyDefinitionsPcrAndPurification(),
 					getInstrumentUsedTypes("mastercycler-epg-and-zephyr",
 							               "mastercycler-epg-and-bravows",
-							               "mastercycler-ep-gradient" ),      // 29/11/2017 NGL-1717 mastercycler-ep-gradient
+							               "mastercycler-ep-gradient",        // 29/11/2017 NGL-1717 ajout 
+							               "mastercycler-nexus-and-bravows"), // 22/02/2018 NGL-1860 ajout
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
@@ -362,7 +363,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsCapture(),
 					getInstrumentUsedTypes("bravo-workstation",
-							               "bravows-and-mastercycler-epg"), 
+							               "bravows-and-mastercycler-epg",
+										   "bravows-and-mastercycler-nexus"),  // 22/02/2018 NGL-1860: ajout
 					"OneToOne",
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
