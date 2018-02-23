@@ -21,17 +21,16 @@ public class PropertyValueFieldConfiguration extends AbstractFieldConfiguration 
 
 	@Override
 	public void populateField(Field field, Object dbObject,
-			Map<Integer, String> rowMap, ContextValidation contextValidation, Action action) throws Exception {
-		
-		PropertyValue psv = (PropertyValue)Class.forName(className).newInstance();
-		if(null != value)
+			                  Map<Integer, String> rowMap, 
+			                  ContextValidation contextValidation, 
+			                  Action action) throws Exception {
+		PropertyValue<?> psv = (PropertyValue<?>)Class.forName(className).newInstance();
+		if (value != null)
 			value.populateField(psv.getClass().getField("value"), psv, rowMap, contextValidation, action);
-		if(null != unit)
+		if (unit != null)
 			unit.populateField(psv.getClass().getField("unit"), psv, rowMap, contextValidation, action);	
-		if(value != null){ //only if value not unit
+		if (value != null) //only if value not unit
 			populateField(field, dbObject, psv);
-		}
 	}
-
 	
 }

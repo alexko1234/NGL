@@ -35,28 +35,25 @@ public class NGLControllerHelper {
 	}
 	
 	public static List<Query> generateQueriesForProperties(Map<String, List<String>> properties,
-			Level.CODE level, 
-			String prefixPropertyPath) {
+			                                               Level.CODE level, 
+			                                               String prefixPropertyPath) {
 		List<Query> queries = new ArrayList<Query>();
 		try {
-			for(String keyValue : properties.keySet()){
-				
+			for (String keyValue : properties.keySet()) {
 				String[] key = keyValue.split("\\|",2);
-				
 				PropertyDefinition pd = PropertyDefinition.find.findUnique(key[0], level);
 				List<String> stringValues = properties.get(keyValue);
-				if(null != pd && CollectionUtils.isNotEmpty(stringValues)){					
+				if (pd != null && CollectionUtils.isNotEmpty(stringValues)) {					
 					Query subQueries = DBQuery.empty();
-					if(key.length == 1){
+					if (key.length == 1) {
 						List<Object> values = ValidationHelper.convertStringToType(pd.valueType, stringValues);
-					
 						//use $in because is more generic than $is and work to field of type array or single
 						subQueries = DBQuery.in(prefixPropertyPath+"."+key[0]+".value", values);
 						//in case of property is not defined in the document ???
-						if(Boolean.class.getName().equals(pd.valueType) && !((Boolean)values.get(0)).booleanValue()){
+						if (Boolean.class.getName().equals(pd.valueType) && !((Boolean)values.get(0)).booleanValue()) {
 							subQueries = DBQuery.or(subQueries, DBQuery.notExists(prefixPropertyPath+"."+key[0]+".value"));
 						}						
-					}else if(key.length > 1 && stringValues.size() == 1){
+					} else if (key.length > 1 && stringValues.size() == 1) {
 						if(key[1].equals("regex")){
 							Pattern pattern = convertStringToPattern(stringValues.get(0));
 							subQueries = DBQuery.regex(prefixPropertyPath+"."+key[0]+".value", pattern);
@@ -95,22 +92,23 @@ public class NGLControllerHelper {
 	}
 	
 	private static Pattern convertStringToPattern(String value) {
-		
 		return Pattern.compile(value);
 	}
 	
-	private static List<Pattern> convertStringToPatterns(List<String> values) {
-		List<Pattern> objects = new ArrayList<Pattern>(values.size());
-		for(String value : values){
-			objects.add(Pattern.compile(value));
-		}	
-		return objects;
-	}
+//	private static List<Pattern> convertStringToPatterns(List<String> values) {
+//		List<Pattern> objects = new ArrayList<Pattern>(values.size());
+//		for(String value : values){
+//			objects.add(Pattern.compile(value));
+//		}	
+//		return objects;
+//	}
 
-	public static List<Query> generateQueriesForTreatmentProperties(Map<String, Map<String, List<String>>> treatmentProperties, Level.CODE level, 
-			String prefixPropertyPath) {
+	public static List<Query> generateQueriesForTreatmentProperties(Map<String, Map<String, 
+			                                                        List<String>>> treatmentProperties, 
+																	Level.CODE level, 
+																	String prefixPropertyPath) {
 		List<Query> queries = new ArrayList<Query>();
-		for(String key : treatmentProperties.keySet()){
+		for (String key : treatmentProperties.keySet()) {
 			queries.addAll(generateQueriesForProperties(treatmentProperties.get(key), level, prefixPropertyPath+"."+key));			
 		}
 		return queries;
@@ -119,10 +117,10 @@ public class NGLControllerHelper {
 	public static Collection<? extends Query> generateExistsQueriesForFields(Map<String, Boolean> existingFields) {
 		List<Query> queries = new ArrayList<Query>();
 		if (MapUtils.isNotEmpty(existingFields)) { //all
-			for(String field : existingFields.keySet()){
-				if(Boolean.FALSE.equals(existingFields.get(field))){
+			for (String field : existingFields.keySet()) {
+				if (Boolean.FALSE.equals(existingFields.get(field))) {
 					queries.add(DBQuery.notExists(field));
-				}else if(Boolean.TRUE.equals(existingFields.get(field))){
+				} else if(Boolean.TRUE.equals(existingFields.get(field))) {
 					queries.add(DBQuery.exists(field));
 				}
 			}		
@@ -134,19 +132,15 @@ public class NGLControllerHelper {
 		List<Query> queries = new ArrayList<Query>();
 		if (MapUtils.isNotEmpty(fieldsQueries)) {
 			try {
-				for(String keyValue : fieldsQueries.keySet()){
-					
+				for (String keyValue : fieldsQueries.keySet()) {
 					String[] keys = keyValue.split("\\|",2);
-					if(keys.length != 2){
-						throw new RuntimeException("bad query fields configuration :"+keyValue);
-						
+					if (keys.length != 2) {
+						throw new RuntimeException("bad query fields configuration :" + keyValue);
 					}
 					String fieldName = keys[0];
 					String operator = keys[1];
-					String value = fieldsQueries.get(keyValue);
-							
+					String value = fieldsQueries.get(keyValue);						
 					Query subQueries = DBQuery.empty();
-					
 					switch (operator) {
 					case "regex":
 						Pattern pattern = convertStringToPattern(value);
@@ -160,9 +154,9 @@ public class NGLControllerHelper {
 						subQueries = DBQuery.notEquals(fieldName, value);
 						break;
 					case "exists":
-						if("TRUE".equals(value)){
+						if ("TRUE".equals(value)) {
 							subQueries = DBQuery.exists(fieldName);
-						}else if("FALSE".equals(value)){
+						} else if("FALSE".equals(value)) {
 							subQueries = DBQuery.notExists(fieldName);
 						}	
 						break;
@@ -170,7 +164,6 @@ public class NGLControllerHelper {
 						throw new RuntimeException("operator not managed or not valid : "+operator);					
 					}				
 					queries.add(subQueries);
-								
 				}
 			} catch (DAOException e) {
 				throw new RuntimeException(e);
@@ -178,4 +171,5 @@ public class NGLControllerHelper {
 		}
 		return queries;
 	}
+	
 }
