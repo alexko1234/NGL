@@ -90,7 +90,6 @@ public class XmlServices {
 	
 		return submission;
 	}
-	
 
 	public static void writeStudyXml (Submission submission, File outputFile) throws IOException, SraException {	
 		if (submission == null) {

@@ -36,16 +36,13 @@ import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
 
-public class ContainerValidationHelper extends CommonValidationHelper{
+public class ContainerValidationHelper extends CommonValidationHelper {
 
-	public static void validateContainerCategoryCode(String categoryCode,
-			ContextValidation contextValidation) {
+	public static void validateContainerCategoryCode(String categoryCode, ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "categoryCode", ContainerCategory.find,false);
-
 	}
 	
 	public static void validateContents(List<Content> contents, ContextValidation contextValidation) {
-		
 		if(ValidationHelper.required(contextValidation, contents, "contents")){
 			Iterator<Content> iterator = contents.iterator();
 			int i = 0;
@@ -281,21 +278,19 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 	}
 	
 	@Deprecated
-	public static void validateProcessTypeCode(String processTypeCode,
-			ContextValidation contextValidation) {
+	public static void validateProcessTypeCode(String processTypeCode, ContextValidation contextValidation) {
 		BusinessValidationHelper.validateExistDescriptionCode(contextValidation, processTypeCode, "processTypeCode", ProcessType.find);
 		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
-		if(stateCode.startsWith("A") || stateCode.startsWith("IW-E")){
+		if (stateCode.startsWith("A") || stateCode.startsWith("IW-E")) {
 			ValidationHelper.required(contextValidation, processTypeCode, "processTypeCode");
-		}else if("IW-P".equals(stateCode) && null != processTypeCode){
+		} else if("IW-P".equals(stateCode) && null != processTypeCode) {
 			contextValidation.addErrors("processTypeCode", "error.validation.container.inputProcesses.notnull");
 		}	
 	}
 	
 	@Deprecated
 	public static void validateStateCode(Container container,ContextValidation contextValidation) {
-		
-		boolean workflow=false;
+		boolean workflow = false;
 		if(contextValidation.getObject("workflow")!=null){
 			workflow=true;
 		}

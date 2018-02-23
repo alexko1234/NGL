@@ -1,9 +1,13 @@
 package controllers.instruments.io.utils;
 
+import static fr.cea.ig.play.IGGlobals.configuration;
+
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,8 +30,8 @@ import org.mongojack.DBQuery;
 
 // import play.Logger;
 // TODO : remove application acccess 
-import play.Play;
-import scala.io.Codec;
+// import play.Play;
+// import scala.io.Codec;
 import fr.cea.ig.MongoDBDAO;
 
 public class OutputHelper {
@@ -42,8 +46,10 @@ public class OutputHelper {
 			logger.error("DAO error: " + e.getMessage(),e);
 		}
 		if (instrument != null) {
-			if (Play.application().configuration().getString("ngl.path.instrument") != null) {
-				return Play.application().configuration().getString("ngl.path.instrument")+java.io.File.separator;
+//			if (Play.application().configuration().getString("ngl.path.instrument") != null) {
+//				return Play.application().configuration().getString("ngl.path.instrument")+java.io.File.separator;
+			if (configuration().getString("ngl.path.instrument") != null) {
+				return configuration().getString("ngl.path.instrument")+java.io.File.separator;
 			} else if(addSampleSheet) {
 				return instrument.path + java.io.File.separator + "SampleSheet" + java.io.File.separator;
 			} else {
@@ -61,7 +67,7 @@ public class OutputHelper {
 		Writer writer = null;
 		try {
 			FileOutputStream fos = new FileOutputStream(file.filename);
-			writer = new OutputStreamWriter(fos, Codec.UTF8().name());			
+			writer = new OutputStreamWriter(fos, StandardCharsets.UTF_8); // Codec.UTF8().name());			
 			writer.write(file.content);
 			writer.append("\r\n");
 			writer.close();
