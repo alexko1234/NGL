@@ -58,6 +58,7 @@ import fr.cea.ig.MongoDBDAO;
 
 public class InstanceTest extends AbstractTests{
 
+	@SuppressWarnings("unchecked")
 	static final Class<DBObject>[] classTest = new Class[]
 			{ Process.class
 		    , Sample.class
@@ -83,9 +84,8 @@ public class InstanceTest extends AbstractTests{
 
 	@BeforeClass
 	public static  void initData() throws DAOException {
-			//ExperimentType
-			sexpExperimentType=ExperimentType.find.findAll().get(0);
-			
+		//ExperimentType
+		sexpExperimentType=ExperimentType.find.findAll().get(0);
 	}	
 
 	//@Test 
@@ -96,7 +96,6 @@ public class InstanceTest extends AbstractTests{
 
 	//@Test
 	public void updateProject() throws DAOException {
-
 		Project project = findObject(Project.class);
 		project.name             = "projectName";
 		project.comments         = new ArrayList<Comment>();
@@ -105,7 +104,7 @@ public class InstanceTest extends AbstractTests{
 		project.traceInformation.setTraceInformation("test");
 		project.typeCode         = "projectType";
 		project.categoryCode     = "categoryProject";
-		
+
 		project.state            = new State(); 
 		project.state.code       = "EtatprojectType";
 		project.state.user       = "test";
@@ -128,8 +127,7 @@ public class InstanceTest extends AbstractTests{
 
 	//@Test
 	public void updateSample() {
-		Sample sample=findObject(Sample.class);
-
+		Sample sample = findObject(Sample.class);
 		sample.name            = "sampleName";
 		sample.referenceCollab = "Ref collab";
 		
@@ -257,8 +255,6 @@ public class InstanceTest extends AbstractTests{
 		//public Map<String,PropertyValue> experimentProperties;
 		//public Map<String, PropertyValue> instrumentProperties;
 		//		public String protocolCode;
-
-
 		experiment.comments=new ArrayList<Comment>();
 		experiment.comments.add(new Comment("comment", "ngl-test"));
 		experiment.traceInformation.setTraceInformation("test"); 
@@ -273,7 +269,7 @@ public class InstanceTest extends AbstractTests{
 			experiment.atomicTransfertMethods.add(i,oneToOneContainer);
 		}
 		
-		Experiment newExperiment=MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, experiment);
+		Experiment newExperiment = MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, experiment);
 		
 		assertThat(newExperiment.code).isEqualTo(experiment.code);
 		//assertThat(newExperiment.state.code).isEqualTo(state.code);

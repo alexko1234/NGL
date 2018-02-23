@@ -47,38 +47,44 @@ public  abstract class AbstractScript {
 		sb.append(arg);
 //		sb.append('\n');
 		println();
-		switch (logLevel()) {
-		case None:
-			break;
-		case Debug : 
-			logger.debug(arg); 
-			break;
-		case Info : 
-			logger.info(arg); 
-			break;
-		default:
-			throw new RuntimeException("unkown log level " + logLevel());
-		}
+		log(arg);
+//		switch (logLevel()) {
+//		case None:
+//			break;
+//		case Debug : 
+//			logger.debug(arg); 
+//			break;
+//		case Info : 
+//			logger.info(arg); 
+//			break;
+//		default:
+//			throw new RuntimeException("unkown log level " + logLevel());
+//		}
 	}	
 	
 	public void printfln(String format, Object... args ) {
 		String arg = String.format(format, args);
 		sb.append(arg);
-		sb.append('\n');
+//		sb.append('\n');
+		println();
+		log(arg);
+	}	
+		
+	private void log(String s) {
 		switch (logLevel()) {
 		case None:
 			break;
 		case Debug : 
-			logger.debug(arg); 
+			logger.debug(s); 
 			break;
 		case Info : 
-			logger.info(arg); 
+			logger.info(s); 
 			break;
 		default:
 			throw new RuntimeException("unkonw log level " + logLevel());
 		}
-	}	
-		
+	}
+	
 	public LogLevel logLevel() {
 		return LogLevel.Debug;
 	}	
