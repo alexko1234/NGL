@@ -1,9 +1,10 @@
-package sra.scripts.utils;
+package fr.cea.ig.lfw.utils;
 
 import java.util.Iterator;
 import java.util.function.Function;
 
-import sra.scripts.utils.iteration.MappingIterator;
+import fr.cea.ig.lfw.utils.iteration.MappingIterator;
+import fr.cea.ig.lfw.utils.iteration.SkippingIterator;
 
 /**
  * Pas encore utilisé
@@ -17,7 +18,7 @@ public class Iterators {
 	}
 	
 	public static <A> Iterator<A> skip (Iterator <A> i, int cp) {
-		return new SkipIterator<A>(i, cp);
+		return new SkippingIterator<A>(i, cp);
 		
 	}
 }

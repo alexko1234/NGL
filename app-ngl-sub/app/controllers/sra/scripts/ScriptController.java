@@ -5,10 +5,10 @@ import java.lang.reflect.Method;
 
 import javax.inject.Inject;
 
+import fr.cea.ig.lfw.controllers.AbstractScript;
 import play.inject.Injector;
 import play.mvc.Controller;
 import play.mvc.Result;
-import sra.scripts.AbstractScript;
 
 public class ScriptController extends Controller {
 	//public static final String LILI = "lili";

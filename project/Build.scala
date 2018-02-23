@@ -248,12 +248,13 @@ object ApplicationBuild extends Build {
 		  javaWs,
 		  //ceaAuth,
 		  // ceaMongo,
-		  "javax.mail" % "mail"            % "1.4.2",
-		  "org.drools" % "drools-core"     % "6.1.0.Final",
-		  "org.drools" % "drools-compiler" % "6.1.0.Final",
-		  "org.drools" % "knowledge-api"   % "6.1.0.Final",
-		  "org.kie"    % "kie-api"         % "6.1.0.Final",
-		  "org.kie"    % "kie-internal"    % "6.1.0.Final"
+		  "javax.mail"   % "mail"            % "1.4.2",
+		  "org.drools"   % "drools-core"     % "6.1.0.Final",
+		  "org.drools"   % "drools-compiler" % "6.1.0.Final",
+		  "org.drools"   % "knowledge-api"   % "6.1.0.Final",
+		  "org.kie"      % "kie-api"         % "6.1.0.Final",
+		  "org.kie"      % "kie-internal"    % "6.1.0.Final",
+	    "commons-lang" % "commons-lang"    % "2.2"
 		) ++ (if (embeddedAuth) Seq() else Seq(ceaAuth))
 		
 		val nglbiDependencies = Seq(

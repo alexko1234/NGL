@@ -1,28 +1,35 @@
-package sra.scripts.utils.iteration;
+package fr.cea.ig.lfw.utils.iteration;
 
 import java.util.Iterator;
 import java.util.function.Function;
-/**
- * * Transforme un iterarable A en iterable B
- * @author sgas
- *
- * @param <A>
- * @param <B>
- */
 
-
-import sra.scripts.utils.ZenIterable;
+import fr.cea.ig.lfw.utils.ZenIterable;
 
 /**
- * Constructeur
+ * Transforme un iterable A en iterable B.
+ * 
  * @author sgas
  *
- * @param <A> Iterable A
- * @param <B> Iterable B
+ * @param <A> type of source elements
+ * @param <B> type of viewed elements
  */
 public class MappingIterable <A,B> implements ZenIterable <B> {
-	Iterable <A> i;
-	Function <A, B> function;
+	
+	/**
+	 * Iterable to provide a view of.
+	 */
+	private final Iterable <A> i;
+	
+	/**
+	 * Function to apply to wrapped iterable elements.
+	 */
+	private final Function <A, B> function;
+	
+	/**
+	 * Constructeur.
+	 * @param i
+	 * @param function
+	 */
 	public MappingIterable(Iterable <A> i, Function <A, B> function) {
 		this.i = i;
 		this.function = function;
@@ -37,4 +44,5 @@ public class MappingIterable <A,B> implements ZenIterable <B> {
 		Iterator <B> k = new MappingIterator <>(j, function);
 		return k;
 	}
+	
 }

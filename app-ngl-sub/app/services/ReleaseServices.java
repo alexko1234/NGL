@@ -90,21 +90,25 @@ public class ReleaseServices  {
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
 		Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, submission.studyCode);
 
-		if (submission == null) {
-			throw new SraException("soumission " + submission.code + " impossible à recuperer dans base");
-		}
-		if (! retourEbiRelease.exists()) {
+		if (submission == null) 
+			throw new SraException("soumission " + submissionCode + " impossible à recuperer dans base");
+		if (! retourEbiRelease.exists())
 			throw new SraException("Fichier resultat de l'ebi pour la release absent des disques : "+ retourEbiRelease.getAbsolutePath());
-		}
 		if (!submission.release) {
 			throw new SraException("soumission "+submission.code+" ne correspond pas a une soumission pour release");
 		}
-		BufferedReader inputBuffer = null;
-		try {
-			inputBuffer = new BufferedReader(new FileReader(retourEbiRelease));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+//		BufferedReader inputBuffer = null;
+//		try {
+//			inputBuffer = new BufferedReader(new FileReader(retourEbiRelease));
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		}
+//		// BufferedReader inputBuffer = null;
+//		try (BufferedReader inputBuffer = new BufferedReader(new FileReader(retourEbiRelease))) {
+//			// inputBuffer = new BufferedReader(new FileReader(retourEbiRelease));
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		} 
 		
 		// Get global parameters for email => utiliser Play.application().configuration().getString plutot que
 		// ConfigFactory.load().getString pour recuperer les parametres pour avoir les surcharges de AbstractTest si 

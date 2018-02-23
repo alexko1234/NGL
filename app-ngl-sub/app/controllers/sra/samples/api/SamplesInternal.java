@@ -55,7 +55,7 @@ public class SamplesInternal extends DocumentController<Sample>{
 		System.out.println(" ok je suis dans SamplesInternal.update\n");
 		Sample sampleInput = filledForm.get();
 
-		if(queryFieldsForm.fields != null){
+		if (queryFieldsForm.fields != null) {
 			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 
 			ctxVal.setUpdateMode();

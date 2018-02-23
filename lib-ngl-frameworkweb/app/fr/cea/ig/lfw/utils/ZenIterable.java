@@ -1,4 +1,4 @@
-package sra.scripts.utils;
+package fr.cea.ig.lfw.utils;
 
 import java.util.function.Consumer;
 import java.util.function.Function;

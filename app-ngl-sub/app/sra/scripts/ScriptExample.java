@@ -1,5 +1,6 @@
 package sra.scripts;
 
+import fr.cea.ig.lfw.controllers.AbstractScript;
 
 // Script interractif qui ne tourne pas pendant des heures car serveur attend reponse 
 public class ScriptExample extends AbstractScript {

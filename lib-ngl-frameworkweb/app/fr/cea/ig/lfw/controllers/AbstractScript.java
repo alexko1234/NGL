@@ -1,17 +1,19 @@
-package sra.scripts;
+package fr.cea.ig.lfw.controllers;
 
 import play.mvc.Result;
-import play.mvc.Results;//.ok; // pour utiliser les methodes de controller
-//import static controllers.sra.scripts.ScriptController.LILI;
+import play.mvc.Results;
 
 public  abstract class AbstractScript {
+	
 	private final play.Logger.ALogger logger;
 	
-	StringBuilder sb;
+	private final StringBuilder sb;
+	
+	private boolean windowsLf = false;
 	
 	public AbstractScript() {
 		logger = play.Logger.of(getClass());
-		sb = new StringBuilder();
+		sb     = new StringBuilder();
 	}
 	
 	public Result run() {
@@ -28,21 +30,34 @@ public  abstract class AbstractScript {
 		}
 	}
 	
-
 	public enum LogLevel {
-		Debug, Info
+		None,
+		Debug, 
+		Info
+	}
+	
+	public void println() {
+		if (windowsLf)
+			sb.append("\r\n");
+		else
+			sb.append('\n');
 	}
 	
 	public void println(String arg) {
 		sb.append(arg);
-		sb.append('\n');
+//		sb.append('\n');
+		println();
 		switch (logLevel()) {
+		case None:
+			break;
 		case Debug : 
 			logger.debug(arg); 
 			break;
 		case Info : 
 			logger.info(arg); 
-			break;	
+			break;
+		default:
+			throw new RuntimeException("unkown log level " + logLevel());
 		}
 	}	
 	
@@ -51,12 +66,16 @@ public  abstract class AbstractScript {
 		sb.append(arg);
 		sb.append('\n');
 		switch (logLevel()) {
+		case None:
+			break;
 		case Debug : 
 			logger.debug(arg); 
 			break;
 		case Info : 
 			logger.info(arg); 
-			break;	
+			break;
+		default:
+			throw new RuntimeException("unkonw log level " + logLevel());
 		}
 	}	
 		
@@ -67,6 +86,5 @@ public  abstract class AbstractScript {
 	// methode abstraite qui sera impementée dans les != script
 	public abstract void execute() throws Exception;
 	
-
 }
 

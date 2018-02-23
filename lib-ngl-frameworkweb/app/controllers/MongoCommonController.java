@@ -287,7 +287,8 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		
 	protected Result nativeMongoDBQuery(ListForm form) {
 		MongoCollection collection = MongoDBPlugin.getCollection(collectionName);
-		MongoCursor<T> all = (MongoCursor<T>) collection.find(form.reportingQuery).as(type);
+//		MongoCursor<T> all = (MongoCursor<T>) collection.find(form.reportingQuery).as(type);
+		MongoCursor<T> all = collection.find(form.reportingQuery).as(type);
 		if (form.datatable) {
 			// return ok(getUDTChunk(all)).as("application/json");
 			return MongoStreamer.okStreamUDT(all);
