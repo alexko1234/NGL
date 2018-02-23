@@ -1154,8 +1154,8 @@ public class ExpWorkflowsHelper {
 		*/
 		return propertiesForALevel;
 	}
-
 	
+//	private PropertyValue<?> PropertiesMerger(PropertyValue<?> u, PropertyValue<?> v) {
 	private PropertyValue PropertiesMerger(PropertyValue u, PropertyValue v) {
 		if (u.value.equals(v.value)) {
 			return u;

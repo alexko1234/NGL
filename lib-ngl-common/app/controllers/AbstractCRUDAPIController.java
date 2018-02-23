@@ -56,7 +56,7 @@ import org.mongojack.DBUpdate.Builder;
  * @param <T> class to provide CRUD for
  */
 // TODO: extend MongoController instead of DocumentController
-public abstract class AbstractCRUDAPIController<T extends DBObject> extends DocumentController<T> {
+public abstract class AbstractCRUDAPIController<T extends DBObject & ICRUDValidatable<T>> extends DocumentController<T> {
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(AbstractCRUDAPIController.class);
 	
@@ -248,8 +248,10 @@ public abstract class AbstractCRUDAPIController<T extends DBObject> extends Docu
 		// If it's a IValidatable, set context mode to creation and 
 		// call the validate.
 		if (t instanceof ICRUDValidatable) {
-			((ICRUDValidatable)t).validateInvariants(ctx);
-			((ICRUDValidatable)t).validateUpdate(ctx,past);
+//			((ICRUDValidatable)t).validateInvariants(ctx);
+//			((ICRUDValidatable)t).validateUpdate(ctx,past);
+			t.validateInvariants(ctx);
+			t.validateUpdate(ctx,past);
 		} else if (t instanceof IValidation) {
 			ctx.setUpdateMode();
 			((IValidation)t).validate(ctx);
@@ -357,7 +359,6 @@ public abstract class AbstractCRUDAPIController<T extends DBObject> extends Docu
 		return t;
 	}
 
-
 	public Result update(String code) {
 		// Test query string, could just test if it exists in the first place
 		Form<QueryFieldsForm> filledQueryFieldsForm = getQueryStringForm(QueryFieldsForm.class);
@@ -406,8 +407,8 @@ public abstract class AbstractCRUDAPIController<T extends DBObject> extends Docu
 			ctx.setDeleteMode();
 			((IValidation)t).validate(ctx);
 		} else if (t instanceof ICRUDValidatable) {
-			((ICRUDValidatable)t).validateInvariants(ctx);
-			((ICRUDValidatable)t).validateDelete(ctx);
+			((ICRUDValidatable<T>)t).validateInvariants(ctx);
+			((ICRUDValidatable<T>)t).validateDelete(ctx);
 		}
 		if ((t = afterDeletionValidation(ctx,t)) == null)
 			return null;

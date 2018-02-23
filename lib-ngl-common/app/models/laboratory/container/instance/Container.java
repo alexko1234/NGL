@@ -29,6 +29,7 @@ import models.utils.InstanceConstants;
 // import org.mongojack.MongoCollection;
 
 import validation.ContextValidation;
+import validation.ICRUDValidation;
 import validation.IValidation;
 // import validation.experiment.instance.ContainerUsedValidationHelper;
 
@@ -55,7 +56,7 @@ import fr.cea.ig.DBObject;
  *
  */
 // @MongoCollection(name="Container")
-public class Container extends DBObject implements IValidation, ITracingAccess, ICommentable {
+public class Container extends DBObject implements IValidation, ITracingAccess, ICommentable, ICRUDValidation<Container> {
 
 	//duplication for input in exp : code, categoryCode, contents, mesured*, //contents just for tag and tagCategory 
 	//duplication for output in exp :code, categoryCode, contents, mesured*, //contents just for tag and tagCategory

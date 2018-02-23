@@ -19,6 +19,8 @@ import models.laboratory.sample.instance.reporting.SampleProcessesStatistics;
 // import org.mongojack.MongoCollection;
 
 import validation.ContextValidation;
+import validation.ICRUDValidatable;
+import validation.ICRUDValidation;
 import validation.IValidation;
 import validation.sample.instance.SampleValidationHelper;
 
@@ -43,10 +45,8 @@ import fr.cea.ig.DBObject;
  * @author vrd
  * 
  */
-
-
 // @MongoCollection(name="Sample")
-public class Sample extends DBObject implements IValidation, ICommentable, ITracingAccess {
+public class Sample extends DBObject implements IValidation, ICommentable, ITracingAccess, ICRUDValidation<Sample> {
 
 	// @JsonIgnore
 	// TODO: explain
