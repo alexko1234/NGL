@@ -27,7 +27,7 @@ import models.laboratory.processes.instance.Process;
 import models.laboratory.sample.description.ImportType;
 import models.utils.InstanceConstants;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
 // import play.Logger;
 import validation.ContextValidation;
@@ -43,7 +43,7 @@ public class ContainerValidationHelper extends CommonValidationHelper {
 	}
 	
 	public static void validateContents(List<Content> contents, ContextValidation contextValidation) {
-		if(ValidationHelper.required(contextValidation, contents, "contents")){
+		if (ValidationHelper.required(contextValidation, contents, "contents")) {
 			Iterator<Content> iterator = contents.iterator();
 			int i = 0;
 			while (iterator.hasNext()){
@@ -52,11 +52,9 @@ public class ContainerValidationHelper extends CommonValidationHelper {
 				contextValidation.removeKeyFromRootKeyName("contents["+i+"]");
 				i++;
 			}
-
 			validateContentPercentageSum(contents, contextValidation);
 		}
 	}
-	
 	
 	public static void validateState(State state, ContextValidation contextValidation) {
 		if (ValidationHelper.required(contextValidation, state, "state")) {
@@ -70,15 +68,12 @@ public class ContainerValidationHelper extends CommonValidationHelper {
 	
 	public static void validateNextState(Container container, State nextState, ContextValidation contextValidation) {
 		CommonValidationHelper.validateState(ObjectType.CODE.Container, nextState, contextValidation);
-		if(!contextValidation.hasErrors() && !nextState.code.equals(container.state.code)){
-			String nextStateCode = nextState.code;
+		if (!contextValidation.hasErrors() && !nextState.code.equals(container.state.code)) {
+			String nextStateCode    = nextState.code;
 			String currentStateCode = container.state.code;
-			
 			String context = (String) contextValidation.getObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT);
-			
 			switch (context) {
 			case "workflow":
-				
 				if("IW-P".equals(currentStateCode) && !nextStateCode.startsWith("A")){
 					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
 				}else if(currentStateCode.startsWith("A") && !"IW-E".equals(nextStateCode)  && !"IU".equals(nextStateCode) && !"IW-D".equals(nextStateCode)){
@@ -92,7 +87,6 @@ public class ContainerValidationHelper extends CommonValidationHelper {
 				
 				break;
 			case "controllers":
-				
 				if("IW-P".equals(currentStateCode) && 
 						!nextStateCode.equals("UA") && !nextStateCode.equals("IS")){
 					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
@@ -114,24 +108,18 @@ public class ContainerValidationHelper extends CommonValidationHelper {
 				}else if("IW-E".equals(currentStateCode) || "IU".equals(currentStateCode)){
 					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
 				}
-				
 				break;
-
 			default:
 				throw new RuntimeException("FIELD_STATE_CONTAINER_CONTEXT : "+context+" not manage !!!");
-				
 			}
-			
 			/* old validation lol
 			if(("IS".equals(currentStateCode) || "UA".equals(currentStateCode)) && 
 					(!nextStateCode.equals("IW-P") && !nextStateCode.equals("UA") && !nextStateCode.equals("IS")) ){
 				contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
 			}
 			*/
-		}
-				
+		}	
 	}
-	
 	
 	@Deprecated
 	public static void validateStateCode(String stateCode,ContextValidation contextValidation){
@@ -166,22 +154,20 @@ public class ContainerValidationHelper extends CommonValidationHelper {
 	}
 
 	public static void validateInputProcessCodes(Set<String> processCodes, ContextValidation contextValidation) {
-		if(processCodes!=null && processCodes.size() > 0){
-			for(String processCode: processCodes){
+		if (processCodes!=null && processCodes.size() > 0) {
+			for (String processCode: processCodes) {
 				BusinessValidationHelper.validateExistInstanceCode(contextValidation, processCode, "processCodes", Process.class, InstanceConstants.PROCESS_COLL_NAME); 
 			}
 		}
-		
 		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
-		if(stateCode.startsWith("A") || stateCode.startsWith("IW-E")){
+		if (stateCode.startsWith("A") || stateCode.startsWith("IW-E")) {
 			ValidationHelper.required(contextValidation, processCodes, "processCodes");
-		}else if("IW-P".equals(stateCode) && CollectionUtils.isNotEmpty(processCodes)){
+		} else if("IW-P".equals(stateCode) && CollectionUtils.isNotEmpty(processCodes)) {
 			contextValidation.addErrors("processCodes", "error.validation.container.inputProcesses.notnull");
 		}		
 	}
 	
-	public static void validateImportType(String importTypeCode, Map<String, PropertyValue<?>> properties,	ContextValidation contextValidation){
-		
+	public static void validateImportType(String importTypeCode, Map<String, PropertyValue<?>> properties,	ContextValidation contextValidation) {
 		ImportType importType = BusinessValidationHelper.validateExistDescriptionCode(contextValidation, importTypeCode,"importTypeCode", ImportType.find,true);
 		if (importType != null) {
 			List<PropertyDefinition> proDefinitions=new ArrayList<PropertyDefinition>();
@@ -191,8 +177,7 @@ public class ContainerValidationHelper extends CommonValidationHelper {
 				ValidationHelper.validateProperties(contextValidation,properties, proDefinitions);
 			}
 		}
-		
-	};
+	}
 	
 	public static void validateQualityControlResults(List<QualityControlResult> qualityControlResults, ContextValidation contextValidation) {
 		contextValidation.addKeyToRootKeyName("qualityControlResults");
@@ -207,10 +192,10 @@ public class ContainerValidationHelper extends CommonValidationHelper {
 			});
 		}
 		contextValidation.removeKeyFromRootKeyName("qualityControlResults");		
-	};
+	}
 	
 	public static void validateVolume(PropertyValue<?> volume, ContextValidation contextValidation) {
-		if(volume != null && volume.value != null) {
+		if (volume != null && volume.value != null) {
 			Collection<PropertyDefinition> pdefs = new ArrayList<>();		
 			PropertyDefinition pd = new PropertyDefinition();			
 			pd.code = "volume";

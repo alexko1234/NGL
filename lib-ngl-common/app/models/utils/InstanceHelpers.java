@@ -28,8 +28,8 @@ import models.laboratory.run.instance.SampleOnContainer;
 import models.laboratory.sample.instance.Sample;
 import models.sra.submit.common.instance.Readset;
 
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.collections4.Transformer;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.mongojack.DBQuery;
@@ -52,10 +52,11 @@ import fr.cea.ig.MongoDBResult;
 
 public class InstanceHelpers {
 
-	@SuppressWarnings("unchecked")
-	public static Map<String, PropertyValue> getLazyMapPropertyValue() {
-		return MapUtils.lazyMap(new HashMap<String, PropertyValue>(), new Transformer() {
-			public PropertyValue transform(Object mapKey) {
+	// @SuppressWarnings("unchecked")
+	public static Map<String, PropertyValue<?>> getLazyMapPropertyValue() {
+//		return MapUtils.lazyMap(new HashMap<String, PropertyValue<?>>(), new Transformer() {
+		return MapUtils.lazyMap(new HashMap<>(), new Transformer() {
+			public PropertyValue<?> transform(Object mapKey) {
 				// todo comment je sais quel est le type on doit mettre
 				return new PropertySingleValue();
 			}

@@ -3,6 +3,7 @@ package services;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -102,6 +103,11 @@ public class XmlServices {
 		if (StringUtils.isNotBlank(submission.studyCode)) {	
 			System.out.println("Creation du fichier " + outputFile);
 			// ouvrir fichier en ecriture
+//			try (PrintWriter pw = new PrintWriter(new java.io.FileWriter(outputFile))) {
+//				pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>");
+//				pw.println("<STUDY_SET>");
+//				pw.println("      <STUDY_TITLE>", toto, "</STUDY_TITLE>\n");
+//			}
 			try (BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile))) {
 				String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
 				chaine = chaine + "<STUDY_SET>\n";
@@ -225,7 +231,7 @@ public class XmlServices {
 					Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, experimentCode);
 					//output_buffer.write("//\n");
 					System.out.println("Ecriture de experiment " + experimentCode);
-					if (experiment == null){
+					if (experiment == null) {
 						throw new SraException("experiment impossible à recuperer dans base :"+ experimentCode);
 					}
 					chaine = chaine + "  <EXPERIMENT alias=\"" + experimentCode + "\" center_name=\"" + VariableSRA.centerName + "\"";
@@ -251,30 +257,27 @@ public class XmlServices {
 					chaine = chaine + "        <DESIGN_DESCRIPTION></DESIGN_DESCRIPTION>\n";
 					chaine = chaine + "          <SAMPLE_DESCRIPTOR  ";
 					//if (StringUtils.isNotBlank(experiment.sampleCode) && (experiment.sampleCode.startsWith("external"))) {
-					if (StringUtils.isNotBlank(experiment.sampleCode)){
+					if (StringUtils.isNotBlank(experiment.sampleCode)) {
 						// Ecrire le nom du sample uniquement si sample Genoscope car nom "bidon" pour les samples externe
-						if (! experiment.sampleCode.startsWith("external")){
+						if (! experiment.sampleCode.startsWith("external")) {
 							chaine = chaine+  "refname=\"" + experiment.sampleCode + "\"";
 						}
 					}
-					if (StringUtils.isNotBlank(experiment.sampleAccession)){
+					if (StringUtils.isNotBlank(experiment.sampleAccession)) {
 						chaine = chaine + " accession=\""+experiment.sampleAccession + "\"";
 					}
 					chaine = chaine + "/>\n";
-
 					chaine = chaine + "          <LIBRARY_DESCRIPTOR>\n";
 					chaine = chaine + "            <LIBRARY_NAME>" + experiment.libraryName + "</LIBRARY_NAME>\n";
 					chaine = chaine + "            <LIBRARY_STRATEGY>"+ VariableSRA.mapLibraryStrategy().get(experiment.libraryStrategy.toLowerCase()) + "</LIBRARY_STRATEGY>\n";
 					chaine = chaine + "            <LIBRARY_SOURCE>" + VariableSRA.mapLibrarySource().get(experiment.librarySource.toLowerCase()) + "</LIBRARY_SOURCE>\n";
 					chaine = chaine + "            <LIBRARY_SELECTION>" + VariableSRA.mapLibrarySelection().get(experiment.librarySelection.toLowerCase()) + "</LIBRARY_SELECTION>\n";
 					chaine = chaine + "            <LIBRARY_LAYOUT>\n";
-
 					chaine = chaine + "              <"+ VariableSRA.mapLibraryLayout().get(experiment.libraryLayout.toLowerCase());	
-					if("PAIRED".equalsIgnoreCase(experiment.libraryLayout)) {
+					if ("PAIRED".equalsIgnoreCase(experiment.libraryLayout)) {
 						chaine = chaine + " NOMINAL_LENGTH=\"" + experiment.libraryLayoutNominalLength + "\"";
 					}
 					chaine = chaine + " />\n";
-
 					chaine = chaine + "            </LIBRARY_LAYOUT>\n";
 					if (StringUtils.isBlank(experiment.libraryConstructionProtocol)){
 						chaine = chaine + "            <LIBRARY_CONSTRUCTION_PROTOCOL>none provided</LIBRARY_CONSTRUCTION_PROTOCOL>\n";
@@ -323,52 +326,52 @@ public class XmlServices {
 		}
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		// On accede au run via l'experiment:
-		
+
 		if (! submission.experimentCodes.isEmpty()) {	
 			// ouvrir fichier en ecriture
 			System.out.println("Creation du fichier " + outputFile);
-			BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile));
-			String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
-			chaine = chaine + "<RUN_SET>\n";
-			for (String experimentCode : submission.experimentCodes){
-				// Recuperer objet experiment dans la base :
-				Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, experimentCode);
-				if (experiment == null) {
-					throw new SraException("experiment impossible à recuperer dans base :"+ experimentCode);
-				}
-				Run run = experiment.run;
-				if (run == null){
-					throw new SraException("run impossible à recuperer dans objet experiment:"+ experimentCode);
-				}
-				//output_buffer.write("//\n");
-				String runCode = run.code;
-				System.out.println("Ecriture du run " + runCode);
-				chaine = chaine + "  <RUN alias=\""+ runCode + "\" ";
-				if (StringUtils.isNotBlank(run.accession)) {
-					chaine = chaine + " accession=\"" + run.accession + "\" ";
-				}
-				
-				//Format date
-				chaine =  chaine + "run_date=\""+ formatter.format(run.runDate)+"\"  run_center=\""+run.runCenter+ "\" ";
-				chaine = chaine + ">\n";
-				chaine = chaine + "    <EXPERIMENT_REF refname=\"" + experimentCode + "\"/>\n";
-				chaine = chaine + "    <DATA_BLOCK>\n";
-				chaine = chaine + "      <FILES>\n";
-			
-				for (RawData rawData: run.listRawData) {
-					String fileType = rawData.extention;
-					String relatifName = rawData.relatifName;
-					fileType = fileType.replace(".gz", "");
-					chaine = chaine + "        <FILE filename=\"" + relatifName + "\" "+"filetype=\"" + fileType + "\" checksum_method=\"MD5\" checksum=\"" + rawData.md5 + "\">\n";
-					if ( run.listRawData.size() == 2 ) {
-						chaine = chaine + "          <READ_LABEL>F</READ_LABEL>\n";
-						chaine = chaine + "          <READ_LABEL>R</READ_LABEL>\n";
+			try (BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile))) {
+				String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
+				chaine = chaine + "<RUN_SET>\n";
+				for (String experimentCode : submission.experimentCodes){
+					// Recuperer objet experiment dans la base :
+					Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, experimentCode);
+					if (experiment == null) {
+						throw new SraException("experiment impossible à recuperer dans base :"+ experimentCode);
 					}
-					chaine = chaine + "        </FILE>\n";
-				}
-				chaine = chaine + "      </FILES>\n";
-				chaine = chaine + "    </DATA_BLOCK>\n";
-				chaine = chaine + "  </RUN>\n";
+					Run run = experiment.run;
+					if (run == null){
+						throw new SraException("run impossible à recuperer dans objet experiment:"+ experimentCode);
+					}
+					//output_buffer.write("//\n");
+					String runCode = run.code;
+					System.out.println("Ecriture du run " + runCode);
+					chaine = chaine + "  <RUN alias=\""+ runCode + "\" ";
+					if (StringUtils.isNotBlank(run.accession)) {
+						chaine = chaine + " accession=\"" + run.accession + "\" ";
+					}
+
+					//Format date
+					chaine = chaine + "run_date=\""+ formatter.format(run.runDate)+"\"  run_center=\""+run.runCenter+ "\" ";
+					chaine = chaine + ">\n";
+					chaine = chaine + "    <EXPERIMENT_REF refname=\"" + experimentCode + "\"/>\n";
+					chaine = chaine + "    <DATA_BLOCK>\n";
+					chaine = chaine + "      <FILES>\n";
+
+					for (RawData rawData: run.listRawData) {
+						String fileType = rawData.extention;
+						String relatifName = rawData.relatifName;
+						fileType = fileType.replace(".gz", "");
+						chaine = chaine + "        <FILE filename=\"" + relatifName + "\" "+"filetype=\"" + fileType + "\" checksum_method=\"MD5\" checksum=\"" + rawData.md5 + "\">\n";
+						if ( run.listRawData.size() == 2 ) {
+							chaine = chaine + "          <READ_LABEL>F</READ_LABEL>\n";
+							chaine = chaine + "          <READ_LABEL>R</READ_LABEL>\n";
+						}
+						chaine = chaine + "        </FILE>\n";
+					}
+					chaine = chaine + "      </FILES>\n";
+					chaine = chaine + "    </DATA_BLOCK>\n";
+					chaine = chaine + "  </RUN>\n";
 				}
 				chaine = chaine + "</RUN_SET>\n";
 				output_buffer.write(chaine);
@@ -376,7 +379,7 @@ public class XmlServices {
 				submission.xmlRuns = outputFile.getName();
 			}
 		}
-	
+	}
 
 		
 	public static void writeSubmissionXml (Submission submission, File outputFile) throws IOException {

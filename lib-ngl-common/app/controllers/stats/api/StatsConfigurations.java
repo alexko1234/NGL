@@ -17,7 +17,7 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.stats.StatsConfiguration;
 import models.utils.InstanceConstants;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 

@@ -30,7 +30,7 @@ import validation.ContextValidation;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.State;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 // import models.sra.submit.common.instance.Submission;

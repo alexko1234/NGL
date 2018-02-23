@@ -19,7 +19,7 @@ import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.run.instance.Analysis;
 import models.laboratory.run.instance.ReadSet;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -47,15 +47,15 @@ import fr.cea.ig.play.NGLContext;
 
 public class NGLObjects extends APICommonController<NGLObject> {
 
-	private final Form<NGLObjectsSearchForm> searchForm ; //= form(NGLObjectsSearchForm.class);
-	private Map<String, AbstractUpdate> mappingCollectionUpdates;
-	private NGLContext ctx;
+	// private final Form<NGLObjectsSearchForm> searchForm ; //= form(NGLObjectsSearchForm.class);
+	private Map<String, AbstractUpdate<?>>   mappingCollectionUpdates;
+	// private final NGLContext                 ctx;
 	
 	@Inject
 	public NGLObjects(NGLContext ctx, ReadSets readSets) {
 		super(ctx, NGLObject.class);
-		this.searchForm = ctx.form(NGLObjectsSearchForm.class);
-		mappingCollectionUpdates = new HashMap<String, AbstractUpdate>();
+//		this.searchForm = ctx.form(NGLObjectsSearchForm.class);
+		mappingCollectionUpdates = new HashMap<>(); // <String, AbstractUpdate>();
 		mappingCollectionUpdates.put("ngl_sq.Container", new ContainerUpdate());
 		mappingCollectionUpdates.put("ngl_sq.Process", new ProcessUpdate());
 		mappingCollectionUpdates.put("ngl_sq.Experiment", new ExperimentUpdate());

@@ -2,6 +2,8 @@ package validation.common.instance;
 
 import static validation.utils.ValidationHelper.required;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static fr.cea.ig.play.IGGlobals.configuration;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -23,13 +25,13 @@ import models.utils.InstanceConstants;
 import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
 // import play.Logger;
-import play.Play;
+//import play.Play;
 import rules.services.RulesServices6;
 import validation.ContextValidation;
 import validation.utils.BusinessValidationHelper;
@@ -40,7 +42,7 @@ import fr.cea.ig.MongoDBDAO;
 
 public class CommonValidationHelper {
 	
-	private static final play.Logger.ALogger logger = play.Logger.of(CommonValidationHelper.class);
+//	private static final play.Logger.ALogger logger = play.Logger.of(CommonValidationHelper.class);
 	
 	private static final String nameRules                              = "validations";
 
@@ -565,7 +567,8 @@ public class CommonValidationHelper {
 		facts.addAll(objects);
 		ContextValidation validationRules = new ContextValidation(contextValidation.getUser());
 		facts.add(validationRules);
-		List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), nameRules, facts);
+//		List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), nameRules, facts);
+		List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(configuration().getString("rules.key"), nameRules, facts);
 		for (Object obj : factsAfterRules) {
 			if (ContextValidation.class.isInstance(obj)) {
 				// logger.debug("validateRules/errors " + (((ContextValidation) obj).errors.size()));

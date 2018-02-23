@@ -35,8 +35,8 @@ import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 import models.utils.instance.ExperimentHelper;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;

@@ -12,8 +12,8 @@ import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.utils.dao.DAOException;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 

@@ -29,7 +29,7 @@ import models.utils.dao.DAOException;
 // import models.utils.instance.ExperimentHelper;
 import models.utils.instance.SampleHelper;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
