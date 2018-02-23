@@ -201,25 +201,25 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		
 		/** thermocyclers **/
-		//FDS ajout 03/04/2017 NGL-1225:  Mastercycler Nexus SX1 seul (input tubes ou plaques / output tubes ou  plaques)
-		//FDS 13/07/2017 "Mastercycler Nexus-SX1" et "Mastercycler Nexus" sont le meme type => fusionner !!!
-		//               essai: mettre le nom de labo dans le "path"; 15/01/2018 LHD et LMPD ont fusionné!!
-		l.add(newInstrumentUsedType("Mastercycler Nexus-SX1", "mastercycler-nexus", InstrumentCategory.find.findByCode("thermocycler"), getMastercyclerNexusProperties(), 
+		//FDS ajout 03/04/2017 NGL-1225:  Mastercycler Nexus SX-1 seul (input tubes ou plaques / output tubes ou  plaques)
+		l.add(newInstrumentUsedType("Mastercycler Nexus SX-1", "mastercycler-nexus", InstrumentCategory.find.findByCode("thermocycler"), getMastercyclerNexusProperties(), 
 				getInstruments(
-						createInstrument("mastercycler-nexus5", "Mastercycler 5 (Nexus SX1)", null, true, "ex-LHD", DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("mastercycler-nexus6", "Mastercycler 6 (Nexus SX1)", null, true, "ex-LHD", DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						
-						createInstrument("mastercycler-nexus7", "Mastercycler 7 (Nexus SX1)", null, true, "ex-LMPD", DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("mastercycler-nexus8", "Mastercycler 8 (Nexus SX1)", null, true, "ex-LMPD", DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("mastercycler-nexus9", "Mastercycler 9 (Nexus SX1)", null, true, "ex-LMPD", DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+						//Production (L2PGH)
+						createInstrument("mastercycler-nexus5", "Mastercycler 5 (Nexus SX-1)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("mastercycler-nexus6", "Mastercycler 6 (Nexus SX-1)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						//Developpement (LD)
+						createInstrument("mastercycler-nexus7", "Mastercycler 7 (Nexus SX-1)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("mastercycler-nexus8", "Mastercycler 8 (Nexus SX-1)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("mastercycler-nexus9", "Mastercycler 9 (Nexus SX-1)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
         
 		
-		//FDS 13/07/2017 le nom "Mastercycler Nexus Gradient" est incorrect =>"Mastercycler EP-Gradient"
+		//FDS 13/07/2017 renommer =>"Mastercycler EP Gradient"
 		l.add(newInstrumentUsedType("Mastercycler EP-Gradient", "mastercycler-ep-gradient", InstrumentCategory.find.findByCode("thermocycler"), getMastercyclerEPGradientProperties(), 
 				getInstruments(
+						//Production (L2PGH)
 						createInstrument("mastercycler-ep-gradient1", "Mastercycler 1 (EP Gradient)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("mastercycler-ep-gradient2", "Mastercycler 2 (EP Gradient)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("mastercycler-ep-gradient3", "Mastercycler 3 (EP Gradient)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -312,9 +312,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		
-		//FDS ajout 26/06/2017 Bravo WorkStation (input plate / output plate)
-		// FDS 10/07/2017 inversion code/name
-		// FDS 09/11/2017 ajout de properties...
+		//FDS ajout 26/06/2017 Bravo WorkStation (input plate / output plate); 09/11/2017 ajout de properties...
 		l.add(newInstrumentUsedType("Bravo WorkStation","bravo-workstation", InstrumentCategory.find.findByCode("liquid-handling-robot"), getBravoWsProperties(), 
 				getInstruments(
 						createInstrument("bravo-workstation1", "Bravo Workstation 1",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -325,7 +323,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		
 		// FDS ajout 29/01/2016 JIRA NGL-894 pseudo instruments covaris+Sciclone (plaque input/plaque output) 
-		// FDS 12/07/2017 Covaris E210 plus utilisé=> inactiver les 3 instruments mixtes
+		// FDS 12/07/2017 Covaris E210 plus utilisé=> inactiver les instruments mixtes
 		l.add(newInstrumentUsedType("Covaris E210 + Sciclone NGSX", "covaris-e210-and-sciclone-ngsx", InstrumentCategory.find.findByCode("covaris-and-liquid-handling-robot"), getCovarisAndScicloneNGSXProperties(), 
 				getInstruments(
 						createInstrument("covaris1-and-ngs1", "Covaris 1 / NGS 1", null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -428,7 +426,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		// FDS 17/07/2017 NGL-1201 : pseudo instrument Masterycler Nexus SX-1 + Bravo
 		// FDS 22/02/2018 NGL-1860 : correction: les combinaisons utilisees sont Mastercycler Nexus 5 + bravo 1  Et    Mastercycler Nexus 7ou8  + bravo 2
-		l.add(newInstrumentUsedType("Mastercycler Nexus SX1 + Bravo Workstation", "mastercycler-nexus-and-bravows", InstrumentCategory.find.findByCode("thermocycler-and-liquid-handling-robot"), getMastercyclerNexusAndBravoWsProperties(), 
+		l.add(newInstrumentUsedType("Mastercycler Nexus SX-1 + Bravo Workstation", "mastercycler-nexus-and-bravows", InstrumentCategory.find.findByCode("thermocycler-and-liquid-handling-robot"), getMastercyclerNexusAndBravoWsProperties(), 
 				getInstruments(
 						createInstrument("mastercycler5-and-bravows1", "Mastercycler 5 (Nexus SX-1) / Bravo Workstation 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("mastercycler7-and-bravows2", "Mastercycler 7 (Nexus SX-1) / Bravo Workstation 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -461,7 +459,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		// FDS 22/02/2018 NGL-1860 il faut aussi un pseudo instrument "Bravo Workstation + Mastercycler Nexus" (dans l'autre sens) avec des propriétés differentes ( juste celles du bravo seul)..
+		// FDS 22/02/2018 NGL-1860 il faut aussi un pseudo instrument "Bravo Workstation + Mastercycler Nexus SX-1" (dans l'autre sens) avec des propriétés differentes ( juste celles du bravo seul)..
 		l.add(newInstrumentUsedType("Bravo Workstation + Mastercycler Nexus SX-1", "bravows-and-mastercycler-nexus", InstrumentCategory.find.findByCode("thermocycler-and-liquid-handling-robot"), getBravoWsProperties(), 
 				getInstruments(
 						createInstrument("bravows1-and-mastercycler5", "Bravo Workstation 1 / Mastercycler 5 (Nexus SX-1)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -915,7 +913,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		return l;
 	}
 	
-	// FDS 17/07/2017 NGL-1201 Mastercycler Nexus SX1 + Bravo Workstation
+	// FDS 17/07/2017 NGL-1201 Mastercycler Nexus SX-1 + Bravo Workstation
     //     09/11/2017 NGL-1691  suppression valeurs par defaut ( pcrCycleNumber et AdnBeadVolumeRatio )
 	private static List<PropertyDefinition> getMastercyclerNexusAndBravoWsProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
