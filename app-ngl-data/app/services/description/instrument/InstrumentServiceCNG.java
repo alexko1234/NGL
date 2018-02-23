@@ -216,14 +216,14 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
         
 		
-		//FDS 13/07/2017 renommer =>"Mastercycler EP Gradient"
+		//FDS 13/07/2017 renommer =>"Mastercycler EP-Gradient"
 		l.add(newInstrumentUsedType("Mastercycler EP-Gradient", "mastercycler-ep-gradient", InstrumentCategory.find.findByCode("thermocycler"), getMastercyclerEPGradientProperties(), 
 				getInstruments(
 						//Production (L2PGH)
-						createInstrument("mastercycler-ep-gradient1", "Mastercycler 1 (EP Gradient)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("mastercycler-ep-gradient2", "Mastercycler 2 (EP Gradient)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("mastercycler-ep-gradient3", "Mastercycler 3 (EP Gradient)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("mastercycler-ep-gradient4", "Mastercycler 4 (EP Gradient)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+						createInstrument("mastercycler-ep-gradient1", "Mastercycler 1 (EP-Gradient)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("mastercycler-ep-gradient2", "Mastercycler 2 (EP-Gradient)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("mastercycler-ep-gradient3", "Mastercycler 3 (EP-Gradient)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("mastercycler-ep-gradient4", "Mastercycler 4 (EP-Gradient)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
