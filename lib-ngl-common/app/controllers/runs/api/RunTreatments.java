@@ -88,12 +88,12 @@ public class RunTreatments extends RunsController{
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public /*static*/ Result save(String runCode){
 		Run run  = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runCode);
-		if (run==null) {
+		if (run == null) 
 			return badRequest();
-		}	
 		
 		Form<Treatment> filledForm = getFilledForm(treatmentForm, Treatment.class);
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 		
 		Treatment treatment = filledForm.get();
 		ctxVal.setCreationMode();

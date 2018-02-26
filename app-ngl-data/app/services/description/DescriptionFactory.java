@@ -156,7 +156,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest a fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, String propertyValueType, int displayOrder) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
@@ -171,7 +172,6 @@ public class DescriptionFactory {
 		return pd;
 	}
 
-	
 	/*
 	 * 
 	 * @param name
@@ -184,7 +184,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest a fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, String propertyValueType, int displayOrder, String defaultValue) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
@@ -226,7 +227,9 @@ public class DescriptionFactory {
 		pd.defaultValue=defaultValue;
 		return pd;
 	}
-	@Deprecated
+	
+	// TODO: suggest a fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, Boolean editable,  String propertyValueType, int displayOrder) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
@@ -283,9 +286,9 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest a fix 
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, List<Value> values, String defaultValue, String propertyValueType, int displayOrder) {
-		
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
 		pd.code = code;
@@ -300,7 +303,6 @@ public class DescriptionFactory {
 		pd.displayOrder=displayOrder;
 		return pd;
 	}
-
 	
 	/*
 	 * 
