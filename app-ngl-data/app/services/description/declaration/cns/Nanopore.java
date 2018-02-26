@@ -155,15 +155,13 @@ public class Nanopore extends AbstractDeclaration{
 	                Arrays.asList(getPET("ext-to-nanopore-process-dev-2",-1),
 	                       
                  		// Ancien process DEV
-	                        getPET("nanopore-library",0),
-	                        getPET("nanopore-frg",0),
+	                         getPET("nanopore-frg",0),
 	                        getPET("nanopore-dna-reparation",0),
 		                       
                            //Ajout des nouvelles spec
                          getPET("nanopore-end-prep",0),
 	                                           
                        //Ancien process DEV                
-	                        getPET("nanopore-library",1),
 	                         getPET("nanopore-dna-reparation",1),
 	                        getPET("nanopore-depot",1),
 		                       
@@ -175,7 +173,6 @@ public class Nanopore extends AbstractDeclaration{
                          getPET("nanopore-pre-pcr-ligation",1),
 	               
                          //Ancien process DEV   
-	                        getPET("nanopore-library",2),
 	                        getPET("nanopore-depot",2),
 		                       
                          //Ajout des nouvelles spec
