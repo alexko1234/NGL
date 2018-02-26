@@ -26,7 +26,7 @@ import org.springframework.stereotype.Controller;
 
 import com.mongodb.BasicDBObject;
 
-import play.Logger;
+//import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -43,16 +43,17 @@ import fr.cea.ig.play.NGLContext;
 // @Controller
 public class FilteringConfigurations extends DocumentController<FilteringConfiguration> {
 	
+	private static final play.Logger.ALogger logger = play.Logger.of(FilteringConfigurations.class);
+	
 	private final /*static*/ Form<ConfigurationsSearchForm> searchForm; // = form(ConfigurationsSearchForm.class); 
-	private final /*static*/ Form<FilteringConfiguration> filteringConfigurationsForm;// = form(FilteringConfiguration.class);
+//	private final /*static*/ Form<FilteringConfiguration> filteringConfigurationsForm;// = form(FilteringConfiguration.class);
 	
 	@Inject
 	public FilteringConfigurations(NGLContext ctx) {
 		super(ctx,InstanceConstants.FILTERING_CONFIG_COLL_NAME, FilteringConfiguration.class);
 		searchForm = ctx.form(ConfigurationsSearchForm.class);
-		filteringConfigurationsForm = ctx.form(FilteringConfiguration.class);
+//		filteringConfigurationsForm = ctx.form(FilteringConfiguration.class);
 	}
-
 
 	public Result list() {
 		Form<ConfigurationsSearchForm> filledForm = filledFormQueryString(searchForm, ConfigurationsSearchForm.class);
@@ -77,11 +78,12 @@ public class FilteringConfigurations extends DocumentController<FilteringConfigu
 		
 		return query;
 	}
+	
 	public Result save() {
 		Form<FilteringConfiguration> filledForm = getMainFilledForm();
 		FilteringConfiguration configuration = filledForm.get();
 
-		if (null == configuration._id) {
+		if (configuration._id == null) {
 			configuration.traceInformation = new TraceInformation();
 			configuration.traceInformation
 					.setTraceInformation(getCurrentUser());
@@ -90,7 +92,8 @@ public class FilteringConfigurations extends DocumentController<FilteringConfigu
 			return badRequest("use PUT method to update the filtering config");
 		}
 
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		ctxVal.setCreationMode();
 		configuration.validate(ctxVal);
 		if (!ctxVal.hasErrors()) {
@@ -104,20 +107,20 @@ public class FilteringConfigurations extends DocumentController<FilteringConfigu
 	
 	public Result update(String code) {
 		FilteringConfiguration configuration = getObject(code);
-		if(configuration == null) {
+		if (configuration == null) {
 			return badRequest("FilteringConfiguration with code "+code+" does not exist");
 		}
 		Form<FilteringConfiguration> filledForm = getMainFilledForm();
 		FilteringConfiguration configurationInput = filledForm.get();
 
 		if (configurationInput.code.equals(code)) {
-			if(null != configurationInput.traceInformation){
+			if (configurationInput.traceInformation != null) {
 				configurationInput.traceInformation = getUpdateTraceInformation(configurationInput.traceInformation);
-			}else{
-				Logger.error("traceInformation is null !!");
+			} else {
+				logger.error("traceInformation is null !!");
 			}
-			
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 			ctxVal.setCreationMode();
 			configurationInput.validate(ctxVal);
 			if (!ctxVal.hasErrors()) {
@@ -132,7 +135,8 @@ public class FilteringConfigurations extends DocumentController<FilteringConfigu
 		}				
 	}
 	
-	public static String generateConfigurationCode(){
-		return ("FC-"+(new SimpleDateFormat("yyyyMMddHHmmss")).format(new Date())).toUpperCase();		
+	public static String generateConfigurationCode() {
+		return ("FC-" + new SimpleDateFormat("yyyyMMddHHmmss")).format(new Date()).toUpperCase();		
 	}
+	
 }
