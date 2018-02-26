@@ -22,7 +22,7 @@ import play.Logger;
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;
 import views.components.datatable.DatatableResponse;
-import akka.event.Logging.Debug;
+//import akka.event.Logging.Debug;
 import com.mongodb.BasicDBObject;
 
 import models.laboratory.reagent.description.AbstractCatalog;
@@ -38,7 +38,7 @@ import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
 
-public class BoxCatalogs extends DocumentController<BoxCatalog>{
+public class BoxCatalogs extends DocumentController<BoxCatalog> {
 	
 	private final /*static*/ Form<BoxCatalogSearchForm> boxCatalogSearchForm; // = form(BoxCatalogSearchForm.class);
 	
@@ -51,13 +51,14 @@ public class BoxCatalogs extends DocumentController<BoxCatalog>{
 	public Result save() {
 		Form<BoxCatalog> boxCatalogFilledForm = getMainFilledForm();
 		BoxCatalog boxCatalog = boxCatalogFilledForm.get();
-		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), boxCatalogFilledForm.errors());
+//		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), boxCatalogFilledForm.errors());
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), boxCatalogFilledForm);
 		//TODO change not update autorized here !!!!
-		if (ValidationHelper.required(contextValidation, boxCatalog.name, "name")){
-			if (boxCatalog._id == null){
+		if (ValidationHelper.required(contextValidation, boxCatalog.name, "name")) {
+			if (boxCatalog._id == null) {
 				boxCatalog.code = ReagentCodeHelper.getInstance().generateBoxCatalogCode(boxCatalog.kitCatalogCode);
 				contextValidation.setCreationMode();
-			}else{
+			} else {
 				contextValidation.setUpdateMode();
 			}
 			boxCatalog = (BoxCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, boxCatalog, contextValidation);
@@ -71,7 +72,8 @@ public class BoxCatalogs extends DocumentController<BoxCatalog>{
 		Form<BoxCatalog> boxCatalogFilledForm = getMainFilledForm();
 		BoxCatalog boxCatalog = boxCatalogFilledForm.get();
 		
-		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), boxCatalogFilledForm.errors());
+//		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), boxCatalogFilledForm.errors());
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), boxCatalogFilledForm);
 		contextValidation.setUpdateMode();
 		
 		boxCatalog = (BoxCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, boxCatalog, contextValidation);
@@ -86,10 +88,11 @@ public class BoxCatalogs extends DocumentController<BoxCatalog>{
 		return ok();
 	}
 		
-	public Result list(){
+	public Result list() {
 		Form<BoxCatalogSearchForm> boxCatalogFilledForm = filledFormQueryString(boxCatalogSearchForm,BoxCatalogSearchForm.class);
 		BoxCatalogSearchForm boxCatalogSearch = boxCatalogFilledForm.get();
-		BasicDBObject keys = getKeys(boxCatalogSearch);
+//		BasicDBObject keys = 
+				getKeys(boxCatalogSearch);
 		DBQuery.Query query = getQuery(boxCatalogSearch);
 		Logger.debug("query : "+query);
 
