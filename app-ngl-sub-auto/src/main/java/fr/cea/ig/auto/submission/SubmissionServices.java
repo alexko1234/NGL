@@ -127,7 +127,7 @@ public class SubmissionServices implements ISubmissionServices{
 	{
 		File submissionFile = new File(submissionDirectory + File.separator +"submission.xml");
 
-		if(studyCode==null || SRAFilesUtil.isNotNullValue(studyCode)){
+		if(studyCode==null || !SRAFilesUtil.isNotNullValue(studyCode)){
 			throw new BirdsException("Impossible de faire la soumission pour release " + submissionCode + " sans studyCode");
 
 		}

@@ -38,6 +38,7 @@ rule "Action : create xml file for release"
 	    }catch(Exception e){
 	    	$job.setExecutionState(Job.ERROR_STATUS);
 	    	$job.setProperty("Exception",e.getMessage());
+	    	throw e;
 	    }
 end
 

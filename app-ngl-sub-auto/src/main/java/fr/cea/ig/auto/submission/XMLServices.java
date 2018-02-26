@@ -228,7 +228,7 @@ public class XMLServices implements IXMLServices{
 					chaine = chaine + "            <SPOT_DECODE_SPEC>\n";
 					chaine = chaine + "              <SPOT_LENGTH>"+rpsExp.get("spotLength")+"</SPOT_LENGTH>\n";
 					//Get readSpec
-					Set<ResourceProperties> rpsReadSpecs = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/readSpecs?experimentCode="+experimentCode,"bot");
+					Set<ResourceProperties> rpsReadSpecs = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/readSpecs?code="+experimentCode,"bot");
 
 					for (ResourceProperties rp: rpsReadSpecs) {
 						chaine = chaine + "              <READ_SPEC>\n";
