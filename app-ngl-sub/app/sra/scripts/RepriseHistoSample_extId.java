@@ -96,15 +96,15 @@ public class RepriseHistoSample_extId extends AbstractScript {
 		private SampleInfos(String accession, String externalId) {
 			this(accession, externalId, null, null);
 		}
-		public String getAccession()    {return accession;}
-		public String getExternalId()   {return externalId;}
-		public String getCode()         {return optionalCode;}
+//		public String getAccession()    {return accession;}
+//		public String getExternalId()   {return externalId;}
+//		public String getCode()         {return optionalCode;}
 //		public Date getCreationDate() {return optionalCreationDate;}
-		public Optional<Date> getCreationDate() {
-			if (optionalCreationDate==null)
-				return Optional.empty();
-			return Optional.of(optionalCreationDate);
-		}
+//		public Optional<Date> getCreationDate() {
+//			if (optionalCreationDate==null)
+//				return Optional.empty();
+//			return Optional.of(optionalCreationDate);
+//		}
 	
 	}
 	
@@ -188,19 +188,18 @@ public class RepriseHistoSample_extId extends AbstractScript {
 //		Iterable <SampleInfos>  titi_C = map   (titi_B, function_1);
 //		Iterable <SampleInfos>  titi_D = filter(titi_C, taraFilter);
 //		Iterable <SampleInfos> sampleInfos_1 = titi_D;
-				
-				
+								
 		ZenIterable <SampleInfos> sampleInfos_1 = ebi_1.skip(1).map(function_1).filter(taraFilter);
 		// si on part d'un Iterable :
 		//ZenIterable <SampleInfos> sampleInfos_1 = skip(ebi_1,1).map(function_1).filter(taraFilter);
 		//ZenIterable <SampleInfos> sampleInfos_1 = zen(ebi_1).skip(1).map(function_1).filter(taraFilter);
-		int cp = 0;				
+//		int cp = 0;				
 		for (SampleInfos sampleInfo : sampleInfos_1) {
 //			if (sampleInfo == null) {
 //				continue;
 //			}
 			sampleAcs.add(sampleInfo.accession);
-			cp++;
+//			cp++;
 			updateDB(sampleInfo);
 		}
 		sampleInfos_1.each(sampleInfo -> {
@@ -210,7 +209,6 @@ public class RepriseHistoSample_extId extends AbstractScript {
 			updateDB(sampleInfo);
 		});
 
-		
 		//----------------------------------------------------
 		// Parsing fichier 2
 		File ebiFile2 = new File("/env/cns/home/sgas/repriseHistoExtId/ebi_2_repriseHistoSample.txt");
@@ -240,11 +238,9 @@ public class RepriseHistoSample_extId extends AbstractScript {
 			}
 			sampleAcs.add(sampleInfo.accession);
 			printfln("%s  |  %s  ", sampleInfo.externalId, sampleInfo.accession);
-			cp++;
+//			cp++;
 			updateDB(sampleInfo);
 		}
-		
-		
 		
 		// Controle coherence :
 		Set<String> absentFichier = Tools.subtract(dbSampleAcs, sampleAcs);
@@ -258,7 +254,6 @@ public class RepriseHistoSample_extId extends AbstractScript {
 		for (String sampleAc : absentBase) {
 			printfln("%s",sampleAc);
 		}
-		
 	
 	}
 		

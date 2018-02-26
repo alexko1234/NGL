@@ -111,7 +111,7 @@ public class Samples extends Samples2 {
 // Standard NGL implementation
 class Samples2 extends DocumentController<Sample> {
 	
-	private static final play.Logger.ALogger logger = play.Logger.of(Samples.class);
+//	private static final play.Logger.ALogger logger = play.Logger.of(Samples.class);
 	
 	private final Form<QueryFieldsForm> updateForm; // = form(QueryFieldsForm.class);
 	//private final Form<Sample> sampleForm; // = form(Sample.class);
