@@ -154,14 +154,15 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 	@Permission(value={"writing"})	
 	public Result updateState(String code){
 		ContainerSupport support = getSupport(code);
-		if(support == null){
+		if (support == null) 
 			return badRequest();
-		}
+
 		Form<State> filledForm =  getFilledForm(stateForm, State.class);
 		State state = filledForm.get();
 		state.date = new Date();
 		state.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
 		ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_STATE, Boolean.TRUE);
 		workflows.setState(ctxVal, support, state);
@@ -189,11 +190,12 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 			.map(filledForm -> {
 				ContainerSupportBatchElement element = filledForm.get();
 				ContainerSupport support = getSupport(element.data.code);
-				if (null != support) {
+				if (support != null) {
 					State state = element.data.state;
 					state.date = new Date();
 					state.user = user;
-					ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+//					ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+					ContextValidation ctxVal = new ContextValidation(user, filledForm);
 					ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
 					ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_STATE, Boolean.TRUE);
 					workflows.setState(ctxVal, support, state);

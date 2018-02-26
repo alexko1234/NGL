@@ -1,5 +1,7 @@
 package services.instance.resolution;
 
+import static fr.cea.ig.play.IGGlobals.configuration;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,8 +16,8 @@ import models.laboratory.resolutions.instance.ResolutionConfiguration;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
-import play.Logger;
-import play.Logger.ALogger;
+//import play.Logger;
+//import play.Logger.ALogger;
 import services.instance.InstanceFactory;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
@@ -29,23 +31,36 @@ import fr.cea.ig.MongoDBDAO;
  */
 public class ResolutionService {
 	
-	private static final ALogger logger = Logger.of("ResolutionService");
+	private static final play.Logger.ALogger logger = play.Logger.of(ResolutionService.class);
+	
 	private static HashMap<String, ResolutionCategory> resolutionCategories; 
 	
-	public static void main(ContextValidation ctx) {	
-		
-		String inst=play.Play.application().configuration().getString("institute");
-		
-		if ( inst.equals("CNS") || inst.equals("CNG") || inst.equals("TEST") ) {
-			Logger.info("Create and save "+inst+ " resolution categories ...");
-			
+//	public static void main(ContextValidation ctx) {			
+//		String inst=play.Play.application().configuration().getString("institute");
+//		if ( inst.equals("CNS") || inst.equals("CNG") || inst.equals("TEST") ) {
+//			Logger.info("Create and save "+inst+ " resolution categories ...");
+//			saveResolutions(ctx, inst);
+//			Logger.info(inst+" Resolution collection creation is done!");
+//		}
+//		else {
+//			Logger.error("You need to specify only one institute !");
+//		}
+//		ctx.displayErrors(logger);
+//	}
+	
+	public static void main(ContextValidation ctx) {			
+		String inst = configuration().getString("institute");
+		switch (inst) {
+		case "CNS"  :
+		case "CNG"  :
+		case "TEST" :
+			logger.info("Create and save "+inst+ " resolution categories ...");
 			saveResolutions(ctx, inst);
-			Logger.info(inst+" Resolution collection creation is done!");
+			logger.info(inst+" Resolution collection creation is done!");
+			break;
+		default  :
+			logger.error("You need to specify only one institute !");
 		}
-		else {
-			Logger.error("You need to specify only one institute !");
-		}
-		
 		ctx.displayErrors(logger);
 	}
 	
@@ -555,20 +570,19 @@ public class ResolutionService {
 		ArrayList<String> al = new ArrayList<String>(); 
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class,r.code);
-		List<String> typeCodes=MongoDBDAO.getCollection(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class).distinct("typeCodes");
+		List<String> typeCodes = MongoDBDAO.getCollection(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class).distinct("typeCodes");
 		
 		try {
 			List<ExperimentType> expTypes=ExperimentType.find.findAll();
 			for(ExperimentType expType:expTypes){
-				if(typeCodes == null || !typeCodes.contains(expType.code)){
-					Logger.debug("Add experimentType default resolution "+ expType.code);
+				if (typeCodes == null || !typeCodes.contains(expType.code)) {
+					logger.debug("Add experimentType default resolution "+ expType.code);
 					al.add(expType.code);
 				}	
 			}
 		} catch (DAOException e) {
-			Logger.error("Creation Resolution for ExperimentType error "+e.getMessage());
+			logger.error("Creation Resolution for ExperimentType error " + e.getMessage());
 		}
-		
 		r.typeCodes = al;
 		ctx.setCreationMode();
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
@@ -818,15 +832,13 @@ public class ResolutionService {
 		try {
 			List<ProcessType> processTypes=ProcessType.find.findAll();
 			for(ProcessType processType:processTypes){
-					Logger.debug("Add processType default resolution "+ processType.code);
+					logger.debug("Add processType default resolution "+ processType.code);
 					al.add(processType.code);
 			}
 		} catch (DAOException e) {
-			Logger.error("Creation Resolution for Process Type error "+e.getMessage());
+			logger.error("Creation Resolution for Process Type error "+e.getMessage());
 		}
-		
 		r.typeCodes = al;
-		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
 	}
@@ -856,14 +868,13 @@ public class ResolutionService {
 		
 		try {
 			List<ProcessType> processTypes=ProcessType.find.findAll();
-			for(ProcessType processType:processTypes){
-					Logger.debug("Add processType default resolution "+ processType.code);
+			for (ProcessType processType:processTypes) {
+					logger.debug("Add processType default resolution "+ processType.code);
 					al.add(processType.code);
 			}
 		} catch (DAOException e) {
-			Logger.error("Creation Resolution for Process Type error "+e.getMessage());
+			logger.error("Creation Resolution for Process Type error "+e.getMessage());
 		}
-		
 		r.typeCodes = al;
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
@@ -879,7 +890,6 @@ public class ResolutionService {
 
 		return l;
 	}
-	
 	
 	public static void createContainerResolutionCNG(ContextValidation ctx) {
 		List<Resolution> l = new ArrayList<Resolution>();
