@@ -74,7 +74,11 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 				Logger.info("Nb samples to update :"+samples.size());
 				samples.stream().forEach(sample -> {
 					//Logger.debug("Sample "+sample.code);
-					updateOneSample(sample,contextError);
+					try{
+						updateOneSample(sample,contextError);
+					}catch(Throwable t){
+						logger.error(t.getMessage(),t);	
+					}						
 				});
 	}
 
