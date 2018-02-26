@@ -131,8 +131,7 @@ public class Nanopore extends AbstractDeclaration{
 	                Arrays.asList(getPET("ext-to-nanopore-process-dev",-1),
 	                       
 	                        getPET("nanopore-library",0),
-	                        getPET("nanopore-fragmentation",0),
-	                        getPET("nanopore-frg",0),
+	                         getPET("nanopore-frg",0),
 	                        getPET("nanopore-dna-reparation",0),
 	                       
 	                                           
@@ -157,7 +156,6 @@ public class Nanopore extends AbstractDeclaration{
 	                       
                  		// Ancien process DEV
 	                        getPET("nanopore-library",0),
-	                        getPET("nanopore-fragmentation",0),
 	                        getPET("nanopore-frg",0),
 	                        getPET("nanopore-dna-reparation",0),
 		                       
