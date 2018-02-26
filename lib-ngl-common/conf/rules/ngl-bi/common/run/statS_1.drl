@@ -64,13 +64,13 @@ rule "Copy NovaSeq properties from Container to Run illumina"
 			Set<String> flowCellTypes = new TreeSet<String>();
 			for(Container container:containers){
 				for(Content content:container.contents){
-					if(content.properties.containsKey("flowcellType")){
-						flowCellTypes.add((String)(content.properties.get("flowcellType").value));
+					if(content.properties.containsKey("novaseqFlowcellMode")){
+						flowCellTypes.add((String)(content.properties.get("novaseqFlowcellMode").value));
 					}
 				}
 			}
 			if(flowCellTypes.size() > 0){
-					$run.properties.put("flowCellTypes", new PropertyListValue(new ArrayList(libProcessTypeCodes)));
+					$run.properties.put("novaseqFlowcellMode", new PropertyListValue(new ArrayList(flowCellTypes)));
 			}
 			
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
