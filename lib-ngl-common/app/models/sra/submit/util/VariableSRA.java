@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.util.StringUtil;
 
+import fr.cea.ig.ngl.utils.HashMapBuilder;
 import play.Configuration;
 import play.Play;
 
@@ -30,12 +31,15 @@ public abstract class VariableSRA {
 	public static final Map<String, String> mapCenterName() {
 		return SraParameter.getParameter("centerName");
 	}
+	
 	public static final Map<String, String> mapLaboratoryName() {
 		return SraParameter.getParameter("laboratoryName");
 	}
+	
 	public static final Map<String, String> mapLibProcessTypeCodeVal_orientation() {
 		return SraParameter.getParameter("libProcessTypeCodeValue_orientation");
 	}
+	
 	public static final Map<String, String> mapTypeReadset() { 
 		return SraParameter.getParameter("typeReadset");
 	}
@@ -73,23 +77,24 @@ public abstract class VariableSRA {
 	}
 	
 	public static final Map<String, String> mapAnalysisFileType() {
-		return  SraParameter.getParameter("analysisFileType"); 
+		return SraParameter.getParameter("analysisFileType"); 
 	}
 
-	public static final Map<String, String> mapStrategySample = new HashMap<String, String>() {
-		{
-			put("strategy_external_sample", "strategy_external_sample"); // Si pas de sample à creer parce que fournis par les collaborateurs
-			put("strategy_sample_taxon",    "strategy_sample_taxon");    // si sample specifique par code_projet et taxon
-			put("strategy_sample_clone",    "strategy_sample_clone");    // si sample specifique par code_projet et clone
-		}
-	};
-	
-	public static final Map<String, String> mapStrategyStudy = new HashMap<String, String>() {
-		{
-			put("strategy_external_study", "strategy_external_study"); // Si pas de study à creer parce que fournis par les collaborateurs
-			put("strategy_internal_study", "strategy_internal_study"); 
-		}
-	};	
+//	public static final Map<String, String> mapStrategySample = new HashMap<String, String>() {
+//		{
+//			put("strategy_external_sample", "strategy_external_sample"); // Si pas de sample à creer parce que fournis par les collaborateurs
+//			put("strategy_sample_taxon",    "strategy_sample_taxon");    // si sample specifique par code_projet et taxon
+//			put("strategy_sample_clone",    "strategy_sample_clone");    // si sample specifique par code_projet et clone
+//		}
+//	};
+//	
+//	public static final Map<String, String> mapStrategyStudy = new HashMap<String, String>() {
+//		{
+//			put("strategy_external_study", "strategy_external_study"); // Si pas de study à creer parce que fournis par les collaborateurs
+//			put("strategy_internal_study", "strategy_internal_study"); 
+//		}
+//	};	
+//
 	
 	private static String getString(Configuration conf, String key) {
 		String result = conf.getString(key);
@@ -99,6 +104,19 @@ public abstract class VariableSRA {
 		return result;
 	}
 	
+	public static final Map<String, String> mapStrategySample = 
+			new HashMapBuilder<String,String>()
+				.put("strategy_external_sample", "strategy_external_sample") // Si pas de sample à creer parce que fournis par les collaborateurs
+				.put("strategy_sample_taxon",    "strategy_sample_taxon")    // si sample specifique par code_projet et taxon
+				.put("strategy_sample_clone",    "strategy_sample_clone")    // si sample specifique par code_projet et clone
+				.asMap();
+	
+	public static final Map<String, String> mapStrategyStudy = 
+			new HashMapBuilder<String,String>()
+				.put("strategy_external_study", "strategy_external_study") // Si pas de study à creer parce que fournis par les collaborateurs
+				.put("strategy_internal_study", "strategy_internal_study")
+				.asMap();
+		
 	static {
 		Configuration conf      = Play.application().configuration();
 		centerName              = getString(conf, "centerName");

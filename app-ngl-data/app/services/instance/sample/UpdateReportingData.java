@@ -366,16 +366,16 @@ public class UpdateReportingData extends AbstractImportData {
 		return sampleReadSet;
 	}
 
-	private Map<String, Treatment> filterTreaments(Map<String, Treatment> treatments) {
-		treatments.values()
-			.parallelStream()
-			.forEach(treament ->{
-				treament.results.entrySet().forEach(entry -> {
-					entry.setValue(filterProperties(entry.getValue()));
-				});
-			});
-		return treatments;
-	}
+//	private Map<String, Treatment> filterTreaments(Map<String, Treatment> treatments) {
+//		treatments.values()
+//			.parallelStream()
+//			.forEach(treament ->{
+//				treament.results.entrySet().forEach(entry -> {
+//					entry.setValue(filterProperties(entry.getValue()));
+//				});
+//			});
+//		return treatments;
+//	}
 	
 	/**
 	 * Extract ReadSet before the beginning of ngl-sq used.

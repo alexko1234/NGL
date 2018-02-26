@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.StringUtils;
 
 import play.Logger.ALogger;
+import play.data.Form;
 import play.data.validation.ValidationError;
 
 // TODO: change name to ValidationContext
@@ -73,6 +74,10 @@ public class ContextValidation {
 		this.user      = user;
 	}
 
+	public ContextValidation(String user, Form<?> form) {
+		this(user,form.errors());
+	}
+	
 	/**
 	 * User running the validation.
 	 * @return user running the validation. 

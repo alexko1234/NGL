@@ -52,9 +52,9 @@ public class NGLBaseModule extends play.api.inject.Module {
 	 *   <li>{@link play.api.modules.spring.SpringPlugin}</li>
 	 *   <li>{@link fr.cea.ig.authorization.IAuthorizator} to {@link fr.cea.ig.authorization.authorizators.ConfiguredAuthorizator}</li>
 	 * </ul>
-	 * @param environment
-	 * @param configuration
-	 * @return
+	 * @param environment   environment
+	 * @param configuration configuration
+	 * @return              application bindings
 	 */
 	public List<Binding<?>> nglBindings(Environment environment, Configuration configuration) {
 		List<Binding<?>> bs = new ArrayList<>();

@@ -13,7 +13,7 @@ import fr.cea.ig.DBObject;
  * 
  * @author vrd
  *
- * @param <T>
+ * @param <T> type of referenced objects
  */
 public class CodeReference<T> {
 
