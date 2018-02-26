@@ -77,34 +77,34 @@ public class ProcessServiceTEST extends AbstractProcessService {
 		return propertyDefinitions;
 	}
 
-	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepotCNS() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+//	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepotCNS() throws DAOException {
+//		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+//
+//		//TO do multi value
+//		propertyDefinitions.add(
+//				DescriptionFactory.newPropertiesDefinition("Type séquencage","sequencingType"
+//						, LevelService.getLevels(Level.CODE.Process),String.class, true, getSequencingType(), "single",100));
+//		propertyDefinitions.add(
+//				DescriptionFactory.newPropertiesDefinition("Type de lectures", "readType"
+//						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("SR","PE"), "single",200));		
+//		propertyDefinitions.add(
+//				DescriptionFactory.newPropertiesDefinition("Longueur de lecture", "readLength"
+//						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("50","100","150","250","300","500","600"), "single",300));
+//		
+//		propertyDefinitions.add(
+//				DescriptionFactory.newPropertiesDefinition("% à déposer prévisionnel", "estimatedPercentPerLane"
+//						, LevelService.getLevels(Level.CODE.Process),Double.class, true,"single",400));	
+//		return propertyDefinitions;
+//	}
 
-		//TO do multi value
-		propertyDefinitions.add(
-				DescriptionFactory.newPropertiesDefinition("Type séquencage","sequencingType"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, getSequencingType(), "single",100));
-		propertyDefinitions.add(
-				DescriptionFactory.newPropertiesDefinition("Type de lectures", "readType"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("SR","PE"), "single",200));		
-		propertyDefinitions.add(
-				DescriptionFactory.newPropertiesDefinition("Longueur de lecture", "readLength"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("50","100","150","250","300","500","600"), "single",300));
-		
-		propertyDefinitions.add(
-				DescriptionFactory.newPropertiesDefinition("% à déposer prévisionnel", "estimatedPercentPerLane"
-						, LevelService.getLevels(Level.CODE.Process),Double.class, true,"single",400));	
-		return propertyDefinitions;
-	}
-
-	private static List<Value> getSequencingType(){
-		List<Value> values = new ArrayList<Value>();
-		values.add(DescriptionFactory.newValue("Hiseq 2000/2500N", "Hiseq 2000 / 2500 N"));
-		values.add(DescriptionFactory.newValue("Hiseq 2500 Rapide", "Hiseq 2500 Rapide"));
-		values.add(DescriptionFactory.newValue("Miseq", "Miseq"));
-		values.add(DescriptionFactory.newValue("Hiseq 4000", "Hiseq 4000"));
-		return values;	
-	}
+//	private static List<Value> getSequencingType(){
+//		List<Value> values = new ArrayList<Value>();
+//		values.add(DescriptionFactory.newValue("Hiseq 2000/2500N", "Hiseq 2000 / 2500 N"));
+//		values.add(DescriptionFactory.newValue("Hiseq 2500 Rapide", "Hiseq 2500 Rapide"));
+//		values.add(DescriptionFactory.newValue("Miseq", "Miseq"));
+//		values.add(DescriptionFactory.newValue("Hiseq 4000", "Hiseq 4000"));
+//		return values;	
+//	}
 	
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsLib300600() throws DAOException {
