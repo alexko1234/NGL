@@ -276,7 +276,8 @@ class Containers2 extends DocumentController<Container> {
 				if (!container.state.code.equals(input.state.code)) {
 					return badRequest("You cannot change the state code. Please used the state url ! ");
 				}
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+//				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 				ctxVal.setUpdateMode();
 				input.comments = InstanceHelpers.updateComments(input.comments, ctxVal);
 				cleanProperty(input);
@@ -291,7 +292,8 @@ class Containers2 extends DocumentController<Container> {
 				return badRequest("url container code and json container code are not the same");
 			}	
 		} else {
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+//			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
@@ -351,7 +353,8 @@ class Containers2 extends DocumentController<Container> {
 		State state = filledForm.get();
 		state.date = new Date();
 		state.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
 		ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE, Boolean.TRUE);		
 		workflows.setState(ctxVal, container, state);
@@ -376,7 +379,8 @@ class Containers2 extends DocumentController<Container> {
 				State state = element.data.state;
 				state.date = new Date();
 				state.user = user;
-				ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+//				ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+				ContextValidation ctxVal = new ContextValidation(user, filledForm);
 				ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
 				ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE, Boolean.TRUE);
 				workflows.setState(ctxVal, container, state);
