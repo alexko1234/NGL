@@ -53,7 +53,7 @@ import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
-import play.Logger;
+//import play.Logger;
 import play.api.modules.spring.Spring;
 import services.instance.container.ContainerImportCNS;
 import validation.ContextValidation;
@@ -123,14 +123,13 @@ public class LimsCNSDAO {
 		,new RowMapper<Sample>() {
 			// @SuppressWarnings("rawtypes")
 			public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
-
 				Sample sample = new Sample();
 				InstanceHelpers.updateTraceInformation(sample.traceInformation, "ngl-data");
 				String tadco = rs.getString("tadco");
 				String tprco = rs.getString("tprco");
-				sample.code=rs.getString("code");
+				sample.code = rs.getString("code");
 
-				Logger.debug("Code Materiel (adnco) :"+rs.getString(LIMS_CODE)+" , Type Materiel (tadco) :"+tadco +", Type Projet (tprco) :"+tprco);
+				logger.debug("Code Materiel (adnco) :"+rs.getString(LIMS_CODE)+" , Type Materiel (tadco) :"+tadco +", Type Projet (tprco) :"+tprco);
 
 				String sampleTypeCode=DataMappingCNS.getSampleTypeFromLims(tadco,tprco);
 
@@ -143,7 +142,7 @@ public class LimsCNSDAO {
 				try {
 					sampleType = SampleType.find.findByCode(sampleTypeCode);
 				} catch (DAOException e) {
-					Logger.error("",e);
+					logger.error("",e);
 					return null;
 				}
 
@@ -280,7 +279,7 @@ public class LimsCNSDAO {
 				try{
 					if (!limsCode.equals("0")) {
 						String sql="pm_MaterielmanipInNGL @matmaco=?";
-						Logger.debug(sql+limsCode);
+						logger.debug(sql+limsCode);
 						this.jdbcTemplate.update(sql, Integer.parseInt(limsCode));
 					}
 				} catch(DataAccessException e){
@@ -304,7 +303,7 @@ public class LimsCNSDAO {
 		} else {
 			try {
 				String sql="pm_SampleInNGL @code=?";
-				Logger.debug(sql+sample.code);
+				logger.debug(sql + sample.code);
 				this.jdbcTemplate.update(sql, sample.code);
 			} catch(DataAccessException e){
 				contextError.addErrors("",e.getMessage(), sample.code);
@@ -356,7 +355,7 @@ public class LimsCNSDAO {
 		List<Run> results = this.jdbcTemplate.query(sqlContent,new RowMapper<Run>() {
 			// @SuppressWarnings("rawtypes")
 			public Run mapRow(ResultSet rs, int rowNum) throws SQLException {
-				Logger.debug("Begin findRunsToCreate");
+				logger.debug("Begin findRunsToCreate");
 				ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
 				contextValidation.addKeyToRootKeyName(contextError.getRootKeyName());
 				Run run= MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, rs.getString("code"));
@@ -425,15 +424,15 @@ public class LimsCNSDAO {
 
 		List<Lane> results = this.jdbcTemplate.query("pl_LaneUnRunToNGL @runCode=?",new Object[]{run.code} 
 		,new RowMapper<Lane>() {
-			@SuppressWarnings("rawtypes")
+//			@SuppressWarnings("rawtypes")
 			public Lane mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-				Lane lane=getLane(run,rs.getInt("lanenum"));
+				Lane lane = getLane(run,rs.getInt("lanenum"));
 
-				if(lane==null){
-					Logger.debug("Lane null");
-					lane=new Lane();
-					lane.number=rs.getInt("lanenum");
+				if (lane==null) {
+					logger.debug("Lane null");
+					lane = new Lane();
+					lane.number = rs.getInt("lanenum");
 				}
 				lane.valuation=new Valuation();
 				lane.valuation.valid=TBoolean.valueOf(rs.getString("validationValid"));
@@ -482,7 +481,7 @@ public class LimsCNSDAO {
 				MappingHelper.getPropertiesFromResultSet(rs, treatmentType.getPropertyDefinitionByLevel(level),m);
 			}
 		} catch (DAOException e) {
-			Logger.error("",e);
+			logger.error("",e);
 		}
 		treatment.results = new HashMap<>(); // <String, Map<String,PropertyValue>>();
 		treatment.results.put("default",m);
@@ -493,9 +492,9 @@ public class LimsCNSDAO {
 			final ContextValidation contextError) throws SQLException{
 		List<ReadSet> results = this.jdbcTemplate.query("pl_ReadSetUnRunToNGL @runCode=?",new Object[]{run.code} 
 		,new RowMapper<ReadSet>() {
-			@SuppressWarnings("rawtypes")
+			// @SuppressWarnings("rawtypes")
 			public ReadSet mapRow(ResultSet rs, int rowNum) throws SQLException {
-				ReadSet readSet=new ReadSet();
+				ReadSet readSet = new ReadSet();
 				readSet.code=rs.getString("code");
 				readSet.archiveId=rs.getString("archiveId");
 				readSet.archiveDate=rs.getDate("archiveDate");
@@ -544,7 +543,7 @@ public class LimsCNSDAO {
 			final ContextValidation contextError) throws SQLException{
 		ReadSet results = this.jdbcTemplate.queryForObject("pl_ReadSetUnRunToNGL @readSetCode=?",new Object[]{readSet.code} 
 		,new RowMapper<ReadSet>() {
-			@SuppressWarnings("rawtypes")
+			// @SuppressWarnings("rawtypes")
 			public ReadSet mapRow(ResultSet rs, int rowNum) throws SQLException {
 				ReadSet readSet=new ReadSet();
 				readSet.code=rs.getString("code");
@@ -601,31 +600,23 @@ public class LimsCNSDAO {
 
 		contextError.addKeyToRootKeyName("updateRunLims");
 
-		for(Run run:updateRuns){
-
+		for (Run run:updateRuns) {
 			rootKeyName="run["+run.code+"]";
 			contextError.addKeyToRootKeyName(rootKeyName);
-
-			try{
+			try {
 				String sql="pm_RunhdInNGL @runhnom=?, @InNGL=?";
-				Logger.debug(sql+run.code);
+				logger.debug(sql+run.code);
 				int intInNGL = (inNGL) ? 1 : 0;
 				this.jdbcTemplate.update(sql, run.code,intInNGL);
-
 			} catch(DataAccessException e){
 				contextError.addErrors("",e.getMessage(), run.code);
 			}
-
 			contextError.removeKeyFromRootKeyName(rootKeyName);
-
 		}
 		contextError.removeKeyFromRootKeyName("updateRunLims");
-
 	}
 
-
 	public List<File> findFileToCreateFromReadSet(final ReadSet readSet,final ContextValidation contextError)throws SQLException {
-
 		List<File> results = this.jdbcTemplate.query("pl_FileUnReadSetToNGL @readSetCode=?",new Object[]{readSet.code} 
 		,new RowMapper<File>() {
 			// @SuppressWarnings("rawtypes")
@@ -639,7 +630,7 @@ public class LimsCNSDAO {
 				try {
 					readSetType = ReadSetType.find.findByCode(readSet.typeCode);
 				} catch (DAOException e) {
-					Logger.error("",e);
+					logger.error("",e);
 				}
 				file.properties = new HashMap<>(); // <String, PropertyValue>();
 				MappingHelper.getPropertiesFromResultSet(rs,readSetType.getPropertyDefinitionByLevel(Level.CODE.File),file.properties);
@@ -647,11 +638,9 @@ public class LimsCNSDAO {
 			}
 		});
 		return results;
-
 	}
 
 	public List<Index> findIndexIlluminaToCreate(final ContextValidation contextError)throws SQLException {
-
 		List<Index> results = this.jdbcTemplate.query("pl_TagUneEtmanip 13" 
 				,new RowMapper<Index>() {
 					// @SuppressWarnings("rawtypes")
@@ -670,15 +659,13 @@ public class LimsCNSDAO {
 					}
 				});
 		return results;
-
 	}
-
 
 	public List<String> findSampleUpdated(List<String> sampleCodes) {
 		String sql="select code=rtrim(prsco)+'_'+rtrim(adnnom) from Materiel m, Useadn u where u.adnco=m.adnco and ";
-		if(sampleCodes==null){
+		if (sampleCodes == null) {
 			sql=sql+"  uaddm > uadInNGL";
-		}else {
+		} else {
 			//Pour les tests unitaires
 			sql=sql+" rtrim(prsco)+'_'+rtrim(adnnom) in (";
 			for(String code:sampleCodes){
@@ -689,27 +676,21 @@ public class LimsCNSDAO {
 		//Search Sample to modify
 		List<String> results =  this.jdbcTemplate.query(sql 
 				,new RowMapper<String>() {
-
 			public String mapRow(ResultSet rs, int rowNum) throws SQLException {
-
 				return rs.getString("code");
 			}
-
 		}); 
-
 		return results;
 	}
 
-
 	public List<Process> findProcessToCreate(String sql, final Container container, String processTypeCode, final ContextValidation contextError) {
-		List<Process> results=null;
-
+		List<Process> results = null;
 		try {
 			final ProcessType processType = ProcessType.find.findByCode(processTypeCode);
-			if(processType!=null){
+			if (processType != null) {
 				results = this.jdbcTemplate.query(sql ,new Object[]{container.code}
 			,new RowMapper<Process>() {
-				@SuppressWarnings("rawtypes")
+				// @SuppressWarnings("rawtypes")
 				public Process mapRow(ResultSet rs, int rowNum) throws SQLException {
 					Process process=new Process();
 					process.typeCode         = processType.code;
@@ -725,35 +706,30 @@ public class LimsCNSDAO {
 					process.state            = new State("N",contextError.getUser());
 					process.properties       = new HashMap<>(); // <String, PropertyValue>();
 					MappingHelper.getPropertiesFromResultSet(rs,processType.getPropertyDefinitionByLevel(Level.CODE.Process),process.properties);
-					process.code=CodeHelper.getInstance().generateProcessCode(process);
-					Content c=null;
-					for(Content content:container.contents){
-						if(content.projectCode.equals(process.projectCodes) && content.sampleCode.equals(process.sampleCodes)){
+					process.code = CodeHelper.getInstance().generateProcessCode(process);
+					Content c = null;
+					for (Content content:container.contents) {
+						if (content.projectCode.equals(process.projectCodes) && content.sampleCode.equals(process.sampleCodes)) {
 							c=content;
 						}
 					}
-					if(c!=null){
+					if (c!=null) {
 						process.sampleOnInputContainer=InstanceHelpers.getSampleOnInputContainer(c, container);
-					}else { contextError.addErrors("content",ValidationConstants.ERROR_CODE_NOTEXISTS_MSG,container); }
+					} else { contextError.addErrors("content",ValidationConstants.ERROR_CODE_NOTEXISTS_MSG,container); }
 					return process;
 				}
 			});
-			}else { contextError.addErrors("processType", ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, processTypeCode); }
-			
-			
-		}	
-		catch (DAOException e) {
-			Logger.error("",e);
+			} else { contextError.addErrors("processType", ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, processTypeCode); }
+		} catch (DAOException e) {
+			logger.error("",e);
 		}
 		return results;
-
 	}
 	
 	public ReadSet findLSRunProjData(ReadSet readset){
-		
 		List<ReadSet> results = this.jdbcTemplate.query("pl_LSRunProjUnReadSetToNGL @readSetCode=?", new String[]{readset.code} 
 				,new RowMapper<ReadSet>() {
-					@SuppressWarnings("rawtypes")
+					// @SuppressWarnings("rawtypes")
 					public ReadSet mapRow(ResultSet rs, int rowNum) throws SQLException {
 						ReadSet readset = new ReadSet();
 						readset.code = rs.getString("code");
@@ -768,38 +744,34 @@ public class LimsCNSDAO {
 						return readset;						
 					}
 				});
-		
-		if(results.size() != 1 ){
+		if (results.size() != 1 ) {
 			//Logger.error("Probleme to load lsRunProjData with "+readset.code);
 			return null;
-		}else{
+		} else {
 			return results.get(0);
 		}
-		
 	}
 	
-	public List<ReadSet> findLSRunProjData(){
-		
+	public List<ReadSet> findLSRunProjData() {
 		List<ReadSet> results = this.jdbcTemplate.query("pl_LSRunProjUnReadSetToNGL" 
 				,new RowMapper<ReadSet>() {
-					@SuppressWarnings("rawtypes")
+					// @SuppressWarnings("rawtypes")
 					public ReadSet mapRow(ResultSet rs, int rowNum) throws SQLException {
 						ReadSet readset = new ReadSet();
 						readset.code = rs.getString("code");
 						readset.location = rs.getString("location");
 						readset.path = rs.getString("path");
-						if(null != rs.getString("strandOrientation")){
+						if (rs.getString("strandOrientation") != null) {
 							readset.properties.put("strandOrientation", new PropertySingleValue(rs.getString("strandOrientation")));
 						}
-						if(null != rs.getString("insertSizeGoal")){
+						if (rs.getString("insertSizeGoal") != null) {
 							readset.properties.put("insertSizeGoal", new PropertySingleValue(rs.getString("insertSizeGoal")));
 						}	
 						return readset;						
 					}
 				});
-		
 		return results;
-		
 	}
+	
 }
 

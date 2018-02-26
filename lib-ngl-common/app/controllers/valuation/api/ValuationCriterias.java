@@ -24,7 +24,7 @@ import com.mongodb.BasicDBObject;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.valuation.instance.ValuationCriteria;
 import models.utils.InstanceConstants;
-import play.Logger;
+//import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -39,6 +39,9 @@ import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
 
 public class ValuationCriterias extends DocumentController<ValuationCriteria> {//CommonController {
+	
+	private static final play.Logger.ALogger logger = play.Logger.of(ValuationCriterias.class);
+	
 	private final /*static*/ Form<ValuationCriteria> valuationCriteriaForm;// = form(ValuationCriteria.class);
 	private final /*static*/ Form<ValuationCriteriasSearchForm> searchForm;// = form(ValuationCriteriasSearchForm.class);
 	
@@ -112,7 +115,7 @@ public class ValuationCriterias extends DocumentController<ValuationCriteria> {/
 		Form<ValuationCriteria> filledForm = getFilledForm(valuationCriteriaForm, ValuationCriteria.class);
 		ValuationCriteria objectInput = filledForm.get();
 
-		if (null == objectInput._id) {
+		if (objectInput._id == null) {
 			objectInput.traceInformation = new TraceInformation();
 			objectInput.traceInformation
 					.setTraceInformation(getCurrentUser());
@@ -120,8 +123,8 @@ public class ValuationCriterias extends DocumentController<ValuationCriteria> {/
 		} else {
 			return badRequest("use PUT method to update the run");
 		}
-
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		ctxVal.setCreationMode();
 		objectInput.validate(ctxVal);
 		if (!ctxVal.hasErrors()) {
@@ -142,13 +145,13 @@ public class ValuationCriterias extends DocumentController<ValuationCriteria> {/
 		ValuationCriteria objectInput = filledForm.get();
 
 		if (objectFromDB.code.equals(code)) {
-			if(null != objectInput.traceInformation){
+			if (objectInput.traceInformation != null) {
 				objectInput.traceInformation.setTraceInformation(getCurrentUser());
-			}else{
-				Logger.error("traceInformation is null !!");
+			} else {
+				logger.error("traceInformation is null !!");
 			}
-			
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 			ctxVal.setCreationMode();
 			objectFromDB.validate(ctxVal);
 			if (!ctxVal.hasErrors()) {
