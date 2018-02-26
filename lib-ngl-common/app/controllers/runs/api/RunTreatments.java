@@ -131,13 +131,12 @@ public class RunTreatments extends RunsController{
 	public /*static*/ Result update(String runCode, String treatmentCode){
 		Run run  = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), DBQuery.exists("treatments."+treatmentCode)));
-		if (run==null) {
+		if (run == null)
 			return badRequest(); // TODO: add message
-		}	
-		
 		
 		Form<Treatment> filledForm = getFilledForm(treatmentForm, Treatment.class);
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 		
 		Treatment treatment = filledForm.get();
 		if (treatmentCode.equals(treatment.code)) {
@@ -178,9 +177,9 @@ public class RunTreatments extends RunsController{
 	public /*static*/ Result delete(String runCode, String treatmentCode){
 		Run run  = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), DBQuery.exists("treatments."+treatmentCode)));
-		if (run==null) {
+		if (run == null)
 			return badRequest();
-		}	
+
 		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.is("code", runCode), DBUpdate.unset("treatments."+treatmentCode).set("traceInformation", getUpdateTraceInformation(run)));			
 		return ok();		
