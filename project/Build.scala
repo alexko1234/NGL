@@ -48,7 +48,7 @@ object ApplicationBuild extends Build {
 
 	val subVersion             = "2.1.0"  + distSuffix
 	
-	val dataVersion            = "2.0.1"  + distSuffix
+	val dataVersion            = "2.0.2"  + distSuffix
 	
 	val libDatatableVersion    = "2.0.0"    + distSuffix
 	val libFrameworkWebVersion = "2.0.0"    + distSuffix
