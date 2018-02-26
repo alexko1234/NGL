@@ -52,6 +52,8 @@ import fr.cea.ig.MongoDBResult;
 
 public class InstanceHelpers {
 
+	public static final play.Logger.ALogger logger = play.Logger.of(InstanceHelpers.class);
+	
 	// @SuppressWarnings("unchecked")
 	public static Map<String, PropertyValue<?>> getLazyMapPropertyValue() {
 //		return MapUtils.lazyMap(new HashMap<String, PropertyValue<?>>(), new Transformer() {
@@ -115,26 +117,25 @@ public class InstanceHelpers {
 	
 	@Deprecated
 	public static void updateTraceInformation(TraceInformation traceInformation, String user) {
-
 		if (traceInformation.createUser == null) {
 			traceInformation.createUser = user;
 		} else {
 			traceInformation.modifyUser = user;
 		}
-
 		if (traceInformation.creationDate == null) {
 			traceInformation.creationDate = new Date();
 		} else {
 			traceInformation.modifyDate = new Date();
 		}
-
 	}
+	
 	@Deprecated
 	public static TraceInformation updateTraceInformation(TraceInformation traceInformation, State nextState) {
 		traceInformation.modifyDate = nextState.date;
 		traceInformation.modifyUser = nextState.user;
 		return traceInformation;
 	}
+	
 	@Deprecated
 	public static TraceInformation getUpdateTraceInformation(TraceInformation traceInformation, String user) {
 		TraceInformation ti = null;
@@ -152,17 +153,14 @@ public class InstanceHelpers {
 			                                                     Map<String, PropertyValue<?>> propertiesOutPut) {
 		// TODO: fix as it i is a meaningless creation and could as well return
 		//       immediately without doing anything.
-		if (propertiesOutPut == null) {
+		if (propertiesOutPut == null) 
 			propertiesOutPut = new HashMap<>(); // <String, PropertyValue>();
-		}
-		
 		for (PropertyDefinition propertyDefinition : propertyDefinitions) {
 			PropertyValue<?> propertyValue = propertiesInput.get(propertyDefinition.code);
 			if (propertyValue != null) {
 				propertiesOutPut.put(propertyDefinition.code, propertyValue);
 			}
 		}
-
 	}
 	
 	public static Set<String> getDeletedPropertyDefinitionCode(List<PropertyDefinition> propertyDefinitions, Map<String, PropertyValue<?>> propertiesInput) {
@@ -172,15 +170,13 @@ public class InstanceHelpers {
 			.collect(Collectors.toSet());			
 	}
 	
-	public static DBObject save(String collectionName, IValidation obj, ContextValidation contextError,
-			Boolean keepRootKeyName) {
+	public static DBObject save(String collectionName, IValidation obj, ContextValidation contextError, Boolean keepRootKeyName) {
 		ContextValidation localContextError = new ContextValidation(contextError.getUser());
 		localContextError.setMode(contextError.getMode());
 		if (keepRootKeyName) {
 			localContextError.addKeyToRootKeyName(contextError.getRootKeyName());
 		}
 		localContextError.setContextObjects(contextError.getContextObjects());
-
 		if (obj != null) {
 			obj.validate(localContextError);
 		} else {
@@ -332,10 +328,10 @@ public class InstanceHelpers {
 
 	private static Object convertTagCodeToTagShortName(String tagCode) {
 		Index index=MongoDBDAO.findOne(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.in("typeCode", "index-illumina-sequencing","index-nanopore-sequencing").is("code", tagCode));
-		if(null != index){
+		if (index != null) {
 			return index.shortName;
-		}else{
-			Logger.error("Index not found for code : "+tagCode);
+		} else {
+			logger.error("Index not found for code : "+tagCode);
 			return null;
 		}		
 	}

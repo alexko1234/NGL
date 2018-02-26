@@ -1106,8 +1106,7 @@ public class LimsCNGDAO {
 		
 		if (mode.equals("creation")) {
 			sqlView = "v_flowcell_tongl"; 
-		}
-		else {
+		} else {
 			sqlView = "v_flowcell_updated_tongl";
 		}
 		
@@ -1120,7 +1119,7 @@ public class LimsCNGDAO {
 				ResultSet rs0 = rs;
 				int rowNum0 = rowNum;
 				ContextValidation ctxErr = contextError; 
-				ContainerSupport c=  commonContainerSupportMapRow(rs0, rowNum0, ctxErr); 
+				ContainerSupport c = commonContainerSupportMapRow(rs0, rowNum0, ctxErr); 
 				return c;
 			}
 		});
@@ -1172,7 +1171,6 @@ public class LimsCNGDAO {
 		return results;
 	}
 	
-	
 	/* ************************************************************************************************************************************************
 	 * To get the indexes and update the "Parameter" collection
 	 * FDS 30/04/2015: nglbi_code=>code, short_name=>shortName (et non plus code), cng_name=>name!
@@ -1180,7 +1178,7 @@ public class LimsCNGDAO {
 	public List<Index> findIndexIlluminaToCreate(final ContextValidation contextError)throws SQLException {
 		List<Index> results = this.jdbcTemplate.query("select nglbi_code, short_name, cng_name,(CASE WHEN type = 1 THEN 'SINGLE-INDEX'::text WHEN type = 2 THEN 'DUAL-INDEX'::text WHEN type = 3 THEN 'MID'::text ELSE NULL::text END) AS code_category,sequence from t_index order by 1" 
 				,new RowMapper<Index>() {
-					@SuppressWarnings("rawtypes")
+//					@SuppressWarnings("rawtypes")
 					public Index mapRow(ResultSet rs, int rowNum) throws SQLException {
 						Index index=new IlluminaIndex();
 
@@ -1200,7 +1198,6 @@ public class LimsCNGDAO {
 		return results;
 	}
 
-	
 	/* ************************************************************************************************************************************************
 	 * UPDATE Solexa tables t_sample & t_individual tables (import/update dates) 
 	 * @param samples
@@ -1212,8 +1209,7 @@ public class LimsCNGDAO {
 		if (mode.equals("creation")) {
 			key = "update_ImportDate";
 			column = "nglimport_date";
-		}
-		else {
+		} else {
 			key = "update_UpdateDate";
 			column = "ngl_update_date";			
 		}
@@ -1286,8 +1282,7 @@ public class LimsCNGDAO {
 		if (mode.equals("creation")) {
 			key = "update_ImportDate";
 			column = "nglimport_date";
-		}
-		else {
+		} else {
 			key = "update_UpdateDate";
 			column = "ngl_update_date";			
 		}
@@ -1301,8 +1296,7 @@ public class LimsCNGDAO {
 		}
 		try {
 			this.jdbcTemplate.batchUpdate(sql, parameters);
-		}
-		catch(Exception e) {
+		} catch(Exception e) {
 			Logger.debug(e.getMessage());
 		}
 		contextError.removeKeyFromRootKeyName(key);
