@@ -245,7 +245,8 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 			// il y a une query string ==> mettre a jour les champs dont le nom est dans la query string:   ?fields=XXXX&fields=YYY
 			if (dbSupport.code.equals(code)) {
 				// on a bien récupéré ce qu'on a demandé....
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+//				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 				ctxVal.setUpdateMode();
 				validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);	
 				// verifier si les champs de la query string font partie des champs modifiables

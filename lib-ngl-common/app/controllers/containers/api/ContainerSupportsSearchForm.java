@@ -35,8 +35,8 @@ public class ContainerSupportsSearchForm extends ListForm {
 	@Override
 	public String toString() {
 		// 23/05/2016 FDS NGL-825 ajout storageCode
-		return "SupportsSearchForm ["
-				+ "  code=" + code 
+		return "SupportsSearchForm "
+				+ "[ code=" + code 
 				+ ", categoryCode="+ categoryCode 
 				+ ", stateCode=" + stateCode
 				+ ", nextExperimentTypeCode=" + nextExperimentTypeCode
