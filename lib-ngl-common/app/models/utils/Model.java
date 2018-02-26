@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import models.utils.dao.AbstractDAO;
 import models.utils.dao.DAOException;
-import play.Logger;
+//import play.Logger;
 import play.api.modules.spring.Spring;
 
 // TODO: fix serialization uid but not serializable
@@ -14,6 +14,8 @@ import play.api.modules.spring.Spring;
 
 public class Model<T> {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(Model.class);
+	
 	/**
 	 * Serialization version id.  
 	 */
@@ -23,6 +25,7 @@ public class Model<T> {
 	
 	public String code;
 	
+	// Should be Class<AbstractDAO<T>> or close to that
 	protected String classNameDAO;
 
 	@JsonIgnore
@@ -59,10 +62,10 @@ public class Model<T> {
 		try {
 			return (AbstractDAO<T>) Spring.getBeanOfType(Class.forName(classNameDAO));
 		} catch (ClassNotFoundException e) {
-			Logger.error("Class error: " + e.getMessage(), e);
+			logger.error("Class error: " + e.getMessage(), e);
 			throw new DAOException(e);
 		} catch (Exception e) {
-			Logger.error("DAO error: " + e.getMessage(), e);
+			logger.error("DAO error: " + e.getMessage(), e);
 			throw new DAOException(e);
 		}
 	}

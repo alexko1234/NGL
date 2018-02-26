@@ -1,5 +1,7 @@
 package models.utils.instance;
 
+import static fr.cea.ig.play.IGGlobals.configuration;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -22,8 +24,8 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
 
-import play.Logger;
-import play.Play;
+// import play.Logger;
+// import play.Play;
 import rules.services.RulesServices6;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
@@ -32,8 +34,15 @@ import validation.container.instance.ContainerValidationHelper;
 import fr.cea.ig.MongoDBDAO;
 
 public class ProcessHelper {
+	
+	public static final play.Logger.ALogger logger = play.Logger.of(ProcessHelper.class);
+	
+	private static final String rulesKey() {
+		return configuration().getString("rules.key");	
+	}
+	
 	@Deprecated
-	public static void updateContainer(Container container, String typeCode, Set<String> codes,ContextValidation contextValidation){
+	public static void updateContainer(Container container, String typeCode, Set<String> codes,ContextValidation contextValidation) {
 		if(container.fromTransformationTypeCodes == null || container.fromTransformationTypeCodes.size() == 0){
 			container.fromTransformationTypeCodes = new HashSet<String>();
 			ProcessType processType;
@@ -63,44 +72,39 @@ public class ProcessHelper {
 	@Deprecated
 	public static void updateContainerSupportFromContainer(Container container,ContextValidation contextValidation){
 		ContainerSupport containerSupport=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, container.support.code);
-		if(null != containerSupport){
-			if(containerSupport.fromTransformationTypeCodes==null){
-				containerSupport.fromTransformationTypeCodes=new HashSet<String>();
+		if (containerSupport != null) {
+			if (containerSupport.fromTransformationTypeCodes == null) {
+				containerSupport.fromTransformationTypeCodes = new HashSet<String>();
 			}
 			containerSupport.fromTransformationTypeCodes.addAll(container.fromTransformationTypeCodes);
 			contextValidation.putObject(CommonValidationHelper.FIELD_STATE_CODE, container.state.code);
 			ContainerSupportValidationHelper.validateExperimentTypeCodes(containerSupport.fromTransformationTypeCodes, contextValidation);
-			if(!contextValidation.hasErrors()){
+			if (!contextValidation.hasErrors()) {
 				MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME,ContainerSupport.class,
 						DBQuery.is("code", container.support.code)
 						,DBUpdate.set("fromTransformationTypeCodes",container.fromTransformationTypeCodes));
 			}
-		}else{
-			Logger.error("Support container not exist = "+container.support.code);
+		} else {
+			logger.error("Support container not exist = "+container.support.code);
 		}
 	}
-
 
 	public static Process applyRules(Process proc, ContextValidation ctx ,String rulesName){
 		ArrayList<Object> facts = new ArrayList<Object>();
 		facts.add(proc);
 		facts.add(ctx);
-		List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), rulesName, facts);
+		//List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), rulesName, facts);
+		RulesServices6.getInstance().callRulesWithGettingFacts(rulesKey(), rulesName, facts);
 		return proc;
-
 	}
 	
 	public static List<Process>  applyRules(List<Process> processes, ContextValidation ctx ,String rulesName){
 		ArrayList<Object> facts = new ArrayList<Object>();
 		facts.add(ctx);
-		facts.addAll(processes);
-		
-		List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), rulesName, facts);
-		
-
+		facts.addAll(processes);		
+		// List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), rulesName, facts);
+		RulesServices6.getInstance().callRulesWithGettingFacts(rulesKey(), rulesName, facts);
 		return processes;
-
 	}	
 	
-
 }
