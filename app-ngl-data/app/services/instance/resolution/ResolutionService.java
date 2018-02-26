@@ -574,7 +574,7 @@ public class ResolutionService {
 		
 		try {
 			List<ExperimentType> expTypes=ExperimentType.find.findAll();
-			for(ExperimentType expType:expTypes){
+			for (ExperimentType expType:expTypes) {
 				if (typeCodes == null || !typeCodes.contains(expType.code)) {
 					logger.debug("Add experimentType default resolution "+ expType.code);
 					al.add(expType.code);
@@ -731,9 +731,9 @@ public class ResolutionService {
 		r.typeCodes = al;
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
-		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
-		
+		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);	
 	}
+	
 	private static void createGelMigrationResolutionCNS(ContextValidation ctx) {
 		List<Resolution> l = new ArrayList<Resolution>();
 		

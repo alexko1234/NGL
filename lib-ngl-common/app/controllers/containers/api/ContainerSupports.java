@@ -255,7 +255,7 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 				validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm); 
 				// if (!filledForm.hasErrors()) {
 				if (!ctxVal.hasErrors()) {
-					if (null != dbSupport.traceInformation) {
+					if (dbSupport.traceInformation != null) {
 						dbSupport.traceInformation.setTraceInformation(getCurrentUser());
 					} else {
 						logger.error("traceInformation is null for Container support " + code);	
@@ -284,11 +284,10 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 		}
 	}
 
-	private void updateStorages(ContainerSupport dbSupport,
-			ContainerSupport formSupport) {
+	private void updateStorages(ContainerSupport dbSupport, ContainerSupport formSupport) {
 		if (dbSupport.storages == null) {
 			dbSupport.storages = new ArrayList<StorageHistory>();
-			if (null != dbSupport.storageCode) {
+			if (dbSupport.storageCode != null) {
 				StorageHistory sh = getStorageHistory(dbSupport.storageCode, dbSupport.storages.size());
 				dbSupport.storages.add(sh);
 			}
@@ -441,7 +440,6 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 		IntStream.range(0, numberOfCode).forEach(i -> {
 			codes.add(CodeHelper.getInstance().generateContainerSupportCode());
 		});
-		
 		return ok(Json.toJson(codes));
 	}
 	
