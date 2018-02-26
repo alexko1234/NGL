@@ -56,11 +56,11 @@ public class RepriseHistoSample_extId extends AbstractScript {
 	}
 	*/
 	// version 2 : On demande à play d'instancier la classe avec un objet EbiAPI
-	private final EbiAPI ebiAPI;	
+//	private final EbiAPI ebiAPI;	
 
 	@Inject
 	public RepriseHistoSample_extId(EbiAPI ebiAPI) {
-		this.ebiAPI = ebiAPI;
+//		this.ebiAPI = ebiAPI;
 	}
 	
 	/**
@@ -180,8 +180,8 @@ public class RepriseHistoSample_extId extends AbstractScript {
 			}	
 		};
 		
-		Function <SampleInfos, Boolean> taraFilter_lambda = 
-				sampleInfo -> sampleInfo.optionalCode == null || !sampleInfo.optionalCode.matches("^TARA_[a-zA-Z0-9]{10,11}$");
+//		Function <SampleInfos, Boolean> taraFilter_lambda = 
+//				sampleInfo -> sampleInfo.optionalCode == null || !sampleInfo.optionalCode.matches("^TARA_[a-zA-Z0-9]{10,11}$");
 				
 //		Iterable <List<String>> titi_A = ebi_1;
 //		Iterable <List<String>> titi_B = skip  (titi_A, 1);
@@ -218,7 +218,7 @@ public class RepriseHistoSample_extId extends AbstractScript {
 		
 		Function<List<String>, SampleInfos> function_2 =
 				new Function<List<String>, SampleInfos>() {
-					boolean first = true;
+//					boolean first = true;
 					@Override
 					public SampleInfos apply(List<String> record) {
 						String accession = record.get(0);
