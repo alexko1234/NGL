@@ -68,7 +68,8 @@ public class NGLObjects extends APICommonController<NGLObject> {
 		
 		//Form d = Form.form(); //just used to have errors
 		Form<?> d = getNGLContext().form();
-		ContextValidation cv = new ContextValidation(getCurrentUser(), d.errors());
+//		ContextValidation cv = new ContextValidation(getCurrentUser(), d.errors());
+		ContextValidation cv = new ContextValidation(getCurrentUser(),d);
 		form.validate(cv);
 		if (cv.hasErrors()) {
 			// return badRequest(Json.toJson(d.errors-AsJson()));
