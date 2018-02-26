@@ -53,7 +53,8 @@ import fr.cea.ig.mongo.MongoStreamer;
 
 // New version is probably MongoCommonController<T>
 
-@Deprecated
+// TODO: suggest a fix
+// @Deprecated
 @With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 public abstract class CommonController extends Controller {
 // abstract class UNUSED_CommonController extends Controller {
@@ -314,14 +315,12 @@ public abstract class CommonController extends Controller {
 	 * @param fields
 	 * @param filledForm
 	 */
-	protected static void validateIfFieldsArePresentInForm(
-			ContextValidation ctxVal, List<String> fields, Form<?> filledForm) {
+	protected static void validateIfFieldsArePresentInForm(ContextValidation ctxVal, List<String> fields, Form<?> filledForm) {
 		for(String field: fields){
 			if(filledForm.field(field).value() == null){
 				ctxVal.addErrors(field, "error.notdefined");
 			}
 		}	
-		
 	}
 	
 	protected static Calendar getToDate(Date date) {

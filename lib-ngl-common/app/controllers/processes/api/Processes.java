@@ -369,14 +369,15 @@ public class Processes extends DocumentController<Process> {
 	@Permission(value={"writing"})
 	public Result updateState(String code){
 		Process objectInDB = getObject(code);
-		if(objectInDB == null) {
+		if (objectInDB == null) 
 			return notFound();
-		}
+		
 		Form<State> filledForm =  getFilledForm(stateForm, State.class);
 		State state = filledForm.get();
 		state.date = new Date();
 		state.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		workflows.setState(ctxVal, objectInDB, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getObject(code)));

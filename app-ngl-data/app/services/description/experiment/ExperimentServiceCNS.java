@@ -33,8 +33,7 @@ import com.typesafe.config.ConfigFactory;
 
 public class ExperimentServiceCNS extends AbstractExperimentService {
 
-	
-	@SuppressWarnings("unchecked")
+	// @SuppressWarnings("unchecked")
 	public  void saveProtocolCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ProtocolCategory> l = new ArrayList<ProtocolCategory>();
 		l.add(DescriptionFactory.newSimpleCategory(ProtocolCategory.class, "Developpement", "development"));
@@ -43,7 +42,6 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 
 	}
 	
-
 	/**
 	 * Save all ExperimentCategory
 	 * @param errors
@@ -113,9 +111,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 
 	}
 
-	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
-
-		
+	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {		
 		new ExtractionDNARNA().getExperimentTypeNode();
 		
 		new Opgen().getExperimentTypeNode();
@@ -155,10 +151,6 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 
 	}
 
-	
-	
-	
-	
 	private static List<PropertyDefinition> getPropertyDefinitionsLibIndexing() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		//Ajouter la liste des index illumina

@@ -327,9 +327,10 @@ public class Runs extends RunsController {
 
 		RunsSaveForm runSaveForm = filledFormQueryString(RunsSaveForm.class);
 		
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 		ctxVal.setCreationMode();
-		if(runSaveForm.external!=null)
+		if (runSaveForm.external != null)
 			ctxVal.putObject("external", runSaveForm.external);
 		else
 			ctxVal.putObject("external", false);
@@ -371,7 +372,8 @@ public class Runs extends RunsController {
 				if(!run.state.code.equals(runInput.state.code)){
 					return badRequest("You cannot change the state code. Please used the state url ! ");
 				}
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+//				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 				ctxVal.setUpdateMode();
 				runInput.validate(ctxVal);
 				if (!ctxVal.hasErrors()) {
@@ -385,9 +387,10 @@ public class Runs extends RunsController {
 			}else{
 				return badRequest("run code are not the same");
 			}	
-		}else{
-			//warning no validation !!!
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+		} else {
+			// warning no validation !!!
+//			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);

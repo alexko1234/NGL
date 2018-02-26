@@ -90,7 +90,8 @@ public class Samples extends DocumentController<AbstractSample>{
 		AbstractSample sampleInput = filledForm.get();
 
 		if (code.equals(sampleInput.code)) {
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+//			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 			ctxVal.setUpdateMode();
 			ctxVal.getContextObjects().put("type", "sra");
 			sampleInput.traceInformation.setTraceInformation(getCurrentUser());
