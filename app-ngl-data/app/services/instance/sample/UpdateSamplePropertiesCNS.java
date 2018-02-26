@@ -78,6 +78,10 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 						updateOneSample(sample,contextError);
 					}catch(Throwable t){
 						logger.error(t.getMessage(),t);	
+						if(null != t.getMessage())
+							contextError.addErrors(sample.code, t.getMessage());
+						else
+							contextError.addErrors(sample.code, "null");
 					}						
 				});
 	}

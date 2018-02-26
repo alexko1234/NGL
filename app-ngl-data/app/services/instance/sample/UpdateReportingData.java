@@ -67,11 +67,11 @@ public class UpdateReportingData extends AbstractImportData {
 				try{
 					
 					long t1 = System.currentTimeMillis();
-					DBCursor<Sample> cursor = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class)
+					List<Sample> cursor = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class)
 						.sort("traceInformation.creationDate", Sort.DESC).skip(skip).limit(1000)
-						.cursor;
+						.toList();
 					
-					cursor.setOptions(Bytes.QUERYOPTION_NOTIMEOUT).forEach(sample -> {
+					cursor.forEach(sample -> {
 							try{
 								updateProcesses(sample);
 								logger.debug("update sample "+sample.code);
@@ -90,7 +90,6 @@ public class UpdateReportingData extends AbstractImportData {
 									contextError.addErrors(sample.code, "null");
 							}
 						});
-					cursor.close();
 					skip = skip+1000;
 					long t2 = System.currentTimeMillis();
 					logger.debug("time "+skip+" - "+((t2-t1)/1000));
