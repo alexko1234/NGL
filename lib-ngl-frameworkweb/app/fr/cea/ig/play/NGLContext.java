@@ -50,10 +50,10 @@ import jsmessages.JsMessagesFactory;
 @Singleton
 public class NGLContext {
 
-	/**
-	 * Logger.
-	 */
-	private static final play.Logger.ALogger logger = play.Logger.of(NGLContext.class);
+//	/**
+//	 * Logger.
+//	 */
+//	private static final play.Logger.ALogger logger = play.Logger.of(NGLContext.class);
 	
 	/**
 	 * NGL play configuration wrapper.

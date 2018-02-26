@@ -55,28 +55,32 @@ public class InstanceHelpers {
 	// @SuppressWarnings("unchecked")
 	public static Map<String, PropertyValue<?>> getLazyMapPropertyValue() {
 //		return MapUtils.lazyMap(new HashMap<String, PropertyValue<?>>(), new Transformer() {
-		return MapUtils.lazyMap(new HashMap<>(), new Transformer() {
-			public PropertyValue<?> transform(Object mapKey) {
+		return MapUtils.lazyMap(new HashMap<>(), new Transformer<String, PropertyValue<?>>() {
+//			public PropertyValue<?> transform(Object mapKey) {
+			public PropertyValue<?> transform(String mapKey) {
 				// todo comment je sais quel est le type on doit mettre
 				return new PropertySingleValue();
 			}
 		});
 	}
-
-	@Deprecated
+	
 	public static String getUser() {
-		String user;
-		try {
-			user = Http.Context.current().session().get("CAS_FILTER_USER");
-			if (user == null) {
-				user = "ngl";
-			}
-		} catch (RuntimeException e) {
-			user = "ngl";
-		}
-		return user;
-
+		return fr.cea.ig.authentication.Authentication.getUser();
 	}
+
+//	@Deprecated
+//	public static String getUser() {
+//		String user;
+//		try {
+//			user = Http.Context.current().session().get("CAS_FILTER_USER");
+//			if (user == null) {
+//				user = "ngl";
+//			}
+//		} catch (RuntimeException e) {
+//			user = "ngl";
+//		}
+//		return user;
+//	}
 
 	public static List<Comment> addComment(String comment, List<Comment> comments, String user) {
 		if (comments == null) {
@@ -292,8 +296,7 @@ public class InstanceHelpers {
 		return sc;
 	}
 
-	public static Sample convertToSample(ReadSet readSet)
-	{
+	public static Sample convertToSample(ReadSet readSet) {
 		SampleOnContainer sampleOnContainer = readSet.sampleOnContainer;
 		Sample sample = new Sample();
 		sample.code            = sampleOnContainer.sampleCode;
@@ -308,6 +311,7 @@ public class InstanceHelpers {
 		InstanceHelpers.getUpdateTraceInformation(sample.traceInformation, "ngl-bi");
 		return sample;
 	}
+	
 	private static Content getContent(Container container, ReadSet readSet) {
 		String tag = getTag(readSet);
 		for (Content sampleUsed : container.contents) {
@@ -341,12 +345,11 @@ public class InstanceHelpers {
 		return (codeParts.length == 2) ? codeParts[1] : null;
 	}
 	
-	
-	private static Sample getSample(String sampleCode){
-		return MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,
-				DBQuery.is("code", sampleCode));
+	private static Sample getSample(String sampleCode) {
+		return MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, 
+				                  Sample.class,
+				                  DBQuery.is("code", sampleCode));
 	}
-	
 	
 	public static String getReferenceCollab(String sampleCode){
 		Sample sample = getSample(sampleCode);
@@ -358,15 +361,14 @@ public class InstanceHelpers {
 				InstanceConstants.CONTAINER_COLL_NAME,
 				Container.class,
 				DBQuery.and(DBQuery.is("support.code", containerSupportCode),
-						DBQuery.is("support.line", readSet.laneNumber.toString()),
-						DBQuery.in("sampleCodes", readSet.sampleCode)));
+						    DBQuery.is("support.line", readSet.laneNumber.toString()),
+						    DBQuery.in("sampleCodes", readSet.sampleCode)));
 
 		if (cl.size() == 0) {
 			Logger.warn("Not found Container for " + readSet.code + " with : '" + containerSupportCode + ", "
 					+ readSet.laneNumber.toString() + ", " + readSet.sampleCode + "'");
 			return null;
 		}
-
 		return cl.toList().get(0);
 	}
 
