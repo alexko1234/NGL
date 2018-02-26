@@ -83,7 +83,7 @@ public class LaneTest extends AbstractBIServerTest{
 	public void test1list()
 	{
 		Logger.debug("list Lane");
-		WSResponse response = WSHelper.get(ws, "/api/runs/"+run.code+"/lanes", 200);
+		WSResponse response = WSHelper.getAsBot(ws, "/api/runs/"+run.code+"/lanes", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 
@@ -91,7 +91,7 @@ public class LaneTest extends AbstractBIServerTest{
 	public void test2get()
 	{
 		Logger.debug("get Lane");
-		WSResponse response = WSHelper.get(ws, "/api/runs/"+run.code+"/lanes/1", 200);
+		WSResponse response = WSHelper.getAsBot(ws, "/api/runs/"+run.code+"/lanes/1", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 
@@ -99,7 +99,7 @@ public class LaneTest extends AbstractBIServerTest{
 	public void test3head()
 	{
 		Logger.debug("head Lane");
-		WSResponse response = WSHelper.head(ws, "/api/runs/"+run.code+"/lanes/1", 200);
+		WSResponse response = WSHelper.headAsBot(ws, "/api/runs/"+run.code+"/lanes/1", 200);
 		assertThat(response).isNotNull();
 	}
 
@@ -107,7 +107,7 @@ public class LaneTest extends AbstractBIServerTest{
 	public void test4deleteNumber()
 	{
 		Logger.debug("delete Lane number");
-		WSHelper.delete(ws,"/api/runs/"+run.code+"/lanes/7",200);
+		WSHelper.deleteAsBot(ws,"/api/runs/"+run.code+"/lanes/7",200);
 		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
 		assertThat(run.lanes.size()).isEqualTo(6);
 	}
@@ -116,7 +116,7 @@ public class LaneTest extends AbstractBIServerTest{
 	public void test5save()
 	{
 		Logger.debug("save Lane with json "+laneJson);
-		WSHelper.post(ws, "/api/runs/"+run.code+"/lanes", laneJson, 200);
+		WSHelper.postAsBot(ws, "/api/runs/"+run.code+"/lanes", laneJson, 200);
 		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
 		assertThat(run.lanes.size()).isEqualTo(7);
 	}
@@ -130,7 +130,7 @@ public class LaneTest extends AbstractBIServerTest{
 		Date date = new Date();
 		Lane lane = run.lanes.get(0);
 		lane.valuation.date=date;
-		WSHelper.putObject(ws, "/api/runs/"+run.code+"/lanes/"+run.lanes.get(0).number, lane, 200);
+		WSHelper.putObjectAsBot(ws, "/api/runs/"+run.code+"/lanes/"+run.lanes.get(0).number, lane, 200);
 		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
 		assertThat(run.lanes.get(0).valuation.date).isEqualTo(date);
 	}
@@ -143,7 +143,7 @@ public class LaneTest extends AbstractBIServerTest{
 		valuation.comment="test valuation";
 		valuation.date=new Date();
 		valuation.valid=TBoolean.FALSE;
-		WSHelper.putObject(ws, "/api/runs/"+run.code+"/lanes/"+run.lanes.get(0).number+"/valuation", valuation, 200);
+		WSHelper.putObjectAsBot(ws, "/api/runs/"+run.code+"/lanes/"+run.lanes.get(0).number+"/valuation", valuation, 200);
 		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
 		assertThat(run.lanes.get(0).valuation.comment).isEqualTo("test valuation");
 		assertThat(run.lanes.get(0).valuation.valid).isEqualTo(TBoolean.FALSE);
@@ -153,7 +153,7 @@ public class LaneTest extends AbstractBIServerTest{
 	public void test8delete()
 	{
 		Logger.debug("delete Lane number");
-		WSHelper.delete(ws,"/api/runs/"+run.code+"/lanes",200);
+		WSHelper.deleteAsBot(ws,"/api/runs/"+run.code+"/lanes",200);
 		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
 		assertThat(run.lanes).isNull();
 	}

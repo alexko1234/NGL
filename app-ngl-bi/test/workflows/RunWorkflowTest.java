@@ -124,7 +124,7 @@ public class RunWorkflowTest extends AbstractTests{
 					State state = new State("IP-S","bot");
 					//Result r = callAction(controllers.runs.api.routes.ref.State.update(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
-					WSHelper.put(ws, "/api/runs/"+run.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
+					WSHelper.putAsBot(ws, "/api/runs/"+run.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 					run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
 					Logger.debug("state code"+run.state.code);
 					assertThat(run.state.code).isEqualTo("IP-S");
@@ -139,7 +139,7 @@ public class RunWorkflowTest extends AbstractTests{
 					State state = new State("F-S","bot");
 					//Result r = callAction(controllers.runs.api.routes.ref.State.update(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
-					WSHelper.put(ws, "/api/runs/"+run.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
+					WSHelper.putAsBot(ws, "/api/runs/"+run.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 					run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
 					Logger.debug("state code"+run.state.code);
 					assertThat(run.state.code).isEqualTo("IW-RG");
@@ -154,7 +154,7 @@ public class RunWorkflowTest extends AbstractTests{
 					State state = new State("F-RG","bot");
 					//Result r = callAction(controllers.runs.api.routes.ref.State.update(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
-					WSHelper.put(ws, "/api/runs/"+run.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
+					WSHelper.putAsBot(ws, "/api/runs/"+run.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 					run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
 					Logger.debug("state code"+run.state.code);
 					assertThat(run.state.code).isEqualTo("IW-V");
@@ -180,7 +180,7 @@ public class RunWorkflowTest extends AbstractTests{
 					State state = new State("F-RG","bot");
 					//Result r = callAction(controllers.runs.api.routes.ref.State.update(runInvalidLane.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
-					WSHelper.put(ws, "/api/runs/"+runInvalidLane.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
+					WSHelper.putAsBot(ws, "/api/runs/"+runInvalidLane.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 					runInvalidLane = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runInvalidLane.code);
 					Logger.debug("state code"+runInvalidLane.state.code);
 					for(Lane lane : runInvalidLane.lanes){
@@ -204,7 +204,7 @@ public class RunWorkflowTest extends AbstractTests{
 					State state = new State("F-V","bot");
 					//Result r = callAction(controllers.runs.api.routes.ref.State.update(runInvalidLane.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
-					WSHelper.put(ws, "/api/runs/"+runInvalidLane.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
+					WSHelper.putAsBot(ws, "/api/runs/"+runInvalidLane.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 					runInvalidLane = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runInvalidLane.code);
 					Logger.debug("state code"+runInvalidLane.state.code);
 					for(Lane lane : runInvalidLane.lanes){

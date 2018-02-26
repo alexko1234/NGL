@@ -114,7 +114,7 @@ public class ReadSetTest extends AbstractBIServerTest{
 	public void test1save()
 	{
 		Logger.debug("save ReadSet");
-		WSHelper.post(ws, "/api/readsets", jsonReadSet, 200);
+		WSHelper.postAsBot(ws, "/api/readsets", jsonReadSet, 200);
 		readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 		Logger.debug("ReadSet "+readSet.code);
 		assertThat(readSet).isNotNull();
@@ -156,7 +156,7 @@ public class ReadSetTest extends AbstractBIServerTest{
 	public void test2list()
 	{
 		Logger.debug("list ReadSet");
-		WSResponse response = WSHelper.get(ws, "/api/readsets", 200);
+		WSResponse response = WSHelper.getAsBot(ws, "/api/readsets", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 
@@ -164,7 +164,7 @@ public class ReadSetTest extends AbstractBIServerTest{
 	public void test3get()
 	{
 		Logger.debug("get ReadSet");
-		WSResponse response = WSHelper.get(ws, "/api/readsets/"+readSet.code, 200);
+		WSResponse response = WSHelper.getAsBot(ws, "/api/readsets/"+readSet.code, 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 
@@ -172,7 +172,7 @@ public class ReadSetTest extends AbstractBIServerTest{
 	public void test4head()
 	{
 		Logger.debug("head ReadSet");
-		WSResponse response = WSHelper.head(ws, "/api/readsets/"+readSet.code, 200);
+		WSResponse response = WSHelper.headAsBot(ws, "/api/readsets/"+readSet.code, 200);
 		assertThat(response).isNotNull();
 	}
 
@@ -182,7 +182,7 @@ public class ReadSetTest extends AbstractBIServerTest{
 		Logger.debug("update ReadSet");
 		Date date = new Date();
 		readSet.archiveDate=date;
-		WSHelper.putObject(ws, "/api/readsets/"+readSet.code,readSet, 200);
+		WSHelper.putObjectAsBot(ws, "/api/readsets/"+readSet.code,readSet, 200);
 		readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 		assertThat(readSet.archiveDate).isEqualTo(date);
 	}
@@ -201,7 +201,7 @@ public class ReadSetTest extends AbstractBIServerTest{
 		readSetValuation.bioinformaticValuation=valuation;
 		readSetValuation.productionValuation=valuation;
 
-		WSHelper.putObject(ws, "/api/readsets/"+readSet.code+"/valuation",readSetValuation, 200);
+		WSHelper.putObjectAsBot(ws, "/api/readsets/"+readSet.code+"/valuation",readSetValuation, 200);
 		readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 		assertThat(readSet.bioinformaticValuation.valid).isEqualTo(TBoolean.FALSE);
 		assertThat(readSet.bioinformaticValuation.comment).isEqualTo("test valuation");
@@ -225,7 +225,7 @@ public class ReadSetTest extends AbstractBIServerTest{
 	public void test8delete()
 	{
 		Logger.debug("delete ReadSet");
-		WSHelper.delete(ws,"/api/readsets/"+readSet.code,200);
+		WSHelper.deleteAsBot(ws,"/api/readsets/"+readSet.code,200);
 		ReadSet readSetDB = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 		assertThat(readSetDB).isNull();
 	}
@@ -234,7 +234,7 @@ public class ReadSetTest extends AbstractBIServerTest{
 	public void test9deleteByRunCode()
 	{
 		Logger.debug("delete ReadSet by runCode");
-		WSHelper.delete(ws,"/api/runs/"+run.code+"/readsets",200);
+		WSHelper.deleteAsBot(ws,"/api/runs/"+run.code+"/readsets",200);
 		List<ReadSet> readSetDB = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,DBQuery.is("runCode", run.code)).toList();
 		assertThat(readSetDB.size()==0);
 	}

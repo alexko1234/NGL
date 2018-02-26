@@ -37,6 +37,11 @@ public class PermissionAction extends Action<Permission> {
 	 */
 	private final Authentication.Configuration authConfiguration;
 	
+	/**
+	 * Logger.
+	 */
+	private static final play.Logger.ALogger logger = play.Logger.of(PermissionAction.class);
+	
 	@Inject
 	public PermissionAction(IAuthorizator authorizator, Authentication.Configuration authConfiguration) {
 		this.authorizator = authorizator;
@@ -50,12 +55,18 @@ public class PermissionAction extends Action<Permission> {
 		
 		String userAgent = context.request().getHeader("User-Agent");
 		String agentByPass = authConfiguration.agentByPass(userAgent);
-		if (agentByPass != null && authorizator.authorize(agentByPass, configuration.value()))
+		logger.debug("Header User-Agent: "+ userAgent);
+		logger.debug("authConfiguration.agentByPass(userAgent): "+ agentByPass);
+		if (agentByPass != null && authorizator.authorize(agentByPass, configuration.value())) {
+			logger.debug("Autorisation !");
 			return delegate.call(context);
+		}
 		
-		if (!Authentication.isAuthenticatedSession(context.session()))
+		if (!Authentication.isAuthenticatedSession(context.session())) {
 			// return CompletableFuture.supplyAsync(() -> unauthorized("not authenticated"));
+			logger.debug("not authenticated");
 			return CompletableFuture.supplyAsync(() -> forbidden("not authenticated"));
+		}
 		String username = Authentication.getUser(context.session());
 		// We run the authorizator implementation.
 		if (authorizator.authorize(username, configuration.value()))

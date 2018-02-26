@@ -39,10 +39,10 @@ public class ReadSetTreatments extends ReadSetsController {
 		treatmentForm = ctx.form(Treatment.class);
 	}
 	
-//	@Permission(value={"reading"})
-	@Authenticated
-	@Historized
-	@Authorized.Read
+	@Permission(value={"reading"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Read
 	public /*static*/ Result list(String readSetCode){
 		ReadSet readSet = getReadSet(readSetCode);
 		if (readSet != null) {
@@ -52,10 +52,10 @@ public class ReadSetTreatments extends ReadSetsController {
 		}		
 	}
 	
-//	@Permission(value={"reading"})
-	@Authenticated
-	@Historized
-	@Authorized.Read
+	@Permission(value={"reading"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Read
 	public /*static*/ Result get(String readSetCode, String treatmentCode){
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.exists("treatments."+treatmentCode)));
@@ -66,10 +66,10 @@ public class ReadSetTreatments extends ReadSetsController {
 		}		
 	}
 	
-//	@Permission(value={"reading"})
-	@Authenticated
-	@Historized
-	@Authorized.Read
+	@Permission(value={"reading"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Read
 	public /*static*/ Result head(String readSetCode, String treatmentCode){
 		if(MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.exists("treatments."+treatmentCode)))){
@@ -79,10 +79,10 @@ public class ReadSetTreatments extends ReadSetsController {
 		}
 	}
 	
-//	@Permission(value={"writing"})	
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})	
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	//@Permission(value={"creation_update_treatments"})
 	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
@@ -127,10 +127,10 @@ public class ReadSetTreatments extends ReadSetsController {
 		}
 	}
 
-//	@Permission(value={"writing"})
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	//@Permission(value={"creation_update_treatments"})
 	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
@@ -174,10 +174,10 @@ public class ReadSetTreatments extends ReadSetsController {
 		}
 	}
 	
-	@Authenticated
-	@Historized
-	@Authorized.Write
-//	@Permission(value={"writing"})	//@Permission(value={"delete_treatments"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
+	@Permission(value={"writing"})	//@Permission(value={"delete_treatments"})
 	public /*static*/ Result delete(String readSetCode, String treatmentCode){
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.exists("treatments."+treatmentCode)));
@@ -189,10 +189,10 @@ public class ReadSetTreatments extends ReadSetsController {
 		return ok();		
 	}
 	
-//	@Permission(value={"writing"})
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	public /*static*/ Result deleteAll(String readSetCode){
 		ReadSet readSet = getReadSet(readSetCode);
 		if (readSet == null) {

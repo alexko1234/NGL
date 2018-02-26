@@ -92,7 +92,7 @@ public class AnalysesTreatmentTest extends AbstractBIServerTest{
 	public void test4save()
 	{
 		Logger.debug("save AnalysesTreatment");
-		WSHelper.post(ws, "/api/analyses/"+analysis.code+"/treatments", jsonAssemblyBA, 200);
+		WSHelper.postAsBot(ws, "/api/analyses/"+analysis.code+"/treatments", jsonAssemblyBA, 200);
 		analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
 		assertThat(analysis.treatments.get("assemblyBA")).isNotNull();
 	}
@@ -104,7 +104,7 @@ public class AnalysesTreatmentTest extends AbstractBIServerTest{
 		//Get Treatment ngsrg
 		Treatment assemblyBA = analysis.treatments.get("assemblyBA");
 		assemblyBA.results.get("pairs").put("GCpercent", new PropertySingleValue(new Double(0)));
-		WSHelper.putObject(ws, "/api/analyses/"+analysis.code+"/treatments/assemblyBA", assemblyBA, 200);
+		WSHelper.putObjectAsBot(ws, "/api/analyses/"+analysis.code+"/treatments/assemblyBA", assemblyBA, 200);
 		analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
 		assertThat(analysis.treatments.get("assemblyBA").results.get("pairs").get("GCpercent").getValue()).isEqualTo(new Double(0));
 	}
@@ -113,7 +113,7 @@ public class AnalysesTreatmentTest extends AbstractBIServerTest{
 	public void test6delete()
 	{
 		Logger.debug("delete AnalysesTreatment");
-		WSHelper.delete(ws,"/api/analyses/"+analysis.code+"/treatments/assemblyBA",200);
+		WSHelper.deleteAsBot(ws,"/api/analyses/"+analysis.code+"/treatments/assemblyBA",200);
 		analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
 		assertThat(analysis.treatments.get("assemblyBA")).isNull();
 	}

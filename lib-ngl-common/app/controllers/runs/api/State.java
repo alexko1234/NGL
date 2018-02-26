@@ -46,10 +46,10 @@ public class State extends RunsController {
     	this.workflows   = workflows;
 	}
     
-//    @Permission(value={"reading"})
-    @Authenticated
-    @Historized
-    @Authorized.Read
+    @Permission(value={"reading"})
+//    @Authenticated
+//    @Historized
+//    @Authorized.Read
     public Result get(String code) {
     	Run runValue = getRun(code, "state");
     	if (runValue != null) {
@@ -59,10 +59,10 @@ public class State extends RunsController {
     	}
     }
 
-//    @Permission(value={"writing"})
-    @Authenticated
-    @Historized
-    @Authorized.Write
+    @Permission(value={"writing"})
+//    @Authenticated
+//    @Historized
+//    @Authorized.Write
     // @Permission(value={"workflow_run_lane"})
     public Result update(String code) {
 		Run run = getRun(code);
@@ -84,10 +84,10 @@ public class State extends RunsController {
 		}
     }
     
-//    @Permission(value={"writing"})
-    @Authenticated
-    @Historized
-    @Authorized.Write
+    @Permission(value={"writing"})
+//    @Authenticated
+//    @Historized
+//    @Authorized.Write
     public Result updateBatch() {
     	List<Form<RunBatchElement>> filledForms =  getFilledFormList(batchElementForm, RunBatchElement.class);
 		
@@ -115,10 +115,10 @@ public class State extends RunsController {
 		return ok(Json.toJson(response));
     }
     
-//    @Permission(value={"reading"})
-    @Authenticated
-    @Historized
-    @Authorized.Read
+    @Permission(value={"reading"})
+//    @Authenticated
+//    @Historized
+//    @Authorized.Read
     public Result historical(String code) {
 		Run runValue = getRun(code, "state");
 		if (runValue != null) {

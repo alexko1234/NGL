@@ -91,10 +91,10 @@ public class Runs extends RunsController {
 		this.workflows = workflows;
 	}
 	
-//	@Permission(value={"reading"})
-	@Authenticated
-	@Historized
-	@Authorized.Read
+	@Permission(value={"reading"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Read
 	public Result list(){
 
 		//Form<RunsSearchForm> filledForm = filledFormQueryString(searchForm, RunsSearchForm.class);
@@ -267,10 +267,10 @@ public class Runs extends RunsController {
 	}
 
 	
-//	@Permission(value={"reading"})
-	@Authenticated
-	@Historized
-	@Authorized.Read
+	@Permission(value={"reading"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Read
 	public /*static*/ Result get(String code) {
 		
 		DatatableForm form = filledFormQueryString(DatatableForm.class);
@@ -283,10 +283,10 @@ public class Runs extends RunsController {
 		}
 	}
 
-//	@Permission(value={"reading"})
-	@Authenticated
-	@Historized
-	@Authorized.Read
+	@Permission(value={"reading"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Read
 	public /*static*/ Result head(String code){
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code)){			
 			return ok();					
@@ -296,10 +296,10 @@ public class Runs extends RunsController {
 	}
 
 	
-//	@Permission(value={"writing"})	
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})	
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	//@Permission(value={"creation_update_run_lane"})
 	public /*static*/ Result save() throws DAOException {
 		Form<Run> filledForm = getFilledForm(runForm, Run.class);
@@ -344,10 +344,10 @@ public class Runs extends RunsController {
 		}
 	}
 
-//	@Permission(value={"writing"})
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	//@Permission(value={"creation_update_run_lane"})
 	public /*static*/ Result update(String code) {
 		Run run = getRun(code);
@@ -413,10 +413,10 @@ public class Runs extends RunsController {
 	}
 
 
-//	@Permission(value={"writing"})
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	public /*static*/ Result delete(String code) {
 		Run run = getRun(code);
 		if (run == null) {
@@ -430,10 +430,10 @@ public class Runs extends RunsController {
 
 	
 	
-//	@Permission(value={"writing"})	
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})	
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	//@Permission(value={"valuation_run_lane"})
 	public /*static*/ Result valuation(String code){
 		Run run = getRun(code);
@@ -463,10 +463,10 @@ public class Runs extends RunsController {
 		}
 	}
 	
-//	@Permission(value={"writing"})
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	public /*static*/ Result applyRules(String code, String rulesCode){
 		Run run = getRun(code);
 		if (run != null) {

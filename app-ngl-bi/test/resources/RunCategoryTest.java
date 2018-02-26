@@ -19,7 +19,7 @@ public class RunCategoryTest extends AbstractBIServerTest{
 	public void test1list()
 	{
 		Logger.debug("list RunCategory");
-		WSResponse response = WSHelper.get(ws, "/api/run-categories", 200);
+		WSResponse response = WSHelper.getAsBot(ws, "/api/run-categories", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 

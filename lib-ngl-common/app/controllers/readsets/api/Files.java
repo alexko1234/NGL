@@ -40,10 +40,10 @@ public class Files extends ReadSetsController {
 		updateForm = ctx.form(QueryFieldsForm.class);
 	}
 	
-//	@Permission(value={"reading"})
-	@Authenticated
-	@Historized
-	@Authorized.Read
+	@Permission(value={"reading"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Read
 	public /*static*/ Result list(String readsetCode) {
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", readsetCode));
 		if (null == readSet) {
@@ -52,10 +52,10 @@ public class Files extends ReadSetsController {
 		return ok(Json.toJson(readSet.files));
 	}
 
-//	@Permission(value={"reading"})
-	@Authenticated
-	@Historized
-	@Authorized.Read
+	@Permission(value={"reading"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Read
 	public /*static*/ Result get(String readsetCode, String fullname) {
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("code", readsetCode), DBQuery.is("files.fullname", fullname)));
 		if (null == readSet) {
@@ -69,10 +69,10 @@ public class Files extends ReadSetsController {
 		return notFound();
 	}
 	
-//	@Permission(value={"reading"})
-	@Authenticated
-	@Historized
-	@Authorized.Read
+	@Permission(value={"reading"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Read
 	public /*static*/ Result head(String readsetCode, String fullname) {
 		if(MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("code", readsetCode), DBQuery.is("files.fullname", fullname)))){			
 			return ok();					
@@ -81,10 +81,10 @@ public class Files extends ReadSetsController {
 		}		
 	}
 	
-//	@Permission(value={"writing"})
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	public /*static*/ Result save(String readsetCode) {
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", readsetCode));
 		if (null == readSet) {
@@ -111,10 +111,10 @@ public class Files extends ReadSetsController {
 		}
 	}
 	
-//	@Permission(value={"writing"})
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	public /*static*/ Result update(String readSetCode, String fullname) {
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.is("files.fullname", fullname)));
 		if (null == readSet) {
@@ -174,10 +174,10 @@ public class Files extends ReadSetsController {
 		}
 	}
 
-//	@Permission(value={"writing"})
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	public /*static*/ Result delete(String readsetCode, String fullname) {
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("code", readsetCode), DBQuery.is("files.fullname", fullname)));
 		if (null == readSet) {
@@ -191,10 +191,10 @@ public class Files extends ReadSetsController {
 		return ok();
 	}
 
-//	@Permission(value={"writing"})
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	public /*static*/ Result deleteByReadSetCode(String readsetCode) { 
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", readsetCode));
 		if (null == readSet) {
@@ -205,10 +205,10 @@ public class Files extends ReadSetsController {
 		return ok();
 	}
 	
-//	@Permission(value={"writing"})
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	public /*static*/ Result deleteByRunCode(String runCode) { 
 		Run run  = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runCode);
 		if (run==null) {

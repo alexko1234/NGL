@@ -8,6 +8,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import controllers.APICommonController;
+import controllers.authorisation.Permission;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
@@ -32,10 +33,10 @@ public class RunCategories extends APICommonController<RunCategoriesSearchForm> 
 		runCategoriesForm = ctx.form(RunCategoriesSearchForm.class);
 	}
 	
-//	@Permission(value={"reading"})
-	@Authenticated
-	@Historized
-	@Authorized.Read
+	@Permission(value={"reading"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Read
 	public /*static*/ Result list(){
 		Form<RunCategoriesSearchForm> runCategoryFilledForm = filledFormQueryString(runCategoriesForm,RunCategoriesSearchForm.class);
 		RunCategoriesSearchForm runCategoriesSearch = runCategoryFilledForm.get();
