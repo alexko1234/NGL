@@ -21,7 +21,7 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
-import play.Logger;
+//import play.Logger;
 import play.data.Form;
 
 // import static play.data.Form.form;
@@ -32,16 +32,18 @@ import play.mvc.Result;
 import validation.ContextValidation;
 import validation.run.instance.RunValidationHelper;
 
-public class Lanes extends RunsController{
+public class Lanes extends RunsController {
+
+	private static final play.Logger.ALogger logger = play.Logger.of(Lanes.class);
 	
 	private final /*static*/ Form<Lane> laneForm ;//= form(Lane.class);
-	private final /*static*/ Form<Treatment> treatmentForm;// = form(Treatment.class);
+//	private final /*static*/ Form<Treatment> treatmentForm;// = form(Treatment.class);
 	private final /*static*/ Form<Valuation> valuationForm ;//= form(Valuation.class);
 	
 	@Inject
 	public Lanes(NGLContext ctx) {
 		laneForm = ctx.form(Lane.class);
-		treatmentForm = ctx.form(Treatment.class);
+//		treatmentForm = ctx.form(Treatment.class);
 		valuationForm = ctx.form(Valuation.class);
 	}
 	
@@ -51,7 +53,7 @@ public class Lanes extends RunsController{
 	@Authorized.Read
 	public /*static*/ Result list(String code) {
 		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
-		if(run == null || run.lanes == null){
+		if (run == null || run.lanes == null) {
 			return badRequest();
 		}
 		return ok(Json.toJson(run.lanes));		
@@ -96,26 +98,25 @@ public class Lanes extends RunsController{
 	//@Permission(value={"creation_update_run_lane"})
 	public /*static*/ Result save(String code) {
 		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
-		if(run == null){
+		if (run == null)
 			return badRequest();
-		}
 				
 		Form<Lane> filledForm = getFilledForm(laneForm, Lane.class);			
 		Lane laneValue = filledForm.get();
 		
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		ctxVal.putObject("run", run);
 		ctxVal.setCreationMode();
 		laneValue.validate(ctxVal);
-		
-		if(!ctxVal.hasErrors()) {
+		if (!ctxVal.hasErrors()) {
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.is("code", code),
 					DBUpdate.push("lanes", laneValue).set("traceInformation", getUpdateTraceInformation(run)));
 			return ok(Json.toJson(laneValue));	
 		} else {
 			// Logger.error(filledForm.errors-AsJson().toString());
-			Logger.error(NGLContext._errorsAsJson(ctxVal.getErrors()).toString());
+			logger.error(NGLContext._errorsAsJson(ctxVal.getErrors()).toString());
 			// return badRequest(filledForm.errors-AsJson());
 			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}		
@@ -128,18 +129,18 @@ public class Lanes extends RunsController{
 	//@Permission(value={"creation_update_run_lane"})
 	public /*static*/ Result update(String code, Integer laneNumber){
 		Run run = getRun(code, laneNumber);
-		if(run == null){
+		if (run == null)
 			return badRequest();
-		}
+
 		Form<Lane> filledForm = getFilledForm(laneForm, Lane.class);			
 		Lane laneValue = filledForm.get();
 		if (laneNumber.equals(laneValue.number)) {				
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 			ctxVal.putObject("run", run);
 			ctxVal.setUpdateMode();
 			laneValue.validate(ctxVal);
-			
-			if(!ctxVal.hasErrors()) {
+			if (!ctxVal.hasErrors()) {
 				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 						DBQuery.and(DBQuery.is("code", code), DBQuery.is("lanes.number", laneNumber)),
 						DBUpdate.set("lanes.$", laneValue).set("traceInformation", getUpdateTraceInformation(run))); 
@@ -148,7 +149,7 @@ public class Lanes extends RunsController{
 				// return badRequest(filledForm.errors-AsJson());
 				return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 			}
-		}else{
+		} else {
 			return badRequest("lane number are not the same");
 		}
 	}
@@ -159,15 +160,13 @@ public class Lanes extends RunsController{
 	@Authorized.Write
 	public /*static*/ Result delete(String code, Integer laneNumber) { 
 		Run run = getRun(code, laneNumber);
-		if(run == null){
+		if (run == null)
 			return badRequest();
-		}
 		
 		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, DBQuery.and(DBQuery.is("code",code),DBQuery.is("lanes.number",laneNumber)), DBUpdate.unset("lanes.$"));
 		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, DBQuery.is("code",code), DBUpdate.pull("lanes", null).set("traceInformation", getUpdateTraceInformation(run)));
 		MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("runCode", code), DBQuery.is("laneNumber",laneNumber)));
 		return ok();
-	
 	}
 	
 //	@Permission(value={"writing"})
@@ -176,9 +175,9 @@ public class Lanes extends RunsController{
 	@Authorized.Write
 	public /*static*/ Result deleteByRunCode(String code) {
 		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
-		if (run==null) {
+		if (run == null)
 			return badRequest();
-		}
+
 		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, DBQuery.is("code",code), DBUpdate.unset("lanes").set("traceInformation", getUpdateTraceInformation(run)));
 		MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("runCode", code)));
 		return ok();
@@ -191,14 +190,15 @@ public class Lanes extends RunsController{
 	//@Permission(value={"valuation_run_lane"})
 	public /*static*/ Result valuation(String code, Integer laneNumber){
 		Run run = getRun(code, laneNumber);
-		if(run == null){
+		if (run == null)
 			return badRequest();
-		}
+
 		Form<Valuation> filledForm = getFilledForm(valuationForm, Valuation.class);
 		Valuation valuation = filledForm.get();
 		valuation.date = new Date();
 		valuation.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		ctxVal.putObject("run", run);
 		ctxVal.setUpdateMode();
 		RunValidationHelper.validateValuation(run.typeCode, valuation, ctxVal);			
