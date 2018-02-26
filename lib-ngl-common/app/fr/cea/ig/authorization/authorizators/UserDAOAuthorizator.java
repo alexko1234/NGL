@@ -194,6 +194,7 @@ public class UserDAOAuthorizator implements IAuthorizator {
         } 
         return permissions;
     }
+    
     /**
      * Can the user access the given application by name .
      * @param login user login
