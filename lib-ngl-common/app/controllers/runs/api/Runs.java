@@ -440,17 +440,17 @@ public class Runs extends RunsController {
 	//@Permission(value={"valuation_run_lane"})
 	public /*static*/ Result valuation(String code){
 		Run run = getRun(code);
-		if(run == null){
+		if (run == null)
 			return badRequest();
-		}
 		Form<Valuation> filledForm =  getFilledForm(valuationForm, Valuation.class);
 		Valuation valuation = filledForm.get();
 		valuation.date = new Date();
 		valuation.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		ctxVal.setUpdateMode();
 		RunValidationHelper.validateValuation(run.typeCode, valuation, ctxVal);
-		if(!ctxVal.hasErrors()) {			
+		if (!ctxVal.hasErrors()) {			
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.and(DBQuery.is("code", code)),
 					DBUpdate.set("valuation", valuation).set("traceInformation", getUpdateTraceInformation(run)));			
