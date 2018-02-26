@@ -277,28 +277,23 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 			}else if(dao.isLseqco(readSet)){
 				try{
 					LotSeqValuation lsv = dao.getLotsequenceValuation(readSet.code);
-					if(null != lsv){
-						Logger.debug(lsv.toString());
-						
-						if(null != lsv.tacco){
+					if (lsv != null) {
+						logger.debug(lsv.toString());
+						if (lsv.tacco != null) 
 							tacheId = lsv.tacco;
-						}
-						if(null != lsv.cptreco){
-							cptreco = lsv.cptreco;
-						}										
-					}else{
-						Logger.error("LotSeqValuation is null for "+readSet.code);
+						if (lsv.cptreco != null)
+							cptreco = lsv.cptreco;				
+					} else {
+						logger.error("LotSeqValuation is null for "+readSet.code);
 					}
-					
-					if(null == cptreco || cptreco == 47){ //used to manage history recovery
+					if (cptreco == null || cptreco == 47) { //used to manage history recovery
 						cptreco = getCR(readSet.productionValuation);
 					}
-					
 					dao.updateLotsequenceAbandon(readSet.code, getSeqVal(readSet.productionValuation, readSet.code), cptreco, tacheId, 55);
-					if(!TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)){
+					if (!TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)) {
 						dao.updateLotsequenceAbandonBI(readSet.code, getAbandon(readSet.bioinformaticValuation, readSet.code));
 					}
-				}catch(Throwable t){ //in case of deadlock situation or other error we retry
+				} catch(Throwable t) { // in case of deadlock situation or other error we retry, TODO: do not catch throwable
 					logger.warn(readSet.code+" : second : "+t.getMessage());
 //					LotSeqValuation lsv = 
 							dao.getLotsequenceValuation(readSet.code);
@@ -309,19 +304,19 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 				}
 				
 			}
-		} catch(Throwable t) {
+		} catch(Throwable t) { // TODO: do not catch throwable
 			logger.error(readSet.code + " : " + t.getMessage(), t);
 		}
 	}
 
 	public synchronized void sendMailFVQC(ReadSet readSet) throws MailServiceException {
-		Logger.debug("send mail agirs");
-		if(!MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+		logger.debug("send mail agirs");
+		if (!MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.is("runCode", readSet.runCode).notIn("state.historical.code", "F-VQC"))
 				&& MongoDBDAO.checkObjectExist(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-						DBQuery.is("code", readSet.runCode).notEquals("properties.sendMailAgirs.value", Boolean.TRUE))){
+						DBQuery.is("code", readSet.runCode).notEquals("properties.sendMailAgirs.value", Boolean.TRUE))) {
 			
-			Logger.debug("send mail agirs now");
+			logger.debug("send mail agirs now");
 			String biurl = "http://ngl-bi.genoscope.cns.fr";
 			
 			List<ReadSet> readsets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
@@ -339,7 +334,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 					+ "</div>");
 			message.append("<h3 style='text-decoration: underline;'>").append(readSet.runCode).append("</h3>");
 			
-			for(String key : mReadSets.keySet()){				
+			for (String key : mReadSets.keySet()) {				
 				ResponProjet rp = dao.getResponProjet(key);				
 				message.append("<h4 style='text-decoration: underline;'>Projet : ").append(key).append("</h4>");
 				message.append("<div style='color:green;'>").append(rp.name).append("</div>");
@@ -428,39 +423,37 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 					//Logger.debug("key banque = "+key);
 					mapBanques.put(key, banque);
 				}
-				if(mapBanques.size()==0){
+				if (mapBanques.size() == 0) {
 					for(BanqueSolexa banque:  dao.getBanqueSolexaFlowcellNGL(run.containerSupportCode)){
 						String key = banque.prsco+"_"+banque.adnnom+"_"+banque.lanenum+"_"+((banque.tagkeyseq != null)?banque.tagkeyseq:"");
-						Logger.debug("key banque = "+key);
+						logger.debug("key banque = "+key);
 						mapBanques.put(key, banque);
 					}
 				}
 				Map<String, ReadSet> mapReadSets = new HashMap<String, ReadSet>();
-				for(ReadSet readSet:  readSets){
+				for (ReadSet readSet:  readSets) {
 					String index = (readSet.code.contains("."))?readSet.code.split("\\.")[1]:"";
 					String key = readSet.sampleCode+"_"+readSet.laneNumber+"_"+index;
 					//Logger.debug("key readSet = "+key);
 					//we insert only that we find in dblims
-					if(mapBanques.containsKey(key)){
+					if (mapBanques.containsKey(key)) {
 						mapReadSets.put(key, readSet);
-						
 					}
 				}
-				
-				Logger.debug("Load DepotSolexa = "+ds);
+				logger.debug("Load DepotSolexa = "+ds);
 				//Delete run if exist ???
 				
 				dao.insertRun(run, ds);
 				dao.insertLanes(run.lanes, ds);
-				for(Map.Entry<String, ReadSet> entry : mapReadSets.entrySet()){
-					try{
-					dao.insertReadSet(entry.getValue(), mapBanques.get(entry.getKey()));
-					dao.insertFiles(entry.getValue(), false);
+				for (Map.Entry<String, ReadSet> entry : mapReadSets.entrySet()) {
+					try {
+						dao.insertReadSet(entry.getValue(), mapBanques.get(entry.getKey()));
+						dao.insertFiles(entry.getValue(), false);
 					}catch(NullPointerException e){
-						Logger.error("No readSet "+entry.getValue());
+						logger.error("No readSet "+entry.getValue());
 					}
 				}
-				
+
 				dao.dispatchRun(run);
 				dao.updateRunInNGL(run);
 				//passe l'etat à traite
@@ -507,29 +500,28 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 		}
 	}
 	
-	public void linkRunWithMaterielManip(){
-		try{
+	public void linkRunWithMaterielManip() {
+		try {
 			dao.linkRunWithMaterielManip();
 			
-		}catch(Throwable t){
+		} catch(Throwable t) {
 			logger.error("Synchro LINK RUN / MATERIEL_MANIP: "+t.getMessage(),t);
 		}
 	}
 	
-	
 	public DepotSolexa insertFlowcellNGL(Run run){
-		List<models.laboratory.experiment.instance.Experiment> expPrepaflowcell=MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, models.laboratory.experiment.instance.Experiment.class,DBQuery.in("outputContainerSupportCodes", run.containerSupportCode).in("typeCode", "prepa-flowcell","prepa-fc-ordered")).toList();
-		if(CollectionUtils.isEmpty(expPrepaflowcell)){
+		List<models.laboratory.experiment.instance.Experiment> expPrepaflowcell = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, models.laboratory.experiment.instance.Experiment.class,DBQuery.in("outputContainerSupportCodes", run.containerSupportCode).in("typeCode", "prepa-flowcell","prepa-fc-ordered")).toList();
+		if (CollectionUtils.isEmpty(expPrepaflowcell)) {
 			throw new RuntimeException("Prepaflowcell Experiment with containerOutPut "+run.containerSupportCode+" not found in NGL");
 		}
 		
-		List<models.laboratory.experiment.instance.Experiment> expDepotIllumina=MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, models.laboratory.experiment.instance.Experiment.class,DBQuery.in("inputContainerSupportCodes", run.containerSupportCode).is("typeCode", "illumina-depot")).toList();
-		if(CollectionUtils.isEmpty(expDepotIllumina)){
+		List<models.laboratory.experiment.instance.Experiment> expDepotIllumina = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, models.laboratory.experiment.instance.Experiment.class,DBQuery.in("inputContainerSupportCodes", run.containerSupportCode).is("typeCode", "illumina-depot")).toList();
+		if (CollectionUtils.isEmpty(expDepotIllumina)) {
 			throw new RuntimeException("DepotIllumina Experiment with containerOutPut "+run.containerSupportCode+" not found in NGL");
 		}
 
 		//Create Manip FlowcellNGL
-		DepotSolexa ds=dao.insertFlowcellNGL(expPrepaflowcell.get(0),expDepotIllumina.get(0), run);
+		DepotSolexa ds = dao.insertFlowcellNGL(expPrepaflowcell.get(0),expDepotIllumina.get(0), run);
 		return ds;
 
 	}
@@ -538,4 +530,5 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 	public Sample findSampleToCreate(String sampleCode) {
 		return dao.getMateriel(sampleCode);
 	}
+	
 }
