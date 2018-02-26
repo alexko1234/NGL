@@ -18,30 +18,29 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.protocol.instance.Protocol;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
-import play.Logger;
-import scala.collection.script.Remove;
+//import play.Logger;
+//import scala.collection.script.Remove;
 import services.instance.InstanceFactory;
 import validation.ContextValidation;
 
 public class ProtocolServiceCNS {	
 
+	private static final play.Logger.ALogger logger = play.Logger.of(ProtocolServiceCNS.class);
+	
 	private final static String institute = "CNS";
 
 	public static void main(ContextValidation ctx) {	
-
-		Logger.info("Start to create protocols collection for "+institute+"...");
-		Logger.info("Remove protocol");
+		logger.info("Start to create protocols collection for "+institute+"...");
+		logger.info("Remove protocol");
 		removeProtocols(ctx);
-		Logger.info("Save protocols ...");
+		logger.info("Save protocols ...");
 		saveProtocols(ctx);
-		Logger.info(institute+" Protocols collection creation is done!");
+		logger.info(institute+" Protocols collection creation is done!");
 	}
-	
 	
 	private static void removeProtocols(ContextValidation ctx) {
 		MongoDBDAO.delete(InstanceConstants.PROTOCOL_COLL_NAME, Protocol.class, DBQuery.empty());
 	}
-
 
 	public static void saveProtocols(ContextValidation ctx){		
 		List<Protocol> lp = new ArrayList<Protocol>();
@@ -349,7 +348,7 @@ public class ProtocolServiceCNS {
 		}
 		for(Protocol protocole:lp){
 			InstanceHelpers.save(InstanceConstants.PROTOCOL_COLL_NAME, protocole,ctx);
-			Logger.debug(" Protocole "+protocole.code);
+			logger.debug(" Protocole "+protocole.code);
 		}
 	}
 
@@ -362,7 +361,7 @@ cDNAsynthesisType	?	?	?	?	?	?
 	@SafeVarargs
 	private static Map<String, PropertyValue<?>> concatMap(Map<String, PropertyValue<?>>...map) {
 		Map<String, PropertyValue<?>> mapFinal = new HashMap<>(map.length); // <String, PropertyValue>(map.length);
-		for(int i = 0 ; i < map.length; i++){
+		for (int i = 0 ; i < map.length; i++) {
 			mapFinal.putAll(map[i]);
 		}
 		return mapFinal;

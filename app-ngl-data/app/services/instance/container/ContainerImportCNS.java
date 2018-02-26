@@ -33,16 +33,17 @@ import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
 import models.utils.instance.ContainerSupportHelper;
-import play.Logger;
+//import play.Logger;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
 
 public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(ContainerImportCNS.class);
+	
 	@Inject
-	public ContainerImportCNS(String name,FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+	public ContainerImportCNS(String name,FiniteDuration durationFromStart,	FiniteDuration durationFromNextIteration, NGLContext ctx) {
 		super(name,durationFromStart, durationFromNextIteration, ctx);
 	}
 
@@ -146,19 +147,20 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 
 		//List of other containers also in NGL associed to support to create 
 		List<Container> containersSupportContainers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code", supportContainers)).toList();
-		Logger.debug("Nb container  support"+containersSupportContainers.size());
+		logger.debug("Nb container  support"+containersSupportContainers.size());
 		containersSupportContainers.addAll(containers);
 		
-		List<ContainerSupport> containerSupports=ContainerHelper.createSupportFromContainers(containersSupportContainers,propertiesContainerSupports, contextError);
+//		List<ContainerSupport> containerSupports=
+				ContainerHelper.createSupportFromContainers(containersSupportContainers,propertiesContainerSupports, contextError);
 	
-		List<Container> newContainers=new ArrayList<Container>();
+		List<Container> newContainers = new ArrayList<Container>();
 		
 		for (Container container:containers) {
 			//Logger.debug("Container :"+container.code+ "nb sample code"+container.sampleCodes.size());
-			rootKeyName="container["+container.code+"]";
+			rootKeyName = "container[" + container.code + "]";
 			contextError.addKeyToRootKeyName(rootKeyName);
 			Container result=(Container) InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME,container, contextError,true);
-			if(result!=null){
+			if (result != null) {
 				newContainers.add(result);
 			}
 			contextError.removeKeyFromRootKeyName(rootKeyName);
@@ -228,23 +230,21 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 
 		Container container = new Container();
 		container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
-		try{
+		try {
 			container.traceInformation.creationDate=rs.getDate("dc");
 		} catch(SQLException e){
 		}
 
-
 		//Logger.debug("Container :"+rs.getString("code"));
 		container.code=rs.getString("code");
-		
 
-		try{
+		try {
 			container.categoryCode=rs.getString("containerCategoryCode");
-		} catch(SQLException e){
+		} catch(SQLException e) {
 			container.categoryCode=containerCategoryCode;
 		}
 
-		container.comments=new ArrayList<Comment>();				
+		container.comments = new ArrayList<Comment>();				
 		container.comments.add(new Comment(rs.getString("comment"), "ngl-test"));
 		
 		container.state = new State(); 
@@ -255,17 +255,16 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		
 		container.valuation = new Valuation();
 		
-		try{
+		try {
 			container.valuation.valid=TBoolean.valueOf(rs.getString("valide"));
-		} catch(SQLException e){
+		} catch(SQLException e) {
 			container.valuation.valid=TBoolean.UNSET;
 		}
 		
 		String storageCode=null;
-		try{
+		try {
 			storageCode=rs.getString("storageCode");
-		}catch(SQLException e){
-			
+		} catch(SQLException e) {
 		}
 		
 		container.support=ContainerSupportHelper.getContainerSupport(container.categoryCode, rs.getInt("nbContainer"), rs.getString("codeSupport"), rs.getString("column"), rs.getString("line"),storageCode);
@@ -276,45 +275,43 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 			container.properties.put("sequencingProgramType", new PropertySingleValue(rs.getString("sequencingProgramType")));
 		//TODO GA pass by getDate but need migration on all the tube and plate importing from dblims
 		if(rs.getString("receptionDate")!=null){
-		//GS	container.properties.put("receptionDate",new PropertySingleValue(rs.getString("receptionDate")));	
-		 container.properties.put("receptionDate",new PropertySingleValue(rs.getDate("receptionDate")));
+			//GS	container.properties.put("receptionDate",new PropertySingleValue(rs.getString("receptionDate")));	
+			container.properties.put("receptionDate",new PropertySingleValue(rs.getDate("receptionDate")));
 		}
 
 		String mesuredConcentrationUnit="ng/µl";
 		String mesuredSizeUnit="pb";
 
-		try{
-			if(   rs.getString("measuredConcentrationUnit")!=null){
+		try {
+			if (rs.getString("measuredConcentrationUnit") != null) {
 				mesuredConcentrationUnit=rs.getString("measuredConcentrationUnit");
 			}
 		} catch(SQLException e){
-			
 		}
 		
-		try{
-			if(   rs.getString("measuredSizeUnit")!=null){
+		try {
+			if(rs.getString("measuredSizeUnit") != null) {
 				mesuredSizeUnit=rs.getString("measuredSizeUnit");
 			}
-		} catch(SQLException e){
-			
+		} catch(SQLException e) {
 		}
 		
-		if(rs.getString("measuredConcentration")!=null){
-			container.concentration=new PropertySingleValue(Math.round(rs.getFloat("measuredConcentration")*100.0)/100.0, mesuredConcentrationUnit);}
-		if(rs.getString("measuredVolume")!=null){
-			container.volume=new PropertySingleValue(Math.round(rs.getFloat("measuredVolume")*100.0)/100.0, "µL");}
-		if(rs.getString("measuredQuantity")!=null){
-			container.quantity=new PropertySingleValue(Math.round(rs.getFloat("measuredQuantity")*100.0)/100.0, "ng");}
+		if (rs.getString("measuredConcentration") != null)
+			container.concentration=new PropertySingleValue(Math.round(rs.getFloat("measuredConcentration")*100.0)/100.0, mesuredConcentrationUnit);
+		if (rs.getString("measuredVolume") != null)
+			container.volume = new PropertySingleValue(Math.round(rs.getFloat("measuredVolume")*100.0)/100.0, "µL");
+		if (rs.getString("measuredQuantity") != null)
+			container.quantity = new PropertySingleValue(Math.round(rs.getFloat("measuredQuantity")*100.0)/100.0, "ng");
 		
-		try{
-			if(rs.getString("measuredSize")!=null){
+		try {
+			if (rs.getString("measuredSize") != null) {
 			container.size=new PropertySingleValue(rs.getInt("measuredSize"), mesuredSizeUnit);
 			}
 		} catch(SQLException e) {	
 		}
 		// List<QualityControlResult> qualityControlResults = new ArrayList<QualityControlResult>();
 		try {
-			if(rs.getString("concentrationTypeCode")!=null){
+			if (rs.getString("concentrationTypeCode") != null) {
 				QualityControlResult qcConcentrationResult = new QualityControlResult();
 				qcConcentrationResult.typeCode   = rs.getString("concentrationTypeCode");
 				qcConcentrationResult.code=qcConcentrationResult.typeCode+"_"+container.code;
@@ -322,9 +319,8 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 				qcConcentrationResult.properties.put("concentration1", container.concentration);
 				qcConcentrationResult.date       = rs.getDate("concentrationDate");
 				container.qualityControlResults.add(qcConcentrationResult);
-				}
-			}catch(SQLException e){
-			
+			}
+		} catch(SQLException e) {
 		}
 		try {
 			if (rs.getString("sizeTypeCode") != null) {
