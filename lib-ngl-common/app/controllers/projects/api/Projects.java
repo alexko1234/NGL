@@ -26,7 +26,7 @@ import org.springframework.stereotype.Controller;
 
 import com.mongodb.BasicDBObject;
 
-import play.Logger;
+//import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -42,14 +42,16 @@ import fr.cea.ig.MongoDBResult;
 // @Controller
 public class Projects extends DocumentController<Project> {
 	
+	private static final play.Logger.ALogger logger = play.Logger.of(Projects.class);
+	
 	private final /*static*/ Form<ProjectsSearchForm> searchForm;// = form(ProjectsSearchForm.class); 
-	private final /*static*/ Form<Project> projectForm;// = form(Project.class);
+//	private final /*static*/ Form<Project> projectForm;// = form(Project.class);
 	
 	@Inject
 	public Projects(NGLContext ctx) {
 		super(ctx,InstanceConstants.PROJECT_COLL_NAME, Project.class);		
 		searchForm = ctx.form(ProjectsSearchForm.class); 
-		projectForm = ctx.form(Project.class);
+//		projectForm = ctx.form(Project.class);
 	}
 
 
@@ -69,14 +71,14 @@ public class Projects extends DocumentController<Project> {
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("name", 1);
 			keys.put("code", 1);
-			if(null == form.orderBy)form.orderBy = "code";
-			if(null == form.orderSense)form.orderSense = 0;
+			if (form.orderBy    == null) form.orderBy    = "code";
+			if (form.orderSense == null) form.orderSense = 0;
 			MongoDBResult<Project> results = mongoDBFinder(form, q, keys);			
 			List<Project> projects = results.toList();			
 			return ok(Json.toJson(toListObjects(projects)));
 		} else {
-			if(null == form.orderBy)form.orderBy = "code";
-			if(null == form.orderSense)form.orderSense = 0;
+			if (form.orderBy    == null) form.orderBy    = "code";
+			if (form.orderSense == null) form.orderSense = 0;
 			MongoDBResult<Project> results = mongoDBFinder(form, q, keys);	
 			List<Project> projects = results.toList();
 			return ok(Json.toJson(projects));
@@ -146,23 +148,21 @@ public class Projects extends DocumentController<Project> {
 	public Result save() {
 		Form<Project> filledForm = getMainFilledForm();
 		Project projectInput = filledForm.get();
-
-		if (null == projectInput._id) { 
+		if (projectInput._id == null) { 
 			projectInput.traceInformation = new TraceInformation();
 			projectInput.traceInformation.setTraceInformation(getCurrentUser());
 			
-			if(null == projectInput.state){
+			if (projectInput.state == null) {
 				projectInput.state = new State();
 			}
 			projectInput.state.code = "N";
 			projectInput.state.user = getCurrentUser();
 			projectInput.state.date = new Date();		
-			
 		} else {
 			return badRequest("use PUT method to update the project");
 		}
-		
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 		ctxVal.setCreationMode();
 		projectInput.validate(ctxVal);
 
@@ -175,7 +175,6 @@ public class Projects extends DocumentController<Project> {
 		}
 	}
 
-
 	public Result update(String code) {
 		Project project = getObject(code);
 		if (project == null) {
@@ -185,13 +184,13 @@ public class Projects extends DocumentController<Project> {
 		Project projectInput = filledForm.get();
 		
 		if (code.equals(projectInput.code)) {
-			if(null != projectInput.traceInformation){
+			if (projectInput.traceInformation != null) {
 				projectInput.traceInformation.setTraceInformation(getCurrentUser());
-			}else{
-				Logger.error("traceInformation is null !!");
+			} else {
+				logger.error("traceInformation is null !!");
 			}
-			
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+//			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 			ctxVal.setUpdateMode();
 			projectInput.validate(ctxVal);
 			if (!ctxVal.hasErrors()) {
@@ -201,7 +200,6 @@ public class Projects extends DocumentController<Project> {
 				// return badRequest(filledForm.errors-AsJson());
 				return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 			}
-			
 		} else {
 			return badRequest("Project codes are not the same");
 		}
