@@ -9,54 +9,41 @@ import validation.ContextValidation;
 import validation.container.instance.ContainerValidationHelper;
 import validation.experiment.instance.ContainerUsedValidationHelper;
 
-public class OutputContainerUsed extends AbstractContainerUsed{
+public class OutputContainerUsed extends AbstractContainerUsed {
 		
 	public Comment comment;
 	
 	public OutputContainerUsed() {
-		super();
-		
+//		super();		
 	}
 	
 	public OutputContainerUsed(String code) {
-		super(code);
-		
+		super(code);		
 	}
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		long t0 = System.currentTimeMillis();
-		ContainerUsedValidationHelper.validateOutputContainerCode(code, contextValidation);
-		
-		long t1 = System.currentTimeMillis();
-		ContainerUsedValidationHelper.validateLocationOnSupportOnContainer(locationOnContainerSupport, contextValidation);
-		
-		long t2 = System.currentTimeMillis();
-		ContainerUsedValidationHelper.validateOutputContainerCategoryCode(categoryCode, contextValidation);
-		
-		long t3 = System.currentTimeMillis();
-		ContainerUsedValidationHelper.validateOutputContents(contents, contextValidation);
-		
-		long t4 = System.currentTimeMillis();
-		ContainerValidationHelper.validateVolume(volume, contextValidation);
-		
-		long t4_1 = System.currentTimeMillis();
+//		long t0 = System.currentTimeMillis();
+		ContainerUsedValidationHelper.validateOutputContainerCode(code, contextValidation);		
+//		long t1 = System.currentTimeMillis();
+		ContainerUsedValidationHelper.validateLocationOnSupportOnContainer(locationOnContainerSupport, contextValidation);		
+//		long t2 = System.currentTimeMillis();
+		ContainerUsedValidationHelper.validateOutputContainerCategoryCode(categoryCode, contextValidation);		
+//		long t3 = System.currentTimeMillis();
+		ContainerUsedValidationHelper.validateOutputContents(contents, contextValidation);		
+//		long t4 = System.currentTimeMillis();
+		ContainerValidationHelper.validateVolume(volume, contextValidation);		
+//		long t4_1 = System.currentTimeMillis();
 		ContainerValidationHelper.validateSize(size, contextValidation);
-		
-		
-		long t5 = System.currentTimeMillis();
-		ContainerValidationHelper.validateConcentration(concentration, contextValidation);
-		
-		long t6 = System.currentTimeMillis();
-		ContainerValidationHelper.validateQuantity(quantity, contextValidation);
-		
-		long t7 = System.currentTimeMillis();
-		ContainerUsedValidationHelper.validateExperimentProperties(experimentProperties, Level.CODE.ContainerOut, contextValidation);
-		
-		long t8 = System.currentTimeMillis();
-		ContainerUsedValidationHelper.validateInstrumentProperties(instrumentProperties, Level.CODE.ContainerOut, contextValidation);
-		
-		long t9 = System.currentTimeMillis();
+//		long t5 = System.currentTimeMillis();
+		ContainerValidationHelper.validateConcentration(concentration, contextValidation);		
+//		long t6 = System.currentTimeMillis();
+		ContainerValidationHelper.validateQuantity(quantity, contextValidation);		
+//		long t7 = System.currentTimeMillis();
+		ContainerUsedValidationHelper.validateExperimentProperties(experimentProperties, Level.CODE.ContainerOut, contextValidation);		
+//		long t8 = System.currentTimeMillis();
+		ContainerUsedValidationHelper.validateInstrumentProperties(instrumentProperties, Level.CODE.ContainerOut, contextValidation);		
+//		long t9 = System.currentTimeMillis();
 		/*
 		Logger.debug("OutputContainerUsed validate \n "
 				+"1 = "+(t1-t0)+" ms\n"
@@ -72,6 +59,5 @@ public class OutputContainerUsed extends AbstractContainerUsed{
 				);
 				*/
 	}
-
 	
 }
