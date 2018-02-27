@@ -39,6 +39,7 @@ import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
 
 public class StatsConfigurations extends DocumentController<StatsConfiguration> {// CommonController {
+	
 	private final /*static*/ Form<StatsConfiguration> reportConfigForm;// = form(StatsConfiguration.class);
 	private final /*static*/ Form<ConfigurationsSearchForm> searchForm;// = form(ConfigurationsSearchForm.class);
 	
@@ -105,17 +106,17 @@ public class StatsConfigurations extends DocumentController<StatsConfiguration> 
 	public /*static*/ Result save() {
 		Form<StatsConfiguration> filledForm = getFilledForm(reportConfigForm, StatsConfiguration.class);
 		StatsConfiguration statsConfiguration = filledForm.get();
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 
-		if (null == statsConfiguration._id) {
-			statsConfiguration.traceInformation = new TraceInformation();
-			statsConfiguration.traceInformation
-					.setTraceInformation(getCurrentUser());
+		if (statsConfiguration._id == null) {
+//			statsConfiguration.traceInformation = new TraceInformation();
+//			statsConfiguration.traceInformation.setTraceInformation(getCurrentUser());
+			statsConfiguration.setTraceCreationStamp(ctxVal, getCurrentUser());
 			statsConfiguration.code = generateStatsConfigurationCode();
 		} else {
 			return badRequest("use PUT method to update the run");
 		}
-
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 		ctxVal.setCreationMode();
 		statsConfiguration.validate(ctxVal);
 		if (!ctxVal.hasErrors()) {
@@ -130,20 +131,20 @@ public class StatsConfigurations extends DocumentController<StatsConfiguration> 
 	@Permission(value={"writing"})
 	public /*static*/ Result update(String code) {
 		StatsConfiguration statsConfiguration =  getStatsConfiguration(code);
-		if(statsConfiguration == null) {
-			return badRequest("StatsConfiguration with code "+code+" does not exist");
-		}
+		if (statsConfiguration == null)
+			return badRequest("StatsConfiguration with code "+code+" does not exist"); // TODO: probably a not found
 		Form<StatsConfiguration> filledForm = getFilledForm(reportConfigForm, StatsConfiguration.class);
 		StatsConfiguration statsConfigurationInput = filledForm.get();
 
 		if (statsConfigurationInput.code.equals(code)) {
-			if(null != statsConfigurationInput.traceInformation){
-				statsConfigurationInput.traceInformation.setTraceInformation(getCurrentUser());
-			}else{
-				Logger.error("traceInformation is null !!");
-			}
-			
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//			if(null != statsConfigurationInput.traceInformation){
+//				statsConfigurationInput.traceInformation.setTraceInformation(getCurrentUser());
+//			}else{
+//				Logger.error("traceInformation is null !!");
+//			}
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
+			statsConfigurationInput.setTraceUpdateStamp(ctxVal, getCurrentUser());
+//			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 			ctxVal.setUpdateMode();
 			statsConfigurationInput.validate(ctxVal);
 			if (!ctxVal.hasErrors()) {
@@ -161,19 +162,19 @@ public class StatsConfigurations extends DocumentController<StatsConfiguration> 
 	@Permission(value={"writing"})
 	public /*static*/ Result delete(String code) {
 		StatsConfiguration statsConfiguration =  getStatsConfiguration(code);
-		if(statsConfiguration == null) {
-			return badRequest("StatsConfiguration with code "+statsConfiguration+" does not exist");
-		}
+		if (statsConfiguration == null)
+			return badRequest("StatsConfiguration with code "+statsConfiguration+" does not exist"); // TODO: probably a not found
 		MongoDBDAO.deleteByCode(InstanceConstants.STATS_CONFIG_COLL_NAME,  StatsConfiguration.class, statsConfiguration.code);
 		return ok();
 	}
 	
 	public static String generateStatsConfigurationCode(){
-		return ("RC-"+(new SimpleDateFormat("yyyyMMddHHmmss")).format(new Date())).toUpperCase();		
+		return ("RC-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())).toUpperCase();		
 	}
 	
 	private static StatsConfiguration getStatsConfiguration(String code) {
 		StatsConfiguration statsConfiguration = MongoDBDAO.findByCode(InstanceConstants.STATS_CONFIG_COLL_NAME, StatsConfiguration.class, code);
     	return statsConfiguration;
 	}
+	
 }
