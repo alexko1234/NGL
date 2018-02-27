@@ -66,15 +66,14 @@ public class State extends RunsController {
     // @Permission(value={"workflow_run_lane"})
     public Result update(String code) {
 		Run run = getRun(code);
-		if (run == null) {
-		    return badRequest();
-		}
-		Form<models.laboratory.common.instance.State> filledForm = getFilledForm(
-			stateForm, models.laboratory.common.instance.State.class);
+		if (run == null)
+		    return badRequest(); // TODO: probably a not found
+		Form<models.laboratory.common.instance.State> filledForm = getFilledForm(stateForm, models.laboratory.common.instance.State.class);
 		models.laboratory.common.instance.State state = filledForm.get();
 		state.date = new Date();
 		state.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		workflows.setState(ctxVal, run, state);
 		if (!ctxVal.hasErrors()) {
 		    return ok(Json.toJson(getRun(code)));
@@ -95,11 +94,12 @@ public class State extends RunsController {
 		for(Form<RunBatchElement> filledForm: filledForms){
 			RunBatchElement element = filledForm.get();
 			Run run = getRun(element.data.code);
-			if(null != run){
+			if (run != null) {
 				models.laboratory.common.instance.State state = element.data.state;
 				state.date = new Date();
 				state.user = getCurrentUser();
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 				workflows.setState(ctxVal, run, state);
 				if (!ctxVal.hasErrors()) {
 					response.add(new DatatableBatchResponseElement(OK, getRun(run.code), element.index));
@@ -110,7 +110,6 @@ public class State extends RunsController {
 			} else {
 				response.add(new DatatableBatchResponseElement(BAD_REQUEST, element.index));
 			}
-			
 		}		
 		return ok(Json.toJson(response));
     }
@@ -128,21 +127,28 @@ public class State extends RunsController {
 		} else {
 		    return notFound();
 		}
-		
     }
 
-    private static Set<TransientState> getHistorical(
-	    Set<TransientState> historical, HistoricalStateSearchForm form) {
+    private static Set<TransientState> getHistorical(Set<TransientState> historical, HistoricalStateSearchForm form) {
 		List<TransientState> values = new ArrayList<TransientState>();
 		if (StringUtils.isNotBlank(form.stateCode)) {
-			Iterator<TransientState> iterator = historical.iterator();
-			while(iterator.hasNext()){
-				TransientState ts = iterator.next();
-				if(form.stateCode.equals(ts.code)){
+//			Iterator<TransientState> iterator = historical.iterator();
+//			while (iterator.hasNext()) {
+//				TransientState ts = iterator.next();
+//				if (form.stateCode.equals(ts.code)) {
+//				    values.add(ts);
+//				    if (form.last)
+//				    	break;
+//				}				
+//			}
+			for (TransientState ts : historical) {
+				if (form.stateCode.equals(ts.code)) {
 				    values.add(ts);
-				    if(form.last)break;
+				    if (form.last)
+				    	break;
 				}				
 			}
+			
 			/*
 		    for (int i = historical.size() - 1; i >= 0; i--) {
 			TransientState ts = historical.get(i);
@@ -153,7 +159,6 @@ public class State extends RunsController {
 		    } 
 		    */
 		    Collections.reverse(values);
-		    
 		    return new HashSet<>(values);
 		} else {
 		    return historical;

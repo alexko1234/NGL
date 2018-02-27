@@ -98,6 +98,21 @@ public class ContextValidation {
 			return null;
 		}
 	}
+	
+	/**
+	 * Get a typed object from this context, this does nothing else than
+	 * moving the cast problem in a single place.
+	 * @param key object name
+	 * @return    typed object
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> T getTypedObject(String key){
+		if (contextObjects.containsKey(key)) {
+			return (T)contextObjects.get(key);
+		} else {
+			return null;
+		}
+	}
 
 	public Map<String,Object> getContextObjects() {
 		return this.contextObjects;
