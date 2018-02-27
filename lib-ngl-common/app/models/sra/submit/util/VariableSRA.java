@@ -1,6 +1,6 @@
 package models.sra.submit.util;
 
-
+import static fr.cea.ig.play.IGGlobals.configuration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,8 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.util.StringUtil;
 
 import fr.cea.ig.ngl.utils.HashMapBuilder;
-import play.Configuration;
-import play.Play;
+//import play.Configuration;
+//import play.Play;
 
 public abstract class VariableSRA {
 	
@@ -96,11 +96,10 @@ public abstract class VariableSRA {
 //	};	
 //
 	
-	private static String getString(Configuration conf, String key) {
-		String result = conf.getString(key);
-		if (StringUtils.isBlank(result)){
-			logger.error("Absence dans la config play de la cle '" + key + "'");
-		}
+	private static String getString(String key) {
+		String result = configuration().getString(key);
+		if (StringUtils.isBlank(result))
+			logger.error("Absence dans la config play de la cle '{}'", key);
 		return result;
 	}
 	
@@ -117,18 +116,30 @@ public abstract class VariableSRA {
 				.put("strategy_internal_study", "strategy_internal_study")
 				.asMap();
 		
+//	static {
+//		Configuration conf      = Play.application().configuration();
+//		centerName              = getString(conf, "centerName");
+//		laboratoryName          = getString(conf, "laboratoryName");
+//		submissionRootDirectory = getString(conf, "submissionRootDirectory");
+//		defaultLibraryConstructionProtocol = getString(conf, "defaultLibraryConstructionProtocol");
+//		admin                   = getString(conf, "admin");
+//		xmlSubmission           = getString(conf, "xmlSubmission");
+//		xmlStudies              = getString(conf, "xmlStudies");
+//		xmlSamples              = getString(conf, "xmlSamples");
+//		xmlExperiments          = getString(conf, "xmlExperiments");
+//		xmlRuns                 = getString(conf, "xmlRuns");
+//	}
 	static {
-		Configuration conf      = Play.application().configuration();
-		centerName              = getString(conf, "centerName");
-		laboratoryName          = getString(conf, "laboratoryName");
-		submissionRootDirectory = getString(conf, "submissionRootDirectory");
-		defaultLibraryConstructionProtocol = getString(conf, "defaultLibraryConstructionProtocol");
-		admin                   = getString(conf, "admin");
-		xmlSubmission           = getString(conf, "xmlSubmission");
-		xmlStudies              = getString(conf, "xmlStudies");
-		xmlSamples              = getString(conf, "xmlSamples");
-		xmlExperiments          = getString(conf, "xmlExperiments");
-		xmlRuns                 = getString(conf, "xmlRuns");
+		centerName              = getString("centerName");
+		laboratoryName          = getString("laboratoryName");
+		submissionRootDirectory = getString("submissionRootDirectory");
+		defaultLibraryConstructionProtocol = getString("defaultLibraryConstructionProtocol");
+		admin                   = getString("admin");
+		xmlSubmission           = getString("xmlSubmission");
+		xmlStudies              = getString("xmlStudies");
+		xmlSamples              = getString("xmlSamples");
+		xmlExperiments          = getString("xmlExperiments");
+		xmlRuns                 = getString("xmlRuns");
 	}
 	
 };
