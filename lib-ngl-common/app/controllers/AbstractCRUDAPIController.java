@@ -146,7 +146,8 @@ public abstract class AbstractCRUDAPIController<T extends DBObject & ICRUDValida
 		Form<T> filledForm = getMainFilledForm();
 		T t = filledForm.get();
 		// Create a validation context
-		ContextValidation ctx = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctx = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctx = new ContextValidation(getCurrentUser(), filledForm);
 		t = create(ctx,t);
 		return checkedResult(ctx,t);
 	}
@@ -365,7 +366,8 @@ public abstract class AbstractCRUDAPIController<T extends DBObject & ICRUDValida
 		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
 		Form<T> filledForm = getMainFilledForm();
 		T t = filledForm.get();
-		ContextValidation ctx = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctx = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctx = new ContextValidation(getCurrentUser(), filledForm);
 		// TODO: We could use a possibly faster test (!isObjectExist(code))
 		T dbo = getObject(code);
 		if (dbo == null) {
