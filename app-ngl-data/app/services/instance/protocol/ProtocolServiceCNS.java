@@ -348,6 +348,9 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("qiagen-repli-g-wga","QIAGEN REPLI-g WGA","path7","1","production", InstanceFactory.setExperimentTypeCodes("wga-amplification")));	
 		lp.add(newProtocol("qiagen-repli-g-wta","QIAGEN REPLI-g WTA","path7","1","production", InstanceFactory.setExperimentTypeCodes("wga-amplification")));	
 
+		lp.add(newProtocol("debranchage-nanopore","Débranchage_Nanopore","path7","1","production", InstanceFactory.setExperimentTypeCodes("wga-debranching")));	
+
+		
 		if(ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			
 		}else if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){

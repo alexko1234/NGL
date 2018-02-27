@@ -239,6 +239,9 @@ angular.module('home').controller('WGAAmplificationCtrl',['$scope','$http', '$pa
 		$scope.atmService.data.setEdit();
 	});
 	
+	$scope.$watch("experiment.instrument.outContainerSupportCategoryCode", function(){
+		$scope.experiment.instrument.outContainerSupportCategoryCode = "tube";
+	});
 	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod
