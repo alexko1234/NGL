@@ -39,6 +39,20 @@ angular.module('home').controller('WGAAmplificationCtrl',['$scope','$http', '$pa
 					        	 "extraHeaders":{0:Messages("experiments.inputs")}
 						     },
 						     {
+						 		"header" : Messages("containers.table.sampleTypes"),
+								"property" : "inputContainer.contents",
+								"filter" : "getArray:'sampleTypeCode' | unique | codes:'type'",
+								"order" : false,
+								"hide" : true,
+								"type" : "text",
+								"position" : 3.5,
+								"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
+								"extraHeaders" : {
+									0 : Messages("experiments.inputs")
+								}
+
+							},
+						     {
 					        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
 					        	 "property":"inputContainer.fromTransformationTypeCodes",
 					        	 "order":true,
@@ -266,7 +280,9 @@ angular.module('home').controller('WGAAmplificationCtrl',['$scope','$http', '$pa
 		if(property.code=="dnaTreatment"){
 			column.defaultValues = function(line){
 				var sampleCategoryCode = line.inputContainer.contents[0].sampleCategoryCode;
-				if(sampleCategoryCode === 'DNA')return 'WGA';
+				var oriDNATreatment = $parse('inputContainer.contents[0].properties.dnaTreatment.value')(line);
+				if(sampleCategoryCode === 'DNA' && oriDNATreatment === 'SAG')return 'SAG + WGA';
+				else if(sampleCategoryCode === 'DNA')return 'WGA';
 				else if(sampleCategoryCode === 'RNA')return 'WTA';
 			};
 		}
