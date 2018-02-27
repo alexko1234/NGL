@@ -24,7 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-import play.Logger;
+// import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -47,6 +47,8 @@ import fr.cea.ig.play.NGLContext;
 
 public class NGLObjects extends APICommonController<NGLObject> {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(NGLObjects.class);
+	
 	// private final Form<NGLObjectsSearchForm> searchForm ; //= form(NGLObjectsSearchForm.class);
 	private Map<String, AbstractUpdate<?>>   mappingCollectionUpdates;
 	// private final NGLContext                 ctx;
@@ -90,7 +92,8 @@ public class NGLObjects extends APICommonController<NGLObject> {
 		NGLObject input = filledForm.get();
 		
 		if (input.code.equals(code)) {
-			ContextValidation cv = new ContextValidation(getCurrentUser(), filledForm.errors());
+//			ContextValidation cv = new ContextValidation(getCurrentUser(), filledForm.errors());
+			ContextValidation cv = new ContextValidation(getCurrentUser(), filledForm);
 			input.validate(cv);
 			if (cv.hasErrors()) {
 				//return badRequest(filledForm.errors-AsJson());
@@ -110,12 +113,11 @@ public class NGLObjects extends APICommonController<NGLObject> {
 	}
 
 	private List<NGLObject> getNGLObjects(NGLObjectsSearchForm form, String collectionName) {
-		
 		Query q =  mappingCollectionUpdates.get(collectionName).getQuery(form);
-		if(null != q){
+		if (q != null) {
 			List<NGLObject> r = MongoDBDAO.find(collectionName, NGLObject.class, q, getKeys()).toList();
 			r.forEach(o -> {
-				Logger.debug("treat"+o.code);
+				logger.debug("treat"+o.code);
 				o.collectionName = collectionName;
 				o.contentPropertyNameUpdated = form.contentPropertyNameUpdated;
 				o.currentValue = form.contentProperties.get(form.contentPropertyNameUpdated).get(0);
@@ -124,17 +126,16 @@ public class NGLObjects extends APICommonController<NGLObject> {
 				o.nbOccurrences = mappingCollectionUpdates.get(collectionName).getNbOccurrence(o);
 			});
 			return r;
-		}else{
+		} else {
 			return Collections.emptyList();
 		}
-		
 	}
 	
 	private BasicDBObject getKeys() {
 		BasicDBObject keys = new BasicDBObject();
 		keys.put("code",1);
 		keys.put("typeCode",1);
-		
 		return keys;
 	}
+	
 }
