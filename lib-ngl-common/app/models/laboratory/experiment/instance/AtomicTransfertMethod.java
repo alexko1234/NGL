@@ -26,9 +26,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 })
 public abstract class AtomicTransfertMethod implements IValidation {
 
-
-	public Integer viewIndex; //use in rules validation to have the position+1 in the list of ATM.
-	
+	public Integer viewIndex; //use in rules validation to have the position+1 in the list of ATM.	
 	public List<InputContainerUsed> inputContainerUseds;
 	public List<OutputContainerUsed> outputContainerUseds;
 	public String line; //is equal to outputSupportContainerLine
@@ -36,7 +34,7 @@ public abstract class AtomicTransfertMethod implements IValidation {
 	public Comment comment;
 	
 	public AtomicTransfertMethod() {
-		super();
+//		super();
 	}
 	
 	public abstract void updateOutputCodeIfNeeded(ContainerSupportCategory outputCsc, String supportCode);
@@ -45,11 +43,11 @@ public abstract class AtomicTransfertMethod implements IValidation {
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		long t0 = System.currentTimeMillis();
+//		long t0 = System.currentTimeMillis();
 		AtomicTransfertMethodValidationHelper.validationLineAndColumn(contextValidation,line,column);
-		long t1 = System.currentTimeMillis();
+//		long t1 = System.currentTimeMillis();
 		AtomicTransfertMethodValidationHelper.validateInputContainers(contextValidation, inputContainerUseds);
-		long t2 = System.currentTimeMillis();
+//		long t2 = System.currentTimeMillis();
 		/*
 		Logger.debug("ATM validate \n "
 				+"1 = "+(t1-t0)+" ms\n"
@@ -60,10 +58,5 @@ public abstract class AtomicTransfertMethod implements IValidation {
 				
 		*/
 	}
-
-	
-
-	
-	
 	
 }
