@@ -316,7 +316,7 @@ public abstract class CommonController extends Controller {
 	 * @param filledForm
 	 */
 	protected static void validateIfFieldsArePresentInForm(ContextValidation ctxVal, List<String> fields, Form<?> filledForm) {
-		for(String field: fields){
+		for(String field: fields) {
 			if (filledForm.field(field).value() == null) {
 				ctxVal.addErrors(field, "error.notdefined");
 			}
