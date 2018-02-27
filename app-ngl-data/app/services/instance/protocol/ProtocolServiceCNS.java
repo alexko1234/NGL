@@ -135,6 +135,7 @@ public class ProtocolServiceCNS {
 		
 		lp.add(newProtocol("irys-prep-nlrs-300-900","Irys Prep Labelling NLRS (300/900)","path7","1","production", InstanceFactory.setExperimentTypeCodes("irys-nlrs-prep","irys-chip-preparation")));
 		lp.add(newProtocol("saphyr-prep-nlrs","Saphyr Prep Labelling NLRS","path7","1","production", InstanceFactory.setExperimentTypeCodes("irys-nlrs-prep","irys-chip-preparation")));
+		lp.add(newProtocol("saphyr-prep-labelling-dls-30206-A","Saphyr Prep Labelling DLS_30206/A","path7","1","production", InstanceFactory.setExperimentTypeCodes("bionano-dls-prep","irys-chip-preparation")));
 		
 		lp.add(newProtocol("depot_irys","Depot IRYS","path7","1","production", InstanceFactory.setExperimentTypeCodes("bionano-depot")));	
 		lp.add(newProtocol("depot_saphyr","Depot SAPHYR","path7","1","production", InstanceFactory.setExperimentTypeCodes("bionano-depot")));
@@ -349,6 +350,11 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("qiagen-repli-g-wta","QIAGEN REPLI-g WTA","path7","1","production", InstanceFactory.setExperimentTypeCodes("wga-amplification")));	
 
 		lp.add(newProtocol("debranchage-nanopore","Débranchage_Nanopore","path7","1","production", InstanceFactory.setExperimentTypeCodes("wga-debranching")));	
+
+		
+		/* EPGV */
+		lp.add(newProtocol("protocole-epgv","Protocole EPGV","path7","1","production", InstanceFactory.setExperimentTypeCodes("post-pcr-ampure","fluo-quantification","prepa-fc-ordered","prepa-flowcell","normalisation")));	
+		lp.add(newProtocol("pcr-free-350-epgv","PCR_free_350_EPGV","path7","1","production", InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation")));	
 
 		
 		if(ConfigFactory.load().getString("ngl.env").equals("PROD") ){

@@ -657,6 +657,7 @@ public class ResolutionService {
 		r.objectTypeCode = "Experiment";
 		ArrayList<String> al = new ArrayList<String>();
 		al.add("irys-nlrs-prep");
+		al.add("bionano-dls-prep");
 		r.typeCodes = al;
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);

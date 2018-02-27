@@ -107,7 +107,7 @@ angular.module('home').controller('WGAAmplificationCtrl',['$scope','$http', '$pa
 					        	 "order":true,
 								 "edit":true,
 								 "hide":true,
-								 "required":true,
+								 "required":"isRequired()",
 								 "type":"number",
 					        	 "position":51,
 					        	 "extraHeaders":{0:Messages("experiments.outputs")}

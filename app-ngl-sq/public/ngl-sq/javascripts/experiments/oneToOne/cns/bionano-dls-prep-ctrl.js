@@ -1,4 +1,4 @@
-angular.module('home').controller('IrysNlrsPrepCtrl',['$scope', '$parse', 'atmToSingleDatatable',
+angular.module('home').controller('BionanoDLSPrepCtrl',['$scope', '$parse', 'atmToSingleDatatable',
                                                     function($scope, $parse, atmToSingleDatatable){
 	
 	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
@@ -80,13 +80,14 @@ angular.module('home').controller('IrysNlrsPrepCtrl',['$scope', '$parse', 'atmTo
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },		
 			         {
-			        	 "header":Messages("containers.table.irysprep.concentration") + " (ng/µL)",
-			        	 "property":"outputContainerUsed.concentration.value",
+			        	 "header":Messages("containers.table.volume")+" (µL)",
+			        	 "property":"outputContainerUsed.volume.value",
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
-			        	 "type":"number",
-			        	 "position":22,
+						 "required":"isRequired()",
+						 "type":"number",
+			        	 "position":51,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
@@ -200,6 +201,115 @@ angular.module('home').controller('IrysNlrsPrepCtrl',['$scope', '$parse', 'atmTo
 	
 	$scope.experiment.instrument.outContainerSupportCategoryCode = "tube";
 	
+	
+	$scope.updatePropertyFromUDT = function(value, col){
+		console.log("update from property : "+col.property);
+		
+		if(col.property === 'inputContainerUsed.experimentProperties.inputVolume.value'){
+			computeInputQuantity(value.data);			
+		}else if(col.property === 'outputContainerUsed.experimentProperties.measuredConc1.value'
+			|| col.property === 'outputContainerUsed.experimentProperties.measuredConc2.value'){
+			computeAverageConcentration(value.data, "averageConcentration", "measuredConc1" ,"measuredConc2");
+			computeVarationCoefficient(value.data, "varationCoefficient", "averageConcentration", "measuredConc1" ,"measuredConc2");
+		}else if(col.property === 'outputContainerUsed.experimentProperties.measuredConc3.value'
+			|| col.property === 'outputContainerUsed.experimentProperties.measuredConc4.value'){
+			computeAverageConcentration(value.data, "averageConcentration2", "measuredConc3" ,"measuredConc4");
+			computeVarationCoefficient(value.data, "varationCoefficient2", "averageConcentration2", "measuredConc3" ,"measuredConc4");
+		}		
+	}
+	
+	var computeInputQuantity = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.inputQuantity");
+		var inputQuantity = getter(udtData);
+		if(undefined == inputQuantity)inputQuantity={};
+		
+		var compute = {
+				intputConc : $parse("inputContainerUsed.concentration.value")(udtData),
+				intputVol : $parse("inputContainerUsed.experimentProperties.inputVolume.value")(udtData),			
+				isReady:function(){
+					return (this.intputConc && this.intputVol);
+				}
+			};
+		
+		if(compute.isReady()){
+			var result = $parse("intputConc * intputVol")(compute);
+			console.log("result = "+result);
+			if(angular.isNumber(result) && !isNaN(result)){
+				inputQuantity.value = Math.round(result*10)/10;	
+				inputQuantity.unit = 'ng'; 
+			}else{
+				inputQuantity = undefined;
+			}	
+			getter.assign(udtData, inputQuantity);
+		}else{
+			inputQuantity = null;
+			getter.assign(udtData, inputQuantity);
+			console.log("not ready to computeInputQuantity");
+		}
+		
+	};
+	
+	var computeAverageConcentration = function(udtData, avgConc, conc1, conc2){
+		var getter = $parse("outputContainerUsed.experimentProperties."+avgConc);
+		var averageConcentration = getter(udtData);
+		if(undefined == averageConcentration)averageConcentration={};
+		
+		var compute = {
+				conc1 : $parse("outputContainerUsed.experimentProperties."+conc1+".value")(udtData),
+				conc2 : $parse("outputContainerUsed.experimentProperties."+conc2+".value")(udtData),			
+				isReady:function(){
+					return (this.conc1 && this.conc2);
+				}
+			};
+		
+		if(compute.isReady()){
+			var result = $parse("(conc1 + conc2)/2")(compute);
+			console.log("result = "+result);
+			if(angular.isNumber(result) && !isNaN(result)){
+				averageConcentration.value = Math.round(result*10)/10;	
+				averageConcentration.unit = 'ng/µl'; 
+			}else{
+				averageConcentration = undefined;
+			}	
+			getter.assign(udtData, averageConcentration);
+		}else{
+			averageConcentration = null;
+			getter.assign(udtData, averageConcentration);
+			console.log("not ready to computeAverageConcentration");
+		}
+		
+	};
+	
+	var computeVarationCoefficient = function(udtData, variationCoefficient, avgConc, conc1, conc2){
+		var getter = $parse("outputContainerUsed.experimentProperties."+variationCoefficient);
+		var variationCoefficient = getter(udtData);
+		if(undefined == variationCoefficient)variationCoefficient={};
+		
+		var compute = {
+				conc1 : $parse("outputContainerUsed.experimentProperties."+conc1+".value")(udtData),
+				conc2 : $parse("outputContainerUsed.experimentProperties."+conc2+".value")(udtData),			
+				avgConc : $parse("outputContainerUsed.experimentProperties."+avgConc+".value")(udtData),
+				isReady:function(){
+					return (this.conc1 && this.conc2 && this.avgConc);
+				}
+			};
+		
+		if(compute.isReady()){
+			var result = $parse("(((conc1 - avgConc) * (conc1 - avgConc)) + ((conc2 - avgConc) * (conc2 - avgConc)))/2")(compute);
+			console.log("result = "+result);
+			if(angular.isNumber(result) && !isNaN(result)){
+				variationCoefficient.value = Math.sqrt(result)*100;					
+			}else{
+				variationCoefficient = undefined;
+			}	
+			getter.assign(udtData, variationCoefficient);
+		}else{
+			variationCoefficient = null;
+			getter.assign(udtData, variationCoefficient);
+			console.log("not ready to computeAverageConcentration");
+		}
+		
+	};
 	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod
