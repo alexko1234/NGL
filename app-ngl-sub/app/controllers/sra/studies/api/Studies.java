@@ -46,7 +46,6 @@ public class Studies extends DocumentController<AbstractStudy> {
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(Studies.class);
 
-
 	// final static Form<AbstractStudy> studyForm = form(AbstractStudy.class);
 	// final static Form<StudiesSearchForm> studiesSearchForm = form(StudiesSearchForm.class);
 	// final StudyWorkflows studyWorkflows = Spring.get BeanOfType(StudyWorkflows.class);
@@ -74,7 +73,7 @@ public class Studies extends DocumentController<AbstractStudy> {
 		ContextValidation contextValidation = new ContextValidation(user);
 		// SubmissionServices submissionServices = new SubmissionServices();
 		Form<AbstractStudy> filledForm = getFilledForm(studyForm, AbstractStudy.class);
-		AbstractStudy userStudy = filledForm.get();	
+//		AbstractStudy userStudy = filledForm.get();	
 		Study study = null;
 		try {
 			String submissionCode = submissionServices.initReleaseSubmission(studyCode, contextValidation);
@@ -95,7 +94,8 @@ public class Studies extends DocumentController<AbstractStudy> {
 		Form<AbstractStudy> filledForm = getFilledForm(studyForm, AbstractStudy.class);
 		AbstractStudy userStudy = filledForm.get();
 
-		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm);
 		contextValidation.setCreationMode();	
 		if (userStudy._id == null) {
 			userStudy.traceInformation = new TraceInformation(); 
@@ -113,7 +113,6 @@ public class Studies extends DocumentController<AbstractStudy> {
 				if (StringUtils.isNotBlank(((Study)userStudy).centerProjectName)){
 					((Study)userStudy).centerProjectName = ((Study)userStudy).centerProjectName.replaceFirst("_", "");
 				}
-
 				try {
 					((Study)userStudy).code = SraCodeHelper.getInstance().generateStudyCode(((Study)userStudy).projectCodes);
 				} catch (SraException e) {
@@ -222,10 +221,9 @@ public class Studies extends DocumentController<AbstractStudy> {
 
 	public Result update(String code) {
 		AbstractStudy study = getObject(code);
-
 		Form<AbstractStudy> filledForm = getFilledForm(studyForm, AbstractStudy.class);
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
-
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 		if (study == null) {
 			//return badRequest("Study with code "+code+" not exist");
 			ctxVal.addErrors("study ", " not exist");
@@ -263,7 +261,8 @@ public class Studies extends DocumentController<AbstractStudy> {
 		State state = filledForm.get();
 		state.date = new Date();
 		state.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		if (study == null) {
 			//return badRequest("Submission with code "+code+" not exist");
 			ctxVal.addErrors("study " + code,  " not exist in database");	
