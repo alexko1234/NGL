@@ -24,7 +24,7 @@ import services.description.common.LevelService;
 import services.description.common.MeasureService;
 import services.description.declaration.AbstractDeclaration;
 
-public class ExtractionDNARNA extends AbstractDeclaration{
+public class SamplePrep extends AbstractDeclaration{
 
 	@Override
 	protected List<ExperimentType> getExperimentTypeCommon() {

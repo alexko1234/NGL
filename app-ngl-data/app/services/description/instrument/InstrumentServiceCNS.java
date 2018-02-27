@@ -643,7 +643,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType"
 				, LevelService.getLevels(Level.CODE.Instrument,Level.CODE.ContainerSupport),String.class, true,DescriptionFactory.newValues("SR","PE"),"single"));
-		propertyDefinitions.add(newPropertiesDefinition("Type flowcell","flowcellType"
+		propertyDefinitions.add(newPropertiesDefinition("Type flowcell","novaseqFlowcellMode"
 				, LevelService.getLevels(Level.CODE.Instrument,Level.CODE.Content),String.class, true,DescriptionFactory.newValues("S1","S2","S3","S4"),"single"));
 		propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
 		

@@ -16,7 +16,6 @@ import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 import services.description.declaration.cns.BanqueIllumina;
 import services.description.declaration.cns.Bionano;
-import services.description.declaration.cns.ExtractionDNARNA;
 import services.description.declaration.cns.MetaBarCoding;
 import services.description.declaration.cns.MetaGenomique;
 import services.description.declaration.cns.MetaTProcess;
@@ -27,6 +26,7 @@ import services.description.declaration.cns.Transfert;
 import services.description.declaration.cns.Purif;
 
 import services.description.declaration.cns.RunIllumina;
+import services.description.declaration.cns.SamplePrep;
 
 import com.typesafe.config.ConfigFactory;
 
@@ -74,7 +74,7 @@ public class ProcessServiceCNS extends AbstractProcessService {
 		l.addAll(new Nanopore().getProcessType());
 		l.addAll(new RunIllumina().getProcessType());
 		l.addAll(new Opgen().getProcessType());
-		l.addAll(new ExtractionDNARNA().getProcessType());
+		l.addAll(new SamplePrep().getProcessType());
 		
 		DAOHelpers.saveModels(ProcessType.class, l, errors);
 		
