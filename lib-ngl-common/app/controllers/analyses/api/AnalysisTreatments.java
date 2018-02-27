@@ -49,7 +49,6 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 		return object.treatments.get(code);
 	}
 	
-	
 //	@Permission(value={"writing"})	
 	@Authenticated
 	@Historized
@@ -59,17 +58,16 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public Result save(String parentCode){
 		Analysis objectInDB = getObject(parentCode);
-		if (objectInDB == null) {
+		if (objectInDB == null)
 			return notFound();
-		}
 		// Supposed to be an exception in 2.5
 		/*else if(request().body().isMaxSizeExceeded()){
 			return badRequest("Max size exceeded");
 		}*/
 		
 		Form<Treatment> filledForm = getSubFilledForm();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
-		
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 		
 		Treatment inputTreatment = filledForm.get();
 		ctxVal.setCreationMode();
 		ctxVal.putObject("level", Level.CODE.Analysis);
@@ -95,13 +93,11 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public Result update(String parentCode, String code){
 		Analysis objectInDB = getObject(getSubObjectQuery(parentCode, code));
-		if (objectInDB == null) {
-			return notFound();			
-		}	
-		
+		if (objectInDB == null)
+			return notFound();
 		Form<Treatment> filledForm = getSubFilledForm();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
-		
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 		Treatment inputTreatment = filledForm.get();
 		if (code.equals(inputTreatment.code)) {
 			ctxVal.setUpdateMode();
@@ -129,9 +125,8 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 	//@Permission(value={"delete_treatments"})
 	public Result delete(String parentCode, String code){
 		Analysis objectInDB = getObject(getSubObjectQuery(parentCode, code));
-		if (objectInDB == null) {
+		if (objectInDB == null)
 			return notFound();			
-		}	
 		updateObject(DBQuery.is("code", parentCode), 
 				DBUpdate.unset("treatments."+code)
 				.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
@@ -151,4 +146,5 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 				DBUpdate.unset("treatments").set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 		return ok();
 	}
+	
 }
