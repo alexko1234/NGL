@@ -41,20 +41,18 @@ import views.components.datatable.DatatableResponse;
 
 public class Reagents extends DocumentController<Reagent> {
 	
+	private final /*static*/ Form<ReagentSearchForm> reagentSearchForm; // = form(ReagentSearchForm.class);
+
 	@Inject
 	public Reagents(NGLContext ctx) {
 		super(ctx,InstanceConstants.REAGENT_INSTANCE_COLL_NAME, Reagent.class);
 		reagentSearchForm = ctx.form(ReagentSearchForm.class);
 	}
 
-	private final /*static*/ Form<ReagentSearchForm> reagentSearchForm; // = form(ReagentSearchForm.class);
-
 	public Result get(String code){
 		Reagent reagent = getObject(code);
-		if(reagent != null){
+		if (reagent != null)
 			return ok(Json.toJson(reagent));
-		}
-
 		return badRequest();
 	}
 
@@ -72,12 +70,12 @@ public class Reagents extends DocumentController<Reagent> {
 		reagent.traceInformation.createUser =  getCurrentUser();
 		reagent.traceInformation.creationDate = new Date();
 		
-		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), reagentFilledForm.errors());
+//		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), reagentFilledForm.errors());
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), reagentFilledForm);
 		contextValidation.setCreationMode();
 		/*if(ValidationHelper.required(contextValidation, reagent.name, "name")){
 			reagentCatalog.code = CodeHelper.getInstance().generateReagentCatalogCode(reagentCatalog.name);
 		}*/
-
 		reagent = (Reagent)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, reagent, contextValidation);
 		if (contextValidation.hasErrors())
 			return badRequest(errorsAsJson(contextValidation.getErrors()));
@@ -85,14 +83,15 @@ public class Reagents extends DocumentController<Reagent> {
 		 // legit, spaghetti above
 	}
 
-	public Result update(String code){
+	public Result update(String code) {
 		Form<Reagent> reagentFilledForm = getMainFilledForm();
 		Reagent reagent = reagentFilledForm.get();
 
 		reagent.traceInformation.modifyUser =  getCurrentUser();
 		reagent.traceInformation.modifyDate = new Date();
 		
-		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), reagentFilledForm.errors());
+//		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), reagentFilledForm.errors());
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), reagentFilledForm);
 		contextValidation.setUpdateMode();
 
 		reagent = (Reagent)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, reagent, contextValidation);
@@ -108,34 +107,27 @@ public class Reagents extends DocumentController<Reagent> {
 		BasicDBObject keys = getKeys(reagentSearch);
 		DBQuery.Query query = getQuery(reagentSearch);
 
-		if(reagentSearch.datatable){
+		if (reagentSearch.datatable) {
 			MongoDBResult<Reagent> results =  mongoDBFinder(reagentSearch, query);
 			List<Reagent> reagents = results.toList();
-
 			return ok(Json.toJson(new DatatableResponse<Reagent>(reagents, results.count())));
-		}else if (reagentSearch.list){
+		} else if (reagentSearch.list) {
 			keys = new BasicDBObject();
 			keys.put("code", 1);
 			keys.put("category", 1);
-
-			if(null == reagentSearch.orderBy)reagentSearch.orderBy = "code";
-			if(null == reagentSearch.orderSense)reagentSearch.orderSense = 0;				
-
+			if (reagentSearch.orderBy    == null) reagentSearch.orderBy    = "code";
+			if (reagentSearch.orderSense == null) reagentSearch.orderSense = 0;				
 			MongoDBResult<Reagent> results = mongoDBFinder(reagentSearch, query, keys);
 			List<Reagent> reagents = results.toList();
 			List<ListObject> los = new ArrayList<ListObject>();
-			for(Reagent p: reagents){					
+			for (Reagent p: reagents)					
 				los.add(new ListObject(p.code, p.code));								
-			}
-
 			return Results.ok(Json.toJson(los));
-		}else{
-			if(null == reagentSearch.orderBy)reagentSearch.orderBy = "code";
-			if(null == reagentSearch.orderSense)reagentSearch.orderSense = 0;
-
+		} else {
+			if (reagentSearch.orderBy    == null) reagentSearch.orderBy    = "code";
+			if (reagentSearch.orderSense == null) reagentSearch.orderSense = 0;
 			MongoDBResult<Reagent> results = mongoDBFinder(reagentSearch, query);
 			List<Reagent> reagents = results.toList();
-
 			return ok(Json.toJson(reagents));
 		}
 	}
@@ -144,7 +136,6 @@ public class Reagents extends DocumentController<Reagent> {
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
 		Query query = null;
 		queryElts.add(DBQuery.is("category", "Reagent"));
-
 
 		if(StringUtils.isNotBlank(reagentSearch.boxCode)){
 			queryElts.add(DBQuery.is("boxCode", reagentSearch.boxCode));
