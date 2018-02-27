@@ -6,29 +6,6 @@ package rules
 
 
 //declare any global variables here
-
-rule "Rules when sample is created in Tara Pacific project "
-	@nglSQ( sampleCreation )
-	dialect "java"
-	salience 1000
-	no-loop
-    when
-        $sample : Sample($code:code, $code != null, _id == null)
-        //$sample : Sample(code != null, _id == null)
-        $projectCode : String(this == 'AA') from $sample.projectCodes
-    then
-    	Logger.debug("Update Sample for Tara Pacific : "+$sample.code);  
-       	$sample.referenceCollab = $sample.code;
-       	
-       	$sample.typeCode = "not-defined";
-       	$sample.categoryCode = "unknown";
-       	$sample.importTypeCode = "tara-reception-without-file";
-       	
-       	PropertySingleValue psv = new PropertySingleValue($sample.code);
-       	$sample.properties = new HashMap<String, PropertyValue>();
-       	$sample.properties.put("taraBarCode", psv);
-	end
-	
 rule "Add property negativeControl when sample is imported "
 	@nglSQ( sampleCreation )
 	dialect "java"
@@ -45,4 +22,21 @@ rule "Add property negativeControl when sample is imported "
        	$sample.properties.put("negativeControl", psv);
 	end
 	
-	
+rule "Add property fishAnatomy when sample is imported or updated "
+	@nglSQ( sampleCreation )
+	dialect "java"
+	salience 900
+	no-loop
+    when
+        $sample : Sample($properties:properties, $properties!=null, typeCode=="fish", $pvTaraProtocol:properties.get("taraProtocol")!=null)
+        
+        not PropertyValue() from $properties.get("fishAnatomy")
+        
+    then
+    	Logger.debug("Add property fishAnatomy to : "+$sample.code);  
+       	String fishAnatomy = $pvTaraProtocol.value.toString();
+       	if('GIL'.equals(fishAnatomy))fishAnatomy='GILLS';
+       	
+       	PropertySingleValue psv = new PropertySingleValue(fishAnatomy);
+       	$sample.properties.put("fishAnatomy", psv);
+	end	
