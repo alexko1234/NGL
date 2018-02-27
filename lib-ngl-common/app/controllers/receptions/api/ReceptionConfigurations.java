@@ -19,7 +19,7 @@ import models.utils.ListObject;
 
 import org.mongojack.DBQuery;
 
-import play.Logger;
+//import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -37,23 +37,24 @@ import fr.cea.ig.play.NGLContext;
 
 public class ReceptionConfigurations extends DocumentController<ReceptionConfiguration> {
 	
-	final Form<ReceptionConfiguration> reportConfigForm;// = form(ReceptionConfiguration.class);
+	private static final play.Logger.ALogger logger = play.Logger.of(ReceptionConfigurations.class);
+//	private final Form<ReceptionConfiguration> reportConfigForm;// = form(ReceptionConfiguration.class);
+	
 	@Inject
 	public ReceptionConfigurations(NGLContext ctx) {
 		super(ctx,InstanceConstants.RECEPTION_CONFIG_COLL_NAME, ReceptionConfiguration.class);	
-		reportConfigForm = ctx.form(ReceptionConfiguration.class);
+//		reportConfigForm = ctx.form(ReceptionConfiguration.class);
 	}
 	
 	@Permission(value={"reading"})
-	public Result list(){
+	public Result list() {
 		ListForm searchForm = filledFormQueryString(ListForm.class);
 		DBQuery.Query query = DBQuery.empty();
-		if(searchForm.datatable){
+		if (searchForm.datatable) {
 			MongoDBResult<ReceptionConfiguration> results = mongoDBFinder(searchForm, query);
 			List<ReceptionConfiguration> configurations = results.toList();
 			return ok(Json.toJson(new DatatableResponse<ReceptionConfiguration>(configurations, results.count())));
-		}
-		else if(searchForm.list){
+		} else if(searchForm.list) {
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("name", 1);
@@ -62,12 +63,10 @@ public class ReceptionConfigurations extends DocumentController<ReceptionConfigu
 			MongoDBResult<ReceptionConfiguration> results = mongoDBFinder(searchForm,query).sort("displayOrder");
 			List<ReceptionConfiguration> configurations = results.toList();
 			List<ListObject> los = new ArrayList<ListObject>();
-			for(ReceptionConfiguration p: configurations){
+			for(ReceptionConfiguration p: configurations)
 				los.add(new ListObject(p.code, p.name));
-			}
-			
 			return Results.ok(Json.toJson(los));
-		}else{
+		} else {
 			MongoDBResult<ReceptionConfiguration> results = mongoDBFinder(searchForm, query);
 			List<ReceptionConfiguration> configurations = results.toList();
 			return Results.ok(Json.toJson(configurations));
@@ -79,16 +78,16 @@ public class ReceptionConfigurations extends DocumentController<ReceptionConfigu
 		Form<ReceptionConfiguration> filledForm = getMainFilledForm();
 		ReceptionConfiguration input = filledForm.get();
 
-		if (null == input._id) {
+		if (input._id == null) {
 			input.traceInformation = new TraceInformation();
-			input.traceInformation
-					.setTraceInformation(getCurrentUser());
+			input.traceInformation.setTraceInformation(getCurrentUser());
 			input.code = generateReceptionConfigurationCode();
 		} else {
 			return badRequest("use PUT method to update the ReceptionConfiguration");
 		}
 
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		ctxVal.setCreationMode();
 		input.validate(ctxVal);
 		if (!ctxVal.hasErrors()) {
@@ -110,13 +109,13 @@ public class ReceptionConfigurations extends DocumentController<ReceptionConfigu
 		ReceptionConfiguration input = filledForm.get();
 		
 		if (code.equals(input.code)) {
-			if(null != input.traceInformation){
+			if (input.traceInformation != null) {
 				input.traceInformation.setTraceInformation(getCurrentUser());
-			}else{
-				Logger.error("traceInformation is null !!");
+			} else {
+				logger.error("traceInformation is null !!");
 			}
-			
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+//			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 			ctxVal.setUpdateMode();
 			input.validate(ctxVal);
 			if (!ctxVal.hasErrors()) {
@@ -126,14 +125,13 @@ public class ReceptionConfigurations extends DocumentController<ReceptionConfigu
 				//return badRequest(filledForm.errors-AsJson());
 				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}
-			
-		}else{
+		} else {
 			return badRequest("ReceptionConfiguration codes are not the same");
 		}
 	}
 	
 	private static String generateReceptionConfigurationCode(){
-		return ("RC-"+(new SimpleDateFormat("yyyyMMddHHmmss")).format(new Date())).toUpperCase();		
+		return ("RC-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())).toUpperCase();		
 	}
 	
 }
