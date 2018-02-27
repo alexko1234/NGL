@@ -16,7 +16,7 @@
 		<tbody>
 			<tr ng-if="sample.processes !== null" ng-repeat="process in sample.processes|orderBy:'traceInformation.creationDate'">
 				<td ng-bind="process.traceInformation.creationDate|date:'@Messages("datetime.format")'" />	
-				<td ng-bind="process.typeCode|codes:'type'" />
+				<td ng-bind="process.typeCode|codes:'type':false" />
 				<td ng-bind="process.state.code|codes:'state'" />
 				<td list-resize="process.state.resolutionCodes|codes:'resolution'" />
 				<td ng-bind="process.currentExperimentTypeCode|codes:'type'" />
