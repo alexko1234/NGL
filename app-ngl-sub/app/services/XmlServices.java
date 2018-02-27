@@ -311,11 +311,12 @@ public class XmlServices {
 				}
 				chaine = chaine + "</EXPERIMENT_SET>\n";
 				output_buffer.write(chaine);
-				output_buffer.close();
+//				output_buffer.close();
 				submission.xmlExperiments = outputFile.getName();
 			}
 		}
 	}
+	
 	public static void writeRunXml (Submission submission, File outputFile) throws IOException, SraException {
 		if (submission == null) {
 			return;
@@ -375,7 +376,7 @@ public class XmlServices {
 				}
 				chaine = chaine + "</RUN_SET>\n";
 				output_buffer.write(chaine);
-				output_buffer.close();
+//				output_buffer.close();
 				submission.xmlRuns = outputFile.getName();
 			}
 		}
@@ -386,8 +387,6 @@ public class XmlServices {
 		if (submission == null) {
 			return;
 		}
-		
-		
 		// ouvrir fichier en ecriture
 		System.out.println("Creation du fichier " + outputFile);
 		BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile));
@@ -415,9 +414,6 @@ public class XmlServices {
 			chaine = chaine + "      <ACTION>\n        <ADD source=\"run.xml\" schema=\"run\"/>\n      </ACTION>\n";
 		}
 		chaine = chaine + "    </ACTIONS>\n";
-		
-		
-		
 		chaine = chaine + "  </SUBMISSION>\n";
 		chaine = chaine + "</SUBMISSION_SET>\n";
 		
@@ -428,46 +424,45 @@ public class XmlServices {
 
 
 	public static void writeSubmissionReleaseXml (Submission submission, File outputFile) throws IOException, SraException {
-		
 		if (submission == null) {
 			throw new SraException("Aucune soumission en argument");
 		}
-		if(StringUtils.isBlank(submission.studyCode)){
+		if (StringUtils.isBlank(submission.studyCode)) {
 			throw new SraException("Impossible de faire la soumission pour release " + submission.code + " sans studyCode");
 
 		}
 		Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, submission.studyCode);	
-		if(StringUtils.isBlank(study.accession)){
+		if (StringUtils.isBlank(study.accession)) {
 			throw new SraException("Impossible de releaser le study " + study.code + " sans numeros d'accession");
 		}
-
 		// ouvrir fichier en ecriture
 		System.out.println("Creation du fichier " + outputFile);
-		BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile));
-		String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
-		chaine = chaine + "<SUBMISSION_SET>\n";
-		
-		System.out.println("Ecriture du submission " + submission.code);
-		chaine = chaine + "  <SUBMISSION alias=\""+ submission.code + "\" ";
-		chaine = chaine + ">\n";	
-		chaine = chaine + "    <CONTACTS>\n";
-		chaine = chaine + "      <CONTACT  name=\"william\" inform_on_status=\"william@genoscope.cns.fr\" inform_on_error=\"william@genoscope.cns.fr\"/>\n";
-		chaine = chaine + "    </CONTACTS>\n";
-			
-		chaine = chaine + "    <ACTIONS>\n";
-		
-		chaine = chaine + "      <ACTION>\n        <RELEASE target=\"" + study.accession + "\"/>\n      </ACTION>\n";
-		
-		chaine = chaine + "    </ACTIONS>\n";
-		
-		
-		
-		chaine = chaine + "  </SUBMISSION>\n";
-		chaine = chaine + "</SUBMISSION_SET>\n";
-		
-		output_buffer.write(chaine);
-		output_buffer.close();	
-		submission.xmlSubmission = outputFile.getName();
+		try (BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile))) {
+			String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
+			chaine = chaine + "<SUBMISSION_SET>\n";
+
+			System.out.println("Ecriture du submission " + submission.code);
+			chaine = chaine + "  <SUBMISSION alias=\""+ submission.code + "\" ";
+			chaine = chaine + ">\n";	
+			chaine = chaine + "    <CONTACTS>\n";
+			chaine = chaine + "      <CONTACT  name=\"william\" inform_on_status=\"william@genoscope.cns.fr\" inform_on_error=\"william@genoscope.cns.fr\"/>\n";
+			chaine = chaine + "    </CONTACTS>\n";
+
+			chaine = chaine + "    <ACTIONS>\n";
+
+			chaine = chaine + "      <ACTION>\n        <RELEASE target=\"" + study.accession + "\"/>\n      </ACTION>\n";
+
+			chaine = chaine + "    </ACTIONS>\n";
+
+
+
+			chaine = chaine + "  </SUBMISSION>\n";
+			chaine = chaine + "</SUBMISSION_SET>\n";
+
+			output_buffer.write(chaine);
+			output_buffer.close();
+		}
+		submission.xmlSubmission = outputFile.getName();		
 	}
 
 }

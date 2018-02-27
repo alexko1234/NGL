@@ -53,7 +53,7 @@ public class Experiments extends NGLController
 	private final details          details;
 	private final search           search;
 	private final searchContainers searchContainers;
-	private final Form<Experiment> experimentForm;
+//	private final Form<Experiment> experimentForm;
 	
 	// final static Form<Experiment> experimentForm = form(Experiment.class);
 	
@@ -71,7 +71,7 @@ public class Experiments extends NGLController
 	@Inject
 	public Experiments(NGLApplication app, home home, details details, search search, searchContainers searchContainers) {
 		super(app);
-		experimentForm        = form(Experiment.class);
+//		experimentForm        = form(Experiment.class);
 		this.home             = home;
 		this.details          = details;
 		this.search           = search;
