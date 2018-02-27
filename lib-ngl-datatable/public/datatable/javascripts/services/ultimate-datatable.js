@@ -3061,7 +3061,7 @@ directive("udtTbody", function(){
 	    					editElement = "Edit Not Defined for col.type !";
 	    				}
 	    				//return '<div class="form-group"  ng-class="{\'has-error\': value.line.errors[\''+col.property+'\'] !== undefined}">'+editElement+'<span class="help-block" ng-if="value.line.errors[\''+col.property+'\'] !== undefined">{{value.line.errors["'+col.property+'"]}}<br></span></div>';
-	    				return '<div class="form-group"  ng-class="udtTableFunctions.getValidationClass(\'subForm\'+value.line.id, col)">'+editElement+'<span class="help-block" ng-if="value.line.errors[\''+col.property+'\'] !== undefined">{{value.line.errors["'+col.property+'"]}}<br></span></div>';
+	    				return '<div class="form-group"  ng-class="udtTbodyHelpers.getValidationClass(\'subForm\'+value.line.id, col)">'+editElement+'<span class="help-block" ng-if="value.line.errors[\''+col.property+'\'] !== undefined">{{value.line.errors["'+col.property+'"]}}<br></span></div>';
 		    			
 	    			},
 	    			getValidationClass : function(formName, col){
@@ -3344,8 +3344,11 @@ directive('udtDefaultValue',['$parse', function($parse) {
 											ngModel.$setViewValue(false);
 											ngModel.$render();
 										}											
-									}else{
+									}else if(!angular.isFunction(_col.defaultValues)){
 										ngModel.$setViewValue(_col.defaultValues);
+										ngModel.$render();
+									}else{
+										ngModel.$setViewValue(_col.defaultValues(scope.value.data));
 										ngModel.$render();
 									}
 				                	
@@ -4209,7 +4212,8 @@ run(['$templateCache', function($templateCache) {
    +                        '</th>'
    +                    '</tr>'
    +                '</thead>'
-   +                '<tbody infinite-scroll="udtTable.addScrollCurrentLimitTo()" infinite-scroll-distance="1" infinite-scroll-disabled="udtTable.disabledScroll()" udt-tbody>'
+//   +                '<tbody infinite-scroll="udtTable.addScrollCurrentLimitTo()" infinite-scroll-distance="1" infinite-scroll-disabled="udtTable.disabledScroll()" udt-tbody>'
+   +                '<tbody udt-tbody>'
    +                    '<tr ng-if="udtTable.config.filter.columnMode && !udtTable.config.edit.start" class="filter">'
    +                        '<td ng-repeat="col in udtTable.config.columns" ng-if="!udtTable.isHide(col.id)">'
    +                            '<div ng-if="col.showFilter" udt-cell-filter/>'
