@@ -536,8 +536,8 @@ public class ImportServiceCNS extends AbstractImportService {
 		// A supprimer car uniquement utilisé dans l'import d'echantillons bio cf NGL-1663
 		propertyDefinitions.add(newPropertiesDefinition("Fraction / couche", "sizeFractionOrLayer", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null,
 		newValues(">20 µm","2-20 µm","0.2-2 µm",">2 µm","0.1 cm","1-3 cm","3-5 cm","5-10 cm","10-15 cm","15-30 cm"), null,null,null,"single", 6, false, null,null));				
-		propertyDefinitions.add(newPropertiesDefinition("Méthode préparation ADN", "dnaTreatment", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null,
-				DescriptionFactory.newValues("MDA","size selection using ampure","EtOH-reconcentrated","WGA"), null, null, null,"single", 18, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Méthode préparation ADN (ou ARN)", "dnaTreatment", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null,
+				DescriptionFactory.newValues("MDA","size selection using ampure","EtOH-reconcentrated","WGA", "SAG"), null, null, null,"single", 18, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Code éch. témoin négatif extraction", "extractionBlankSampleCode", LevelService.getLevels(Level.CODE.Content), String.class, false, null,
 				null, null, null, null,"single", 22, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Contrôle négatif", "negativeControl", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, false, null, 

@@ -343,8 +343,11 @@ public class ProtocolServiceCNS {
 		
 		lp.add(newProtocol("qcard-qc","QC_qcard","path7","1","production", InstanceFactory.setExperimentTypeCodes("qcard")));	
 
-		
-		
+		lp.add(newProtocol("ptr-wga-bq-sags-v3","PTR_WGA_Bq_SAGs_V3","path7","1","production", InstanceFactory.setExperimentTypeCodes("wga-amplification")));	
+		lp.add(newProtocol("wga-nanopore","WGA_Nanopore","path7","1","production", InstanceFactory.setExperimentTypeCodes("wga-amplification")));	
+		lp.add(newProtocol("qiagen-repli-g-wga","QIAGEN REPLI-g WGA","path7","1","production", InstanceFactory.setExperimentTypeCodes("wga-amplification")));	
+		lp.add(newProtocol("qiagen-repli-g-wta","QIAGEN REPLI-g WTA","path7","1","production", InstanceFactory.setExperimentTypeCodes("wga-amplification")));	
+
 		if(ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			
 		}else if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
