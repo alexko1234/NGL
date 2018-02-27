@@ -560,7 +560,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			console.log("refreshMaxConcfunction result "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
 				maxConc = {};
-				maxConc.unit = (compute.inputConcUnit === 'nM')?'fmol':'ng';
+				maxConc.unit = 'ng/µl';
 				if(result > compute.inputConc){
 					maxConc.value =  compute.inputConc;						
 				}else{
@@ -568,7 +568,6 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 				}
 				if (outputConc){
 					if (outputConc.value > maxConc.value){
-						console.log("refreshMaxConcfunctionnnnnnnnnnnn");
 						outputConc.value = maxConc.value;
 						outputConc.unit= maxConc.unit;
 						getter2.assign(udtData,outputConc);
