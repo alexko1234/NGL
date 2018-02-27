@@ -43,7 +43,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
-import play.Logger;
+//import play.Logger;
 import services.instance.experiment.ExperimentImport;
 import validation.ContextValidation;
 
@@ -57,19 +57,21 @@ import validation.ContextValidation;
 @Repository
 public class LimsCNGDAO {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(LimsCNGDAO.class);
+	
 	private JdbcTemplate jdbcTemplate;
 
-	private static final String CONTAINER_STATE_CODE_IW_P="IW-P";
-	private static final String CONTAINER_STATE_CODE_IS="IS";
+	private static final String CONTAINER_STATE_CODE_IW_P = "IW-P";
+	private static final String CONTAINER_STATE_CODE_IS   = "IS";
 	
-	protected static final String PROJECT_TYPE_CODE_DEFAULT = "default-project";
+	protected static final String PROJECT_TYPE_CODE_DEFAULT  = "default-project";
 	protected static final String PROJECT_STATE_CODE_DEFAULT = "IP";
 	
-	protected static final String IMPORT_CATEGORY_CODE="sample-import";  // inutilisé...
+	protected static final String IMPORT_CATEGORY_CODE     = "sample-import";  // inutilisé...
 	protected static final String IMPORT_TYPE_CODE_DEFAULT = "default-import";
 	
 	protected static final String SAMPLE_TYPE_CODE_DEFAULT = "default-sample-cng"; // inutilisé...
-	protected static final String SAMPLE_USED_TYPE_CODE = "default-sample-cng";	
+	protected static final String SAMPLE_USED_TYPE_CODE    = "default-sample-cng";	
 	
 	@Autowired
 	@Qualifier("lims")
@@ -97,10 +99,10 @@ public class LimsCNGDAO {
 		try {
 			projectType = ProjectType.find.findByCode(project.typeCode);
 		} catch (DAOException e) {
-			Logger.error("",e);
+			logger.error("",e);
 			return null;
 		}
-		if( projectType==null ){
+		if (projectType == null) {
 			ctxErr.addErrors("code", "error.codeNotExist", project.typeCode, project.code);
 			return null;
 		}
@@ -146,13 +148,13 @@ public class LimsCNGDAO {
 			sample.code=rs.getString("code");
 			
 			String sampleTypeCode=rs.getString("sample_type");
-			Logger.debug("[commonSampleMapRowSample] code :"+sample.code+ " Sample type code :"+sampleTypeCode);
+			logger.debug("[commonSampleMapRowSample] code :"+sample.code+ " Sample type code :"+sampleTypeCode);
 			
 			SampleType sampleType=null;
 			try {
 				sampleType = SampleType.find.findByCode(sampleTypeCode);
 			} catch (DAOException e) {
-				Logger.error("",e);
+				logger.error("",e);
 				return null;
 			}
 			if ( sampleType==null ) {
@@ -170,8 +172,7 @@ public class LimsCNGDAO {
 			sample.projectCodes=new HashSet<String>();
 			if (rs.getString("project") != null) {
 				sample.projectCodes.add(rs.getString("project"));
-			}
-			else {
+			} else {
 				sample.projectCodes.add(" "); 
 			}
 
@@ -205,7 +206,7 @@ public class LimsCNGDAO {
 		container.traceInformation = new TraceInformation();
 		container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 		container.code = rs.getString("container_code");
-		Logger.debug("[commonContainerMapRow] Container code :"+container.code);
+		logger.debug("[commonContainerMapRow] Container code :"+container.code);
 
 		//FDS 20/01/2016 ne pas ajouter des commentaires vides  ""...
 		if ((rs.getString("comment") != null) && (! rs.getString("comment").equals(""))) {
@@ -266,12 +267,11 @@ public class LimsCNGDAO {
 		
 		// 14/10/2016 containerCategoryCode est surchargé on a sample-well, library-well dans certains cas
 		// remettre la valeur initiale
-		if ( containerCategoryCode.equals("sample-well") || containerCategoryCode.equals("library-well") ){
-			Logger.debug("[commonContainerMapRow] ContainerCategorycode :"+containerCategoryCode);			
+		if (containerCategoryCode.equals("sample-well") || containerCategoryCode.equals("library-well")) {
+			logger.debug("[commonContainerMapRow] ContainerCategorycode :" + containerCategoryCode);			
 			container.categoryCode="well";
 			containerCategoryCode="well";
-		}
-		else {
+		} else {
 			container.categoryCode = containerCategoryCode; 
 		}
 		
@@ -284,9 +284,8 @@ public class LimsCNGDAO {
 					                                                       rs.getString("column"),
 					                                                       rs.getString("row"),
 					                                                       rs.getString("storage_code"));  
-		}
-		catch(DAOException e) {
-			Logger.error("[commonContainerMapRow] Can't get container support !"); 
+		} catch(DAOException e) {
+			logger.error("[commonContainerMapRow] Can't get container support !"); 
 		}
 		
 		container.properties = new HashMap<>(); // <String, PropertyValue>();
@@ -310,10 +309,10 @@ public class LimsCNGDAO {
 			try {
 				sampleType = SampleType.find.findByCode(sampleTypeCode);
 			} catch (DAOException e) {
-				Logger.error("",e);
+				logger.error("",e);
 				return null;
 			}
-			if ( sampleType==null ) {
+			if (sampleType == null) {
 				ctxErr.addErrors("sample code", "error.codeNotExist", sampleTypeCode, content.sampleCode);
 				return null;
 			}	
@@ -335,7 +334,7 @@ public class LimsCNGDAO {
 				if (rs.getString("exp_short_name")!=null) {
 					content.properties.put("libProcessTypeCode", new PropertySingleValue(rs.getString("exp_short_name")));
 				} else {
-					Logger.warn("[commonContainerMapRow] content exp_short_name : null !!!!!!");
+					logger.warn("[commonContainerMapRow] content exp_short_name : null !!!!!!");
 					content.properties.put("libProcessTypeCode", new PropertySingleValue("-1"));// specific value for making comparison, suppressed in demultiplexContainer
 				}
 			
@@ -343,7 +342,7 @@ public class LimsCNGDAO {
 				if (rs.getString("aliquote_code")!=null) { 
 					content.properties.put("sampleAliquoteCode", new PropertySingleValue(rs.getString("aliquote_code")));
 				} else {
-					Logger.warn("[commonContainerMapRow] content aliquote code : null !!!!!");
+					logger.warn("[commonContainerMapRow] content aliquote code : null !!!!!");
 					content.properties.put("sampleAliquoteCode", new PropertySingleValue("-1"));// specific value for making comparison, suppressed in demultiplexContainer
 				}
 			} else if ("sample-well".equals(specialContainerCategoryCode)) {
@@ -351,15 +350,11 @@ public class LimsCNGDAO {
 					content.properties.put("sampleAliquoteCode", new PropertySingleValue(rs.getString("aliquote_code")));
 				}
 			}
-			
-			container.contents.add(content);	
-			
+			container.contents.add(content);		
 			container.sampleCodes=new HashSet<String>();
 			container.sampleCodes.add(rs.getString("sample_code"));	
-			Logger.debug("[commonContainerMapRow] container sampleCodes: " + container.sampleCodes);		
+			logger.debug("[commonContainerMapRow] container sampleCodes: " + container.sampleCodes);		
 		}
-
-		
 		return container;
 	}
 	
@@ -375,15 +370,12 @@ public class LimsCNGDAO {
 	private ContainerSupport commonContainerSupportMapRow(ResultSet rs, int rowNum, ContextValidation ctxErr) throws SQLException {
 		ContainerSupport containerSupport = new ContainerSupport();	
 		containerSupport.code = rs.getString("support_code");
-		
 		if (rs.getString("seq_program_type").equals("PE") || rs.getString("seq_program_type").equals("SR")) {
 			containerSupport.properties= new HashMap<>(); // <String, PropertyValue>();
 			containerSupport.properties.put("sequencingProgramType", new PropertySingleValue(rs.getString("seq_program_type")));
+		} else {
+			logger.error("Wrong value of seq_program_type : " + rs.getString("seq_program_type") + "! (expected SE ou PR) for code : " + rs.getString("support_code")); 
 		}
-		else {
-			Logger.error("Wrong value of seq_program_type : " + rs.getString("seq_program_type") + "! (expected SE ou PR) for code : " + rs.getString("support_code")); 
-		}
-		
 		return containerSupport;
 	}	
 	
@@ -446,8 +438,7 @@ public class LimsCNGDAO {
 		if (mode.equals("creation")) {
 			key = "update_ImportDate";
 			column = "nglimport_date";
-		}
-		else {
+		} else {
 			key = "update_UpdateDate";
 			column = "ngl_update_date";			
 		}
@@ -460,7 +451,6 @@ public class LimsCNGDAO {
 	        parameters.add(new Object[] {new Date(), project.code}); 
 		}
 		this.jdbcTemplate.batchUpdate(sql, parameters);  
-		
 		contextError.removeKeyFromRootKeyName(key);
 	}
 	
@@ -476,31 +466,30 @@ public class LimsCNGDAO {
 		int pos = 0;
 		int x = 1;
 		int listSize = results.size(); 
-		 while (pos < listSize-1) {
-			 // meme recodage a faire que pour les containers...TODO
-             while ( (pos < listSize-1) && (results.get(pos).code.equals( results.get(pos+x).code ))   ) {
-                     // difference between the two project codes
-                     if (! results.get(pos).projectCodes.toArray(new String[0])[0].equals(results.get(pos+x).projectCodes.toArray(new String[0])[0])) {
-                             if (! results.get(pos).projectCodes.contains(results.get(pos+x).projectCodes.toArray(new String[0])[0])) {
-                                     results.get(pos).projectCodes.add( results.get(pos+x).projectCodes.toArray(new String[0])[0] );
-                             }
-                     }
-                     // all the difference have been reported on the first sample found (at the position pos)
-                     // so we can delete the sample at the position (posNext)
-                     results.remove(pos+x);
-                     listSize--;
-             }
-             pos++;
-     }
-     //for remove null comment or project
-     for (Sample s : results) {
-             for (String projectCode :s.projectCodes) {
-                     if (projectCode.equals(" ")) {
-                             s.projectCodes.remove(projectCode);
-                     }
-             }
-     }
-	
+		while (pos < listSize-1) {
+			// meme recodage a faire que pour les containers...TODO
+			while (pos < listSize-1 && results.get(pos).code.equals(results.get(pos+x).code)) {
+				// difference between the two project codes
+				if (! results.get(pos).projectCodes.toArray(new String[0])[0].equals(results.get(pos+x).projectCodes.toArray(new String[0])[0])) {
+					if (! results.get(pos).projectCodes.contains(results.get(pos+x).projectCodes.toArray(new String[0])[0])) {
+						results.get(pos).projectCodes.add( results.get(pos+x).projectCodes.toArray(new String[0])[0] );
+					}
+				}
+				// all the difference have been reported on the first sample found (at the position pos)
+				// so we can delete the sample at the position (posNext)
+				results.remove(pos+x);
+				listSize--;
+			}
+			pos++;
+		}
+		//for remove null comment or project
+		for (Sample s : results) {
+			for (String projectCode :s.projectCodes) {
+				if (projectCode.equals(" ")) {
+					s.projectCodes.remove(projectCode);
+				}
+			}
+		}
 		return results;
 	}
 
@@ -511,7 +500,6 @@ public class LimsCNGDAO {
 	 * @throws DAOException
 	 */
 	public List<Sample> findAllSample(final ContextValidation contextError) throws DAOException {
-		
 		List<Sample> results = this.jdbcTemplate.query("select * from v_sample_tongl_reprise order by code, project desc, comments", new Object[]{} 
 		,new RowMapper<Sample>() {
 			public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -522,7 +510,6 @@ public class LimsCNGDAO {
 				return s;
 			}
 		});
-		
 		//demultiplexSample toujours necessaire car le code est le SOLEXA stock_barcode=> plusieurs samples peuvent avoir le meme code
 		return demultiplexSample(results);			
 	}
@@ -537,7 +524,6 @@ public class LimsCNGDAO {
 	public List<Sample> findSampleToModify(final ContextValidation contextError) throws SQLException, DAOException {
 		return findSampleToModify(contextError, null);
 	}
-	
 	
 	/* ************************************************************************************************************************************************
 	 * 2d To get a particular sample updated in the CNG's LIMS (Solexa database)
@@ -555,11 +541,11 @@ public class LimsCNGDAO {
 		
 		if (sampleCode != null) { 	
 			sqlQuery = "select * from v_sample_updated_tongl where code=? order by code, project desc, comments";
-			Logger.debug("Modify 1 sample ("+ sampleCode+ ") with SOLEXA sql: "+ sqlQuery );
+			logger.debug("Modify 1 sample ("+ sampleCode+ ") with SOLEXA sql: "+ sqlQuery );
 			queryObj = new Object[]{sampleCode};
 		} else {
 			sqlQuery = "select * from v_sample_updated_tongl order by code, project desc, comments";
-			Logger.debug("Modify samples with SOLEXA sql: "+ sqlQuery );
+			logger.debug("Modify samples with SOLEXA sql: "+ sqlQuery );
 			queryObj = new Object[]{};
 		}
 		
@@ -605,15 +591,13 @@ public class LimsCNGDAO {
 		
 		if (sampleCode != null) {	
 			sqlQuery = "select * from v_sample_tongl where code = ? order by code, project desc, comments";
-			Logger.debug("Import 1 sample ("+ sampleCode+ ") with SOLEXA sql: "+ sqlQuery );
+			logger.debug("Import 1 sample ("+ sampleCode+ ") with SOLEXA sql: "+ sqlQuery );
 			queryObj = new Object[]{sampleCode};
-		}
-		else {		
+		} else {		
 			sqlQuery = "select * from v_sample_tongl order by code, project desc, comments";
-			Logger.debug("Import samples with SOLEXA sql:" +  sqlQuery );
+			logger.debug("Import samples with SOLEXA sql:" +  sqlQuery );
 			queryObj = new Object[]{};
 		}
-
 		results = this.jdbcTemplate.query(sqlQuery, queryObj
 			,new RowMapper<Sample>() {
 				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -624,7 +608,6 @@ public class LimsCNGDAO {
 					return s;
 				}
 			});
-		
 		//demultiplexSample toujours necessaire car le code est le SOLEXA stock_barcode=> plusieurs samples peuvent avoir le meme code
 		return demultiplexSample(results);	
 	}
@@ -638,7 +621,7 @@ public class LimsCNGDAO {
 	public static List<Container> demultiplexContainer(List<Container> results) throws DAOException {
 		//affect all the project codes /samples /tags to the same container (for having unique codes of containers) 
 		/// required to have an ordered list (see ORDER BY clause in the sql of the view)
-		Logger.debug("start demultiplexing containers");
+		logger.debug("start demultiplexing containers");
 		
 		int pos = 0;
 		int x = 1;
@@ -650,7 +633,7 @@ public class LimsCNGDAO {
 			
 			while ( (pos < listSize-1) && (results.get(pos).code.equals(results.get(pos+x).code)) ) {
 				// 10-07-15 refactored by NW
-				Logger.debug("demultiplexing container "+ results.get(pos).code);
+				logger.debug("demultiplexing container "+ results.get(pos).code);
 				assert results.get(pos+x).sampleCodes.size() <= 1;
 				
 				// difference between two consecutive sampleCodes
@@ -715,7 +698,7 @@ public class LimsCNGDAO {
 		//define container projects from projects contents
 		defineContainerProjectCodes(results); 
 		
-		Logger.debug("end demultiplexing containers");
+		logger.debug("end demultiplexing containers");
 		return results;
 	}
 	
@@ -759,23 +742,20 @@ public class LimsCNGDAO {
 		content.properties.put("tagCategory", new PropertySingleValue(results.get(posNext).contents.toArray(new Content[0])[0].properties.get("tagCategory").value));
 	
 		if (results.get(posNext).contents.toArray(new Content[0])[0].properties.get("libProcessTypeCode") == null) {	
-			Logger.debug("[createContent] content.sampleCode =" + content.sampleCode + " pas de lib process type code (exp_type_code) !!!!!");
-		}
-		else {
+			logger.debug("[createContent] content.sampleCode =" + content.sampleCode + " pas de lib process type code (exp_type_code) !!!!!");
+		} else {
 			content.properties.put("libProcessTypeCode", new PropertySingleValue(results.get(posNext).contents.toArray(new Content[0])[0].properties.get("libProcessTypeCode").value));
-			Logger.debug("[createContent] content.sampleCode =" + content.sampleCode + "; content.libProcessTypeCode ="+ content.properties.get("libProcessTypeCode").value);
+			logger.debug("[createContent] content.sampleCode =" + content.sampleCode + "; content.libProcessTypeCode ="+ content.properties.get("libProcessTypeCode").value);
 		}
 		
 		//FDS 16/06/2015 JIRA NGL-673: ajouter aliquote code 
 		//FDS 19/01/2016 !! pas d'aliquote code pour des containers qui contiennent des samples
 		if (results.get(posNext).contents.toArray(new Content[0])[0].properties.get("sampleAliquoteCode") == null) {
-			Logger.debug("[createContent] content.sampleCode =" + content.sampleCode + " pas de aliquote code !!!!!");
-		}
-		else {
+			logger.debug("[createContent] content.sampleCode =" + content.sampleCode + " pas de aliquote code !!!!!");
+		} else {
 			content.properties.put("sampleAliquoteCode", new PropertySingleValue(results.get(posNext).contents.toArray(new Content[0])[0].properties.get("sampleAliquoteCode").value));
 			//Logger.debug("[createContent] content.sampleCode =" + content.sampleCode + "; content.sampleAliquoteCode ="+ content.properties.get("sampleAliquoteCode").value);
 		}
-		
 		results.get(posCurrent).contents.add(content); 
 		
 		return results;
@@ -821,96 +801,74 @@ public class LimsCNGDAO {
 			
 			if (experimentTypeCode.equals("lib-normalization")) {		
 					sqlView = "v_libnorm_tube_tongl_new";   /* 15/06/2016 renommage des vues */
-			}
-			else if (experimentTypeCode.equals("denat-dil-lib")) {
+			} else if (experimentTypeCode.equals("denat-dil-lib")) {
 					sqlView = "v_libdenatdil_tube_tongl_new";  /* 15/06/2016 renommage des vues */
-			}
-			else {
+			} else {
 					//autres experimentTypeCode a venir ??
 					sqlView = " UNSUPPORTED";
-					Logger.error("findContainerToCreate: unsupported experimentTypeCode: "+experimentTypeCode);
+					logger.error("findContainerToCreate: unsupported experimentTypeCode: "+experimentTypeCode);
 			}
 			
 			if (importState == null ) {
 				sqlClause="";
-			}
-			else if (importState.equals("is")){
+			} else if (importState.equals("is")) {
 				sqlClause=" and ngl_status='done' ";
-			}
-			else if (importState.equals("iw-p")){
+			} else if (importState.equals("iw-p")) {
 				sqlClause=" and ngl_status='ready' ";
-			}
-			else {
+			} else {
 				sqlClause=" UNSUPPORTED";
-				Logger.error("findContainerToCreate: unsupported importState : "+importState);
+				logger.error("findContainerToCreate: unsupported importState : "+importState);
 			}
-			
 			//13/03/2015 le order by est TRES IMPORTANT: demultiplexContainer en depend !! 
 			sqlOrder=" order by container_code, project desc, sample_code, tag, exp_short_name";
-			
-		}
-		else if (containerCategoryCode.equals("sample-well")) {
+		} else if (containerCategoryCode.equals("sample-well")) {
 			sqlView = "v_sample_plate_new_tongl";
 			sqlOrder=" order by container_code, project desc, sample_code";
-		}
-	    /*	test 14/06/2016 */
-		else if (containerCategoryCode.equals("library-well")) {
-		
+		} else if (containerCategoryCode.equals("library-well")) { /*	test 14/06/2016 */
 			if (experimentTypeCode.equals("lib-normalization")) {		
 					sqlView = "v_libnorm_plate_tongl_new"; 
-			}
-			else if (experimentTypeCode.equals("denat-dil-lib")) {
+			} else if (experimentTypeCode.equals("denat-dil-lib")) {
 					sqlView = "v_libdenatdil_plate_tongl_new";
-			}
-			else {
+			} else {
 					//autres experimentTypeCode a venir ??
 					sqlView = " UNSUPPORTED";
-					Logger.error("findContainerToCreate: unsupported experimentTypeCode: "+experimentTypeCode);
+					logger.error("findContainerToCreate: unsupported experimentTypeCode: "+experimentTypeCode);
 			}
-			
 			if (importState == null ) {
 				sqlClause="";
-			}
-			else if (importState.equals("is")){
+			} else if (importState.equals("is")) {
 				sqlClause=" and ngl_status='done' ";
-			}
-			else if (importState.equals("iw-p")){
+			} else if (importState.equals("iw-p")) {
 				sqlClause=" and ngl_status='ready' ";
-			}
-			else {
+			} else {
 				sqlClause=" UNSUPPORTED";
-				Logger.error("findContainerToCreate: unsupported importState : "+importState);
+				logger.error("findContainerToCreate: unsupported importState : "+importState);
 			}	
-			
 			//13/03/2015 le order by est TRES IMPORTANT: demultiplexContainer en depend !! 
-			sqlOrder=" order by container_code, project desc, sample_code, tag, exp_short_name";
+			sqlOrder = " order by container_code, project desc, sample_code, tag, exp_short_name";
 		}
-		
 		// fusion des 2 appels a jdbcTemplate.query
 		List<Container> results = null;
 		if (containerCode != null) {
 			// FDS note: si containerCategoryCode = sample-well ou library-well=> n'a aucun sens d'importer un puits tout seul!!!
-			Logger.debug("Import container " + containerCategoryCode +"("+ containerCode+ ") with SOLEXA sql: "+ sqlView + sqlClause + sqlOrder);
+			logger.debug("Import container " + containerCategoryCode +"("+ containerCode+ ") with SOLEXA sql: "+ sqlView + sqlClause + sqlOrder);
 			sqlQuery="select * from " + sqlView + " where container_code = ? " + sqlClause + sqlOrder;
 			queryObj = new Object[]{containerCode};
-		}
-		else {
-			Logger.debug("Import containers " + containerCategoryCode + " with SOLEXA sql: "+ sqlView + sqlClause+ sqlOrder);
+		} else {
+			logger.debug("Import containers " + containerCategoryCode + " with SOLEXA sql: "+ sqlView + sqlClause+ sqlOrder);
 			sqlQuery="select * from " + sqlView + " where 1=1 " + sqlClause + sqlOrder;
 			queryObj = new Object[]{};
 		}
-		
 		results = this.jdbcTemplate.query(sqlQuery, queryObj, new RowMapper<Container>() {
-		public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
+			public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 				ResultSet rs0 = rs;
 				int rowNum0 = rowNum;
 				ContextValidation ctxErr = contextError; 
-				
+
 				Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, containerCategoryCode, experimentTypeCode, importState);
 				return c;
 			}
 		});
-		
 		//FDS NOTE: c'est dans demultiplexContainer.createContent() que sont crees le(s) content(s) d'un container
 		return demultiplexContainer(results);			
 	}
@@ -936,45 +894,32 @@ public class LimsCNGDAO {
 		}
 		else */
 		if (containerCategoryCode.equals("tube")) {
-			
 			if (experimentTypeCode.equals("lib-normalization")) {
 				sqlView = "v_libnorm_tube_tongl_all"; /* 15/06/2016 renommage des vues tube */
-			}
-			else if (experimentTypeCode.equals("denat-dil-lib")) {
+			} else if (experimentTypeCode.equals("denat-dil-lib")) {
 				sqlView = "v_libdenatdil_tube_tongl_all"; /* 15/06/2016 renommage des vues tube */
-			}
-			else {
+			} else {
 				//autres experimentTypeCode a venir ??
 				sqlView = " UNSUPPORTED";
 			}
-			Logger.error("findAllContainer: unsupported experimentTypeCode: "+experimentTypeCode);
-			
-			sqlOrder=" order by container_code, project desc, sample_code, tag, exp_short_name";
-		}
-		else if (containerCategoryCode.equals("sample-well")) {
+			logger.error("findAllContainer: unsupported experimentTypeCode: "+experimentTypeCode);
+			sqlOrder = " order by container_code, project desc, sample_code, tag, exp_short_name";
+		} else if (containerCategoryCode.equals("sample-well")) {
 				sqlView = "v_sample_plate_tongl_reprise";
 				sqlOrder = " order by container_code, project desc, sample_code";
-				
-		}
-		/* test 15/06/2016 */
-		else if (containerCategoryCode.equals("library-well")) {
-			
+		} else if (containerCategoryCode.equals("library-well")) { /* test 15/06/2016 */
 			if (experimentTypeCode.equals("lib-normalization")) {
 				sqlView = "v_libnorm_plate_tongl_all";
-			}
-			else if (experimentTypeCode.equals("denat-dil-lib")) {
+			} else if (experimentTypeCode.equals("denat-dil-lib")) {
 				sqlView = "v_libdenatdil_plate_tongl_all";
-			}
-			else {
+			} else {
 				//autres experimentTypeCode a venir ??
 				sqlView = " UNSUPPORTED";
-				Logger.error("findAllContainer: unsupported experimentTypeCode: "+experimentTypeCode);
+				logger.error("findAllContainer: unsupported experimentTypeCode: "+experimentTypeCode);
 			}
 			// a verifier !!!!!!
 			sqlOrder=" order by container_code, project desc, sample_code, tag, exp_short_name";
 		}
-		
-		
 		List<Container> results = this.jdbcTemplate.query("select * from " + sqlView + sqlOrder , new Object[]{} 
 		,new RowMapper<Container>() {
 			public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -986,7 +931,6 @@ public class LimsCNGDAO {
 				return c;
 			}
 		});
-		
 		//FDS NOTE: c'est dans demultiplexContainer.createContent() que sont crees le(s) content(s) d'un container
 		return demultiplexContainer(results);			
 	}
@@ -1030,52 +974,40 @@ public class LimsCNGDAO {
 		if (containerCategoryCode.equals("tube")) {
 			if (experimentTypeCode.equals("lib-normalization")) {
 				sqlView = "v_libnorm_tube_tongl_updated"; /* 15/06/2016 renommage des vues tube */
-			}
-			else if (experimentTypeCode.equals("denat-dil-lib")) {
+			} else if (experimentTypeCode.equals("denat-dil-lib")) {
 				sqlView = "v_libdenatdil_tube_tongl_updated"; /* 15/06/2016 renommage des vues tube */
-			}
-			else {
+			} else {
 				//autres experimentTypeCode a venir ??
 				sqlView = " UNSUPPORTED";
-				Logger.error("findContainerToModify: unsupported experimentTypeCode: "+experimentTypeCode);
+				logger.error("findContainerToModify: unsupported experimentTypeCode: "+experimentTypeCode);
 			}
 			sqlOrder = " order by container_code, project desc, sample_code, tag, exp_short_name";
-		}
-		else if (containerCategoryCode.equals("sample-well")) {
+		} else if (containerCategoryCode.equals("sample-well")) {
 			sqlView ="v_sample_plate_updated_tongl";
 			sqlOrder = " order by container_code, project desc, sample_code";
-		}
-		/* test 15/06/2016*/
-		else if (containerCategoryCode.equals("library-well")) {
-			
+		} else if (containerCategoryCode.equals("library-well")) { /* test 15/06/2016*/
 			if (experimentTypeCode.equals("lib-normalization")) {
 				sqlView = "v_libnorm_plate_tongl_updated";
-			}
-			else if (experimentTypeCode.equals("denat-dil-lib")) {
+			} else if (experimentTypeCode.equals("denat-dil-lib")) {
 				sqlView = "v_libdenatdil_plate_tongl_updated";
-			}
-			else {
+			} else {
 				//autres experimentTypeCode a venir ??
 				sqlView = " UNSUPPORTED";
-				Logger.error("findContainerToModify: unsupported experimentTypeCode: "+experimentTypeCode);
+				logger.error("findContainerToModify: unsupported experimentTypeCode: " + experimentTypeCode);
 			}
 			// a verifier
 			sqlOrder = " order by container_code, project desc, sample_code, tag, exp_short_name";
 		}
-	
-	
 		List<Container> results = null;	
 		
 		// FDS 21/01/2016 fusion des 2 appel a jdbcTemplate.query
 		if (containerCode != null) {
 			sqlClause = " where container_code = ? ";
-			queryObj = new Object[]{containerCode};
-			
-			Logger.debug("Modify 1 container " + containerCategoryCode +"("+ containerCode+ ") with SOLEXA view: "+ sqlView );
-		}else {
-			Logger.debug("Modify containers " + containerCategoryCode + " with SOLEXA view: "+ sqlView );
+			queryObj = new Object[] { containerCode };	
+			logger.debug("Modify 1 container " + containerCategoryCode +"("+ containerCode+ ") with SOLEXA view: "+ sqlView );
+		} else {
+			logger.debug("Modify containers " + containerCategoryCode + " with SOLEXA view: "+ sqlView );
 		}
-			
 		results = this.jdbcTemplate.query("select * from " + sqlView + sqlClause + sqlOrder, queryObj 
 			,new RowMapper<Container>() {
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -1123,7 +1055,6 @@ public class LimsCNGDAO {
 				return c;
 			}
 		});
-		
 		// map data
 		HashMap<String,PropertyValue<String>> mapCodeSupportSequencing = new HashMap<>(); // <String,PropertyValue<String>>();
 		for (ContainerSupport result : results) {
@@ -1191,7 +1122,7 @@ public class LimsCNGDAO {
 						index.traceInformation=new TraceInformation();
 						InstanceHelpers.updateTraceInformation(index.traceInformation, "ngl-data");
 						
-						Logger.info("index code:"+index.code);
+						logger.info("index code: {}", index.code);
 						return index;
 					}
 				});
@@ -1245,8 +1176,7 @@ public class LimsCNGDAO {
 		if (mode.equals("creation")) {
 			key = "update_ImportDate";
 			column = "nglimport_date";
-		}
-		else {
+		} else {
 			key = "update_UpdateDate";
 			column = "ngl_update_date";			
 		}
@@ -1258,15 +1188,16 @@ public class LimsCNGDAO {
 		for (Container container : containers) {
 	        parameters.add(new Object[] {new Date(), container.properties.get("limsCode").value}); 
 		}
-		this.jdbcTemplate.batchUpdate(sql, parameters);  
+//		this.jdbcTemplate.batchUpdate(sql, parameters);  
+		jdbcTemplate.batchUpdate(sql, parameters);  
 		
 		sql = "UPDATE t_sample_lane SET " + column + " = ? WHERE lane_id = ?";
 		parameters = new ArrayList<Object[]>();
 		for (Container container : containers) {
 	        parameters.add(new Object[] {new Date(), container.properties.get("limsCode").value}); 
 		}
-		this.jdbcTemplate.batchUpdate(sql, parameters);   
-				
+//		this.jdbcTemplate.batchUpdate(sql, parameters);   		
+		jdbcTemplate.batchUpdate(sql, parameters);   		
 		contextError.removeKeyFromRootKeyName(key);
 	}
 	
@@ -1297,7 +1228,7 @@ public class LimsCNGDAO {
 		try {
 			this.jdbcTemplate.batchUpdate(sql, parameters);
 		} catch(Exception e) {
-			Logger.debug(e.getMessage());
+			logger.debug(e.getMessage());
 		}
 		contextError.removeKeyFromRootKeyName(key);
 	}
@@ -1317,28 +1248,22 @@ public class LimsCNGDAO {
 		if (mode.equals("creation")) {
 			key = "update_ImportDate";
 			column = "nglimport_date";
-		}
-		else {
+		} else {
 			key = "update_UpdateDate";
 			column = "ngl_update_date";			
 		}
-		
 		contextError.addKeyToRootKeyName(key);
-		
 		String sql = "UPDATE t_group SET " + column + " = ? WHERE name = ? and type=4";
 		List<Object[]> parameters = new ArrayList<Object[]>();
-		
 		// ceci va updater une plaque autant de fois qu'elle a de puits ==> A ameliorer !!!!!!
 		for (Container container : containers) {
 	        parameters.add(new Object[] {new Date(), container.support.code}); 
 		}
 		try {
 			this.jdbcTemplate.batchUpdate(sql, parameters);
+		} catch(Exception e) {
+			logger.debug(e.getMessage());
 		}
-		catch(Exception e) {
-			Logger.debug(e.getMessage());
-		}
-		
 		contextError.removeKeyFromRootKeyName(key);
 	}
 	
@@ -1354,27 +1279,23 @@ public class LimsCNGDAO {
 		if (mode.equals("creation")) {
 			key = "update_ImportDate";
 			column = "nglimport_date";
-		}
-		else {
+		} else {
 			key = "update_UpdateDate";
 			column = "ngl_update_date";			
 		}
-		
 		contextError.addKeyToRootKeyName(key);
-		
 		//-1-mise a jour de la plaque ( table t_group avec type=4)
 		String sql = "UPDATE t_group SET " + column + " = ? WHERE name = ? and type=4";
 		List<Object[]> parameters = new ArrayList<Object[]>();
-		
 		// ceci va updater une plaque autant de fois qu'elle a de puits ==> A ameliorer !!!!!!
 		for (Container container : containers) {
 	        parameters.add(new Object[] {new Date(), container.support.code}); 
 		}
 		try {
-			this.jdbcTemplate.batchUpdate(sql, parameters);
-		}
-		catch(Exception e) {
-			Logger.debug(e.getMessage());
+//			this.jdbcTemplate.batchUpdate(sql, parameters);
+			jdbcTemplate.batchUpdate(sql, parameters);
+		} catch(Exception e) {
+			logger.debug(e.getMessage());
 		}
 		
 		//-2- mise a jour du puits ( table t_tube )
@@ -1385,11 +1306,9 @@ public class LimsCNGDAO {
 		}
 		try {
 			this.jdbcTemplate.batchUpdate(sql, parameters);
-		}
-		catch(Exception e) {
-			Logger.debug(e.getMessage());
+		} catch(Exception e) {
+			logger.debug(e.getMessage());
 		}	
-			
 		contextError.removeKeyFromRootKeyName(key);
 	}
 	
@@ -1416,14 +1335,12 @@ public class LimsCNGDAO {
 		}
 		try {
 			this.jdbcTemplate.batchUpdate(sql, parameters);
-		}
-		catch(Exception e) {
-			Logger.debug(e.getMessage());
+		} catch(Exception e) {
+			logger.debug(e.getMessage());
 		}
 		contextError.removeKeyFromRootKeyName(key);
 	}
 	
-
 	// 21/03/2017 TX Nicolas=> il n'y a pas dans jdbctemplate une methode qui retourne map <string,string> donc il faut l'implementer
 	private class MyExtractor implements ResultSetExtractor<Map<String,String>> {
 		
@@ -1435,6 +1352,7 @@ public class LimsCNGDAO {
 			}
 			return map;
 		}
+		
 	}
 	
 	// 21/03/2017 Les vieux echantillons ont été importés sans leur sample type (ils sont 'defaut-sample-cng' actuellement) trouver leur vrai sample type

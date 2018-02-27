@@ -47,7 +47,7 @@ public class LaneTreatments extends RunsController{
 						DBQuery.elemMatch("lanes",DBQuery.is("number", laneNumber))));
 		if (run != null) {
 			return ok(Json.toJson(getLane(run, laneNumber).treatments));
-		} else{
+		} else {
 			return notFound();
 		}		
 	}
@@ -65,7 +65,7 @@ public class LaneTreatments extends RunsController{
 										DBQuery.exists("treatments."+treatmentCode)))));
 		if (run != null) {
 			return ok(Json.toJson(getLane(run, laneNumber).treatments.get(treatmentCode)));
-		} else{
+		} else {
 			return notFound();
 		}		
 	}
@@ -74,15 +74,15 @@ public class LaneTreatments extends RunsController{
 	@Authenticated
 	@Historized
 	@Authorized.Read
-	public /*static*/ Result head(String runCode, Integer laneNumber, String treatmentCode){
-		if(MongoDBDAO.checkObjectExist(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+	public /*static*/ Result head(String runCode, Integer laneNumber, String treatmentCode) {
+		if (MongoDBDAO.checkObjectExist(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), 
 						DBQuery.elemMatch("lanes", 
 								DBQuery.and(
 										DBQuery.is("number", laneNumber),
 										DBQuery.exists("treatments."+treatmentCode)))))){
 			return ok();
-		}else{
+		} else {
 			return notFound();
 		}
 	}
@@ -97,32 +97,28 @@ public class LaneTreatments extends RunsController{
 	public /*static*/ Result save(String runCode, Integer laneNumber){
 		Run run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), DBQuery.is("lanes.number", laneNumber)));
-		if(run == null){
-			return badRequest();
-		}	
+		if (run == null)
+			return badRequest(); // Probably a not found
 		
 		Form<Treatment> filledForm = getFilledForm(treatmentForm, Treatment.class);
 		Treatment treatment = filledForm.get();
 		
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 		ctxVal.setCreationMode();
 		ctxVal.putObject("level", Level.CODE.Lane);
 		ctxVal.putObject("run", run);
 		ctxVal.putObject("lane", getLane(run, laneNumber));
 		treatment.validate(ctxVal);
-		if(!ctxVal.hasErrors()){
+		if (!ctxVal.hasErrors()) {
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.and(DBQuery.is("code", runCode), DBQuery.is("lanes.number", laneNumber)),
 					DBUpdate.set("lanes.$.treatments."+treatment.code, treatment).set("traceInformation", getUpdateTraceInformation(run)));	
-			
-			
-			
 			return ok(Json.toJson(treatment));
 		} else {
 			// return badRequest(filledForm.errors-AsJson());
 			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
-			
 	}
 	
 //	@Permission(value={"writing"})
@@ -139,14 +135,14 @@ public class LaneTreatments extends RunsController{
 								DBQuery.and(
 										DBQuery.is("number", laneNumber),
 										DBQuery.exists("treatments."+treatmentCode)))));
-		if(run == null){
-			return badRequest();
-		}	
+		if (run == null)
+			return badRequest(); // TODO: probably a not found
 		
 		Form<Treatment> filledForm = getFilledForm(treatmentForm, Treatment.class);
 		Treatment treatment = filledForm.get();
 		if (treatmentCode.equals(treatment.code)) {
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+//			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 			ctxVal.setUpdateMode();
 			ctxVal.putObject("level", Level.CODE.Lane);
 			ctxVal.putObject("run", run);
@@ -178,18 +174,16 @@ public class LaneTreatments extends RunsController{
 								DBQuery.and(
 										DBQuery.is("number", laneNumber),
 										DBQuery.exists("treatments."+treatmentCode)))));
-		if(run == null){
-			return badRequest();
-		}	
+		if (run == null)
+			return badRequest(); // TODO: probably a not found
 		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), DBQuery.is("lanes.number", laneNumber)),
 				DBUpdate.unset("lanes.$.treatments."+treatmentCode).set("traceInformation", getUpdateTraceInformation(run)));					
 		return ok();		
 	}	
 	
-	
 	private /*static*/ Lane getLane(Run run, Integer laneNumber) {
-		if(null != run.lanes){
+		if (run.lanes != null) {
 			for (Lane lane : run.lanes) {
 				if (lane.number.equals(laneNumber)) {
 					return lane;
@@ -198,4 +192,5 @@ public class LaneTreatments extends RunsController{
 		}
 		throw new RuntimeException("Lane number does not exist "+run.code+" / "+laneNumber);
 	}
+	
 }
