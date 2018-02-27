@@ -43,7 +43,7 @@ import fr.cea.ig.play.NGLContext;
 // @Controller
 public class FilteringConfigurations extends DocumentController<FilteringConfiguration> {
 	
-	private static final play.Logger.ALogger logger = play.Logger.of(FilteringConfigurations.class);
+//	private static final play.Logger.ALogger logger = play.Logger.of(FilteringConfigurations.class);
 	
 	private final /*static*/ Form<ConfigurationsSearchForm> searchForm; // = form(ConfigurationsSearchForm.class); 
 //	private final /*static*/ Form<FilteringConfiguration> filteringConfigurationsForm;// = form(FilteringConfiguration.class);
@@ -82,18 +82,17 @@ public class FilteringConfigurations extends DocumentController<FilteringConfigu
 	public Result save() {
 		Form<FilteringConfiguration> filledForm = getMainFilledForm();
 		FilteringConfiguration configuration = filledForm.get();
-
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		if (configuration._id == null) {
-			configuration.traceInformation = new TraceInformation();
-			configuration.traceInformation
-					.setTraceInformation(getCurrentUser());
+//			configuration.traceInformation = new TraceInformation();
+//			configuration.traceInformation.setTraceInformation(getCurrentUser());
+			configuration.setTraceCreationStamp(ctxVal, getCurrentUser());
 			configuration.code = generateConfigurationCode();
 		} else {
 			return badRequest("use PUT method to update the filtering config");
 		}
 
 //		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		ctxVal.setCreationMode();
 		configuration.validate(ctxVal);
 		if (!ctxVal.hasErrors()) {
@@ -107,20 +106,20 @@ public class FilteringConfigurations extends DocumentController<FilteringConfigu
 	
 	public Result update(String code) {
 		FilteringConfiguration configuration = getObject(code);
-		if (configuration == null) {
-			return badRequest("FilteringConfiguration with code "+code+" does not exist");
-		}
+		if (configuration == null)
+			return badRequest("FilteringConfiguration with code " + code + " does not exist"); // TODO: probably a not found
 		Form<FilteringConfiguration> filledForm = getMainFilledForm();
 		FilteringConfiguration configurationInput = filledForm.get();
 
 		if (configurationInput.code.equals(code)) {
-			if (configurationInput.traceInformation != null) {
-				configurationInput.traceInformation = getUpdateTraceInformation(configurationInput.traceInformation);
-			} else {
-				logger.error("traceInformation is null !!");
-			}
+//			if (configurationInput.traceInformation != null) {
+//				configurationInput.traceInformation = getUpdateTraceInformation(configurationInput.traceInformation);
+//			} else {
+//				logger.error("traceInformation is null !!");
+//			}
 //			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
+			configurationInput.setTraceUpdateStamp(ctxVal,getCurrentUser());
 			ctxVal.setCreationMode();
 			configurationInput.validate(ctxVal);
 			if (!ctxVal.hasErrors()) {
@@ -136,7 +135,7 @@ public class FilteringConfigurations extends DocumentController<FilteringConfigu
 	}
 	
 	public static String generateConfigurationCode() {
-		return ("FC-" + new SimpleDateFormat("yyyyMMddHHmmss")).format(new Date()).toUpperCase();		
+		return ("FC-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())).toUpperCase();		
 	}
 	
 }

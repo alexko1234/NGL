@@ -19,7 +19,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-import play.Logger;
+//import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -36,6 +36,9 @@ import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
 
 public class ReportingConfigurations extends DocumentController<ReportingConfiguration> {// CommonController {
+
+//	private static final play.Logger.ALogger logger = play.Logger.of(ReportingConfigurations.class);
+	
 	private final /*static*/ Form<ReportingConfiguration> reportConfigForm; // = form(ReportingConfiguration.class);
 	private final /*static*/ Form<ConfigurationsSearchForm> searchForm; // = form(ConfigurationsSearchForm.class);
 	
@@ -52,12 +55,12 @@ public class ReportingConfigurations extends DocumentController<ReportingConfigu
 		
 		Query q = getQuery(form);
 		BasicDBObject keys = getKeys(form);
-		if(form.datatable){			
+		if (form.datatable) {			
 			MongoDBResult<ReportingConfiguration> results = mongoDBFinder(form, q, keys);
 			//MongoDBResult<ReportingConfiguration> results = mongoDBFinder(InstanceConstants.REPORTING_CONFIG_COLL_NAME, form, ReportingConfiguration.class, q, keys);				
 			List<ReportingConfiguration> reportingConfigurations = results.toList();
 			return ok(Json.toJson(new DatatableResponse<ReportingConfiguration>(reportingConfigurations, results.count())));
-		}else{
+		} else {
 			MongoDBResult<ReportingConfiguration> results = mongoDBFinder(form, q, keys);	
 			//MongoDBResult<ReportingConfiguration> results = mongoDBFinder(InstanceConstants.REPORTING_CONFIG_COLL_NAME, form, ReportingConfiguration.class, q, keys);							
 			List<ReportingConfiguration> reportingConfigurations = results.toList();
@@ -81,10 +84,9 @@ public class ReportingConfigurations extends DocumentController<ReportingConfigu
 
 	public /*static*/ Result get(String code) {
 		ReportingConfiguration reportingConfiguration =  getReportingConfiguration(code);		
-		if(reportingConfiguration != null) {
+		if (reportingConfiguration != null) {
 			return ok(Json.toJson(reportingConfiguration));	
-		} 		
-		else {
+		} else {
 			return notFound();
 		}			
 	}
@@ -92,17 +94,16 @@ public class ReportingConfigurations extends DocumentController<ReportingConfigu
 	public /*static*/ Result save() {
 		Form<ReportingConfiguration> filledForm = getFilledForm(reportConfigForm, ReportingConfiguration.class);
 		ReportingConfiguration reportingConfiguration = filledForm.get();
-
-		if (null == reportingConfiguration._id) {
-			reportingConfiguration.traceInformation = new TraceInformation();
-			reportingConfiguration.traceInformation
-					.setTraceInformation(getCurrentUser());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
+		if (reportingConfiguration._id == null) {
+//			reportingConfiguration.traceInformation = new TraceInformation();
+//			reportingConfiguration.traceInformation.setTraceInformation(getCurrentUser());
+			reportingConfiguration.setTraceCreationStamp(ctxVal, getCurrentUser());
 			reportingConfiguration.code = generateReportingConfigurationCode();
 		} else {
 			return badRequest("use PUT method to update the ReportingConfiguration");
 		}
-
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 		ctxVal.setCreationMode();
 		reportingConfiguration.validate(ctxVal);
 		if (!ctxVal.hasErrors()) {
@@ -116,20 +117,20 @@ public class ReportingConfigurations extends DocumentController<ReportingConfigu
 	
 	public /*static*/ Result update(String code) {
 		ReportingConfiguration reportingConfiguration =  getReportingConfiguration(code);
-		if(reportingConfiguration == null) {
-			return badRequest("ReportingConfiguration with code "+code+" does not exist");
-		}
+		if (reportingConfiguration == null)
+			return badRequest("ReportingConfiguration with code "+code+" does not exist"); // TODO: probably a not found
 		Form<ReportingConfiguration> filledForm = getFilledForm(reportConfigForm, ReportingConfiguration.class);
 		ReportingConfiguration reportingConfigurationInput = filledForm.get();
 
 		if (reportingConfigurationInput.code.equals(code)) {
-			if(null != reportingConfigurationInput.traceInformation){
-				reportingConfigurationInput.traceInformation.setTraceInformation(getCurrentUser());
-			}else{
-				Logger.error("traceInformation is null !!");
-			}
-			
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//			if (reportingConfigurationInput.traceInformation != null) {
+//				reportingConfigurationInput.traceInformation.setTraceInformation(getCurrentUser());
+//			} else {
+//				logger.error("traceInformation is null !!"); // TODO: handle error properly
+//			}
+//			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
+			reportingConfigurationInput.setTraceUpdateStamp(ctxVal, getCurrentUser());
 			ctxVal.setUpdateMode();
 			reportingConfigurationInput.validate(ctxVal);
 			if (!ctxVal.hasErrors()) {
@@ -139,26 +140,26 @@ public class ReportingConfigurations extends DocumentController<ReportingConfigu
 				// return badRequest(filledForm.errors-AsJson());
 				return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 			}
-		}else{
+		} else {
 			return badRequest("ReportingConfiguration code are not the same");
 		}				
 	}
 	
 	public /*static*/ Result delete(String code) {
 		ReportingConfiguration reportingConfiguration =  getReportingConfiguration(code);
-		if(reportingConfiguration == null) {
-			return badRequest("ReportingConfiguration with code "+reportingConfiguration+" does not exist");
-		}
+		if (reportingConfiguration == null)
+			return badRequest("ReportingConfiguration with code "+reportingConfiguration+" does not exist"); // TODO: probably a not found
 		MongoDBDAO.deleteByCode(InstanceConstants.REPORTING_CONFIG_COLL_NAME,  ReportingConfiguration.class, reportingConfiguration.code);
 		return ok();
 	}
 	
-	public static String generateReportingConfigurationCode(){
-		return ("RC-"+(new SimpleDateFormat("yyyyMMddHHmmss")).format(new Date())).toUpperCase();		
+	public static String generateReportingConfigurationCode() {
+		return ("RC-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())).toUpperCase();		
 	}
 	
 	private static ReportingConfiguration getReportingConfiguration(String code) {
 		ReportingConfiguration reportingConfiguration = MongoDBDAO.findByCode(InstanceConstants.REPORTING_CONFIG_COLL_NAME, ReportingConfiguration.class, code);
     	return reportingConfiguration;
 	}
+	
 }
