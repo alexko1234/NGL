@@ -27,6 +27,7 @@ import services.description.declaration.cns.Opgen;
 import services.description.declaration.cns.Purif;
 import services.description.declaration.cns.QualityControl;
 import services.description.declaration.cns.RunIllumina;
+import services.description.declaration.cns.SamplePrep;
 import services.description.declaration.cns.Transfert;
 
 import com.typesafe.config.ConfigFactory;
