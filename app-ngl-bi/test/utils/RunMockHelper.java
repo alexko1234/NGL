@@ -163,8 +163,8 @@ public class RunMockHelper {
 		
 		r.state = getState("F-QC");
 		Set<String> lResos = new HashSet<String>();
-		lResos.add("reso1");
-		lResos.add("reso2");
+		lResos.add("Run-abandonLane");
+		lResos.add("Info-testDev");
 		r.state.resolutionCodes=lResos;
 		TraceInformation ti = new TraceInformation(); 
 		ti.setTraceInformation("dnoisett");
