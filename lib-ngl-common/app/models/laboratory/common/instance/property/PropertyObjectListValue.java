@@ -16,20 +16,32 @@ import models.laboratory.common.instance.PropertyValue;
  * used to stock a list of complex object
  * an object is stock in Map with key = property and value = value of property
  */
-public class PropertyObjectListValue extends PropertyValue<List<Map<String, ?>>>{
+//public class PropertyObjectListValue extends PropertyValue<List<Map<String, ?>>> {
+public class PropertyObjectListValue extends PropertyValue<List<Map<String, Object>>> {
+	
+	public Map<String,String> unit;
 	
 	public PropertyObjectListValue() {
 		super(PropertyValue.objectListType);
 	}
-	public PropertyObjectListValue(List<Map<String, ?>> value) {
+	
+//	public PropertyObjectListValue(List<Map<String, ?>> value) {
+//		super(PropertyValue.objectListType, value);	
+//	}
+//	public PropertyObjectListValue(List<Map<String, ?>> value, Map<String,String> unit) {
+//		super(PropertyValue.objectListType, value);
+//		this.unit = unit;
+//	}
+
+	public PropertyObjectListValue(List<Map<String, Object>> value) {
 		super(PropertyValue.objectListType, value);	
 	}
-	public PropertyObjectListValue(List<Map<String, ?>> value, Map<String,String> unit) {
+	
+	public PropertyObjectListValue(List<Map<String, Object>> value, Map<String,String> unit) {
 		super(PropertyValue.objectListType, value);
 		this.unit = unit;
 	}
-	
-	public Map<String,String> unit;
+
 	@Override
 	public String toString() {
 		return "PropertyObjectListValue [value=" + value + ", unit=" + unit + ", class="+value.getClass().getName()+"]";

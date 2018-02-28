@@ -25,6 +25,7 @@ import controllers.DocumentController;
 // import controllers.sra.submissions.api.SubmissionsSearchForm;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.mongo.DBQueryBuilder;
 import fr.cea.ig.play.NGLContext;
 import validation.ContextValidation;
 import models.laboratory.common.instance.TraceInformation;
@@ -62,12 +63,12 @@ public class Configurations extends DocumentController<Configuration> {
 		// this.configWorkflows     = configWorkflows;
 	}
 
-	
 	public Result save() {
 		Form<Configuration> filledForm = getFilledForm(configurationForm, Configuration.class);
 		Configuration userConfiguration = filledForm.get();
 		
-		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm);
 		contextValidation.setCreationMode();	
 		if (userConfiguration._id == null) {
 			userConfiguration.traceInformation = new TraceInformation(); 
@@ -82,7 +83,8 @@ public class Configurations extends DocumentController<Configuration> {
 				// return badRequest(filledForm.errors-AsJson());
 				return badRequest(errorsAsJson(contextValidation.getErrors()));
 			}
-			System.out.println (" !!!!!!!!!!! userConf.code = " + userConfiguration.code);
+//			System.out.println (" !!!!!!!!!!! userConf.code = " + userConfiguration.code);
+			logger.debug(" !!!!!!!!!!! userConf.code = " + userConfiguration.code);
 			userConfiguration.validate(contextValidation);
 			// if(contextValidation.errors.size()==0) {
 			if (!contextValidation.hasErrors()) {
@@ -92,13 +94,14 @@ public class Configurations extends DocumentController<Configuration> {
 				return badRequest(errorsAsJson(contextValidation.getErrors()));
 			}
 		} else {
-			filledForm.reject("configuration with id "+userConfiguration._id ," already exist");
-			return badRequest(filledForm.errorsAsJson( )); // legit, at least does seem
+//			filledForm.reject("configuration with id "+userConfiguration._id ," already exist");
+//			return badRequest(filledForm.errorsAsJson( )); // legit, at least does seem
+			contextValidation.addError("configuration with id "+userConfiguration._id ," already exist");
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
 		}
 		return ok(Json.toJson(userConfiguration.code));
 	}
-	
-	
+		
 	// methode list appelee avec url suivante :
 	//localhost:9000/api/sra/configurations?datatable=true&paginationMode=local&projCode=BCZ
 	// url construite dans services.js 
@@ -112,20 +115,16 @@ public class Configurations extends DocumentController<Configuration> {
 		Query query = getQuery(configurationsSearchForm);
 		MongoDBResult<Configuration> results = mongoDBFinder(configurationsSearchForm, query);				
 		List<Configuration> configurationsList = results.toList();
-		if(configurationsSearchForm.datatable){
+		if (configurationsSearchForm.datatable) {
 			return ok(Json.toJson(new DatatableResponse<Configuration>(configurationsList, configurationsList.size())));
-		}else{
+		} else {
 			return ok(Json.toJson(configurationsList));
 		}
 	}
 
-	
-
-	
 	private Query getQuery(ConfigurationsSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
-		Query query = null;
-		
+
 		if (CollectionUtils.isNotEmpty(form.projCodes)) { //
 			queries.add(DBQuery.in("projectCodes", form.projCodes)); // doit pas marcher car pour state.code
 			// C'est une valeur qui peut prendre une valeur autorisee dans le formulaire. Ici on veut que 
@@ -144,22 +143,19 @@ public class Configurations extends DocumentController<Configuration> {
 			queries.add(DBQuery.in("code", form.codes));
 		}
 		
-		if(CollectionUtils.isNotEmpty(form.codes)){
+		if (CollectionUtils.isNotEmpty(form.codes)) {
 			queries.add(DBQuery.in("code", form.codes));
-		}else if(StringUtils.isNotBlank(form.codeRegex)){
+		} else if(StringUtils.isNotBlank(form.codeRegex)) {
 			queries.add(DBQuery.regex("code", Pattern.compile(form.codeRegex)));
 		}
 		
-		if(queries.size() > 0){
-			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
-		}
-		return query;
+//		Query query = null;
+//		if (queries.size() > 0)
+//			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
+//		return query;
+		return DBQueryBuilder.query(DBQueryBuilder.and(queries));
 	}
-	
-
-	
-	
-	
+		
 	private Configuration getConfiguration(String code) {
 		Configuration configuration = MongoDBDAO.findByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, code);
 		return configuration;
@@ -169,8 +165,8 @@ public class Configurations extends DocumentController<Configuration> {
 		//Get Submission from DB 
 		Configuration configuration = getConfiguration(code);
 		Form<Configuration> filledForm = getFilledForm(configurationForm, Configuration.class);
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
-
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 		if (configuration == null) {
 			//return badRequest("Configuration with code "+code+" not exist");
 			ctxVal.addErrors("configuration ", " not exist");
@@ -187,11 +183,11 @@ public class Configurations extends DocumentController<Configuration> {
 				logger.info("Update configuration state " + configurationInput.state.code);
 				MongoDBDAO.update(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, configurationInput);
 				return ok(Json.toJson(configurationInput));
-			}else {
+			} else {
 				//return badRequest(filledForm.errors-AsJson());
 				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}
-		}else{
+		} else {
 			//return badRequest("configuration code are not the same");
 			ctxVal.addErrors("configuration " + code, "configuration code  " + code + " and configurationInput.code "+ configurationInput.code + "are not the same");
 			// return badRequest(filledForm.errors-AsJson());

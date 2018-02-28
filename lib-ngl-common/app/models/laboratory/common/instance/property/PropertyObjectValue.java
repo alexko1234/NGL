@@ -14,38 +14,48 @@ import validation.utils.ValidationHelper;
  * used to stock a complex object
  * an object is stock in Map with key = property and value = value of property
  */
-public class PropertyObjectValue extends PropertyValue<Map<String,?>>{
+//public class PropertyObjectValue extends PropertyValue<Map<String,?>> {
+public class PropertyObjectValue extends PropertyValue<Map<String,Object>> {
+	
+	public Map<String,String> unit;
 	
 	public PropertyObjectValue() {
 		super(PropertyValue.objectType);		
 	}
 	
-	public PropertyObjectValue(Map<String, ?> value) {
+//	public PropertyObjectValue(Map<String, ?> value) {
+//		super(PropertyValue.objectType, value);		
+//	}
+
+//	public PropertyObjectValue(Map<String, ?> value, Map<String,String> unit) {
+//		super(PropertyValue.objectType, value);
+//		this.unit = unit;
+//	}
+	
+	public PropertyObjectValue(Map<String, Object> value) {
 		super(PropertyValue.objectType, value);		
 	}
 	
-	
-	public PropertyObjectValue(Map<String, ?> value, Map<String,String> unit) {
+	public PropertyObjectValue(Map<String, Object> value, Map<String,String> unit) {
 		super(PropertyValue.objectType, value);
 		this.unit = unit;
 	}
 	
-	public Map<String,String> unit;
 	@Override
 	public String toString() {
 		return "PropertyObjectValue [value=" + value + ", unit=" + unit + ", class="+value.getClass().getName()+"]";
 	}
 	
-	@SuppressWarnings("unchecked")
+	// @SuppressWarnings("unchecked")
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		super.validate(contextValidation);
 		Iterator<PropertyDefinition> propertyDefinitions = ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).iterator();
-		while(propertyDefinitions.hasNext()){
+		while (propertyDefinitions.hasNext()) {
 			PropertyDefinition propertyDefinition = propertyDefinitions.next();
-			if(ValidationHelper.checkIfActive(contextValidation, propertyDefinition)){
-				if(ValidationHelper.required(contextValidation, this, propertyDefinition)){				
-					if(ValidationHelper.convertPropertyValue(contextValidation, this, propertyDefinition)){
+			if (ValidationHelper.checkIfActive(contextValidation, propertyDefinition)) {
+				if (ValidationHelper.required(contextValidation, this, propertyDefinition)) {				
+					if (ValidationHelper.convertPropertyValue(contextValidation, this, propertyDefinition)) {
 						ValidationHelper.checkIfExistInTheList(contextValidation, this, propertyDefinition);
 						//TODO FORMAT AND UNIT
 					}
