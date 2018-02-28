@@ -13,6 +13,12 @@ import validation.ContextValidation;
 
 public abstract class AbstractInput extends ExcelHelper {
 	
+	protected final play.Logger.ALogger logger;
+	
+	public AbstractInput() {
+		logger = play.Logger.of(getClass());
+	}
+	
 	public abstract Experiment importFile(Experiment experiment, PropertyFileValue pfv, ContextValidation contextValidation) throws Exception;
 	
 	protected PropertySingleValue getPSV(InputContainerUsed icu, String code) {
