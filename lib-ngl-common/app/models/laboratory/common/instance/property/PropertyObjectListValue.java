@@ -41,7 +41,7 @@ public class PropertyObjectListValue extends PropertyValue<List<Map<String, Obje
 		super(PropertyValue.objectListType, value);
 		this.unit = unit;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "PropertyObjectListValue [value=" + value + ", unit=" + unit + ", class="+value.getClass().getName()+"]";
