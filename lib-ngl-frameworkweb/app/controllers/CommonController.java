@@ -143,8 +143,7 @@ public abstract class CommonController extends Controller {
 			Map<String, String[]> queryString = request().queryString();
 			BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(clazz.newInstance());
 			wrapper.setAutoGrowNestedPaths(true);
-			for(String key :queryString.keySet()){
-				
+			for (String key : queryString.keySet()) {
 				try {
 					if (isNotEmpty(queryString.get(key))) {
 						Object value = queryString.get(key);
@@ -194,49 +193,42 @@ public abstract class CommonController extends Controller {
 	 */
 	protected static <T extends DBObject> MongoDBResult<T> mongoDBFinder(String collection, ListForm form, Class<T> type, DBQuery.Query query){
 		MongoDBResult<T> results = null;
-		if(form.datatable){
-			results = MongoDBDAO.find(collection, type, query) 
-					.sort(form.orderBy, Sort.valueOf(form.orderSense));
-			if(form.isServerPagination()){
+		if (form.datatable) {
+			results = MongoDBDAO.find(collection, type, query).sort(form.orderBy, Sort.valueOf(form.orderSense));
+			if (form.isServerPagination()) {
 				results.page(form.pageNumber,form.numberRecordsPerPage); 
-			}
-					
-		}else{
+			}	
+		} else {
 			results = MongoDBDAO.find(collection, type, query) 
 					.sort(form.orderBy, Sort.valueOf(form.orderSense));
-			if(form.limit != -1){
+			if (form.limit != -1) {
 				results.limit(form.limit);
 			}
 		}
-		
 		return results;
 	}
 
 	protected static <T extends DBObject> MongoDBResult<T> mongoDBFinder(String collection, ListForm form, Class<T> type, DBQuery.Query query, BasicDBObject keys){
 		MongoDBResult<T> results = null;
-		if(form.datatable){
-			results = MongoDBDAO.find(collection, type, query, keys) 
-					.sort(form.orderBy, Sort.valueOf(form.orderSense));
-			if(form.isServerPagination()){
+		if (form.datatable) {
+			results = MongoDBDAO.find(collection, type, query, keys).sort(form.orderBy, Sort.valueOf(form.orderSense));
+			if (form.isServerPagination()) {
 				results.page(form.pageNumber,form.numberRecordsPerPage); 
 			}
-		}else{
-			results = MongoDBDAO.find(collection, type, query, keys) 
-					.sort(form.orderBy, Sort.valueOf(form.orderSense));
-			if(form.limit != -1){
+		} else {
+			results = MongoDBDAO.find(collection, type, query, keys).sort(form.orderBy, Sort.valueOf(form.orderSense));
+			if (form.limit != -1) {
 				results.limit(form.limit);
 			}
 		}
-		
-		
 		return results;
 	}
 	
 	protected static BasicDBObject getKeys(DatatableForm form) {
 		BasicDBObject keys = new BasicDBObject();
-		if(null != form.includes && form.includes.size() > 0 && !form.includes.contains("*")){
+		if (form.includes != null && form.includes.size() > 0 && !form.includes.contains("*")) {
 			keys.putAll((BSONObject)getIncludeKeys(form.includes.toArray(new String[form.includes.size()])));			
-		}else if(null != form.excludes && form.excludes.size() > 0){
+		} else if(null != form.excludes && form.excludes.size() > 0) {
 			keys.putAll((BSONObject)getExcludeKeys(form.excludes.toArray(new String[form.excludes.size()])));					
 		}
 		return keys;
@@ -245,7 +237,7 @@ public abstract class CommonController extends Controller {
 	protected static BasicDBObject getIncludeKeys(String[] keys) {
 		Arrays.sort(keys, Collections.reverseOrder());
 		BasicDBObject values = new BasicDBObject();
-		for(String key : keys){
+		for (String key : keys) {
 		    values.put(key, 1);
 		}
 		return values;
@@ -254,7 +246,7 @@ public abstract class CommonController extends Controller {
 	protected static BasicDBObject getExcludeKeys(String[] keys) {
 		Arrays.sort(keys, Collections.reverseOrder());
 		BasicDBObject values = new BasicDBObject();
-		for(String key : keys){
+		for (String key : keys) {
 		    values.put(key, 0);
 		}
 		return values;
@@ -283,14 +275,13 @@ public abstract class CommonController extends Controller {
 	protected static Builder getBuilder(Object value, List<String> fields, Class<?> clazz, String prefix) {
 		Builder builder = new Builder();
 		try {
-			for(String field: fields){
+			for (String field: fields) {
 				String fieldName = (null != prefix)?prefix+"."+field:field;
 				builder.set(fieldName, clazz.getField(field).get(value));
 			}
-		}catch(Exception e){
+		} catch(Exception e) {
 			throw new RuntimeException(e);
 		}
-		
 		return builder;
 	}
 	
@@ -300,13 +291,10 @@ public abstract class CommonController extends Controller {
 	 * @param fields
 	 * @param authorizedUpdateFields
 	 */
-	protected static void validateAuthorizedUpdateFields(ContextValidation ctxVal, List<String> fields,
-			List<String> authorizedUpdateFields) {
-		for(String field: fields){
-			if(!authorizedUpdateFields.contains(field)){
-				ctxVal.addErrors("fields", "error.valuenotauthorized", field);
-			}
-		}				
+	protected static void validateAuthorizedUpdateFields(ContextValidation ctxVal, List<String> fields,	List<String> authorizedUpdateFields) {
+		for(String field: fields)
+			if (!authorizedUpdateFields.contains(field))
+				ctxVal.addErrors("fields", "error.valuenotauthorized", field);		
 	}
 	
 	/*
@@ -315,12 +303,17 @@ public abstract class CommonController extends Controller {
 	 * @param fields
 	 * @param filledForm
 	 */
+//	protected static void validateIfFieldsArePresentInForm(ContextValidation ctxVal, List<String> fields, Form<?> filledForm) {
+//		for(String field: fields) {
+//			if (filledForm.field(field).value() == null) {
+//				ctxVal.addErrors(field, "error.notdefined");
+//			}
+//		}	
+//	}
 	protected static void validateIfFieldsArePresentInForm(ContextValidation ctxVal, List<String> fields, Form<?> filledForm) {
-		for(String field: fields) {
-			if (filledForm.field(field).value() == null) {
+		for (String field : fields)
+			if (filledForm.field(field).getValue() == null) 
 				ctxVal.addErrors(field, "error.notdefined");
-			}
-		}	
 	}
 	
 	protected static Calendar getToDate(Date date) {

@@ -36,16 +36,13 @@ public class Output extends AbstractOutput {
 				&& "96-well-plate".equals(experiment.instrument.outContainerSupportCategoryCode)) {
 			// feuille de route specifique pour les pools de plaques -> plaque
 			content = OutputHelper.format(normalisation_x_to_plate.render(getPlateSampleSheetLines(experiment, "plate")).body());
-
 		} else if ("normalisation-post-pcr".equals(type) && "96-well-plate".equals(experiment.instrument.inContainerSupportCategoryCode)
 				&& "96-well-plate".equals(experiment.instrument.outContainerSupportCategoryCode)) {
 			// feuille de route specifique pour les pools de plaques -> plaque
 			content = OutputHelper.format(normalisation_post_pcr_x_to_plate.render(getPlateSampleSheetLines(experiment, "plate")).body());
-
 		} else if ("tubes-to-plate".equals(type)) {
 			// feuille de route specifique pour les pools de tubes -> plaque
 			content = OutputHelper.format(x_to_plate.render(getPlateSampleSheetLines(experiment, "tube")).body());
-
 		} else if ("plates-to-plate".equals(type)) {
 			content = OutputHelper.format(x_to_plate.render(getPlateSampleSheetLines(experiment, "plate")).body());
 		} else {
@@ -71,7 +68,7 @@ public class Output extends AbstractOutput {
 
 	private PlateSampleSheetLine getPlateSampleSheetLine(AtomicTransfertMethod atm, String inputContainerCategory,Experiment experiment) {
 		Map<String, String> sourceMapping = getSourceMapping(experiment);
-		Map<String, String> destPositionMapping = getDestMapping(experiment);
+//		Map<String, String> destPositionMapping = getDestMapping(experiment);
 
 		InputContainerUsed icu = atm.inputContainerUseds.get(0);
 		OutputContainerUsed ocu = atm.outputContainerUseds.get(0);
@@ -85,7 +82,7 @@ public class Output extends AbstractOutput {
 		} else if(ocu.volume != null && ocu.volume.value != null) {
 			pssl.inputVolume = (Double)ocu.volume.value;
 		}
-		if(icu.experimentProperties!=null && icu.experimentProperties.containsKey("bufferVolume")) {
+		if (icu.experimentProperties != null && icu.experimentProperties.containsKey("bufferVolume")) {
 			pssl.bufferVolume = (Double)icu.experimentProperties.get("bufferVolume").value;
 		}
 		pssl.dwell = OutputHelper.getNumberPositionInPlateByLine(ocu.locationOnContainerSupport.line, ocu.locationOnContainerSupport.column);
@@ -101,23 +98,23 @@ public class Output extends AbstractOutput {
 		return pssl;
 	}
 
-	private List<String> grp1 = Arrays.asList("A","B","C","D"); 
-	private List<String> grp2 = Arrays.asList("E","F","G","H"); 
+	// TODO: define possibly as Set<String>
+	private static List<String> grp1 = Arrays.asList("A","B","C","D"); 
+	private static List<String> grp2 = Arrays.asList("E","F","G","H"); 
 
 	private String getSourceADN(String line, String column) {
 		String value = null;
 		Integer col = Integer.valueOf(column);
 
-		if(grp1.contains(line) && col < 7){
+		if (grp1.contains(line) && col < 7) {
 			value = "A1-D6";
-		}else if(grp1.contains(line) && col >= 7){
+		} else if(grp1.contains(line) && col >= 7) {
 			value = "A7-D12";
-		}else if(grp2.contains(line) && col < 7){
+		} else if(grp2.contains(line) && col < 7) {
 			value = "E1-H6";
-		}else if(grp2.contains(line) && col >= 7){
+		} else if(grp2.contains(line) && col >= 7) {
 			value = "E7-H12";
 		}
-
 		return value;
 	}
 
@@ -150,14 +147,15 @@ public class Output extends AbstractOutput {
 		return sources;
 	}
 
-	private Map<String, String> getDestMapping(Experiment experiment) {
-		Map<String, String> dest = new HashMap<String, String>();
-
-		String[] outputContainerSupportCodes = experiment.outputContainerSupportCodes.toArray(new String[0]);
-		Arrays.sort(outputContainerSupportCodes);
-		for(int i = 0; i < outputContainerSupportCodes.length ; i++){
-			dest.put(outputContainerSupportCodes[i], (i+1)+"");
-		}
-		return dest;
-	}
+//	private Map<String, String> getDestMapping(Experiment experiment) {
+//		Map<String, String> dest = new HashMap<String, String>();
+//
+//		String[] outputContainerSupportCodes = experiment.outputContainerSupportCodes.toArray(new String[0]);
+//		Arrays.sort(outputContainerSupportCodes);
+//		for(int i = 0; i < outputContainerSupportCodes.length ; i++){
+//			dest.put(outputContainerSupportCodes[i], (i+1)+"");
+//		}
+//		return dest;
+//	}
+	
 }

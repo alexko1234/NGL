@@ -262,7 +262,8 @@ public class ContainerValidationHelper extends CommonValidationHelper {
 		validateRules(validationfacts, contextValidation);
 	}
 	
-	@Deprecated
+	// TODO: suggest fix
+	// @Deprecated
 	public static void validateProcessTypeCode(String processTypeCode, ContextValidation contextValidation) {
 		BusinessValidationHelper.validateExistDescriptionCode(contextValidation, processTypeCode, "processTypeCode", ProcessType.find);
 		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
