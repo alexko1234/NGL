@@ -98,30 +98,35 @@ public class SampleMapping extends Mapping<Sample> {
 			sample.traceInformation = new TraceInformation(contextValidation.getUser());
 		}
 		//update categoryCode by default.
-		sample.categoryCode = SampleType.find.findByCode(sample.typeCode).category.code;
-		
-		if(sample.life != null && sample.life.from != null && sample.life.from.sampleCode != null){
-			Sample parentSample = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code",sample.life.from.sampleCode).in("projectCodes", sample.life.from.projectCode));
-			if(null != parentSample){
-				sample.life.from.sampleTypeCode=parentSample.typeCode;
-				if(null != parentSample.life && null != parentSample.life.path){
-					sample.life.path=parentSample.life.path+","+parentSample.code;
+		//FDS 28/02/2012 catch the case when sample.typeCode is not valid
+		if (null==SampleType.find.findByCode(sample.typeCode) ) {
+			contextValidation.addErrors("sample.typeCode", ValidationConstants.ERROR_NOTEXISTS_MSG, sample.typeCode);
+		} else {
+			sample.categoryCode = SampleType.find.findByCode(sample.typeCode).category.code;
+			
+			if(sample.life != null && sample.life.from != null && sample.life.from.sampleCode != null){
+				Sample parentSample = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code",sample.life.from.sampleCode).in("projectCodes", sample.life.from.projectCode));
+				if(null != parentSample){
+					sample.life.from.sampleTypeCode=parentSample.typeCode;
+					if(null != parentSample.life && null != parentSample.life.path){
+						sample.life.path=parentSample.life.path+","+parentSample.code;
+					}else{
+						sample.life.path=","+parentSample.code;
+					}
+					//force this information 
+					sample.properties.putAll(parentSample.properties);	
+					if(!parentSample.taxonCode.equals(sample.taxonCode)){
+						contextValidation.addErrors("taxonCode","error.receptionfile.taxonCode.diff", sample.taxonCode, parentSample.taxonCode);
+					}
+					if(!parentSample.referenceCollab.equals(sample.referenceCollab)){
+						contextValidation.addErrors("referenceCollab","error.receptionfile.referenceCollab.diff", sample.referenceCollab, parentSample.referenceCollab);
+					}				
 				}else{
-					sample.life.path=","+parentSample.code;
+					contextValidation.addErrors("sample", ValidationConstants.ERROR_NOTEXISTS_MSG, sample.life.from.projectCode+" + "+sample.life.from.sampleCode);
 				}
-				//force this information 
-				sample.properties.putAll(parentSample.properties);	
-				if(!parentSample.taxonCode.equals(sample.taxonCode)){
-					contextValidation.addErrors("taxonCode","error.receptionfile.taxonCode.diff", sample.taxonCode, parentSample.taxonCode);
-				}
-				if(!parentSample.referenceCollab.equals(sample.referenceCollab)){
-					contextValidation.addErrors("referenceCollab","error.receptionfile.referenceCollab.diff", sample.referenceCollab, parentSample.referenceCollab);
-				}				
 			}else{
-				contextValidation.addErrors("sample", ValidationConstants.ERROR_NOTEXISTS_MSG, sample.life.from.projectCode+" + "+sample.life.from.sampleCode);
+				sample.life = null;
 			}
-		}else{
-			sample.life = null;
 		}
 		
 		//Call rules to add properties to sample
