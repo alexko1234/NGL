@@ -123,6 +123,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
+						 "watch":true,
 			        	 "type":"text",
 			        	 "defaultValues":"nM",
 			        	 "position":51,
@@ -560,7 +561,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			console.log("refreshMaxConcfunction result "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
 				maxConc = {};
-				maxConc.unit = 'ng/µl';
+				maxConc.unit = compute.inputConcUnit;
 				if(result > compute.inputConc){
 					maxConc.value =  compute.inputConc;						
 				}else{
