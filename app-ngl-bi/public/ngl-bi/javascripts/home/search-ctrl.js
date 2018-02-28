@@ -23,6 +23,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable' , functio
 			        	   	"order":true
 						},
 						{	"property":"typeCode",
+							"filter":"codes:'type'",
 							"header":Messages("runs.typeCode"),
 							"type":"text",
 							"order":true
