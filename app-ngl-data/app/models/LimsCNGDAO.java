@@ -1060,7 +1060,10 @@ public class LimsCNGDAO {
 		for (ContainerSupport result : results) {
 			if (!mapCodeSupportSequencing.containsKey(result.code)) {
 				// mapCodeSupportSequencing.put(result.code, result.properties.get("sequencingProgramType"));
-				mapCodeSupportSequencing.put(result.code, (PropertyValue<String>)result.properties.get("sequencingProgramType"));
+//				mapCodeSupportSequencing.put(result.code, (PropertyValue<String>)result.properties.get("sequencingProgramType"));
+				@SuppressWarnings("unchecked") // no way around this cast
+				PropertyValue<String> pvs = (PropertyValue<String>)result.properties.get("sequencingProgramType");
+				mapCodeSupportSequencing.put(result.code, pvs);
 			}
 		}	
 		return mapCodeSupportSequencing;
@@ -1111,17 +1114,15 @@ public class LimsCNGDAO {
 				,new RowMapper<Index>() {
 //					@SuppressWarnings("rawtypes")
 					public Index mapRow(ResultSet rs, int rowNum) throws SQLException {
-						Index index=new IlluminaIndex();
-
-						index.code=rs.getString("nglbi_code");
-						index.shortName=rs.getString("short_name");
-						index.name=rs.getString("cng_name");
-						
-						index.categoryCode=rs.getString("code_category");
-						index.sequence=rs.getString("sequence");
-						index.traceInformation=new TraceInformation();
-						InstanceHelpers.updateTraceInformation(index.traceInformation, "ngl-data");
-						
+						Index index = new IlluminaIndex();
+						index.code         = rs.getString("nglbi_code");
+						index.shortName    = rs.getString("short_name");
+						index.name         = rs.getString("cng_name");
+						index.categoryCode = rs.getString("code_category");
+						index.sequence     = rs.getString("sequence");
+//						index.traceInformation=new TraceInformation();
+//						InstanceHelpers.updateTraceInformation(index.traceInformation, "ngl-data");
+						index.setTraceCreationStamp(contextError, "ngl-data"); // Assume creation from method name
 						logger.info("index code: {}", index.code);
 						return index;
 					}
