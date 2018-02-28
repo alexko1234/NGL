@@ -189,7 +189,8 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 						createInstrument("QuBit3", "QuBit3 ADN", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
 						createInstrument("QuBit4", "QuBit4 AMPLI", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
 						createInstrument("QuBit5", "QuBit5 CDNA", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
-						createInstrument("QuBit6", "QuBit6 NANOPORE", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))						
+						createInstrument("QuBit6", "QuBit6 NANOPORE", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
+						createInstrument("QuBit7", "QuBit7 HPM (LBiomeG)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))
 						), 
 				getContainerSupportCategories(new String[]{"tube"}),null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); //ok
@@ -825,7 +826,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	
 	private static List<PropertyDefinition> getQuBitFluoroskanProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Gamme", "gamme", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null,  newValues("BR","HS","BR et HS","RNA HS","HS et ssDNA"), 
+		l.add(newPropertiesDefinition("Gamme", "gamme", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null,  newValues("BR","HS","BR et HS","RNA HS","HS et ssDNA", "DeNovix Ultra HS"), 
 				"single", 10, true, null,null));
 		return l;
 	}

@@ -104,7 +104,7 @@ angular.module('home').controller('WGADebranchingCtrl',['$scope', '$parse', 'atm
 			        	 "property":"outputContainerUsed.volume.value",
 			        	 "order":true,
 						 "edit":true,
-						 "required":true,
+						 "required":"isRequired()",
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":51,
