@@ -430,7 +430,7 @@ class Containers2 extends DocumentController<Container> {
 				samplePathRegex.add(Pattern.compile(regexPath));
 			});
 			
-			if(sampleCodes.size() > 0){
+			if(CollectionUtils.isNotEmpty(sampleCodes)){
 				//2 search all sample childs from previous sample
 				List<Query> l = samplePathRegex.stream().map(r -> DBQuery.regex("life.path", r)).collect(Collectors.toList());
 				MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, 
@@ -441,14 +441,16 @@ class Containers2 extends DocumentController<Container> {
 					if(CollectionUtils.isNotEmpty(containersSearch.sampleCodes)){
 						queryElts.add(DBQuery.in("sampleCodes", containersSearch.sampleCodes));
 					}else{
-						queryElts.add(DBQuery.is("sampleCodes", "-1")); // none results
+						queryElts.add(DBQuery.in("sampleCodes", "-1")); // none results
 					}
 					
 				}else if(CollectionUtils.isNotEmpty(sampleCodes)){
 					queryElts.add(DBQuery.in("sampleCodes", sampleCodes));
 				}else{
-					queryElts.add(DBQuery.is("sampleCodes", "-1")); // none results
+					queryElts.add(DBQuery.in("sampleCodes", "-1")); // none results
 				}
+			}else{
+				queryElts.add(DBQuery.in("sampleCodes", "-1")); // none results
 			}
 		}else {
 			if(CollectionUtils.isNotEmpty(containersSearch.projectCodes)){
