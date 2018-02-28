@@ -570,11 +570,14 @@ public class ResolutionService {
 		ArrayList<String> al = new ArrayList<String>(); 
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class,r.code);
-		List<String> typeCodes = MongoDBDAO.getCollection(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class).distinct("typeCodes");
-		
+		// JacksonDBCollection.distinct return type is a raw List
+		@SuppressWarnings("unchecked")
+		List<String> typeCodes = 
+				MongoDBDAO.getCollection(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class)
+				          .distinct("typeCodes");
 		try {
-			List<ExperimentType> expTypes=ExperimentType.find.findAll();
-			for (ExperimentType expType:expTypes) {
+			List<ExperimentType> expTypes = ExperimentType.find.findAll();
+			for (ExperimentType expType : expTypes) {
 				if (typeCodes == null || !typeCodes.contains(expType.code)) {
 					logger.debug("Add experimentType default resolution "+ expType.code);
 					al.add(expType.code);

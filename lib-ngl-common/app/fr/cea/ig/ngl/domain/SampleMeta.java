@@ -102,7 +102,7 @@ public class SampleMeta {
 	public static final Def<Sample,Boolean> metagenomic =
 			new Def<>((q,t) -> { q.set("properties.metagenomic",true); },
 					  (s,c) -> { return; },
-					  s     -> { PropertyValue<?> v = s.properties.get("metagenomic");
+					  s     -> { // PropertyValue<?> v = s.properties.get("metagenomic");
 					             // extract and default the value.
 					             return null;
 					           });
