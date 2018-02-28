@@ -198,7 +198,7 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 	   var categoryCodes = $scope.$eval("getBasket().get()|getArray:'support.categoryCode'|unique",mainService);
 	   
 	   //  26/02/2018  experience ne peut marcher qu'avec 1 plaque en entree!!!!!
-	   if ( ($scope.inputSupportCodes.length > 1) || ( categoryCodes[0] !== "96-wells-plate")){
+	   if ( ($scope.inputSupportCodes.length > 1) || ( categoryCodes[0] !== "96-well-plate")){
 		   $scope.messages.clear();
 		   $scope.messages.setError(Messages("experiments.input.error.only-1-plate"));
 
