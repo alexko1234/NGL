@@ -64,6 +64,7 @@ object ApplicationBuild extends Build {
   val fest        = "org.easytesting"      % "fest-assert"        % "1.4" % "test"
   val jtds        = "net.sourceforge.jtds" % "jtds"               % "1.3.1"
 
+  /*
 	override def settings = super.settings ++ Seq(
 		EclipseKeys.skipParents in ThisBuild := false,
     // Compile the project before generating Eclipse files,
@@ -74,7 +75,12 @@ object ApplicationBuild extends Build {
     // Use .class files instead of generated .scala files for views and routes
     // EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.ManagedClasses, EclipseCreateSrc.ManagedResources)	
   )
+*/
+  override def settings = super.settings ++ Seq(
+    EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.ManagedClasses,EclipseCreateSrc.ManagedResources)   
 
+  )
+  
 	object BuildSettings {
 
 		val buildOrganization = "fr.cea.ig"
