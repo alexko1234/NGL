@@ -9,7 +9,6 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 							"order":true,
 							"hide":true,
 							"type":"text",
-							 "mergeCells" : true,
 							"position":2,
 							"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 						 "extraHeaders":{0:Messages("experiments.inputs")}
