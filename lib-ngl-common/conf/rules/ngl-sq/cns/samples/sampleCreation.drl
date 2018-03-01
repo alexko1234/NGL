@@ -28,10 +28,7 @@ rule "Add property fishAnatomy when sample is imported or updated "
 	salience 900
 	no-loop
     when
-        $sample : Sample($properties:properties, $properties!=null, typeCode=="fish", $pvTaraProtocol:properties.get("taraProtocol")!=null)
-        
-        not PropertyValue() from $properties.get("fishAnatomy")
-        
+        $sample : Sample($properties:properties, $properties!=null, typeCode=="fish", $pvTaraProtocol:properties.get("taraProtocol")!=null)        
     then
     	Logger.debug("Add property fishAnatomy to : "+$sample.code);  
        	String fishAnatomy = $pvTaraProtocol.value.toString();
