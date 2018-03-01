@@ -119,7 +119,8 @@ public class Input extends AbstractInput {
 			if(null != dilFactor){
 				PropertySingleValue finalConcentration = getPSV(icu,codePropertiesConcFinal);
 				finalConcentration.unit = concentrationDil.unit;
-				finalConcentration.value = new BigDecimal(dilFactor * (Double)concentrationDil.value).setScale(2, RoundingMode.HALF_UP);	
+				//finalConcentration.value = new BigDecimal(dilFactor * (Double)concentrationDil.value).setScale(2, RoundingMode.HALF_UP);	
+				finalConcentration.value = new BigDecimal((dilFactor * (Double)concentrationDil.value));	
 			}else{
 				Logger.warn("dilfactor is null after convertion"+dilutionFactor.value);
 			}

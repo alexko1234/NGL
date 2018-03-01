@@ -338,19 +338,19 @@ public class QualityControl extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Dosage HS 1 (sur dilution)", "concentrationDilHS1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 17, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Dosage HS 1 (réel)", "concentrationHS1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 18, false, null,null));
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 18, false, null,"3"));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Facteur de dilution HS2 (1/X)","dilutionFactorHS2", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, null,"single", 19, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Dosage HS 2 (sur dilution)", "concentrationDilHS2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 20, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Dosage HS 2 (réel)", "concentrationHS2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 21, false, null,null));
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 21, false, null,"3"));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Méthode de calcul de la concentration finale", "calculationMethod", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, "F", 
 				DescriptionFactory.newValues("Moyenne des 2 HS","BR si > 25 et HS1 si BR <= 25","BR 1 seul","HS 1 seul","HS 2 seul","Non quantifiable"),null,null,null,"single", 22, true, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Concentration finale", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 23, false, null,null));
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 23, false, null,"3"));
 		propertyDefinitions.add(newPropertiesDefinition("Volume final", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode("µL"),"single", 24, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Quantité finale", "quantity1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
@@ -383,19 +383,19 @@ public class QualityControl extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Dosage HS 1 (sur dilution)", "concentrationDilHS1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 17, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Dosage HS 1 (réel)", "concentrationHS1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 18, false, null,null));
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 18, false, null,"3"));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Facteur de dilution HS2 (1/X)","dilutionFactorHS2", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, null,"single", 19, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Dosage HS 2 (sur dilution)", "concentrationDilHS2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 20, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Dosage HS 2 (réel)", "concentrationHS2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 21, false, null,null));
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 21, false, null,"3"));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Méthode de calcul de la concentration finale", "calculationMethod", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, "F", 
 				DescriptionFactory.newValues("Moyenne des 2 HS","BR si > 25 et HS1 si BR <= 25","BR 1 seul","HS 1 seul","HS 2 seul","Non quantifiable"),null,null,null,"single", 22, true, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Concentration finale", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 23, false, null,null));
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 23, false, null,"3"));
 		propertyDefinitions.add(newPropertiesDefinition("Volume final", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode("µL"),"single", 24, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Quantité finale", "quantity1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
