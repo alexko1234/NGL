@@ -225,7 +225,7 @@ public class Bionano extends AbstractDeclaration{
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"),"single",21, true, null, "2"));
 		
 		propertyDefinitions.add(newPropertiesDefinition("CV","variationCoefficient", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, true, null, 
-				null, null, null, null,"single", 22, true, null, null));
+				null, null, null, null,"single", 22, true, null, "2"));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Concentration 3", "measuredConc3", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"),"single",23, true, null, "2"));
@@ -237,11 +237,11 @@ public class Bionano extends AbstractDeclaration{
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"),"single",25, true, null, "2"));
 
 		propertyDefinitions.add(newPropertiesDefinition("CV 2","variationCoefficient2", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, false, null, 
-				null, null, null, null,"single", 26, true, null, null));
+				null, null, null, null,"single", 26, true, null, "2"));
 
-		propertyDefinitions.add(newPropertiesDefinition("Volume DL","dlVolume", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, true, null,
+		propertyDefinitions.add(newPropertiesDefinition("Volume DL","dlVolume", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, true, "F",
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",27, true, null, "2"));
-		propertyDefinitions.add(newPropertiesDefinition("Volume stain","stainVolume", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, true, null,
+		propertyDefinitions.add(newPropertiesDefinition("Volume stain","stainVolume", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, true, "F",
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",28, true, null, "2"));
 		
 		
