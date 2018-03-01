@@ -276,7 +276,7 @@ search.tab.addcolumns = Colonnes supplémentaires
 #processes
 processes.title = Processus
 processes.menu = Processus
-processes.menu.new-from-containers = Création avec des containers
+processes.menu.new-from-containers = Création à partir de containers
 processes.menu.new-from-samples = Création avec des échantillons
 processes.menu.assign-to-container = Assigner processus aux containers
 processes.menu.state = Changement d''Etat
