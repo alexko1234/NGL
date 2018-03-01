@@ -141,7 +141,7 @@ angular.module('home').controller('OneToVoidReceptionFluoQuantificationCNSCtrl',
 			var result = $parse("(conc1 * dilution1)")(compute);
 			console.log("result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
-				concentration1 = Math.round(result*10)/10;				
+				concentration1 = result;				
 			}else{
 				concentration1 = undefined;
 			}	
@@ -169,7 +169,7 @@ angular.module('home').controller('OneToVoidReceptionFluoQuantificationCNSCtrl',
 			var result = $parse("(conc1 * dilution1)")(compute);
 			console.log("result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
-				concentration1 = Math.round(result*10)/10;				
+				concentration1 = result;				
 			}else{
 				concentration1 = undefined;
 			}	
@@ -203,7 +203,7 @@ angular.module('home').controller('OneToVoidReceptionFluoQuantificationCNSCtrl',
 					var result = $parse("(inputConcHS1 + inputConcHS2)/2")(compute);
 					console.log("result Moyenne des 2 HS = "+result);
 					if(angular.isNumber(result) && !isNaN(result)){
-						concentration1 = Math.round(result*10)/10;				
+						concentration1 = result;				
 					}else{
 						concentration1 = undefined;
 					}	
