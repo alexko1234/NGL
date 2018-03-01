@@ -58,7 +58,7 @@ public class Receptions extends TPLCommonController {
 				fileService.analyse();
 			} catch(Throwable e) {
 				e.printStackTrace();
-				contextValidation.addErrors("Error", e.getMessage());
+				contextValidation.addErrors("Error", (e.getMessage() != null)?e.getMessage():"null");
 			}
 			if (contextValidation.hasErrors()) {
 				// return badRequest(filledForm.errors-AsJson());
