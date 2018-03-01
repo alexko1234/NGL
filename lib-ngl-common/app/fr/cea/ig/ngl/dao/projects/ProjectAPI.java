@@ -2,6 +2,7 @@ package fr.cea.ig.ngl.dao.projects;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -10,14 +11,14 @@ import org.mongojack.DBQuery.Query;
 
 import com.mongodb.BasicDBObject;
 
-import controllers.projects.api.ProjectsSearchForm;
+import fr.cea.ig.MongoDBResult.Sort;
 import fr.cea.ig.ngl.dao.api.APIException;
-import fr.cea.ig.ngl.dao.api.ValidationException;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.ngl.dao.api.APIValidationException;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.instance.Project;
-import play.data.Form;
+import play.Logger;
+import play.data.validation.ValidationError;
 import validation.ContextValidation;
 
 @Singleton
@@ -38,51 +39,79 @@ public class ProjectAPI {
 		return dao.findByCode(code);
 	}
 	
-	public List<Project> list(ProjectsSearchForm form, Query query, BasicDBObject keys) throws APIException {
-		if (form.datatable) {
-			return datatableFormList(form, query, keys);
-		} else if(form.list) {
-			return listFormList(form, query);
-		} else {
-			return null;
-		}
-	}
-
-	private List<Project> listFormList(ProjectsSearchForm form, Query query) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private List<Project> datatableFormList(ProjectsSearchForm form, Query query, BasicDBObject keys) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Project> list(Query query, String orderBy, Sort orderSense) throws APIException {
+		return dao.mongoDBFinder(query, orderBy, orderSense).toList();
 	}
 	
-	public Project create(Form<Project> form, String currentUser) throws ValidationException {
-		Project projectInput = form.get();
-		ContextValidation ctxVal = new ContextValidation(currentUser, form.errors()); 
-		if (projectInput._id == null) { 
-			projectInput.traceInformation = new TraceInformation();
-			projectInput.traceInformation.creationStamp(ctxVal, currentUser);
+	public List<Project> list(Query query, String orderBy, Sort orderSense, 
+			Integer pageNumber, Integer numberRecordsPerPage) throws APIException {
+		return dao.mongoDBFinderWithPagination(query, orderBy, orderSense, pageNumber, numberRecordsPerPage).toList();
+	}
+	
+	public List<Project> list(Query query, String orderBy, Sort orderSense, BasicDBObject keys) throws APIException {
+		return dao.mongoDBFinder(query, orderBy, orderSense, keys).toList();
+	}
+	
+	public List<Project> list(Query query, String orderBy, Sort orderSense, BasicDBObject keys, 
+			Integer pageNumber, Integer numberRecordsPerPage) throws APIException {
+		return dao.mongoDBFinderWithPagination(query, orderBy, orderSense, pageNumber, numberRecordsPerPage, keys).toList();
+	}
+	
+	public Project create(Project project, String currentUser, Map<String,List<ValidationError>> errors) throws APIValidationException {
+		ContextValidation ctxVal = new ContextValidation(currentUser, errors); 
+		if (project._id == null) { 
+			project.traceInformation = new TraceInformation();
+			project.traceInformation.creationStamp(ctxVal, currentUser);
 			
-			if(null == projectInput.state){
-				projectInput.state = new State();
+			if(null == project.state){
+				project.state = new State();
 			}
-			projectInput.state.code = "N";
-			projectInput.state.user = currentUser;
-			projectInput.state.date = new Date();		
+			project.state.code = "N";
+			project.state.user = currentUser;
+			project.state.date = new Date();		
 			
 		} else {
-			throw new ValidationException("use PUT method to update the project");
+			throw new APIValidationException("use PUT method to update the project");
 		}
 		
 		ctxVal.setCreationMode();
-		projectInput.validate(ctxVal);
+		project.validate(ctxVal);
 		
 		if (!ctxVal.hasErrors()) {
-			return dao.saveObject(projectInput);
+			return dao.saveObject(project);
 		} else {
-			throw new ValidationException("invalid input", ctxVal.getErrors());
+			throw new APIValidationException("invalid input", ctxVal.getErrors());
 		}
+	}
+	
+	public void delete(String code) {
+		this.dao.deleteObject(code);
+	}
+	
+	public Project update(String code, Project input, String currentUser, Map<String,List<ValidationError>> errors) throws APIException, APIValidationException {
+		Project project = this.get(code);
+		if (project == null) {
+			throw new APIException("Project with code " + code + " not exist");
+		}
+		ContextValidation ctxVal = new ContextValidation(currentUser, errors); 
+		if (code.equals(input.code)) {
+			if(input.traceInformation != null){
+				input.traceInformation.modificationStamp(ctxVal, currentUser);
+			}else{
+				Logger.error("traceInformation is null !!");
+			}
+			ctxVal.setUpdateMode();
+			input.validate(ctxVal);
+			if (!ctxVal.hasErrors()) {
+				dao.updateObject(input);
+				return input;
+			} else {
+				throw new APIValidationException("Invalid Project object", ctxVal.getErrors());
+			}
+			
+		} else {
+			throw new APIException("Project codes are not the same");
+		}
+		
 	}
 }
