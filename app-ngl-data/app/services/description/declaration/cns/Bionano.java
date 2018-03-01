@@ -33,11 +33,11 @@ public class Bionano extends AbstractDeclaration{
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 
 		//Bionano
-		l.add(newExperimentType("Ext to NLRS, Bionano chip, dépôt","ext-to-bionano-nlrs-process",null,-1,
+		l.add(newExperimentType("Ext to NLRS / DLS, Bionano chip, dépôt","ext-to-bionano-nlrs-process",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newExperimentType(" Ext to Bionano Chip, dépôt","ext-to-bionano-chip-process",null,-1,
+		l.add(newExperimentType("Ext to Bionano Chip, dépôt","ext-to-bionano-chip-process",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
@@ -224,7 +224,7 @@ public class Bionano extends AbstractDeclaration{
 		propertyDefinitions.add(newPropertiesDefinition("Concentration moyenne", "averageConcentration", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"),"single",21, true, null, "2"));
 		
-		propertyDefinitions.add(newPropertiesDefinition("CV","varationCoefficient", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, true, null, 
+		propertyDefinitions.add(newPropertiesDefinition("CV","variationCoefficient", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, true, null, 
 				null, null, null, null,"single", 22, true, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Concentration 3", "measuredConc3", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null,
@@ -236,7 +236,7 @@ public class Bionano extends AbstractDeclaration{
 		propertyDefinitions.add(newPropertiesDefinition("Concentration moyenne 2", "averageConcentration2", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"),"single",25, true, null, "2"));
 
-		propertyDefinitions.add(newPropertiesDefinition("CV 2","varationCoefficient2", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, false, null, 
+		propertyDefinitions.add(newPropertiesDefinition("CV 2","variationCoefficient2", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, false, null, 
 				null, null, null, null,"single", 26, true, null, null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Volume DL","dlVolume", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, true, null,

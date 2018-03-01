@@ -210,11 +210,11 @@ angular.module('home').controller('BionanoDLSPrepCtrl',['$scope', '$parse', 'atm
 		}else if(col.property === 'outputContainerUsed.experimentProperties.measuredConc1.value'
 			|| col.property === 'outputContainerUsed.experimentProperties.measuredConc2.value'){
 			computeAverageConcentration(value.data, "averageConcentration", "measuredConc1" ,"measuredConc2");
-			computeVarationCoefficient(value.data, "varationCoefficient", "averageConcentration", "measuredConc1" ,"measuredConc2");
+			computeVariationCoefficient(value.data, "variationCoefficient", "averageConcentration", "measuredConc1" ,"measuredConc2");
 		}else if(col.property === 'outputContainerUsed.experimentProperties.measuredConc3.value'
 			|| col.property === 'outputContainerUsed.experimentProperties.measuredConc4.value'){
 			computeAverageConcentration(value.data, "averageConcentration2", "measuredConc3" ,"measuredConc4");
-			computeVarationCoefficient(value.data, "varationCoefficient2", "averageConcentration2", "measuredConc3" ,"measuredConc4");
+			computeVariationCoefficient(value.data, "variationCoefficient2", "averageConcentration2", "measuredConc3" ,"measuredConc4");
 		}		
 	}
 	
@@ -235,7 +235,7 @@ angular.module('home').controller('BionanoDLSPrepCtrl',['$scope', '$parse', 'atm
 			var result = $parse("intputConc * intputVol")(compute);
 			console.log("result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
-				inputQuantity.value = Math.round(result*10)/10;	
+				inputQuantity.value = Math.round(result*100)/100;	
 				inputQuantity.unit = 'ng'; 
 			}else{
 				inputQuantity = undefined;
@@ -266,7 +266,7 @@ angular.module('home').controller('BionanoDLSPrepCtrl',['$scope', '$parse', 'atm
 			var result = $parse("(conc1 + conc2)/2")(compute);
 			console.log("result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
-				averageConcentration.value = Math.round(result*10)/10;	
+				averageConcentration.value = Math.round(result*100)/100;	
 				averageConcentration.unit = 'ng/µl'; 
 			}else{
 				averageConcentration = undefined;
@@ -298,7 +298,7 @@ angular.module('home').controller('BionanoDLSPrepCtrl',['$scope', '$parse', 'atm
 			var result = $parse("(((conc1 - avgConc) * (conc1 - avgConc)) + ((conc2 - avgConc) * (conc2 - avgConc)))/2")(compute);
 			console.log("result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
-				variationCoefficient.value = Math.sqrt(result)*100;					
+				variationCoefficient.value = (Math.sqrt(result)/compute.avgConc)*100;					
 			}else{
 				variationCoefficient = undefined;
 			}	

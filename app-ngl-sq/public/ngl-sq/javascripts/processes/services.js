@@ -1666,6 +1666,12 @@ angular.module('ngl-sq.processesServices', [])
 			searchProcesses : function(){
 				this.form.stateCode = 'IW-C';
 				this.form.sampleCodes = this.selectedSampleCodes;
+				
+				//clean old process search
+				for(var key in this.containerData){
+					this.containerData[key].processes = [];
+				}
+				
 				$http.get(jsRoutes.controllers.processes.api.Processes.list().url,{params:this.form,service:this})
 					.then(function(result){
 						var service = result.config.service;
@@ -1673,7 +1679,7 @@ angular.module('ngl-sq.processesServices', [])
 							process.sampleCodes.forEach(function(sampleCode){
 								Object.keys(this.containerData)
 									.forEach(function(containerCode){
-										if(!this.containerData[containerCode].processes)this.containerData[containerCode].processes = [];
+										//if(!this.containerData[containerCode].processes)this.containerData[containerCode].processes = [];
 										if(this.containerData[containerCode].sampleCodes.indexOf(sampleCode) > -1)
 											this.containerData[containerCode].processes.push(process);
 								}, this);								
