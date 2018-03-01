@@ -95,16 +95,10 @@ public class ProjectAPITest extends AbstractTests {
 	@Test
 	public void listProjectTest() {
 		Query query = DBQuery.is("code", factory.project.code);
-		List<Project> projs;
-		try {
-			projs = api.list(query, "code", Sort.valueOf(0));
-			assertEquals(1, projs.size());
-		} catch (APIException e) {
-			logger.error(e.getMessage());
-			fail(e.getMessage());
-		}
+		List<Project> projs = api.list(query, "code", Sort.valueOf(0));
+		assertEquals(1, projs.size());
 	}
-	
+
 	@Test
 	public void updateTest() {
 		try {

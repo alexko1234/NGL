@@ -11,7 +11,10 @@ import org.mongojack.DBQuery.Query;
 
 import com.mongodb.BasicDBObject;
 
+import akka.stream.javadsl.Source;
+import akka.util.ByteString;
 import fr.cea.ig.MongoDBResult.Sort;
+import fr.cea.ig.mongo.MongoStreamer;
 import fr.cea.ig.ngl.dao.api.APIException;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
 import models.laboratory.common.instance.State;
@@ -39,22 +42,39 @@ public class ProjectAPI {
 		return dao.findByCode(code);
 	}
 	
-	public List<Project> list(Query query, String orderBy, Sort orderSense) throws APIException {
+	public boolean isObjectExist(String code) {
+		return dao.isObjectExist(code);
+	}
+	
+	public List<Project> list(Query query, String orderBy, Sort orderSense) {
 		return dao.mongoDBFinder(query, orderBy, orderSense).toList();
 	}
 	
 	public List<Project> list(Query query, String orderBy, Sort orderSense, 
-			Integer pageNumber, Integer numberRecordsPerPage) throws APIException {
+			Integer pageNumber, Integer numberRecordsPerPage) {
 		return dao.mongoDBFinderWithPagination(query, orderBy, orderSense, pageNumber, numberRecordsPerPage).toList();
 	}
 	
-	public List<Project> list(Query query, String orderBy, Sort orderSense, BasicDBObject keys) throws APIException {
+	public List<Project> list(Query query, String orderBy, Sort orderSense, BasicDBObject keys) {
 		return dao.mongoDBFinder(query, orderBy, orderSense, keys).toList();
 	}
 	
+	public Source<ByteString, ?> stream(Query query, String orderBy, Sort orderSense, BasicDBObject keys) {
+		return MongoStreamer.streamUDT(dao.mongoDBFinder(query, orderBy, orderSense, keys));
+	}
+	
+	public List<Project> list(Query query, String orderBy, Sort orderSense, BasicDBObject keys, Integer limit) {
+		return dao.mongoDBFinder(query, orderBy, orderSense, limit, keys).toList();
+	}
+	
 	public List<Project> list(Query query, String orderBy, Sort orderSense, BasicDBObject keys, 
-			Integer pageNumber, Integer numberRecordsPerPage) throws APIException {
+			Integer pageNumber, Integer numberRecordsPerPage) {
 		return dao.mongoDBFinderWithPagination(query, orderBy, orderSense, pageNumber, numberRecordsPerPage, keys).toList();
+	}
+	
+	public Source<ByteString, ?> stream(Query query, String orderBy, Sort orderSense, BasicDBObject keys, 
+			Integer pageNumber, Integer numberRecordsPerPage) {
+		return MongoStreamer.streamUDT(dao.mongoDBFinderWithPagination(query, orderBy, orderSense, pageNumber, numberRecordsPerPage, keys));
 	}
 	
 	public Project create(Project project, String currentUser, Map<String,List<ValidationError>> errors) throws APIValidationException {
