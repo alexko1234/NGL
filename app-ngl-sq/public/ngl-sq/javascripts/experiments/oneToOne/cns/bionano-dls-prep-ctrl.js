@@ -280,7 +280,7 @@ angular.module('home').controller('BionanoDLSPrepCtrl',['$scope', '$parse', 'atm
 		
 	};
 	
-	var computeVarationCoefficient = function(udtData, variationCoefficient, avgConc, conc1, conc2){
+	var computeVariationCoefficient = function(udtData, variationCoefficient, avgConc, conc1, conc2){
 		var getter = $parse("outputContainerUsed.experimentProperties."+variationCoefficient);
 		var variationCoefficient = getter(udtData);
 		if(undefined == variationCoefficient)variationCoefficient={};
