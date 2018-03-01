@@ -24,7 +24,7 @@ import validation.utils.ValidationHelper;
 public class ProjectValidationHelper extends CommonValidationHelper {
 
 	public static void validateProjectType(String typeCode,
-			                               Map<String, PropertyValue<?>> properties,
+			                               Map<String, PropertyValue> properties,
 			                               ContextValidation contextValidation) {
 		ProjectType projectType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ProjectType.find,true);
 		if (projectType != null) {

@@ -26,7 +26,7 @@ import fr.cea.ig.MongoDBDAO;
 public class FileValidationHelper extends CommonValidationHelper {
 	
 	public static void validationFiles(List<File> files, ContextValidation contextValidation) {
-		if ((null != files) && (files.size() > 0)) {
+		if (files!= null && files.size() > 0) {
 			int index = 0;
 			List<String> lstFullName = new ArrayList<String>();
 			for (File file : files) {
@@ -34,8 +34,9 @@ public class FileValidationHelper extends CommonValidationHelper {
 				if (!lstFullName.contains(file.fullname)) {
 					file.validate(contextValidation);
 					lstFullName.add(file.fullname);
+				} else { 
+					contextValidation.addErrors("fullname", ValidationConstants.ERROR_NOTUNIQUE_MSG, file.fullname); 
 				}
-				else { contextValidation.addErrors("fullname", ValidationConstants.ERROR_NOTUNIQUE_MSG, file.fullname); }
 				contextValidation.removeKeyFromRootKeyName("files[" + index + "]");
 				index++;
 			}
@@ -89,7 +90,7 @@ public class FileValidationHelper extends CommonValidationHelper {
 		
 	}
 	
-	public static void validateFileProperties(Map<String, PropertyValue<?>> properties, ContextValidation contextValidation) {
+	public static void validateFileProperties(Map<String, PropertyValue> properties, ContextValidation contextValidation) {
 		Class<?> objectClass =  getObjectFromContext("objectClass", Class.class, contextValidation);
 		if (ReadSet.class.isAssignableFrom(objectClass)) { 
 			validateReadSetFileProperties(properties, contextValidation);
@@ -98,7 +99,7 @@ public class FileValidationHelper extends CommonValidationHelper {
 		}
 	}
 	
-	private static void validateReadSetFileProperties(Map<String, PropertyValue<?>> properties, ContextValidation contextValidation) {
+	private static void validateReadSetFileProperties(Map<String, PropertyValue> properties, ContextValidation contextValidation) {
 		ReadSet readSet = getReadSetFromContext(contextValidation);
 		try {
 			ReadSetType readSetType = ReadSetType.find.findByCode(readSet.typeCode);
@@ -112,7 +113,7 @@ public class FileValidationHelper extends CommonValidationHelper {
 		}		
 	}
 	
-	private static void validateAnalysisFileProperties(Map<String, PropertyValue<?>> properties, ContextValidation contextValidation) {
+	private static void validateAnalysisFileProperties(Map<String, PropertyValue> properties, ContextValidation contextValidation) {
 		Analysis analysis = getAnalysisFromContext(contextValidation);
 		try {
 			AnalysisType analysisType = AnalysisType.find.findByCode(analysis.typeCode);

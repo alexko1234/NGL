@@ -13,7 +13,8 @@ import models.laboratory.common.instance.PropertyValue;
  * 
  *
  */
-public class PropertyByteValue extends PropertyValue<byte[]> {
+//public class PropertyByteValue extends PropertyValue<byte[]> {
+public class PropertyByteValue extends PropertyValue {
 	
 	// TODO: Should be protected and define typeless constructors. 
 	public PropertyByteValue(String _type) {
@@ -24,9 +25,17 @@ public class PropertyByteValue extends PropertyValue<byte[]> {
 		super(_type, value);		
 	}
 	
+	public byte[] getValue() {
+		return byteValue();
+	}
+	
+	public byte[] byteValue() { 
+		return (byte[])value;
+	}
+	
 	@Override
 	public String toString() {
-		return "PropertyByteValue [value=" + value + ", class="+value.getClass().getName()+"]";
+		return "PropertyByteValue [value=" + value + ", class=" + value.getClass().getName() + "]";
 	}
 	
 	@Override

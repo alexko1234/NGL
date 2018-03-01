@@ -167,7 +167,7 @@ public class ContainerValidationHelper extends CommonValidationHelper {
 		}		
 	}
 	
-	public static void validateImportType(String importTypeCode, Map<String, PropertyValue<?>> properties,	ContextValidation contextValidation) {
+	public static void validateImportType(String importTypeCode, Map<String, PropertyValue> properties,	ContextValidation contextValidation) {
 		ImportType importType = BusinessValidationHelper.validateExistDescriptionCode(contextValidation, importTypeCode,"importTypeCode", ImportType.find,true);
 		if (importType != null) {
 			List<PropertyDefinition> proDefinitions=new ArrayList<PropertyDefinition>();
@@ -184,8 +184,8 @@ public class ContainerValidationHelper extends CommonValidationHelper {
 		if (qualityControlResults != null) {
 			qualityControlResults.stream().forEach(qcr -> {
 				contextValidation.addKeyToRootKeyName("["+qcr.typeCode+"]");
-				ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, qcr.typeCode, "typeCode", ExperimentType.find,true);
-				if(exType!=null){
+				ExperimentType exType = BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, qcr.typeCode, "typeCode", ExperimentType.find,true);
+				if (exType != null) {
 					ValidationHelper.validateProperties(contextValidation, qcr.properties, exType.getPropertyDefinitionByLevel(Level.CODE.ContainerIn), true, false, null, null);			
 				}
 				contextValidation.removeKeyFromRootKeyName("["+qcr.typeCode+"]");
@@ -194,7 +194,7 @@ public class ContainerValidationHelper extends CommonValidationHelper {
 		contextValidation.removeKeyFromRootKeyName("qualityControlResults");		
 	}
 	
-	public static void validateVolume(PropertyValue<?> volume, ContextValidation contextValidation) {
+	public static void validateVolume(PropertyValue volume, ContextValidation contextValidation) {
 		if (volume != null && volume.value != null) {
 			Collection<PropertyDefinition> pdefs = new ArrayList<>();		
 			PropertyDefinition pd = new PropertyDefinition();			
@@ -206,11 +206,10 @@ public class ContainerValidationHelper extends CommonValidationHelper {
 			volume.validate(contextValidation);
 			contextValidation.removeObject("propertyDefinitions");	
 			ValidationHelper.required(contextValidation, ((PropertySingleValue)volume).unit, "volume.unit");
-			
 		}
 	}
 	
-	public static void validateConcentration(PropertyValue<?> concentration, ContextValidation contextValidation) {
+	public static void validateConcentration(PropertyValue concentration, ContextValidation contextValidation) {
 		if (concentration != null && concentration.value != null) {
 			Collection<PropertyDefinition> pdefs = new ArrayList<>();
 			PropertyDefinition pd = new PropertyDefinition();
@@ -225,7 +224,7 @@ public class ContainerValidationHelper extends CommonValidationHelper {
 		}
 	}
 	
-	public static void validateQuantity(PropertyValue<?> quantity,	ContextValidation contextValidation) {
+	public static void validateQuantity(PropertyValue quantity,	ContextValidation contextValidation) {
 		if (quantity != null && quantity.value != null) {
 			Collection<PropertyDefinition> pdefs = new ArrayList<>();
 			PropertyDefinition pd = new PropertyDefinition();
@@ -240,7 +239,7 @@ public class ContainerValidationHelper extends CommonValidationHelper {
 		}
 	}
 
-	public static void validateSize(PropertyValue<?> size, ContextValidation contextValidation) {
+	public static void validateSize(PropertyValue size, ContextValidation contextValidation) {
 		if (size != null && size.value != null) {
 			Collection<PropertyDefinition> pdefs = new ArrayList<>();		
 			PropertyDefinition pd = new PropertyDefinition();			

@@ -62,7 +62,8 @@ public class CbotV2AloneInput extends AbstractInput {
 		 DocumentBuilder builder = factory.newDocumentBuilder();
 	     
 	     try {
-	    	 InputStream inputStream = new ByteArrayInputStream(pfv.value);
+//	    	 InputStream inputStream = new ByteArrayInputStream(pfv.value);
+	    	 InputStream inputStream = new ByteArrayInputStream(pfv.byteValue());
 	    	 // le fichier produit par Illumina n'est PAS en UTF-16 malgré l'entete <?xml version="1.0" encoding="utf-16"?>
 	    	 // mais en UTF-8 !!! il faut donc remettre la valeur correcte
 	    	 InputSource is = new InputSource(inputStream);

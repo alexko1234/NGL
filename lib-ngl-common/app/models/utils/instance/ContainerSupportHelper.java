@@ -69,7 +69,7 @@ public class ContainerSupportHelper {
 	
 
 	public static ContainerSupport createContainerSupport(String containerSupportCode, 
-			                                              PropertyValue<?> sequencingProgramType, 
+			                                              PropertyValue sequencingProgramType, 
 			                                              String categoryCode, 
 			                                              String user) {
 		ContainerSupport s = new ContainerSupport(); 
@@ -89,7 +89,7 @@ public class ContainerSupportHelper {
 		s.valuation.valid = TBoolean.UNSET;
 
 		if (sequencingProgramType != null) {
-			HashMap<String, PropertyValue<?>> prop = new HashMap<>(); // <String, PropertyValue>();
+			HashMap<String, PropertyValue> prop = new HashMap<>(); // <String, PropertyValue>();
 			prop.put("sequencingProgramType", sequencingProgramType);
 			s.properties = prop;
 		}

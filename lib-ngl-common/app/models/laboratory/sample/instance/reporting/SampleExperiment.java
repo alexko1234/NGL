@@ -14,9 +14,8 @@ public class SampleExperiment {
 	public String categoryCode;
 	public State state;
 	public Valuation status;
-	
 	public TraceInformation traceInformation;
 	public String protocolCode;
-	public Map<String,PropertyValue<?>> properties;
+	public Map<String,PropertyValue> properties;
 	
 }

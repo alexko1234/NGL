@@ -10,26 +10,24 @@ import models.laboratory.container.instance.LocationOnContainerSupport;
 import validation.IValidation;
 
 public abstract class AbstractContainerUsed implements IValidation {
-	public String code;
-	public String categoryCode;
-	public List<Content> contents;
+	
+	public String                     code;
+	public String                     categoryCode;
+	public List<Content>              contents;
 	public LocationOnContainerSupport locationOnContainerSupport;
-	
-	public PropertySingleValue volume;        
-	public PropertySingleValue concentration; 
-	public PropertySingleValue quantity; 	
-	public PropertySingleValue size; 	
-	
-	public Map<String,PropertyValue<?>> experimentProperties;
-	public Map<String,PropertyValue<?>> instrumentProperties;
+	public PropertySingleValue        volume;        
+	public PropertySingleValue        concentration; 
+	public PropertySingleValue        quantity; 	
+	public PropertySingleValue        size; 	
+	public Map<String,PropertyValue>  experimentProperties;
+	public Map<String,PropertyValue>  instrumentProperties;
 	
 	public AbstractContainerUsed() {
-		super();
-		
+//		super();		
 	}
 	
 	public AbstractContainerUsed(String code) {
-		this.code=code;
+		this.code = code;
 	}
 	
 }

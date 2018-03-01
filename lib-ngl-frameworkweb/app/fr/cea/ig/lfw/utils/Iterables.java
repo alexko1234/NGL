@@ -1,5 +1,6 @@
 package fr.cea.ig.lfw.utils;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 import fr.cea.ig.lfw.utils.iteration.FilteringIterable;
@@ -29,6 +30,12 @@ public class Iterables {
 	 */
 	public static <A> ZenIterable <A> zen(Iterable<A> i) {
 		return skip(i,0);
+	}
+	
+	public static <A> Optional<A> first(Iterable<A> i) {
+		for (A a : i)
+			return Optional.of(a);
+		return Optional.empty();
 	}
 	
 }

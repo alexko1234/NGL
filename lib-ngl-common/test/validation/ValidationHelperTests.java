@@ -207,8 +207,8 @@ public class ValidationHelperTests extends AbstractTests {
 			System.out.println(e);
 	}
 		
-	private Map<String, PropertyValue<?>> getPropertiesRequired() {
-		Map<String, PropertyValue<?>> m = new HashMap<>(); // String, PropertyValue>();
+	private Map<String, PropertyValue> getPropertiesRequired() {
+		Map<String, PropertyValue> m = new HashMap<>(); // String, PropertyValue>();
 		
 		PropertySingleValue propSingle = new PropertySingleValue();
 		m.put("single1-1", propSingle);
@@ -274,8 +274,8 @@ public class ValidationHelperTests extends AbstractTests {
 		assertThat(cv.errors.size()).isEqualTo(0);	
 	}
 	
-	private Map<String, PropertyValue<?>> getPropertiesSingle(){
-		Map<String, PropertyValue<?>> m = new HashMap<>(); // String, PropertyValue>();
+	private Map<String, PropertyValue> getPropertiesSingle(){
+		Map<String, PropertyValue> m = new HashMap<>(); // String, PropertyValue>();
 		PropertySingleValue propText = new PropertySingleValue("test");
 		m.put("String", propText);
 		PropertySingleValue propInt = new PropertySingleValue(33);
@@ -301,8 +301,8 @@ public class ValidationHelperTests extends AbstractTests {
 		assertThat(cv.errors.size()).isEqualTo(0);
 	}
 	
-	private Map<String, PropertyValue<?>> getPropertiesSingleString(){
-		Map<String, PropertyValue<?>> m = new HashMap<>(); // String, PropertyValue>();
+	private Map<String, PropertyValue> getPropertiesSingleString(){
+		Map<String, PropertyValue> m = new HashMap<>(); // String, PropertyValue>();
 		PropertySingleValue propString = new PropertySingleValue("test");
 		m.put("String", propString);
 		PropertySingleValue propInt = new PropertySingleValue(33+"");
@@ -352,8 +352,8 @@ public class ValidationHelperTests extends AbstractTests {
 		assertThat(cv.errors.size()).isEqualTo(0);
 	}
 	
-	private Map<String, PropertyValue<?>> getPropertiesListString(){
-		Map<String, PropertyValue<?>> m = new HashMap<>(); // String, PropertyValue>();
+	private Map<String, PropertyValue> getPropertiesListString(){
+		Map<String, PropertyValue> m = new HashMap<>(); // String, PropertyValue>();
 		PropertyListValue propListString = new PropertyListValue(Arrays.asList("test", "test2", "tes3"));
 		m.put("String", propListString);
 		PropertyListValue propListInt = new PropertyListValue(Arrays.asList("33","36","65"));
@@ -419,8 +419,8 @@ public class ValidationHelperTests extends AbstractTests {
 		assertThat(cv.errors.size()).isEqualTo(0);		
 	}
 	
-	private Map<String, PropertyValue<?>> getPropertiesObjectString() {
-		Map<String, PropertyValue<?>> m = new HashMap<>(); // String, PropertyValue>();
+	private Map<String, PropertyValue> getPropertiesObjectString() {
+		Map<String, PropertyValue> m = new HashMap<>(); // String, PropertyValue>();
 		PropertyObjectValue propObject = new PropertyObjectValue(getMap("test", "45", "36985214456467789654"));
 		m.put("Object", propObject);
 		return m;

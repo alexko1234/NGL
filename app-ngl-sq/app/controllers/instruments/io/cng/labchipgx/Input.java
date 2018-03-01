@@ -38,7 +38,8 @@ public class Input extends AbstractInput {
 		// hashMap  pour stocker les concentrations et size du fichier 
 		Map<String,LabChipData> dataMap = new HashMap<String,LabChipData>(0);
 		
-		InputStream is = new ByteArrayInputStream(pfv.value);
+//		InputStream is = new ByteArrayInputStream(pfv.value);
+		InputStream is = new ByteArrayInputStream(pfv.byteValue());
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 		int n = 0;

@@ -246,7 +246,7 @@ public class OutputHelper {
 	}
 	
 	public static TagModel getTagModel(List<Container> containers) {
-		List<PropertyValue<?>> tags = containers.stream().map((Container container) -> container.contents)
+		List<PropertyValue> tags = containers.stream().map((Container container) -> container.contents)
 			.flatMap(List::stream)
 			.filter(c -> c.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME))
 			.filter(c -> !c.properties.get("tagCategory").equals("MID"))
@@ -257,7 +257,7 @@ public class OutputHelper {
 			tagModel.maxTag1Size = 0;
 			tagModel.maxTag2Size = 0;
 			tagModel.tagType = "SINGLE-INDEX";
-			for (PropertyValue<?> _tag : tags) {
+			for (PropertyValue _tag : tags) {
 				PropertySingleValue tag = (PropertySingleValue)_tag;
 				Index index = getIndex("index-illumina-sequencing", tag.value.toString());
 				

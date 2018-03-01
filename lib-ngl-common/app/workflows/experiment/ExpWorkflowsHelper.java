@@ -168,20 +168,18 @@ public class ExpWorkflowsHelper {
 			exp.atomicTransfertMethods.stream().map(atm -> atm.outputContainerUseds)
 			.flatMap(List::stream)
 			.forEach(ocu -> {
-				Map<String,PropertyValue<?>> experimentProperties = ocu.experimentProperties;
-				if(experimentProperties.containsKey("projectCode") 
-						&& StringUtils.isNotBlank((String)experimentProperties.get("projectCode").value)){
+				Map<String,PropertyValue> experimentProperties = ocu.experimentProperties;
+				if (experimentProperties.containsKey("projectCode") 
+						&& StringUtils.isNotBlank((String)experimentProperties.get("projectCode").value)) {
 					projectCodes.add(experimentProperties.get("projectCode").value.toString());
 				}
 				
-				if(experimentProperties.containsKey("sampleCode")
-						&& StringUtils.isNotBlank((String)experimentProperties.get("sampleCode").value)){
+				if (experimentProperties.containsKey("sampleCode")
+						&& StringUtils.isNotBlank((String)experimentProperties.get("sampleCode").value)) {
 					sampleCodes.add(experimentProperties.get("sampleCode").value.toString());
 				}						
 			});
 		}
-		
-		
 		exp.projectCodes = projectCodes;		
 		exp.sampleCodes = sampleCodes;
 		exp.inputContainerSupportCodes = inputContainerSupportCodes;		
@@ -388,26 +386,26 @@ public class ExpWorkflowsHelper {
 	}
 
 	private void updateOutputContainerUsed(Experiment exp, AtomicTransfertMethod atm, ContainerSupportCategory outputCsc, String supportCode, boolean justContainerCode) {
-		if(atm.outputContainerUseds != null){
+		if (atm.outputContainerUseds != null) {
 			atm.updateOutputCodeIfNeeded(outputCsc, supportCode);
-			if(!justContainerCode){
+			if (!justContainerCode) {
 				updateOutputContainerUsedContents(exp, atm);
 			}
 		}		
 	}
 
 	private void updateOutputContainerUsedContents(Experiment exp, AtomicTransfertMethod atm) {
-		if(atm.outputContainerUseds != null){
-			atm.outputContainerUseds.forEach((OutputContainerUsed ocu) ->{
+		if (atm.outputContainerUseds != null) {
+			atm.outputContainerUseds.forEach((OutputContainerUsed ocu) -> {
 				ocu.contents = getContents(exp, atm, ocu);				
 			});
 		}
 	}
 
 	private void updateInputContainerUsedContents(Experiment exp, AtomicTransfertMethod atm) {
-		if(atm.inputContainerUseds != null){
-			atm.inputContainerUseds.forEach((InputContainerUsed icu) ->{
-				Map<String, PropertyValue<?>> newContentProperties = getCommonPropertiesForALevelWithICU(exp, icu, CODE.Content);
+		if (atm.inputContainerUseds != null) {
+			atm.inputContainerUseds.forEach((InputContainerUsed icu) -> {
+				Map<String, PropertyValue> newContentProperties = getCommonPropertiesForALevelWithICU(exp, icu, CODE.Content);
 				icu.contents.forEach(content -> {
 					content.properties.putAll(newContentProperties);
 				});
@@ -417,9 +415,9 @@ public class ExpWorkflowsHelper {
 	
 	private Set<String> getFromTransformationTypeCodes(Experiment exp, AtomicTransfertMethod atm) {
 		Set<String> _fromExperimentTypeCodes = new HashSet<String>(0);
-		if(ExperimentCategory.CODE.transformation.equals(ExperimentCategory.CODE.valueOf(exp.categoryCode))){
+		if (ExperimentCategory.CODE.transformation.equals(ExperimentCategory.CODE.valueOf(exp.categoryCode))) {
 			_fromExperimentTypeCodes.add(exp.typeCode);
-		}else{
+		} else {
 			_fromExperimentTypeCodes = atm.inputContainerUseds.stream().map((InputContainerUsed icu) -> icu.fromTransformationTypeCodes).flatMap(Set::stream).collect(Collectors.toSet());
 		}
 		return _fromExperimentTypeCodes;
@@ -427,9 +425,9 @@ public class ExpWorkflowsHelper {
 
 	private Set<String> getFromTransformationCodes(Experiment exp, AtomicTransfertMethod atm) {
 		Set<String> _fromExperimentCodes = new HashSet<String>(0);
-		if(ExperimentCategory.CODE.transformation.equals(ExperimentCategory.CODE.valueOf(exp.categoryCode))){
+		if (ExperimentCategory.CODE.transformation.equals(ExperimentCategory.CODE.valueOf(exp.categoryCode))) {
 			_fromExperimentCodes.add(exp.code);
-		}else{
+		} else {
 			_fromExperimentCodes = atm.inputContainerUseds.stream()
 					.filter((InputContainerUsed icu) -> icu.fromTransformationCodes != null)
 					.map((InputContainerUsed icu) -> icu.fromTransformationCodes).flatMap(Set::stream).collect(Collectors.toSet());
@@ -438,7 +436,7 @@ public class ExpWorkflowsHelper {
 	}
 
 	private String getFromSatTypeCode(Experiment exp, ExperimentCategory.CODE code) {
-		if(code.equals(ExperimentCategory.CODE.valueOf(exp.categoryCode))){
+		if (code.equals(ExperimentCategory.CODE.valueOf(exp.categoryCode))) {
 			return exp.typeCode;
 		}
 		return null;
@@ -455,14 +453,14 @@ public class ExpWorkflowsHelper {
 	private List<Content> getContents(Experiment exp, AtomicTransfertMethod atm, OutputContainerUsed ocu) {
 		List<Content> contents =  atm.inputContainerUseds.stream()
 				.map((InputContainerUsed icu) -> {
-					Map<String, PropertyValue<?>> contentProperties = getInputPropertiesForALevel(exp, icu, CODE.Content);
+					Map<String, PropertyValue> contentProperties = getInputPropertiesForALevel(exp, icu, CODE.Content);
 					List<Content> newContents = ContainerHelper.calculPercentageContent(icu.contents, icu.percentage);
 					newContents.forEach(c -> c.properties.putAll(contentProperties));
 					return newContents;
 					})
 				.flatMap(List::stream).collect(Collectors.toCollection(ArrayList::new));
 		contents = ContainerHelper.fusionContents(contents);
-		Map<String, PropertyValue<?>> newContentProperties = getCommonPropertiesForALevel(exp, CODE.Content);
+		Map<String, PropertyValue> newContentProperties = getCommonPropertiesForALevel(exp, CODE.Content);
 		newContentProperties.putAll(getOutputPropertiesForALevel(exp, ocu, CODE.Content));
 		contents.forEach((Content c) ->{
 			c.properties.putAll(newContentProperties);
@@ -740,7 +738,7 @@ public class ExpWorkflowsHelper {
 		String fromTransfertTypeCode =  getFromSatTypeCode(exp, ExperimentCategory.CODE.transfert);
 		String fromTransfertCode = getFromSatCode(exp, ExperimentCategory.CODE.transfert);
 		
-		Map<String, PropertyValue<?>> containerProperties = getCommonPropertiesForALevel(exp, CODE.Container);
+		Map<String, PropertyValue> containerProperties = getCommonPropertiesForALevel(exp, CODE.Container);
 		TreeOfLifeNode tree = getTreeOfLifeNode(exp, atm);
 
 		Set<String> processTypeCodes =new HashSet<String>();
@@ -762,7 +760,7 @@ public class ExpWorkflowsHelper {
 			c.categoryCode = ocu.categoryCode;
 			c.contents = ocu.contents;
 			c.support = ocu.locationOnContainerSupport;
-			Map<String, PropertyValue<?>> outputContainerProperties = getOutputPropertiesForALevel(exp, ocu, CODE.Container);
+			Map<String, PropertyValue> outputContainerProperties = getOutputPropertiesForALevel(exp, ocu, CODE.Container);
 			outputContainerProperties.putAll(containerProperties);
 			c.properties = outputContainerProperties;
 			c.concentration = getNullIfNoValue(ocu.concentration);
@@ -782,12 +780,11 @@ public class ExpWorkflowsHelper {
 			c.state = state;
 			c.traceInformation = traceInformation;
 			c.treeOfLife=tree;
-			if(null != ocu.comment){
+			if (ocu.comment != null) {
 				c.comments = Collections.singletonList(updateComment(ocu.comment, validation));
 			}
 			newContainers.add(c);
 		}
-		
 		//if oneToMany you need to create new processes for each new additional container
 		if (atm.outputContainerUseds != null && atm.outputContainerUseds.size() > 1) {
 			//Set<String> allNewInputProcessCodes = new HashSet<String>();
@@ -800,7 +797,7 @@ public class ExpWorkflowsHelper {
 				c.categoryCode = ocu.categoryCode;
 				c.contents = ocu.contents;
 				c.support = ocu.locationOnContainerSupport;
-				Map<String, PropertyValue<?>> outputContainerProperties = getOutputPropertiesForALevel(exp, ocu, CODE.Container);
+				Map<String, PropertyValue> outputContainerProperties = getOutputPropertiesForALevel(exp, ocu, CODE.Container);
 				outputContainerProperties.putAll(containerProperties);
 				c.properties = outputContainerProperties;
 				c.concentration = getNullIfNoValue(ocu.concentration);
@@ -820,7 +817,7 @@ public class ExpWorkflowsHelper {
 				c.state = state;
 				c.traceInformation = traceInformation;
 				c.treeOfLife=tree;
-				if(null != ocu.comment){
+				if (ocu.comment != null) {
 					c.comments = Collections.singletonList(ocu.comment);
 				}
 				newContainers.add(c);
@@ -929,41 +926,36 @@ public class ExpWorkflowsHelper {
 	}
 	
 
-	private Map<String, PropertyValue<?>> getOutputPropertiesForALevel(Experiment exp, OutputContainerUsed ocu, Level.CODE level) {
-		Map<String, PropertyValue<?>> propertiesForALevel = new HashMap<>(); // <String, PropertyValue>();
-
+	private Map<String, PropertyValue> getOutputPropertiesForALevel(Experiment exp, OutputContainerUsed ocu, Level.CODE level) {
+		Map<String, PropertyValue> propertiesForALevel = new HashMap<>(); // <String, PropertyValue>();
 		ExperimentType expType = ExperimentType.find.findByCode(exp.typeCode);
 		Set<String> experimentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevelFilterObject(expType.propertiesDefinitions, level);
-
 		if (ocu != null && ocu.experimentProperties != null && experimentPropertyDefinitionCodes.size() > 0) {
 			propertiesForALevel.putAll(ocu.experimentProperties.entrySet().stream()
 						.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()) && entry.getValue() != null)
 						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));					
 //						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), ExpWorkflowsHelper::PropertiesMerger)));					
 		}
-
 		//extract instrument content properties
 		InstrumentUsedType insType = InstrumentUsedType.find.findByCode(exp.instrument.typeCode);
 		Set<String> instrumentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevelFilterObject(insType.propertiesDefinitions, level);
-
 		if (ocu != null && ocu.instrumentProperties != null && instrumentPropertyDefinitionCodes.size() > 0) {			
 			propertiesForALevel.putAll(ocu.instrumentProperties.entrySet().stream()
 						.filter(entry -> instrumentPropertyDefinitionCodes.contains(entry.getKey()) && entry.getValue() != null)
 						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));								
 		}
-		
 		return propertiesForALevel;
 	}
 	
-	private Map<String, PropertyValue<?>> getInputPropertiesForALevel(Experiment exp, 
+	private Map<String, PropertyValue> getInputPropertiesForALevel(Experiment exp, 
 			                                                          InputContainerUsed icu, 
 			                                                          Level.CODE level) {
-		Map<String, PropertyValue<?>> propertiesForALevel = new HashMap<>(); // String, PropertyValue>();
+		Map<String, PropertyValue> propertiesForALevel = new HashMap<>(); // String, PropertyValue>();
 
 		ExperimentType expType = ExperimentType.find.findByCode(exp.typeCode);
 		Set<String> experimentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevelFilterObject(expType.propertiesDefinitions, level);
 
-		if(null != icu && icu.experimentProperties != null && experimentPropertyDefinitionCodes.size() > 0){
+		if (icu != null && icu.experimentProperties != null && experimentPropertyDefinitionCodes.size() > 0) {
 			propertiesForALevel.putAll(icu.experimentProperties.entrySet().stream()
 						.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()) && entry.getValue() != null)
 						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));					
@@ -973,7 +965,7 @@ public class ExpWorkflowsHelper {
 		InstrumentUsedType insType = InstrumentUsedType.find.findByCode(exp.instrument.typeCode);
 		Set<String> instrumentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevelFilterObject(insType.propertiesDefinitions, level);
 
-		if(null != icu && icu.instrumentProperties != null && instrumentPropertyDefinitionCodes.size() > 0){			
+		if (icu != null && icu.instrumentProperties != null && instrumentPropertyDefinitionCodes.size() > 0) {			
 			propertiesForALevel.putAll(icu.instrumentProperties.entrySet().stream()
 						.filter(entry -> instrumentPropertyDefinitionCodes.contains(entry.getKey()) && entry.getValue() != null)
 						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));								
@@ -1006,24 +998,21 @@ public class ExpWorkflowsHelper {
 	 * @param level
 	 * @return
 	 */
-	private Map<String, PropertyValue<?>> getCommonPropertiesForALevelWithICU(Experiment exp, InputContainerUsed icu, Level.CODE level) {
-		Map<String, PropertyValue<?>> propertiesForALevel = new HashMap<>(); // String, PropertyValue>();
-
+	private Map<String, PropertyValue> getCommonPropertiesForALevelWithICU(Experiment exp, InputContainerUsed icu, Level.CODE level) {
+		Map<String, PropertyValue> propertiesForALevel = new HashMap<>(); // String, PropertyValue>();
 		ExperimentType expType = ExperimentType.find.findByCode(exp.typeCode);
 		Set<String> experimentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevel(expType.propertiesDefinitions, level);
-
 		//extract experiment content properties
-		if (null != exp.experimentProperties && experimentPropertyDefinitionCodes.size() > 0) {
+		if (exp.experimentProperties != null && experimentPropertyDefinitionCodes.size() > 0) {
 			propertiesForALevel.putAll(exp.experimentProperties.entrySet()
 					.stream()
 					.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()) && entry.getValue() != null)
 					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
 		}
-		
 		//extract protocol
 		Protocol protocol = MongoDBDAO.findByCode(InstanceConstants.PROTOCOL_COLL_NAME, Protocol.class, exp.protocolCode);
 		//TODO Need to define protocol properties in description but in waiting we just copy all
-		if(Level.CODE.Content.equals(level) && null != protocol && null != protocol.properties && protocol.properties.size() > 0){
+		if (Level.CODE.Content.equals(level) && protocol != null && protocol.properties != null && protocol.properties.size() > 0){
 			propertiesForALevel.putAll(protocol.properties);
 		}
 
@@ -1075,13 +1064,10 @@ public class ExpWorkflowsHelper {
 	 * @param level
 	 * @return
 	 */
-	private Map<String, PropertyValue<?>> getCommonPropertiesForALevel(Experiment exp, Level.CODE level) {
-		Map<String, PropertyValue<?>> propertiesForALevel = new HashMap<>(); // <String, PropertyValue>();
-
+	private Map<String, PropertyValue> getCommonPropertiesForALevel(Experiment exp, Level.CODE level) {
+		Map<String, PropertyValue> propertiesForALevel = new HashMap<>(); // <String, PropertyValue>();
 		ExperimentType expType = ExperimentType.find.findByCode(exp.typeCode);
-		
 		Set<String> experimentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevelFilterObject(expType.propertiesDefinitions, level);
-
 		//extract experiment content properties
 		if (exp.experimentProperties != null && experimentPropertyDefinitionCodes.size() > 0) {
 			propertiesForALevel.putAll(exp.experimentProperties.entrySet()
@@ -1089,14 +1075,12 @@ public class ExpWorkflowsHelper {
 					.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()))
 					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
 		}
-
 		//extract protocol
 		Protocol protocol = MongoDBDAO.findByCode(InstanceConstants.PROTOCOL_COLL_NAME, Protocol.class, exp.protocolCode);
 		//TODO Need to define protocol properties in description but in waiting we just copy all
 		if (Level.CODE.Content.equals(level) && protocol != null && protocol.properties != null && protocol.properties.size() > 0) {
 			propertiesForALevel.putAll(protocol.properties);
 		}
-		
 		/*
 		if(null != atm && experimentPropertyDefinitionCodes.size() > 0){
 			propertiesForALevel.putAll(atm.inputContainerUseds.stream()
@@ -1156,7 +1140,21 @@ public class ExpWorkflowsHelper {
 		return propertiesForALevel;
 	}
 	
-	private <T> PropertyValue<T> PropertiesMerger(PropertyValue<T> u, PropertyValue<T> v) {
+//	private <T> PropertyValue<T> PropertiesMerger(PropertyValue<T> u, PropertyValue<T> v) {
+//		if (u.value.equals(v.value)) {
+//			return u;
+//		} else {
+//			throw new IllegalStateException(String.format("Duplicate key %s with different values", u)); 
+//		}
+//	}
+//	private PropertyValue PropertiesMerger(PropertyValue u, PropertyValue v) {
+//		if (u.value.equals(v.value)) {
+//			return u;
+//		} else {
+//			throw new IllegalStateException(String.format("Duplicate key %s with different values", u)); 
+//		}
+//	}
+	private <T extends PropertyValue> T PropertiesMerger(T u, T v) {
 		if (u.value.equals(v.value)) {
 			return u;
 		} else {
@@ -1185,7 +1183,7 @@ public class ExpWorkflowsHelper {
 	 * Extract process property for only the first experiment of the process
 	 * 
 	 */
-	private List<Map.Entry<String,PropertyValue<?>>> getProcessesProperties(InputContainerUsed icu) {
+	private List<Map.Entry<String,PropertyValue>> getProcessesProperties(InputContainerUsed icu) {
 		List<Process> processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code", icu.processCodes).is("inputContainerCode", icu.code)).toList();
 		if (processes != null && processes.size() > 0) {
 			return processes.stream()
@@ -1303,7 +1301,7 @@ public class ExpWorkflowsHelper {
 
 			c.qualityControlResults.add(new QualityControlResult(exp.code, exp.typeCode, c.qualityControlResults.size(), icu.experimentProperties, c.valuation));
 
-			Map<String, PropertyValue<?>> newContentProperties = getCommonPropertiesForALevelWithICU(exp, icu, CODE.Content);
+			Map<String, PropertyValue> newContentProperties = getCommonPropertiesForALevelWithICU(exp, icu, CODE.Content);
 			c.contents.forEach(content -> {
 				content.properties.putAll(newContentProperties);
 			});
@@ -1319,7 +1317,7 @@ public class ExpWorkflowsHelper {
 			
 			String oldStorageCode = support.storageCode;
 			String newStorageCode =  getSupportStorageCode(containers, validation);
-			if(newStorageCode != null && !newStorageCode.equals(oldStorageCode)){
+			if (newStorageCode != null && !newStorageCode.equals(oldStorageCode)) {
 				support.storageCode = newStorageCode;
 				support.storages = updateStorages(support, validation);
 				
@@ -1384,11 +1382,11 @@ public class ExpWorkflowsHelper {
 					
 				})
 				.forEach(ocu -> {
-					Map<String,PropertyValue<?>> experimentProperties = ocu.experimentProperties;
+					Map<String,PropertyValue> experimentProperties = ocu.experimentProperties;
 					
-					if(experimentProperties.containsKey("sampleTypeCode") 
+					if (experimentProperties.containsKey("sampleTypeCode") 
 							&& experimentProperties.containsKey("projectCode")
-							&& !experimentProperties.containsKey("sampleCode")){
+							&& !experimentProperties.containsKey("sampleCode")) {
 						String nextProjectCode = (String)experimentProperties.get("projectCode").value;
 						
 						String newSampleCode=CodeHelper.getInstance().generateSampleCode(nextProjectCode, true);
@@ -1498,7 +1496,7 @@ public class ExpWorkflowsHelper {
 		
 				newSample.taxonCode=sampleIn.taxonCode;
 				
-				Map<String, PropertyValue<?>> newSampleProperties = getCommonPropertiesForALevel(exp, CODE.Sample);
+				Map<String, PropertyValue> newSampleProperties = getCommonPropertiesForALevel(exp, CODE.Sample);
 				newSampleProperties.putAll(getInputPropertiesForALevel(exp, icu, CODE.Sample));
 				newSampleProperties.putAll(getOutputPropertiesForALevel(exp, ocu, CODE.Sample));
 				newSampleProperties.putAll(sampleIn.properties);
@@ -1515,10 +1513,10 @@ public class ExpWorkflowsHelper {
 				ContextValidation sampleValidation = new ContextValidation(validation.getUser());
 				sampleValidation.setCreationMode();
 				newSample.validate(sampleValidation);
-				if(!sampleValidation.hasErrors()){
+				if (!sampleValidation.hasErrors()) {
 					((Set<String>)validation.getObject(NEW_SAMPLE_CODES)).add(newSample.code);
 					MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME,newSample);
-				}else{
+				} else {
 					validation.addErrors(sampleValidation.errors);
 				}
 			}		
@@ -1665,7 +1663,6 @@ public class ExpWorkflowsHelper {
 		return m;
 	}
 
-
 	private String getKey(AbstractContainerUsed acu,Content content, Set<String> contentPropertyCodes) {
 		// TODO Auto-generated method stub
 		if(content.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME) && !contentPropertyCodes.contains(InstanceConstants.TAG_PROPERTY_NAME)){
@@ -1686,7 +1683,7 @@ public class ExpWorkflowsHelper {
 		
 		acu.contents.forEach(ocuContent -> {
 			Content oldContent = oldExpContents.get(getKey(acu, ocuContent, contentPropertyCodes));
-			Map<String, Pair<PropertyValue<?>, PropertyValue<?>>> updatedProperties = InstanceHelpers.getUpdatedPropertiesForSomePropertyCodes(contentPropertyCodes, oldContent.properties, ocuContent.properties);
+			Map<String, Pair<PropertyValue, PropertyValue>> updatedProperties = InstanceHelpers.getUpdatedPropertiesForSomePropertyCodes(contentPropertyCodes, oldContent.properties, ocuContent.properties);
 			Set<String> deletedPropertyCodes = InstanceHelpers.getDeletedPropertiesForSomePropertyCodes(contentPropertyCodes, oldContent.properties, ocuContent.properties);
 			
 			if(updatedProperties.size() > 0 || deletedPropertyCodes.size() > 0){
@@ -1707,20 +1704,16 @@ public class ExpWorkflowsHelper {
 		});			
 	}
 
-	
-
-
 	private Set<String> getTagAssignFromContainerLife(Set<String> containerCodes,
 			                                          Content ocuContent, 
 			                                          Set<String> projectCodes,  
 			                                          Set<String> sampleCodes, 
-			                                          Map<String, Pair<PropertyValue<?>, PropertyValue<?>>> updatedProperties) {
+			                                          Map<String, Pair<PropertyValue, PropertyValue>> updatedProperties) {
 		Set<String> tags = null;
 		if (!updatedProperties.containsKey(InstanceConstants.TAG_PROPERTY_NAME) && ocuContent.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)){
 			tags = new TreeSet<String>();
 			tags.add(ocuContent.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value.toString());
 		} else {
-		
 			DBQuery.Query query = DBQuery.in("code", containerCodes)
 					.size("contents", 1) //only one content is very important because we targeting the lib container and not a pool after lib prep.
 					.elemMatch("contents", DBQuery.in("sampleCode", sampleCodes)

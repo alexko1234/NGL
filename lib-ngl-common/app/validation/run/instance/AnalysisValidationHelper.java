@@ -26,7 +26,7 @@ import validation.utils.ValidationHelper;
 public class AnalysisValidationHelper extends CommonValidationHelper {
 	
 	public static void validateAnalysisType(String typeCode,	
-			                                Map<String, PropertyValue<?>> properties, 
+			                                Map<String, PropertyValue> properties, 
 			                                ContextValidation contextValidation) {
 		AnalysisType analysisType = validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", AnalysisType.find,true);
 		if (analysisType != null) {

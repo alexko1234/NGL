@@ -659,14 +659,14 @@ public class ReadSets extends ReadSetsController {
     }
 
     @Permission(value={"writing"})
-    public Result properties(String code){
+    public Result properties(String code) {
         ReadSet readSet = getReadSet(code);
         if (readSet == null)
             return badRequest(); // TODO: probably a not found
         Form<ReadSet> filledForm = getFilledForm(readSetForm, ReadSet.class);
 //        ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
         ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
-        Map<String, PropertyValue<?>> properties = filledForm.get().properties;
+        Map<String, PropertyValue> properties = filledForm.get().properties;
         ctxVal.setUpdateMode();
         ReadSetValidationHelper.validateReadSetType(readSet.typeCode, properties, ctxVal);
         /*if(!ctxVal.hasErrors()){
@@ -705,7 +705,7 @@ public class ReadSets extends ReadSetsController {
                     if (readSet != null) {
 //                        ContextValidation ctxVal = new ContextValidation(user, filledForm.errors()); 
                         ContextValidation ctxVal = new ContextValidation(user, filledForm); 
-                        Map<String, PropertyValue<?>> properties = element.data.properties;
+                        Map<String, PropertyValue> properties = element.data.properties;
                         ctxVal.setUpdateMode();
                         ReadSetValidationHelper.validateReadSetType(readSet.typeCode, properties, ctxVal);
                         if (!ctxVal.hasErrors()) {

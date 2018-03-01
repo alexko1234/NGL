@@ -15,7 +15,8 @@ import validation.utils.ValidationHelper;
  * an object is stock in Map with key = property and value = value of property
  */
 //public class PropertyObjectValue extends PropertyValue<Map<String,?>> {
-public class PropertyObjectValue extends PropertyValue<Map<String,Object>> {
+//public class PropertyObjectValue extends PropertyValue<Map<String,Object>> {
+public class PropertyObjectValue extends PropertyValue {
 	
 	public Map<String,String> unit;
 	
@@ -39,6 +40,15 @@ public class PropertyObjectValue extends PropertyValue<Map<String,Object>> {
 	public PropertyObjectValue(Map<String, Object> value, Map<String,String> unit) {
 		super(PropertyValue.objectType, value);
 		this.unit = unit;
+	}
+	
+	@Override
+	public Map<String,Object> getValue() {
+		return mapValue(); 
+	}
+	
+	public Map<String, Object> mapValue() {
+		return (Map<String, Object>)value;
 	}
 	
 	@Override

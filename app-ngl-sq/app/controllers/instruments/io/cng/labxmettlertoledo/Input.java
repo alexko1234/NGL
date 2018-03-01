@@ -82,7 +82,8 @@ public class Input extends AbstractInput {
 		//-2-------- Parsing
 		logger.debug ("------ START PARSING METTLER FILE ------");
 		
-		byte[] ibuf = pfv.value;
+//		byte[] ibuf = pfv.value;
+		byte[] ibuf = pfv.byteValue();
 		InputStream is = new ByteArrayInputStream(ibuf);
 		
 		// le fichier CSV sorti par le logiciel Labx est en ISO-8859 ( valeur retournee par la commande "file" Linux)

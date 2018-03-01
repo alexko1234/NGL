@@ -396,12 +396,11 @@ public class Analyses extends DocumentController<Analysis> {
 	@Authorized.Write
 	public Result properties(String code){
 		Analysis objectInDB = getObject(code);
-		if(objectInDB == null) {
+		if (objectInDB == null)
 			return notFound();
-		}
 			
 		Form<Analysis> filledForm = getMainFilledForm();
-		Map<String, PropertyValue<?>> properties = filledForm.get().properties;
+		Map<String, PropertyValue> properties = filledForm.get().properties;
 		
 //		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
@@ -432,7 +431,7 @@ public class Analyses extends DocumentController<Analysis> {
 			if (objectInDB != null) {
 //				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
-				Map<String, PropertyValue<?>> properties = element.data.properties;
+				Map<String, PropertyValue> properties = element.data.properties;
 				ctxVal.setUpdateMode();
 				//TODO AnalysisValidationHelper.validateAnalysisType(objectInDB.typeCode, properties, ctxVal);
 				if (!ctxVal.hasErrors()) {

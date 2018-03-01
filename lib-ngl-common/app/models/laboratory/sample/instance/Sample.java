@@ -100,7 +100,7 @@ public class Sample extends DBObject implements IValidation, ICommentable, ITrac
 	/**
 	 * Mandatory : meta : false (meta:metagenomic,metatrucs)
 	 */
-	public Map<String,PropertyValue<?>> properties;
+	public Map<String,PropertyValue> properties;
 	
 	/**
 	 * Unused (not yet ?).

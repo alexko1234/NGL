@@ -65,7 +65,7 @@ public class ContentValidationHelper extends CommonValidationHelper {
 						DBQuery.is("code", sampleCode).in("projectCodes", projectCode));
 	}
 
-	public static void validateProperties(String sampleTypeCode, Map<String, PropertyValue<?>> properties,	ContextValidation contextValidation) {
+	public static void validateProperties(String sampleTypeCode, Map<String, PropertyValue> properties,	ContextValidation contextValidation) {
 		List<PropertyDefinition> proDefinitions = new ArrayList<>(); // PropertyDefinition>();
 		String importTypeCode = (String) contextValidation.getObject(FIELD_IMPORT_TYPE_CODE);
 		if (importTypeCode != null) {
@@ -74,7 +74,7 @@ public class ContentValidationHelper extends CommonValidationHelper {
 				proDefinitions.addAll(importType.getPropertiesDefinitionContentLevel());
 			}
 		}
-		SampleType sampleType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, sampleTypeCode, "sampleTypeCode", SampleType.find,true);
+		SampleType sampleType = BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, sampleTypeCode, "sampleTypeCode", SampleType.find,true);
 		if (sampleType != null) {
 			proDefinitions.addAll(sampleType.getPropertiesDefinitionContentLevel());				
 		}

@@ -33,7 +33,8 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 	@Override
 	public Experiment importFile(Experiment experiment, PropertyFileValue pfv, ContextValidation contextValidation) throws Exception {
 		
-		InputStream is = new ByteArrayInputStream(pfv.value);
+//		InputStream is = new ByteArrayInputStream(pfv.value);
+		InputStream is = new ByteArrayInputStream(pfv.byteValue());
 		
 		// le barcode a checker doit etre dans experiment.ouputContainerSupportCodes......si l'experience a deja ete sauvegardee...	
 		String outputSupportContainerCode=experiment.outputContainerSupportCodes.iterator().next().toString();

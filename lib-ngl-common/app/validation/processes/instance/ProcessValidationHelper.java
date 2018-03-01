@@ -29,7 +29,7 @@ import validation.utils.ValidationHelper;
 public class ProcessValidationHelper extends CommonValidationHelper {
 
 	public static void validateProcessType(String typeCode,
-			                               Map<String, PropertyValue<?>> properties,
+			                               Map<String, PropertyValue> properties,
 			                               ContextValidation contextValidation) {
 		ProcessType processType = BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ProcessType.find,true);
 		if (processType!=null) {
@@ -109,7 +109,7 @@ public class ProcessValidationHelper extends CommonValidationHelper {
 					contextValidation.addErrors("outputContainerCodes."+container.code, ValidationConstants.ERROR_BADSTATE_MSG, container.state.code);
 				}
 			}
-		}
-				
+		}	
 	}
+	
 }

@@ -55,12 +55,12 @@ public class InstanceHelpers {
 	public static final play.Logger.ALogger logger = play.Logger.of(InstanceHelpers.class);
 	
 	// @SuppressWarnings("unchecked")
-	public static Map<String, PropertyValue<?>> getLazyMapPropertyValue() {
+	public static Map<String, PropertyValue> getLazyMapPropertyValue() {
 //		return MapUtils.lazyMap(new HashMap<String, PropertyValue<?>>(), new Transformer() {
-		return MapUtils.lazyMap(new HashMap<>(), new Transformer<String, PropertyValue<?>>() {
+		return MapUtils.lazyMap(new HashMap<>(), new Transformer<String, PropertyValue>() {
 //			public PropertyValue<?> transform(Object mapKey) {
-			public PropertyValue<?> transform(String mapKey) {
-				// todo comment je sais quel est le type on doit mettre
+			public PropertyValue transform(String mapKey) {
+				// TODO comment je sais quel est le type on doit mettre
 				return new PropertySingleValue();
 			}
 		});
@@ -149,21 +149,21 @@ public class InstanceHelpers {
 	}
 
 	public static void copyPropertyValueFromPropertiesDefinition(List<PropertyDefinition> propertyDefinitions,
-			                                                     Map<String, PropertyValue<?>> propertiesInput, 
-			                                                     Map<String, PropertyValue<?>> propertiesOutPut) {
+			                                                     Map<String, PropertyValue> propertiesInput, 
+			                                                     Map<String, PropertyValue> propertiesOutPut) {
 		// TODO: fix as it i is a meaningless creation and could as well return
 		//       immediately without doing anything.
 		if (propertiesOutPut == null) 
 			propertiesOutPut = new HashMap<>(); // <String, PropertyValue>();
 		for (PropertyDefinition propertyDefinition : propertyDefinitions) {
-			PropertyValue<?> propertyValue = propertiesInput.get(propertyDefinition.code);
+			PropertyValue propertyValue = propertiesInput.get(propertyDefinition.code);
 			if (propertyValue != null) {
 				propertiesOutPut.put(propertyDefinition.code, propertyValue);
 			}
 		}
 	}
 	
-	public static Set<String> getDeletedPropertyDefinitionCode(List<PropertyDefinition> propertyDefinitions, Map<String, PropertyValue<?>> propertiesInput) {
+	public static Set<String> getDeletedPropertyDefinitionCode(List<PropertyDefinition> propertyDefinitions, Map<String, PropertyValue> propertiesInput) {
 		return propertyDefinitions.stream()
 			.filter(pd -> !propertiesInput.containsKey(pd.code))
 			.map(pd -> pd.code)
@@ -383,8 +383,8 @@ public class InstanceHelpers {
 	 * @param deletedPropertyCodes
 	 * @return
 	 */
-	public static Map<String, PropertyValue<?>> updateProperties(Map<String, PropertyValue<?>> properties, 
-			                                                     Map<String, PropertyValue<?>> newProperties, 
+	public static Map<String, PropertyValue> updateProperties(Map<String, PropertyValue> properties, 
+			                                                     Map<String, PropertyValue> newProperties, 
 			                                                     Set<String> deletedPropertyCodes) {
 		properties.replaceAll((k,v) -> (newProperties.containsKey(k))?newProperties.get(k):v);							
 		newProperties.forEach((k,v)-> properties.putIfAbsent(k, v));
@@ -399,9 +399,9 @@ public class InstanceHelpers {
 	 * @param deletedPropertyCodes
 	 * @return
 	 */
-	public static Map<String, PropertyValue<?>> 
-	              updatePropertiesWithOldValueComparison(Map<String, PropertyValue<?>> properties, 
-	            		                                 Map<String, Pair<PropertyValue<?>,PropertyValue<?>>> newProperties, 
+	public static Map<String, PropertyValue> 
+	              updatePropertiesWithOldValueComparison(Map<String, PropertyValue> properties, 
+	            		                                 Map<String, Pair<PropertyValue,PropertyValue>> newProperties, 
 	            		                                 Set<String> deletedPropertyCodes) {
 		//1 replace if old value equals old value
 		properties.replaceAll((k,v) -> (newProperties.containsKey(k) && ((newProperties.get(k).getLeft() != null && newProperties.get(k).getLeft().equals(v)) || newProperties.get(k).getLeft() == null))?newProperties.get(k).getRight():v);							
@@ -416,7 +416,7 @@ public class InstanceHelpers {
 			                                   Set<String> sampleCodes, 
 			                                   Set<String> containerCodes,
 			                                   Set<String> tags, 
-			                                   Map<String, Pair<PropertyValue<?>,PropertyValue<?>>> updatedProperties, 
+			                                   Map<String, Pair<PropertyValue,PropertyValue>> updatedProperties, 
 			                                   Set<String> deletedPropertyCodes,
 			                                   ContextValidation validation) {
 		MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,  DBQuery.in("code", containerCodes))
@@ -496,7 +496,7 @@ public class InstanceHelpers {
 	}
 	
 	public static void updateContentProperties(Sample sample, 
-			                                   Map<String, PropertyValue<?>> updatedProperties, 
+			                                   Map<String, PropertyValue> updatedProperties, 
 			                                   Set<String> deletedPropertyCodes,
 			                                   ContextValidation validation) {
 		MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, 
@@ -607,10 +607,10 @@ public class InstanceHelpers {
 	 * @param newProperties
 	 * @return a pair with left element is the old propertyValue and right the new propertyValue
 	 */
-	public static Map<String, Pair<PropertyValue<?>,PropertyValue<?>>> 
+	public static Map<String, Pair<PropertyValue,PropertyValue>> 
 	              getUpdatedPropertiesForSomePropertyCodes(Set<String> propertyCodes, 
-	            		                                   Map<String, PropertyValue<?>> oldProperties,
-	            		                                   Map<String, PropertyValue<?>> newProperties) {
+	            		                                   Map<String, PropertyValue> oldProperties,
+	            		                                   Map<String, PropertyValue> newProperties) {
 		return propertyCodes.stream()
 					 .filter(code -> newProperties.containsKey(code))
 					 .filter(code -> !newProperties.get(code).equals(oldProperties.get(code)))
@@ -625,8 +625,8 @@ public class InstanceHelpers {
 	 * @return
 	 */
 	public static Set<String> getDeletedPropertiesForSomePropertyCodes(Set<String> propertyCodes, 
-			                                                           Map<String, PropertyValue<?>> dbProperties,
-			                                                           Map<String, PropertyValue<?>> newProperties) {
+			                                                           Map<String, PropertyValue> dbProperties,
+			                                                           Map<String, PropertyValue> newProperties) {
 		return propertyCodes.stream()
 					 .filter(code -> dbProperties.containsKey(code) && !newProperties.containsKey(code))
 					 .collect(Collectors.toSet());		

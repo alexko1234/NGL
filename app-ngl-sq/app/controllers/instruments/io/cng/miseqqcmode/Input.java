@@ -28,7 +28,8 @@ public class Input extends AbstractInput {
 	@Override
 	public Experiment importFile(Experiment experiment,PropertyFileValue pfv, ContextValidation contextValidation) throws Exception {	
 			
-		InputStream is = new ByteArrayInputStream(pfv.value);
+//		InputStream is = new ByteArrayInputStream(pfv.value);
+		InputStream is = new ByteArrayInputStream(pfv.byteValue());
 		
 		CSVReader reader = new CSVReader(new InputStreamReader(is));
 		

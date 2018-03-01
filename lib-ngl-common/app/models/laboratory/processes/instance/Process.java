@@ -27,7 +27,7 @@ import fr.cea.ig.DBObject;
 
 
 @MongoCollection(name="Process")
-public class Process extends DBObject implements IValidation{
+public class Process extends DBObject implements IValidation {
 
 	public String typeCode;
 	public String categoryCode;
@@ -37,7 +37,7 @@ public class Process extends DBObject implements IValidation{
 	public TraceInformation traceInformation;
 	public List<Comment> comments = new ArrayList<Comment>(0);
 
-	public Map<String,PropertyValue<?>> properties;
+	public Map<String,PropertyValue> properties;
 
 	// Projects ref
 	public Set<String> projectCodes;
@@ -57,10 +57,10 @@ public class Process extends DBObject implements IValidation{
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		if(contextValidation.getObject(FIELD_STATE_CODE) == null){
+		if (contextValidation.getObject(FIELD_STATE_CODE) == null) {
 			contextValidation.putObject(FIELD_STATE_CODE , state.code);			
 		}
-		if(contextValidation.isCreationMode() 
+		if (contextValidation.isCreationMode() 
 				&& contextValidation.getObject(CommonValidationHelper.FIELD_PROCESS_CREATION_CONTEXT).equals(CommonValidationHelper.VALUE_PROCESS_CREATION_CONTEXT_COMMON)){
 			ProcessValidationHelper.validateProcessType(typeCode,properties,contextValidation);
 			ProcessValidationHelper.validateProcessCategory(categoryCode,contextValidation);
@@ -69,14 +69,14 @@ public class Process extends DBObject implements IValidation{
 			ProcessValidationHelper.validateContainerCode(inputContainerCode, contextValidation, "inputContainerCode");
 			ProcessValidationHelper.validateContainerSupportCode(inputContainerSupportCode, contextValidation, "inputContainerSupportCode");
 			
-		}else if(contextValidation.isCreationMode() 
+		} else if(contextValidation.isCreationMode() 
 				&& contextValidation.getObject(CommonValidationHelper.FIELD_PROCESS_CREATION_CONTEXT).equals(CommonValidationHelper.VALUE_PROCESS_CREATION_CONTEXT_SPECIFIC)){
 			ProcessValidationHelper.validateId(this, contextValidation);
 			ProcessValidationHelper.validateCode(this, InstanceConstants.PROCESS_COLL_NAME, contextValidation);
 			ProcessValidationHelper.validateProjectCodes(projectCodes, contextValidation);
 			ProcessValidationHelper.validateSampleCodes(sampleCodes, contextValidation);
 			ProcessValidationHelper.validateSampleOnInputContainer(sampleOnInputContainer, contextValidation);
-		}else{
+		} else {
 			ProcessValidationHelper.validateId(this, contextValidation);
 			ProcessValidationHelper.validateCode(this, InstanceConstants.PROCESS_COLL_NAME, contextValidation);
 			
@@ -91,7 +91,6 @@ public class Process extends DBObject implements IValidation{
 			ProcessValidationHelper.validateSampleCodes(sampleCodes, contextValidation);
 			ProcessValidationHelper.validateCurrentExperimentTypeCode(currentExperimentTypeCode,contextValidation);		
 			ProcessValidationHelper.validateSampleOnInputContainer(sampleOnInputContainer, contextValidation);
-
 		}
 		//ProcessValidationHelper.validateExperimentCodes(experimentCodes, contextValidation);
 	}
@@ -101,8 +100,9 @@ public class Process extends DBObject implements IValidation{
 		Process p = new Process();
 		p.typeCode     = this.typeCode;
 		p.categoryCode = this.categoryCode;
-		if(this.properties != null && this.properties.size() > 0){
-			p.properties = new HashMap<String, PropertyValue<?>>(this.properties);
+		if (this.properties != null && this.properties.size() > 0) {
+//			p.properties = new HashMap<String, PropertyValue<?>>(this.properties);
+			p.properties = new HashMap<>(this.properties);
 		}
 		p.traceInformation          = this.traceInformation;
 		p.inputContainerSupportCode = this.inputContainerSupportCode;

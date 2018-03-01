@@ -25,7 +25,8 @@ public class Input extends AbstractInput {
 	@Override
 	public Experiment importFile(Experiment experiment,PropertyFileValue pfv,
 			ContextValidation contextValidation) throws Exception {		
-		InputStream is = new ByteArrayInputStream(pfv.value);
+//		InputStream is = new ByteArrayInputStream(pfv.value);
+		InputStream is = new ByteArrayInputStream(pfv.byteValue());
 		
 		Workbook wb = WorkbookFactory.create(is);
 		Sheet sheet = wb.getSheetAt(0);
@@ -50,7 +51,7 @@ public class Input extends AbstractInput {
 				}
 		}
 		//validation
-		if(!contextValidation.hasErrors()){
+		if (!contextValidation.hasErrors()) {
 			experiment.atomicTransfertMethods
 				.stream()
 				.map(atm -> atm.inputContainerUseds.get(0))

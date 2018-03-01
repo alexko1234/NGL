@@ -155,27 +155,24 @@ public class ContainerHelper {
 		finalContent.processComments    = new ArrayList<Comment>();
 				
 		for(Content c : contents){
-			if(null != c.properties){
+			if (c.properties != null) { 
 				for(String key : c.properties.keySet()){
-					PropertyValue<?> pv = c.properties.get(key);
+					PropertyValue pv = c.properties.get(key);
 					finalContent.properties.computeIfAbsent(key, k -> pv);
 					finalContent.properties.computeIfPresent(key, (k,v) -> fusionSameProperty(v, pv));					
 				}
 			}
-			if(null != c.processProperties){
-				for(String key : c.processProperties.keySet()){
-					PropertyValue<?> pv = c.processProperties.get(key);
+			if (c.processProperties != null) {
+				for (String key : c.processProperties.keySet()) {
+					PropertyValue pv = c.processProperties.get(key);
 					finalContent.processProperties.computeIfAbsent(key, k -> pv);
 					finalContent.processProperties.computeIfPresent(key, (k,v) -> fusionSameProperty(v, pv));
 				}
 			}
-			
-			if(c.processComments != null && c.processComments.size() > 0){
+			if (c.processComments != null && c.processComments.size() > 0) {
 				finalContent.processComments.addAll(c.processComments);
 			}
-			
 		}
-		
 		//remove properties with #NOT_COMMON_VALUE#
 		finalContent.properties = finalContent.properties.entrySet()
 										.stream()
@@ -194,18 +191,19 @@ public class ContainerHelper {
 		return finalContent;
 	}
 
-	private static  PropertyValue<?> fusionSameProperty(PropertyValue<?> currentPv, PropertyValue<?> newPv) {
-		if(currentPv.value.equals(newPv.value)){
+	private static  PropertyValue fusionSameProperty(PropertyValue currentPv, PropertyValue newPv) {
+		if (currentPv.value.equals(newPv.value)){
 			return currentPv;
-		}else{
+		} else { 
+			// TODO : do something that is a proper error handling ?
 			return new PropertySingleValue("#NOT_COMMON_VALUE#");
 		}		
 	}
 
 	private static String getContentKey(Content content) {
-		if(content.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)){
+		if (content.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)) {
 			return content.projectCode+"_"+content.sampleCode+"_"+content.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value;
-		}else{
+		} else {
 			return content.projectCode+"_"+content.sampleCode;
 		}		
 	}
@@ -230,7 +228,7 @@ public class ContainerHelper {
 		return newContents;
 	}
 
-	public static List<ContainerSupport> createSupportFromContainers(List<Container> containers, Map<String, PropertyValue<String>> mapSupportsCodeSeq, ContextValidation contextValidation){
+	public static List<ContainerSupport> createSupportFromContainers(List<Container> containers, Map<String, PropertyValue> mapSupportsCodeSeq, ContextValidation contextValidation){
 
 		HashMap<String,ContainerSupport> mapSupports = new HashMap<String,ContainerSupport>();
 
@@ -278,7 +276,7 @@ public class ContainerHelper {
 		return InstanceHelpers.save(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, new ArrayList<ContainerSupport>(mapSupports.values()), contextValidation, true);
 	}
 
-	public static void updateSupportFromUpdatedContainers(List<Container> updatedContainers, Map<String, PropertyValue<String>> mapSupportsCodeSeq, ContextValidation contextValidation){
+	public static void updateSupportFromUpdatedContainers(List<Container> updatedContainers, Map<String, PropertyValue> mapSupportsCodeSeq, ContextValidation contextValidation){
 
 		HashMap<String,ContainerSupport> mapSupports = new HashMap<String,ContainerSupport>();
 		//NOTE FDS 16/06/2016 les cas de supression de containers dans un support ne sont pas gerees par ce code...

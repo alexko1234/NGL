@@ -55,9 +55,10 @@ public class Experiment extends DBObject implements IValidation {
 	public String categoryCode;
 	
 	public TraceInformation traceInformation = new TraceInformation();
-	public Map<String,PropertyValue<?>> experimentProperties;
-	
-	public Map<String, PropertyValue<?>> instrumentProperties;
+//	public Map<String,PropertyValue<?>> experimentProperties;
+//	public Map<String, PropertyValue<?>> instrumentProperties;
+	public Map<String, PropertyValue> experimentProperties;
+	public Map<String, PropertyValue> instrumentProperties;
 	
 	public InstrumentUsed instrument;
 	public String protocolCode;

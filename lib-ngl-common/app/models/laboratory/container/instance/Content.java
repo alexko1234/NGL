@@ -67,16 +67,15 @@ public class Content implements IValidation {
 	public String ncbiScientificName;
 
 	// TODO: use PropertyValue<?>
-	public Map<String,PropertyValue<?>> properties;
+	public Map<String,PropertyValue> properties;
 
 	/* Put process properties to analyse container*/
 	//public String processTypeCode;
 	//public String processCode;
-	public Map<String,PropertyValue<?>> processProperties;
+	public Map<String,PropertyValue> processProperties;
 	
 	public List<Comment> processComments;
 
-	
 	public Content() {
 		properties = new HashMap<>(); // String, PropertyValue>();		
 	}

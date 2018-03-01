@@ -24,8 +24,7 @@ import fr.cea.ig.MongoDBDAO;
 public class Treatment implements IValidation {
 	
 	public Treatment() {
-		super();
-	
+//		super();
 	}
 	
 	public String code;
@@ -33,25 +32,26 @@ public class Treatment implements IValidation {
 	public String categoryCode;
 	
 	@JsonIgnore
-	public Map<String, Map<String, PropertyValue<?>>> results = new HashMap<>(); // String, Map<String, PropertyValue>>();
+	public Map<String, Map<String, PropertyValue>> results = new HashMap<>(); // String, Map<String, PropertyValue>>();
 
 	@JsonAnyGetter
-    public Map<String,Map<String,PropertyValue<?>>> results() {
+    public Map<String,Map<String,PropertyValue>> results() {
         return results;
     }
 
     @JsonAnySetter
-    public void set(String name, Map<String,PropertyValue<?>> value) {
+    public void set(String name, Map<String,PropertyValue> value) {
     	results.put(name, value);
     }
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		TreatmentType treatmentType = TreatmentValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", TreatmentType.find,true);
-		if(null != treatmentType){
+		if (treatmentType != null) {
 			TreatmentValidationHelper.validateCode(treatmentType, code, contextValidation);
 			TreatmentValidationHelper.validateTreatmentCategoryCode(treatmentType, categoryCode, contextValidation);
 			TreatmentValidationHelper.validateResults(treatmentType, results, contextValidation);						
 		}					
 	}
+	
 }

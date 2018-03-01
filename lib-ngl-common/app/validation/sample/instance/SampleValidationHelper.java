@@ -27,7 +27,7 @@ public class SampleValidationHelper extends CommonValidationHelper {
 
 	public static void validateSampleType(String typeCode,
 										  String importTypeCode, 
-										  Map<String, PropertyValue<?>> properties,
+										  Map<String, PropertyValue> properties,
 										  ContextValidation contextValidation) {
 
 		List<PropertyDefinition> proDefinitions = new ArrayList<PropertyDefinition>();

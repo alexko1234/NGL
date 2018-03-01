@@ -39,7 +39,7 @@ import models.laboratory.reagent.description.KitCatalog;
 import models.laboratory.reagent.description.ReagentCatalog;
 
 import models.utils.InstanceConstants;
-import play.Logger;
+// import play.Logger;
 import validation.ContextValidation;
 // import validation.utils.ValidationHelper;
 import controllers.instruments.io.utils.AbstractInput;
@@ -48,6 +48,8 @@ import controllers.instruments.io.utils.AbstractInput;
 import fr.cea.ig.MongoDBDAO;
 
 public class NovaSeqInput extends AbstractInput {
+	
+	private static final play.Logger.ALogger logger = play.Logger.of(NovaSeqInput.class);
 	
 	/* F. Dos Santos NGL-1769: Dépôt NovaSeq : import fichier XML
        Description du fichier à traiter:
@@ -83,16 +85,16 @@ public class NovaSeqInput extends AbstractInput {
 	
 	@Override
 	// suppresson throws Exception
-	public Experiment importFile(Experiment experiment,PropertyFileValue pfv, ContextValidation contextValidation) {	
+	public Experiment importFile(Experiment experiment, PropertyFileValue pfv, ContextValidation contextValidation) {	
 		
 	     try {
 	    	 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	    	 DocumentBuilder builder = factory.newDocumentBuilder();  /// c'est ici que des erreur de balises peuvent etre vues
-	   
-	    	 InputStream inputStream = new ByteArrayInputStream(pfv.value);
+//	    	 InputStream inputStream = new ByteArrayInputStream(pfv.value);
+	    	 InputStream inputStream = new ByteArrayInputStream(pfv.byteValue());
 	    	 InputSource is = new InputSource(inputStream);
 	    	 is.setEncoding("UTF-8");
-	    	 Logger.debug("import fichier >>>" + pfv.fullname );
+	    	 logger.debug("import fichier >>>" + pfv.fullname );
 	 		 
 	         Document xml = builder.parse(is);
 	         
@@ -163,7 +165,7 @@ public class NovaSeqInput extends AbstractInput {
 		     // si la balise OK comparer avec novaseqLoadingTube
 		     // !! pas obligatoire dans l'experience...et peut etre manquant  
 		     if (null == experiment.instrumentProperties.get("novaseqLoadingTube") || null == experiment.instrumentProperties.get("novaseqLoadingTube").value) {
-		    	 Logger.debug("novaseqLoadingTube= null !!");
+		    	 logger.debug("novaseqLoadingTube= null !!");
 		    	 // si on importe le fichier a l'etat terminé on ne peut plus renseigner 'Tube chargement (RFID)' !!!
 				 ///contextValidation.addErrors("Erreurs expérience", "Veuillez renseigner 'Tube chargement (RFID)' avant d'importer le fichier.");
 				 
@@ -178,7 +180,7 @@ public class NovaSeqInput extends AbstractInput {
 		     // si la balise OK comparer avec novaseqFlowcellMode
 		     // !! pas obligatoire dans l'experience...et peut etre manquant
 		     if (null == experiment.instrumentProperties.get("novaseqFlowcellMode") || null == experiment.instrumentProperties.get("novaseqFlowcellMode").value ) {
-		    	 Logger.debug("novaseqFlowcellMode= null !!");
+		    	 logger.debug("novaseqFlowcellMode= null !!");
 		    	 // si on importe le fichier a l'etat terminé on ne peut plus renseigner 'type de flowcell' !!!
 				 ///contextValidation.addErrors("Erreurs expérience", "Veuillez renseigner 'type de flowcell' avant d'importer le fichier.");
 				 
@@ -291,18 +293,16 @@ public class NovaSeqInput extends AbstractInput {
 	    		 if ( null == reag ){
 	        		 contextValidation.addErrors("Erreurs catalogue", "Pas de réactif nommé '"+reagName +"' dans le catalogue");
 	        	 } else {
-		    		 Logger.debug("code="+ reag.code);
+		    		 logger.debug("code="+ reag.code);
 	        		 
-		    		 reagent.kitCatalogCode=kit.code;       // code NGL du kit parent
-		    		 reagent.boxCatalogCode=box.code;       // code NGL de la boîte parent
-		    		 reagent.reagentCatalogCode=reag.code;  // code NGL du reactif
+		    		 reagent.kitCatalogCode = kit.code;       // code NGL du kit parent
+		    		 reagent.boxCatalogCode = box.code;       // code NGL de la boîte parent
+		    		 reagent.reagentCatalogCode = reag.code;  // code NGL du reactif
 		    		 //reagent.boxCode="XXX";               // barcode de la boîte parent... info non disponible dans le fichier
-		    		 reagent.code=serialBarcode+"_"+lotNumber+"_"; // !!!! les codes doivent se terminer par "_" pour etre filtrables par la suite
+		    		 reagent.code = serialBarcode + "_" + lotNumber + "_"; // !!!! les codes doivent se terminer par "_" pour etre filtrables par la suite
 		    		 //reagent.description="TEST....";      // rien de pertinent a mettre ?????
-	
 					 experiment.reagents.add(reagent); 
 	        	 }
-	    		 
 	    	 }
 	     } catch (XPathExpressionException e) {
 		    	 contextValidation.addErrors("Erreurs interne", e.getMessage());

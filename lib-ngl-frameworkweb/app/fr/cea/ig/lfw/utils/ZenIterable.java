@@ -1,5 +1,6 @@
 package fr.cea.ig.lfw.utils;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -52,10 +53,11 @@ public interface ZenIterable <A> extends Iterable <A> {
 		return this;
 	}
 	
+	default Optional<A> first() {
+		return Iterables.first(this);
+	}
+	
 }
-
-
-
 
 
 // moins pratique que interface car 1! slot pour heritage alors que plusieurs pour interface.

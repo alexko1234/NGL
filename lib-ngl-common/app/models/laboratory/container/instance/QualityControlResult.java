@@ -23,12 +23,12 @@ public class QualityControlResult implements IValidation {
 	public String    typeCode;
 	public Date      date;
 	public Valuation valuation;
-	public Map<String,PropertyValue<?>> properties;
+	public Map<String,PropertyValue> properties;
 	
 	public QualityControlResult() {	
 	}
 	
-	public QualityControlResult(String code, String typeCode, Integer index, Map<String,PropertyValue<?>> properties, Valuation valuation) {
+	public QualityControlResult(String code, String typeCode, Integer index, Map<String,PropertyValue> properties, Valuation valuation) {
 		this.index      = index;
 		this.code       = code;
 		this.typeCode   = typeCode;

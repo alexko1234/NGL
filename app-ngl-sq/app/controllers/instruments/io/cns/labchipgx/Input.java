@@ -25,7 +25,8 @@ public class Input extends AbstractInput {
 			
 		
 		String plateCodeInExp = experiment.inputContainerSupportCodes.iterator().next();
-		InputStream is = new ByteArrayInputStream(pfv.value);
+//		InputStream is = new ByteArrayInputStream(pfv.value);
+		InputStream is = new ByteArrayInputStream(pfv.byteValue());
 		
 		CSVReader reader = new CSVReader(new InputStreamReader(is));
 		

@@ -180,10 +180,10 @@ public class ProcWorkflowHelper {
 		if(null != outputContainerCodes && outputContainerCodes.size() > 0 
 				&& process.properties != null && process.properties.size() > 0 && propertyCodes.size() > 0){
 			Process oldProcess = (Process) validation.getObject(OBJECT_IN_DB);
-			Map<String, Pair<PropertyValue<?>,PropertyValue<?>>> updatedProperties = InstanceHelpers.getUpdatedPropertiesForSomePropertyCodes(propertyCodes, oldProcess.properties, process.properties);
+			Map<String, Pair<PropertyValue,PropertyValue>> updatedProperties = InstanceHelpers.getUpdatedPropertiesForSomePropertyCodes(propertyCodes, oldProcess.properties, process.properties);
 			Set<String> deletedPropertyCodes = InstanceHelpers.getDeletedPropertiesForSomePropertyCodes(propertyCodes, oldProcess.properties, process.properties);
-			logger.debug("updatedProperties "+updatedProperties);
-			logger.debug("deletedPropertyCodes "+deletedPropertyCodes);
+			logger.debug("updatedProperties " + updatedProperties);
+			logger.debug("deletedPropertyCodes " + deletedPropertyCodes);
 			
 			if(updatedProperties.size() > 0 || deletedPropertyCodes.size() > 0){
 				//1 find tag inside inputContainer and all outputContainer if input does not have a tag
@@ -202,10 +202,6 @@ public class ProcWorkflowHelper {
 		}
 	}
 
-
-	
-	
-	
 	private Set<String> getProcessesPropertyDefinitionCodes(Process process, Level.CODE level) {		
 		ProcessType processType = ProcessType.find.findByCode(process.typeCode);
 		return processType.getPropertyDefinitionByLevel(level)
@@ -213,9 +209,7 @@ public class ProcWorkflowHelper {
 				.map(pd -> pd.code)
 				.collect(Collectors.toSet());		
 	}
-	
-	
-	
+		
 	/*
 	 * Query to retrieve container and content (using tag if exist)
 	 * @param process
@@ -223,20 +217,16 @@ public class ProcWorkflowHelper {
 	 */
 	private DBQuery.Query getInputContainerQuery(Process process) {
 		DBQuery.Query query = DBQuery.is("code",process.inputContainerCode);
-		if(process.sampleOnInputContainer.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)){
+		if (process.sampleOnInputContainer.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)) {
 			query.elemMatch("contents", DBQuery.is("sampleCode", process.sampleOnInputContainer.sampleCode)
 												.is("projectCode",  process.sampleOnInputContainer.projectCode)
 												.is("properties.tag.value", process.sampleOnInputContainer.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value));
 			
-		}else{
+		} else {
 			query.elemMatch("contents", DBQuery.is("sampleCode", process.sampleOnInputContainer.sampleCode).is("projectCode",  process.sampleOnInputContainer.projectCode));
 			
 		}
-		
 		return query;
 	}
-
-
-	
 
 }

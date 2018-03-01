@@ -56,7 +56,7 @@ public class ContainerUsedValidationHelper extends CommonValidationHelper {
 		//TODO improve comparison
 	}
 	
-	public static void validateExperimentProperties(Map<String,PropertyValue<?>> properties, Level.CODE level, ContextValidation contextValidation) {
+	public static void validateExperimentProperties(Map<String,PropertyValue> properties, Level.CODE level, ContextValidation contextValidation) {
 		String typeCode = getObjectFromContext(FIELD_TYPE_CODE, String.class, contextValidation);
 		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
 		
@@ -73,7 +73,7 @@ public class ContainerUsedValidationHelper extends CommonValidationHelper {
 		}
 	}
 	
-	public static void validateInstrumentProperties(Map<String,PropertyValue<?>> properties,  Level.CODE level, ContextValidation contextValidation) {
+	public static void validateInstrumentProperties(Map<String,PropertyValue> properties,  Level.CODE level, ContextValidation contextValidation) {
 		InstrumentUsed instrument = getObjectFromContext(FIELD_INST_USED, InstrumentUsed.class, contextValidation);
 		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
 		

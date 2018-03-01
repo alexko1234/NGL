@@ -105,11 +105,11 @@ public class TreatmentValidationHelper extends CommonValidationHelper {
 		return false;
 	}
 
-	public static void validateResults(TreatmentType treatmentType, Map<String, Map<String, PropertyValue<?>>> results, ContextValidation contextValidation) {
+	public static void validateResults(TreatmentType treatmentType, Map<String, Map<String, PropertyValue>> results, ContextValidation contextValidation) {
 		if(ValidationHelper.required(contextValidation, results, "results")){
 			Level.CODE levelCode = getLevelFromContext(contextValidation);
 			//validate all treatment key in input
-			for(Map.Entry<String, Map<String, PropertyValue<?>>> entry : results.entrySet()){
+			for(Map.Entry<String, Map<String, PropertyValue>> entry : results.entrySet()){
 				TreatmentTypeContext context = getTreatmentTypeContext(entry.getKey(), treatmentType.id);
 				if(context == null){
 					contextValidation.addErrors(entry.getKey(),ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, entry.getKey());
@@ -118,7 +118,7 @@ public class TreatmentValidationHelper extends CommonValidationHelper {
 			//validate if all treatment context are present
 			for(TreatmentTypeContext context : treatmentType.contexts){
 				if(results.containsKey(context.code)){
-					Map<String, PropertyValue<?>> props = results.get(context.code);
+					Map<String, PropertyValue> props = results.get(context.code);
 					contextValidation.addKeyToRootKeyName(context.code);					
 					ValidationHelper.validateProperties(contextValidation, props, treatmentType.getPropertyDefinitionByLevel(Level.CODE.valueOf(context.name), levelCode));
 					contextValidation.removeKeyFromRootKeyName(context.code);

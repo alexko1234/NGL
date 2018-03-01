@@ -33,7 +33,7 @@ public class SampleOnContainer implements IValidation{
 	// Reference to the container
 	public String containerCode;
 	// Properties of the content in the container
-	public Map<String,PropertyValue<?>> properties;
+	public Map<String,PropertyValue> properties;
 	//Percentage of content on the container
 	public Double percentage;
 	//Collaborator's reference
@@ -41,11 +41,9 @@ public class SampleOnContainer implements IValidation{
 	//NCBI information from Sample
 	public String taxonCode;
 	public String ncbiScientificName;
-
 	//Measured concentration from Container
 	public PropertySingleValue containerConcentration;
 	
-
 	@Override
 	public String toString() {
 		return "SampleOnContainer [lastUpdateDate=" + lastUpdateDate

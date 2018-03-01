@@ -81,7 +81,8 @@ public class Input extends AbstractInput {
 		Map<String,Double> data = new HashMap<String,Double>(0);
 		
 		// ajout 03/08/2017 charset detection (N. Wiart)
-		byte[] ibuf = pfv.value;
+//		byte[] ibuf = pfv.value;
+		byte[] ibuf = pfv.byteValue();
 		String charset = "UTF-8"; //par defaut, convient aussi pour de l'ASCII pur
 		
 		// si le fichier commence par les 2 bytes ff/fe  alors le fichier est encodé en UTF-16 little endian

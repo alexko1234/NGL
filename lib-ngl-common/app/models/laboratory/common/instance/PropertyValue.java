@@ -13,7 +13,6 @@ import validation.ContextValidation;
 import validation.IValidation;
 import validation.utils.ValidationHelper;
 
-
 /**
  * Object used in Map of key/value to stored value with its unit
  * if unit is null, it will not stored in MongoDB
@@ -30,7 +29,8 @@ import validation.utils.ValidationHelper;
 	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyObjectValue.class,     name = PropertyValue.objectType),
 	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyObjectListValue.class, name = PropertyValue.objectListType)
 })
-public abstract class PropertyValue<T> implements IValidation {
+//public abstract class PropertyValue<T> implements IValidation {
+public abstract class PropertyValue implements IValidation {
 	
 	public static final String singleType     = "single";
 	public static final String listType       = "list";
@@ -40,43 +40,62 @@ public abstract class PropertyValue<T> implements IValidation {
 	public static final String objectListType = "object_list";
 	
 	public String _type;
-	public T value;
+	
+	public Object value;
 	
 	// TODO: remove super() calls that are implicit
 	public PropertyValue(String _type) {
 		// super();
-		this._type = _type;
+//		this._type = _type;
+		this(_type,null);
 	}
 	
-	public PropertyValue(String _type, T value) {
-		// super();
+//	public PropertyValue(String _type, T value) {
+//		// super();
+//		this._type = _type;
+//		this.value = value;
+//	}
+	public PropertyValue(String _type, Object value) {
 		this._type = _type;
 		this.value = value;
 	}
 	
-	public PropertyValue(String _type, T value, String unit) {
-		// super();
-		this._type = _type;
-		this.value = value;		
-	}
+//	public PropertyValue(String _type, T value, String unit) {
+//		// super();
+//		this._type = _type;
+//		this.value = value;		
+//	}
 	
-	public T getValue() {
+	// Cheap covariance 
+//	public T getValue() {
+//		return value;
+//	}
+	
+	// This is supposed to be overloaded in subclasses so we have 
+	// some covariance in the return type that helps with drools.
+	public Object getValue() {
 		return value;
 	}
 	
 	// This is an obviously bad method that should be abstract 
 	// and defined in subclasses so the proper value type is enforced.
-	@SuppressWarnings("unchecked")
+	// This is a setter that is not named "setValue" so it does not interact with
+	// json serialization.
+//	@SuppressWarnings("unchecked")
+//	public void assignValue(Object value) {
+//		this.value = (T)value;
+//	}
 	public void assignValue(Object value) {
-		this.value = (T)value;
+		this.value = value;
 	}
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		//Validate type of property against propertyDefinition
+		// Validate type of property against propertyDefinition
 		Collection<PropertyDefinition> propertyDefinitions = (Collection<PropertyDefinition>) contextValidation.getObject("propertyDefinitions");
 		ValidationHelper.checkType(contextValidation, this, propertyDefinitions);
 	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -85,6 +104,7 @@ public abstract class PropertyValue<T> implements IValidation {
 		result = prime * result + ((value == null) ? 0 : value.hashCode());
 		return result;
 	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -93,7 +113,8 @@ public abstract class PropertyValue<T> implements IValidation {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		PropertyValue<?> other = (PropertyValue<?>) obj;
+//		PropertyValue<?> other = (PropertyValue<?>) obj;
+		PropertyValue other = (PropertyValue) obj;
 		if (_type == null) {
 			if (other._type != null)
 				return false;

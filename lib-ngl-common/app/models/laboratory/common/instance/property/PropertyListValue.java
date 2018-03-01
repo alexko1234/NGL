@@ -13,16 +13,19 @@ import models.laboratory.common.instance.PropertyValue;
 /**
  *
  */
-public class PropertyListValue extends PropertyValue<List<? extends Object>>{
+//public class PropertyListValue extends PropertyValue<List<? extends Object>>{
+public class PropertyListValue extends PropertyValue {
 	
 	public String unit;
 	
 	public PropertyListValue() {
 		super(PropertyValue.listType);
 	}
+	
 	public PropertyListValue(List<? extends Object> value) {
 		super(PropertyValue.listType, value);
 	}
+	
 	public PropertyListValue(List<? extends Object> value, String unit) {
 		super(PropertyValue.listType, value);
 		this.unit = unit;
@@ -30,8 +33,9 @@ public class PropertyListValue extends PropertyValue<List<? extends Object>>{
 
 	@Override
 	public String toString() {
-		return "PropertyListValue [value=" + value + ", unit=" + unit + ", class="+value.getClass().getName()+"]";
+		return "PropertyListValue [value=" + value + ", unit=" + unit + ", class=" + value.getClass().getName() + "]";
 	}
+	
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		super.validate(contextValidation);
@@ -46,6 +50,11 @@ public class PropertyListValue extends PropertyValue<List<? extends Object>>{
 		}
 		
 	}
+	
+	public List<Object> listValue() {
+		return (List<Object>)value;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -53,6 +62,7 @@ public class PropertyListValue extends PropertyValue<List<? extends Object>>{
 		result = prime * result + ((unit == null) ? 0 : unit.hashCode());
 		return result;
 	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -70,5 +80,4 @@ public class PropertyListValue extends PropertyValue<List<? extends Object>>{
 		return true;
 	}
 	
-
 }

@@ -53,7 +53,7 @@ public class ContainerSupport extends DBObject implements IValidation {
 	public Set<String> projectCodes;
 	public Set<String> sampleCodes;
 	public Set<String> fromTransformationTypeCodes; //TODO GA useful ???
-	public Map<String, PropertyValue<?>> properties;
+	public Map<String, PropertyValue> properties;
 	public Integer nbContainers;
 	public Integer nbContents;
 	

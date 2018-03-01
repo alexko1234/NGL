@@ -320,16 +320,14 @@ public class LimsAbandonDAO {
 		return treatment.results().get("default").get(propertyCode).value;
 	}
 
-
 	private Date getStateDate(String stateCode, State state) {
-		for(TransientState ts : state.historical){
-			if(stateCode.equals(ts.code)){
+		for (TransientState ts : state.historical) {
+			if (stateCode.equals(ts.code)) {
 				return ts.date;
 			}
 		}
-		throw new RuntimeException("insertRun : missing state date : "+stateCode);
+		throw new RuntimeException("insertRun : missing state date : " + stateCode);
 	}
-
 
 	public void insertReadSet(ReadSet rs, BanqueSolexa bs) {
 		/*
@@ -371,24 +369,19 @@ public class LimsAbandonDAO {
 		@futil bit
 		*/
 		
-		if(deleteAllBeforeInsert){
+		if (deleteAllBeforeInsert) {
 			this.jdbcTemplate.update("ps_FichierlotseqUnlotsequence @lseqco = ?", getLseqco(rs));
 		}
 		
-		for(File file:rs.files){
-			
+		for (File file : rs.files) {
 			//Logger.debug("select lseqco from Lotsequence l inner join Runhd r on r.runhco = l.runhco where lseqnom = '"+rs.code+"' and runhnom = '"+rs.runCode+"'");
-			
 			Integer lseqco = getLseqco(rs);
 			Integer tfileco = convertTypeCode(file.typeCode);  //=
 			Integer flabelco = convertLabel((String)file.properties.get("label").value);
 			String flotseqname = file.fullname.replace("."+file.extension, "");
-			
-			
 			this.jdbcTemplate.update("pc_Fichierlotseq @lseqco=?, @flotseqname=?, @flotseqext=?, "
 					+ "@flotseqascii=?, @tfileco=?, @flabelco=?, @futil=?",
 					lseqco, flotseqname, file.extension, Integer.valueOf((String)file.properties.get("asciiEncoding").value.toString()), tfileco, flabelco, file.usable);
-					
 		}
 	}
 
@@ -679,8 +672,8 @@ public class LimsAbandonDAO {
 	
 	private void getPropertiesFromResultSet(ResultSet rs,
 			                                List<PropertyDefinition> propertiesDefinitions,
-			                                Map<String, PropertyValue<?>> properties) throws SQLException {
-		for(PropertyDefinition propertyDefinition :propertiesDefinitions) {
+			                                Map<String, PropertyValue> properties) throws SQLException {
+		for (PropertyDefinition propertyDefinition :propertiesDefinitions) {
 			String code  = null;
 			String unite = null;
 			try {

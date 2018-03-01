@@ -24,7 +24,7 @@ public class PropertyValueFieldConfiguration extends AbstractFieldConfiguration 
 			                  Map<Integer, String> rowMap, 
 			                  ContextValidation contextValidation, 
 			                  Action action) throws Exception {
-		PropertyValue<?> psv = (PropertyValue<?>)Class.forName(className).newInstance();
+		PropertyValue psv = (PropertyValue)Class.forName(className).newInstance();
 		if (value != null)
 			value.populateField(psv.getClass().getField("value"), psv, rowMap, contextValidation, action);
 		if (unit != null)

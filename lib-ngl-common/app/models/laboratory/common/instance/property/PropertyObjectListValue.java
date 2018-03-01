@@ -17,7 +17,8 @@ import models.laboratory.common.instance.PropertyValue;
  * an object is stock in Map with key = property and value = value of property
  */
 //public class PropertyObjectListValue extends PropertyValue<List<Map<String, ?>>> {
-public class PropertyObjectListValue extends PropertyValue<List<Map<String, Object>>> {
+//public class PropertyObjectListValue extends PropertyValue<List<Map<String, Object>>> {
+public class PropertyObjectListValue extends PropertyValue {
 	
 	public Map<String,String> unit;
 	
@@ -40,6 +41,15 @@ public class PropertyObjectListValue extends PropertyValue<List<Map<String, Obje
 	public PropertyObjectListValue(List<Map<String, Object>> value, Map<String,String> unit) {
 		super(PropertyValue.objectListType, value);
 		this.unit = unit;
+	}
+	
+	@Override
+	public List<Map<String, Object>> getValue() {
+		return listMapValue();
+	}
+	
+	public List<Map<String, Object>> listMapValue() {
+		return (List<Map<String, Object>>)value;
 	}
 	
 	@Override

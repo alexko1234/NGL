@@ -18,6 +18,9 @@ import com.google.common.io.Files;
  */
 public class PropertyFileValue extends PropertyByteValue {
 	
+	public String fullname;
+	public String extension;
+	
 	// TODO: Should provide protected constructors that take a type argument.
 	
 	public PropertyFileValue() {
@@ -30,15 +33,11 @@ public class PropertyFileValue extends PropertyByteValue {
 		this.fullname = value.getName();
 	}
 	
-	public String fullname;
-	public String extension;
-	
 	@Override
 	public String toString() {
-		return "PropertyFileValue [name=" + fullname + ", ext=" + extension+", class="+value.getClass().getName()+"]";
+		return "PropertyFileValue [name=" + fullname + ", ext=" + extension + ", class=" + value.getClass().getName() + "]";
 	}
-	
-	
+		
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		PropertyDefinition propertyDefinition = (PropertyDefinition) ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).toArray()[0];
@@ -77,6 +76,5 @@ public class PropertyFileValue extends PropertyByteValue {
 			return false;
 		return true;
 	}
-	
 
 }

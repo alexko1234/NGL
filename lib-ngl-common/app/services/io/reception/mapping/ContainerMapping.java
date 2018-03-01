@@ -143,8 +143,7 @@ public class ContainerMapping extends Mapping<Container> {
 		});				
 	}
 
-	
-	private Map<String, PropertyValue<?>> computeProperties(Map<String, PropertyValue<?>> properties, Sample sample, String containerCode) {
+	private Map<String, PropertyValue> computeProperties(Map<String, PropertyValue> properties, Sample sample, String containerCode) {
 		setPropertiesFromSample(properties, sample);
 		if(sample.life != null && sample.life.from != null && sample.life.from.sampleCode != null && sample.life.from.projectCode != null){
 			PropertySingleValue fromSampleTypeCode = new PropertySingleValue(sample.life.from.sampleTypeCode);
@@ -158,27 +157,23 @@ public class ContainerMapping extends Mapping<Container> {
 					DBQuery.is("code",sample.life.from.sampleCode).in("projectCodes", sample.life.from.projectCode));
 			setPropertiesFromSample(properties, parentSample);
 		}
-		
 		// HACK to have the original container on the readset
 		if(Action.save.equals(action) && !properties.containsKey("sampleAliquoteCode")){
 			PropertySingleValue psv = new PropertySingleValue(containerCode);
 			properties.put("sampleAliquoteCode", psv);
 		}
-		
 		return properties;
 	}
 
-	private void setPropertiesFromSample(Map<String, PropertyValue<?>> properties, Sample sample) {
+	private void setPropertiesFromSample(Map<String, PropertyValue> properties, Sample sample) {
 		SampleType sampleType = SampleType.find.findByCode(sample.typeCode);
-		if(sampleType !=null){
+		if (sampleType != null) {
 			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(sampleType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,properties);
 		}
-		
 		ImportType importType = ImportType.find.findByCode(sample.importTypeCode);
-		if(importType !=null){
+		if (importType != null) {
 			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(importType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,properties);
 		}
 	}
 
-	
 }

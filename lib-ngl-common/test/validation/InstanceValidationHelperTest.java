@@ -301,7 +301,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		lp.add(project.code);
 		c.projectCodes = lp;
 		
-		Map<String, PropertyValue<?>> m = new HashMap<>(); // <String, PropertyValue>();
+		Map<String, PropertyValue> m = new HashMap<>(); // <String, PropertyValue>();
 		m.put("limsCode", new PropertySingleValue(3805));
 		c.properties = m;
 		
@@ -372,7 +372,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		lp.add(project.code);
 		c.projectCodes = lp;
 		
-		Map<String, PropertyValue<?>> m = new HashMap<>(); // <String, PropertyValue>();
+		Map<String, PropertyValue> m = new HashMap<>(); // <String, PropertyValue>();
 		m.put("limsCode", new PropertySingleValue(3805));
 		c.properties = m;
 		

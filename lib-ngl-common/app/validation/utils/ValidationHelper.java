@@ -39,7 +39,10 @@ public class ValidationHelper {
 	
 	public static final play.Logger.ALogger logger = play.Logger.of(ValidationHelper.class);
 	
-	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue<?>> properties,List<PropertyDefinition> propertyDefinitions, Boolean validateNotDefined) {
+//	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue<?>> properties,List<PropertyDefinition> propertyDefinitions, Boolean validateNotDefined) {
+//		validateProperties(contextValidation, properties, propertyDefinitions, validateNotDefined, true, null, null);
+//	}
+	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, Boolean validateNotDefined) {
 		validateProperties(contextValidation, properties, propertyDefinitions, validateNotDefined, true, null, null);
 	}
 	
@@ -49,7 +52,10 @@ public class ValidationHelper {
 	 * @param properties
 	 * @param propertyDefinitions
 	 */
-	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue<?>> properties,List<PropertyDefinition> propertyDefinitions){
+//	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue<?>> properties,List<PropertyDefinition> propertyDefinitions){
+//		validateProperties(contextValidation, properties, propertyDefinitions, true, true, null, null);		
+//	}
+	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions){
 		validateProperties(contextValidation, properties, propertyDefinitions, true, true, null, null);		
 	}
 	
@@ -60,8 +66,83 @@ public class ValidationHelper {
 	 * @param propertyDefinitions
 	 * @param validateNotDefined
 	 */
-	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue<?>> properties,List<PropertyDefinition> propertyDefinitions, Boolean validateNotDefined, Boolean testRequired, String currentStateCode, String defaultRequiredState) {
-		Map<String, PropertyValue<?>> inputProperties = new HashMap<>(); //<String, PropertyValue>(0);
+//	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue<?>> properties,List<PropertyDefinition> propertyDefinitions, Boolean validateNotDefined, Boolean testRequired, String currentStateCode, String defaultRequiredState) {
+//		Map<String, PropertyValue<?>> inputProperties = new HashMap<>(); //<String, PropertyValue>(0);
+//		if (properties != null && !properties.isEmpty()) {
+//			cleanningProperties(properties);
+//			inputProperties = new HashMap<>(); // String, PropertyValue>(properties);		
+//		}		
+//		Multimap<String, PropertyDefinition> multimap = getMultimap(propertyDefinitions);
+//		
+//		for(String key : multimap.keySet()){
+//			Collection<PropertyDefinition> pdefs = multimap.get(key); 
+//			PropertyValue<?> pv = inputProperties.get(key);
+//			
+//			PropertyDefinition propertyDefinition=(PropertyDefinition) pdefs.toArray()[0];			
+//			
+//			//if pv null and required
+//			if(pv == null && propertyDefinition.required && testRequired 
+//					&& isStateRequired(currentStateCode, propertyDefinition.requiredState, defaultRequiredState)){				
+//				contextValidation.addErrors(propertyDefinition.code+".value", ERROR_REQUIRED_MSG,"");					
+//	        	
+//			} else if (pv != null) {
+//				contextValidation.putObject("propertyDefinitions", pdefs);				
+//				pv.validate(contextValidation);
+//			}
+//			/* old algo not delete please
+//			for(PropertyDefinition propertyDefinition: pdefs){
+//				
+//				if(propertyDefinition.active){
+//					//mandatory
+//					if(propertyDefinition.required && required(contextValidation.errors, pv, getKey(rootKeyName,propertyDefinition.code))){
+//						required(contextValidation.errors, pv.value, getKey(rootKeyName,propertyDefinition.code+".value"));
+//					}
+//					if(null != pv && null != pv.value){				
+//						//type	
+//						try{
+//							pv = convertPropertyValue(propertyDefinition, pv);
+//							properties.put(propertyDefinition.code, pv);
+//							
+//							if(propertyDefinition.choiceInList && !checkIfExistInTheList(propertyDefinition, pv.value.toString())){
+//								addErrors(contextValidation.errors, getKey(rootKeyName,propertyDefinition.code), "error.valuenotauthorized", pv.value);
+//							}
+//							
+//							//TODO unit validation
+//							
+//						}catch(Throwable e){
+//							Logger.error(e.getMessage(),e);
+//							addErrors(contextValidation.errors, getKey(rootKeyName,propertyDefinition.code), "error.badtype", propertyDefinition.valueType, pv.value);
+//						}
+//					}	
+//					
+//				}else{
+//					//Non active on les supprimes par defaut pour l'instant et erreur
+//					if(null != pv){
+//						properties.remove(key);
+//						//TODO gestion de warning !!!
+//						addErrors(contextValidation.errors, getKey(rootKeyName,propertyDefinition.code), "error.notactive");
+//					}
+//				}
+//				
+//				
+//			}
+//		*/
+//			//TODO REMOVE NOT ACTIVE IF NOT ACTIVE is a warning and not an error
+//			if(inputProperties.containsKey(key)){
+//				inputProperties.remove(key);
+//			}
+//		}
+//		
+//		//treat other property not defined
+//		if(validateNotDefined){
+//			for(String key : inputProperties.keySet()){
+//				contextValidation.addErrors(key, ERROR_NOTDEFINED_MSG);
+//			}
+//		}
+//	}
+	
+	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, Boolean validateNotDefined, Boolean testRequired, String currentStateCode, String defaultRequiredState) {
+		Map<String, PropertyValue> inputProperties = new HashMap<>(); //<String, PropertyValue>(0);
 		if (properties != null && !properties.isEmpty()) {
 			cleanningProperties(properties);
 			inputProperties = new HashMap<>(); // String, PropertyValue>(properties);		
@@ -70,88 +151,53 @@ public class ValidationHelper {
 		
 		for(String key : multimap.keySet()){
 			Collection<PropertyDefinition> pdefs = multimap.get(key); 
-			PropertyValue<?> pv = inputProperties.get(key);
-			
-			PropertyDefinition propertyDefinition=(PropertyDefinition) pdefs.toArray()[0];			
-			
+			PropertyValue pv = inputProperties.get(key);
+			PropertyDefinition propertyDefinition = (PropertyDefinition) pdefs.toArray()[0];			
 			//if pv null and required
-			if(pv == null && propertyDefinition.required && testRequired 
-					&& isStateRequired(currentStateCode, propertyDefinition.requiredState, defaultRequiredState)){				
+			if (pv == null && propertyDefinition.required 
+					       && testRequired 
+				           && isStateRequired(currentStateCode, propertyDefinition.requiredState, defaultRequiredState)) {				
 				contextValidation.addErrors(propertyDefinition.code+".value", ERROR_REQUIRED_MSG,"");					
-	        	
 			} else if (pv != null) {
 				contextValidation.putObject("propertyDefinitions", pdefs);				
 				pv.validate(contextValidation);
 			}
-			/* old algo not delete please
-			for(PropertyDefinition propertyDefinition: pdefs){
-				
-				if(propertyDefinition.active){
-					//mandatory
-					if(propertyDefinition.required && required(contextValidation.errors, pv, getKey(rootKeyName,propertyDefinition.code))){
-						required(contextValidation.errors, pv.value, getKey(rootKeyName,propertyDefinition.code+".value"));
-					}
-					if(null != pv && null != pv.value){				
-						//type	
-						try{
-							pv = convertPropertyValue(propertyDefinition, pv);
-							properties.put(propertyDefinition.code, pv);
-							
-							if(propertyDefinition.choiceInList && !checkIfExistInTheList(propertyDefinition, pv.value.toString())){
-								addErrors(contextValidation.errors, getKey(rootKeyName,propertyDefinition.code), "error.valuenotauthorized", pv.value);
-							}
-							
-							//TODO unit validation
-							
-						}catch(Throwable e){
-							Logger.error(e.getMessage(),e);
-							addErrors(contextValidation.errors, getKey(rootKeyName,propertyDefinition.code), "error.badtype", propertyDefinition.valueType, pv.value);
-						}
-					}	
-					
-				}else{
-					//Non active on les supprimes par defaut pour l'instant et erreur
-					if(null != pv){
-						properties.remove(key);
-						//TODO gestion de warning !!!
-						addErrors(contextValidation.errors, getKey(rootKeyName,propertyDefinition.code), "error.notactive");
-					}
-				}
-				
-				
-			}
-		*/
 			//TODO REMOVE NOT ACTIVE IF NOT ACTIVE is a warning and not an error
 			if(inputProperties.containsKey(key)){
 				inputProperties.remove(key);
 			}
-		}
-		
+		}		
 		//treat other property not defined
-		if(validateNotDefined){
+		if (validateNotDefined) {
 			for(String key : inputProperties.keySet()){
 				contextValidation.addErrors(key, ERROR_NOTDEFINED_MSG);
 			}
 		}
 	}
 	
-	private static void cleanningProperties(Map<String, PropertyValue<?>> properties) {
+//	private static void cleanningProperties(Map<String, PropertyValue<?>> properties) {
+//		List<String> removedKeys = properties.entrySet().parallelStream()
+//			.filter(entry -> (entry.getValue() == null || entry.getValue().value == null || StringUtils.isBlank(entry.getValue().value.toString())))
+//			.map(entry -> entry.getKey())
+//			.collect(Collectors.toList());
+//		if (!removedKeys.isEmpty()) {
+//			removedKeys.parallelStream().forEach(key -> properties.remove(key));
+//		}		
+//	}
+	private static void cleanningProperties(Map<String, PropertyValue> properties) {
 		List<String> removedKeys = properties.entrySet().parallelStream()
 			.filter(entry -> (entry.getValue() == null || entry.getValue().value == null || StringUtils.isBlank(entry.getValue().value.toString())))
 			.map(entry -> entry.getKey())
 			.collect(Collectors.toList());
-		
 		if (!removedKeys.isEmpty()) {
 			removedKeys.parallelStream().forEach(key -> properties.remove(key));
 		}		
 	}
 
-	private static boolean isStateRequired(String currentStateCode,
-			String requiredState, String defaultRequiredState) {
-
-		if(null == currentStateCode || (null == defaultRequiredState && null == requiredState)){
+	private static boolean isStateRequired(String currentStateCode,	String requiredState, String defaultRequiredState) {
+		if (currentStateCode== null || (null == defaultRequiredState && null == requiredState)){
 			return true;
-		}else{
+		} else {
 			State currentState = State.find.findByCode(currentStateCode);
 			State pdRequiredState = State.find.findByCode((requiredState == null)?defaultRequiredState:requiredState);
 			return currentState.position >= pdRequiredState.position;
@@ -453,9 +499,11 @@ public class ValidationHelper {
 	public static boolean convertPropertyValue(ContextValidation contextValidation, PropertyListValue propertyValue, PropertyDefinition propertyDefinition) {
 		try{
 			Class<?> valueClass = getClass(propertyDefinition.valueType);
-			List<Object> newList = new ArrayList<Object>(propertyValue.value.size());
-			for(Object value : propertyValue.value){
-				if(!valueClass.isInstance(value)){ //transform only if not the good type
+//			List<Object> newList = new ArrayList<Object>(propertyValue.value.size());
+			List<Object> newList = new ArrayList<Object>(propertyValue.listValue().size());
+//			for (Object value : propertyValue.value) {
+			for (Object value : propertyValue.listValue()) {
+				if (!valueClass.isInstance(value)) { //transform only if not the good type
 					value = convertValue(valueClass, value, null);
 				}
 				newList.add(value);
@@ -484,6 +532,7 @@ public class ValidationHelper {
 		String[] codes = splitCodePropertyDefinition(propertyDefinition);
 		try {
 			Class<?> valueClass = getClass(propertyDefinition.valueType);
+//			Map<String, Object> map = (Map<String, Object>) propertyValue.value;
 			Map<String, Object> map = (Map<String, Object>) propertyValue.value;
 //			Map<String, ?> map = propertyValue.value;
 			Object value = map.get(codes[1]);
@@ -493,7 +542,7 @@ public class ValidationHelper {
 			map.put(codes[1], value);			
 		} catch(Throwable e) {
 			logger.error(e.getMessage(),e);
-			contextValidation.addErrors(codes[0]+".value."+codes[1], ERROR_BADTYPE_MSG, propertyDefinition.valueType, propertyValue.value);
+			contextValidation.addErrors(codes[0] + ".value."+codes[1], ERROR_BADTYPE_MSG, propertyDefinition.valueType, propertyValue.value);
 			return false;
 		}
 		return true;
@@ -511,11 +560,12 @@ public class ValidationHelper {
 		try{
 			Class<?> valueClass = getClass(propertyDefinition.valueType);
 //			List<Map<String, ?>> list = propertyValue.value;
-			List<Map<String, Object>> list = propertyValue.value;
+//			List<Map<String, Object>> list = propertyValue.value;
+			List<Map<String, Object>> list = propertyValue.listMapValue();
 //			for(Map<String, ?> map: list){
-			for(Map<String, Object> map : list){
+			for (Map<String, Object> map : list) {
 				Object value = map.get(codes[1]);
-				if (!valueClass.isInstance(value) && value!=null) { //transform only if not the good type
+				if (!valueClass.isInstance(value) && value != null) { // transform only if not the good type
 					value = convertValue(valueClass, value, null);
 				}	
 				((Map<String, Object>)map).put(codes[1], value);
@@ -586,15 +636,17 @@ public class ValidationHelper {
 //		}
 //	}
 	
-	public static boolean required(ContextValidation contextValidation, PropertyListValue propertyValue, PropertyDefinition propertyDefinition){
+	public static boolean required(ContextValidation contextValidation, PropertyListValue propertyValue, PropertyDefinition propertyDefinition) {
 		if (!propertyDefinition.required)
 				return true;
 		if (!required(contextValidation, propertyValue, propertyDefinition.code))
 			return false;
 		boolean isValid = true;
-		if (CollectionUtils.isNotEmpty(propertyValue.value)) {
+//		if (CollectionUtils.isNotEmpty(propertyValue.value)) {
+		if (CollectionUtils.isNotEmpty(propertyValue.listValue())) {
 			int i = 0;
-			for (Object value : propertyValue.value) {
+//			for (Object value : propertyValue.value) {
+			for (Object value : propertyValue.listValue()) {
 				if (!required(contextValidation, value, propertyDefinition.code + ".value[" + i++ + "]")) {
 					isValid = false;
 				}
@@ -619,7 +671,8 @@ public class ValidationHelper {
 			String[] codes = splitCodePropertyDefinition(propertyDefinition);
 //			Map<String, Object> map = (Map<String, Object>) propertyValue.value;
 //			Object value = map.get(codes[1]);
-			Object value = propertyValue.value.get(codes[1]);
+//			Object value = propertyValue.value.get(codes[1]);
+			Object value = propertyValue.mapValue().get(codes[1]);
 			return required(contextValidation, value, codes[0]+".value."+codes[1]);
 		} else if(propertyDefinition.required) {
 			return false;
@@ -661,7 +714,8 @@ public class ValidationHelper {
 			String[] codes = splitCodePropertyDefinition(propertyDefinition);
 			int i = 0;
 			boolean isValid = true;
-			for (Map<String, Object> map : propertyValue.value){
+//			for (Map<String, Object> map : propertyValue.value){
+			for (Map<String, Object> map : propertyValue.listMapValue()) {
 				Object value = map.get(codes[1]);
 				if (!required(contextValidation, value, codes[0]+".value["+i+++"]."+codes[1])) {
 					isValid = false;
@@ -782,18 +836,18 @@ public class ValidationHelper {
 	 * @return
 	 */
 	public static boolean checkIfExistInTheList(ContextValidation contextValidation, PropertyListValue propertyValue, PropertyDefinition propertyDefinition){
-		if(propertyDefinition.choiceInList){
+		if (propertyDefinition.choiceInList) {
 			int i = 0;
 			boolean isOk = true;
-			for(Object value : propertyValue.value){
+//			for(Object value : propertyValue.value){
+			for (Object value : propertyValue.listValue()) {
 				if(!checkIfExistInTheList(propertyDefinition, value)){
 					contextValidation.addErrors(propertyDefinition.code+".value["+i+++"]", ERROR_VALUENOTAUTHORIZED_MSG, value);
 					isOk = false;
 				}
 			}
-			
 			return isOk;
-		}else{
+		} else {
 			return true;
 		}
 	}
@@ -806,9 +860,10 @@ public class ValidationHelper {
 	 * @param propertyDefinition
 	 */
 	public static boolean checkIfExistInTheList(ContextValidation contextValidation, PropertyObjectValue propertyValue, PropertyDefinition propertyDefinition) {
-		if(propertyDefinition.choiceInList){
+		if (propertyDefinition.choiceInList) {
 			boolean isOk = true;
-			for(Entry<String, ?> entryValue : propertyValue.value.entrySet()){
+//			for (Entry<String, ?> entryValue : propertyValue.value.entrySet()){
+			for (Entry<String, ?> entryValue : propertyValue.mapValue().entrySet()){
 				Object value = entryValue.getValue();
 				if((propertyDefinition.code.endsWith(entryValue.getKey())) && !checkIfExistInTheList(propertyDefinition, value)){
 					contextValidation.addErrors(propertyDefinition.code+".value."+entryValue.getKey(), ERROR_VALUENOTAUTHORIZED_MSG, value);
@@ -816,7 +871,7 @@ public class ValidationHelper {
 				}
 			}			
 			return isOk;
-		}else{
+		} else {
 			return true;
 		}
 	}
@@ -829,20 +884,21 @@ public class ValidationHelper {
 	 * @return 
 	 */
 	public static boolean checkIfExistInTheList(ContextValidation contextValidation, PropertyObjectListValue propertyValue, PropertyDefinition propertyDefinition) {
-		if(propertyDefinition.choiceInList){
+		if (propertyDefinition.choiceInList) {
 			int i = 0;
 			boolean isOk = true;
-			for(Map<String, ?> map : propertyValue.value){
-				for(Entry<String, ?> entryValue : map.entrySet()){
+//			for(Map<String, ?> map : propertyValue.value){
+			for (Map<String, ?> map : propertyValue.listMapValue()) {
+				for (Entry<String, ?> entryValue : map.entrySet()) {
 					Object value = entryValue.getValue();
-					if((propertyDefinition.code.endsWith(entryValue.getKey())) && !checkIfExistInTheList(propertyDefinition, value)){
+					if ((propertyDefinition.code.endsWith(entryValue.getKey())) && !checkIfExistInTheList(propertyDefinition, value)) {
 						contextValidation.addErrors(propertyDefinition.code+".value["+i+++"]."+entryValue.getKey(), ERROR_VALUENOTAUTHORIZED_MSG, value);
 						isOk = false;
 					}
 				}								
 			}
 			return isOk;	
-		}else{
+		} else {
 			return true;
 		}
 	}
@@ -892,11 +948,24 @@ public class ValidationHelper {
 	 * @param propertyDefinitions
 	 * @return
 	 */
-	public static boolean checkType(ContextValidation contextValidation, PropertyValue<?> propertyValue, Collection<PropertyDefinition> propertyDefinitions) {
+//	public static boolean checkType(ContextValidation contextValidation, PropertyValue<?> propertyValue, Collection<PropertyDefinition> propertyDefinitions) {
+//		boolean isSame = true;
+//		for (PropertyDefinition propDef : propertyDefinitions) {
+//			if (propertyValue._type == null || !propertyValue._type.equals(propDef.propertyValueType)) {
+//				logger.error("Error property "+propDef.code+" : "+propertyValue.value+" expected "+propDef.propertyValueType+ " found "+propertyValue._type);
+//				//TODO à activer si la prod se passe bien
+//				//contextValidation.addErrors(propDef.code, ERROR_PROPERTY_TYPE, propertyValue.value, propDef.propertyValueType,propertyValue._type);
+//				isSame = false;
+//			}
+//		}
+//		return isSame;
+//	}
+	public static boolean checkType(ContextValidation contextValidation, PropertyValue propertyValue, Collection<PropertyDefinition> propertyDefinitions) {
 		boolean isSame = true;
 		for (PropertyDefinition propDef : propertyDefinitions) {
 			if (propertyValue._type == null || !propertyValue._type.equals(propDef.propertyValueType)) {
-				logger.error("Error property "+propDef.code+" : "+propertyValue.value+" expected "+propDef.propertyValueType+ " found "+propertyValue._type);
+//				logger.error("Error property "+propDef.code+" : "+propertyValue.value+" expected "+propDef.propertyValueType+ " found "+propertyValue._type);
+				logger.error("Error property {} : {}, expected {} got {}", propDef.code, propertyValue.value, propDef.propertyValueType, propertyValue._type);
 				//TODO à activer si la prod se passe bien
 				//contextValidation.addErrors(propDef.code, ERROR_PROPERTY_TYPE, propertyValue.value, propDef.propertyValueType,propertyValue._type);
 				isSame = false;

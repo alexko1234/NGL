@@ -330,7 +330,7 @@ rule "Add treatment minKnowBasecalling from Run to ReadSet nanopore"
 	salience 300
 	no-loop
 	when
-		$run : Run(categoryCode == "nanopore",$treatment : treatments["minknowBasecalling"], $treatment!=null)
+		$run : Run(categoryCode == "nanopore", $treatment : treatments["minknowBasecalling"], $treatment!=null)
 		$readSet : ReadSet(runCode == $run.code)
 	then
 		Logger.debug("Add minknowBasecalling from Run "+$run.code+" to ReadSet "+$readSet.code);
@@ -348,6 +348,6 @@ rule "Add treatment minKnowBasecalling from Run to ReadSet nanopore"
 		$readSet.treatments.put("minknowBasecalling",treatMetrichorForReadSet);
 		
 		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,  
-			DBQuery.is("code",$readSet.code),
-			DBUpdate.set("treatments", $readSet.treatments));
+			              DBQuery.is("code",$readSet.code),
+			              DBUpdate.set("treatments", $readSet.treatments));
 end

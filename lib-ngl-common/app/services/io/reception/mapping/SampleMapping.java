@@ -105,9 +105,9 @@ public class SampleMapping extends Mapping<Sample> {
 	
 	protected void update(Sample sample) {
 		
-		if(Action.update.equals(action)){
+		if (Action.update.equals(action)) {
 			sample.traceInformation.setTraceInformation(contextValidation.getUser());
-		}else{
+		} else {
 			sample.traceInformation = new TraceInformation(contextValidation.getUser());
 		}
 		//update categoryCode by default.
