@@ -3160,10 +3160,11 @@ directive("udtTbody", function(){
   		    	link: function(scope, element, attr) {
   		    		
 			    	var getDisplayValue = function(column, value, currentScope){
-			    		var filter  = currentScope.udtTable.getFilter(column);
-		    			var formatter = currentScope.udtTable.getFormatter(column);
-	    				
+			    		
 		    			if(column.watch === true && !value.line.group && (column.url === undefined || column.url === null)){
+		    				var filter  = currentScope.udtTable.getFilter(column);
+			    			var formatter = currentScope.udtTable.getFormatter(column);
+		    				
 		    				scope.$watch("value.data."+column.property+filter+formatter, function(newValue, oldValue) {
                                     if ( newValue !== oldValue ) {
                                     	scope.cellValue = newValue;
