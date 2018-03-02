@@ -97,11 +97,6 @@ object ApplicationBuild extends Build {
 
 	val subVersion             = "2.2.0"  + distSuffix
 	
-<<<<<<< .mine
-
-=======
-	val dataVersion            = "2.0.3"  + distSuffix
->>>>>>> .theirs
 	
 	// val dataVersion            = "2.0.0"  + distSuffix
 	val nglAssetsVersion       = "2.0.0"  + distSuffix
@@ -124,7 +119,15 @@ object ApplicationBuild extends Build {
   val fest        = "org.easytesting"      % "fest-assert"        % "1.4" % "test"
   val jtds        = "net.sourceforge.jtds" % "jtds"               % "1.3.1"
 
-  /*
+  // This does not work
+  val eclipseLinkingSettings =
+    /*if (eclipseLinking) 
+      Seq(EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.ManagedClasses, EclipseCreateSrc.ManagedResources),	
+          EclipseKeys.preTasks  := Seq(compile in Compile),
+          EclipseKeys.skipParents in ThisBuild := false) 
+    else*/ 
+      Seq()
+          
 	override def settings = super.settings ++ Seq(
 		EclipseKeys.skipParents in ThisBuild := false,
     // Compile the project before generating Eclipse files,
@@ -135,12 +138,7 @@ object ApplicationBuild extends Build {
     // Use .class files instead of generated .scala files for views and routes
     // EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.ManagedClasses, EclipseCreateSrc.ManagedResources)	
   ) ++ eclipseLinkingSettings
-*/
-  override def settings = super.settings ++ Seq(
-    EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.ManagedClasses,EclipseCreateSrc.ManagedResources)   
 
-  )
-  
 	object BuildSettings {
 	  
 		// Probably poor scala style
