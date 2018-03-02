@@ -86,9 +86,9 @@ public class NCBITaxon {
 			if (!this.error && this.exists) {
 				return getValue(xpath);
 			}else if(!this.error && !this.exists){
-				return "Taxon code " + this.code + " is not exists";
+				return "Taxon code " + this.code + " does not exists";
 			}else if(this.error){
-				return "Taxon code " + this.code + " is on error";
+				return "Taxon code " + this.code + " is in error";
 			}else{
 				return null;
 			}

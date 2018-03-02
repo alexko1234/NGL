@@ -281,7 +281,15 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	$scope.$watch("experiment.instrumentProperties.containerSupportCode.value", function(newValue, OldValue){
 		if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {
 			if ( $scope.experiment.instrumentProperties.cbotFile ) { $scope.experiment.instrumentProperties.cbotFile.value = undefined; } 
-		    checkFCpattern();// ajout 24/04/2017 NGL-1325
+			$scope.messages.clear();
+			
+			// ajout 14/02/2018
+			if ( undefined !=$scope.experiment.experimentProperties ){
+				checkNovaSeq($scope.experiment.experimentProperties.sequencingType.value,  $scope.experiment.instrument.code );
+			}
+		
+			// ajout 24/04/2017 NGL-1325
+		    checkFCpattern();
 		}
 	});	
 	
@@ -292,42 +300,27 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			if ( $scope.experiment.instrumentProperties.cbotFile ) { $scope.experiment.instrumentProperties.cbotFile.value = undefined; }
 			$scope.messages.clear();
 			
-			// 18/12/2017 NGL-1754: restreindre instrument a MarieCurix-A  ou MarieCurix-B quand le type de sequencage choisi est sequencage choisi est NovaSeq 6000
-			//                      attention match() a tenir a jour dans l'avenir si d'autres novaseq arrivent...
-			// 17/01/2018 il y a 2 sequencingType (voir 3 si la S1 sort un jour => utiliser match () )
-			if ( $scope.experiment.experimentProperties.sequencingType ) {
-				
-				if ( (null!=$scope.experiment.experimentProperties.sequencingType.value.match(/NovaSeq 6000/) ) && (null===$scope.experiment.instrument.code.match(/MarieCurix/))){
-					$scope.messages.clazz = "alert alert-warning";
-					$scope.messages.text = "L'instrument choisi n'est pas un NovaSeq 6000";
-					$scope.messages.showDetails = false;
-					$scope.messages.open();
-				} 
-				// 13/02 NON LAISSER !!$scope.experiment.experimentProperties.sequencingType.value=undefined; 
+			// 14/02/2018 separer dans une fonction
+			if ( undefined !=$scope.experiment.experimentProperties ){
+				checkNovaSeq($scope.experiment.experimentProperties.sequencingType.value,  newValue);
 			}
+			
+			// 13/02/2018 ajouter la verification FC 	
+			checkFCpattern();
 		}
 	});	
 	
-    // -4- sequencingType
+    //-4- sequencingType
 	$scope.$watch("experiment.experimentProperties.sequencingType.value", function(newValue, OldValue){
 		if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {
 			console.log('sequencing type changed to :'+ newValue);
 			$scope.messages.clear();
 			
-			// 18/12/2017 NGL-1754 : restreindre instrument a MarieCurix-A ou MarieCurix-B quand le type de sequencage choisi est NovaSeq 6000
-			// 18/01/2018 plusieurs (2 ou 3) sequencing type NovaSeq 6000 possibles
-			if (newValue.match(/NovaSeq 6000/) && ( $scope.experiment.instrument.code !== undefined )) {
-		    	// attention maintenir a jour !!!!
-		    	var NovaSeq6000Regexp=/MarieCurix/;
-		    	if ( null===$scope.experiment.instrument.code.match(NovaSeq6000Regexp) ){
-		    		$scope.messages.clazz = "alert alert-warning";
-		    		$scope.messages.text = "L'instrument choisi n'est pas un NovaSeq 6000";
-		    		$scope.messages.showDetails = false;
-		    		$scope.messages.open();
-		    	}
-			}
-		    
+			// 14/02/2018 separer dans une fonction
+			checkNovaSeq(newValue,  $scope.experiment.instrument.code);
+			
 			checkFCpattern();
+			
 			// ajout 16/01/2018 NGL-1767 modification dynamique de la feuille de calcul
 			// !! marche pas si le design Flowcell n'as pas encore ete fait...
 			setFeuilleCalcul();
@@ -336,16 +329,37 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		} 
 	});	
 	
+	// 18/12/2017 NGL-1754 : restreindre instrument a MarieCurix-A ou MarieCurix-B quand le type de sequencage choisi est NovaSeq 6000
+	// !! /MarieCurix/ --> HARDCODED.. a maintenir a jour en cas d'evolution...
+	// 14/02/2018 creer fonction dediee
+
+	function checkNovaSeq(sequencingType,instrumentCode){
+		if ( undefined===sequencingType || undefined===instrumentCode ){ return; }
+
+		if ( (null!=sequencingType.match(/NovaSeq 6000/) ) && (null===instrumentCode.match(/MarieCurix/))){
+			$scope.messages.clazz = "alert alert-warning";
+			$scope.messages.text = "L'instrument choisi n'est pas un NovaSeq 6000";
+			///$scope.messages.showDetails = false;
+			$scope.messages.open();			
+		} 
+		
+		//13/02/2018 ajouter la verification inverse
+		if ( (null===sequencingType.match(/NovaSeq 6000/) ) && (null != instrumentCode.match(/MarieCurix/))){
+			$scope.messages.clazz = "alert alert-warning";
+			$scope.messages.text = "Le type de séquencage choisi n'est pas NovaSeq 6000 / *";
+			///$scope.messages.showDetails = false;
+			$scope.messages.open();
+		} 
+	}
+	
+	
 	function checkFCpattern (){	
 		// en mode 'a sauvegarder'  experimentProperties n'est pas encore defini
-		if (undefined===$scope.experiment.experimentProperties|| undefined===$scope.experiment.instrumentProperties.containerSupportCode ){
-			console.log('pas encore de test possible');
-			return;
-		}
+		if ( undefined===$scope.experiment.experimentProperties || undefined===$scope.experiment.instrumentProperties.containerSupportCode ){ return; }
 		
 		var H4000fcRegexp= /^[A-Za-z0-9]*BBXX$/;
 		var HXfcRegexp= /^[A-Za-z0-9]*ALXX$/;
-		// var Nv6000S1fcRegexp= /^[A-Za-z0-9]*???XX$/; // pas encore dispo chez Illumina
+		// var Nv6000S1fcRegexp= /^[A-Za-z0-9]*???XX$/; // pas encore d'info sur le pattern
 		var Nv6000S2fcRegexp= /^[A-Za-z0-9]*DMXX$/; // info Illumina 25/01/2018
 		var Nv6000S4fcRegexp= /^[A-Za-z0-9]*DSXX$/; // info Illumina 25/01/2018
 		
@@ -353,35 +367,41 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		seqType=$scope.experiment.experimentProperties.sequencingType.value;
 		//console.log('check FC pattern: FC='+ fcBarcode + 'sequencing type='+seqType );
 		
-		// !! labels NovaSeq pas definitifs: voir Julie...
-		if ((seqType === 'Hiseq 4000') && ( null===fcBarcode.match(H4000fcRegexp))) {
-			$scope.messages.clazz = "alert alert-warning";
-			$scope.messages.text = "Code Flowcell n'est pas du type 'Hiseq 4000' (*BBXX)";
-			$scope.messages.showDetails = false;
-			$scope.messages.open();
+		if ((seqType === 'Hiseq 4000') && ( null === fcBarcode.match(H4000fcRegexp))) {
+			setAlert($scope.messages.text, "Code Flowcell n'est pas du type 'Hiseq 4000' (*BBXX)")
 			
-		} else if ((seqType === 'Hiseq X') && ( null===fcBarcode.match(HXfcRegexp))) {
-			$scope.messages.clazz = "alert alert-warning";
-			$scope.messages.text = "Code Flowcell n'est pas du type 'Hiseq X' (*ALXX)";
-			$scope.messages.showDetails = false;
-			$scope.messages.open();
+		} else if ((seqType === 'Hiseq X') && ( null === fcBarcode.match(HXfcRegexp))) {
+			setAlert($scope.messages.text, "Code Flowcell n'est pas du type 'Hiseq X' (*ALXX)");	
 			
-		} else if ((seqType === 'NovaSeq 6000 / S2') && (null===fcBarcode.match(Nv6000S2fcRegexp))) {
-			$scope.messages.clazz = "alert alert-warning";
-			$scope.messages.text = "Code Flowcell n'est pas du type 'NovaSeq 6000 / S2' (*DMXX)";
-			$scope.messages.showDetails = false;
-			$scope.messages.open();
+		} else if ((seqType === 'NovaSeq 6000 / S2') && (null === fcBarcode.match(Nv6000S2fcRegexp))) {
+			setAlert($scope.messages.text,"Code Flowcell n'est pas du type 'NovaSeq 6000 / S2' (*DMXX)");
 			
-		} else if ((seqType === 'NovaSeq 6000 / S4') && (null===fcBarcode.match(Nv6000S4fcRegexp))) {
+		} else if ((seqType === 'NovaSeq 6000 / S4') && (null === fcBarcode.match(Nv6000S4fcRegexp))) {
+			setAlert($scope.messages.text,"Code Flowcell n'est pas du type 'NovaSeq 6000 / S4' (*DSXX)");
+
+		} 
+		//else if ((seqType === 'NovaSeq 6000 / S1') && (null === fcBarcode.match(Nv6000S1fcRegexp))) { ....}
+	}
+	
+	//14/02/2018 fonction qui affiche Alerte simple ou multiligne
+	// test avec variable pour libelle synamique...marche pas...
+	function setAlert(prevMsg, newMsg){
+		if ( prevMsg===undefined ) {
 			$scope.messages.clazz = "alert alert-warning";
-			$scope.messages.text = "Code Flowcell n'est pas du type 'NovaSeq 6000 / S4' (*DSXX)";
-			$scope.messages.showDetails = false;
+			$scope.messages.text = newMsg;
 			$scope.messages.open();	
-			
-		// TODO un jour 'NovaSeq 6000 / S1' ??
 		} else {
-			//console.log('checkFCpattern OK !!!');
-			$scope.messages.clear();
+			$scope.messages.clazz = "alert alert-warning";
+			$scope.messages.text = "Alertes";
+				
+			//var data = { Instrument_et_Expérience:[ prevMsg ]} // pour utilisation de push
+			//data.Instrument_et_Expérience.push(newMsg);
+			
+			var data = { "Instrument et Expérience":[prevMsg,newMsg ]};// cle avec des espaces marche si on n'utilise pas push...
+		
+			$scope.messages.setDetails(data);
+			$scope.messages.showDetails = true;
+			$scope.messages.open();	
 		}	
 	}
 	

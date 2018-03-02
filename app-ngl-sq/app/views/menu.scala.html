@@ -42,13 +42,19 @@
   				  @ddme(nav, always,          "containers.search", Containers.home("search"), "containers.menu.search")
 				  @ddme(nav, writePermission, "containers.state",  Containers.home("state"),  "containers.menu.state")
 				  @ddme(nav, writePermission, "container.new",     Containers.home("new"),    "containers.menu.new_from_file")
-  				}		
+  				}	
+  					
   				@ddmenu(nav,"processes","processes.menu") {
 				  @ddme(nav, always,          "processes.search", Processes.home("search"), "processes.menu.search")
-				  @ddme(nav, writePermission, "processes.new",    Processes.home("new"),    "processes.menu.creation")
+				  @ddme(nav, writePermission, "processes.new-from-containers",    Processes.home("new-from-containers"),    "processes.menu.new-from-containers")
+				  @****
+				  * @ddme(nav, writePermission, "new-from-samples",    Processes.home("new-from-samples"),    "processes.menu.new-from-samples")
+				  * @ddme(nav, writePermission, "assign-to-container",    Processes.home("assign-to-container"),    "processes.menu.assign-to-container")
+				  *****@
 				  @ddme(nav, writePermission, "processes.remove", Processes.home("remove"), "processes.menu.remove")
-				  @ddme(nav, adminPermission, "processes.state",  Processes.home("state"),  "processes.menu.state")
-				}		
+				  @ddme(nav, adminPermission, "processes.state",  Processes.home("state"),  "processes.menu.state")				  
+				}
+				
   				@ddmenu(nav,"experiments","experiments.menu") {
   				  @ddme(nav, always,          "experiments.search",   Experiments.home("search"),   "experiments.menu.search")
 				  @ddme(nav, writePermission, "experiments.new",      Experiments.home("new"),      "experiments.menu.creation")

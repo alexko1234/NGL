@@ -77,11 +77,11 @@ public class UpdateReportingData extends AbstractImportData {
 		while(skip < nbResult) {
 			try {
 				long t1 = System.currentTimeMillis();
-				DBCursor<Sample> cursor = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class)
-						.sort("traceInformation.creationDate", Sort.DESC).skip(skip).limit(2000)
-						.cursor;
+					List<Sample> cursor = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class)
+						.sort("traceInformation.creationDate", Sort.DESC).skip(skip).limit(1000)
+						.toList();
 
-				cursor.setOptions(Bytes.QUERYOPTION_NOTIMEOUT).forEach(sample -> {
+					cursor.forEach(sample -> {
 					try{
 						updateProcesses(sample);
 						logger.debug("update sample "+sample.code);
@@ -100,17 +100,16 @@ public class UpdateReportingData extends AbstractImportData {
 							contextError.addErrors(sample.code, "null");
 					}
 				});
-				cursor.close();
-				skip = skip+2000;
-				long t2 = System.currentTimeMillis();
-				logger.debug("time "+skip+" - "+((t2-t1)/1000));
-			} catch(Throwable e) { // TODO: do not ctach throwable
-				logger.error("Error : "+e,e);
-				if(null != e.getMessage())
-					contextError.addErrors("Error", e.getMessage());
-				else
-					contextError.addErrors("Error", "null");
-			}
+					skip = skip+1000;
+					long t2 = System.currentTimeMillis();
+					logger.debug("time "+skip+" - "+((t2-t1)/1000));
+				}catch(Throwable e){
+					logger.error("Error : "+e,e);
+					if(null != e.getMessage())
+						contextError.addErrors("Error", e.getMessage());
+					else
+						contextError.addErrors("Error", "null");
+				}
 		}
 	}
 

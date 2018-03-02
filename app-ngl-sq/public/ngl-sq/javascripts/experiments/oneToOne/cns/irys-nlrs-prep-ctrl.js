@@ -49,7 +49,7 @@ angular.module('home').controller('IrysNlrsPrepCtrl',['$scope', '$parse', 'atmTo
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 					 {
-			        	 "header":Messages("containers.table.concentration") + " (nM)",
+			        	 "header":Messages("containers.table.concentration") + " (ng/µl)",
 			        	 "property":"inputContainerUsed.concentration.value",
 			        	 "order":true,
 						 "edit":false,

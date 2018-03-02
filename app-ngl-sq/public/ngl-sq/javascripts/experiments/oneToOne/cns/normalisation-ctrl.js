@@ -9,7 +9,6 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 							"order":true,
 							"hide":true,
 							"type":"text",
-							 "mergeCells" : true,
 							"position":2,
 							"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 						 "extraHeaders":{0:Messages("experiments.inputs")}
@@ -123,6 +122,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
+						 "watch":true,
 			        	 "type":"text",
 			        	 "defaultValues":"nM",
 			        	 "position":51,
@@ -560,7 +560,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			console.log("refreshMaxConcfunction result "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
 				maxConc = {};
-				maxConc.unit = (compute.inputConcUnit === 'nM')?'fmol':'ng';
+				maxConc.unit = compute.inputConcUnit;
 				if(result > compute.inputConc){
 					maxConc.value =  compute.inputConc;						
 				}else{
@@ -568,7 +568,6 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 				}
 				if (outputConc){
 					if (outputConc.value > maxConc.value){
-						console.log("refreshMaxConcfunctionnnnnnnnnnnn");
 						outputConc.value = maxConc.value;
 						outputConc.unit= maxConc.unit;
 						getter2.assign(udtData,outputConc);
@@ -795,21 +794,42 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 	var generateSampleSheetNormalisationPostPCR = function(){
 		$scope.fileUtils.generateSampleSheet({"type":"normalisation-post-pcr"});
 	};
+	var generateSampleSheetNormalisationBuffer = function(){
+		$scope.fileUtils.generateSampleSheet({"type":"normalisation-buffer"});
+	};
 	
 	if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube" 
 		|| $scope.experiment.instrument.inContainerSupportCategoryCode !== "tube"){
-		
-		$scope.setAdditionnalButtons([{
-			isDisabled : function(){return $scope.isNewState();} ,
-			isShow:function(){return !$scope.isNewState();},
-			click:generateSampleSheetNormalisation,
-			label:Messages("experiments.sampleSheet")+" normalisation"
-		},{
-			isDisabled : function(){return $scope.isNewState();} ,
-			isShow:function(){return !$scope.isNewState();},
-			click:generateSampleSheetNormalisationPostPCR,
-			label:Messages("experiments.sampleSheet")+" normalisation post PCR"
-		}]);
+
+	if($scope.experiment.instrument.typeCode === "brand-lhs"){
+			$scope.setAdditionnalButtons([{
+				isDisabled : function(){return $scope.isNewState();} ,
+				isShow:function(){return !$scope.isNewState();},
+				click:generateSampleSheetNormalisation,
+				label:Messages("experiments.sampleSheet")+" normalisation ADN"
+			},{
+				isDisabled : function(){return $scope.isNewState();} ,
+				isShow:function(){return !$scope.isNewState();},
+				click:generateSampleSheetNormalisationBuffer,
+				label:Messages("experiments.sampleSheet")+" normalisation Tampon"
+			}]);	
+		}else if ($scope.experiment.instrument.typeCode === "hand"){
+
+
+		}else{		
+			$scope.setAdditionnalButtons([{
+				isDisabled : function(){return $scope.isNewState();} ,
+				isShow:function(){return !$scope.isNewState();},
+				click:generateSampleSheetNormalisation,
+				label:Messages("experiments.sampleSheet")+" normalisation"
+			},{
+				isDisabled : function(){return $scope.isNewState();} ,
+				isShow:function(){return !$scope.isNewState();},
+				click:generateSampleSheetNormalisationPostPCR,
+				label:Messages("experiments.sampleSheet")+" normalisation post PCR"
+			}]);
+		}
+
 	}
 	
 	

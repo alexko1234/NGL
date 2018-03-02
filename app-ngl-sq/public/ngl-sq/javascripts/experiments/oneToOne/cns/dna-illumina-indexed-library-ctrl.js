@@ -287,7 +287,7 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 			var result = compute.inputVolume * compute.conc;
 			console.log("result = "+result);
 			if(result){
-				libraryInputQuantity = result;				
+				libraryInputQuantity = Math.round(result*10)/10;;				
 			}else{
 				libraryInputQuantity = undefined;
 			}	

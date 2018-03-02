@@ -24,7 +24,7 @@ import services.description.common.LevelService;
 import services.description.common.MeasureService;
 import services.description.declaration.AbstractDeclaration;
 
-public class ExtractionDNARNA extends AbstractDeclaration{
+public class SamplePrep extends AbstractDeclaration{
 
 	@Override
 	protected List<ExperimentType> getExperimentTypeCommon() {
@@ -67,12 +67,24 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsExtractionARNSmallLarge(),
 				getInstrumentUsedTypes("hand"),"OneToMany", getSampleTypes("RNA"),true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		//END LBIOMEG
+		
+		l.add(newExperimentType("Ext to WGA (ou WTA)","ext-to-wga-or-wta-process",null,-1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		
+		l.add(newExperimentType("Amplification / WGA (ou WTA)","wga-amplification","WGA",730,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsWGAAmplification(),
+				getInstrumentUsedTypes("hand"),"OneToOne", null,true,
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
 		
 		
 		
 		return l;
 	}
+
+	
 
 	@Override
 	protected List<ExperimentType> getExperimentTypePROD() {
@@ -138,7 +150,16 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 						getExperimentTypes("small-and-large-rna-isolation").get(0), getExperimentTypes("small-and-large-rna-isolation").get(0), getExperimentTypes("ext-to-small-and-large-rna-extraction").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		
+		l.add(DescriptionFactory.newProcessType("WGA (ou WTA)", "wga-or-wta-process", 
+				ProcessCategory.find.findByCode("sample-prep"), 5,
+				null, 
+				Arrays.asList(
+						getPET("ext-to-wga-or-wta-process",-1),
+						getPET("dna-rna-extraction",-1),
+						getPET("wga-amplification",0)), 
+						getExperimentTypes("wga-amplification").get(0), getExperimentTypes("wga-amplification").get(0), getExperimentTypes("ext-to-wga-or-wta-process").get(0), 
+						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
 		return l;	
 	}
 	
@@ -178,7 +199,10 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 		newExperimentTypeNode("small-and-large-rna-isolation", getExperimentTypes("small-and-large-rna-isolation").get(0), false, false, false, getExperimentTypeNodes("total-rna-extraction","ext-to-small-and-large-isolation-process"), 
 				getExperimentTypes("dnase-treatment"),getExperimentTypes("fluo-quantification","chip-migration"), null).save();
 		
-	
+		newExperimentTypeNode("ext-to-wga-or-wta-process", getExperimentTypes("ext-to-wga-or-wta-process").get(0), false, false, false, null, null, null, null).save();
+		newExperimentTypeNode("wga-amplification", getExperimentTypes("wga-amplification").get(0), false, false, false, getExperimentTypeNodes("ext-to-wga-or-wta-process","dna-rna-extraction"), 
+				getExperimentTypes("dnase-treatment"),getExperimentTypes("fluo-quantification","chip-migration"), null).save();
+		
 	}
 
 	@Override
@@ -250,6 +274,16 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 		
 		return propertyDefinitions;
 	}
-
+	private List<PropertyDefinition> getPropertyDefinitionsWGAAmplification() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, false, null,
+				null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",13, true,null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Méthode préparation ADN (ou ARN)", "dnaTreatment", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null,
+				DescriptionFactory.newValues("WGA","WTA","SAG + WGA"), null, null, null,"single", 18, true, null,null));
+		
+		return propertyDefinitions;
+	}
 
 }
