@@ -181,7 +181,7 @@ public class LimsCNSDAO {
 					TaraDAO  taraServices = Spring.getBeanOfType(TaraDAO.class);
 					if (sample.properties == null) 
 						sample.properties = new HashMap<>(); // <String, PropertyValue>();
-					Map<String, PropertyValue<?>> map = taraServices.findTaraSampleFromLimsCode(rs.getInt(LIMS_CODE),contextError);
+					Map<String, PropertyValue> map = taraServices.findTaraSampleFromLimsCode(rs.getInt(LIMS_CODE),contextError);
 					if (map != null) { 
 						sample.properties.putAll(map);
 					} else {
@@ -470,7 +470,7 @@ public class LimsCNSDAO {
 		treatment.categoryCode=categoryCode;
 		treatment.code=code;
 		treatment.typeCode=typeCode;
-		Map<String,PropertyValue<?>> m = new HashMap<>(); // <String,PropertyValue>();
+		Map<String,PropertyValue> m = new HashMap<>(); // <String,PropertyValue>();
 
 		try {
 			TreatmentType treatmentType=TreatmentType.find.findByCode(treatment.typeCode);

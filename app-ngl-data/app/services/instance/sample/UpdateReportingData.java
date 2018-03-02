@@ -295,10 +295,10 @@ public class UpdateReportingData extends AbstractImportData {
 		return sampleExperiments;
 	}
 
-	private Map<String, PropertyValue<?>> computeExperimentProperties(Experiment experiment, 
+	private Map<String, PropertyValue> computeExperimentProperties(Experiment experiment, 
 			                                                          InputContainerUsed icu,
 			                                                          OutputContainerUsed ocu) {
-		Map<String, PropertyValue<?>> finalProperties = new HashMap<>(); // <String, PropertyValue>();
+		Map<String, PropertyValue> finalProperties = new HashMap<>(); // <String, PropertyValue>();
 		if (null != experiment.experimentProperties) finalProperties.putAll(filterProperties(experiment.experimentProperties));
 		if (null != experiment.instrumentProperties) finalProperties.putAll(filterProperties(experiment.instrumentProperties));
 		if (null != icu.experimentProperties)        finalProperties.putAll(filterProperties(icu.experimentProperties));
@@ -311,7 +311,7 @@ public class UpdateReportingData extends AbstractImportData {
 		return finalProperties;
 	}
 
-	private Map<String, PropertyValue<?>> filterProperties(Map<String, PropertyValue<?>> properties) {
+	private Map<String, PropertyValue> filterProperties(Map<String, PropertyValue> properties) {
 		return properties.entrySet().parallelStream()
 				.filter(entry -> entry.getValue() != null && !entry.getValue()._type.equals(PropertyValue.imgType)
 						&& !entry.getValue()._type.equals(PropertyValue.fileType))

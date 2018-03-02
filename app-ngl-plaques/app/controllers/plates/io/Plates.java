@@ -81,7 +81,8 @@ public class Plates extends TPLCommonController {
 			ContextValidation contextValidation)  throws Exception {
 		// TODO Auto-generated method stub
 		logger.debug("Load plate files");
-		InputStream is = new ByteArrayInputStream(pfv.value);
+//		InputStream is = new ByteArrayInputStream(pfv.value);
+		InputStream is = new ByteArrayInputStream(pfv.getValue());
 		Workbook wb = WorkbookFactory.create(is);
 		Sheet sheet = wb.getSheetAt(0);//case sensitive??
 		if (sheet == null ) {

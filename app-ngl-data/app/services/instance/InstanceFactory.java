@@ -15,10 +15,10 @@ import models.laboratory.resolutions.instance.ResolutionCategory;
 
 public class InstanceFactory {
 	
-	public static Map<String,PropertyValue<?>> newPSV(String key, Object value){
+	public static Map<String,PropertyValue> newPSV(String key, Object value){
 		PropertySingleValue psv = new PropertySingleValue();
 		psv.value = value;
-		Map<String,PropertyValue<?>> map = new HashMap<>(1); // <String,PropertyValue>(1);
+		Map<String,PropertyValue> map = new HashMap<>(1); // <String,PropertyValue>(1);
 		map.put(key, psv);
 		return map;
 	}
@@ -47,7 +47,7 @@ public class InstanceFactory {
 			                           String version, 
 			                           String cat, 
 			                           List<String> exp,  
-			                           Map<String, PropertyValue<?>> properties) {
+			                           Map<String, PropertyValue> properties) {
 		return newProtocol(code, name, path, version, cat, exp, properties, true);
 	}
 
@@ -67,7 +67,7 @@ public class InstanceFactory {
 			                           String version, 
 			                           String cat, 
 			                           List<String> exp,  
-			                           Map<String, PropertyValue<?>> properties, Boolean active) {
+			                           Map<String, PropertyValue> properties, Boolean active) {
 		Protocol p = new Protocol();
 		p.code = code.toLowerCase().replace("\\s+", "-");
 		p.name = name;

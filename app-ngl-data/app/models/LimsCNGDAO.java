@@ -684,7 +684,7 @@ public class LimsCNGDAO {
 				//remove bad properties;  FDS comments 04/05/2015 : valeurs -1 positionnées dans commonContainerMapRow 
 				// FDS 17/06/2015 ajout sampleAliquoteCode pour JIRA NGL-673
 				for (String propName : new String[]{"tag", "tagCategory", "libProcessTypeCode", "sampleAliquoteCode"}) {
-					PropertyValue<?> propVal = content.properties.get(propName);
+					PropertyValue propVal = content.properties.get(propName);
 					if (propVal != null && (propVal.value == null || propVal.value.equals("-1"))) {
 						content.properties.remove(propName);
 					}
@@ -1032,7 +1032,7 @@ public class LimsCNGDAO {
 	 * @return
 	 * @throws DAOException
 	 */	
-	public HashMap<String, PropertyValue<String>>  setSequencingProgramTypeToContainerSupport(final ContextValidation contextError, String mode)  throws DAOException {
+	public HashMap<String, PropertyValue>  setSequencingProgramTypeToContainerSupport(final ContextValidation contextError, String mode)  throws DAOException {
 		String sqlView;
 		String sqlQuery;
 		
@@ -1056,13 +1056,13 @@ public class LimsCNGDAO {
 			}
 		});
 		// map data
-		HashMap<String,PropertyValue<String>> mapCodeSupportSequencing = new HashMap<>(); // <String,PropertyValue<String>>();
+		HashMap<String,PropertyValue> mapCodeSupportSequencing = new HashMap<>(); // <String,PropertyValue<String>>();
 		for (ContainerSupport result : results) {
 			if (!mapCodeSupportSequencing.containsKey(result.code)) {
 				// mapCodeSupportSequencing.put(result.code, result.properties.get("sequencingProgramType"));
 //				mapCodeSupportSequencing.put(result.code, (PropertyValue<String>)result.properties.get("sequencingProgramType"));
-				@SuppressWarnings("unchecked") // no way around this cast
-				PropertyValue<String> pvs = (PropertyValue<String>)result.properties.get("sequencingProgramType");
+//				@SuppressWarnings("unchecked") // no way around this cast
+				PropertyValue pvs = (PropertyValue)result.properties.get("sequencingProgramType");
 				mapCodeSupportSequencing.put(result.code, pvs);
 			}
 		}	

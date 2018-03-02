@@ -1194,7 +1194,7 @@ public class SubmissionServices {
 		System.out.println("laboratoryRunCode =" + laboratoryRunCode);
 
 		models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
-		Map<String, PropertyValue<?>> sampleOnContainerProperties = readSet.sampleOnContainer.properties;
+		Map<String, PropertyValue> sampleOnContainerProperties = readSet.sampleOnContainer.properties;
 		Set <String> listKeysSampleOnContainerProperties = null;
 
 		if (sampleOnContainerProperties != null) {
@@ -1255,9 +1255,9 @@ public class SubmissionServices {
 			// mettre la valeur calculée de libraryLayoutNominalLength
 			models.laboratory.run.instance.Treatment treatmentMapping = readSet.treatments.get("mapping");
 			if (treatmentMapping != null) {
-				Map <String, Map<String, PropertyValue<?>>> resultsMapping = treatmentMapping.results();
+				Map <String, Map<String, PropertyValue>> resultsMapping = treatmentMapping.results();
 				if ( resultsMapping != null && (resultsMapping.containsKey("pairs"))){
-					Map<String, PropertyValue<?>> pairs = resultsMapping.get("pairs");
+					Map<String, PropertyValue> pairs = resultsMapping.get("pairs");
 					if (pairs != null) {
 //						Set <String> listKeysMapping = pairs.keySet();  // Obtenir la liste des clés
 //						for(String k: listKeysMapping) {
@@ -1266,12 +1266,12 @@ public class SubmissionServices {
 //							//System.out.println(propertyValue.value);
 //						}
 						if (pairs.containsKey("estimatedPEInsertSize")) {
-							PropertyValue<?> estimatedInsertSize = pairs.get("estimatedPEInsertSize");
+							PropertyValue estimatedInsertSize = pairs.get("estimatedPEInsertSize");
 							experiment.libraryLayoutNominalLength = (Integer) estimatedInsertSize.value;
 							System.out.println("valeur calculee libraryLayoutNominalLength  => "  + experiment.libraryLayoutNominalLength);
 						} 
 						if (pairs.containsKey("estimatedMPInsertSize")) {
-							PropertyValue<?> estimatedInsertSize = pairs.get("estimatedMPInsertSize");
+							PropertyValue estimatedInsertSize = pairs.get("estimatedMPInsertSize");
 							experiment.libraryLayoutNominalLength = (Integer) estimatedInsertSize.value;
 							System.out.println("valeur calculee libraryLayoutNominalLength  => "  + experiment.libraryLayoutNominalLength);
 						}	
@@ -1295,7 +1295,7 @@ public class SubmissionServices {
 
 					if (sampleOnContainerProperties.containsKey("libLayoutNominalLength")) {	
 						//System.out.println("recherche valeur theorique possible");
-						PropertyValue<?> nominalLengthTypeCode = sampleOnContainerProperties.get("libLayoutNominalLength");
+						PropertyValue nominalLengthTypeCode = sampleOnContainerProperties.get("libLayoutNominalLength");
 						Integer nominalLengthCodeValue = (Integer) nominalLengthTypeCode.value;
 						if ((nominalLengthCodeValue != null) && (nominalLengthCodeValue!= -1)){
 							experiment.libraryLayoutNominalLength = nominalLengthCodeValue;
@@ -1321,9 +1321,9 @@ public class SubmissionServices {
 			// Recuperer l'information spotLength pour les illumina
 			models.laboratory.run.instance.Treatment treatmentNgsrg = (laboratoryRun.treatments.get("ngsrg"));
 			if (treatmentNgsrg != null) {
-				Map <String, Map<String, PropertyValue<?>>> resultsNgsrg = treatmentNgsrg.results();
+				Map <String, Map<String, PropertyValue>> resultsNgsrg = treatmentNgsrg.results();
 				if (resultsNgsrg != null && resultsNgsrg.containsKey("default")) {
-					Map<String, PropertyValue<?>> ngsrg = resultsNgsrg.get("default");
+					Map<String, PropertyValue> ngsrg = resultsNgsrg.get("default");
 					//Set <String> listKeys = ngsrg.keySet();  // Obtenir la liste des clés
 					/*for(String k: listKeys){
 					System.out.print("cle = " + k);
@@ -1331,7 +1331,7 @@ public class SubmissionServices {
 					//System.out.print(propertyValue.toString());
 					System.out.println(", value  => "+propertyValue.value);
 				} */
-					PropertyValue<?> propertyNbCycle = ngsrg.get("nbCycle");
+					PropertyValue propertyNbCycle = ngsrg.get("nbCycle");
 					if (ngsrg.get("nbCycle") != null){
 						experiment.spotLength = (Long) propertyNbCycle.value;
 					}
@@ -1372,7 +1372,7 @@ public class SubmissionServices {
 						} */
 							
 							if (sampleOnContainerProperties.containsKey("libProcessTypeCode")) {					
-								PropertyValue<?> libProcessTypeCode = sampleOnContainerProperties.get("libProcessTypeCode");
+								PropertyValue libProcessTypeCode = sampleOnContainerProperties.get("libProcessTypeCode");
 								String libProcessTypeCodeValue = (String) libProcessTypeCode.value;
 								/*if(libProcessTypeCodeValue.equalsIgnoreCase("A")||libProcessTypeCodeValue.equalsIgnoreCase("C")||libProcessTypeCodeValue.equalsIgnoreCase("N")){
 									experiment.libraryLayoutOrientation = "reverse-forward";
@@ -1420,8 +1420,8 @@ public class SubmissionServices {
 					if (rsc.equalsIgnoreCase(readSet.code)){
 						// bonne lane = lane correspondant au run associé au readSet
 						models.laboratory.run.instance.Treatment laneTreatment = (ll.treatments.get("ngsrg"));
-						Map<String, Map<String, PropertyValue<?>>> laneResults = laneTreatment.results();
-						Map<String, PropertyValue<?>> lanengsrg = laneResults.get("default");
+						Map<String, Map<String, PropertyValue>> laneResults = laneTreatment.results();
+						Map<String, PropertyValue> lanengsrg = laneResults.get("default");
 						// Set<String> laneListKeys = lanengsrg.keySet();  // Obtenir la liste des clés
 						/*for(String k: laneListKeys) {
 							System.out.println("attention cle = " + k);

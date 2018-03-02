@@ -43,10 +43,10 @@ public class UpdateTaraPropertiesCNS extends AbstractImportDataCNS{
 	
 	public static void updateSampleFromTara(ContextValidation contextError, List<String> limsCodes) throws SQLException, DAOException{
 		
-		List<Map<String, PropertyValue<?>>> taraPropertyList = taraServices.findTaraSampleUpdated(limsCodes);
+		List<Map<String, PropertyValue>> taraPropertyList = taraServices.findTaraSampleUpdated(limsCodes);
 	
 		//Logger.debug("Nb Map Tara"+taraPropertyList.size());
-		for (Map<String,PropertyValue<?>> taraProperties : taraPropertyList) {
+		for (Map<String,PropertyValue> taraProperties : taraPropertyList) {
 	
 			if(!taraProperties.containsKey(LimsCNSDAO.LIMS_CODE)){
 				contextError.addErrors(LimsCNSDAO.LIMS_CODE,"error.codeNotExist","");

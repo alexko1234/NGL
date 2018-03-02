@@ -56,11 +56,11 @@ public class TaraDAO {
 	}
 
 	// @SuppressWarnings("rawtypes")
-	public Map<String,PropertyValue<?>> findTaraSampleFromLimsCode(Integer limsCode,ContextValidation contextValidation) {
-		List<Map<String,PropertyValue<?>>> results =  this.jdbcTemplate.query(SELECT_MATERIEL_TARA +
+	public Map<String,PropertyValue> findTaraSampleFromLimsCode(Integer limsCode,ContextValidation contextValidation) {
+		List<Map<String,PropertyValue>> results =  this.jdbcTemplate.query(SELECT_MATERIEL_TARA +
 				"  WHERE REF_ID=? ", 
-				new Object[]{limsCode},new RowMapper<Map<String,PropertyValue<?>>>() {
-					public Map<String,PropertyValue<?>> mapRow(ResultSet rs, int rowNum) throws SQLException {
+				new Object[]{limsCode},new RowMapper<Map<String,PropertyValue>>() {
+					public Map<String,PropertyValue> mapRow(ResultSet rs, int rowNum) throws SQLException {
 						return mapRowTara(rs, rowNum);
 					}
 			});     
@@ -73,7 +73,7 @@ public class TaraDAO {
 	}
 	
 	// @SuppressWarnings("rawtypes")
-	public List<Map<String,PropertyValue<?>>> findTaraSampleUpdated(List<String> limsCodes) {
+	public List<Map<String,PropertyValue>> findTaraSampleUpdated(List<String> limsCodes) {
 		String sql = null;
 		if (limsCodes == null) {
 			sql = SELECT_MATERIEL_TARA + " WHERE TO_DAYS(NOW()) - TO_DAYS(LAST_UPD_TARA_DB) <= 10";
@@ -86,10 +86,10 @@ public class TaraDAO {
 			sql = sql + "'')";
 		}
 		//Logger.debug("Query :"+sql);
-		List<Map<String,PropertyValue<?>>> results =  this.jdbcTemplate.query(sql 
-				,new RowMapper<Map<String,PropertyValue<?>>>() {
-					public Map<String,PropertyValue<?>> mapRow(ResultSet rs, int rowNum) throws SQLException {
-						Map<String,PropertyValue<?>> properMap = mapRowTara(rs, rowNum);
+		List<Map<String,PropertyValue>> results =  this.jdbcTemplate.query(sql 
+				,new RowMapper<Map<String,PropertyValue>>() {
+					public Map<String,PropertyValue> mapRow(ResultSet rs, int rowNum) throws SQLException {
+						Map<String,PropertyValue> properMap = mapRowTara(rs, rowNum);
 						properMap.put("limsCode",new PropertySingleValue(rs.getInt("ref_id")));
 						return properMap;
 					}
@@ -97,9 +97,9 @@ public class TaraDAO {
 		return results;
 	}
 	
-	public Map<String,PropertyValue<?>> mapRowTara(ResultSet rs, int rowNum) throws SQLException {
+	public Map<String,PropertyValue> mapRowTara(ResultSet rs, int rowNum) throws SQLException {
 		//Logger.debug("Tara :"+rs.getInt("ref_id"));
-		Map<String,PropertyValue<?>> properMap = new HashMap<>(); // <String, PropertyValue<?>>();
+		Map<String,PropertyValue> properMap = new HashMap<>(); // <String, PropertyValue<?>>();
 		properMap.put("taraStation",    new PropertySingleValue(rs.getInt("station")));
 		properMap.put("taraDepth",      new PropertySingleValue(rs.getString("profondeur")));
 		properMap.put("taraFilter",     new PropertySingleValue(rs.getString("filtre")));

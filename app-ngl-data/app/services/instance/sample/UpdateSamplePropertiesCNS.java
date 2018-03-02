@@ -88,7 +88,7 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 
 		logger.debug("Update sample {}", sample.code);
 
-		Map<String, PropertyValue<?>> updatedProperties = new HashMap<>(); // String, PropertyValue>();
+		Map<String, PropertyValue> updatedProperties = new HashMap<>(); // String, PropertyValue>();
 		Set<String> deletedPropertyCodes = new TreeSet<String>();
 		SampleType sampleType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.typeCode, "typeCode", SampleType.find,true);
 		ImportType importType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.importTypeCode, "importTypeCode", ImportType.find,true);
@@ -105,7 +105,7 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 		updateCollectionsFromSample(sample, updatedProperties, deletedPropertyCodes,contextError);
 	} 
 
-	private void updateCollectionsFromSample(Sample sample, Map<String, PropertyValue<?>> updatedProperties, Set<String> deletedPropertyCodes, ContextValidation contextError){
+	private void updateCollectionsFromSample(Sample sample, Map<String, PropertyValue> updatedProperties, Set<String> deletedPropertyCodes, ContextValidation contextError){
 
 		logger.info("Update son samples, containers, readSets, process from sample : {}", sample.code);
 		InstanceHelpers.updateContentProperties(sample, updatedProperties, deletedPropertyCodes, contextError);

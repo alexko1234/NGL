@@ -144,7 +144,7 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		//-1- chargement depuis la base source Postgresql
 		List<Container> containers = limsServices.findContainerToCreate(contextError, containerCategoryCode, experimentTypeCode, importState);
 		
-		HashMap<String, PropertyValue<String>> mapCodeSupportSeq = null;
+		HashMap<String, PropertyValue> mapCodeSupportSeq = null;
 		
 		/* 14/01/2016  on n'importe plus de lanes...
 		if (containerCategoryCode.equals("lane")) {
@@ -187,7 +187,7 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		//-1- chargement depuis la base source Postgresql
 		List<Container> containers = limsServices.findContainerToModify(contextError, containerCategoryCode, experimentTypeCode);
 		
-		HashMap<String, PropertyValue<String>> mapCodeSupportSeq = null;
+		HashMap<String, PropertyValue> mapCodeSupportSeq = null;
 		
 		/* 14/01/2016 on n'importe plus les lanes
 		if (containerCategoryCode.equals("lane")) {

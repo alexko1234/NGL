@@ -16,7 +16,7 @@ public class MappingHelper {
 
 	public static void getPropertiesFromResultSet(ResultSet rs,
 				                                  List<PropertyDefinition> propertiesDefinitions,
-				                                  Map<String, PropertyValue<?>> properties) throws SQLException {
+				                                  Map<String, PropertyValue> properties) throws SQLException {
 		for (PropertyDefinition propertyDefinition : propertiesDefinitions) {
 			String code  = null;
 			String unite = null;
