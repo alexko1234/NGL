@@ -51,9 +51,12 @@ public class IO extends TPLCommonController {
 				&& ValidationHelper.required(contextValidation, experiment.instrument.typeCode, "instrument.code")) {
 			String className = getClassName(experiment, "Output");
 			try {
+				@SuppressWarnings("unchecked")
 				Class<? extends AbstractOutput> clazz = (Class<? extends AbstractOutput>) Class.forName(className);
-				Constructor<?> constructor = clazz.getConstructor();
-				AbstractOutput instance = (AbstractOutput) constructor.newInstance();
+//				Constructor<?> constructor = clazz.getConstructor();
+//				AbstractOutput instance = (AbstractOutput) constructor.newInstance();
+				Constructor<? extends AbstractOutput> constructor = clazz.getConstructor();
+				AbstractOutput instance = constructor.newInstance();
 				return instance;
 			} catch(Exception e) {
 				contextValidation.addErrors("outputClass", "io.error.instance.notexist",className);
@@ -77,9 +80,12 @@ public class IO extends TPLCommonController {
 				className ="controllers.instruments.io." + institute + "." + extraInstrument + ".Input";
 			}
 			try {
+				@SuppressWarnings("unchecked")
 				Class<? extends AbstractInput> clazz = (Class<? extends AbstractInput>) Class.forName(className);
-				Constructor<?> constructor = clazz.getConstructor();
-				AbstractInput instance = (AbstractInput) constructor.newInstance();
+//				Constructor<?> constructor = clazz.getConstructor();
+//				AbstractInput instance = (AbstractInput) constructor.newInstance();
+				Constructor<? extends AbstractInput> constructor = clazz.getConstructor();
+				AbstractInput instance = constructor.newInstance();
 				return instance;
 			} catch(Exception e) {
 				contextValidation.addErrors("outputClass", "io.error.instance.notexist",className);

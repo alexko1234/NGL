@@ -139,8 +139,9 @@ public class NovaSeqInput extends AbstractInput {
 		     String expression=null;
 		     
 		     //-1- position sur sequenceur: NIVEAU 1
-		     expression="Side";
-		     String side = (String)xpath.evaluate(expression, root);
+		     expression = "Side";
+//		     String side = (String)xpath.evaluate(expression, root);
+		     String side = xpath.evaluate(expression, root);
 		     checkMandatoryXMLTag (contextValidation, expression, side); 
 		     // si la balise OK comparer avec  position
 		     if ((side.length() > 0) && (! experiment.instrumentProperties.get("position").value.equals(side))) {
@@ -148,8 +149,9 @@ public class NovaSeqInput extends AbstractInput {
 			 } 
 		     
 		     //-2- barcode de Flowcell  NIVEAU 2=><RfidsInfo>
-		     expression="RfidsInfo/FlowCellSerialBarcode";
-		     String flowcellId = (String)xpath.evaluate(expression, root);  
+		     expression = "RfidsInfo/FlowCellSerialBarcode";
+//		     String flowcellId = (String)xpath.evaluate(expression, root);  
+		     String flowcellId = xpath.evaluate(expression, root);  
 		     checkMandatoryXMLTag (contextValidation, expression, flowcellId );
 		     // si la balise OK comparer avec inputContainerSupportCodes: <BARCODE>_<POS>
 		     if ((flowcellId.length() > 0) && (! experiment.inputContainerSupportCodes.contains(flowcellId))) {
@@ -193,8 +195,9 @@ public class NovaSeqInput extends AbstractInput {
 		     /* Info Illumina: la balise <InstrumentName> contient toujour l'ID du sequenceur mais la balise <RunId> peut etre parametree pour que le nom
 		      * de run contient le nom du PC : <RunId>180115_MARIECURIX_0008_AH5TCYDMXX</RunId>
 		      */
-		     expression="RunId";
-		     String run = (String)xpath.evaluate(expression, root);
+		     expression = "RunId";
+//		     String run = (String)xpath.evaluate(expression, root);
+		     String run = xpath.evaluate(expression, root);
 		     checkMandatoryXMLTag (contextValidation, expression, run);
 		     if ((run.length() > 0) && (! run.contains(experiment.instrument.code))) {
 	    		 contextValidation.addErrors("Erreurs fichier", "L'instrument dans le nom du run du fichier ne correspond pas à l'instrument de l'expérience.");
@@ -230,9 +233,10 @@ public class NovaSeqInput extends AbstractInput {
     	 String kitName=null;
     	 
     	 try {
-		     String expression="RfidsInfo/FlowCellMode";
-		     String fcMode = (String)xpath.evaluate(expression, root);
-		     
+		     String expression = "RfidsInfo/FlowCellMode";
+//		     String fcMode = (String)xpath.evaluate(expression, root);
+		     String fcMode = xpath.evaluate(expression, root);
+
 		     if ("S2".equals(fcMode)) {
 		    	 kitName="NovaSeq 6000 S2 Rgt kit (300c)";
 		    	 //String boxName="BOX NOVASEQ 6000";
@@ -275,26 +279,28 @@ public class NovaSeqInput extends AbstractInput {
 	    		 
 		    	 ReagentUsed reagent=new ReagentUsed(); 
 	    		 
-	    		 String XMLtag1="RfidsInfo/"+pair.getKey()+"SerialBarcode";
+	    		 String XMLtag1 = "RfidsInfo/" + pair.getKey() + "SerialBarcode";
 	    		 //Logger.debug("XMLtag:"+XMLtag1); 
-	    		 String serialBarcode = (String)xpath.evaluate(XMLtag1, root);
+//	    		 String serialBarcode = (String)xpath.evaluate(XMLtag1, root);
+	    		 String serialBarcode = xpath.evaluate(XMLtag1, root);
 	    		 checkMandatoryXMLTag (contextValidation, XMLtag1, serialBarcode );
 	    		 
-	    		 String XMLtag2="RfidsInfo/"+pair.getKey()+"LotNumber";
+	    		 String XMLtag2 = "RfidsInfo/" + pair.getKey() + "LotNumber";
 	      		 //Logger.debug("XMLtag:"+XMLtag2);
-	    		 String lotNumber = (String)xpath.evaluate(XMLtag2, root);
+//	    		 String lotNumber = (String)xpath.evaluate(XMLtag2, root);
+	    		 String lotNumber = xpath.evaluate(XMLtag2, root);
 	    		 checkMandatoryXMLTag (contextValidation, XMLtag2, lotNumber );
 	    		 
-	    		 String reagName=pair.getValue()[0];
+	    		 String reagName = pair.getValue()[0];
 	    		 //Logger.debug("création reagent used: "+ reagName);
 	    		 
 	    		 // 12/02/2018 ajouter la contrainte sur la boite parent
 	    		 ReagentCatalog reag= MongoDBDAO.findOne(InstanceConstants.REAGENT_CATALOG_COLL_NAME, ReagentCatalog.class, DBQuery.is("category", "Reagent").
 	    				 and(DBQuery.is("name", reagName)).and(DBQuery.is("boxCatalogCode", box.code ))); 		 
-	    		 if ( null == reag ){
+	    		 if (reag == null) {
 	        		 contextValidation.addErrors("Erreurs catalogue", "Pas de réactif nommé '"+reagName +"' dans le catalogue");
 	        	 } else {
-		    		 logger.debug("code="+ reag.code);
+		    		 logger.debug("code=" + reag.code);
 	        		 
 		    		 reagent.kitCatalogCode = kit.code;       // code NGL du kit parent
 		    		 reagent.boxCatalogCode = box.code;       // code NGL de la boîte parent
