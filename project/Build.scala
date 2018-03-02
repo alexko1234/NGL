@@ -163,11 +163,17 @@ object ApplicationBuild extends Build {
 			dependencyOverrides  += "com.fasterxml.jackson.core"     % "jackson-annotations"     % "2.7.3",
 			dependencyOverrides  += "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8"   % "2.7.3",
 			dependencyOverrides  += "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % "2.7.3",
-			javacOptions in (Compile,doc) ++= Seq("-notimestamp", "-linksource", "-quiet"),
 			javaOptions in Test ++= testJavaOptions,
 			fork                 := true,
+			// --- javadoc configuration
 			// Remove scala files from the doc process so javadoc is used. 
 			sources in (Compile, doc) <<= sources in (Compile, doc) map { _.filterNot(_.getName endsWith ".scala") },
+			javacOptions in (Compile,doc) ++= Seq("-notimestamp", "-linksource"),
+			javacOptions in (Compile,doc)  += "-quiet", // do not show the genneration info
+			// TODO: should use some defined output dir, don't know what the name is
+			unmanagedResourceDirectories in (Compile, doc) += baseDirectory.value / "target" / "scala-2.12" / "classes_managed/",
+			dependencyClasspath in (Compile, doc) += baseDirectory.value / "target" / "scala-2.12" / "classes_managed/",
+			//
 			unmanagedResourceDirectories in Test += baseDirectory.value / "test",
 			// sources in doc in Compile := Seq(),
 			// Remove javadoc jar creation when packaging (building dist)
