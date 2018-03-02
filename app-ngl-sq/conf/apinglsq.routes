@@ -33,7 +33,6 @@ GET		/api/processes/:code											controllers.processes.api.Processes.get(code
 HEAD	/api/processes/:code               								controllers.processes.api.Processes.head(code: java.lang.String)
 POST	/api/processes/:from											controllers.processes.api.Processes.save(from: java.lang.String)
 POST	/api/processes/:from/batch										controllers.processes.api.Processes.saveBatch(from: java.lang.String)
-PUT		/api/processes/:code											@controllers.processes.api.Processes.update(code:java.lang.String)
 PUT		/api/processes/batch											controllers.processes.api.Processes.updateBatch()
 PUT		/api/processes/:code											controllers.processes.api.Processes.update(code:java.lang.String)
 PUT		/api/processes/batch/state										controllers.processes.api.Processes.updateStateBatch()
