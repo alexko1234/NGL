@@ -28,6 +28,7 @@ import controllers.QueryFieldsForm;
 // import controllers.sra.configurations.api.Configurations;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.authentication.Authentication;
 import fr.cea.ig.play.NGLContext;
 import mail.MailServiceException;
 import models.laboratory.common.instance.State;
@@ -173,8 +174,8 @@ public class Submissions extends DocumentController<Submission>{
 		Form<Submission> filledForm = getFilledForm(submissionForm, Submission.class);
 		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
 		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
-		
-		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser(), filledForm);
 		if (submission == null) {
 			//return badRequest("Submission with code "+code+" not exist");
 			ctxVal.addErrors("submission ", " not exist");
@@ -204,7 +205,8 @@ public class Submissions extends DocumentController<Submission>{
 				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}	
 		} else { //update only some authorized properties
-			ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+//			ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+			ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 			
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
@@ -231,14 +233,14 @@ public class Submissions extends DocumentController<Submission>{
 		State state = filledForm.get();
 		state.date = new Date();
 		state.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser(), filledForm);
 		if (submission == null) {
 			//return badRequest("Submission with code "+code+" not exist");
 			ctxVal.addErrors("submission " + code,  " not exist in database");	
 			// return badRequest(filledForm.errors-AsJson());
 			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
-
 		subWorkflows.setState(ctxVal, submission, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getObject(code)));
@@ -259,22 +261,28 @@ public class Submissions extends DocumentController<Submission>{
 		// Form<Submission> filledForm = /*Form.*/form(Submission.class);
 		// filledForm.fill(submission);
 		Form<Submission> filledForm = getFilledForm(submissionForm, Submission.class);
-
+		ContextValidation ctxVal = new ContextValidation(Authentication.getUser(),filledForm);
 		if (submission == null) {
 			//return badRequest("Submission with code "+code+" not exist");
-			filledForm.reject("Submission " + code," not exist");  // si solution filledForm.reject
-			return badRequest(filledForm.errorsAsJson( )); // legit
+//			filledForm.reject("Submission " + code," not exist");  // si solution filledForm.reject
+//			return badRequest(filledForm.errorsAsJson( )); // legit
+			ctxVal.addError("Submission " + code," not exist");  // si solution filledForm.reject
+			return badRequest(errorsAsJson(ctxVal.getErrors())); 
 		}
 		try {
 			submission = XmlServices.writeAllXml(code);
 		} catch (IOException e) {
 			//return badRequest(e.getMessage());
-			filledForm.reject("Submission " + code, e.getMessage());  // si solution filledForm.reject
-			return badRequest(filledForm.errorsAsJson( )); // legit
+//			filledForm.reject("Submission " + code, e.getMessage());  // si solution filledForm.reject
+//			return badRequest(filledForm.errorsAsJson( )); // legit
+			ctxVal.addError("Submission " + code, e.getMessage());  // si solution filledForm.reject
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		} catch (SraException e) {
 			//return badRequest(e.getMessage());
-			filledForm.reject("Submission " + code, e.getMessage());  // si solution filledForm.reject
-			return badRequest(filledForm.errorsAsJson( )); // legit
+//			filledForm.reject("Submission " + code, e.getMessage());  // si solution filledForm.reject
+//			return badRequest(filledForm.errorsAsJson( )); // legit
+			ctxVal.addError("Submission " + code, e.getMessage());  // si solution filledForm.reject
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 		return ok(Json.toJson(submission));
 	}
@@ -360,7 +368,8 @@ public class Submissions extends DocumentController<Submission>{
 		logger.debug("readsets "+submissionsCreationForm.readSetCodes);
 
 		String user = getCurrentUser();
-		ContextValidation contextValidation = new ContextValidation(user, filledForm.errors());
+//		ContextValidation contextValidation = new ContextValidation(user, filledForm.errors());
+		ContextValidation contextValidation = new ContextValidation(user, filledForm);
 		contextValidation.setCreationMode();
 		contextValidation.getContextObjects().put("type", "sra");
 

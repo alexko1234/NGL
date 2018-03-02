@@ -171,8 +171,9 @@ object ApplicationBuild extends Build {
 			javacOptions in (Compile,doc) ++= Seq("-notimestamp", "-linksource"),
 			javacOptions in (Compile,doc)  += "-quiet", // do not show the genneration info
 			// TODO: should use some defined output dir, don't know what the name is
-			unmanagedResourceDirectories in (Compile, doc) += baseDirectory.value / "target" / "scala-2.12" / "classes_managed/",
+			// unmanagedResourceDirectories in (Compile, doc) += baseDirectory.value / "target" / "scala-2.12" / "classes_managed/",
 			dependencyClasspath in (Compile, doc) += baseDirectory.value / "target" / "scala-2.12" / "classes_managed/",
+			doc.in(Compile) := doc.in(Compile).dependsOn(compile.in(Compile)).value,
 			//
 			unmanagedResourceDirectories in Test += baseDirectory.value / "test",
 			// sources in doc in Compile := Seq(),
@@ -494,7 +495,7 @@ object ApplicationBuild extends Build {
 	  //publishArtifact in (Compile, packageDoc) := false,
     //publishArtifact in packageDoc := false,
     //sources in (Compile,doc)   := Seq.empty,
-    publishArtifact in makePom := false,
+    publishArtifact in makePom := false, 
     publishTo                  := Some(nexusigpublish)
   ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
 

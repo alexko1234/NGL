@@ -129,7 +129,6 @@ public class NovaSeqInput extends AbstractInput {
 	      } catch (XPathExpressionException  e) {
 	    	  contextValidation.addErrors("Erreurs interne", e.getMessage());
 	      } 
- 
 		  return experiment;
 	}
 	        
@@ -160,7 +159,8 @@ public class NovaSeqInput extends AbstractInput {
 			 // -3- barcode du tube de chargement  NIVEAU 2=><RfidsInfo>
 		     // !!! pour l'instant il n'y a qu'un seul tube... mais ca va changer avec l'utilisation d'un support de chargement multi-lanes....
 		     expression="RfidsInfo/LibraryTubeSerialBarcode";
-		     String tubeId = (String)xpath.evaluate(expression, root);
+//		     String tubeId = (String)xpath.evaluate(expression, root);
+		     String tubeId = xpath.evaluate(expression, root);
 		     checkMandatoryXMLTag (contextValidation, expression, tubeId );
 		     // si la balise OK comparer avec novaseqLoadingTube
 		     // !! pas obligatoire dans l'experience...et peut etre manquant  
@@ -175,7 +175,8 @@ public class NovaSeqInput extends AbstractInput {
 		     
 		     //-4- flowcell mode    NIVEAU 2=><RfidsInfo>
 		     expression="RfidsInfo/FlowCellMode";
-		     String fcMode = (String)xpath.evaluate(expression, root);
+//		     String fcMode = (String)xpath.evaluate(expression, root);
+		     String fcMode = xpath.evaluate(expression, root);
 		     checkMandatoryXMLTag (contextValidation, expression, fcMode );
 		     // si la balise OK comparer avec novaseqFlowcellMode
 		     // !! pas obligatoire dans l'experience...et peut etre manquant
