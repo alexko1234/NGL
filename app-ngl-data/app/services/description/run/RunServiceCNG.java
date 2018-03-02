@@ -27,9 +27,8 @@ public class RunServiceCNG  extends AbstractRunService{
 	// FDS 06/04/2017 NGL-1225: ajout rsnanopore
 	public void saveReadSetType(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ReadSetType> l = new ArrayList<ReadSetType>();
-		l.add(DescriptionFactory.newReadSetType("Default","default-readset",  getReadSetPropertyDefinitions(),  DescriptionFactory.getInstitutes(Constants.CODE.CNG) ));
-		l.add(DescriptionFactory.newReadSetType("rsillumina","rsillumina",  getReadSetPropertyDefinitions(),  DescriptionFactory.getInstitutes( Constants.CODE.CNG) ));
-		l.add(DescriptionFactory.newReadSetType("rsnanopore","rsnanopore", getReadSetPropertyDefinitionsNanopore(),  DescriptionFactory.getInstitutes( Constants.CODE.CNG) ));
+		l.add(DescriptionFactory.newReadSetType("Readset Illumina","rsillumina",  getReadSetPropertyDefinitions(),  DescriptionFactory.getInstitutes( Constants.CODE.CNG) ));
+		l.add(DescriptionFactory.newReadSetType("Readset Nanopore","rsnanopore", getReadSetPropertyDefinitionsNanopore(),  DescriptionFactory.getInstitutes( Constants.CODE.CNG) ));
 		
 		DAOHelpers.saveModels(ReadSetType.class, l, errors);
 	}

@@ -14,6 +14,7 @@
 								},
 								{	"property":"typeCode",
 									"header": Messages("runs.typeCode"),
+									"filter":"codes:'type'",
 									"type" :"text",
 							    	"order":true,
 							    	"group":true,

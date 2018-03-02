@@ -133,6 +133,13 @@
 							    		
 					});
 					
+					columns.push({	"property":"productionValuation.comment",
+						"header":Messages("readsets.productionValuation.comment"),
+						"type":"text",
+						"edit":true,
+				    	"position":73
+					});
+					
 					columns.push({	"property":"bioinformaticValuation.valid",
 									"filter":"codes:'valuation'",
 									"header":Messages("readsets.bioinformaticValuation.valid"),
@@ -156,6 +163,8 @@
 							    	"groupBy":'category.name',
 							    	"position":82
 					});
+					
+					
 					
 			}else if(mainService.getHomePage() == 'state'){
 					columns.push({	"property":"state.code",
