@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -424,12 +425,6 @@ class Containers2 extends DocumentController<Container> {
 			queryElts.add(DBQuery.regex("contents.ncbiScientificName", Pattern.compile(containersSearch.ncbiScientificNameRegex)));
 		}
 		
-		if(CollectionUtils.isNotEmpty(containersSearch.projectCodes)){
-			queryElts.add(DBQuery.in("projectCodes", containersSearch.projectCodes));
-		}else if(StringUtils.isNotBlank(containersSearch.projectCode)){
-			queryElts.add(DBQuery.in("projectCodes", containersSearch.projectCode));
-		}
-
 		if(CollectionUtils.isNotEmpty(containersSearch.codes)){
 			queryElts.add(DBQuery.in("code", containersSearch.codes));
 		}else if(StringUtils.isNotBlank(containersSearch.code)){
@@ -451,13 +446,58 @@ class Containers2 extends DocumentController<Container> {
 		if(StringUtils.isNotBlank(containersSearch.categoryCode)){
 			queryElts.add(DBQuery.is("categoryCode", containersSearch.categoryCode));
 		}
-
-		if(CollectionUtils.isNotEmpty(containersSearch.sampleCodes)){
-			queryElts.add(DBQuery.in("sampleCodes", containersSearch.sampleCodes));
-		}else if(StringUtils.isNotBlank(containersSearch.sampleCode)){
-			queryElts.add(DBQuery.in("sampleCodes", containersSearch.sampleCode));
+		
+		if(containersSearch.sampleCodesFromIWCProcess){
+		
+			if(StringUtils.isBlank(containersSearch.nextProcessTypeCode))
+				throw new RuntimeException("Missing nextProcessTypeCode to search container if sampleCodesFromIWCProcess");
+			
+			//1 extract all sampleCode from process in IW-C
+			Set<String> sampleCodes = new TreeSet<String>();
+			List<Pattern> samplePathRegex = new ArrayList<Pattern>();
+			MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
+					DBQuery.is("state.code", "IW-C").is("typeCode", containersSearch.nextProcessTypeCode))
+			.cursor.forEach(p ->{
+				sampleCodes.addAll(p.sampleCodes);
+				String regexPath = ","+p.sampleCodes.iterator().next();
+				samplePathRegex.add(Pattern.compile(regexPath));
+			});
+			
+			if(CollectionUtils.isNotEmpty(sampleCodes)){
+				//2 search all sample childs from previous sample
+				List<Query> l = samplePathRegex.stream().map(r -> DBQuery.regex("life.path", r)).collect(Collectors.toList());
+				MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, 
+						DBQuery.or(l.toArray(new Query[0]))).cursor.forEach(s -> sampleCodes.add(s.code));
+				
+				if(CollectionUtils.isNotEmpty(containersSearch.sampleCodes)){
+					containersSearch.sampleCodes.retainAll(sampleCodes);
+					if(CollectionUtils.isNotEmpty(containersSearch.sampleCodes)){
+						queryElts.add(DBQuery.in("sampleCodes", containersSearch.sampleCodes));
+					}else{
+						queryElts.add(DBQuery.in("sampleCodes", "-1")); // none results
+					}
+					
+				}else if(CollectionUtils.isNotEmpty(sampleCodes)){
+					queryElts.add(DBQuery.in("sampleCodes", sampleCodes));
+				}else{
+					queryElts.add(DBQuery.in("sampleCodes", "-1")); // none results
+				}
+			}else{
+				queryElts.add(DBQuery.in("sampleCodes", "-1")); // none results
+			}
+		}else {
+			if(CollectionUtils.isNotEmpty(containersSearch.projectCodes)){
+				queryElts.add(DBQuery.in("projectCodes", containersSearch.projectCodes));
+			}else if(StringUtils.isNotBlank(containersSearch.projectCode)){
+				queryElts.add(DBQuery.in("projectCodes", containersSearch.projectCode));
+			}
+			
+			if(CollectionUtils.isNotEmpty(containersSearch.sampleCodes)){
+				queryElts.add(DBQuery.in("sampleCodes", containersSearch.sampleCodes));
+			}else if(StringUtils.isNotBlank(containersSearch.sampleCode)){
+				queryElts.add(DBQuery.in("sampleCodes", containersSearch.sampleCode));
+			}
 		}
-
 		
 		if(CollectionUtils.isNotEmpty(containersSearch.supportCodes)){
 			queryElts.add(DBQuery.in("support.code", containersSearch.supportCodes));
@@ -513,7 +553,6 @@ class Containers2 extends DocumentController<Container> {
 					
 			ProcessType processType = ProcessType.find.findByCode(containersSearch.nextProcessTypeCode);
 			if(processType != null){
-				//List<ExperimentType> experimentTypes = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(processType.firstExperimentType.code);
 				
 				List<ExperimentType> experimentTypes = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCodeAndProcessTypeCode(processType.firstExperimentType.code, processType.code);
 				
@@ -544,44 +583,6 @@ class Containers2 extends DocumentController<Container> {
 			}
 		//used in experiment creation	
 		}else if(StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){
-			
-			//TODO GA Prendre la précédente dans chacun des processus et pas celle de l'expérience
-			/*
-			List<ExperimentType> previous = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(containersSearch.nextExperimentTypeCode);
-			if(CollectionUtils.isNotEmpty(previous)){
-				for(ExperimentType e:previous){
-					listePrevious.add(e.code);
-				}
-
-				if(CollectionUtils.isNotEmpty(listePrevious)){
-					queryElts.add(DBQuery.or(DBQuery.in("fromTransformationTypeCodes", listePrevious)));
-				}
-			
-			//NextExperimentTypeCode appartient au processType des containers
-				List<String> listProcessType=new ArrayList<String>();
-				List<ProcessType> processTypes=ProcessType.find.findByExperimentTypeCode(containersSearch.nextExperimentTypeCode);
-				if(CollectionUtils.isNotEmpty(processTypes)){
-					for(ProcessType processType:processTypes){
-						listProcessType.add(processType.code);
-						
-						//TODO GA NEW CODE TO ASSOCIATE expType and processType 
-						List<ExperimentType> previousExpType = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCodeAndProcessTypeCode(containersSearch.nextExperimentTypeCode,processType.code);
-						Logger.debug("NB Previous exp : "+previousExpType.size());
-					}
-				}
-				//TODO Erreur quand pas de processus pour un type d'expérience
-				
-				if(CollectionUtils.isNotEmpty(listProcessType)){
-					queryElts.add(DBQuery.in("processTypeCodes", listProcessType));
-				}
-				
-				
-				
-			}else{
-				//throw new RuntimeException("nextExperimentTypeCode = "+ containersSearch.nextExperimentTypeCode +" does not exist!");
-			}
-			queryElts.add(DBQuery.nor(DBQuery.notExists("processCodes"),DBQuery.size("processCodes", 0)));
-			*/
 			
 			List<DBQuery.Query> subQueryElts = new ArrayList<DBQuery.Query>();
 			List<ProcessType> processTypes=ProcessType.find.findByExperimentTypeCode(containersSearch.nextExperimentTypeCode);

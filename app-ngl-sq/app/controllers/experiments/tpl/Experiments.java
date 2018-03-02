@@ -362,6 +362,7 @@ public class Experiments extends NGLController
   	    		
   	    		controllers.containers.api.routes.javascript.Containers.list(),
   	    		controllers.containers.api.routes.javascript.ContainerSupports.list(),
+  	    		controllers.containers.api.routes.javascript.ContainerSupports.get(), // ajout FDS 16/02/2018
   	    		controllers.containers.api.routes.javascript.Containers.get(),
   	    		controllers.processes.api.routes.javascript.Processes.list(),
   	    		controllers.processes.api.routes.javascript.ProcessTypes.list(),

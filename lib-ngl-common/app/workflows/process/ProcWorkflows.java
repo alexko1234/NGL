@@ -16,7 +16,8 @@ import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.State;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
-// import play.Logger;
+import models.utils.InstanceHelpers;
+import play.Logger;
 import validation.ContextValidation;
 import validation.processes.instance.ProcessValidationHelper;
 import workflows.Workflows;
@@ -53,6 +54,9 @@ public class ProcWorkflows extends Workflows<Process> {
 	public void applyPreStateRules(ContextValidation validation,
 			Process process, State nextState) {
 		process.traceInformation = updateTraceInformation(process.traceInformation, nextState); 			
+		if("N".equals(nextState.code)){
+			procWorkflowsHelper.updateSampleOnContainer(validation ,process);			
+	}
 	}
 
 	@Override
@@ -63,8 +67,12 @@ public class ProcWorkflows extends Workflows<Process> {
 	
 	@Override
 	public void applyPostValidateCurrentStateRules(ContextValidation validation, Process process) {
-		procWorkflowsHelper.get().updateContentProcessPropertiesAttribute(validation, process);
-		procWorkflowsHelper.get().updateContentPropertiesWithContentProcessProperties(validation, process);
+		if(!"IW-C".equals(process.state.code)){
+			procWorkflowsHelper.updateContentProcessPropertiesAttribute(validation, process);
+			procWorkflowsHelper.updateContentPropertiesWithContentProcessProperties(validation, process);
+		}else if("IW-C".equals(process.state.code)){
+			nextState(validation, process);
+	}
 	}
 	
 	@Override
@@ -114,6 +122,11 @@ public class ProcWorkflows extends Workflows<Process> {
 
 	@Override
 	public void nextState(ContextValidation contextValidation, Process process) {
+		State nextState = cloneState(process.state, contextValidation.getUser());
+		if("IW-C".equals(process.state.code) && process.inputContainerCode != null){
+			nextState.code = "N";
+	}
+		setState(contextValidation, process, nextState);
 	}
 
 }

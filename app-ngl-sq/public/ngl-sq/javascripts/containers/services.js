@@ -430,6 +430,8 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			refreshSamples : function(){
 				if(this.form.projectCodes && this.form.projectCodes.length>0){
 					lists.refresh.samples({projectCodes:this.form.projectCodes});
+				}else{
+					lists.clear('samples');
 				}
 			},
 			changeProject : function(){

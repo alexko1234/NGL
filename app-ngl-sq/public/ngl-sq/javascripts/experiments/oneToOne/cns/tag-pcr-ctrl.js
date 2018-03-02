@@ -12,7 +12,6 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 								 "edit":false,
 								 "hide":true,
 					        	 "type":"text",
-					        	 "mergeCells" : true,
 					        	 "position":1,
 					        	 "extraHeaders":{0:Messages("experiments.inputs")}
 					         },		

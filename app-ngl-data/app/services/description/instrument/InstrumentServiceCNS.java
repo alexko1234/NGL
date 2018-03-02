@@ -189,7 +189,8 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 						createInstrument("QuBit3", "QuBit3 ADN", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
 						createInstrument("QuBit4", "QuBit4 AMPLI", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
 						createInstrument("QuBit5", "QuBit5 CDNA", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
-						createInstrument("QuBit6", "QuBit6 NANOPORE", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))						
+						createInstrument("QuBit6", "QuBit6 NANOPORE", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
+						createInstrument("QuBit7", "QuBit7 HPM (LBiomeG)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))
 						), 
 				getContainerSupportCategories(new String[]{"tube"}),null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); //ok
@@ -643,7 +644,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType"
 				, LevelService.getLevels(Level.CODE.Instrument,Level.CODE.ContainerSupport),String.class, true,DescriptionFactory.newValues("SR","PE"),"single"));
-		propertyDefinitions.add(newPropertiesDefinition("Type flowcell","flowcellType"
+		propertyDefinitions.add(newPropertiesDefinition("Type flowcell","novaseqFlowcellMode"
 				, LevelService.getLevels(Level.CODE.Instrument,Level.CODE.Content),String.class, true,DescriptionFactory.newValues("S1","S2","S3","S4"),"single"));
 		propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
 		
@@ -825,7 +826,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	
 	private static List<PropertyDefinition> getQuBitFluoroskanProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Gamme", "gamme", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null,  newValues("BR","HS","BR et HS","RNA HS","HS et ssDNA"), 
+		l.add(newPropertiesDefinition("Gamme", "gamme", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null,  newValues("BR","HS","BR et HS","RNA HS","HS et ssDNA", "DeNovix Ultra HS"), 
 				"single", 10, true, null,null));
 		return l;
 	}

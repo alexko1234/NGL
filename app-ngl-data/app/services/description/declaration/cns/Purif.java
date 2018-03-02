@@ -43,12 +43,12 @@ public class Purif extends AbstractDeclaration {
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(newExperimentType("Ampure","ampure",null, 30300,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), getPropertyDefinitionsPostAmupurePCR(),
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), getPropertyDefinitionsPostAmpurePCR(),
 				getInstrumentUsedTypes("hand","biomek-fx"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));	
 		
 		l.add(newExperimentType("Ampure Post-PCR","post-pcr-ampure",null, 30400,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), getPropertyDefinitionsPostAmupurePCR(),
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), getPropertyDefinitionsPostAmpurePCR(),
 				getInstrumentUsedTypes("hand","biomek-fx"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));	
 		
@@ -56,6 +56,12 @@ public class Purif extends AbstractDeclaration {
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), getPropertyDefinitionsSpinColumnPurification(),
 				getInstrumentUsedTypes("hand"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));	
+		
+		l.add(newExperimentType("Débranchage","wga-debranching",null, 30600,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), getPropertyDefinitionsWGADebranching(),
+				getInstrumentUsedTypes("hand"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));	
+		
 		
 		l.add(newExperimentType("Ext to Purif / eval / TF","ext-to-purif-qc-transfert",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
@@ -67,6 +73,26 @@ public class Purif extends AbstractDeclaration {
 	}
 	
 	
+	private List<PropertyDefinition> getPropertyDefinitionsWGADebranching() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,"1"));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null,
+				null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",13, true,null,"1"));
+			
+
+		propertyDefinitions.add(newPropertiesDefinition("Nombre de débranchages", "nbDebranching", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, true, null, 
+				null, null, null, null,"single", 14, true, null, null));
+	
+		
+		propertyDefinitions.add(newPropertiesDefinition("Ratio billes Ampure", "adnBeadVolumeRatio", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, 
+				null, null, null, null,"single", 15, true, null, null));
+
+		return propertyDefinitions;
+	}
+
 	private List<PropertyDefinition> getPropertyDefinitionsDNAseTreatment() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
@@ -89,9 +115,9 @@ public class Purif extends AbstractDeclaration {
 	}
 	
 	
-	private List<PropertyDefinition> getPropertyDefinitionsPostAmupurePCR() {
+	private List<PropertyDefinition> getPropertyDefinitionsPostAmpurePCR() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Ratio billes (Ampure Post PCR)", "adnBeadVolumeRatio", LevelService.getLevels(Level.CODE.Experiment), String.class, true, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Ratio billes Ampure", "adnBeadVolumeRatio", LevelService.getLevels(Level.CODE.Experiment), String.class, true, null, 
 				null, null, null, null,"single", 2, true, null, null));
 	
 		return propertyDefinitions;

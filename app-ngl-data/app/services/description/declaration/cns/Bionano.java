@@ -33,11 +33,11 @@ public class Bionano extends AbstractDeclaration{
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 
 		//Bionano
-		l.add(newExperimentType("Ext to NLRS, Bionano chip, dépôt","ext-to-bionano-nlrs-process",null,-1,
+		l.add(newExperimentType("Ext to NLRS / DLS, Bionano chip, dépôt","ext-to-bionano-nlrs-process",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newExperimentType(" Ext to Bionano Chip, dépôt","ext-to-bionano-chip-process",null,-1,
+		l.add(newExperimentType("Ext to Bionano Chip, dépôt","ext-to-bionano-chip-process",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
@@ -46,17 +46,23 @@ public class Bionano extends AbstractDeclaration{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 
-		l.add(newExperimentType("Bionano Prep NLRS","irys-nlrs-prep",null,3100,
+		l.add(newExperimentType("BIONANO Prep NLRS","irys-nlrs-prep",null,3100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionIrysPrepNLRS(),
 				getInstrumentUsedTypes("hand"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 
-		l.add(newExperimentType(" Préparation Bionano CHIP","irys-chip-preparation",null,3200,
+		l.add(newExperimentType("BIONANO Prep DLS","bionano-dls-prep",null,3150,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionBionanoPrepDLS(),
+				getInstrumentUsedTypes("hand"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
+
+		
+		l.add(newExperimentType("BIONANO Prep Chip","irys-chip-preparation",null,3200,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionPreparationIrysChip(),
 				getInstrumentUsedTypes("irys-hand"),"ManyToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 
-		l.add(newExperimentType("Dépôt BioNano","bionano-depot",null,3300,
+		l.add(newExperimentType("BIONANO Dépôt","bionano-depot",null,3300,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionDepotBionano(),
 				getInstrumentUsedTypes("IRYS","SAPHYR"),"OneToVoid", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
@@ -86,11 +92,12 @@ public class Bionano extends AbstractDeclaration{
 	protected List<ProcessType> getProcessTypeCommon() {
 		List<ProcessType> l=new ArrayList<ProcessType>();
 
-		l.add(DescriptionFactory.newProcessType("NLRS, Bionano chip, dépôt", "bionano-nlrs-process", 
+		l.add(DescriptionFactory.newProcessType("NLRS / DLS, Bionano chip, dépôt", "bionano-nlrs-process", 
 				ProcessCategory.find.findByCode("mapping"), 101, 
 				getPropertyDefinitionsBionano(), 
 				Arrays.asList(getPET("ext-to-bionano-nlrs-process",-1),
 						getPET("irys-nlrs-prep",0),
+						getPET("bionano-dls-prep",0),
 						getPET("irys-chip-preparation",1),
 						getPET("bionano-depot",2)), 
 						getExperimentTypes("irys-nlrs-prep").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-bionano-nlrs-process").get(0), 
@@ -101,6 +108,7 @@ public class Bionano extends AbstractDeclaration{
 				getPropertyDefinitionsBionano(),
 				Arrays.asList(getPET("ext-to-bionano-chip-process",-1),
 						getPET("irys-nlrs-prep",-1),
+						getPET("bionano-dls-prep",-1),
 						getPET("irys-chip-preparation",0),
 						getPET("bionano-depot",1)), 
 						getExperimentTypes("irys-chip-preparation").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-bionano-chip-process").get(0), 
@@ -144,9 +152,12 @@ public class Bionano extends AbstractDeclaration{
 		newExperimentTypeNode("ext-to-bionano-run", getExperimentTypes("ext-to-bionano-run").get(0), false, false, null, null, null).save();	
 
 		newExperimentTypeNode("irys-nlrs-prep",getExperimentTypes("irys-nlrs-prep").get(0),false,false,getExperimentTypeNodes("ext-to-bionano-nlrs-process"),null,null).save();
-		newExperimentTypeNode("irys-chip-preparation",getExperimentTypes("irys-chip-preparation").get(0),false,false,getExperimentTypeNodes("ext-to-bionano-chip-process","irys-nlrs-prep"),null,null).save();
+		newExperimentTypeNode("bionano-dls-prep",getExperimentTypes("bionano-dls-prep").get(0),false,false,getExperimentTypeNodes("ext-to-bionano-nlrs-process"),null,null).save();
+		
+		newExperimentTypeNode("irys-chip-preparation",getExperimentTypes("irys-chip-preparation").get(0),false,false,getExperimentTypeNodes("ext-to-bionano-chip-process","irys-nlrs-prep","bionano-dls-prep"),null,null).save();
 		newExperimentTypeNode("bionano-depot",getExperimentTypes("bionano-depot").get(0),false,false,getExperimentTypeNodes("ext-to-bionano-run","irys-chip-preparation"),null,null).save();
 	
+		
 	}
 	
 	@Override
@@ -176,7 +187,67 @@ public class Bionano extends AbstractDeclaration{
 		//propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",51,true,"8", null));		
 		return propertyDefinitions;
 	}
+	
+	private List<PropertyDefinition> getPropertyDefinitionBionanoPrepDLS() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
+				
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null,
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",8, true, null, "2"));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null,
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",9, true, null, "2"));
+
+		propertyDefinitions.add(newPropertiesDefinition("Quantité prévue par le protocole","requiredQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Integer.class, true, null,
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",10, true, "750", null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume eau","bufferVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null,
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",11, true, null, "2"));
+		
+		//File
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Tableau sélection enzyme","enzymeLabelDensity",LevelService.getLevels(Level.CODE.ContainerIn), File.class, false, null,
+				null,"file", 12, true, null, null));
+
+		propertyDefinitions.add(newPropertiesDefinition("Enzyme de labelling", "labellingEnzyme", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null,
+				DescriptionFactory.newValues("DLE-1"), "single",13, true, "DLE-1", null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume enzyme","enzymeVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null,
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",14, true, "1.5", "2"));
+			
+				
+		propertyDefinitions.add(newPropertiesDefinition("Concentration 1", "measuredConc1", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null,
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"),"single",19, true, null, "2"));
+
+		propertyDefinitions.add(newPropertiesDefinition("Concentration 2", "measuredConc2", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null,
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"),"single",20, true, null, "2"));
+
+		propertyDefinitions.add(newPropertiesDefinition("Concentration moyenne", "averageConcentration", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null,
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"),"single",21, true, null, "2"));
+		
+		propertyDefinitions.add(newPropertiesDefinition("CV","variationCoefficient", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, true, null, 
+				null, null, null, null,"single", 22, true, null, "2"));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Concentration 3", "measuredConc3", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null,
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"),"single",23, true, null, "2"));
+
+		propertyDefinitions.add(newPropertiesDefinition("Concentration 4", "measuredConc4", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null,
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"),"single",24, true, null, "2"));
+
+		propertyDefinitions.add(newPropertiesDefinition("Concentration moyenne 2", "averageConcentration2", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null,
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"),"single",25, true, null, "2"));
+
+		propertyDefinitions.add(newPropertiesDefinition("CV 2","variationCoefficient2", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, false, null, 
+				null, null, null, null,"single", 26, true, null, "2"));
+
+		propertyDefinitions.add(newPropertiesDefinition("Volume DL","dlVolume", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, true, "F",
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",27, true, null, "2"));
+		propertyDefinitions.add(newPropertiesDefinition("Volume stain","stainVolume", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, true, "F",
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",28, true, null, "2"));
+		
+		
+		return propertyDefinitions;
+	}
+	
 
 	private List<PropertyDefinition> getPropertyDefinitionIrysPrepNLRS() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
@@ -215,7 +286,7 @@ public class Bionano extends AbstractDeclaration{
 		propertyDefinitions.add(newPropertiesDefinition("Concentration 3", "measuredConc3", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"),"single",21, true));
 
-		propertyDefinitions.add(newPropertiesDefinition("Concentration arrondie", "nlrsConcentration", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Double.class, true, null
+		propertyDefinitions.add(newPropertiesDefinition("Conc. arrondie pour Irys", "nlrsConcentration", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Double.class, false, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"),"single",24, true));
 
 		propertyDefinitions.add(newPropertiesDefinition("CV","variationCoefficient", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, false, null, null, null, null,"single", 25, true));

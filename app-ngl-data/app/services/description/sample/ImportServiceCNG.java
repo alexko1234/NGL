@@ -147,7 +147,7 @@ public class ImportServiceCNG extends AbstractImportService {
          values.add(DescriptionFactory.newValue("CAA","CAA - Agilent : V6+UTR (DefCap023)")); // !! aussi dans ProcessServiceCNG / getCaptureLibProcessTypeCodeValues
          values.add(DescriptionFactory.newValue("CAB","CAB - DefCap024"));
          values.add(DescriptionFactory.newValue("CAC","CAC - Agilent : V6+Cosmic (DefCap025)")); // !! aussi dans ProcessServiceCNG / getCaptureLibProcessTypeCodeValues
-         values.add(DescriptionFactory.newValue("CAD","CAD - Nimblegen : MedExome (DefCap026)"));
+         values.add(DescriptionFactory.newValue("CAD","CAD - Nimblegen : MedExome (DefCap026)"));// !! aussi dans ProcessServiceCNG / getCaptureLibProcessTypeCodeValues
          values.add(DescriptionFactory.newValue("CAE","CAE - Nimblegen : MedExome+Mitome (DefCap027)"));
          values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028)")); // NGL-1584 ajout
          
@@ -211,6 +211,7 @@ public class ImportServiceCNG extends AbstractImportService {
         
         // 04/10/2017 ajout des codes pour import Capture
         values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028")); // NGL-1584 ajout
+        values.add(DescriptionFactory.newValue("CAD","CAD - Nimblegen : MedExome (DefCap026)"));// ajout 28/02/2018
 
         return values;
 	}
