@@ -26,32 +26,27 @@ import controllers.instruments.io.utils.OutputHelper;
 public class Output extends AbstractOutput {
 
 	@Override
-	 public File generateFile(Experiment experiment,ContextValidation contextValidation) throws Exception {
-		String type = (String)contextValidation.getObject("type");
-		
+	public File generateFile(Experiment experiment, ContextValidation contextValidation) throws Exception {
+//		String type = (String)contextValidation.getObject("type");
 		String content=null;
 		//tube / 96-well-plate
-		if ("qpcr-quantification".equals(experiment.typeCode)){
+		if ("qpcr-quantification".equals(experiment.typeCode)) {
 			content = OutputHelper.format(qpcrquantification.render(getSampleSheetStratageneLines(experiment)).body());
-		}else {
+		} else {
 			//rna-prep; pcr-purif; normalization-and-pooling a venir.....
-			throw new RuntimeException(experiment.typeCode+" not managed");
+			throw new RuntimeException(experiment.typeCode + " not managed");
 		}
-		
-		File file = new File(getFileName(experiment)+".csv", content);
+		File file = new File(getFileName(experiment) + ".csv", content);
 		return file;
 	}
 	
-	
 	private List<SampleSheetStrategeneLine> getSampleSheetStratageneLines(Experiment experiment) {
-		
 		Map<Integer, String> results = experiment.atomicTransfertMethods
 			.stream()
 			.map(atm -> atm.inputContainerUseds)
 			.flatMap(List::stream)
 			.filter(icu -> (icu.instrumentProperties != null && icu.instrumentProperties.containsKey("qPCRposition")))
 			.collect(Collectors.toMap(icu -> Integer.valueOf(icu.instrumentProperties.get("qPCRposition").value.toString()), icu -> icu.code));
-		
 		
 		List<SampleSheetStrategeneLine> sampleSheetStrategeneLines = new ArrayList<SampleSheetStrategeneLine>();
 		
@@ -72,15 +67,12 @@ public class Output extends AbstractOutput {
 		sampleSheetStrategeneLines.addAll(getSubElt("G", 8, results.get(15)));
 		sampleSheetStrategeneLines.addAll(getSubElt("H", 8, results.get(16)));
 		
-		
-		if(null != results.get(17)){
-			sampleSheetStrategeneLines.add(new SampleSheetStrategeneLine("A12", results.get(17)+"_1"));
-			sampleSheetStrategeneLines.add(new SampleSheetStrategeneLine("B12", results.get(17)+"_1"));
-			sampleSheetStrategeneLines.add(new SampleSheetStrategeneLine("C12", results.get(17)+"_2"));
-			sampleSheetStrategeneLines.add(new SampleSheetStrategeneLine("D12", results.get(17)+"_2"));
+		if (results.get(17) != null) {
+			sampleSheetStrategeneLines.add(new SampleSheetStrategeneLine("A12", results.get(17) + "_1"));
+			sampleSheetStrategeneLines.add(new SampleSheetStrategeneLine("B12", results.get(17) + "_1"));
+			sampleSheetStrategeneLines.add(new SampleSheetStrategeneLine("C12", results.get(17) + "_2"));
+			sampleSheetStrategeneLines.add(new SampleSheetStrategeneLine("D12", results.get(17) + "_2"));
 		}
-		
-	
 		return sampleSheetStrategeneLines;
 	}
 
@@ -97,12 +89,9 @@ public class Output extends AbstractOutput {
 		return sampleSheetStrategeneLines;
 	}
 
-
 	private String getFileName(Experiment experiment) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyMMdd");
 		return experiment.typeCode.toUpperCase()+"_"+experiment.atomicTransfertMethods.get(0).inputContainerUseds.get(0).locationOnContainerSupport.code+"_"+sdf.format(new Date());
 	}
 
-	
-	
 }

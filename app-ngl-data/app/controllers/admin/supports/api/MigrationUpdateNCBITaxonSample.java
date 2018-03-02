@@ -70,11 +70,11 @@ public class MigrationUpdateNCBITaxonSample extends DocumentController<Sample> {
 		
 //		if(play.Play.application().configuration().getString("institute").equals("CNS")){
 		if(config.getInstitute().equals("CNS")) {
-			ncbiScientificName=taxonomyServices.getScientificName(sample.taxonCode);
-			ncbiLineage=taxonomyServices.getLineage(sample.taxonCode);
+			ncbiScientificName = taxonomyServices.getScientificName(sample.taxonCode);
+			ncbiLineage = taxonomyServices.getLineage(sample.taxonCode);
 		} else {
-			ncbiScientificName=taxonomyServices.getScientificName(sample.taxonCode);
-			ncbiLineage=taxonomyServices.getLineage(sample.taxonCode);
+			ncbiScientificName = taxonomyServices.getScientificName(sample.taxonCode);
+			ncbiLineage = taxonomyServices.getLineage(sample.taxonCode);
 		}
 		MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME,  Sample.class, 
 				DBQuery.is("code", sample.code), DBUpdate.set("ncbiScientificName", ncbiScientificName).set("ncbiLineage", ncbiLineage));

@@ -39,12 +39,10 @@ public class ReadSets extends CommonController {
 	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 	@Permission(value={"reading"})
 	public /*static*/ Result list(){
-
 		BasicDBObject keys = new BasicDBObject();
-		keys.put("treatments", 0);
-		
+		keys.put("treatments", 0);		
 		Integer archive = getArchiveValue();
-		List<Archive> archives = new ArrayList<Archive>();
+//		List<Archive> archives = new ArrayList<Archive>();
 		MongoDBResult<ReadSet> results =  MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, getQuery(archive), keys);		
 		// return ok(new MongoDBDatatableResponseChunks<ReadSet>(results, r -> convertToArchive(archive, r))).as("application/json");
 		// return ok(MongoStreamer.streamUDT(results, r -> convertToArchive(archive, r))).as("application/json");
