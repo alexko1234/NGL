@@ -359,7 +359,7 @@ public class Processes extends DocumentController<Process> {
 				if (null != input.traceInformation) {
 					input.traceInformation = getUpdateTraceInformation(input.traceInformation);
 				} else {
-					Logger.error("traceInformation is null !!");
+					logger.error("traceInformation is null !!");
 				}
 				
 				if (!process.state.code.equals(input.state.code)) {
@@ -441,9 +441,9 @@ public class Processes extends DocumentController<Process> {
 		Container container = null;
 		if(process.inputContainerCode != null && !process.state.code.equals("IW-C")){
 			container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,process.inputContainerCode);
-		if(container==null) {
-			return notFound("Container process "+code+"with code "+process.inputContainerCode+" does not exist");
-		}
+			if(container==null) {
+				return notFound("Container process "+code+"with code "+process.inputContainerCode+" does not exist");
+			}
 		}
 		DynamicForm deleteForm = getNGLContext().form();
 		ContextValidation contextValidation=new ContextValidation(getCurrentUser(),deleteForm.errors());
