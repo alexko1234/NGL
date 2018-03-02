@@ -15,7 +15,7 @@ import models.laboratory.reception.instance.ReceptionConfiguration.FileType;
 public class ReceptionFileService {
 	
 	private final NGLContext ctx;
-	@Inject //TODO utile ??
+	@Inject
 	public ReceptionFileService(NGLContext ctx) {
 		this.ctx = ctx;
 	}
