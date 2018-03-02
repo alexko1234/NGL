@@ -53,23 +53,17 @@ public class Processes extends DocumentController<Process> {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(Processes.class);
 	
-	private final Form<State>                 stateForm;// = form(State.class);
-	// private final /*static*/ Form<ProcessesSearchForm> processesSearchForm;// = form(ProcessesSearchForm.class);
-	private final Form<ProcessesBatchElement> batchElementForm;// = form(ProcessesBatchElement.class);
-	// final static ProcWorkflows workflows = Spring.get BeanOfType(ProcWorkflows.class);
-	// final static ProcWorkflowHelper workflowHelper = Spring.get BeanOfType(ProcWorkflowHelper.class);
+	private final Form<State>                 stateForm;
+	private final Form<ProcessesBatchElement> batchElementForm;
 	private final ProcWorkflows               workflows;
-	// private final ProcWorkflowHelper workflowHelper;
 	
 	@Inject
-	public Processes(NGLContext ctx, ProcWorkflows workflows /*, ProcWorkflowHelper workflowHelper*/) {
+	public Processes(NGLContext ctx, ProcWorkflows workflows ) {
 		super(ctx,InstanceConstants.PROCESS_COLL_NAME, Process.class);		
 		defaultKeys         =  Arrays.asList("*");
 		stateForm           = ctx.form(State.class);
-		// processesSearchForm = ctx.form(ProcessesSearchForm.class);
 		batchElementForm    = ctx.form(ProcessesBatchElement.class);
-		this.workflows      = workflows;
-		// this.workflowHelper = workflowHelper;
+		this.workflows      = workflows;		
 	}
 
 	@Permission(value={"reading"})

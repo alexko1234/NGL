@@ -84,7 +84,7 @@ public class UpdateReportingData extends AbstractImportData {
 					cursor.forEach(sample -> {
 					try{
 						updateProcesses(sample);
-								logger.debug("update sample "+sample.code);
+						logger.debug("update sample "+sample.code);
 						if(sample.processes != null && sample.processes.size() > 0){
 							MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), 
 									DBUpdate.set("processes", sample.processes).set("processesStatistics", sample.processesStatistics).set("processesUpdatedDate", date));
@@ -101,15 +101,15 @@ public class UpdateReportingData extends AbstractImportData {
 					}
 				});
 					skip = skip+1000;
-				long t2 = System.currentTimeMillis();
+					long t2 = System.currentTimeMillis();
 					logger.debug("time "+skip+" - "+((t2-t1)/1000));
 				}catch(Throwable e){
-				logger.error("Error : "+e,e);
-				if(null != e.getMessage())
-					contextError.addErrors("Error", e.getMessage());
-				else
-					contextError.addErrors("Error", "null");
-			}
+					logger.error("Error : "+e,e);
+					if(null != e.getMessage())
+						contextError.addErrors("Error", e.getMessage());
+					else
+						contextError.addErrors("Error", "null");
+				}
 		}
 	}
 
