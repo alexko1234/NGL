@@ -72,16 +72,17 @@ public class Studies extends DocumentController<AbstractStudy> {
 		System.out.println("Dans Studies.java.release ");
 		ContextValidation contextValidation = new ContextValidation(user);
 		// SubmissionServices submissionServices = new SubmissionServices();
-		Form<AbstractStudy> filledForm = getFilledForm(studyForm, AbstractStudy.class);
+//		Form<AbstractStudy> filledForm = getFilledForm(studyForm, AbstractStudy.class);
 //		AbstractStudy userStudy = filledForm.get();	
 		Study study = null;
 		try {
 			String submissionCode = submissionServices.initReleaseSubmission(studyCode, contextValidation);
-			System.out.println("Dans Studies.java.release submissionCode="+ submissionCode);
+			System.out.println("Dans Studies.java.release submissionCode=" + submissionCode);
 			// creer le repertoire de soumission
 			study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, studyCode);
 		} catch (SraException e) {
-			filledForm.reject("release pour studyCode : "+ studyCode, e.getMessage());
+//			filledForm.reject("release pour studyCode : "+ studyCode, e.getMessage());
+			contextValidation.addError("release pour studyCode : "+ studyCode, e.getMessage());
 			// Logger.debug("filled form "+filledForm.errors-AsJson());
 			logger.debug("filled form "+errorsAsJson(contextValidation.getErrors()));
 			//return badRequest(filledForm.errors-AsJson());
@@ -132,10 +133,11 @@ public class Studies extends DocumentController<AbstractStudy> {
 			}
 		} else {
 			//return badRequest("study with id " + userStudy._id + " already exist");
-			filledForm.reject("Study_id "+userStudy._id, "study with id " + userStudy._id + " already exist");  // si solution filledForm.reject
-			return badRequest(filledForm.errorsAsJson( )); // legit
+//			filledForm.reject("Study_id "+userStudy._id, "study with id " + userStudy._id + " already exist");  // si solution filledForm.reject
+//			return badRequest(filledForm.errorsAsJson( )); // legit
+			contextValidation.addError("Study_id "+userStudy._id, "study with id " + userStudy._id + " already exist");  // si solution filledForm.reject
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
 		}
-
 		return ok(Json.toJson(userStudy.code));
 	}
 

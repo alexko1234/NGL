@@ -35,11 +35,11 @@ public class Experiments extends DocumentController<Experiment> {
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(Experiments.class);
 
+	private static final List<String> authorizedUpdateFields = Arrays.asList("accession");
+
 	final /*static*/ Form<ExperimentsSearchForm> experimentsSearchForm;// = form(ExperimentsSearchForm.class);
 	final /*static*/ Form<Experiment> experimentForm;// = form(Experiment.class);
-
 	final /*static*/ Form<QueryFieldsForm> updateForm ;//= form(QueryFieldsForm.class);
-	final static List<String> authorizedUpdateFields = Arrays.asList("accession");
 
 	@Inject
 	public Experiments(NGLContext ctx) {
@@ -50,8 +50,9 @@ public class Experiments extends DocumentController<Experiment> {
 	}
 
 	public Result get(String code) {
-		Experiment exp  = MongoDBDAO.findOne(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, 
-				DBQuery.is("code", code));
+		Experiment exp  = MongoDBDAO.findOne(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, 
+				                             Experiment.class, 
+				                             DBQuery.is("code", code));
 		if (exp != null) {
 			return ok(Json.toJson(exp));
 		} else {
@@ -189,4 +190,5 @@ public class Experiments extends DocumentController<Experiment> {
 		}
 		return query;
 	}
+	
 }

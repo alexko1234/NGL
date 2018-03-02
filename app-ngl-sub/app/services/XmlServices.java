@@ -36,7 +36,8 @@ public class XmlServices {
 	public static Submission writeAllXml(String submissionCode) throws IOException, SraException {
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
 		String resultDirectory = submission.submissionDirectory;
-		System.out.println("resultDirectory = " + resultDirectory);
+//		System.out.println("resultDirectory = " + resultDirectory);
+		logger.debug("resultDirectory = " + resultDirectory);
 		return writeAllXml(submissionCode, resultDirectory);
 	}
 	
@@ -47,11 +48,14 @@ public class XmlServices {
 	*/	
 	
 	public static Submission writeAllXml(String submissionCode, String resultDirectory) throws IOException, SraException {
-		System.out.println("creation des fichiers xml pour l'ensemble de la soumission "+ submissionCode);
-		System.out.println("resultDirectory = " + resultDirectory);
+//		System.out.println("creation des fichiers xml pour l'ensemble de la soumission "+ submissionCode);
+//		System.out.println("resultDirectory = " + resultDirectory);
+		logger.debug("creation des fichiers xml pour l'ensemble de la soumission "+ submissionCode);
+		logger.debug("resultDirectory = " + resultDirectory);
 		// Recuperer l'objet submission:
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
-		System.out.println ("Recuperation de la submission" + submission.code);
+//		System.out.println ("Recuperation de la submission" + submission.code);
+		logger.debug("Recuperation de la submission" + submission.code);
 		// si on est dans soumission de données :
 		if (!submission.release) {
 			if (StringUtils.isNotBlank(submission.studyCode)) {	
@@ -66,14 +70,14 @@ public class XmlServices {
 				File experimentFile = new File(resultDirectory + File.separator + VariableSRA.xmlExperiments);
 				writeExperimentXml(submission, experimentFile); 
 			} else {
-				System.out.println("experimentCodes==0 ??????????");
+//				System.out.println("experimentCodes==0 ??????????");
 				logger.debug("experimentCodes==0 ??????????");
 			}
 			if (submission.runCodes.size() != 0){
 				File runFile = new File(resultDirectory + File.separator + VariableSRA.xmlRuns);
 				writeRunXml(submission, runFile); 
 			} else {
-				System.out.println("runCodes==0 ??????????");
+//				System.out.println("runCodes==0 ??????????");
 				logger.debug("runCodes==0 ??????????");
 			}
 		
@@ -101,7 +105,8 @@ public class XmlServices {
 			return;
 		}
 		if (StringUtils.isNotBlank(submission.studyCode)) {	
-			System.out.println("Creation du fichier " + outputFile);
+//			System.out.println("Creation du fichier " + outputFile);
+			logger.debug("Creation du fichier " + outputFile);
 			// ouvrir fichier en ecriture
 //			try (PrintWriter pw = new PrintWriter(new java.io.FileWriter(outputFile))) {
 //				pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>");
@@ -118,7 +123,8 @@ public class XmlServices {
 				if (study == null){
 					throw new SraException("study impossible à recuperer dans base :"+ studyCode);
 				}
-				System.out.println("Ecriture du study " + studyCode);
+//				System.out.println("Ecriture du study " + studyCode);
+				logger.debug("Ecriture du study " + studyCode);
 
 				chaine = chaine + "  <STUDY alias=\""+ studyCode + "\" ";
 				if (StringUtils.isNotBlank(study.accession)) {	
@@ -148,7 +154,7 @@ public class XmlServices {
 				chaine = chaine + "  </STUDY>\n";
 				chaine = chaine + "</STUDY_SET>\n";
 				output_buffer.write(chaine);
-				output_buffer.close();
+//				output_buffer.close();
 				submission.xmlStudys = outputFile.getName();
 			}
 		} // end if		
@@ -158,7 +164,8 @@ public class XmlServices {
 	public static void writeSampleXml (Submission submission, File outputFile) throws IOException, SraException {
 		if (submission == null)
 			return;
-		System.out.println("sample = "  + submission.sampleCodes.get(0));
+//		System.out.println("sample = "  + submission.sampleCodes.get(0));
+		logger.debug("sample = "  + submission.sampleCodes.get(0));
 		// Si demande de release pas d'ecriture de sample.
 		if (submission.release)
 			return;
@@ -166,14 +173,16 @@ public class XmlServices {
 			String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
 			chaine = chaine + "<SAMPLE_SET>\n";
 			for (String sampleCode : submission.sampleCodes){
-				System.out.println("sampleCode = '" + sampleCode +"'");
+//				System.out.println("sampleCode = '" + sampleCode +"'");
+				logger.debug("sampleCode = '" + sampleCode +"'");
 				// Recuperer objet sample dans la base :
 				Sample sample = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.submit.common.instance.Sample.class, sampleCode);
 				if (sample == null) {
 					throw new SraException("sample impossible à recuperer dans base :"+ sampleCode);
 				}
 				//output_buffer.write("//\n");
-				System.out.println("Ecriture du sample " + sampleCode);
+//				System.out.println("Ecriture du sample " + sampleCode);
+				logger.debug("Ecriture du sample " + sampleCode);
 
 				chaine = chaine + "  <SAMPLE alias=\""+ sampleCode + "\"";
 				
@@ -204,7 +213,8 @@ public class XmlServices {
 			chaine = chaine + "</SAMPLE_SET>\n";
 			
 			// ouvrir fichier en ecriture
-			System.out.println("Creation du fichier " + outputFile);
+//			System.out.println("Creation du fichier " + outputFile);
+			logger.debug("Creation du fichier " + outputFile);
 			try (BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile))) {
 				output_buffer.write(chaine);
 				// output_buffer.close();
@@ -221,7 +231,8 @@ public class XmlServices {
 			return;
 		if (! submission.experimentCodes.isEmpty()) {	
 			// ouvrir fichier en ecriture
-			System.out.println("Creation du fichier " + outputFile);
+//			System.out.println("Creation du fichier " + outputFile);
+			logger.debug("Creation du fichier " + outputFile);
 			try (BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile))) {
 				// Possibly directly use output_buffer.write(String)
 				String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
@@ -230,7 +241,8 @@ public class XmlServices {
 					// Recuperer objet experiment dans la base :
 					Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, experimentCode);
 					//output_buffer.write("//\n");
-					System.out.println("Ecriture de experiment " + experimentCode);
+//					System.out.println("Ecriture de experiment " + experimentCode);
+					logger.debug("Ecriture de experiment " + experimentCode);
 					if (experiment == null) {
 						throw new SraException("experiment impossible à recuperer dans base :"+ experimentCode);
 					}
@@ -330,7 +342,8 @@ public class XmlServices {
 
 		if (! submission.experimentCodes.isEmpty()) {	
 			// ouvrir fichier en ecriture
-			System.out.println("Creation du fichier " + outputFile);
+//			System.out.println("Creation du fichier " + outputFile);
+			logger.debug("Creation du fichier " + outputFile);
 			try (BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile))) {
 				String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
 				chaine = chaine + "<RUN_SET>\n";
@@ -346,7 +359,8 @@ public class XmlServices {
 					}
 					//output_buffer.write("//\n");
 					String runCode = run.code;
-					System.out.println("Ecriture du run " + runCode);
+//					System.out.println("Ecriture du run " + runCode);
+					logger.debug("Ecriture du run " + runCode);
 					chaine = chaine + "  <RUN alias=\""+ runCode + "\" ";
 					if (StringUtils.isNotBlank(run.accession)) {
 						chaine = chaine + " accession=\"" + run.accession + "\" ";
@@ -388,12 +402,14 @@ public class XmlServices {
 			return;
 		}
 		// ouvrir fichier en ecriture
-		System.out.println("Creation du fichier " + outputFile);
+//		System.out.println("Creation du fichier " + outputFile);
+		logger.debug("Creation du fichier " + outputFile);
 		BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile));
 		String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
 		chaine = chaine + "<SUBMISSION_SET>\n";
 		
-		System.out.println("Ecriture du submission " + submission.code);
+//		System.out.println("Ecriture du submission " + submission.code);
+		logger.debug("Ecriture du submission " + submission.code);
 		chaine = chaine + "  <SUBMISSION alias=\""+ submission.code + "\" ";
 		chaine = chaine + ">\n";	
 		chaine = chaine + "    <CONTACTS>\n";
@@ -436,31 +452,27 @@ public class XmlServices {
 			throw new SraException("Impossible de releaser le study " + study.code + " sans numeros d'accession");
 		}
 		// ouvrir fichier en ecriture
-		System.out.println("Creation du fichier " + outputFile);
+//		System.out.println("Creation du fichier " + outputFile);
+		logger.debug("Creation du fichier " + outputFile);
 		try (BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile))) {
 			String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
 			chaine = chaine + "<SUBMISSION_SET>\n";
 
-			System.out.println("Ecriture du submission " + submission.code);
+//			System.out.println("Ecriture du submission " + submission.code);
+			logger.debug("Ecriture du submission " + submission.code);
 			chaine = chaine + "  <SUBMISSION alias=\""+ submission.code + "\" ";
 			chaine = chaine + ">\n";	
 			chaine = chaine + "    <CONTACTS>\n";
 			chaine = chaine + "      <CONTACT  name=\"william\" inform_on_status=\"william@genoscope.cns.fr\" inform_on_error=\"william@genoscope.cns.fr\"/>\n";
 			chaine = chaine + "    </CONTACTS>\n";
-
 			chaine = chaine + "    <ACTIONS>\n";
-
 			chaine = chaine + "      <ACTION>\n        <RELEASE target=\"" + study.accession + "\"/>\n      </ACTION>\n";
-
 			chaine = chaine + "    </ACTIONS>\n";
-
-
-
 			chaine = chaine + "  </SUBMISSION>\n";
 			chaine = chaine + "</SUBMISSION_SET>\n";
 
 			output_buffer.write(chaine);
-			output_buffer.close();
+//			output_buffer.close();
 		}
 		submission.xmlSubmission = outputFile.getName();		
 	}
