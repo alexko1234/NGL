@@ -295,7 +295,9 @@ angular.module('home').controller('BionanoDLSPrepCtrl',['$scope', '$parse', 'atm
 			};
 		
 		if(compute.isReady()){
-			var result = $parse("(((conc1 - avgConc) * (conc1 - avgConc)) + ((conc2 - avgConc) * (conc2 - avgConc)))/2")(compute);
+			// we divide by 2-1 to apply the STDEV STANDARD (sample on a population) and not STDEV PEARSON (full population).
+			//this strategy is defined by bionano enterprise
+			var result = $parse("(((conc1 - avgConc) * (conc1 - avgConc)) + ((conc2 - avgConc) * (conc2 - avgConc)))/(2-1)")(compute);
 			console.log("result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
 				variationCoefficient.value = (Math.sqrt(result)/compute.avgConc)*100;					
