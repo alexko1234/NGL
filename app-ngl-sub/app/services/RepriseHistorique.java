@@ -39,25 +39,17 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.apache.commons.lang3.StringUtils;
-
 //import com.sun.xml.internal.ws.api.pipe.NextAction;
-
-
-
-
-
 import controllers.sra.configurations.api.Configurations;
 import fr.cea.ig.MongoDBDAO;
 //import play.Logger;
 import validation.ContextValidation;
 
-
 public class RepriseHistorique {
+	
 	private static final play.Logger.ALogger logger = play.Logger.of(RepriseHistorique.class);
 
-	public static String adminComment = "Creation dans le cadre d'une reprise d'historique"; 
-	
-	
+	public static final String adminComment = "Creation dans le cadre d'une reprise d'historique"; 
 	
 	public static List<Sample> xmlToSample(File xmlFile) {
 		List<Sample> listSamples = new ArrayList<Sample>();
@@ -77,10 +69,14 @@ public class RepriseHistorique {
 			
 			final Document document= builder.parse(xmlFile);
 			//Affiche du prologue
-			System.out.println("*************PROLOGUE************");
-			System.out.println("version : " + document.getXmlVersion());
-			System.out.println("encodage : " + document.getXmlEncoding());      
-			System.out.println("standalone : " + document.getXmlStandalone());
+//			System.out.println("*************PROLOGUE************");
+//			System.out.println("version : " + document.getXmlVersion());
+//			System.out.println("encodage : " + document.getXmlEncoding());      
+//			System.out.println("standalone : " + document.getXmlStandalone());
+			logger.debug("*************PROLOGUE************");
+			logger.debug("version : " + document.getXmlVersion());
+			logger.debug("encodage : " + document.getXmlEncoding());      
+			logger.debug("standalone : " + document.getXmlStandalone());
 			/*
 			 * Etape 4 : récupération de l'Element racine
 			 */
@@ -125,7 +121,6 @@ public class RepriseHistorique {
 							//System.out.println("title : " + title);
 						}
 					}
-					
 					final Element eltSampleName = (Element) eltSample.getElementsByTagName("SAMPLE_NAME").item(0);
 					if (eltSampleName.getElementsByTagName("COMMON_NAME").item(0)!= null) {
 						String commonName = eltSampleName.getElementsByTagName("COMMON_NAME").item(0).getTextContent();
@@ -190,17 +185,23 @@ public class RepriseHistorique {
 			
 			final Document document= builder.parse(xmlFile);
 			//Affiche du prologue
-			System.out.println("*************PROLOGUE************");
-			System.out.println("version : " + document.getXmlVersion());
-			System.out.println("encodage : " + document.getXmlEncoding());      
-			System.out.println("standalone : " + document.getXmlStandalone());
+//			System.out.println("*************PROLOGUE************");
+//			System.out.println("version : " + document.getXmlVersion());
+//			System.out.println("encodage : " + document.getXmlEncoding());      
+//			System.out.println("standalone : " + document.getXmlStandalone());
+			logger.debug("*************PROLOGUE************");
+			logger.debug("version : " + document.getXmlVersion());
+			logger.debug("encodage : " + document.getXmlEncoding());      
+			logger.debug("standalone : " + document.getXmlStandalone());
 			/*
 			 * Etape 4 : récupération de l'Element racine
 			 */
 			final Element racine = document.getDocumentElement();
 			//Affichage de l'élément racine
-			System.out.println("\n*************RACINE************");
-			System.out.println(racine.getNodeName());
+//			System.out.println("\n*************RACINE************");
+//			System.out.println(racine.getNodeName());
+			logger.debug("\n*************RACINE************");
+			logger.debug(racine.getNodeName());
 			/*
 			 * Etape 5 : récupération des samples
 			 */
@@ -211,18 +212,22 @@ public class RepriseHistorique {
 				if(racineNoeuds.item(i).getNodeType() == Node.ELEMENT_NODE) {
 					final Element eltStudy = (Element) racineNoeuds.item(i);
 					//Affichage d'un study
-					System.out.println("\n*************STUDY************");
-					System.out.println("alias : " + eltStudy.getAttribute("alias"));
+//					System.out.println("\n*************STUDY************");
+//					System.out.println("alias : " + eltStudy.getAttribute("alias"));
+					logger.debug("\n*************STUDY************");
+					logger.debug("alias : " + eltStudy.getAttribute("alias"));
 					
 					String alias = eltStudy.getAttribute("alias");
 					Study study = new Study();
-					System.out.println("study alias : " + alias);
+//					System.out.println("study alias : " + alias);
+					logger.debug("study alias : " + alias);
 					study.code = alias;
 					
 					String accession = eltStudy.getAttribute("accession");
 					if (StringUtils.isNotBlank(accession)){
 						study.accession = accession;
-						System.out.println("study alias : " + alias);
+//						System.out.println("study alias : " + alias);
+						logger.debug("study alias : " + alias);	
 					}
 					
 					final Element descriptor = (Element) eltStudy.getElementsByTagName("DESCRIPTOR").item(0);
@@ -231,28 +236,32 @@ public class RepriseHistorique {
 						String title = descriptor.getElementsByTagName("STUDY_TITLE").item(0).getTextContent();
 						if (StringUtils.isNotBlank(title)) {
 							study.title = title;
-							System.out.println("title : " + title);
+//							System.out.println("title : " + title);
+							logger.debug("title : " + title);
 						}
 					}
 					if (descriptor.getElementsByTagName("STUDY_ABSTRACT").item(0)!= null) {
 						String studyAbstract = descriptor.getElementsByTagName("STUDY_ABSTRACT").item(0).getTextContent();
 						if (StringUtils.isNotBlank(studyAbstract)) {
 							study.studyAbstract = studyAbstract;
-							System.out.println("studyAbstract : " + studyAbstract);
+//							System.out.println("studyAbstract : " + studyAbstract);
+							logger.debug("studyAbstract : " + studyAbstract);
 						}
 					}
 					if (descriptor.getElementsByTagName("STUDY_DESCRIPTION").item(0)!= null) {
 						String description = descriptor.getElementsByTagName("STUDY_DESCRIPTION").item(0).getTextContent();
 						if (StringUtils.isNotBlank(description)) {
 							study.description = description;
-							System.out.println("description : " + description);
+//							System.out.println("description : " + description);
+							logger.debug("description : " + description);
 						}
 					}	
 					if (descriptor.getElementsByTagName("CENTER_PROJECT_NAME").item(0)!= null) {
 						String centerProjectName = descriptor.getElementsByTagName("CENTER_PROJECT_NAME").item(0).getTextContent();
 						if (StringUtils.isNotBlank(centerProjectName)) {
 							study.centerProjectName = centerProjectName;
-							System.out.println("centerProjectName : " + centerProjectName);
+//							System.out.println("centerProjectName : " + centerProjectName);
+							logger.debug("centerProjectName : " + centerProjectName);
 						}
 					}	
 					if (descriptor.getElementsByTagName("STUDY_TYPE").item(0)!= null) {
@@ -296,10 +305,14 @@ public class RepriseHistorique {
 
 			final Document document= builder.parse(xmlFile);
 			//Affiche du prologue
-			System.out.println("*************PROLOGUE************");
-			System.out.println("version : " + document.getXmlVersion());
-			System.out.println("encodage : " + document.getXmlEncoding());      
-			System.out.println("standalone : " + document.getXmlStandalone());
+//			System.out.println("*************PROLOGUE************");
+//			System.out.println("version : " + document.getXmlVersion());
+//			System.out.println("encodage : " + document.getXmlEncoding());      
+//			System.out.println("standalone : " + document.getXmlStandalone());
+			logger.debug("*************PROLOGUE************");
+			logger.debug("version : " + document.getXmlVersion());
+			logger.debug("encodage : " + document.getXmlEncoding());      
+			logger.debug("standalone : " + document.getXmlStandalone());
 			/*
 			 * Etape 4 : récupération de l'Element racine
 			 */
@@ -375,12 +388,10 @@ public class RepriseHistorique {
 							}
 						}
 					} else {
-						System.out.println("Type de plateforme inconnue" + typePlatform );
+//						System.out.println("Type de plateforme inconnue" + typePlatform );
+						logger.debug("Type de plateforme inconnue" + typePlatform );
 					}
-
-
 					final Element eltExpDesign = (Element) eltExperiment.getElementsByTagName("DESIGN").item(0);
-
 					final Element eltExpSampleDescriptor = (Element) eltExpDesign.getElementsByTagName("SAMPLE_DESCRIPTOR").item(0);
 					String sample_refname = eltExpSampleDescriptor.getAttribute("refname");
 					if (StringUtils.isNotBlank(sample_refname)) {
@@ -741,7 +752,7 @@ public class RepriseHistorique {
 					
 					
 					final Element eltDataBlock = (Element) eltRun.getElementsByTagName("DATA_BLOCK").item(0);
-					final Element eltFiles = (Element) eltDataBlock.getElementsByTagName("FILES").item(0);
+//					final Element eltFiles = (Element) eltDataBlock.getElementsByTagName("FILES").item(0);
 
 					final NodeList racine_files = eltDataBlock.getElementsByTagName("FILE");
 					if (racine_files != null) {
@@ -754,7 +765,7 @@ public class RepriseHistorique {
 								final Element eltFile = (Element) nodeFile;
 								String filename = eltFile.getAttribute("filename");
 								String filetype = eltFile.getAttribute("filetype");
-								String checksum_method = eltFile.getAttribute("checksum_method");
+//								String checksum_method = eltFile.getAttribute("checksum_method");
 								String md5 = eltFile.getAttribute("checksum");
 								RawData rawData = new RawData();								
 								rawData.relatifName = filename;
@@ -812,34 +823,33 @@ public class RepriseHistorique {
 			} else if (! lg.matches("^\\s*<.*")) {
 				// ignorer 
 				System.out.println("ligne ignoree B = '"+ lg+"'");
-
 			} else if (lg.matches("^\\s*$")) {
 				// ignorer 
 				System.out.println("ligne ignoree C= '"+ lg+"'");
-
 			} else {
 				if (reportEbi==false) {
-					System.out.println("reportEbi = false");
-					System.out.println("ligne = '"+ lg+"'");
-					String pattern_string = "<RECEIPT\\s+receiptDate=\"(\\S+)\"\\s+submissionFile=\"(\\S+)\"\\s+success=\"true\"";
+//					System.out.println("reportEbi = false");
+//					System.out.println("ligne = '"+ lg+"'");
+					logger.debug("reportEbi = false");
+					logger.debug("ligne = '"+ lg+"'");
+//					String pattern_string = "<RECEIPT\\s+receiptDate=\"(\\S+)\"\\s+submissionFile=\"(\\S+)\"\\s+success=\"true\"";
 					//String pattern_string = "<RECEIPT";
-					java.util.regex.Pattern pattern = Pattern.compile(pattern_string);
-					Matcher m = pattern.matcher(lg);
+//					java.util.regex.Pattern pattern = Pattern.compile(pattern_string);
+//					Matcher m = pattern.matcher(lg);
 					/*if ( ! m.find() ) {
 						throw new SraException("Absence de la ligne RECEIPT dans le fichier " + file_list_AC.getAbsolutePath());
 					} */
 					reportEbi = true;
-					System.out.println("reportEbi = true");
-
+//					System.out.println("reportEbi = true");
+					logger.debug("reportEbi = true");
 				} else {
-					
-				
 				//System.out.println("Traitement des AC :");
 				String patternAc = "<(\\S+)\\s+accession=\"(\\S+)\"\\s+alias=\"(\\S+)\"";
 				java.util.regex.Pattern pAc = Pattern.compile(patternAc);
 
 				
-					System.out.println(lg);
+//					System.out.println(lg);
+				logger.debug(lg);
 					Matcher mAc = pAc.matcher(lg);
 					// Appel de find obligatoire pour pouvoir récupérer $1 ...$n
 					if ( ! mAc.find() ) {

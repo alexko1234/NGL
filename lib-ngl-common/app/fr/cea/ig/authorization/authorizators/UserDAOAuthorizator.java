@@ -118,7 +118,8 @@ public class UserDAOAuthorizator implements IAuthorizator {
 
     /**
      * DI constructor.
-     * @param config configuration to use
+     * @param config        configuration to use
+     * @param permissionAPI permission API
      */
     @Inject
     public UserDAOAuthorizator(IGConfig config, Provider<PermissionAPI> permissionAPI) {
