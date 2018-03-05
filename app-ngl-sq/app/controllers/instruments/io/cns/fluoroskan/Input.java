@@ -64,6 +64,10 @@ public class Input extends AbstractInput {
 					codePropertiesConcDil="concentrationDilHS2";
 					codePropertiesConcFinal="concentrationHS2";
 					codePropertiesDilFactor="dilutionFactorHS2";
+				}else if(typeQC.equals("HS3")){
+					codePropertiesConcDil="concentrationDilHS3";
+					codePropertiesConcFinal="concentrationHS3";
+					codePropertiesDilFactor="dilutionFactorHS3";
 				}else{
 					contextValidation.addErrors("Erreur gamme", "Code gamme non géré : "+typeQC);	
 				}
