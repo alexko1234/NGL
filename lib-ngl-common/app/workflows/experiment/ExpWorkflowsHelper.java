@@ -592,14 +592,15 @@ public class ExpWorkflowsHelper {
 				});
 				
 			});
-			Set<String> newProcessCodes = (Set<String>)validation.getObject(NEW_PROCESS_CODES);
+//			Set<String> newProcessCodes = (Set<String>)validation.getObject(NEW_PROCESS_CODES);
+			Set<String> newProcessCodes = validation.getTypedObject(NEW_PROCESS_CODES);
 			if (newProcessCodes != null) {
 				MongoDBDAO.delete(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code", newProcessCodes));
 			}
 			validation.addErrors(supportsValidation.errors);
 		}			
 
-		long t3 = System.currentTimeMillis();
+//		long t3 = System.currentTimeMillis();
 		/*
 		Logger.debug("createOutputContainerSupports \n "
 				+"1 = "+(t1-t0)+" ms\n"
@@ -627,8 +628,9 @@ public class ExpWorkflowsHelper {
 						DBUpdate.pull("outputContainerCodes",code));				
 			});
 			
-			Set<String> newProcessCodes = (Set<String>)validation.getObject(NEW_PROCESS_CODES);
-			if(null != newProcessCodes  && newProcessCodes.size() > 0){
+//			Set<String> newProcessCodes = (Set<String>)validation.getObject(NEW_PROCESS_CODES);
+			Set<String> newProcessCodes = validation.getTypedObject(NEW_PROCESS_CODES);
+			if (newProcessCodes != null && newProcessCodes.size() > 0) {
 				MongoDBDAO.delete(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code", newProcessCodes));
 			}
 		}
@@ -637,8 +639,9 @@ public class ExpWorkflowsHelper {
 	public void deleteSamplesIfNeeded(Experiment exp, ContextValidation validation) {
 		ExperimentType experimentType=ExperimentType.find.findByCode(exp.typeCode);
 		if(experimentType.newSample){	
-			Set<String> newSampleCodes = (Set<String>)validation.getObject(NEW_SAMPLE_CODES);
-			if(null != newSampleCodes && newSampleCodes.size() > 0){
+//			Set<String> newSampleCodes = (Set<String>)validation.getObject(NEW_SAMPLE_CODES);
+			Set<String> newSampleCodes = validation.getTypedObject(NEW_SAMPLE_CODES);
+			if (newSampleCodes != null && newSampleCodes.size() > 0) {
 				logger.debug("Nb newSampleCodes :"+newSampleCodes.size());
 				List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("code", newSampleCodes)).toList();
 				Set<String> projectCodes = samples.stream().map(s -> s.projectCodes).flatMap(Set::stream).collect(Collectors.toSet());
@@ -791,7 +794,8 @@ public class ExpWorkflowsHelper {
 			List<OutputContainerUsed> outputContainerUseds = atm.outputContainerUseds.subList(1, atm.outputContainerUseds.size());
 			outputContainerUseds.forEach((OutputContainerUsed ocu) ->{
 				Set<String> newInputProcessCodes = duplicateProcesses(inputProcessCodes);
-				((Set<String>)validation.getObject(NEW_PROCESS_CODES)).addAll(newInputProcessCodes);
+//				((Set<String>)validation.getObject(NEW_PROCESS_CODES)).addAll(newInputProcessCodes);
+				validation.<Set<String>>getTypedObject(NEW_PROCESS_CODES).addAll(newInputProcessCodes);
 				Container c = new Container();
 				c.code = ocu.code;
 				c.categoryCode = ocu.categoryCode;
@@ -1514,7 +1518,8 @@ public class ExpWorkflowsHelper {
 				sampleValidation.setCreationMode();
 				newSample.validate(sampleValidation);
 				if (!sampleValidation.hasErrors()) {
-					((Set<String>)validation.getObject(NEW_SAMPLE_CODES)).add(newSample.code);
+//					((Set<String>)validation.getObject(NEW_SAMPLE_CODES)).add(newSample.code);
+					validation.<Set<String>>getTypedObject(NEW_SAMPLE_CODES).add(newSample.code);
 					MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME,newSample);
 				} else {
 					validation.addErrors(sampleValidation.errors);

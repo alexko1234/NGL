@@ -81,11 +81,13 @@ public class ReadSetWorkflowsHelper {
 	public void updateFiles(ReadSet readSet, ContextValidation contextValidation) {
 		//met les fichiers dipo ou non d
 		State state = cloneState(readSet.state, contextValidation.getUser());
-		if (null != readSet.files) {
-			for(File f : readSet.files){
-				WriteResult<ReadSet, String> r = MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-						DBQuery.and(DBQuery.is("code", readSet.code), DBQuery.is("files.fullname", f.fullname)),
-						DBUpdate.set("files.$.state", state));					
+		if (readSet.files != null) {
+			for (File f : readSet.files) {
+				WriteResult<ReadSet, String> r = 
+						MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, 
+								          ReadSet.class, 
+						                  DBQuery.and(DBQuery.is("code", readSet.code), DBQuery.is("files.fullname", f.fullname)),
+						                  DBUpdate.set("files.$.state", state));					
 			}
 		} else {
 			// Logger.error("No files for "+readSet.code);
