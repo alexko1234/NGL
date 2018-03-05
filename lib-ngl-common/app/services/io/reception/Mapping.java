@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.TreeMap;
 
-import play.Logger;
+//import play.Logger;
 import validation.ContextValidation;
 import validation.IValidation;
 import models.laboratory.container.instance.ContainerSupport;
@@ -17,7 +17,7 @@ import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 
 /**
- * Classe to map a line of Excel or CVS file to an DBObject : sample, support, container, etc.
+ * Class to map a line of Excel or CVS file to a DBObject : sample, support, container, etc.
  * 
  * @author galbini
  *
@@ -25,32 +25,39 @@ import fr.cea.ig.MongoDBDAO;
  */
 public abstract class Mapping<T extends DBObject> {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(Mapping.class);
+	
 	public enum Keys {
 		sample,
 		support,
 		container
 	};
 	
+	// Seems that it's supposed to be 3 maps and not 1.
 	protected Map<String, Map<String, DBObject>> objects;
 	protected Map<String, ? extends AbstractFieldConfiguration> configuration;
 	protected Action action;
 	protected ContextValidation contextValidation;
 	protected String collectionName;
 	protected Class<T> type;
-	
 	private Keys key;
 	
 	// TODO: fix doc generation error for unqualified parameter type (Keys -> Mapping.Keys)
-	protected Mapping(Map<String, Map<String, DBObject>> objects, Map<String, ? extends AbstractFieldConfiguration> configuration, Action action,
-			String collectionName, Class<T> type, Mapping.Keys key, ContextValidation contextValidation) {
-		super();
-		this.objects = objects;
-		this.configuration = configuration;
-		this.action = action;
+	protected Mapping(Map<String, Map<String, DBObject>> objects, 
+			          Map<String, ? extends AbstractFieldConfiguration> configuration, 
+			          Action action,
+			          String collectionName, 
+			          Class<T> type, 
+			          Mapping.Keys key, 
+			          ContextValidation contextValidation) {
+//		super();
+		this.objects           = objects;
+		this.configuration     = configuration;
+		this.action            = action;
 		this.contextValidation = contextValidation;
-		this.collectionName =collectionName;
-		this.type = type;
-		this.key = key;
+		this.collectionName    = collectionName;
+		this.type              = type;
+		this.key               = key;
 	}
 	
 	/*
@@ -60,29 +67,27 @@ public abstract class Mapping<T extends DBObject> {
 	 */
 	public T convertToDBObject(Map<Integer, String> rowMap) throws Exception {
 		T object = type.newInstance();
-		if(Action.update.equals(action)){
+		if (Action.update.equals(action)) {
 			object = get(object, rowMap, true);
-		}else if(Action.save.equals(action)){
+		} else if(Action.save.equals(action)) {
 			T objectInDB = get(object, rowMap, false);
-			if (null != objectInDB) {
+			if (objectInDB != null) {
 				contextValidation.addErrors("Error", "error.objectexist", type.getSimpleName(), objectInDB.code);
-			} else if(object.code != null) {
-				// Nothing is done with the type T, could use Objectc and no cast probably
+			} else if (object.code != null) {
+				// TODO: use properly typed separate object collections so the cast is not needed
 				T objectInObjects = (T)objects.get(key.toString()).get(object.code);
-				if (null != objectInObjects) {
+				if (objectInObjects != null) {
 					object = objectInObjects;
 				}
 			}
 		}
-		
-		if (null != object) {
+		if (object != null) {
 			Field[] fields = type.getFields();
 			for (Field field : fields) {
 				populateField(field, object, rowMap);			
 			}
 			update(object);
 		}
-		
 		return object;
 	}
 	
@@ -98,45 +103,41 @@ public abstract class Mapping<T extends DBObject> {
 	 */
 	public abstract void consolidate(T object);
 	
-	
 	public void synchronizeMongoDB(DBObject c){
-		if(Action.save.equals(action)){
+		if (Action.save.equals(action)) {
 			MongoDBDAO.save(collectionName, c);
-		}else if(Action.update.equals(action)){
+		} else if(Action.update.equals(action)) {
 			MongoDBDAO.update(collectionName, c);
 		}		
 	}
 	
 	public void rollbackInMongoDB(DBObject c){
-		if(Action.save.equals(action) && c._id == null){ //Delete sample and support if already exist !!!!
+		if (Action.save.equals(action) && c._id == null) { //Delete sample and support if already exist !!!!
 			MongoDBDAO.deleteByCode(collectionName, c.getClass(), c.code);
-		}else if(Action.update.equals(action)){
+		} else if(Action.update.equals(action)) {
 			//replace by old version of the object
 		}		
 	}
 	
-	public void validate(DBObject c){
-		
+	public void validate(DBObject c) {
 		ContextValidation cv = new ContextValidation(contextValidation.getUser());
 		cv.setRootKeyName(contextValidation.getRootKeyName());
 		cv.addKeyToRootKeyName(c.code);
 		cv.setMode(cv.getMode());
 		((IValidation)c).validate(cv);
-		
-		if(cv.hasErrors()){
+		if (cv.hasErrors()) {
 			contextValidation.addErrors(cv.errors);
 		}
-		
 		cv.removeKeyFromRootKeyName(c.code);	
 	}
 	
 	protected void populateField(Field field, DBObject dbObject, Map<Integer, String> rowMap) {
-		if(configuration.containsKey(field.getName())){
+		if (configuration.containsKey(field.getName())) {
 			AbstractFieldConfiguration fieldConfiguration = configuration.get(field.getName());
 			try {
 				fieldConfiguration.populateField(field, dbObject, rowMap, contextValidation, action);
 			} catch (Exception e) {
-				Logger.error("Error", e.getMessage(), e);
+				logger.error("Error", e.getMessage(), e);
 				contextValidation.addErrors("Error", e.getMessage());
 				throw new RuntimeException(e);
 			}
@@ -146,48 +147,47 @@ public abstract class Mapping<T extends DBObject> {
 	protected T get(T object, Map<Integer, String> rowMap, boolean errorIsNotFound) {
 		try {
 			AbstractFieldConfiguration codeConfig = configuration.get("code");
-			if(null != codeConfig){
+			if (codeConfig != null) {
 				codeConfig.populateField(object.getClass().getField("code"), object, rowMap, contextValidation, action);
-				if(null != object.code){
+				if (object.code != null) {
 					String code = object.code;
 					object = MongoDBDAO.findByCode(collectionName, type, object.code);	
-					if(errorIsNotFound && null == object){
+					if (errorIsNotFound && object == null) {
 						contextValidation.addErrors("Error", "not found "+type.getSimpleName()+" for code "+code);
 					}
-				}else if(codeConfig.required){
+				} else if (codeConfig.required) {
 					contextValidation.addErrors("Error", "not found "+type.getSimpleName()+" code !!!");
-				}else{
+				} else {
 					object = null;
 				}
-			}else{
+			} else {
 				object = null;
 			}
 		} catch (Exception e) {
-			Logger.error("Error", e.getMessage(), e);
+			logger.error("Error", e.getMessage(), e);
 			contextValidation.addErrors("Error", e.getMessage());
 			throw new RuntimeException(e);
 		}
-		
 		return object;
 	}
 
 	protected ContainerSupport getContainerSupport(String code) {
-		if(objects.containsKey("support")){
+		if (objects.containsKey("support")) {
 			ContainerSupport cs = (ContainerSupport)objects.get("support").get(code);
 			return cs;
-		}else{
+		} else {
 			throw new RuntimeException("Support must be load from Excel file, check configuration");
 		}
 	}
 	
 	protected Sample getSample(String code) {
 		Sample sample = null;
-		if(objects.containsKey("sample")){
+		if (objects.containsKey("sample")) {
 			sample = (Sample)objects.get("sample").get(code);			
-		}else{
+		} else {
 			objects.put("sample", new TreeMap<String, DBObject>());
 		}
-		if(null == sample){
+		if (sample == null) {
 			sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, code);
 			objects.get("sample").put(code, sample);
 		}

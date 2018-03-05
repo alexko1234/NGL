@@ -51,7 +51,7 @@ public class ColumnParser {
 		if (! keyField.matches("\\S+") || keyField.isEmpty() ) {
 			throw new RuntimeException("Text has no visible content", new IllegalArgumentException());
 		}
-		this.keyField = keyField;
+		this.keyField  = keyField;
 		this.separator = separator;
 	}
 	
@@ -194,19 +194,20 @@ public class ColumnParser {
 		if (inputStream == null)
 			throw new SraException("le flux '" + inputStream + "'n'existe pas ou n'est pas lisible");
 		Map<String, T> mapUserObject = new HashMap<>(); // String, Object>(); 
-		try {
-			//BufferedReader input_buffer = new BufferedReader(new FileReader(file));
-			BufferedReader input_buffer = new BufferedReader(new InputStreamReader(inputStream));
-			int cp = 1;
+//		try {
+//			//BufferedReader input_buffer = new BufferedReader(new FileReader(file));
+//			BufferedReader input_buffer = new BufferedReader(new InputStreamReader(inputStream));
+		try (BufferedReader input_buffer = new BufferedReader(new InputStreamReader(inputStream))) {
+//			int cp = 1;
 			String [] nameFieldsInFile = null;
 			String [] valFieldsInFile = null;
 			
 			String ligne;
-			String legend = "";
+//			String legend = "";
 			int cp_no_empty = 0;
 
 			while ((ligne = input_buffer.readLine()) != null) {
-				cp++;
+//				cp++;
 				ligne = ligne + " ";
 				Matcher mlv = plv.matcher(ligne);
 				Matcher mlc = plc.matcher(ligne);
@@ -227,8 +228,8 @@ public class ColumnParser {
 					ligne = mc.group(1);
 				}
 			
-				if(cp_no_empty == 1) {
-					legend = ligne;
+				if (cp_no_empty == 1) {
+//					legend = ligne;
 					nameFieldsInFile = this.validateHeaders(ligne);
 					continue;
 				}

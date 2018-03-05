@@ -251,7 +251,7 @@ public class ContainerHelper {
 				newSupport.state=container.state;
 				newSupport.storageCode=container.support.storageCode; //FDS ajout 14/10/2015
 				
-				if(null != container.fromTransformationTypeCodes){
+				if (container.fromTransformationTypeCodes != null) {
 					newSupport.fromTransformationTypeCodes = new  HashSet<String>(container.fromTransformationTypeCodes);
 				}
 				
@@ -259,14 +259,14 @@ public class ContainerHelper {
 					newSupport.nbContainers = 1;
 					newSupport.nbContents = container.contents.size();
 					mapSupports.put(newSupport.code, newSupport);
-				}
-				else {
-					ContainerSupport oldSupport = (ContainerSupport) mapSupports.get(newSupport.code);
+				} else {
+//					ContainerSupport oldSupport = (ContainerSupport) mapSupports.get(newSupport.code);
+					ContainerSupport oldSupport = mapSupports.get(newSupport.code);
 					oldSupport.projectCodes.addAll(newSupport.projectCodes); 
 					oldSupport.sampleCodes.addAll(newSupport.sampleCodes);
 					oldSupport.nbContainers++;
 					oldSupport.nbContents = oldSupport.nbContents + container.contents.size();
-					if(null != newSupport.fromTransformationTypeCodes && null != oldSupport.fromTransformationTypeCodes){
+					if (newSupport.fromTransformationTypeCodes != null && oldSupport.fromTransformationTypeCodes != null) {
 						oldSupport.fromTransformationTypeCodes.addAll(newSupport.fromTransformationTypeCodes);
 					}
 				}
@@ -310,7 +310,8 @@ public class ContainerHelper {
 				else {
 					// NOTE FDS 16/06/216 comment gerer le remplacement d'une ancienne valeur par une nouvelle ??
 					
-					ContainerSupport oldSupport = (ContainerSupport) mapSupports.get(newSupport.code);
+//					ContainerSupport oldSupport = (ContainerSupport) mapSupports.get(newSupport.code);
+					ContainerSupport oldSupport = mapSupports.get(newSupport.code);
 					oldSupport.projectCodes.addAll(newSupport.projectCodes); 
 					//Logger.debug("[updateSupportFromUpdatedContainers] adding projectCodes " +  newSupport.projectCodes + " to containerSupport " + oldSupport.code);
 					
