@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.mongojack.DBQuery;
 
-import play.Logger;
-import play.Logger.ALogger;
+//import play.Logger;
+//import play.Logger.ALogger;
 import services.description.DescriptionFactory;
 import models.laboratory.common.description.Value;
 import models.laboratory.experiment.description.ExperimentType;
@@ -26,36 +26,34 @@ import fr.cea.ig.MongoDBDAO;
 
 public abstract class AbstractDeclaration {
 	
+	private static final play.Logger.ALogger logger = play.Logger.of(AbstractDeclaration.class);
+	
 	protected abstract List<ExperimentType> getExperimentTypeCommon();
 	protected abstract List<ExperimentType> getExperimentTypeDEV();
 	protected abstract List<ExperimentType> getExperimentTypePROD();
 	protected abstract List<ExperimentType> getExperimentTypeUAT();
 
-
-	public List<ExperimentType> getExperimentType(){
+	public List<ExperimentType> getExperimentType() {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
-		
 		//Logger.debug(this.getClass().getSimpleName()+" getExperimentType");
-
-		if(getExperimentTypeCommon()!=null){
+		if (getExperimentTypeCommon() != null) {
 			l.addAll(getExperimentTypeCommon());
 		}
-		if(ConfigFactory.load().getString("ngl.env").equals("DEV")){
-			if(getExperimentTypeDEV()!=null){
+		if (ConfigFactory.load().getString("ngl.env").equals("DEV")) {
+			if (getExperimentTypeDEV() != null) {
 				l.addAll(getExperimentTypeDEV());
 			}
-		}else if(ConfigFactory.load().getString("ngl.env").equals("UAT")){
-			if(getExperimentTypeUAT()!=null){
+		} else if(ConfigFactory.load().getString("ngl.env").equals("UAT")) {
+			if (getExperimentTypeUAT() != null) {
 				l.addAll(getExperimentTypeUAT());
 			}
-		}else if(ConfigFactory.load().getString("ngl.env").equals("PROD")) {
-			if(getExperimentTypePROD()!=null){
+		} else if(ConfigFactory.load().getString("ngl.env").equals("PROD")) {
+			if (getExperimentTypePROD() != null) {
 				l.addAll(getExperimentTypePROD());
 			}
-		}else {
+		} else {
 			throw new RuntimeException("ngl.env value not implemented");
 		}
-		
 		return l;
 	}
 
@@ -64,12 +62,10 @@ public abstract class AbstractDeclaration {
 	protected abstract List<ProcessType> getProcessTypePROD();
 	protected abstract List<ProcessType> getProcessTypeUAT();
 
-	public List<ProcessType> getProcessType(){
+	public List<ProcessType> getProcessType() {
 		List<ProcessType> l = new ArrayList<ProcessType>();
-		
 		//Logger.debug(this.getClass().getSimpleName()+" getProcessType");
-
-		if(getProcessTypeCommon()!=null){
+		if (getProcessTypeCommon()!=null) {
 			l.addAll(getProcessTypeCommon());
 		}
 		if(ConfigFactory.load().getString("ngl.env").equals("DEV")){

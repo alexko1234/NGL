@@ -27,7 +27,8 @@ public class DAOHelpers {
 	 * @return
 	 * @throws DAOException
 	 */
-	public static <T extends Model<T>> Map<String,List<ValidationError>> saveModels(Class<T> type, Map<String, T> models) throws DAOException {
+	public static <T extends Model> Map<String,List<ValidationError>> saveModels(Class<T> type, Map<String, T> models) throws DAOException {
+//	public static <T extends Model<T>> Map<String,List<ValidationError>> saveModels(Class<T> type, Map<String, T> models) throws DAOException {
 		Map<String,List<ValidationError>>errors = new HashMap<String, List<ValidationError>>();
 		for (Entry<String,T> model : models.entrySet()) {
 			T samp = new HelperObjects<T>().getObject(type, model.getKey());
@@ -43,7 +44,8 @@ public class DAOHelpers {
 		return errors;
 	}
 
-	public static <T extends Model<T>> void removeAll(Class<T> type, Finder<T> finder) throws DAOException {
+	public static <T extends Model> void removeAll(Class<T> type, Finder<T> finder) throws DAOException {
+//	public static <T extends Model<T>> void removeAll(Class<T> type, Finder<T> finder) throws DAOException {
 		List<T> list = finder.findAll();
 		for(T t : list){
 			logger.debug("remove "+type.getName() + " : "+t.code);
@@ -51,11 +53,13 @@ public class DAOHelpers {
 		}		
 	}
 
-	public static <T extends Model<T>> T getModelByCode(Class<T> type, Finder<T> finder, String code) throws DAOException {
+	public static <T extends Model> T getModelByCode(Class<T> type, Finder<T> finder, String code) throws DAOException {
+//	public static <T extends Model<T>> T getModelByCode(Class<T> type, Finder<T> finder, String code) throws DAOException {
 		return getModelByCodes(type, finder, code).get(0);
 	}
 
-	public static <T extends Model<T>> List<T> getModelByCodes(Class<T> type, Finder<T> finder, String...codes) throws DAOException {
+	public static <T extends Model> List<T> getModelByCodes(Class<T> type, Finder<T> finder, String...codes) throws DAOException {
+//	public static <T extends Model<T>> List<T> getModelByCodes(Class<T> type, Finder<T> finder, String...codes) throws DAOException {
 		List<T> l = new ArrayList<T>();
 		for (String code : codes) {
 			//Logger.debug("Load "+type.getName() + " : "+code);
@@ -72,9 +76,10 @@ public class DAOHelpers {
 	 * @return
 	 * @throws DAOException
 	 */
-	public static <T extends Model<T>> void saveModel(Class<T> type, T model, Map<String,List<ValidationError>> errors) throws DAOException {
-//		T t = (T) model.getInstance().findByCode(model.code);
-		T t = model.getInstance().findByCode(model.code);
+	public static <T extends Model> void saveModel(Class<T> type, T model, Map<String,List<ValidationError>> errors) throws DAOException {
+//	public static <T extends Model<T>> void saveModel(Class<T> type, T model, Map<String,List<ValidationError>> errors) throws DAOException {
+		T t = (T) model.getInstance().findByCode(model.code);
+//		T t = model.getInstance().findByCode(model.code);
 		if (t == null) {
 			logger.info("Save "+type.getName() + " : "+model.code);
 			model.save();
@@ -90,7 +95,8 @@ public class DAOHelpers {
 	 * @param errors
 	 * @throws DAOException 
 	 */
-	public static <T extends Model<T>> void saveModels(Class<T> type, List<T> models, Map<String,List<ValidationError>> errors) throws DAOException {
+	public static <T extends Model> void saveModels(Class<T> type, List<T> models, Map<String,List<ValidationError>> errors) throws DAOException {
+//	public static <T extends Model<T>> void saveModels(Class<T> type, List<T> models, Map<String,List<ValidationError>> errors) throws DAOException {
 		for (T model : models) {
 			saveModel(type, model, errors);
 		}		
@@ -103,9 +109,10 @@ public class DAOHelpers {
 	 * @param errors
 	 * @throws DAOException
 	 */
-	public static <T extends Model<T>> void updateModel(Class<T> type, T model, Map<String,List<ValidationError>> errors) throws DAOException {
-//		T t = (T) model.getInstance().findByCode(model.code);
-		T t = model.getInstance().findByCode(model.code);
+	public static <T extends Model> void updateModel(Class<T> type, T model, Map<String,List<ValidationError>> errors) throws DAOException {
+//	public static <T extends Model<T>> void updateModel(Class<T> type, T model, Map<String,List<ValidationError>> errors) throws DAOException {
+		T t = (T) model.getInstance().findByCode(model.code);
+//		T t = model.getInstance().findByCode(model.code);
 		if (t != null) {
 			model.update();
 		} else {
@@ -113,8 +120,9 @@ public class DAOHelpers {
 		}
 	}
 
-	public static <T extends Model<T>> void updateModels(Class<T> type, List<T> models, Map<String,List<ValidationError>> errors) throws DAOException {
-		for(T model : models){
+	public static <T extends Model> void updateModels(Class<T> type, List<T> models, Map<String,List<ValidationError>> errors) throws DAOException {
+//	public static <T extends Model<T>> void updateModels(Class<T> type, List<T> models, Map<String,List<ValidationError>> errors) throws DAOException {
+		for (T model : models) {
 			updateModel(type, model, errors);
 		}		
 	}

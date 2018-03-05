@@ -16,16 +16,15 @@ import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.api.modules.spring.Spring;
 
-public class SampleTypeMappingQuery extends MappingSqlQuery<SampleType>{
+public class SampleTypeMappingQuery extends MappingSqlQuery<SampleType> {
 
-	public SampleTypeMappingQuery()
-	{
-		super();
-	}
-	public SampleTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)
-	{
+//	public SampleTypeMappingQuery()	{
+////		super();
+//	}
+	
+	public SampleTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)	{
 		super(ds,sql);
-		if(sqlParameter!=null)
+		if (sqlParameter != null)
 			super.declareParameter(sqlParameter);
 		compile();
 	}
@@ -45,7 +44,8 @@ public class SampleTypeMappingQuery extends MappingSqlQuery<SampleType>{
 			SampleCategoryDAO sampleCategoryDAO = Spring.getBeanOfType(SampleCategoryDAO.class);
 			SampleCategory sampleCategory=null;
 			try {
-				sampleCategory = (SampleCategory) sampleCategoryDAO.findById(idSampleCategory);
+//				sampleCategory = (SampleCategory) sampleCategoryDAO.findById(idSampleCategory);
+				sampleCategory = sampleCategoryDAO.findById(idSampleCategory);
 			} catch (DAOException e) {
 				throw new SQLException(e);
 			}
