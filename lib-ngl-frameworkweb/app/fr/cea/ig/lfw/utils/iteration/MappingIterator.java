@@ -25,10 +25,10 @@ public class MappingIterator <A,B> implements Iterator <B> {
 	
 	/**
 	 * Methode de transformation de A vers B.
-	 * @param i
-	 * @param f
+	 * @param i iterateur
+	 * @param f fonction a appliquer
 	 */
-	public MappingIterator(	Iterator <A> i,	Function <A,B> f) {
+	public MappingIterator(Iterator <A> i, Function <A,B> f) {
 		this.i = i;
 		this.f = f;
 	}

@@ -74,6 +74,8 @@ public class ContextValidation {
 		this.user      = user;
 	}
 
+	// TODO: provide a proper initialization
+	@SuppressWarnings("deprecation")
 	public ContextValidation(String user, Form<?> form) {
 		this(user,form.errors());
 	}
@@ -103,6 +105,7 @@ public class ContextValidation {
 	 * Get a typed object from this context, this does nothing else than
 	 * moving the cast problem in a single place.
 	 * @param key object name
+	 * @param <T> expected object type
 	 * @return    typed object
 	 */
 	@SuppressWarnings("unchecked")

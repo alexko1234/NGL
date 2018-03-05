@@ -16,6 +16,7 @@ public interface ZenIterable <A> extends Iterable <A> {
 	/**
 	 * Transforme un ZenIterable de A en ZenIterable de B, grace à la methode indiquée
 	 * @param   f Fonction de transformation de B vers A
+	 * @param <B> view elements type
 	 * @return  ZenIterable de B
 	 */
 	default <B> ZenIterable <B> map (Function <A,B> f) {

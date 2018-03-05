@@ -65,6 +65,7 @@ public class JavascriptGeneration {
 		 * @param key   element to key function
 		 * @param name  element to name function
 		 * @param value element to value function
+		 * @param <T>   source iterable element type
 		 * @return      this to chain calls
 		 */
 		public <T> Codes add(Iterable<T> c, Function<T,String> key, Function<T,String> name, Function<T,String> value) {
@@ -80,6 +81,8 @@ public class JavascriptGeneration {
 		 * @param key   element to key function
 		 * @param name  element to name function
 		 * @param value element to value function
+		 * @param <S>   source iterable element type
+		 * @param <T>   flattened iterable element type
 		 * @return      this to chain calls
 		 */
 		public <S,T> Codes add(Iterable<S> c, Function<S,Collection<T>> flat, Function<T,String> key, Function<T,String> name, Function<T,String> value) {

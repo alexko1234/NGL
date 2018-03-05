@@ -25,6 +25,7 @@ public class Iterables {
 	
 	/**
 	 * Transforme un Iterable en ZenIterable
+	 * @param <A> type des elemments de l'iterable
 	 * @param i   iterable à transformer
 	 * @return    iterable transformé
 	 */

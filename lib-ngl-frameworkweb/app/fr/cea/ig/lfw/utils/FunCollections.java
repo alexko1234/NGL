@@ -33,7 +33,7 @@ public class FunCollections {
 		return Optional.empty();
 	}
 
-	/**
+	/* *
 	 * Build a constant function from a value. 
 	 * <p>
 	 * This is not a real improvement in readability:

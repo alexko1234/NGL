@@ -27,8 +27,8 @@ public class MappingIterable <A,B> implements ZenIterable <B> {
 	
 	/**
 	 * Constructeur.
-	 * @param i
-	 * @param function
+	 * @param i        iterable dont on veut une vue
+	 * @param function fonction a appliquer pour creer la vue
 	 */
 	public MappingIterable(Iterable <A> i, Function <A, B> function) {
 		this.i = i;
