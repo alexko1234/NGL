@@ -84,9 +84,9 @@ public class Submission extends DBObject implements IValidation, TransitionObjec
 	}
 
 	public Submission() {
-		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
+//		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
 		Date courantDate = new java.util.Date();
-		String st_my_date = dateFormat.format(courantDate);	
+//		String st_my_date = dateFormat.format(courantDate);	
 		this.creationDate = courantDate;
 	}
 	

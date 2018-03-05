@@ -15,14 +15,15 @@ import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.api.modules.spring.Spring;
 
-public class ReadSetTypeMappingQuery extends MappingSqlQuery<ReadSetType>{
+public class ReadSetTypeMappingQuery extends MappingSqlQuery<ReadSetType> {
 
-	public ReadSetTypeMappingQuery() {
-		super();
-	}
+//	public ReadSetTypeMappingQuery() {
+//		super();
+//	}
+
 	public ReadSetTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
 		super(ds,sql);
-		if(sqlParameter!=null)
+		if (sqlParameter != null)
 			super.declareParameter(sqlParameter);
 		compile();
 	}
@@ -30,24 +31,25 @@ public class ReadSetTypeMappingQuery extends MappingSqlQuery<ReadSetType>{
 	@Override
 	protected ReadSetType mapRow(ResultSet rs, int rowNum) throws SQLException {
 		ReadSetType readSetType = new ReadSetType();
-			
+
 		readSetType.id = rs.getLong("id");
-			
-			long idCommonInfoType = rs.getLong("fk_common_info_type");
-			//long idReadSetCategory = rs.getLong("fk_readset_category");
-			
-			//Get commonInfoType
-			CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-			CommonInfoType commonInfoType = null;
-			try {
-				 commonInfoType = (CommonInfoType) commonInfoTypeDAO.findById(idCommonInfoType);
-			} catch (DAOException e) {
-				throw new SQLException(e);
-			}
-			//Set commonInfoType
-			readSetType.setCommonInfoType(commonInfoType);
-			//Get category
-			/*
+
+		long idCommonInfoType = rs.getLong("fk_common_info_type");
+		//long idReadSetCategory = rs.getLong("fk_readset_category");
+
+		//Get commonInfoType
+		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
+		CommonInfoType commonInfoType = null;
+		try {
+//			commonInfoType = (CommonInfoType) commonInfoTypeDAO.findById(idCommonInfoType);
+			commonInfoType = commonInfoTypeDAO.findById(idCommonInfoType);
+		} catch (DAOException e) {
+			throw new SQLException(e);
+		}
+		//Set commonInfoType
+		readSetType.setCommonInfoType(commonInfoType);
+		//Get category
+		/*
 			ReadSetCategoryDAO readSetCategoryDAO = Spring.getBeanOfType(ReadSetCategoryDAO.class);
 			ReadSetCategory readSetCategory=null;
 			try {
@@ -57,8 +59,8 @@ public class ReadSetTypeMappingQuery extends MappingSqlQuery<ReadSetType>{
 			}
 			//Set category
 			readSetType.category = readSetCategory;
-			*/
-			return readSetType;
+		 */
+		return readSetType;
 	}
 
 }

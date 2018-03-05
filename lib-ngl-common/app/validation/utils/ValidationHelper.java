@@ -429,6 +429,7 @@ public class ValidationHelper {
 	 * @param arguments message args
 	 * @deprecated use ContextValidation.addErrors
 	 */
+	@Deprecated
 	public static void addErrors(Map<String, List<ValidationError>> errors,	String key, String message, Object... arguments) {
 		if (!errors.containsKey(key)) {
 			errors.put(key, new ArrayList<ValidationError>());
@@ -568,7 +569,8 @@ public class ValidationHelper {
 				if (!valueClass.isInstance(value) && value != null) { // transform only if not the good type
 					value = convertValue(valueClass, value, null);
 				}	
-				((Map<String, Object>)map).put(codes[1], value);
+//				((Map<String, Object>)map).put(codes[1], value);
+				map.put(codes[1], value);
 			}
 		} catch(Throwable e) {
 			logger.error(e.getMessage(),e);

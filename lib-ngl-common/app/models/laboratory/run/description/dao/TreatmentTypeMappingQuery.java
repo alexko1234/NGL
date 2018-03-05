@@ -15,14 +15,15 @@ import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.api.modules.spring.Spring;
 
-public class TreatmentTypeMappingQuery extends MappingSqlQuery<TreatmentType>{
+public class TreatmentTypeMappingQuery extends MappingSqlQuery<TreatmentType> {
 
-	public TreatmentTypeMappingQuery() {
-		super();
-	}
+//	public TreatmentTypeMappingQuery() {
+//		super();
+//	}
+
 	public TreatmentTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
 		super(ds,sql);
-		if(sqlParameter!=null)
+		if (sqlParameter != null)
 			super.declareParameter(sqlParameter);
 		compile();
 	}
@@ -43,8 +44,8 @@ public class TreatmentTypeMappingQuery extends MappingSqlQuery<TreatmentType>{
 			//Get category
 			long idTreatmentCategory = rs.getLong("fk_treatment_category");			
 			TreatmentCategoryDAO treatmentCategoryDAO = Spring.getBeanOfType(TreatmentCategoryDAO.class);
-			treatmentType.category = (TreatmentCategory) treatmentCategoryDAO.findById(idTreatmentCategory);
-			
+//			treatmentType.category = (TreatmentCategory) treatmentCategoryDAO.findById(idTreatmentCategory);
+			treatmentType.category = treatmentCategoryDAO.findById(idTreatmentCategory);			
 			TreatmentTypeContextDAO treatmentContextDAO =  Spring.getBeanOfType(TreatmentTypeContextDAO.class);
 			treatmentType.contexts = treatmentContextDAO.findByTreatmentTypeId(treatmentType.id);
 			
@@ -52,7 +53,6 @@ public class TreatmentTypeMappingQuery extends MappingSqlQuery<TreatmentType>{
 		} catch (DAOException e) {
 			throw new SQLException(e);
 		}
-
 	}
 
 }
