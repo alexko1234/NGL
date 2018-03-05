@@ -48,8 +48,12 @@ body {
 				</div>
 			</div>
 		</div>
-		@* TODO: makes some proper rendering of the error message *@
-		@if(error!=null){@error}
+		@if(error!=null){
+		<div class="alert alert-danger">
+  			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  			<strong>Error:</strong> @error
+		</div>
+		}
 		<div id="body" class="container">
 			<form class="form-signin" method="POST"	action="@fr.cea.ig.authentication.routes.AuthenticationController.callback_POST">
 				<h2 class="form-signin-heading">@Messages("signin")</h2>
