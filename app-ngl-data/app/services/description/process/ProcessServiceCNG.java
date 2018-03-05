@@ -34,7 +34,7 @@ import com.typesafe.config.ConfigFactory;
 
 public class ProcessServiceCNG  extends AbstractProcessService{
 
-	/**
+	/* *
 	 * Save all Process Categories
 	 * @param errors
 	 * @throws DAOException 
@@ -53,7 +53,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		DAOHelpers.saveModels(ProcessCategory.class, l, errors);
 	}
 
-	/**
+	/* *
 	 * Save all Process types
 	 * @param errors
 	 * @throws DAOException 		

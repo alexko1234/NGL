@@ -46,9 +46,9 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	}
 	
 	/**
-	 * Save all Experiment Categories
-	 * @param errors
-	 * @throws DAOException 
+	 * Save all Experiment Categories.
+	 * @param errors        error mamanger
+	 * @throws DAOException DAO problem
 	 */
 	public  void saveExperimentCategories(Map<String,List<ValidationError>> errors) throws DAOException{
 		List<ExperimentCategory> l = new ArrayList<ExperimentCategory>();
@@ -63,9 +63,9 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	}
 
 	/**
-	 * Save all Experiment Types
-	 * @param errors
-	 * @throws DAOException 
+	 * Save all Experiment Types. 
+	 * @param errors        error manager
+	 * @throws DAOException DAO problem
 	 */
 	public void saveExperimentTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 			List<ExperimentType> l = new ArrayList<ExperimentType>();
@@ -502,9 +502,9 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 
 
 	/**
-	 * Save all Experiment TypeNodes
-	 * @param errors
-	 * @throws DAOException 
+	 * Save all Experiment TypeNodes.
+	 * @param errors        error manager
+	 * @throws DAOException DAO problem
 	 */
 	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 		//NOTE FDS: les nodes qui apparaissent en previous doivent etre crees avant sinon==>message : experimentTypeNode is mandatory

@@ -22,9 +22,9 @@ public class ContainerService {
 	}
 	
 	/**
-	 * Save All container categories
-	 * @param errors
-	 * @throws DAOException 
+	 * Save All container categories.
+	 * @param errors        error manager
+	 * @throws DAOException DAO problem
 	 */
 	public static void saveContainerCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ContainerCategory> l = new ArrayList<ContainerCategory>();
@@ -43,9 +43,9 @@ public class ContainerService {
 	}
 
 	/**
-	 * Save All support categories
-	 * @param errors
-	 * @throws DAOException 
+	 * Save All support categories.
+	 * @param errors        error manager
+	 * @throws DAOException DAO problem
 	 */
 	public static void saveContainerSupportCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ContainerSupportCategory> l = new ArrayList<ContainerSupportCategory>();

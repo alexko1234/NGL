@@ -43,9 +43,9 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 	}
 	
 	/**
-	 * Save all ExperimentCategory
-	 * @param errors
-	 * @throws DAOException 
+	 * Save all ExperimentCategory.
+	 * @param errors        error manager
+	 * @throws DAOException DAO problem
 	 */
 	public  void saveExperimentCategories(Map<String,List<ValidationError>> errors) throws DAOException{
 		List<ExperimentCategory> l = new ArrayList<ExperimentCategory>();

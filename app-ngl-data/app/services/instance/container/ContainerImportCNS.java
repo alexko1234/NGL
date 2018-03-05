@@ -113,7 +113,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 	
 	}
 
-	/**
+	/* *
 	 * 
 	 * Create containers, contents and samples from 2 sql queries 
 	 * @param contextError
@@ -141,7 +141,8 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 				// propertiesContainerSupports.put(container.support.code, container.properties.get("sequencingProgramType"));
 //				propertiesContainerSupports.put(container.support.code, (PropertyValue<String>)container.properties.get("sequencingProgramType"));
 //				@SuppressWarnings("unchecked")
-				PropertyValue pvs = (PropertyValue)container.properties.get("sequencingProgramType");
+//				PropertyValue pvs = (PropertyValue)container.properties.get("sequencingProgramType");
+				PropertyValue pvs = container.properties.get("sequencingProgramType");
 				propertiesContainerSupports.put(container.support.code, pvs);
 				container.properties.remove("sequencingProgramType");
 			}
@@ -216,7 +217,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		}
 	}
 
-	/**
+	/* *
 	 * 
 	 * Create au niveau Container from a ResultSet
 	 * 

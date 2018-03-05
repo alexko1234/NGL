@@ -1062,7 +1062,8 @@ public class LimsCNGDAO {
 				// mapCodeSupportSequencing.put(result.code, result.properties.get("sequencingProgramType"));
 //				mapCodeSupportSequencing.put(result.code, (PropertyValue<String>)result.properties.get("sequencingProgramType"));
 //				@SuppressWarnings("unchecked") // no way around this cast
-				PropertyValue pvs = (PropertyValue)result.properties.get("sequencingProgramType");
+//				PropertyValue pvs = (PropertyValue)result.properties.get("sequencingProgramType");
+				PropertyValue pvs = result.properties.get("sequencingProgramType");
 				mapCodeSupportSequencing.put(result.code, pvs);
 			}
 		}	

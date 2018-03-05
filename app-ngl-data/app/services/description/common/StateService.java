@@ -27,9 +27,9 @@ public class StateService {
 	
 	
 	/**
-	 * Creates state categories
-	 * @param errors
-	 * @throws DAOException
+	 * Creates state categories.
+	 * @param errors        error manager
+	 * @throws DAOException DAO problem
 	 */
 	public static void saveStateCategories(Map<String,List<ValidationError>> errors) throws DAOException{
 		List<StateCategory> l = new ArrayList<StateCategory>();			
@@ -41,9 +41,9 @@ public class StateService {
 
 
 	/**
-	 * Create states (in the database objects description)
-	 * @param errors
-	 * @throws DAOException
+	 * Create states (in the database objects description).
+	 * @param errors        error manager
+	 * @throws DAOException DAO problem
 	 */
 	public static void saveStates(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<State> l = new ArrayList<State>();
@@ -117,9 +117,9 @@ public class StateService {
 	
 	/**
 	 * Creates hierarchical relation between states in order to draw states flow (directive workflowChart)
-	 * Graphic representation is made by the directive "workflowChart"
-	 * @param errors
-	 * @throws DAOException
+	 * Graphic representation is made by the directive "workflowChart".
+	 * @param errors        error manager
+	 * @throws DAOException DAO problem
 	 */
 	public static void saveStatesHierarchy(Map<String, List<ValidationError>> errors) throws DAOException{
 		List<StateHierarchy> l = new ArrayList<StateHierarchy>();

@@ -88,11 +88,10 @@ public class LimsCNSDAO {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);              
 	}
 
-	/**
-	 * Find Tube Lims who have flag 'tubinNGL=0' ( this flag is update to 1 when Tube exists in NGL database)
-	 * 
-	 * @param contextError
-	 * @return
+	/* *
+	 * Find Tube Lims who have flag 'tubinNGL=0' ( this flag is update to 1 when Tube exists in NGL database).
+	 * @param contextError error manager
+	 * @return             tube list
 	 */
 	public List<Container> findContainersToCreate(String procedure, 
 			                                      ContextValidation contextError, 
@@ -314,7 +313,7 @@ public class LimsCNSDAO {
 	}
 
 
-	/**
+	/* *
 	 *  Find contents from a container code 
 	 *  
 	 *  */

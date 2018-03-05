@@ -39,11 +39,11 @@ public class ExperimentServiceTEST extends AbstractExperimentService {
 	}
 	
 	/**
-	 * Save all ExperimentCategory
-	 * @param errors
-	 * @throws DAOException 
+	 * Save all ExperimentCategory.
+	 * @param errors        error manager
+	 * @throws DAOException DAO problem
 	 */
-	public  void saveExperimentCategories(Map<String,List<ValidationError>> errors) throws DAOException{
+	public  void saveExperimentCategories(Map<String,List<ValidationError>> errors) throws DAOException {
 		List<ExperimentCategory> l = new ArrayList<ExperimentCategory>();
 		for (ExperimentCategory.CODE code : ExperimentCategory.CODE.values()) {
 			l.add(DescriptionFactory.newSimpleCategory(ExperimentCategory.class, code.name(), code.name()));
@@ -51,9 +51,7 @@ public class ExperimentServiceTEST extends AbstractExperimentService {
 		DAOHelpers.saveModels(ExperimentCategory.class, l, errors);
 	}
 
-
-	public void saveExperimentTypes(
-			Map<String, List<ValidationError>> errors) throws DAOException {
+	public void saveExperimentTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 /*
 		l.add(newExperimentType("Ext to dépôt opgen","ext-to-opgen-depot",null,

@@ -114,8 +114,8 @@ public class InstanceHelpers {
 		return new ArrayList<Comment>(0);					
 	}
 	
-	
-	@Deprecated
+	// TODO: replace by implementing ITracingAccess 
+	// @Deprecated
 	public static void updateTraceInformation(TraceInformation traceInformation, String user) {
 		if (traceInformation.createUser == null) {
 			traceInformation.createUser = user;
@@ -129,14 +129,15 @@ public class InstanceHelpers {
 		}
 	}
 	
-	@Deprecated
+	// @Deprecated
 	public static TraceInformation updateTraceInformation(TraceInformation traceInformation, State nextState) {
 		traceInformation.modifyDate = nextState.date;
 		traceInformation.modifyUser = nextState.user;
 		return traceInformation;
 	}
 	
-	@Deprecated
+	// TODO: replace by implementing ITracingAccess 
+	// @Deprecated
 	public static TraceInformation getUpdateTraceInformation(TraceInformation traceInformation, String user) {
 		TraceInformation ti = null;
 		if (traceInformation == null) {
