@@ -10,45 +10,41 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import models.administration.authorisation.description.dao.UserDAO;
 import models.utils.Model;
 import models.utils.dao.DAOException;
-import play.Logger;
+//import play.Logger;
 import play.data.validation.ValidationError;
 
 
 public class User extends Model<User> {
 
-	public User() {
-		super(UserDAO.class.getName());
-	}
-
 	public String login;
-
 	public String firstname;
-
 	public String lastname;
-
 	public String email;
 
 	/**
 	 * 0 not technical, 1 technical
 	 */
+	// Looks like a boolean
 	public int technicaluser;
 
 	/**
 	 * Only for technical users
 	 */
 	public String password;
-
 	public String confirmpassword;
+	
 	// Attribute used to Lists the roles labels
 	public List<Long> roleIds;
-
 	public List<Team> teams;
 	public List<Application> applications;
-
-	public Boolean active ;
+	public Boolean active;
 
 	@JsonIgnore
 	public static UserFinder find = new UserFinder();
+
+	public User() {
+		super(UserDAO.class.getName());
+	}
 
 	@JsonIgnore
 	public  Map<String,List<ValidationError>> validate() {

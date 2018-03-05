@@ -12,6 +12,7 @@ import play.api.modules.spring.Spring;
 // TODO: fix serialization uid but not serializable
 // TODO: fix @JsonIgnore, seems overkill
 
+
 public class Model<T> {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(Model.class);
@@ -58,6 +59,7 @@ public class Model<T> {
 
 	@JsonIgnore
 	@SuppressWarnings("unchecked")
+	// This is more a getDAO than a get instance.
 	public AbstractDAO<T> getInstance() throws DAOException {
 		try {
 			return (AbstractDAO<T>) Spring.getBeanOfType(Class.forName(classNameDAO));

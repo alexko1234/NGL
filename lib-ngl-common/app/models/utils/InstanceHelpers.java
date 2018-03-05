@@ -36,7 +36,7 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
 
-import play.Logger;
+//import play.Logger;
 import play.api.modules.spring.Spring;
 
 import play.mvc.Http;
@@ -188,7 +188,7 @@ public class InstanceHelpers {
 			return MongoDBDAO.save(collectionName, (DBObject) obj);
 		} else {
 			contextError.errors.putAll(localContextError.errors);
-			Logger.info("error(s) on output :: " + contextError.errors.toString());
+			logger.info("error(s) on output :: " + contextError.errors.toString());
 			return null;
 		}
 	}
@@ -197,11 +197,8 @@ public class InstanceHelpers {
 		return save(collectionName, obj, contextError, false);
 	}
 
-	public static <T extends DBObject> List<T> save(String collectionName, List<T> objects,
-			ContextValidation contextErrors) {
-
+	public static <T extends DBObject> List<T> save(String collectionName, List<T> objects,	ContextValidation contextErrors) {
 		List<T> dbObjects = new ArrayList<T>();
-
 		for (DBObject object : objects) {
 			@SuppressWarnings("unchecked")
 			T result = (T) InstanceHelpers.save(collectionName, (IValidation) object, contextErrors);
@@ -209,15 +206,12 @@ public class InstanceHelpers {
 				dbObjects.add(result);
 			}
 		}
-
-		return (List<T>) dbObjects;
+//		return (List<T>) dbObjects;
+		return dbObjects;
 	}
 
-	public static <T extends DBObject> List<T> save(String collectionName, List<T> objects,
-			ContextValidation contextErrors, Boolean keepRootKeyName) {
-
+	public static <T extends DBObject> List<T> save(String collectionName, List<T> objects,	ContextValidation contextErrors, Boolean keepRootKeyName) {
 		List<T> dbObjects = new ArrayList<T>();
-
 		for (DBObject object : objects) {
 			@SuppressWarnings("unchecked")
 			T result = (T) InstanceHelpers.save(collectionName, (IValidation) object, contextErrors, keepRootKeyName);
@@ -225,8 +219,8 @@ public class InstanceHelpers {
 				dbObjects.add(result);
 			}
 		}
-
-		return (List<T>) dbObjects;
+//		return (List<T>) dbObjects;
+		return dbObjects;
 	}
 
 	public static SampleOnContainer getSampleOnContainer(ReadSet readSet) {
@@ -320,10 +314,10 @@ public class InstanceHelpers {
 					return sampleUsed;
 				}
 			} catch (Exception e) {
-				Logger.error("Problem with " + readSet.code + " / " + readSet.sampleCode + " : " + e.getMessage());
+				logger.error("Problem with " + readSet.code + " / " + readSet.sampleCode + " : " + e.getMessage());
 			}
 		}
-		Logger.warn("Not found Content for " + readSet.code + " / " + readSet.sampleCode);
+		logger.warn("Not found Content for " + readSet.code + " / " + readSet.sampleCode);
 		return null;
 	}
 
@@ -362,7 +356,7 @@ public class InstanceHelpers {
 						    DBQuery.in("sampleCodes", readSet.sampleCode)));
 
 		if (cl.size() == 0) {
-			Logger.warn("Not found Container for " + readSet.code + " with : '" + containerSupportCode + ", "
+			logger.warn("Not found Container for " + readSet.code + " with : '" + containerSupportCode + ", "
 					+ readSet.laneNumber.toString() + ", " + readSet.sampleCode + "'");
 			return null;
 		}
