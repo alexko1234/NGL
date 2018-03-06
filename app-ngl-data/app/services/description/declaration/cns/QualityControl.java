@@ -323,7 +323,11 @@ public class QualityControl extends AbstractDeclaration {
 	private List<PropertyDefinition> getPropertyDefinitionsDosageFluorometrique() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
-		propertyDefinitions.addAll(getPropertyDefinitionsDosageFluorometriqueEval());
+		propertyDefinitions.addAll(getPropertyDefinitionsDosageFluorometriqueEvalCommon());
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume mesuré", "preQuantificationVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 11, false, null,null));
+		
 		propertyDefinitions.add(newPropertiesDefinition("Conc. calculée en nM ", "nMcalculatedConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "nM"),MeasureUnit.find.findByCode("nM"),"single", 33, false, null,"2"));
 	
@@ -332,16 +336,24 @@ public class QualityControl extends AbstractDeclaration {
 		
 	}
 
-	
 	private List<PropertyDefinition> getPropertyDefinitionsDosageFluorometriqueEval() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.addAll(getPropertyDefinitionsDosageFluorometriqueEvalCommon());
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume mesuré", "preQuantificationVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 11, true, null,null));
+		
+		return propertyDefinitions;
+	}
+	
+	
+	private List<PropertyDefinition> getPropertyDefinitionsDosageFluorometriqueEvalCommon() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
 		propertyDefinitions.add(newPropertiesDefinition("Choix visuel", "displayChoice", LevelService.getLevels(Level.CODE.Experiment), String.class, false, null, 
 				DescriptionFactory.newValues("Tout", "BR1 + HS1", "HS1 + HS2 + HS3"),null,null,null,"single", 10, true, "Tout", null));
 		
 		
-		propertyDefinitions.add(newPropertiesDefinition("Volume mesuré", "preQuantificationVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 11, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,null));		
 		

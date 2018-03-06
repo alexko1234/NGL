@@ -24,6 +24,8 @@ rule "Set good project code for Amplicon"
 		
 		if(mapping.map.containsKey($inputProjectCode)){
 			outputProjectCode.value = mapping.map.get($inputProjectCode);
+		}else if(mapping.map.containsValue($inputProjectCode)){ //case of nested tag-pcr
+			outputProjectCode.value = $inputProjectCode;
 		}else{
 			Logger.error("Tag-PCR mapping not defined for project "+$inputProjectCode);
 			outputProjectCode.value = null;

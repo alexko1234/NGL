@@ -1760,8 +1760,8 @@ angular.module('ngl-sq.processesServices', [])
 						}
 						nodeQueries.push($http.get(jsRoutes.controllers.experiments.api.ExperimentTypeNodes.get(experimentType.experimentTypeCode).url)
 								.then(function(result){
-									if(!graphNodes[result.data.experimentType.code])
-										graphNodes[result.data.experimentType.code] = newNode(result.data);
+									if(!graphNodes[result.data.code])
+										graphNodes[result.data.code] = newNode(result.data);
 									return result.data;
 								})								
 						);
@@ -1771,7 +1771,7 @@ angular.module('ngl-sq.processesServices', [])
 					},processExperimentTypes);
 					$q.all(nodeQueries).then(function(expNodes){
 						expNodes.forEach(function(experimentNode){
-							graphNodes[experimentNode.experimentType.code].parentNodes.forEach(function(parent){
+							graphNodes[experimentNode.code].parentNodes.forEach(function(parent){
 								if(graphNodes[parent.code])
 									graphNodes[parent.code].childNodes.push(this);
 							}, experimentNode.experimentType) 

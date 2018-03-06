@@ -1,5 +1,5 @@
-angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingleDatatable','lists','mainService',
-                                                    function($scope, $parse, atmToSingleDatatable,lists,mainService){
+angular.module('home').controller('TagPCRCtrl',['$scope', '$parse','$filter', 'atmToSingleDatatable','lists','mainService',
+                                                    function($scope, $parse, $filter, atmToSingleDatatable,lists,mainService){
                                                     
 	var datatableConfig = {
 					name: $scope.experiment.typeCode.toUpperCase(),
@@ -201,7 +201,7 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
 
-		if (! checktagPcrBlankSampleCode($scope)){
+		if (! checkTagPcrBlankSampleCode($scope)){
 			$scope.$emit('childSavedError', callbackFunction);
 		}else{
 			$scope.$emit('childSaved', callbackFunction);
@@ -242,19 +242,61 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 	});
 	
 	
-	var checktagPcrBlankSampleCode = function($scope){
+	var checkTagPcrBlankSampleCode = function($scope){
 		var experiment=$scope.experiment;
 		var blank1;
 		var blank2;
 		var sampleCodeAvailable;
 
+		var nestedDetectionBlank1  = $filter('filter')(experiment.atomicTransfertMethods,{inputContainerUseds:{contents:{properties:{tagPcrBlank1SampleCode:{value:'CEB'}}}}});
+		var nestedDetectionBlank2  = $filter('filter')(experiment.atomicTransfertMethods,{inputContainerUseds:{contents:{properties:{tagPcrBlank2SampleCode:{value:'CEB'}}}}});
+		var isNested = false;
+		if(nestedDetectionBlank1.length > 0 && nestedDetectionBlank2.length > 0){
+			isNested = true;
+		}
+				
+		if(isNested && (nestedDetectionBlank1.length !== nestedDetectionBlank2.length 
+				|| nestedDetectionBlank1.length !== experiment.atomicTransfertMethods.length)){
+			$scope.messages.setError(Messages("Attention problème avec tag-pcr nested, tous les inputs n'ont pas les 2 échantillons témoins"));	
+			return false;
+		}
+		//search atm with output with CEB as new sampleCode
+		var atmWithBlanckSamples = $filter('filter')(experiment.atomicTransfertMethods,{outputContainerUseds:{experimentProperties:{sampleCode:{value:'CEB'}}}});
+		if(isNested){
+			//search only where input is on CEB project
+			atmWithBlanckSamples = $filter('filter')(atmWithBlanckSamples,{inputContainerUseds:{contents:{projectCode:'CEB'}}});
+		}
+		
+		//check the good number of atm
+		if(atmWithBlanckSamples.length === 1){
+			$scope.messages.setError(Messages('Attention vous devez renseigner les 2 témoins négatifs pour cette expérience'));	
+			return false;
+		}else if(atmWithBlanckSamples.length > 2){
+			$scope.messages.setError(Messages('Attention vous avez renseigné plus de 2 témoins négatifs pour cette expérience'));	
+			return false;
+		}else if(atmWithBlanckSamples.length === 2){
+			var blanckSamples = [];
+			blanckSamples[0] = atmWithBlanckSamples[0].outputContainerUseds[0].experimentProperties.sampleCode.value;
+			blanckSamples[1] = atmWithBlanckSamples[1].outputContainerUseds[0].experimentProperties.sampleCode.value;
+			blanckSamples = $filter('orderBy')(blanckSamples);
+			
+			getterBlanck1 = $parse("experimentProperties.tagPcrBlank1SampleCode.value");
+			getterBlanck2 = $parse("experimentProperties.tagPcrBlank2SampleCode.value");
+			
+			for(var i = 0; i < experiment.atomicTransfertMethods.length; i++){
+				getterBlanck1.assign(experiment.atomicTransfertMethods[i].outputContainerUseds[0], blanckSamples[0]);
+				getterBlanck2.assign(experiment.atomicTransfertMethods[i].outputContainerUseds[0], blanckSamples[1]);
+			}
+		}
+		return true;
+		
+		
+		/*
 		for(var i=0 ; i < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; i++){
 			var atm = experiment.atomicTransfertMethods[i];
 			for(var j=0 ; j < atm.outputContainerUseds.length ; j++){		
 				var ocu = atm.outputContainerUseds[j];
-				var getter = $parse("experimentProperties.tagPcrBlank1SampleCode.value");
-				var getter2 = $parse("experimentProperties.tagPcrBlank2SampleCode.value");
-
+				
 				if(ocu.experimentProperties && ocu.experimentProperties.projectCode   && ocu.experimentProperties.projectCode.value==="CEB"){				
 					if(ocu.experimentProperties.sampleCode){
 						sampleCodeAvailable=true;
@@ -296,8 +338,9 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 				}
 			}
 		}
-
+		
 		return true;
+		*/
 	};
 
 	
