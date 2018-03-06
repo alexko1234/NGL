@@ -30,6 +30,18 @@ rule "Code Flowcell catch full"
             Logger.debug("Code Flowcell not full " + $atomicTransfertMethods.size());
             $contextValidation.addErrors("instrument",  "error.validationexp.lanefull", $atomicTransfertMethods.size());
         }
-    	
-    	
+end
+
+rule "position catch"
+    @nglSQ( validations )
+	dialect "java"
+	salience 900
+	no-loop
+    when
+	    $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-fc-ordered", $stateCode : state.code, $stateCode == "IP", $instrument:instrument.typeCode, $instrument == "cBot-interne-novaseq", $instrumentProperties:instrumentProperties)
+	    $position: PropertyValue($code:value, $code matches ".*[^AB].*") from $instrumentProperties.get("position")
+	    $contextValidation:ContextValidation()
+    then
+	    Logger.debug("Code position without bad chars");
+	    $contextValidation.addErrors("instrument",	"error.validationexp.codewithbadchar", "position");
 end

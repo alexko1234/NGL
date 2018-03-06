@@ -294,108 +294,175 @@ angular.module('home').controller('GETTubesToFlowcellCtrl',['$scope', '$parse', 
 		}
 	}
 
+	//valeurs par defaut pour XP S4
+	var defValXPs4 = new Map([
+			                  ["finalVolume1",30],
+			                  ["finalVolume",30],
+			                  ["phixConcentration",0.25],
+			                  ["echPhix",30],
+			                  ["NaOHVolume",7],
+			                  ["NaOHConcentration",0.2],
+			                  ["trisHCLVolume",8],
+			                  ["trisHCLConcentration",400000000],
+			                  ["masterEPXVolume",105]
+		                  ]);
+	//valeurs par defaut pour XP S1
+	var defValXPs1 = new Map([
+			                  ["finalVolume1",18],
+			                  ["finalVolume",18],
+			                  ["phixConcentration",0.25],
+			                  ["echPhix",18],
+			                  ["NaOHVolume",4],
+			                  ["NaOHConcentration",0.2],
+			                  ["trisHCLVolume",5],
+			                  ["trisHCLConcentration",400000000],
+			                  ["masterEPXVolume",63]
+		                  ]);
+	//valeurs par defaut pour Standard S4
+	var defValSTs4 = new Map([
+			                  ["finalVolume1",310],
+			                  ["finalVolume",310],
+			                  ["phixConcentration",0.25],
+			                  ["echPhix",310],
+			                  ["NaOHVolume",77],
+			                  ["NaOHConcentration",0.2],
+			                  ["trisHCLVolume",78],
+			                  ["trisHCLConcentration",400000000],
+			                  ["masterEPXVolume",0]
+		                  ]);
+	//valeurs par defaut pour Standard S1
+	var defValSTs1 = new Map([
+			                  ["finalVolume1",85],
+			                  ["finalVolume",85],
+			                  ["phixConcentration",0.25],
+			                  ["echPhix",85],
+			                  ["NaOHVolume",21],
+			                  ["NaOHConcentration",0.2],
+			                  ["trisHCLVolume",21.5],
+			                  ["trisHCLConcentration",400000000],
+			                  ["masterEPXVolume",0]
+		                  ]);
+	
 	
 	/*
 	 * préremplir valeurs par defaut
 	 */
 	var defaultValue = function(){
-		console.log("defaultValue experiment " + JSON.stringify($scope.experiment));
+//		console.log("defaultValue experiment " + JSON.stringify($scope.experiment));
+//		console.log("defaultValue experiment " + JSON.stringify($scope.atmService.data.atm));
 		if($scope.experiment.atomicTransfertMethods == false && $scope.experiment.instrument.typeCode == "cBot-interne-novaseq"){
-			for (var col = 0; col < $scope.experimentType.propertiesDefinitions.length; col++) {
-				if($scope.experiment.instrument.outContainerSupportCategoryCode == "flowcell-4-s4"){
-					switch($scope.experimentType.propertiesDefinitions[col].code){
-						case "finalVolume1":
-							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
-							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],30);
-							break;
-						case "finalVolume":
-							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
-							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],30);
-							break;
-						case "phixConcentration":
-							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
-							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],0.25);
-							break;
-						case "echPhix":
-							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
-							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],31.1);
-							break;
-						case "NaOHVolume":
-							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
-							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],7);
-							break;
-						case "NaOHConcentration":
-							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
-							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],0.2);
-							break;
-						case "trisHCLVolume":
-							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
-							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],8);
-							break;
-						case "trisHCLConcentration":
-							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
-							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],400000000);
-							break;
-						case "masterEPXVolume":
-							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
-							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],105);
-							break;
+//			console.log("defaultValue experiment " + JSON.stringify($scope.experimentType));
+			if(undefined != $scope.experiment.instrumentProperties.workflow){
+				console.log($scope.experiment.instrumentProperties.workflow.value);
+				for (var val = 0; val < $scope.experimentType.propertiesDefinitions.length; val++) {
+					valueName = $scope.experimentType.propertiesDefinitions[val].code;
+					if($scope.experiment.instrumentProperties.workflow.value == "XP" && $scope.experiment.instrument.outContainerSupportCategoryCode == "flowcell-4-s4" && defValXPs4.get(valueName) != undefined){
+						console.log(valueName + " : " + defValXPs4.get(valueName));
+						$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[val],defValXPs4.get(valueName));
+					}else if ($scope.experiment.instrumentProperties.workflow.value == "XP" && $scope.experiment.instrument.outContainerSupportCategoryCode == "flowcell-2-s1" && defValXPs1.get(valueName) != undefined){
+						console.log(valueName + " : " + defValXPs1.get(valueName));
+						$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[val],defValXPs1.get(valueName));
+					}else if($scope.experiment.instrumentProperties.workflow.value == "Standard" && $scope.experiment.instrument.outContainerSupportCategoryCode == "flowcell-4-s4" && defValSTs4.get(valueName) != undefined){
+						console.log(valueName + " : " + defValSTs4.get(valueName));
+						$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[val],defValSTs4.get(valueName));
+					}else if ($scope.experiment.instrumentProperties.workflow.value == "Standard" && $scope.experiment.instrument.outContainerSupportCategoryCode == "flowcell-2-s1" && defValSTs1.get(valueName) != undefined){
+						console.log(valueName + " : " + defValSTs1.get(valueName));
+						$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[val],defValSTs1.get(valueName));
 					}
-				}else if ($scope.experiment.instrument.outContainerSupportCategoryCode == "flowcell-2-s1"){
-					switch($scope.experimentType.propertiesDefinitions[col].code){
-						case "finalVolume1":
-							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
-							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],18);
-							break;
-						case "finalVolume":
-							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
-							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],18);
-							break;
-						case "phixConcentration":
-							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
-							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],0.25);
-							break;
-						case "echPhix":
-							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
-							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],18.7);
-							break;
-						case "NaOHVolume":
-							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
-							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],4);
-							break;
-						case "NaOHConcentration":
-							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
-							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],0.2);
-							break;
-						case "trisHCLVolume":
-							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
-							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],5);
-							break;
-						case "trisHCLConcentration":
-							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
-							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],400000000);
-							break;
-						case "masterEPXVolume":
-							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
-							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],63);
-							break;
-					}
-				}
-			}
-		}
+				} //for
+			} // if workflow
+		} //if "cBot-interne-novaseq"
 	}
 	
 	defaultValue();
 	
+//	var wf ="";
+//	$scope.workflow = function() {
+//		if(undefined != $scope.experiment.instrumentProperties.workflow && wf != $scope.experiment.instrumentProperties.workflow.value){
+//			wf = $scope.experiment.instrumentProperties.workflow.value;
+//			console.log("coucou");
+//			setDefaultValues;//met à jour les valeurs par defaut par rapport au type de la fc et à la workflow A REMPLASSER PAR RECHARGER
+//		}
+//		return wf;
+//	}
+//	wfWach =function(){
+//		console.log("wfWach");
+//		if ($scope.experiment.atomicTransfertMethods == false && $scope.experiment.state.code == "N" && $scope.experiment.instrument.typeCode == "cBot-interne-novaseq"){
+//			$scope.$watch($scope.workflow, console.log("ok"));
+//		}
+//	}
+//	wfWach();
+	
+//	var setDefaultValues = function(){
+//		if(undefined != $scope.experiment.instrumentProperties.workflow){
+//			console.log($scope.experiment.instrumentProperties.workflow.value);
+//			//choisir liste des valeurs à utilisé
+//			if($scope.experiment.instrumentProperties.workflow.value == "XP" && $scope.experiment.instrument.outContainerSupportCategoryCode == "flowcell-4-s4"){
+//				valueToUse = defValXPs4;
+//			}else if ($scope.experiment.instrumentProperties.workflow.value == "XP" && $scope.experiment.instrument.outContainerSupportCategoryCode == "flowcell-2-s1"){
+//				valueToUse = defValXPs1;
+//			}else if($scope.experiment.instrumentProperties.workflow.value == "Standard" && $scope.experiment.instrument.outContainerSupportCategoryCode == "flowcell-4-s4"){
+//				valueToUse = defValSTs4;
+//			}else if ($scope.experiment.instrumentProperties.workflow.value == "Standard" && $scope.experiment.instrument.outContainerSupportCategoryCode == "flowcell-2-s1"){
+//				valueToUse = defValSTs1;
+//			}
+//			//appliquer les valeurs
+//			for(var j = 0 ; j < $scope.experiment.atomicTransfertMethods.length ; j++){
+////				var atm = $scope.experiment.atomicTransfertMethods[j];
+//				var atm = $scope.atmService.data.atm[j];
+////				console.log(JSON.stringify(atm));
+//				for (var i = 0; i < atm.inputContainerUseds.length; i++) {
+////					console.log("experimentProperties 0 : " + JSON.stringify(atm.inputContainerUseds[i].experimentProperties));
+//					for ( var val in atm.inputContainerUseds[i].experimentProperties) {
+//						var value = valueToUse.get(val);
+//						$parse(val).assign(atm.inputContainerUseds[i].experimentProperties, value);
+//						console.log("setDefaultValues " + val + ":" + value);	
+//					} //experimentProperties					
+//					console.log("experimentProperties " + JSON.stringify($scope.atmService.data.atm[j].inputContainerUseds[i].experimentProperties));
+//				} //inputContainerUseds
+//			} //atm
+//			
+//			$scope.atmService.data.updateDatatable();
+////			$scope.atmService.refreshViewFromExperiment($scope.experiment);
+//		} // if workflow
+//	}
+//	
+//	//récupère la bonne valeur de workflow du début
+//	var wf = "";
+//	var setwf = function(){
+//		if(undefined != $scope.experiment.instrumentProperties.workflow){
+//			wf = $scope.experiment.instrumentProperties.workflow.value;
+//		}
+//	}
+//	setwf();
+//	$scope.workflow = function() {
+//		if($scope.experiment.atomicTransfertMethods != undefined && undefined != $scope.experiment.instrumentProperties.workflow && wf != $scope.experiment.instrumentProperties.workflow.value){
+//			wf = $scope.experiment.instrumentProperties.workflow.value;
+//			setDefaultValues();//remet les valeurs par defaut dans les containers
+////			$scope.atmService.data.updateDatatable();
+//			console.log("coucou");
+//		}
+//		return wf;
+//	}
+//	wfWach =function(){
+//		console.log("wfWach");
+//		if ($scope.experiment.state.code != "F" && $scope.experiment.instrument.typeCode == "cBot-interne-novaseq"){
+//			$scope.$watch($scope.workflow, console.log("ok"));
+//		}
+//	}
+//	wfWach();
+	
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save on tubes-to-flowcell");
 		validateProcessProperties($scope.experiment);
-		$scope.atmService.viewToExperiment($scope.experiment);
+		$scope.atmService.viewToExperiment($scope.experiment);;
 		$scope.updateConcentration($scope.experiment);
-		$scope.$emit('childSaved', callbackFunction);
+		$scope.$emit('childSaved', callbackFunction)
 		addReagents();
 	});
 
+	
+	
 	var copyFlowcellCodeToDT = function(datatable){
 		console.log("copyFlowcellCodeToDT");
 		var dataMain = datatable.getData();
@@ -457,8 +524,8 @@ angular.module('home').controller('GETTubesToFlowcellCtrl',['$scope', '$parse', 
 			for(var i=0;i < atm.inputContainerUseds.length;i++){
 				var inputContainerUsed = atm.inputContainerUseds[i];
 				if(inputContainerUsed.experimentProperties && inputContainerUsed.experimentProperties.finalVolume && inputContainerUsed.experimentProperties.phixVolume){
-					concentration = (inputContainerUsed.experimentProperties.finalConcentration1.value /(((inputContainerUsed.experimentProperties.finalVolume.value + inputContainerUsed.experimentProperties.phixVolume.value)/ inputContainerUsed.experimentProperties.finalVolume.value)*(( inputContainerUsed.experimentProperties.echPhix.value + inputContainerUsed.experimentProperties.NaOHVolume.value + inputContainerUsed.experimentProperties.trisHCLVolume.value  +  inputContainerUsed.experimentProperties.masterEPXVolume.value )/ inputContainerUsed.experimentProperties.echPhix.value )))*1000;
-					console.log("Concentration = (" + inputContainerUsed.experimentProperties.finalConcentration1.value + "/(((" + inputContainerUsed.experimentProperties.finalVolume.value + " + " + inputContainerUsed.experimentProperties.phixVolume.value + ")/" + inputContainerUsed.experimentProperties.finalVolume.value +")*((" + inputContainerUsed.experimentProperties.echPhix.value + " + " + inputContainerUsed.experimentProperties.NaOHVolume.value + " + " + inputContainerUsed.experimentProperties.trisHCLVolume.value  + " + " +  inputContainerUsed.experimentProperties.masterEPXVolume.value + ")/" + inputContainerUsed.experimentProperties.echPhix.value + ")))*1000= " + concentration);
+					concentration = (inputContainerUsed.experimentProperties.finalConcentration1.value /(((inputContainerUsed.experimentProperties.finalVolume.value + inputContainerUsed.experimentProperties.phixVolume.value)/ (inputContainerUsed.experimentProperties.finalVolume.value + inputContainerUsed.experimentProperties.phixVolume.value))*( inputContainerUsed.experimentProperties.echPhix.value + inputContainerUsed.experimentProperties.NaOHVolume.value + inputContainerUsed.experimentProperties.trisHCLVolume.value  +  inputContainerUsed.experimentProperties.masterEPXVolume.value )/ inputContainerUsed.experimentProperties.echPhix.value ))*1000;
+					console.log("Concentration = (" + inputContainerUsed.experimentProperties.finalConcentration1.value + "/(((" + inputContainerUsed.experimentProperties.finalVolume.value + " + " + inputContainerUsed.experimentProperties.phixVolume.value + ")/(" + inputContainerUsed.experimentProperties.finalVolume.value + " + " + inputContainerUsed.experimentProperties.phixVolume.value + "))*(" + inputContainerUsed.experimentProperties.echPhix.value + " + " + inputContainerUsed.experimentProperties.NaOHVolume.value + " + " + inputContainerUsed.experimentProperties.trisHCLVolume.value  + " + " +  inputContainerUsed.experimentProperties.masterEPXVolume.value + ")/" + inputContainerUsed.experimentProperties.echPhix.value + "))*1000= " + concentration);
 //					console.log(JSON.stringify(inputContainerUsed.experimentProperties));
 					if (!atm.outputContainerUseds[0].concentration){
 						var setter = $parse("atm.outputContainerUseds[0].concentration.value").assign;
@@ -554,7 +621,6 @@ angular.module('home').controller('GETTubesToFlowcellCtrl',['$scope', '$parse', 
 	
 		
 	$scope.$on('activeEditMode', function(e) {
-		
 		validateProcessProperties($scope.experiment);
 		console.log("call event activeEditMode");
 		$scope.atmService.data.$atmToSingleDatatable.data.selectAll(true);

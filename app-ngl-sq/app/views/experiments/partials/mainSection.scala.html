@@ -120,6 +120,13 @@
 				    </div>
 				</div>
 			    
+			    
+			   <div  ng-repeat="propertyDef in instrumentType.propertiesDefinitions | filter:'Instrument' | orderBy : 'displayOrder'" 
+			   		class="form-group {{propertyDef.required?'required':''}} {{getHasErrorClass('instrumentForm', 'instrumentProperties'+propertyDef.code)}}"
+			   		ng-switch on="propertyDef.valueType">
+						@dynamicPropertyDefinition("instrumentProperties", "updateInstrumentProperty")						
+				</div>	
+				
 				<div class="form-group required  {{getHasErrorClass('instrumentForm', 'instrumentCode')}}" ng-if="(experiment.instrument.typeCode !== undefined &&  experiment.instrument.typeCode !== null && !isOutputATMVoid())">
 					<label class="col-md-6 col-lg-6 control-label">@Messages("experiments.intrumentCategory")</label>
 					<div class="col-md-6 col-lg-6">
@@ -139,12 +146,6 @@
 					</div>
 				</div>
 					
-			    
-			   <div  ng-repeat="propertyDef in instrumentType.propertiesDefinitions | filter:'Instrument' | orderBy : 'displayOrder'" 
-			   		class="form-group {{propertyDef.required?'required':''}} {{getHasErrorClass('instrumentForm', 'instrumentProperties'+propertyDef.code)}}"
-			   		ng-switch on="propertyDef.valueType">
-						@dynamicPropertyDefinition("instrumentProperties", "updateInstrumentProperty")						
-				</div>	
 																												    
 			    </form>
 			    </div>
