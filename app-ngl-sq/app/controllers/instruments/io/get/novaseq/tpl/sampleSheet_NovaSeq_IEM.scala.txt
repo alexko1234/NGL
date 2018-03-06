@@ -14,7 +14,7 @@ Date,@(CsvHelper.getRunDate(e))
 Workflow,GenerateFASTQ
 Application,FASTQ Only
 Assay,PlaGe
-Description,Nothing
+Description,@(e.instrument.typeCode)
 Chemistry,Default
 
 [Reads]

@@ -10,7 +10,7 @@ Date,@(CsvHelper.getRunDate(e))
 Workflow,GenerateFASTQ
 Application,FASTQ Only
 Assay,PlaGe
-Description,Nothing
+Description,@(e.instrument.typeCode)
 Chemistry,@if(tagModel.tagType == "DUAL-INDEX"){amplicon}else{Default}
 ;
 [Reads]
