@@ -110,13 +110,8 @@ object ApplicationBuild extends Build {
 	val nglCommonVersion       = "2.1.0"  + distSuffix
 
 	// IG libraries
-<<<<<<< HEAD
+
   val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.6-2.0.7"
-=======
-  // val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.6-1.5.3-SNAPSHOT"
-  // val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.6-1.5.4-SNAPSHOT"
-  val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.0.10-static-SNAPSHOT"
->>>>>>> master-isoprod-bi-2.1.X
 	val ceaSpring   = "fr.cea.ig"           %% "play-spring-module" % "2.6-1.4.2-SNAPSHOT"
 	val ceaMongo    = "fr.cea.ig"           %% "mongodbplugin"      % "2.6-1.7.4-SNAPSHOT"
   // External libraries versions

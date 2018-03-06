@@ -33,6 +33,15 @@
 				choiceInList:false
 			});
 			
+			columns.push({	property:"bioinformaticParameters.biologicalAnalysis",
+				header: "projects.bioinformaticParameters.biologicalAnalysis",
+				type :"String",
+				filter:"codes:'boolean'",	
+				order:true,
+				edit:false,
+				choiceInList:false
+			});
+			
 			columns.push({	property:"state.code",
 								filter:"codes:'state'",					
 								header: "projects.stateCode",
