@@ -19,7 +19,7 @@ import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.jdbc.support.MetaDataAccessException;
 
 // import fr.cea.ig.play.NGLContext;
-import play.Logger;
+//import play.Logger;
 
 
 /**
@@ -31,6 +31,8 @@ import play.Logger;
  */
 public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(AbstractDAODefault.class);
+	
 	protected String  sqlCommon;
 	protected boolean usedInstitute = false;
 	
@@ -51,9 +53,10 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 	}
 
 	protected String getSqlCommon() throws DAOException {
-		if (null == sqlCommon) {
+		if (sqlCommon == null) {
 			sqlCommon = getSQLSelect();
-			if (usedInstitute) sqlCommon += DAOHelpers.getSQLForInstitute(tableName, "t");
+			if (usedInstitute) 
+				sqlCommon += DAOHelpers.getSQLForInstitute(tableName, "t");
 		}
 		return sqlCommon;
 	}
@@ -94,7 +97,7 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 	public List<T> findAll() throws DAOException {
 		try {
 			String sql = getSqlCommon() + " ORDER by t.code";
-			//Logger.debug(sql);
+			logger.debug(sql);
 			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
 			return this.jdbcTemplate.query(sql, mapper);
 		} catch (DataAccessException e) {
@@ -113,7 +116,7 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 		// if (id == null) throw new DAOIllegalArgumentException("id",id); //("id is mandatory");
 		daoAssertNotNull("id",id);
 		try {
-			String sql = getSqlCommon()+" WHERE t.id=?";
+			String sql = getSqlCommon() + " WHERE t.id=?";
 			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
 			return this.jdbcTemplate.queryForObject(sql, mapper, id);
 		} catch (DataAccessException e) {
@@ -151,7 +154,7 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
 			return this.jdbcTemplate.query(sql, mapper, listToSqlParameters(codes ,"t.code", Types.VARCHAR));
 		} catch (DataAccessException e) {
-			Logger.warn(e.getMessage());
+			logger.warn(e.getMessage());
 			return null;
 		}
 	}

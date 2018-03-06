@@ -22,7 +22,7 @@ import play.api.modules.spring.Spring;
 //public class AnalysisTypeMappingQuery extends MappingSqlQuery<AnalysisType> {
 public class AnalysisTypeMappingQuery extends NGLMappingSqlQuery<AnalysisType> {
 
-	public static final MappingSqlQueryFactory<AnalysisType> factory = (d,s) -> new AnalysisTypeMappingQuery(d,s);
+	public static final MappingSqlQueryFactory<AnalysisType> factory = AnalysisTypeMappingQuery::new;
 	
 //	// This is needed by reflection instanciation.  
 //	public AnalysisTypeMappingQuery() {

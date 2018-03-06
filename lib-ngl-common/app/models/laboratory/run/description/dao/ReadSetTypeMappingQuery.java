@@ -20,7 +20,7 @@ import play.api.modules.spring.Spring;
 //public class ReadSetTypeMappingQuery extends MappingSqlQuery<ReadSetType> {
 public class ReadSetTypeMappingQuery extends NGLMappingSqlQuery<ReadSetType> {
 
-	public static final MappingSqlQueryFactory<ReadSetType> factory = (d,s) -> new ReadSetTypeMappingQuery(d,s);
+	public static final MappingSqlQueryFactory<ReadSetType> factory = ReadSetTypeMappingQuery::new;
 	
 //	// Needed by reflection instanciation.
 //	public ReadSetTypeMappingQuery() {

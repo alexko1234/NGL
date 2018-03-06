@@ -20,7 +20,7 @@ import play.api.modules.spring.Spring;
 //public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType> {
 public class CommonInfoTypeMappingQuery extends NGLMappingSqlQuery<CommonInfoType> {
 
-	public static final MappingSqlQueryFactory<CommonInfoType> factory = (d,s) -> new CommonInfoTypeMappingQuery(d,s);
+	public static final MappingSqlQueryFactory<CommonInfoType> factory = CommonInfoTypeMappingQuery::new;
 	
 //	public CommonInfoTypeMappingQuery(){
 //		super();

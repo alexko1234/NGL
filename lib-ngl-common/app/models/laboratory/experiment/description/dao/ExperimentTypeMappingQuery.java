@@ -26,7 +26,7 @@ import play.api.modules.spring.Spring;
 //public class ExperimentTypeMappingQuery extends MappingSqlQuery<ExperimentType> {
 public class ExperimentTypeMappingQuery extends NGLMappingSqlQuery<ExperimentType> {
 
-	public static final MappingSqlQueryFactory<ExperimentType> factory = (d,s) -> new ExperimentTypeMappingQuery(d,s);
+	public static final MappingSqlQueryFactory<ExperimentType> factory = ExperimentTypeMappingQuery::new;
 	
 //	public ExperimentTypeMappingQuery()
 //	{
@@ -79,7 +79,8 @@ public class ExperimentTypeMappingQuery extends NGLMappingSqlQuery<ExperimentTyp
 		ExperimentCategoryDAO experimentCategoryDAO = Spring.getBeanOfType(ExperimentCategoryDAO.class);
 		ExperimentCategory experimentCategory=null;
 		try {
-			experimentCategory = (ExperimentCategory) experimentCategoryDAO.findById(idExperimentCategory);
+//			experimentCategory = (ExperimentCategory) experimentCategoryDAO.findById(idExperimentCategory);
+			experimentCategory = experimentCategoryDAO.findById(idExperimentCategory);
 		} catch (DAOException e) {
 			throw new SQLException(e);
 		}

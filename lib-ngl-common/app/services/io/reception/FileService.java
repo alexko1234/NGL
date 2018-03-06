@@ -305,27 +305,27 @@ public abstract class FileService {
 	private void updateAbstractFieldConfigurationHeader(AbstractFieldConfiguration afc) {
 		if (ExcelFieldConfiguration.class.isAssignableFrom(afc.getClass())) {
 			updateExcelConfigurationHeader((ExcelFieldConfiguration)afc);
-		} else if(DoubleExcelFieldConfiguration.class.isAssignableFrom(afc.getClass())) {
+		} else if (DoubleExcelFieldConfiguration.class.isAssignableFrom(afc.getClass())) {
 			updateDoubleExcelConfigurationHeader((DoubleExcelFieldConfiguration)afc);
-		} else if(PropertiesFieldConfiguration.class.isAssignableFrom(afc.getClass())) {
+		} else if (PropertiesFieldConfiguration.class.isAssignableFrom(afc.getClass())) {
 			PropertiesFieldConfiguration pfc = (PropertiesFieldConfiguration)afc;
 			Set<String> propertyNames = pfc.configs.keySet();
 			propertyNames.stream().forEach(_pName -> {
 				updateAbstractFieldConfigurationHeader(pfc.configs.get(_pName));
 			});
-		} else if(PropertyValueFieldConfiguration.class.isAssignableFrom(afc.getClass())) {
+		} else if (PropertyValueFieldConfiguration.class.isAssignableFrom(afc.getClass())) {
 			PropertyValueFieldConfiguration pvfc = (PropertyValueFieldConfiguration)afc;
 			updateAbstractFieldConfigurationHeader(pvfc.value);
 			if (pvfc.unit != null)
 				updateAbstractFieldConfigurationHeader(pvfc.unit);
-		} else if(ObjectFieldConfiguration.class.isAssignableFrom(afc.getClass())) {
+		} else if (ObjectFieldConfiguration.class.isAssignableFrom(afc.getClass())) {
 //			@SuppressWarnings("rawtypes")
 			ObjectFieldConfiguration ofc = (ObjectFieldConfiguration)afc;
 			Set<String> propertyNames = ofc.configs.keySet();
 			propertyNames.stream().forEach(_pName ->{
 				updateAbstractFieldConfigurationHeader((AbstractFieldConfiguration) ofc.configs.get(_pName));
 			});
-		} else if(TagExcelFieldConfiguration.class.isAssignableFrom(afc.getClass())) {
+		} else if (TagExcelFieldConfiguration.class.isAssignableFrom(afc.getClass())) {
 			updateTagExcelConfigurationHeader((TagExcelFieldConfiguration)afc);
 		}
 	}

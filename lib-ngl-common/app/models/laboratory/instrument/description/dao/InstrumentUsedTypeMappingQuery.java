@@ -24,7 +24,7 @@ import play.api.modules.spring.Spring;
 //public class InstrumentUsedTypeMappingQuery extends MappingSqlQuery<InstrumentUsedType> {
 public class InstrumentUsedTypeMappingQuery extends NGLMappingSqlQuery<InstrumentUsedType> {
 
-	public static final MappingSqlQueryFactory<InstrumentUsedType> factory = (d,s) -> new InstrumentUsedTypeMappingQuery(d,s);
+	public static final MappingSqlQueryFactory<InstrumentUsedType> factory = InstrumentUsedTypeMappingQuery::new;
 	
 //	public InstrumentUsedTypeMappingQuery()
 //	{

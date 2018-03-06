@@ -21,7 +21,7 @@ import play.api.modules.spring.Spring;
 //public class ProjectTypeMappingQuery extends MappingSqlQuery<ProjectType> {
 public class ProjectTypeMappingQuery extends NGLMappingSqlQuery<ProjectType> {
 
-	public static final MappingSqlQueryFactory<ProjectType> factory = (d,s) -> new ProjectTypeMappingQuery(d,s);
+	public static final MappingSqlQueryFactory<ProjectType> factory = ProjectTypeMappingQuery::new;
 	
 //	public ProjectTypeMappingQuery()
 //	{
@@ -53,9 +53,10 @@ public class ProjectTypeMappingQuery extends NGLMappingSqlQuery<ProjectType> {
 			projectType.setCommonInfoType(commonInfoType);
 			//Get category
 			ProjectCategoryDAO projectCategoryDAO = Spring.getBeanOfType(ProjectCategoryDAO.class);
-			ProjectCategory projectCategory=null;
+			ProjectCategory projectCategory = null;
 			try {
-				projectCategory = (ProjectCategory) projectCategoryDAO.findById(idProjectCategory);
+//				projectCategory = (ProjectCategory) projectCategoryDAO.findById(idProjectCategory);
+				projectCategory = projectCategoryDAO.findById(idProjectCategory);
 			} catch (DAOException e) {
 				throw new SQLException(e);
 			}

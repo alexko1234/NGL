@@ -8,24 +8,30 @@ import models.laboratory.common.description.State;
 import models.laboratory.common.description.StateCategory;
 import models.utils.dao.DAOException;
 import models.utils.dao.MappingSqlQueryFactory;
+import models.utils.dao.NGLMappingSqlQuery;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
-public class StateMappingQuery extends MappingSqlQuery<State> {
+//public class StateMappingQuery extends MappingSqlQuery<State> {
+public class StateMappingQuery extends NGLMappingSqlQuery<State> {
 
-	public static final MappingSqlQueryFactory<State> factory = (d,s) -> new StateMappingQuery(d,s,null);
+	public static final MappingSqlQueryFactory<State> factory = (d,s,ps) -> new StateMappingQuery(d,s,ps);
 	
 //	public StateMappingQuery() {
 //		super();
 //	}
 	
-	public StateMappingQuery(DataSource ds, String sql,SqlParameter sqlParameter) {
-		super(ds,sql);
-		if (sqlParameter != null)
-//			super.declareParameter(sqlParameter);
-			declareParameter(sqlParameter);
-		compile();
+//	public StateMappingQuery(DataSource ds, String sql,SqlParameter sqlParameter) {
+//		super(ds,sql);
+//		if (sqlParameter != null)
+////			super.declareParameter(sqlParameter);
+//			declareParameter(sqlParameter);
+//		compile();
+//	}
+
+	public StateMappingQuery(DataSource ds, String sql, SqlParameter... sqlParameters) {
+		super(ds,sql,sqlParameters);
 	}
 	
 	@Override

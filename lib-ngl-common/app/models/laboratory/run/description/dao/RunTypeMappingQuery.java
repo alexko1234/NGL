@@ -34,7 +34,7 @@ public class RunTypeMappingQuery extends NGLMappingSqlQuery<RunType> {
 //		compile();
 //	}
 	
-	public static final MappingSqlQueryFactory<RunType> factory = (d,s) -> new RunTypeMappingQuery(d,s);
+	public static final MappingSqlQueryFactory<RunType> factory = RunTypeMappingQuery::new;
 	
 	public RunTypeMappingQuery(DataSource ds, String sql, SqlParameter... sqlParameters) {
 		super(ds,sql,sqlParameters);

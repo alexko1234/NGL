@@ -15,28 +15,34 @@ import models.administration.authorisation.User;
 import models.utils.dao.DAOException;
 // import play.Logger;
 import models.utils.dao.MappingSqlQueryFactory;
+import models.utils.dao.NGLMappingSqlQuery;
 
 /**
  * 
  * @author michieli
  *
  */
-public class UserMappingQuery extends MappingSqlQuery<User> {
+//public class UserMappingQuery extends MappingSqlQuery<User> {
+public class UserMappingQuery extends NGLMappingSqlQuery<User> {
 
-	public static final MappingSqlQueryFactory<User> factory = (d,s) -> new UserMappingQuery(d,s,null);
+	public static final MappingSqlQueryFactory<User> factory = (d,s,ps) -> new UserMappingQuery(d,s,ps);
 	
 //	public UserMappingQuery(){
 //		super();
 //	}
 	
-	public UserMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter){
-		super(ds,sql);
-		if (sqlParameter != null)
-//			super.declareParameter(sqlParameter);
-			declareParameter(sqlParameter);
-		compile();
-	}
+//	public UserMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter){
+//		super(ds,sql);
+//		if (sqlParameter != null)
+////			super.declareParameter(sqlParameter);
+//			declareParameter(sqlParameter);
+//		compile();
+//	}
 
+	public UserMappingQuery(DataSource ds, String sql, SqlParameter... sqlParameters) {
+		super(ds,sql,sqlParameters);
+	}
+	
 	@Override
 	protected User mapRow(ResultSet rs, int rowNum) throws SQLException {
 		User user = new User();

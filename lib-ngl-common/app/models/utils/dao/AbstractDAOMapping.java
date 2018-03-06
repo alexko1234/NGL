@@ -86,13 +86,13 @@ public abstract class AbstractDAOMapping<T> extends AbstractDAO<T> {
 //			MappingSqlQuery<T> mapping = classMapping.newInstance();
 //			mapping.setDataSource(dataSource);
 //			mapping.setSql(sql);
-			MappingSqlQuery<T> mapping = classMapping.apply(dataSource,sql);
-			if (sqlParams != null && sqlParams.length > 0) {
-				for (SqlParameter sqlParam: sqlParams) {
-					mapping.declareParameter(sqlParam);
-				}
-			}
-			mapping.compile();
+			MappingSqlQuery<T> mapping = classMapping.apply(dataSource,sql,sqlParams);
+//			if (sqlParams != null && sqlParams.length > 0) {
+//				for (SqlParameter sqlParam: sqlParams) {
+//					mapping.declareParameter(sqlParam);
+//				}
+//			}
+//			mapping.compile();
 			return mapping;
 		} catch (InvalidDataAccessApiUsageException e) {
 			throw new DAOException(e);

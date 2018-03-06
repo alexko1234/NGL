@@ -7,24 +7,30 @@ import javax.sql.DataSource;
 
 import models.laboratory.common.description.Institute;
 import models.utils.dao.MappingSqlQueryFactory;
+import models.utils.dao.NGLMappingSqlQuery;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
-public class InstituteMappingQuery extends MappingSqlQuery<Institute> {
+//public class InstituteMappingQuery extends MappingSqlQuery<Institute> {
+public class InstituteMappingQuery extends NGLMappingSqlQuery<Institute> {
 
-	public static final MappingSqlQueryFactory<Institute> factory = (d,s) -> new InstituteMappingQuery(d,s,null);
+	public static final MappingSqlQueryFactory<Institute> factory = InstituteMappingQuery::new;
 	
 //	public InstituteMappingQuery() {
 //		super();
 //	}
 	
-	public InstituteMappingQuery(DataSource ds, String sql,SqlParameter sqlParameter) {
-		super(ds,sql);
-		if (sqlParameter != null)
-//			super.declareParameter(sqlParameter);
-			declareParameter(sqlParameter);
-		compile();
+//	public InstituteMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
+//		super(ds,sql);
+//		if (sqlParameter != null)
+////			super.declareParameter(sqlParameter);
+//			declareParameter(sqlParameter);
+//		compile();
+//	}
+
+	public InstituteMappingQuery(DataSource ds, String sql, SqlParameter... sqlParameters) {
+		super(ds,sql,sqlParameters);
 	}
 	
 	@Override

@@ -20,7 +20,7 @@ import play.api.modules.spring.Spring;
 //public class TreatmentTypeMappingQuery extends MappingSqlQuery<TreatmentType> {
 public class TreatmentTypeMappingQuery extends NGLMappingSqlQuery<TreatmentType> {
 
-	public static final MappingSqlQueryFactory<TreatmentType> factory = (d,s) -> new TreatmentTypeMappingQuery(d,s);
+	public static final MappingSqlQueryFactory<TreatmentType> factory = TreatmentTypeMappingQuery::new;
 	
 //	// Needed by reflection instanciation.
 //	public TreatmentTypeMappingQuery() {

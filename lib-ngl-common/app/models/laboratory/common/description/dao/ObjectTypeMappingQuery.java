@@ -13,7 +13,7 @@ import org.springframework.jdbc.object.MappingSqlQuery;
 //public class ObjectTypeMappingQuery extends MappingSqlQuery<ObjectType> {
 public class ObjectTypeMappingQuery extends NGLMappingSqlQuery<ObjectType> {
 
-	public static final MappingSqlQueryFactory<ObjectType> factory = (d,s) -> new ObjectTypeMappingQuery(d,s);
+	public static final MappingSqlQueryFactory<ObjectType> factory = ObjectTypeMappingQuery::new;
 	
 //	public ObjectTypeMappingQuery(){
 //		super();

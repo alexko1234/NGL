@@ -8,26 +8,32 @@ import javax.sql.DataSource;
 
 import models.laboratory.instrument.description.Instrument;
 import models.utils.dao.MappingSqlQueryFactory;
+import models.utils.dao.NGLMappingSqlQuery;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.api.modules.spring.Spring;
 
-public class InstrumentMappingQuery extends MappingSqlQuery<Instrument> {
+//public class InstrumentMappingQuery extends MappingSqlQuery<Instrument> {
+public class InstrumentMappingQuery extends NGLMappingSqlQuery<Instrument> {
 
-	public static final MappingSqlQueryFactory<Instrument> factory = (d,s) -> new InstrumentMappingQuery(d,s,null);
+	public static final MappingSqlQueryFactory<Instrument> factory = InstrumentMappingQuery::new;
 	
 //	public InstrumentMappingQuery() {
 //		super();
 //	}
 	
-	public InstrumentMappingQuery(DataSource ds, String sql,SqlParameter sqlParameter) {
-		super(ds,sql);
-		if (sqlParameter != null)
-//			super.declareParameter(sqlParameter);
-			declareParameter(sqlParameter);
-		compile();
+//	public InstrumentMappingQuery(DataSource ds, String sql,SqlParameter sqlParameter) {
+//		super(ds,sql);
+//		if (sqlParameter != null)
+////			super.declareParameter(sqlParameter);
+//			declareParameter(sqlParameter);
+//		compile();
+//	}
+
+	public InstrumentMappingQuery(DataSource ds, String sql, SqlParameter... sqlParameters) {
+		super(ds,sql,sqlParameters);
 	}
 	
 	@Override

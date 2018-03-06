@@ -21,7 +21,7 @@ import play.api.modules.spring.Spring;
 //public class SampleTypeMappingQuery extends MappingSqlQuery<SampleType> {
 public class SampleTypeMappingQuery extends NGLMappingSqlQuery<SampleType> {
 
-	public static final MappingSqlQueryFactory<SampleType> factory = (d,s) -> new SampleTypeMappingQuery(d,s);
+	public static final MappingSqlQueryFactory<SampleType> factory = SampleTypeMappingQuery::new;
 	
 //	public SampleTypeMappingQuery()	{
 ////		super();

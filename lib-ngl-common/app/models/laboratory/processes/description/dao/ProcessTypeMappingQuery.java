@@ -24,7 +24,7 @@ import play.api.modules.spring.Spring;
 //public class ProcessTypeMappingQuery extends MappingSqlQuery<ProcessType> {
 public class ProcessTypeMappingQuery extends NGLMappingSqlQuery<ProcessType> {
 
-	public static final MappingSqlQueryFactory<ProcessType> factory = (d,s) -> new ProcessTypeMappingQuery(d,s);
+	public static final MappingSqlQueryFactory<ProcessType> factory = ProcessTypeMappingQuery::new;
 	
 	boolean lightVersion = false;
 	
@@ -61,7 +61,8 @@ public class ProcessTypeMappingQuery extends NGLMappingSqlQuery<ProcessType> {
 			processType.setCommonInfoType(commonInfoType);
 			//Get category
 			ProcessCategoryDAO processCategoryDAO = Spring.getBeanOfType(ProcessCategoryDAO.class);
-			ProcessCategory processCategory=(ProcessCategory) processCategoryDAO.findById(idProjectCategory);
+//			ProcessCategory processCategory=(ProcessCategory) processCategoryDAO.findById(idProjectCategory);
+			ProcessCategory processCategory = processCategoryDAO.findById(idProjectCategory);
 			processType.category = processCategory;
 			//Get list experimentType
 			if(!lightVersion){

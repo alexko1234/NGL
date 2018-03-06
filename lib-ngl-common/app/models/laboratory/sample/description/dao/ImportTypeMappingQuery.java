@@ -21,7 +21,7 @@ import play.api.modules.spring.Spring;
 //public class ImportTypeMappingQuery extends MappingSqlQuery<ImportType>{
 public class ImportTypeMappingQuery extends NGLMappingSqlQuery<ImportType> {
 
-	public static final MappingSqlQueryFactory<ImportType> factory = (d,s) -> new ImportTypeMappingQuery(d,s);
+	public static final MappingSqlQueryFactory<ImportType> factory = ImportTypeMappingQuery::new;
 	
 //	public ImportTypeMappingQuery()	{
 //		super();

@@ -13,15 +13,17 @@ import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
 import models.utils.dao.DAOException;
 import models.utils.dao.MappingSqlQueryFactory;
+import models.utils.dao.NGLMappingSqlQuery;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.api.modules.spring.Spring;
 
-public class PropertyDefinitionMappingQuery extends MappingSqlQuery<PropertyDefinition> {
+//public class PropertyDefinitionMappingQuery extends MappingSqlQuery<PropertyDefinition> {
+public class PropertyDefinitionMappingQuery extends NGLMappingSqlQuery<PropertyDefinition> {
 
-	public static final MappingSqlQueryFactory<PropertyDefinition> factory = (d,s) -> new PropertyDefinitionMappingQuery(d,s);
+	public static final MappingSqlQueryFactory<PropertyDefinition> factory = (d,s,ps) -> new PropertyDefinitionMappingQuery(d,s,ps);
 	
 	private boolean lightVersion = false;
 	
@@ -30,18 +32,23 @@ public class PropertyDefinitionMappingQuery extends MappingSqlQuery<PropertyDefi
 //		super();
 //	}
 
-	public PropertyDefinitionMappingQuery(DataSource ds, String sql, SqlParameter ... sqlParameters) {
+	public PropertyDefinitionMappingQuery(DataSource ds, String sql, SqlParameter... sqlParameters) {
 		this(ds, sql, false, sqlParameters);
 	}
 	
-	public PropertyDefinitionMappingQuery(DataSource ds, String sql, boolean lightVersion , SqlParameter ... sqlParameters)	{
-		super(ds,sql);
-		for (SqlParameter sqlParameter : sqlParameters) {
-			if (sqlParameter != null)
-//				super.declareParameter(sqlParameter);
-				declareParameter(sqlParameter);
-		}
-		compile();
+//	public PropertyDefinitionMappingQuery(DataSource ds, String sql, boolean lightVersion , SqlParameter ... sqlParameters)	{
+//		super(ds,sql);
+//		for (SqlParameter sqlParameter : sqlParameters) {
+//			if (sqlParameter != null)
+////				super.declareParameter(sqlParameter);
+//				declareParameter(sqlParameter);
+//		}
+//		compile();
+//		this.lightVersion = lightVersion;
+//	}
+
+	public PropertyDefinitionMappingQuery(DataSource ds, String sql, boolean lightVersion , SqlParameter... sqlParameters)	{
+		super(ds, sql, sqlParameters);
 		this.lightVersion = lightVersion;
 	}
 
