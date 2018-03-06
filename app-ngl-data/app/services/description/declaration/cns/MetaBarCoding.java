@@ -362,7 +362,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Amorces", "amplificationPrimers", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content,Level.CODE.Sample), String.class, true, null, 
 				DescriptionFactory.newValues("Fuhrman primer","V9 primer", "16S primer + Fuhrman primer", "ITS2 primer", "ITSintfor2 / ITS-Reverse", "SYM_VAR_5.8S2 / SYM_VAR_REV", 
 						"ITSD / ITS2REV","CP23S primers","18S_V4 primer", "COI primer m1COIintF / jgHCO2198", "Sneed2015 27F / 519Rmodbio",
-						"16SV4V5 Archae","16SV5V6 Prok","18SV1V2 Metazoaire","16SV4 Procaryote","Amp 48-1", "Amp 48-2", "16S primer", "autre"),null, null, null,"single", 2, true, null,null));
+						"16SV4V5 Archae","16SV5V6 Prok","18SV1V2 Metazoaire","16SV4 Procaryote","Amp 48-1", "Amp 48-2", "16S primers", "autre"),null, null, null,"single", 2, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Région ciblée", "targetedRegion", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content,Level.CODE.Sample), String.class, true, null, 
 				DescriptionFactory.newValues("16S_V4V5","18S_V9", "16S_Full Length + 16S_V4V5", "ITS2","CP23S","18S_V4","COI", "16S_V1V2V3",
 						"16S_V5V6","18S_V1V2","16S_V4", "16S_Full Length", "Multi-Amplicons"), null, null, null,"single", 3, true, null,null));
@@ -382,7 +382,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 	
 	private List<PropertyDefinition> getPropertyMetaBarCodingDouble() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
-		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, getBanqueProcessTypeMetaTA(), 
+		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, getBanqueProcessTypeMetaTC(), 
 				null,null,null,"single", 13, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Amorces", "amplificationPrimers", LevelService.getLevels(Level.CODE.Process), String.class, true, null, 
 				DescriptionFactory.newValues("16S primer + Fuhrman primer"), null,null,null,"single", 14, true, null, null));
