@@ -10,25 +10,34 @@ import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.run.description.RunCategory;
 import models.laboratory.run.description.RunType;
 import models.utils.dao.DAOException;
+import models.utils.dao.MappingSqlQueryFactory;
+import models.utils.dao.NGLMappingSqlQuery;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.api.modules.spring.Spring;
 
-public class RunTypeMappingQuery extends MappingSqlQuery<RunType> {
+//public class RunTypeMappingQuery extends MappingSqlQuery<RunType> {
+public class RunTypeMappingQuery extends NGLMappingSqlQuery<RunType> {
 
-	// Needed by reflection instanciation.
-	public RunTypeMappingQuery() {
-//		super();
-	}
+//	// Needed by reflection instanciation.
+//	public RunTypeMappingQuery() {
+////		super();
+//	}
 
-	public RunTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
-		super(ds,sql);
-		if (sqlParameter!=null)
-//			super.declareParameter(sqlParameter);
-			declareParameter(sqlParameter);
-		compile();
+//	public RunTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
+//		super(ds,sql);
+//		if (sqlParameter!=null)
+////			super.declareParameter(sqlParameter);
+//			declareParameter(sqlParameter);
+//		compile();
+//	}
+	
+	public static final MappingSqlQueryFactory<RunType> factory = (d,s) -> new RunTypeMappingQuery(d,s);
+	
+	public RunTypeMappingQuery(DataSource ds, String sql, SqlParameter... sqlParameters) {
+		super(ds,sql,sqlParameters);
 	}
 	
 	@Override

@@ -15,8 +15,13 @@ import play.api.modules.spring.Spring;
 @Repository
 public class ImportTypeDAO extends AbstractDAOCommonInfoType<ImportType> {
 
+//	protected ImportTypeDAO() {
+//		super("import_type", ImportType.class, ImportTypeMappingQuery.class, 
+//			  "SELECT distinct c.id, c.fk_common_info_type, c.fk_import_category ",
+//			  "FROM import_type as c " + sqlCommonInfoType, false);
+//	}
 	protected ImportTypeDAO() {
-		super("import_type", ImportType.class, ImportTypeMappingQuery.class, 
+		super("import_type", ImportType.class, ImportTypeMappingQuery.factory, 
 			  "SELECT distinct c.id, c.fk_common_info_type, c.fk_import_category ",
 			  "FROM import_type as c " + sqlCommonInfoType, false);
 	}

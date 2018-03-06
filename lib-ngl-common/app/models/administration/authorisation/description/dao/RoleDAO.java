@@ -17,10 +17,14 @@ import models.utils.dao.DAOException;
  *
  */
 @Repository
-public class RoleDAO extends AbstractDAOMapping<Role>{
+public class RoleDAO extends AbstractDAOMapping<Role> {
 	
-	protected RoleDAO(){
-		super("role", Role.class, RoleMappingQuery.class,
+//	protected RoleDAO(){
+//		super("role", Role.class, RoleMappingQuery.class,
+//				"SELECT r.id, r.label FROM role as r ", true);
+//	}
+	protected RoleDAO() {
+		super("role", Role.class, RoleMappingQuery.factory,
 				"SELECT r.id, r.label FROM role as r ", true);
 	}
 	

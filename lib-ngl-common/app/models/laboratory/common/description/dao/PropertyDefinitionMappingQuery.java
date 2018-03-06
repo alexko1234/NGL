@@ -12,57 +12,60 @@ import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
 import models.utils.dao.DAOException;
+import models.utils.dao.MappingSqlQueryFactory;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.api.modules.spring.Spring;
 
-public class PropertyDefinitionMappingQuery extends MappingSqlQuery<PropertyDefinition>{
+public class PropertyDefinitionMappingQuery extends MappingSqlQuery<PropertyDefinition> {
 
+	public static final MappingSqlQueryFactory<PropertyDefinition> factory = (d,s) -> new PropertyDefinitionMappingQuery(d,s);
+	
 	private boolean lightVersion = false;
 	
-	public PropertyDefinitionMappingQuery()
-	{
-		super();
-	}
+//	public PropertyDefinitionMappingQuery()
+//	{
+//		super();
+//	}
 
-	public PropertyDefinitionMappingQuery(DataSource ds, String sql, SqlParameter ... sqlParameters){
+	public PropertyDefinitionMappingQuery(DataSource ds, String sql, SqlParameter ... sqlParameters) {
 		this(ds, sql, false, sqlParameters);
 	}
 	
-	public PropertyDefinitionMappingQuery(DataSource ds, String sql, boolean lightVersion , SqlParameter ... sqlParameters)
-	{
+	public PropertyDefinitionMappingQuery(DataSource ds, String sql, boolean lightVersion , SqlParameter ... sqlParameters)	{
 		super(ds,sql);
-		for(SqlParameter sqlParameter : sqlParameters){
-			if(sqlParameter!=null)
-				super.declareParameter(sqlParameter);
+		for (SqlParameter sqlParameter : sqlParameters) {
+			if (sqlParameter != null)
+//				super.declareParameter(sqlParameter);
+				declareParameter(sqlParameter);
 		}
 		compile();
 		this.lightVersion = lightVersion;
 	}
 
 	@Override
-	protected PropertyDefinition mapRow(ResultSet rs, int rowNumber)
-			throws SQLException {
+	protected PropertyDefinition mapRow(ResultSet rs, int rowNumber) throws SQLException {
 		PropertyDefinition propertyDefinition = new PropertyDefinition();
-		if(!this.lightVersion){
-			propertyDefinition.id = rs.getLong("id");
-			propertyDefinition.name = rs.getString("name");
-			propertyDefinition.code = rs.getString("code");
-			propertyDefinition.description = rs.getString("description");
-			propertyDefinition.required = rs.getBoolean("required");
-			propertyDefinition.requiredState=rs.getString("required_state");
-			propertyDefinition.active = rs.getBoolean("active");
-			propertyDefinition.choiceInList = rs.getBoolean("choice_in_list");
-			propertyDefinition.valueType = rs.getString("type");
+//		if (!this.lightVersion) {
+		if (!lightVersion) {
+			propertyDefinition.id            = rs.getLong("id");
+			propertyDefinition.name          = rs.getString("name");
+			propertyDefinition.code          = rs.getString("code");
+			propertyDefinition.description   = rs.getString("description");
+			propertyDefinition.required      = rs.getBoolean("required");
+			propertyDefinition.requiredState = rs.getString("required_state");
+			propertyDefinition.active        = rs.getBoolean("active");
+			propertyDefinition.choiceInList  = rs.getBoolean("choice_in_list");
+			propertyDefinition.valueType     = rs.getString("type");
 			propertyDefinition.displayFormat = rs.getString("display_format");
-			propertyDefinition.displayOrder = rs.getInt("display_order");
-			propertyDefinition.defaultValue = rs.getString("default_value");
+			propertyDefinition.displayOrder  = rs.getInt("display_order");
+			propertyDefinition.defaultValue  = rs.getString("default_value");
 			propertyDefinition.propertyValueType = rs.getString("property_value_type");
-			propertyDefinition.editable=rs.getBoolean("editable");
+			propertyDefinition.editable      = rs.getBoolean("editable");
 			//Add measure category
-			try{
+			try {
 				//Add levels
 				LevelDAO levelDAO=Spring.getBeanOfType(LevelDAO.class);
 				List<Level> levels=levelDAO.findByPropertyDefinitionID(propertyDefinition.id);

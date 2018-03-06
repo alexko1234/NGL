@@ -9,28 +9,30 @@ import javax.sql.DataSource;
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.PropertyDefinition;
+import models.utils.dao.MappingSqlQueryFactory;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.api.modules.spring.Spring;
 
-public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType>{
+public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType> {
 
-	public CommonInfoTypeMappingQuery(){
-		super();
-	}
+	public static final MappingSqlQueryFactory<CommonInfoType> factory = (d,s) -> new CommonInfoTypeMappingQuery(d,s,null);
 	
+//	public CommonInfoTypeMappingQuery(){
+//		super();
+//	}
+//	
 	public CommonInfoTypeMappingQuery(DataSource ds, String sql,SqlParameter sqlParameter){
 		super(ds,sql);
-		if(sqlParameter!=null)
+		if (sqlParameter != null)
 			super.declareParameter(sqlParameter);
 		compile();
 	}
 
 	@Override
-	protected CommonInfoType mapRow(ResultSet rs, int rowNumber)
-			throws SQLException {
+	protected CommonInfoType mapRow(ResultSet rs, int rowNumber) throws SQLException {
 		
 			CommonInfoType commonInfoType = new CommonInfoType();
 			commonInfoType.id = rs.getLong("cId");

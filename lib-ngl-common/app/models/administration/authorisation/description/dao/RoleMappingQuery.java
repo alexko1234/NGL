@@ -12,6 +12,7 @@ import org.springframework.jdbc.object.MappingSqlQuery;
 import models.administration.authorisation.Permission;
 import models.administration.authorisation.Role;
 import models.utils.dao.DAOException;
+import models.utils.dao.MappingSqlQueryFactory;
 
 /**
  * 
@@ -19,12 +20,14 @@ import models.utils.dao.DAOException;
  *
  */
 public class RoleMappingQuery extends MappingSqlQuery<Role>{
+
+	public static final MappingSqlQueryFactory<Role> factory = (d,s) -> new RoleMappingQuery(d,s,null);
 	
-	public RoleMappingQuery(){
-		super();
-	}
+//	public RoleMappingQuery(){
+//		super();
+//	}
 	
-	public RoleMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter){
+	public RoleMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
 		super(ds,sql);
 		if (sqlParameter != null)
 			super.declareParameter(sqlParameter);
@@ -34,9 +37,8 @@ public class RoleMappingQuery extends MappingSqlQuery<Role>{
 	@Override
 	protected Role mapRow(ResultSet rs, int rowNum) throws SQLException {
 		Role role = new Role();
-		role.id = rs.getLong("id");
+		role.id    = rs.getLong("id");
 		role.label = rs.getString("label");
-		
 		return role;
 	}
 

@@ -13,19 +13,23 @@ import org.springframework.stereotype.Repository;
 import play.api.modules.spring.Spring;
 
 @Repository
-public class ProjectTypeDAO extends AbstractDAOCommonInfoType<ProjectType>{
+public class ProjectTypeDAO extends AbstractDAOCommonInfoType<ProjectType> {
 
+//	protected ProjectTypeDAO() {
+//		super("project_type", ProjectType.class, ProjectTypeMappingQuery.class, 
+//				"SELECT distinct c.id, c.fk_common_info_type, c.fk_project_category ",
+//						"FROM project_type as c "+sqlCommonInfoType, false);
+//	}
 	protected ProjectTypeDAO() {
-		super("project_type", ProjectType.class, ProjectTypeMappingQuery.class, 
+		super("project_type", ProjectType.class, ProjectTypeMappingQuery.factory, 
 				"SELECT distinct c.id, c.fk_common_info_type, c.fk_project_category ",
 						"FROM project_type as c "+sqlCommonInfoType, false);
 	}
 
 	@Override
-	public long save(ProjectType projectType) throws DAOException
-	{
+	public long save(ProjectType projectType) throws DAOException {
 		
-		if(null == projectType){
+		if (projectType == null) {
 			throw new DAOException("ProjectType is mandatory");
 		}
 		//Check if category exist

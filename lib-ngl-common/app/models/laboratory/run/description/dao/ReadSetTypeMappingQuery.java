@@ -9,6 +9,7 @@ import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.run.description.ReadSetType;
 import models.utils.dao.DAOException;
+import models.utils.dao.MappingSqlQueryFactory;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
@@ -17,10 +18,12 @@ import play.api.modules.spring.Spring;
 
 public class ReadSetTypeMappingQuery extends MappingSqlQuery<ReadSetType> {
 
-	// Needed by reflection instanciation.
-	public ReadSetTypeMappingQuery() {
-		super();
-	}
+	public static final MappingSqlQueryFactory<ReadSetType> factory = (d,s) -> new ReadSetTypeMappingQuery(d,s,null);
+	
+//	// Needed by reflection instanciation.
+//	public ReadSetTypeMappingQuery() {
+//		super();
+//	}
 
 	public ReadSetTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
 		super(ds,sql);

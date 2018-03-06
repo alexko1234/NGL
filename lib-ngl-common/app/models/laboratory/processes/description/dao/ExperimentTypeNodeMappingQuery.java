@@ -11,24 +11,26 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
 import models.laboratory.processes.description.ExperimentTypeNode;
 import models.utils.dao.DAOException;
+import models.utils.dao.MappingSqlQueryFactory;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.api.modules.spring.Spring;
 
-public class ExperimentTypeNodeMappingQuery  extends MappingSqlQuery<ExperimentTypeNode>{
+public class ExperimentTypeNodeMappingQuery  extends MappingSqlQuery<ExperimentTypeNode> {
 
-	public ExperimentTypeNodeMappingQuery()
-	{
-		super();
-	}
+	public static final MappingSqlQueryFactory<ExperimentTypeNode> factory = (d,s) -> new ExperimentTypeNodeMappingQuery(d,s,null);
 	
-	public ExperimentTypeNodeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)
-	{
+//	public ExperimentTypeNodeMappingQuery() {
+//		super();
+//	}
+	
+	public ExperimentTypeNodeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
 		super(ds,sql);
-		if(sqlParameter!=null)
-			super.declareParameter(sqlParameter);
+		if (sqlParameter != null)
+//			super.declareParameter(sqlParameter);
+			declareParameter(sqlParameter);
 		compile();
 	}
 
@@ -61,13 +63,11 @@ public class ExperimentTypeNodeMappingQuery  extends MappingSqlQuery<ExperimentT
 				}else{
 					throw new DAOException("Bad Satellite "+et.code);
 				}
-			}
-						
+			}				
 			return node;
 		} catch (DAOException e) {
 			throw new SQLException(e);
 		}
-		
 	}
 
 }

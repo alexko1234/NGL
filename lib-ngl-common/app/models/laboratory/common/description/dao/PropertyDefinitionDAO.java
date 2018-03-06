@@ -15,21 +15,28 @@ import models.laboratory.common.description.Value;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
-import play.Logger;
+//import play.Logger;
 import play.api.modules.spring.Spring;
 
 @Repository
 public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition>{
 
+	private static final play.Logger.ALogger logger = play.Logger.of(PropertyDefinitionDAO.class);
+	
+//	protected PropertyDefinitionDAO() {
+//		super("property_definition", PropertyDefinition.class, PropertyDefinitionMappingQuery.class,
+//				"SELECT id,code,name,required,required_state,editable,active,type,display_format,display_order,default_value,description,"
+//						+ "choice_in_list,fk_measure_category, property_value_type,fk_save_measure_unit,fk_display_measure_unit,fk_common_info_type "
+//						+" FROM property_definition as t",true);
+//	}
 	protected PropertyDefinitionDAO() {
-		super("property_definition", PropertyDefinition.class, PropertyDefinitionMappingQuery.class,
+		super("property_definition", PropertyDefinition.class, PropertyDefinitionMappingQuery.factory,
 				"SELECT id,code,name,required,required_state,editable,active,type,display_format,display_order,default_value,description,"
 						+ "choice_in_list,fk_measure_category, property_value_type,fk_save_measure_unit,fk_display_measure_unit,fk_common_info_type "
 						+" FROM property_definition as t",true);
 	}
 
-	public List<PropertyDefinition> findByCommonInfoType(long idCommonInfoType)
-	{
+	public List<PropertyDefinition> findByCommonInfoType(long idCommonInfoType)	{
 		String sql = sqlCommon+" WHERE fk_common_info_type = ? ";
 		PropertyDefinitionMappingQuery propertyDefinitionMappingQuery=new PropertyDefinitionMappingQuery(dataSource, sql, new SqlParameter("fk_common_info_type",Type.LONG));
 		return propertyDefinitionMappingQuery.execute(idCommonInfoType);
@@ -40,8 +47,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		throw new DAOException("Must be inserted with commonInfoType id");
 	}
 
-	public PropertyDefinition findUnique(String code, Level.CODE levelCode){
-
+	public PropertyDefinition findUnique(String code, Level.CODE levelCode) {
 		String sql = 
 				"select pd.code, pd.type, pd.property_value_type, "
 						+ " case when count(distinct pd.choice_in_list) = 1 then pd.choice_in_list"
@@ -56,12 +62,10 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 						+" group by pd.code, pd.type, pd.property_value_type";
 		PropertyDefinitionMappingQuery propertyDefinitionMappingQuery=new PropertyDefinitionMappingQuery(dataSource, sql, true, new SqlParameter("l.code",Types.VARCHAR), new SqlParameter("pd.code",Types.VARCHAR));
 		List<PropertyDefinition> l = propertyDefinitionMappingQuery.execute(levelCode.toString(), code);
-
-
-		if(l.size() == 1){
+		if (l.size() == 1) {
 			return l.get(0);
-		}else{
-			Logger.error("PropertyDefinition findUnique query return more than one result or zero result: "+sql+" / "+code+" / "+levelCode);
+		} else {
+			logger.error("PropertyDefinition findUnique query return more than one result or zero result: "+sql+" / "+code+" / "+levelCode);
 			return null;
 		}		
 	}
@@ -239,7 +243,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		String sqlState = "DELETE FROM value WHERE property_definition_id=?";
 		jdbcTemplate.update(sqlState, propertyDefinition.id);
 		//Delete levels
-		Logger.debug("Delete levels");
+		logger.debug("Delete levels");
 		removePropertyDefinitionLevel(propertyDefinition.id);
 		//Delete property_definition
 		super.remove(propertyDefinition);

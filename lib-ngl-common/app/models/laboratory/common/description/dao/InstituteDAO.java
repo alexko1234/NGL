@@ -14,8 +14,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class InstituteDAO extends AbstractDAOMapping<Institute>{
 
+//	protected InstituteDAO() {
+//		super("institute", Institute.class, InstituteMappingQuery.class,
+//				"SELECT t.id, t.name, t.code FROM institute as t ",
+//				true);
+//	}
 	protected InstituteDAO() {
-		super("institute", Institute.class, InstituteMappingQuery.class,
+		super("institute", Institute.class, InstituteMappingQuery.factory,
 				"SELECT t.id, t.name, t.code FROM institute as t ",
 				true);
 	}

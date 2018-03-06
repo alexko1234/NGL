@@ -21,23 +21,26 @@ import org.springframework.stereotype.Repository;
 import play.api.modules.spring.Spring;
 
 @Repository
-public class SampleTypeDAO extends AbstractDAOCommonInfoType<SampleType>{
+public class SampleTypeDAO extends AbstractDAOCommonInfoType<SampleType> {
 
+//	protected SampleTypeDAO() {
+//		super("sample_type", SampleType.class, SampleTypeMappingQuery.class, 
+//				"SELECT distinct c.id, c.fk_common_info_type, c.fk_sample_category ",
+//				"FROM sample_type as c "+sqlCommonInfoType, false);
+//	}
 	protected SampleTypeDAO() {
-		super("sample_type", SampleType.class, SampleTypeMappingQuery.class, 
+		super("sample_type", SampleType.class, SampleTypeMappingQuery.factory, 
 				"SELECT distinct c.id, c.fk_common_info_type, c.fk_sample_category ",
 				"FROM sample_type as c "+sqlCommonInfoType, false);
 	}
 
 	@Override
 	public long save(SampleType sampleType) throws DAOException	{
-		if (null == sampleType) {
+		if (sampleType == null)
 			throw new DAOException("sampleType is mandatory");
-		}
 		//Check if category exist
-		if(sampleType.category == null || sampleType.category.id == null){
+		if (sampleType.category == null || sampleType.category.id == null)
 			throw new DAOException("SampleCategory is not present !!");
-		}
 		
 		//Add commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);

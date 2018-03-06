@@ -13,26 +13,29 @@ import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
 import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
 import models.utils.dao.DAOException;
+import models.utils.dao.MappingSqlQueryFactory;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.api.modules.spring.Spring;
 
-public class ProcessTypeMappingQuery extends MappingSqlQuery<ProcessType>{
+public class ProcessTypeMappingQuery extends MappingSqlQuery<ProcessType> {
 
+	public static final MappingSqlQueryFactory<ProcessType> factory = (d,s) -> new ProcessTypeMappingQuery(d,s,null);
+	
 	boolean lightVersion = false;
 	
-	public ProcessTypeMappingQuery()
-	{
-		super();
-	}
+//	public ProcessTypeMappingQuery()
+//	{
+//		super();
+//	}
 	
-	public ProcessTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)
-	{
+	public ProcessTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
 		super(ds,sql);
-		if(sqlParameter!=null)
-			super.declareParameter(sqlParameter);
+		if (sqlParameter != null)
+//			super.declareParameter(sqlParameter);
+			declareParameter(sqlParameter);
 		compile();
 	}
 

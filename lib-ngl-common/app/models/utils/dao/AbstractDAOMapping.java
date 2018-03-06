@@ -26,9 +26,17 @@ public abstract class AbstractDAOMapping<T> extends AbstractDAO<T> {
 	// table of class <T> must be named as "t" and "code" field must be unique
 	protected String sqlCommon;
 	
-	protected Class<? extends MappingSqlQuery<T>> classMapping;
+//	protected Class<? extends MappingSqlQuery<T>> classMapping;
+//
+//	protected AbstractDAOMapping(String tableName, Class<T> entityClass, Class<? extends MappingSqlQuery<T>> classMapping, String sqlCommon, boolean useGeneratedKey) {
+//		super(tableName, entityClass, useGeneratedKey);
+//		this.classMapping = classMapping;
+//		this.sqlCommon    = sqlCommon;
+//	}
 
-	protected AbstractDAOMapping(String tableName, Class<T> entityClass, Class<? extends MappingSqlQuery<T>> classMapping, String sqlCommon, boolean useGeneratedKey) {
+	protected MappingSqlQueryFactory<T> classMapping;
+
+	protected AbstractDAOMapping(String tableName, Class<T> entityClass, MappingSqlQueryFactory<T> classMapping, String sqlCommon, boolean useGeneratedKey) {
 		super(tableName, entityClass, useGeneratedKey);
 		this.classMapping = classMapping;
 		this.sqlCommon    = sqlCommon;
@@ -75,9 +83,10 @@ public abstract class AbstractDAOMapping<T> extends AbstractDAO<T> {
 
 	protected MappingSqlQuery<T> initializeMapping(String sql, SqlParameter...sqlParams) throws DAOException {
 		try {
-			MappingSqlQuery<T> mapping = classMapping.newInstance();
-			mapping.setDataSource(dataSource);
-			mapping.setSql(sql);
+//			MappingSqlQuery<T> mapping = classMapping.newInstance();
+//			mapping.setDataSource(dataSource);
+//			mapping.setSql(sql);
+			MappingSqlQuery<T> mapping = classMapping.apply(dataSource,sql);
 			if (sqlParams != null && sqlParams.length > 0) {
 				for (SqlParameter sqlParam: sqlParams) {
 					mapping.declareParameter(sqlParam);
@@ -87,10 +96,10 @@ public abstract class AbstractDAOMapping<T> extends AbstractDAO<T> {
 			return mapping;
 		} catch (InvalidDataAccessApiUsageException e) {
 			throw new DAOException(e);
-		} catch (InstantiationException e) {
-			throw new DAOException(e);
-		} catch (IllegalAccessException e) {
-			throw new DAOException(e);
+//		} catch (InstantiationException e) {
+//			throw new DAOException(e);
+//		} catch (IllegalAccessException e) {
+//			throw new DAOException(e);
 		}
 	}
 	

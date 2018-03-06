@@ -24,8 +24,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class InstrumentDAO extends AbstractDAOMapping<Instrument> {
 
+//	protected InstrumentDAO() {
+//		super("instrument", Instrument.class, InstrumentMappingQuery.class,
+//				"SELECT distinct t.id, t.short_name, t.name, t.code, t.active, t.path, t.fk_instrument_used_type FROM instrument as t "+DAOHelpers.getInstrumentSQLForInstitute("t"),
+//				true);				
+//	}
 	protected InstrumentDAO() {
-		super("instrument", Instrument.class, InstrumentMappingQuery.class,
+		super("instrument", Instrument.class, InstrumentMappingQuery.factory,
 				"SELECT distinct t.id, t.short_name, t.name, t.code, t.active, t.path, t.fk_instrument_used_type FROM instrument as t "+DAOHelpers.getInstrumentSQLForInstitute("t"),
 				true);				
 	}

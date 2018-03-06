@@ -10,23 +10,27 @@ import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
 import models.utils.dao.DAOException;
+import models.utils.dao.MappingSqlQueryFactory;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.api.modules.spring.Spring;
 
-public class ProjectTypeMappingQuery extends MappingSqlQuery<ProjectType>{
+public class ProjectTypeMappingQuery extends MappingSqlQuery<ProjectType> {
 
-	public ProjectTypeMappingQuery()
-	{
-		super();
-	}
-	public ProjectTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)
-	{
+	public static final MappingSqlQueryFactory<ProjectType> factory = (d,s) -> new ProjectTypeMappingQuery(d,s,null);
+	
+//	public ProjectTypeMappingQuery()
+//	{
+//		super();
+//	}
+
+	public ProjectTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
 		super(ds,sql);
-		if(sqlParameter!=null)
-			super.declareParameter(sqlParameter);
+		if (sqlParameter != null)
+//			super.declareParameter(sqlParameter);
+			declareParameter(sqlParameter);
 		compile();
 	}
 	

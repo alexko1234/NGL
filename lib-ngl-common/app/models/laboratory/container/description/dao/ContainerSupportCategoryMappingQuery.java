@@ -8,27 +8,29 @@ import javax.sql.DataSource;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.utils.dao.DAOException;
+import models.utils.dao.MappingSqlQueryFactory;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
-public class ContainerSupportCategoryMappingQuery extends MappingSqlQuery<ContainerSupportCategory>{
+public class ContainerSupportCategoryMappingQuery extends MappingSqlQuery<ContainerSupportCategory> {
 
-	public ContainerSupportCategoryMappingQuery()
-	{
-		super();
-	}
-	public ContainerSupportCategoryMappingQuery(DataSource ds, String sql,SqlParameter sqlParameter)
-	{
+	public static final MappingSqlQueryFactory<ContainerSupportCategory> factory = (d,s) -> new ContainerSupportCategoryMappingQuery(d,s,null);
+	
+//	public ContainerSupportCategoryMappingQuery() {
+//		super();
+//	}
+	
+	public ContainerSupportCategoryMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
 		super(ds,sql);
-		if(sqlParameter!=null)
-			super.declareParameter(sqlParameter);
+		if (sqlParameter != null)
+//			super.declareParameter(sqlParameter);
+			declareParameter(sqlParameter);
 		compile();
 	}
 	
 	@Override
-	protected ContainerSupportCategory mapRow(ResultSet rs, int rowNum)
-			throws SQLException {
+	protected ContainerSupportCategory mapRow(ResultSet rs, int rowNum)	throws SQLException {
 		ContainerSupportCategory containerSupportCategory = new ContainerSupportCategory();
 		containerSupportCategory.id=rs.getLong("id");
 		containerSupportCategory.code=rs.getString("code");

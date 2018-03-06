@@ -14,6 +14,7 @@ import models.administration.authorisation.Role;
 import models.administration.authorisation.User;
 import models.utils.dao.DAOException;
 // import play.Logger;
+import models.utils.dao.MappingSqlQueryFactory;
 
 /**
  * 
@@ -22,14 +23,17 @@ import models.utils.dao.DAOException;
  */
 public class UserMappingQuery extends MappingSqlQuery<User> {
 
-	public UserMappingQuery(){
-		super();
-	}
+	public static final MappingSqlQueryFactory<User> factory = (d,s) -> new UserMappingQuery(d,s,null);
+	
+//	public UserMappingQuery(){
+//		super();
+//	}
 	
 	public UserMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter){
 		super(ds,sql);
-		if(sqlParameter != null)
-			super.declareParameter(sqlParameter);
+		if (sqlParameter != null)
+//			super.declareParameter(sqlParameter);
+			declareParameter(sqlParameter);
 		compile();
 	}
 
@@ -54,7 +58,7 @@ public class UserMappingQuery extends MappingSqlQuery<User> {
 		} catch (DAOException e) {
 			throw new SQLException(e);
 		}
-		
 		return user;
 	}
+	
 }

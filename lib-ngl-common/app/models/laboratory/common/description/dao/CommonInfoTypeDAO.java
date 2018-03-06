@@ -22,21 +22,26 @@ import play.api.modules.spring.Spring;
 @Repository
 public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType> {
 
+//	public CommonInfoTypeDAO() {
+//		super("common_info_type", CommonInfoType.class, CommonInfoTypeMappingQuery.class, 
+//				"SELECT distinct t.id as cId, t.name, t.code as codeSearch, t.display_order as displayOrder, t.active as active, o.id as oId, o.code as codeObject, o.generic "+
+//				"FROM common_info_type as t "+
+//				"JOIN object_type as o ON o.id=t.fk_object_type "+DAOHelpers.getCommonInfoTypeSQLForInstitute("t"), true);
+//				
+//	}
 	public CommonInfoTypeDAO() {
-		super("common_info_type", CommonInfoType.class, CommonInfoTypeMappingQuery.class, 
+		super("common_info_type", CommonInfoType.class, CommonInfoTypeMappingQuery.factory, 
 				"SELECT distinct t.id as cId, t.name, t.code as codeSearch, t.display_order as displayOrder, t.active as active, o.id as oId, o.code as codeObject, o.generic "+
 				"FROM common_info_type as t "+
-				"JOIN object_type as o ON o.id=t.fk_object_type "+DAOHelpers.getCommonInfoTypeSQLForInstitute("t"), true);
-				
+				"JOIN object_type as o ON o.id=t.fk_object_type "+DAOHelpers.getCommonInfoTypeSQLForInstitute("t"), true);			
 	}
 
 	public long save(CommonInfoType cit) throws DAOException {
-		if(null == cit){
+		if (cit == null) 
 			throw new DAOException("CommonInfoType is mandatory");
-		}
 
 		//Check if objectType exist
-		if(cit.objectType == null || cit.objectType.id == null ){
+		if (cit.objectType == null || cit.objectType.id == null) {
 			throw new DAOException("CommonInfoType.objectType is mandatory");
 		}
 		
@@ -200,10 +205,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType> {
 		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql, new SqlParameter("code",Types.VARCHAR));
 		return commonInfoTypeMappingQuery.execute(objectTypeCode.name());
 	}
-	
-	
-	
-	
+		
 	public CommonInfoType findByExperimentTypeId(Long id){
 		String sql = sqlCommon +
 				" JOIN experiment_type et ON et.fk_common_info_type = t.id "+
@@ -211,6 +213,5 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType> {
 		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql, new SqlParameter("id",Types.BIGINT));
 		return commonInfoTypeMappingQuery.findObject(id);
 	}
-
 
 }

@@ -21,11 +21,17 @@ import play.Logger;
 import play.api.modules.spring.Spring;
 
 @Repository
-public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentUsedType>{
+public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentUsedType> {
+	
 	InstrumentDAO instrumentDAO = Spring.getBeanOfType(InstrumentDAO.class);
 	
+//	protected InstrumentUsedTypeDAO() {
+//		super("instrument_used_type", InstrumentUsedType.class, InstrumentUsedTypeMappingQuery.class, 
+//				"SELECT distinct c.id, c.fk_common_info_type, c.fk_instrument_category ",
+//						"FROM instrument_used_type as c "+sqlCommonInfoType, false);
+//	}
 	protected InstrumentUsedTypeDAO() {
-		super("instrument_used_type", InstrumentUsedType.class, InstrumentUsedTypeMappingQuery.class, 
+		super("instrument_used_type", InstrumentUsedType.class, InstrumentUsedTypeMappingQuery.factory, 
 				"SELECT distinct c.id, c.fk_common_info_type, c.fk_instrument_category ",
 						"FROM instrument_used_type as c "+sqlCommonInfoType, false);
 	}

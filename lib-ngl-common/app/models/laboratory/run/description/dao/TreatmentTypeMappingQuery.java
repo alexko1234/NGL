@@ -9,25 +9,34 @@ import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.run.description.TreatmentCategory;
 import models.laboratory.run.description.TreatmentType;
 import models.utils.dao.DAOException;
+import models.utils.dao.MappingSqlQueryFactory;
+import models.utils.dao.NGLMappingSqlQuery;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.api.modules.spring.Spring;
 
-public class TreatmentTypeMappingQuery extends MappingSqlQuery<TreatmentType> {
+//public class TreatmentTypeMappingQuery extends MappingSqlQuery<TreatmentType> {
+public class TreatmentTypeMappingQuery extends NGLMappingSqlQuery<TreatmentType> {
 
-	// Needed by reflection instanciation.
-	public TreatmentTypeMappingQuery() {
-//		super();
-	}
-
-	public TreatmentTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
-		super(ds,sql);
-		if (sqlParameter != null)
-//			super.declareParameter(sqlParameter);
-			declareParameter(sqlParameter);
-		compile();
+	public static final MappingSqlQueryFactory<TreatmentType> factory = (d,s) -> new TreatmentTypeMappingQuery(d,s);
+	
+//	// Needed by reflection instanciation.
+//	public TreatmentTypeMappingQuery() {
+////		super();
+//	}
+//
+//	public TreatmentTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
+//		super(ds,sql);
+//		if (sqlParameter != null)
+////			super.declareParameter(sqlParameter);
+//			declareParameter(sqlParameter);
+//		compile();
+//	}
+	
+	public TreatmentTypeMappingQuery(DataSource ds, String sql, SqlParameter... sqlParameters) {
+		super(ds,sql,sqlParameters);
 	}
 	
 	@Override

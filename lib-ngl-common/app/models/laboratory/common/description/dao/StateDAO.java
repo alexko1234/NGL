@@ -23,14 +23,18 @@ import org.springframework.stereotype.Repository;
 import play.Logger;
 
 @Repository
-public class StateDAO extends AbstractDAOMapping<State>{
+public class StateDAO extends AbstractDAOMapping<State> {
 
+//	protected StateDAO() {
+//		super("state", State.class,StateMappingQuery.class, 
+//				"SELECT t.id, t.name,t.code,t.active,t.position,t.fk_state_category, t.display, t.functionnal_group " +
+//				"FROM state as t ", true);
+//	}
 	protected StateDAO() {
-		super("state", State.class,StateMappingQuery.class, 
+		super("state", State.class,StateMappingQuery.factory, 
 				"SELECT t.id, t.name,t.code,t.active,t.position,t.fk_state_category, t.display, t.functionnal_group " +
 				"FROM state as t ", true);
 	}
-
 	
 	@Override
 	public void remove(State state) throws DAOException	{
@@ -63,11 +67,7 @@ public class StateDAO extends AbstractDAOMapping<State>{
 		return state.id;
 	}
 
-
-	
-	
-	private void insertObjectTypes(List<ObjectType> objectTypes, Long id,
-			boolean deleteBefore) throws DAOException {
+	private void insertObjectTypes(List<ObjectType> objectTypes, Long id, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
 			removeObjectTypes(id);
 		}

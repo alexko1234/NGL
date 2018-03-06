@@ -13,19 +13,23 @@ import org.springframework.stereotype.Repository;
 import play.api.modules.spring.Spring;
 
 @Repository
-public class AnalysisTypeDAO extends AbstractDAOCommonInfoType<AnalysisType>{
+public class AnalysisTypeDAO extends AbstractDAOCommonInfoType<AnalysisType> {
 	
+//	protected AnalysisTypeDAO() {
+//		super("analysis_type", AnalysisType.class, AnalysisTypeMappingQuery.class, 
+//				"SELECT distinct c.id, c.fk_common_info_type ", 
+//						"FROM analysis_type as c "+sqlCommonInfoType, false);
+//	}
 	protected AnalysisTypeDAO() {
-		super("analysis_type", AnalysisType.class, AnalysisTypeMappingQuery.class, 
+		super("analysis_type", AnalysisType.class, AnalysisTypeMappingQuery.factory, 
 				"SELECT distinct c.id, c.fk_common_info_type ", 
 						"FROM analysis_type as c "+sqlCommonInfoType, false);
 	}
 	
 	@Override
 	public long save(AnalysisType analysisType) throws DAOException {
-		if(null == analysisType){
+		if (analysisType == null)
 			throw new DAOException("AnalysisType is mandatory");
-		}
 		
 		//Add commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
@@ -55,5 +59,6 @@ public class AnalysisTypeDAO extends AbstractDAOCommonInfoType<AnalysisType>{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		commonInfoTypeDAO.remove(analysisType);
 	}
+	
 }
 

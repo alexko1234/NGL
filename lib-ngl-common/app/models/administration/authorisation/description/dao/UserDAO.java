@@ -25,8 +25,13 @@ public class UserDAO extends AbstractDAOMapping<User> {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(UserDAO.class);
 	
+//	protected UserDAO() {
+//		super("user", User.class, UserMappingQuery.class,
+//				"SELECT t.id, t.login, t.firstname, t.lastname, t.email, t.technicaluser " +
+//				"FROM user as t ", true);
+//	}
 	protected UserDAO() {
-		super("user", User.class, UserMappingQuery.class,
+		super("user", User.class, UserMappingQuery.factory,
 				"SELECT t.id, t.login, t.firstname, t.lastname, t.email, t.technicaluser " +
 				"FROM user as t ", true);
 	}

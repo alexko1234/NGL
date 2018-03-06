@@ -22,24 +22,26 @@ import org.springframework.stereotype.Repository;
 import play.api.modules.spring.Spring;
 
 @Repository
-public class TreatmentTypeDAO extends AbstractDAOCommonInfoType<TreatmentType>{
+public class TreatmentTypeDAO extends AbstractDAOCommonInfoType<TreatmentType> {
 
+//	protected TreatmentTypeDAO() {
+//		super("treatment_type", TreatmentType.class, TreatmentTypeMappingQuery.class, 
+//				"SELECT distinct c.id, c.names, c.fk_common_info_type, c.fk_treatment_category, c.display_orders ",
+//						"FROM treatment_type as c "+sqlCommonInfoType, false);
+//	}
 	protected TreatmentTypeDAO() {
-		super("treatment_type", TreatmentType.class, TreatmentTypeMappingQuery.class, 
+		super("treatment_type", TreatmentType.class, TreatmentTypeMappingQuery.factory, 
 				"SELECT distinct c.id, c.names, c.fk_common_info_type, c.fk_treatment_category, c.display_orders ",
 						"FROM treatment_type as c "+sqlCommonInfoType, false);
-	}
-	
+	}	
 	
 	@Override
 	public long save(TreatmentType treatmentType) throws DAOException {	
-		if (null == treatmentType) {
+		if (treatmentType == null)
 			throw new DAOException("ProjectType is mandatory");
-		}
 		//Check if category exist
-		if (treatmentType.category == null || treatmentType.category.id == null) {
+		if (treatmentType.category == null || treatmentType.category.id == null)
 			throw new DAOException("TreatmentCategory is not present !!");
-		}
 		//Add commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		treatmentType.id = commonInfoTypeDAO.save(treatmentType);

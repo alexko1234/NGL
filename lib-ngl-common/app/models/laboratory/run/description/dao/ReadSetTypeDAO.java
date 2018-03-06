@@ -13,17 +13,21 @@ import play.api.modules.spring.Spring;
 @Repository
 public class ReadSetTypeDAO extends AbstractDAOCommonInfoType<ReadSetType>{
 
+//	protected ReadSetTypeDAO() {
+//		super("readset_type", ReadSetType.class, ReadSetTypeMappingQuery.class, 
+//				"SELECT distinct c.id, c.fk_common_info_type ", 
+//						"FROM readset_type as c "+sqlCommonInfoType, false);
+//	}
 	protected ReadSetTypeDAO() {
-		super("readset_type", ReadSetType.class, ReadSetTypeMappingQuery.class, 
+		super("readset_type", ReadSetType.class, ReadSetTypeMappingQuery.factory, 
 				"SELECT distinct c.id, c.fk_common_info_type ", 
 						"FROM readset_type as c "+sqlCommonInfoType, false);
 	}
 
 	@Override
 	public long save(ReadSetType readSetType) throws DAOException {
-		if(null == readSetType){
+		if (readSetType == null)
 			throw new DAOException("ReadSetType is mandatory");
-		}
 		
 		//Add commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
