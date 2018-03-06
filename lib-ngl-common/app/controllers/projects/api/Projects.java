@@ -15,6 +15,9 @@ import com.mongodb.BasicDBObject;
 import akka.stream.javadsl.Source;
 import akka.util.ByteString;
 import fr.cea.ig.MongoDBResult.Sort;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.authorization.Authorized;
+import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.mongo.DBObjectConvertor;
 import fr.cea.ig.mongo.DBObjectRestrictor;
 import fr.cea.ig.ngl.APINGLController;
@@ -33,7 +36,7 @@ import play.mvc.Result;
  * Controller around Project object
  *
  */
-// @Controller
+@Historized
 public class Projects extends NGLController implements APINGLController, NGLForms, ProjectAPIHolder, DBObjectRestrictor, DBObjectConvertor {
 
 	private final Form<ProjectsSearchForm> searchForm;
@@ -47,6 +50,8 @@ public class Projects extends NGLController implements APINGLController, NGLForm
 	}
 	
 	@Override
+	@Authenticated
+	@Authorized.Read
 	public Result head(String code) {
 		if(! getProjectAPI().isObjectExist(code)){			
 			return notFound();					
@@ -55,6 +60,8 @@ public class Projects extends NGLController implements APINGLController, NGLForm
 	}
 	
 	@Override
+	@Authenticated
+	@Authorized.Read
 	public Result list() {
 		ProjectsSearchForm form = filledFormQueryString(searchForm, ProjectsSearchForm.class).get();
 		Query q = getQuery(form);
@@ -91,11 +98,15 @@ public class Projects extends NGLController implements APINGLController, NGLForm
 	}
 
 	@Override
+	@Authenticated
+	@Authorized.Read
 	public Result get(String code) {
 		return ok(Json.toJson(getProjectAPI().get(code)));
 	}
 	
 	@Override
+	@Authenticated
+	@Authorized.Write
 	public Result save() {
 		Form<Project> filledForm = getFilledForm(projectForm, Project.class);
 		Project projectInput = filledForm.get();
@@ -117,6 +128,8 @@ public class Projects extends NGLController implements APINGLController, NGLForm
 	}
 	
 	@Override
+	@Authenticated
+	@Authorized.Write
 	public Result update(String code) {
 		Project project = getProjectAPI().get(code);
 		if (project == null) {
