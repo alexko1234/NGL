@@ -282,6 +282,7 @@ public class ProcessServiceGET extends AbstractProcessService {
 
 	private static List<Value> getAnalyseType(){
         List<Value> analyseType = new ArrayList<Value>();
+        analyseType.add(DescriptionFactory.newValue("Amplicon","Amplicon"));
         analyseType.add(DescriptionFactory.newValue("Bisulfite","Bisulfite"));
         analyseType.add(DescriptionFactory.newValue("DNA","DNA"));
         analyseType.add(DescriptionFactory.newValue("DNA-MP","DNA-MP"));

@@ -45,7 +45,7 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 		
 		l.add(newInstrumentCategory("Main","hand"));
 		l.add(newInstrumentCategory("CBot","cbot"));
-		l.add(newInstrumentCategory("XP Workflow","xp-wf"));
+//		l.add(newInstrumentCategory("XP Workflow","xp-wf"));
 		
 		l.add(newInstrumentCategory("Séquenceur Illumina","illumina-sequencer"));
 //		l.add(newInstrumentCategory("Cartographie Optique Opgen","opt-map-opgen"));
@@ -160,7 +160,7 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 				getInstruments(
 				createInstrument("MISEQ", "MiSeq n°1", null, true,"/save/devcrgs/src/NGL_Feuille_route/MISEQ", DescriptionFactory.getInstitutes(Constants.CODE.GET)),
 				createInstrument("MISEQ_2","MiSeq n°2", null, true,"/save/devcrgs/src/NGL_Feuille_route/MISEQ_2", DescriptionFactory.getInstitutes(Constants.CODE.GET)),
-				createInstrument("MISEQ_4","MiSeq n°4 ", null, true,"/save/devcrgs/src/NGL_Feuille_route/MISEQ_4", DescriptionFactory.getInstitutes(Constants.CODE.GET))),
+				createInstrument("MISEQ_4","MiSeq n°4 M01945R", null, true,"/save/devcrgs/src/NGL_Feuille_route/MISEQ_4", DescriptionFactory.getInstitutes(Constants.CODE.GET))),
 				getContainerSupportCategories(new String[]{"flowcell-1"}), null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		

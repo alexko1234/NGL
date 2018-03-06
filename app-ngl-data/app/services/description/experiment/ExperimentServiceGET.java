@@ -630,7 +630,7 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",13));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Concentration dilution souhaitée", "finalConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "15",
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "nM"),MeasureUnit.find.findByCode( "nM"),"single",14));
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "pM"),MeasureUnit.find.findByCode( "pM"),"single",14));
 		propertyDefinitions.add(newPropertiesDefinition("Volume final", "volumeFinal", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "1000",
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",15));
 		
@@ -728,6 +728,7 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 	
 	private static List<Value> getAnalyseType(){
         List<Value> analyseType = new ArrayList<Value>();
+        analyseType.add(DescriptionFactory.newValue("Amplicon","Amplicon"));
         analyseType.add(DescriptionFactory.newValue("Bisulfite","Bisulfite"));
         analyseType.add(DescriptionFactory.newValue("DNA","DNA"));
         analyseType.add(DescriptionFactory.newValue("DNA-MP","DNA-MP"));
@@ -738,6 +739,7 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 
     protected static List<Value> getLibrairieType(){
             List<Value> values = new ArrayList<Value>();
+            values.add(DescriptionFactory.newValue("Amplicon","Amplicon"));
             values.add(DescriptionFactory.newValue("Bisulfite-DNA","Bisulfite-DNA"));
             values.add(DescriptionFactory.newValue("ChIP-Seq","ChIP-Seq"));
             values.add(DescriptionFactory.newValue("DNA","DNA"));

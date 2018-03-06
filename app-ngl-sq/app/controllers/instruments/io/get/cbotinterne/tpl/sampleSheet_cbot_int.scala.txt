@@ -5,7 +5,7 @@
 ;@(OutputHelper.getInstrumentProperty(e,"sequencingProgramType"))
 @for(etm <- e.atomicTransfertMethods.sortWith(_.line < _.line)){
 	@for(c <- etm.inputContainerUseds.sortWith(_.code < _.code)){
-		Commentaires:;@if(c.contents.toList.head.processComments != null && c.contents.toList.head.processComments.size > 0){@(c.contents.toList.head.processComments.get(0).comment);}@for(cn <- containers.find(_.code == c.code)){@(cn.comments.get(0).comment)}
+		Commentaires:;@if(c.contents.toList.head.processComments != null && c.contents.toList.head.processComments.size > 0){@(c.contents.toList.head.processComments.get(0).comment);}@for(cn <- containers.find(_.code == c.code)){@if(cn.comments.size>0){@(cn.comments.get(0).comment)}}
 		;
 		Lane;PROJET;Code Barre;% Phix pour dépôt;Volume final PhiX (µL);Cf dépôt(pM);Vf dépôt (µl);
 		@(etm.line);@***
