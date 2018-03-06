@@ -1,4 +1,4 @@
-package fr.cea.ig.ngl.daoapi;
+package fr.cea.ig.ngl.dao.api;
 
 import java.util.List;
 import java.util.Map;

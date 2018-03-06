@@ -1,9 +1,9 @@
-package fr.cea.ig.ngl.daoapi;
+package fr.cea.ig.ngl.dao.protocols;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import fr.cea.ig.ngl.dao.ProtocolDAO;
+import fr.cea.ig.ngl.dao.api.APIException;
 import models.laboratory.protocol.instance.Protocol;
 import models.utils.dao.DAOException;
 

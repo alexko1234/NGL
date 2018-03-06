@@ -1,9 +1,9 @@
-package fr.cea.ig.ngl.daoapi;
+package fr.cea.ig.ngl.dao.codelabels;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import fr.cea.ig.ngl.dao.CodeLabelDAO;
+import fr.cea.ig.ngl.dao.api.APIException;
 import models.laboratory.common.description.CodeLabel;
 import models.utils.dao.DAOException;
 

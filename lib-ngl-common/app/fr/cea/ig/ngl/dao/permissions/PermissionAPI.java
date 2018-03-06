@@ -1,4 +1,4 @@
-package fr.cea.ig.ngl.daoapi;
+package fr.cea.ig.ngl.dao.permissions;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import javax.inject.Singleton;
 
 import controllers.authorisation.PermissionHelper;
 import fr.cea.ig.authorization.authorizators.UserDAOAuthorizator;
-import fr.cea.ig.ngl.dao.PermissionDAO;
+import fr.cea.ig.ngl.dao.api.APIException;
 import models.administration.authorisation.Permission;
 import models.administration.authorisation.User;
 import models.administration.authorisation.description.dao.UserDAO;
