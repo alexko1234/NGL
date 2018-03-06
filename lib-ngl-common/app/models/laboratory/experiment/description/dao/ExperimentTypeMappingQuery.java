@@ -16,28 +16,35 @@ import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.description.dao.SampleTypeDAO;
 import models.utils.dao.DAOException;
 import models.utils.dao.MappingSqlQueryFactory;
+import models.utils.dao.NGLMappingSqlQuery;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.api.modules.spring.Spring;
 
-public class ExperimentTypeMappingQuery extends MappingSqlQuery<ExperimentType> {
+//public class ExperimentTypeMappingQuery extends MappingSqlQuery<ExperimentType> {
+public class ExperimentTypeMappingQuery extends NGLMappingSqlQuery<ExperimentType> {
 
-	public static final MappingSqlQueryFactory<ExperimentType> factory = (d,s) -> new ExperimentTypeMappingQuery(d,s,null);
+	public static final MappingSqlQueryFactory<ExperimentType> factory = (d,s) -> new ExperimentTypeMappingQuery(d,s);
 	
 //	public ExperimentTypeMappingQuery()
 //	{
 //		super();
 //	}
 	
-	public ExperimentTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)	{
-		super(ds,sql);
-		if (sqlParameter != null)
-//			super.declareParameter(sqlParameter);
-			declareParameter(sqlParameter);
-		compile();
+//	public ExperimentTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)	{
+//		super(ds,sql);
+//		if (sqlParameter != null)
+////			super.declareParameter(sqlParameter);
+//			declareParameter(sqlParameter);
+//		compile();
+//	}
+	
+	public ExperimentTypeMappingQuery(DataSource ds, String sql, SqlParameter... sqlParameters)	{
+		super(ds,sql,sqlParameters);
 	}
+	
 	@Override
 	protected ExperimentType mapRow(ResultSet rs, int rowNumber) throws SQLException {
 		ExperimentType experimentType = new ExperimentType();

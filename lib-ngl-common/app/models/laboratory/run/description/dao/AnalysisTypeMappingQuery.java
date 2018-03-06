@@ -11,6 +11,7 @@ import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.run.description.AnalysisType;
 import models.utils.dao.DAOException;
 import models.utils.dao.MappingSqlQueryFactory;
+import models.utils.dao.NGLMappingSqlQuery;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
@@ -18,9 +19,10 @@ import org.springframework.jdbc.object.MappingSqlQuery;
 import fr.cea.ig.lfw.utils.LazyLambdaSupplier;
 import play.api.modules.spring.Spring;
 
-public class AnalysisTypeMappingQuery extends MappingSqlQuery<AnalysisType> {
+//public class AnalysisTypeMappingQuery extends MappingSqlQuery<AnalysisType> {
+public class AnalysisTypeMappingQuery extends NGLMappingSqlQuery<AnalysisType> {
 
-	public static final MappingSqlQueryFactory<AnalysisType> factory = (d,s) -> new AnalysisTypeMappingQuery(d,s,null);
+	public static final MappingSqlQueryFactory<AnalysisType> factory = (d,s) -> new AnalysisTypeMappingQuery(d,s);
 	
 //	// This is needed by reflection instanciation.  
 //	public AnalysisTypeMappingQuery() {
@@ -28,12 +30,16 @@ public class AnalysisTypeMappingQuery extends MappingSqlQuery<AnalysisType> {
 //	}
 
 //	public AnalysisTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
-	private AnalysisTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
-		super(ds,sql);
-		if (sqlParameter != null)
-//			super.declareParameter(sqlParameter);
-			declareParameter(sqlParameter);
-		compile();
+//	private AnalysisTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
+//		super(ds,sql);
+//		if (sqlParameter != null)
+////			super.declareParameter(sqlParameter);
+//			declareParameter(sqlParameter);
+//		compile();
+//	}
+
+	public AnalysisTypeMappingQuery(DataSource ds, String sql, SqlParameter... sqlParameters) {
+		super(ds,sql,sqlParameters);
 	}
 	
 	@Override

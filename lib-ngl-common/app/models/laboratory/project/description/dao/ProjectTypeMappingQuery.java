@@ -11,27 +11,33 @@ import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
 import models.utils.dao.DAOException;
 import models.utils.dao.MappingSqlQueryFactory;
+import models.utils.dao.NGLMappingSqlQuery;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.api.modules.spring.Spring;
 
-public class ProjectTypeMappingQuery extends MappingSqlQuery<ProjectType> {
+//public class ProjectTypeMappingQuery extends MappingSqlQuery<ProjectType> {
+public class ProjectTypeMappingQuery extends NGLMappingSqlQuery<ProjectType> {
 
-	public static final MappingSqlQueryFactory<ProjectType> factory = (d,s) -> new ProjectTypeMappingQuery(d,s,null);
+	public static final MappingSqlQueryFactory<ProjectType> factory = (d,s) -> new ProjectTypeMappingQuery(d,s);
 	
 //	public ProjectTypeMappingQuery()
 //	{
 //		super();
 //	}
 
-	public ProjectTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
-		super(ds,sql);
-		if (sqlParameter != null)
-//			super.declareParameter(sqlParameter);
-			declareParameter(sqlParameter);
-		compile();
+//	public ProjectTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
+//		super(ds,sql);
+//		if (sqlParameter != null)
+////			super.declareParameter(sqlParameter);
+//			declareParameter(sqlParameter);
+//		compile();
+//	}
+
+	public ProjectTypeMappingQuery(DataSource ds, String sql, SqlParameter... sqlParameters) {
+		super(ds,sql,sqlParameters);
 	}
 	
 	@Override

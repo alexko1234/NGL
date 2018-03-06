@@ -10,25 +10,31 @@ import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.PropertyDefinition;
 import models.utils.dao.MappingSqlQueryFactory;
+import models.utils.dao.NGLMappingSqlQuery;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.api.modules.spring.Spring;
 
-public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType> {
+//public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType> {
+public class CommonInfoTypeMappingQuery extends NGLMappingSqlQuery<CommonInfoType> {
 
-	public static final MappingSqlQueryFactory<CommonInfoType> factory = (d,s) -> new CommonInfoTypeMappingQuery(d,s,null);
+	public static final MappingSqlQueryFactory<CommonInfoType> factory = (d,s) -> new CommonInfoTypeMappingQuery(d,s);
 	
 //	public CommonInfoTypeMappingQuery(){
 //		super();
 //	}
 //	
-	public CommonInfoTypeMappingQuery(DataSource ds, String sql,SqlParameter sqlParameter){
-		super(ds,sql);
-		if (sqlParameter != null)
-			super.declareParameter(sqlParameter);
-		compile();
+//	public CommonInfoTypeMappingQuery(DataSource ds, String sql,SqlParameter sqlParameter){
+//		super(ds,sql);
+//		if (sqlParameter != null)
+//			super.declareParameter(sqlParameter);
+//		compile();
+//	}
+	
+	public CommonInfoTypeMappingQuery(DataSource ds, String sql, SqlParameter... sqlParameters) {
+		super(ds,sql,sqlParameters);
 	}
 
 	@Override

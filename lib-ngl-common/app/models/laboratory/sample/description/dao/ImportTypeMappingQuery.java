@@ -11,26 +11,32 @@ import models.laboratory.sample.description.ImportCategory;
 import models.laboratory.sample.description.ImportType;
 import models.utils.dao.DAOException;
 import models.utils.dao.MappingSqlQueryFactory;
+import models.utils.dao.NGLMappingSqlQuery;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.api.modules.spring.Spring;
 
-public class ImportTypeMappingQuery extends MappingSqlQuery<ImportType>{
+//public class ImportTypeMappingQuery extends MappingSqlQuery<ImportType>{
+public class ImportTypeMappingQuery extends NGLMappingSqlQuery<ImportType> {
 
-	public static final MappingSqlQueryFactory<ImportType> factory = (d,s) -> new ImportTypeMappingQuery(d,s,null);
+	public static final MappingSqlQueryFactory<ImportType> factory = (d,s) -> new ImportTypeMappingQuery(d,s);
 	
 //	public ImportTypeMappingQuery()	{
 //		super();
 //	}
 	
-	public ImportTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)	{
-		super(ds,sql);
-		if (sqlParameter != null)
-//			super.declareParameter(sqlParameter);
-			declareParameter(sqlParameter);
-		compile();
+//	public ImportTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)	{
+//		super(ds,sql);
+//		if (sqlParameter != null)
+////			super.declareParameter(sqlParameter);
+//			declareParameter(sqlParameter);
+//		compile();
+//	}
+
+	public ImportTypeMappingQuery(DataSource ds, String sql, SqlParameter... sqlParameters)	{
+		super(ds,sql,sqlParameters);
 	}
 
 	@Override

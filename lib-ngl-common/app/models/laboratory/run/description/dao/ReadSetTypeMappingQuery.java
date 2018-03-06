@@ -10,27 +10,32 @@ import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.run.description.ReadSetType;
 import models.utils.dao.DAOException;
 import models.utils.dao.MappingSqlQueryFactory;
+import models.utils.dao.NGLMappingSqlQuery;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.api.modules.spring.Spring;
 
-public class ReadSetTypeMappingQuery extends MappingSqlQuery<ReadSetType> {
+//public class ReadSetTypeMappingQuery extends MappingSqlQuery<ReadSetType> {
+public class ReadSetTypeMappingQuery extends NGLMappingSqlQuery<ReadSetType> {
 
-	public static final MappingSqlQueryFactory<ReadSetType> factory = (d,s) -> new ReadSetTypeMappingQuery(d,s,null);
+	public static final MappingSqlQueryFactory<ReadSetType> factory = (d,s) -> new ReadSetTypeMappingQuery(d,s);
 	
 //	// Needed by reflection instanciation.
 //	public ReadSetTypeMappingQuery() {
 //		super();
 //	}
 
-	public ReadSetTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
-		super(ds,sql);
-		if (sqlParameter != null)
-//			super.declareParameter(sqlParameter);
-			declareParameter(sqlParameter);
-		compile();
+//	public ReadSetTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
+//		super(ds,sql);
+//		if (sqlParameter != null)
+////			super.declareParameter(sqlParameter);
+//			declareParameter(sqlParameter);
+//		compile();
+//	}
+	public ReadSetTypeMappingQuery(DataSource ds, String sql, SqlParameter... sqlParameters) {
+		super(ds,sql,sqlParameters);
 	}
 	
 	@Override
