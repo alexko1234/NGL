@@ -190,12 +190,12 @@ public class CommonValidationHelper {
 //		return o;
 		T o = null;
 		try {
-			if(code != "" && null != code && returnObject){
+			if (code != "" && code != null && returnObject) {
 				o = find.findByCode(code);
-				if(o == null){
+				if (o == null) {
 					contextValidation.addErrors(key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
 				}
-			}else if(code != "" && null != code && !find.isCodeExist(code)){
+			} else if (code != "" && code != null && !find.isCodeExist(code)){
 				contextValidation.addErrors(key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
 			}
 		} catch (DAOException e) {

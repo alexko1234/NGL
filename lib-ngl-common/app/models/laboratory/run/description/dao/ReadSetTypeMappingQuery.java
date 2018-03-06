@@ -17,14 +17,16 @@ import play.api.modules.spring.Spring;
 
 public class ReadSetTypeMappingQuery extends MappingSqlQuery<ReadSetType> {
 
-//	public ReadSetTypeMappingQuery() {
-//		super();
-//	}
+	// Needed by reflection instanciation.
+	public ReadSetTypeMappingQuery() {
+		super();
+	}
 
 	public ReadSetTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
 		super(ds,sql);
 		if (sqlParameter != null)
-			super.declareParameter(sqlParameter);
+//			super.declareParameter(sqlParameter);
+			declareParameter(sqlParameter);
 		compile();
 	}
 	

@@ -17,14 +17,16 @@ import play.api.modules.spring.Spring;
 
 public class TreatmentTypeMappingQuery extends MappingSqlQuery<TreatmentType> {
 
-//	public TreatmentTypeMappingQuery() {
+	// Needed by reflection instanciation.
+	public TreatmentTypeMappingQuery() {
 //		super();
-//	}
+	}
 
 	public TreatmentTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
 		super(ds,sql);
 		if (sqlParameter != null)
-			super.declareParameter(sqlParameter);
+//			super.declareParameter(sqlParameter);
+			declareParameter(sqlParameter);
 		compile();
 	}
 	

@@ -40,7 +40,7 @@ public class UserDAO extends AbstractDAOMapping<User> {
 		return initializeMapping(sql).execute();
 	}
 	
-	public boolean isExistUserWithLoginAndPassword(String login, String password){
+	public boolean isExistUserWithLoginAndPassword(String login, String password) {
 		String sql = "SELECT login " +
 				"FROM user WHERE login='" + login + "' AND password='" + password + "'";
 		
@@ -49,12 +49,13 @@ public class UserDAO extends AbstractDAOMapping<User> {
 		parameters.put("password", password);
 		
 		BeanPropertyRowMapper<User> mapper = new BeanPropertyRowMapper<User>(User.class);
-		List<User> us =  this.jdbcTemplate.query(sql, mapper);
+//		List<User> us =  this.jdbcTemplate.query(sql, mapper);
+//		List<User> us = jdbcTemplate.query(sql, mapper);
 		// Would have expected == 1
 		return this.jdbcTemplate.query(sql, mapper).size() > 0;
 	}
 
-	public String  getUserPassword(String login) throws DAOException{
+	public String  getUserPassword(String login) throws DAOException {
 		String sql = "SELECT login , password "+
 				"FROM user WHERE login='"+login+"' ";
 		
@@ -62,7 +63,8 @@ public class UserDAO extends AbstractDAOMapping<User> {
 		parameters.put("login", login);
 		
 		BeanPropertyRowMapper<User> mapper = new BeanPropertyRowMapper<User>(User.class);
-		List<User> users =  this.jdbcTemplate.query(sql, mapper);
+//		List<User> users =  this.jdbcTemplate.query(sql, mapper);
+		List<User> users = jdbcTemplate.query(sql, mapper);
 		if (users != null && users.size() == 1 && users.get(0).password != null) {
 			return users.get(0).password.toString();
 		} else {
@@ -71,13 +73,13 @@ public class UserDAO extends AbstractDAOMapping<User> {
 	}	
 	
 	public boolean isUserActive(String login) throws DAOException {
-		String sql = "SELECT active "+
-				"FROM user WHERE login = '"+login+"' ";
+		String sql = "SELECT active " + "FROM user WHERE login = '" + login + "' ";
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("login", login);
 		BeanPropertyRowMapper<User> mapper = new BeanPropertyRowMapper<User>(User.class);
 		logger.debug("UserDAO - isUserActive : requête SQL : " + sql + "  for " + login);
-		List<User> users =  this.jdbcTemplate.query(sql, mapper, parameters);
+//		List<User> users =  this.jdbcTemplate.query(sql, mapper, parameters);
+		List<User> users = jdbcTemplate.query(sql, mapper, parameters);
 		/*if (users != null && users.size() == 1 ) {
 			return users.get(0).active;
 		}
@@ -85,14 +87,13 @@ public class UserDAO extends AbstractDAOMapping<User> {
 		return users != null && users.size() == 1 && users.get(0).active;
 	}
 	
-	
 	public boolean isUserAccessApplication(String login, String application) {
 		if (!login.equals("") && getUserId(login) != 0) {
 			applicationAccess(login, application);
 			String sql = "SELECT a.label "+
 					"FROM user u, application a, user_application ua WHERE u.login='"+login+"' AND a.code='"+application+"' AND ua.user_id=u.id and ua.application_id=a.id";
 			BeanPropertyRowMapper<User> mapper = new BeanPropertyRowMapper<User>(User.class);
-			return this.jdbcTemplate.query(sql, mapper).size()>0;
+			return this.jdbcTemplate.query(sql, mapper).size() > 0;
 		} else if (!login.equals("")) {
 			createUser(login);
 			applicationAccess(login, application);

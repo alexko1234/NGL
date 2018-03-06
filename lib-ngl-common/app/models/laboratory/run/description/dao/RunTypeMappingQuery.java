@@ -18,14 +18,16 @@ import play.api.modules.spring.Spring;
 
 public class RunTypeMappingQuery extends MappingSqlQuery<RunType> {
 
-//	public RunTypeMappingQuery() {
+	// Needed by reflection instanciation.
+	public RunTypeMappingQuery() {
 //		super();
-//	}
+	}
 
 	public RunTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
 		super(ds,sql);
-		if(sqlParameter!=null)
-			super.declareParameter(sqlParameter);
+		if (sqlParameter!=null)
+//			super.declareParameter(sqlParameter);
+			declareParameter(sqlParameter);
 		compile();
 	}
 	

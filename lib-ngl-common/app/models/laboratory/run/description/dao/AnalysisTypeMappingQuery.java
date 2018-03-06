@@ -17,14 +17,16 @@ import play.api.modules.spring.Spring;
 
 public class AnalysisTypeMappingQuery extends MappingSqlQuery<AnalysisType> {
 
-//	public AnalysisTypeMappingQuery() {
-////		super();
-//	}
+	// This is needed by reflection instanciation.  
+	public AnalysisTypeMappingQuery() {
+//		super();
+	}
 
 	public AnalysisTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
 		super(ds,sql);
-		if(sqlParameter!=null)
-			super.declareParameter(sqlParameter);
+		if (sqlParameter != null)
+//			super.declareParameter(sqlParameter);
+			declareParameter(sqlParameter);
 		compile();
 	}
 	

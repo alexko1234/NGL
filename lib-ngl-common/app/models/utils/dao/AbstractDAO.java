@@ -18,8 +18,8 @@ import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-//import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+// import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 // import fr.cea.ig.play.NGLContext;
@@ -47,8 +47,8 @@ public abstract class AbstractDAO<T> {
 
 	protected String             tableName;
 	protected DataSource         dataSource;
-//	protected SimpleJdbcTemplate jdbcTemplate;
-	protected JdbcTemplate       jdbcTemplate;
+	protected SimpleJdbcTemplate jdbcTemplate;
+//	protected JdbcTemplate       jdbcTemplate;
 	protected SimpleJdbcInsert   jdbcInsert;
 	protected Class<T>           entityClass;
 	
@@ -68,8 +68,8 @@ public abstract class AbstractDAO<T> {
 	@Qualifier("ngl")
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
-//		jdbcTemplate = new SimpleJdbcTemplate(dataSource);   
-		jdbcTemplate = new JdbcTemplate(dataSource);   
+		jdbcTemplate = new SimpleJdbcTemplate(dataSource);   
+//		jdbcTemplate = new JdbcTemplate(dataSource);   
 		if(useGeneratedKey)
 			jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName(tableName).usingGeneratedKeyColumns("id");
 		else
@@ -172,9 +172,13 @@ public abstract class AbstractDAO<T> {
 		});
 	}
 
-	public static long queryForLong(JdbcTemplate t, String sql, Object... args) {
-		Long l = t.queryForObject(sql, Long.class, args);
-		return l == null ? 0 : l.longValue();
+//	public static long queryForLong(JdbcTemplate t, String sql, Object... args) {
+//		Long l = t.queryForObject(sql, Long.class, args);
+//		return l == null ? 0 : l.longValue();
+//	}
+	
+	public static long queryForLong(SimpleJdbcTemplate t, String sql, Object... args) {
+		return t.queryForLong(sql, args);
 	}
 	
 }
