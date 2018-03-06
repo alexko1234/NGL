@@ -92,6 +92,7 @@ public class ContainerMapping extends Mapping<Container> {
 	private String computeCode(Container container) {
 		String code = null;
 		if(container.support != null && container.support.code != null && container.support.line != null && container.support.column != null){
+			// FDS 03/03/2018 verifier que container.support.categoryCode existe bien !!
 			if ( null == ContainerSupportCategory.find.findByCode(container.support.categoryCode)) {
 				contextValidation.addErrors("container.support.categoryCode", ValidationConstants.ERROR_NOTEXISTS_MSG, container.support.categoryCode);
 			} else {
