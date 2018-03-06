@@ -13,16 +13,12 @@ import java.util.TreeMap;
 
 import javax.inject.Singleton;
 
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
 import fr.cea.ig.MongoDBResult.Sort;
-import fr.cea.ig.ngl.dao.api.APIException;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.projects.ProjectAPI;
 import fr.cea.ig.ngl.test.dao.api.factory.TestProjectFactory;
@@ -30,97 +26,160 @@ import models.laboratory.project.instance.Project;
 import play.data.validation.ValidationError;
 import utils.AbstractTests;
 
-@Singleton
-@FixMethodOrder(MethodSorters.NAME_ASCENDING) // NB: Optional because creation and deletion are done by @BeforeClass and @AfterClass methods  
+@Singleton  
 public class ProjectAPITest extends AbstractTests {
-	
+
 	private static final play.Logger.ALogger logger = play.Logger.of(ProjectAPITest.class);
-	
+
 	private static ProjectAPI api;
-	private static TestProjectFactory factory;
-	
+
 	private static final String currentUser = "ngsrg";
-	
-	private static Project createdProject;
-		
-	
+
+	private static final Project PROJECT_REF = TestProjectFactory.project(currentUser);
+
+	private Project createdProject;
+
+
 	@BeforeClass
 	public static void setUpClass() {
 		assertTrue(app.isDev());
 		api = app.injector().instanceOf(ProjectAPI.class);
 		assertNotNull(api);
-		factory = app.injector().instanceOf(TestProjectFactory.class);
-		assertNotNull(factory);
-		
-		// Create Data and check creation process
+	}
+
+
+	/**
+	 * Create required Data for test
+	 */
+	public void setUpData() {
 		try {
-			createdProject = api.create(factory.project, currentUser, new TreeMap<String, List<ValidationError>>());
-			assertNotNull(createdProject);
-			logger.debug("Project ID: " + createdProject._id);
-			assertEquals(factory.project.code, createdProject.code);
+			createdProject = api.create(PROJECT_REF, currentUser, new TreeMap<String, List<ValidationError>>());
 		} catch (APIValidationException e) {
 			logger.error(e.getMessage());
 			logger.error("invalid fields: " + e.getErrors().keySet().toString());
 			logValidationErrors(e);
-			fail(e.getMessage());
+			exit(e.getMessage());
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			exit(e.getMessage());
 		}
 	}
-	
-	@AfterClass
-	public static void tearDownClass() {
-		assertNotNull(api);
-		api.delete(factory.project.code);
+
+	/**
+	 * Delete Data used in test
+	 */
+	public void deleteData() {
+		api.delete(createdProject.code);
+	}
+
+	@Test
+	public void createTest() {
 		try {
-			Project proj = api.get(factory.project.getCode());
-			assertNull(proj);
-		} catch (APIException e) {
+			createdProject = api.create(PROJECT_REF, currentUser, new TreeMap<String, List<ValidationError>>());
+			assertNotNull(createdProject);
+			logger.debug("Project ID: " + createdProject._id);
+			assertEquals(PROJECT_REF.code, createdProject.code);
+			assertEquals(PROJECT_REF.name, createdProject.name);
+			assertEquals(PROJECT_REF.typeCode, createdProject.typeCode);
+			assertEquals(PROJECT_REF.categoryCode, createdProject.categoryCode);
+			assertEquals(PROJECT_REF.description, createdProject.description);
+			assertEquals(PROJECT_REF.umbrellaProjectCode, createdProject.umbrellaProjectCode);
+			assertEquals(PROJECT_REF.lastSampleCode, createdProject.lastSampleCode);
+			assertEquals(PROJECT_REF.nbCharactersInSampleCode, createdProject.nbCharactersInSampleCode);
+			assertEquals(PROJECT_REF.archive, createdProject.archive);
+			assertEquals(PROJECT_REF.state.code, createdProject.state.code);
+			assertEquals(PROJECT_REF.state.user, createdProject.state.user);
+			assertEquals(PROJECT_REF.authorizedUsers, createdProject.authorizedUsers);
+			assertEquals(PROJECT_REF.comments.size(), createdProject.comments.size());
+
+		} catch (APIValidationException e) {
 			logger.error(e.getMessage());
-			fail(e.getMessage());
+			logger.error("invalid fields: " + e.getErrors().keySet().toString());
+			logValidationErrors(e);
+			exit(e.getMessage());
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			exit(e.getMessage());
+		}
+		deleteData();
+	}
+
+	@Test
+	public void deleteTest() {
+		setUpData();
+		try {
+			api.delete(PROJECT_REF.code);
+			Project proj = api.get(PROJECT_REF.getCode());
+			assertNull(proj);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			exit(e.getMessage());
 		}
 	}
 
 	@Test
 	public void getProjectTest() {
+		setUpData();
 		try {
-			Project proj = api.get(factory.project.code);
+			Project proj = api.get(PROJECT_REF.code);
 			assertNotNull(proj);
 			assertEquals(createdProject.get_id(), proj.get_id());
-			assertEquals(factory.project.getCode(), proj.getCode());
-		} catch (APIException e) {
+			assertEquals(PROJECT_REF.getCode(), proj.getCode());
+		} catch (Exception e) {
 			logger.error(e.getMessage());
-			fail(e.getMessage());
+			exit(e.getMessage());
 		}
+		deleteData();
 	}
-	
+
 	@Test
 	public void listProjectTest() {
-		Query query = DBQuery.is("code", factory.project.code);
-		List<Project> projs = api.list(query, "code", Sort.valueOf(0));
-		assertEquals(1, projs.size());
+		setUpData();
+		try {
+			Query query = DBQuery.is("code", PROJECT_REF.code);
+			List<Project> projs = api.list(query, "code", Sort.valueOf(0));
+			assertEquals(1, projs.size());
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			exit(e.getMessage());
+		}
+		deleteData();
 	}
 
 	@Test
 	public void updateTest() {
+		setUpData();
 		try {
-			Project updatedProj = factory.projectArchived;
+			Project updatedProj = TestProjectFactory.projectArchived(currentUser);
 			updatedProj._id = createdProject._id;
 			updatedProj.traceInformation.modifyUser = currentUser;
 			updatedProj.traceInformation.modifyDate = new Date();
-			
-			api.update(factory.project.code, updatedProj, currentUser, new TreeMap<String, List<ValidationError>>());
-			Project proj = api.get(factory.projectArchived.code);
-			assertNotEquals(factory.project.archive, proj.archive);
-			assertEquals(factory.projectArchived.archive, proj.archive);
+
+			api.update(PROJECT_REF.code, updatedProj, currentUser, new TreeMap<String, List<ValidationError>>());
+			Project proj = api.get(TestProjectFactory.projectArchived(currentUser).code);
+			assertNotEquals(PROJECT_REF.archive, proj.archive);
+			assertEquals(TestProjectFactory.projectArchived(currentUser).archive, proj.archive);
 		} catch (APIValidationException e) {
 			logger.error(e.getMessage());
 			logValidationErrors(e);
-			fail(e.getMessage());
-		} catch (APIException e) {
+			exit(e.getMessage());
+		} catch (Exception e) {
 			logger.error(e.getMessage());
-			fail(e.getMessage());
+			exit(e.getMessage());
 		}
+		deleteData();
 	}
-	
+
+
+	/**
+	 * 
+	 * @param message
+	 */
+	private void exit(String message) {
+		deleteData();
+		fail(message);
+	}
+
 	/**
 	 * Log Validation Errors only if logger level is DEBUG or less
 	 * @param e

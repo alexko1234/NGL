@@ -20,7 +20,6 @@ import fr.cea.ig.ngl.dao.api.APIValidationException;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.instance.Project;
-import play.Logger;
 import play.data.validation.ValidationError;
 import validation.ContextValidation;
 
@@ -28,6 +27,7 @@ import validation.ContextValidation;
 public class ProjectAPI {
 
 	private final ProjectDAO dao; 
+	private static final play.Logger.ALogger logger = play.Logger.of(ProjectAPI.class);
 	
 	@Inject
 	public ProjectAPI(ProjectDAO dao) {
@@ -38,7 +38,7 @@ public class ProjectAPI {
 		return dao.all();
 	}
 
-	public Project get(String code) throws APIException {
+	public Project get(String code) {
 		return dao.findByCode(code);
 	}
 	
@@ -77,7 +77,7 @@ public class ProjectAPI {
 		return MongoStreamer.streamUDT(dao.mongoDBFinderWithPagination(query, orderBy, orderSense, pageNumber, numberRecordsPerPage, keys));
 	}
 	
-	public Project create(Project project, String currentUser, Map<String,List<ValidationError>> errors) throws APIValidationException {
+	public Project create(Project project, String currentUser, Map<String,List<ValidationError>> errors) throws APIException, APIValidationException {
 		ContextValidation ctxVal = new ContextValidation(currentUser, errors); 
 		if (project._id == null) { 
 			project.traceInformation = new TraceInformation();
@@ -91,7 +91,7 @@ public class ProjectAPI {
 			project.state.date = new Date();		
 			
 		} else {
-			throw new APIValidationException("use PUT method to update the project");
+			throw new APIException("create method does not update existing objects"); 
 		}
 		
 		ctxVal.setCreationMode();
@@ -118,7 +118,7 @@ public class ProjectAPI {
 			if(input.traceInformation != null){
 				input.traceInformation.modificationStamp(ctxVal, currentUser);
 			}else{
-				Logger.error("traceInformation is null !!");
+				logger.error("traceInformation is null !!");
 			}
 			ctxVal.setUpdateMode();
 			input.validate(ctxVal);

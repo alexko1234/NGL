@@ -3,8 +3,6 @@ package fr.cea.ig.ngl.test.dao.api.factory;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
@@ -13,29 +11,21 @@ import models.laboratory.project.instance.Project;
 
 public class TestProjectFactory {
 	
-	// List of objects for tests
-	// force test dev using final objects 
-	
-	/**
-	 * Use as reference in tests
-	 */
-	public final Project project;
-	/**
-	 * Use as reference in tests
-	 */
-	public final Project projectArchived;
-	
-	@Inject
-	public TestProjectFactory() {
-		project = project("ngsrg");
-		projectArchived = projectArchived("ngsrg");
+	public static Project project(String user) {
+		return project(user, "default-project", "default");
+	}
+
+	public static Project projectArchived(String user) {
+		Project p = project(user);
+		p.archive = true;
+		return p;
 	}
 	
-	private static Project project(String user) {
+	public static Project project(String user, String typeCode, String categoryCode) {
 		Project project = new Project();
 		project.name = "Project Test";
-		project.typeCode = "default-project";
-		project.categoryCode = "default";
+		project.typeCode = typeCode;
+		project.categoryCode = categoryCode;
 		project.description = "description";
 		project.umbrellaProjectCode = null;
 		project.lastSampleCode = "lastSampleCode";
@@ -49,17 +39,10 @@ public class TestProjectFactory {
 		
 		project.traceInformation = traceInformation(user);
 		/* TODO add values to these fields
-		public TraceInformation traceInformation;
 		public Map<String, PropertyValue> properties;
 		*/
 		
 		return project;
-	}
-
-	private static Project projectArchived(String user) {
-		Project p = project(user);
-		p.archive = true;
-		return p;
 	}
 	
 	// Complex field constructors

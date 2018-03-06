@@ -1,53 +1,34 @@
 package controllers.projects.api;
 
-import fr.cea.ig.mongo.DBObjectConvertor;
-import fr.cea.ig.mongo.DBObjectRestrictor;
-// import static play.data.Form.form;
-//import static fr.cea.ig.play.IGGlobals.form;
-import fr.cea.ig.mongo.MongoStreamer;
-import fr.cea.ig.ngl.APINGLController;
-import fr.cea.ig.ngl.NGLApplication;
-import fr.cea.ig.ngl.NGLController;
-import fr.cea.ig.ngl.support.NGLForms;
-import fr.cea.ig.ngl.support.api.ProjectAPIHolder;
-import fr.cea.ig.play.NGLContext;
-import fr.cea.ig.util.Streamer;
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.function.Function;
 
 import javax.inject.Inject;
 
-import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.container.instance.Container;
-import models.laboratory.project.instance.Project;
-import models.utils.InstanceConstants;
-import models.utils.ListObject;
-import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Controller;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
 
 import com.mongodb.BasicDBObject;
 
 import akka.stream.javadsl.Source;
 import akka.util.ByteString;
-import play.Logger;
+import fr.cea.ig.MongoDBResult.Sort;
+import fr.cea.ig.mongo.DBObjectConvertor;
+import fr.cea.ig.mongo.DBObjectRestrictor;
+import fr.cea.ig.ngl.APINGLController;
+import fr.cea.ig.ngl.NGLApplication;
+import fr.cea.ig.ngl.NGLController;
+import fr.cea.ig.ngl.dao.api.APIException;
+import fr.cea.ig.ngl.dao.api.APIValidationException;
+import fr.cea.ig.ngl.support.NGLForms;
+import fr.cea.ig.ngl.support.api.ProjectAPIHolder;
+import fr.cea.ig.util.Streamer;
+import models.laboratory.project.instance.Project;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
-import validation.ContextValidation;
-import views.components.datatable.DatatableResponse;
-import controllers.DocumentController;
-//import fr.cea.ig.MongoDBDatatableResponseChunks;
-import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.MongoDBResult.Sort;
-import fr.cea.ig.lfw.utils.JavascriptGeneration.Codes;
 /**
  * Controller around Project object
  *
@@ -75,7 +56,6 @@ public class Projects extends NGLController implements APINGLController, NGLForm
 	
 	@Override
 	public Result list() {
-		//TODO implement
 		ProjectsSearchForm form = filledFormQueryString(searchForm, ProjectsSearchForm.class).get();
 		Query q = getQuery(form);
 		BasicDBObject keys = getKeys(form);
@@ -112,20 +92,54 @@ public class Projects extends NGLController implements APINGLController, NGLForm
 
 	@Override
 	public Result get(String code) {
-		//TODO implement
-		return null;
+		return ok(Json.toJson(getProjectAPI().get(code)));
 	}
 	
 	@Override
 	public Result save() {
-		//TODO implement
-		return null;
+		Form<Project> filledForm = getFilledForm(projectForm, Project.class);
+		Project projectInput = filledForm.get();
+		try {
+			Project p = getProjectAPI().create(projectInput, getCurrentUser(), filledForm.errors());
+			return ok(Json.toJson(p));
+		} catch (APIValidationException e) {
+			getLogger().error(e.getMessage());
+			if(e.getErrors() != null) {
+				return badRequest(errorsAsJson(e.getErrors()));
+			} else {
+				return badRequest(e.getMessage());
+			}
+		} catch (APIException e) {
+			getLogger().error(e.getMessage());
+			return badRequest("use PUT method to update the project");
+		}
+		
 	}
 	
 	@Override
 	public Result update(String code) {
-		//TODO implement
-		return null;
+		Project project = getProjectAPI().get(code);
+		if (project == null) {
+			return badRequest("Project with code "+ code + " not exist");
+		}
+		Form<Project> filledForm = getFilledForm(projectForm, Project.class);
+		Project projectInput = filledForm.get();
+		
+		try {
+			getProjectAPI().update(code, projectInput, getCurrentUser(), filledForm.errors());
+		} catch (APIValidationException e) {
+			getLogger().error(e.getMessage());
+			if(e.getErrors() != null) {
+				return badRequest(errorsAsJson(e.getErrors()));
+			} else {
+				return badRequest(e.getMessage());
+			}
+		} catch (APIException e) {
+			getLogger().error(e.getMessage());
+			return badRequest(e.getMessage());
+		}
+		
+		return ok(Json.toJson(projectInput));
 	}
 	
 	
@@ -187,39 +201,7 @@ public class Projects extends NGLController implements APINGLController, NGLForm
 	}
 
 
-	public Result list() {
-		Form<ProjectsSearchForm> filledForm = filledFormQueryString(searchForm, ProjectsSearchForm.class);
-		ProjectsSearchForm form = filledForm.get();
-		Query q = getQuery(form);
-		BasicDBObject keys = getKeys(form);
-		if (form.datatable) {			
-			MongoDBResult<Project> results = mongoDBFinder(form, q, keys);			
-			// return ok(new MongoDBDatatableResponseChunks<Project>(results)).as("application/json");
-			//return ok(MongoStreamer.stream(results)).as("application/json");
-			// return ok(MongoStreamer.streamUDT(results)).as("application/json");
-			return MongoStreamer.okStreamUDT(results);
-		} else if(form.list) {
-			keys = new BasicDBObject();
-			keys.put("_id", 0);//Don't need the _id field
-			keys.put("name", 1);
-			keys.put("code", 1);
-			if(null == form.orderBy)form.orderBy = "code";
-			if(null == form.orderSense)form.orderSense = 0;
-			MongoDBResult<Project> results = mongoDBFinder(form, q, keys);			
-			List<Project> projects = results.toList();			
-			return ok(Json.toJson(toListObjects(projects)));
-		} else {
-			if(null == form.orderBy)form.orderBy = "code";
-			if(null == form.orderSense)form.orderSense = 0;
-			MongoDBResult<Project> results = mongoDBFinder(form, q, keys);	
-			List<Project> projects = results.toList();
-			return ok(Json.toJson(projects));
-		}
-	}
 	
-	public Result get(String code) {
-		return ok(Json.toJson(super.getObject(code)));
-	}
 
 	
 
