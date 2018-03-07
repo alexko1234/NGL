@@ -2974,7 +2974,7 @@ directive("udtTbody", function(){
     			    		ngChange = '" udt-change="udtTable.updateColumn(col.property, col.id)"';
 						}else if(filter){
 							ngChange = '" udt-change="udtTable.searchLocal(udtTable.searchTerms)"';
-    			    	}else if(col.defaultValue){
+    			    	}else if(col.defaultValues){
     			    		defaultValueDirective = 'udt-default-value="col"';
     			    	}else if(col.choiceInList){
     			    		defaultValueDirective= " udt-auto-select";
