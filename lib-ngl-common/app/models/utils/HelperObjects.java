@@ -42,6 +42,7 @@ public class HelperObjects<T> {
 //	public <T> T getObject(Class<T> type, String value) {
 	public T getObject(Class<T> type, String value) {
 		T object = null;
+		// TODO: this only checks for direct subclasses of DBObject, use a better test 
 		if (type.getSuperclass().getName().equals(DBObject.class.getName())) {
 			object = (T) new ObjectMongoDBReference(type, value).getObject();
 		} else {

@@ -1,7 +1,5 @@
 package lims.cns.dao;
 
-
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -381,7 +379,8 @@ public class LimsAbandonDAO {
 			String flotseqname = file.fullname.replace("."+file.extension, "");
 			this.jdbcTemplate.update("pc_Fichierlotseq @lseqco=?, @flotseqname=?, @flotseqext=?, "
 					+ "@flotseqascii=?, @tfileco=?, @flabelco=?, @futil=?",
-					lseqco, flotseqname, file.extension, Integer.valueOf((String)file.properties.get("asciiEncoding").value.toString()), tfileco, flabelco, file.usable);
+//					lseqco, flotseqname, file.extension, Integer.valueOf((String)file.properties.get("asciiEncoding").value.toString()), tfileco, flabelco, file.usable);
+					lseqco, flotseqname, file.extension, Integer.valueOf(file.properties.get("asciiEncoding").value.toString()), tfileco, flabelco, file.usable);
 		}
 	}
 

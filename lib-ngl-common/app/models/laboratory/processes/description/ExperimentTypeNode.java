@@ -8,8 +8,12 @@ import models.laboratory.processes.description.dao.ExperimentTypeNodeDAO;
 import models.utils.Model;
 //TODO: fix doc generation that produces an error with the unqualified name
 import models.utils.Model.Finder;
+import models.utils.dao.AbstractDAO;
+import play.api.modules.spring.Spring;
 
 public class ExperimentTypeNode extends Model<ExperimentTypeNode>{
+
+	public static final Finder<ExperimentTypeNode> find = new Finder<ExperimentTypeNode>(ExperimentTypeNodeDAO.class.getName());
 
 	//Possibility to do purification
 	public boolean doPurification = false; // Boolean.FALSE;
@@ -30,7 +34,6 @@ public class ExperimentTypeNode extends Model<ExperimentTypeNode>{
 	public List<ExperimentType> possiblePurificationTypes=new ArrayList<ExperimentType>();
 	public List<ExperimentType> possibleTransferts=new ArrayList<ExperimentType>();
 	
-	public static Finder<ExperimentTypeNode> find = new Finder<ExperimentTypeNode>(ExperimentTypeNodeDAO.class.getName());
 	
 	public ExperimentTypeNode() {
 		super(ExperimentTypeNodeDAO.class.getName());

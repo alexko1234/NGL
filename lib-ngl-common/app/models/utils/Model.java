@@ -20,6 +20,7 @@ public class Model<T> {
 	/**
 	 * Serialization version id.  
 	 */
+	@SuppressWarnings("unused")
 	private static final long serialVersionUID = -3835776102653386895L;
 	
 	public Long id;
@@ -122,10 +123,10 @@ public class Model<T> {
 				throw new DAOException(e);
 			}
 		}
-
-		public String getClassName() {
-			return className;
-		}
+		
+//		public String getClassName() {
+//			return className;
+//		}
 		
 	}
 

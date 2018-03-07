@@ -170,38 +170,35 @@ public abstract class FileService {
 	private String generateSampleCode(Sample sample) {
 		String projectCode = sample.projectCodes.iterator().next();
 
-		if(!lastSampleCodeForProjects.containsKey(projectCode)){
+		if (!lastSampleCodeForProjects.containsKey(projectCode)) {
 			Project project = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, projectCode);
 			lastSampleCodeForProjects.put(projectCode, project);
 		}
 		Project project = lastSampleCodeForProjects.get(projectCode);
-		if(null != project){
+		if (project != null) {
 			project.lastSampleCode = CodeHelper.getInstance().generateSampleCode(project, false);
 			return project.lastSampleCode;
-		}else{
+		} else {
 			return null;
 		}
 	}
+	
 	/*
 	 * compute container code with the support code in case of container.code is null
 	 */
-	private String getContainerCode(ContainerSupport support,
-			Container container) {
+	private String getContainerCode(ContainerSupport support, Container container) {
 		ContainerSupportCategory csc = ContainerSupportCategory.find.findByCode(container.support.categoryCode);
 		String code = null;
-		if(csc.nbLine == 1 && csc.nbColumn == 1){
-			code= support.code;
-		}else if(csc.nbLine > 1 && csc.nbColumn == 1){
+		if (csc.nbLine == 1 && csc.nbColumn == 1) {
+			code = support.code;
+		} else if(csc.nbLine > 1 && csc.nbColumn == 1) {
 			container.support.line = container.support.line.toUpperCase();
-			code=support.code+"_"+container.support.line;
-
-		}else if(csc.nbLine > 1 && csc.nbColumn > 1){
+			code = support.code+"_"+container.support.line;
+		} else if(csc.nbLine > 1 && csc.nbColumn > 1) {
 			container.support.line = container.support.line.toUpperCase();
-			container.support.column = container.support.column.toUpperCase();
-			
-			code=support.code+"_"+container.support.line+container.support.column;
+			container.support.column = container.support.column.toUpperCase();	
+			code = support.code+"_"+container.support.line+container.support.column;
 		}
-
 		return code;
 	}
 
@@ -210,34 +207,29 @@ public abstract class FileService {
 	 */
 	protected void consolidateObjects() {
 		//First consolidate container
-		if(configuration.configs.containsKey(Mapping.Keys.container.toString())){
+		if (configuration.configs.containsKey(Mapping.Keys.container.toString())) {
 			Map<String, DBObject> containers = objects.get(Mapping.Keys.container.toString());
 			containers.values().forEach(c -> {
 				((ContainerMapping)mappings.get(Mapping.Keys.container.toString())).consolidate((Container)c);
-
 			});
 		}
 		//Second consolidate support
-		if(configuration.configs.containsKey(Mapping.Keys.support.toString())){
+		if (configuration.configs.containsKey(Mapping.Keys.support.toString())) {
 			Map<String, DBObject> supports = objects.get(Mapping.Keys.support.toString());
 			supports.values().forEach(c -> {
 				((SupportMapping)mappings.get(Mapping.Keys.support.toString())).consolidate((ContainerSupport)c);
-
 			});
 		}
-
-		
-
-
 	}
+	
 	/**
 	 * Save or update objects in mongodb
 	 */
 	protected void saveObjects() {
 		//First sampe if needed
-		if(Action.save.equals(configuration.action)){
+		if (Action.save.equals(configuration.action)) {
 			contextValidation.setCreationMode();
-		}else{
+		} else {
 			contextValidation.setUpdateMode();
 		}
 		if(saveObjectsForKey(Mapping.Keys.sample.toString())){
@@ -320,7 +312,8 @@ public abstract class FileService {
 				updateAbstractFieldConfigurationHeader(pvfc.unit);
 		} else if (ObjectFieldConfiguration.class.isAssignableFrom(afc.getClass())) {
 //			@SuppressWarnings("rawtypes")
-			ObjectFieldConfiguration ofc = (ObjectFieldConfiguration)afc;
+//			ObjectFieldConfiguration ofc = (ObjectFieldConfiguration)afc;
+			ObjectFieldConfiguration<?> ofc = (ObjectFieldConfiguration<?>)afc;
 			Set<String> propertyNames = ofc.configs.keySet();
 			propertyNames.stream().forEach(_pName ->{
 				updateAbstractFieldConfigurationHeader((AbstractFieldConfiguration) ofc.configs.get(_pName));

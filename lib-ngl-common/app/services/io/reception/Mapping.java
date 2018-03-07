@@ -103,7 +103,7 @@ public abstract class Mapping<T extends DBObject> {
 	 */
 	public abstract void consolidate(T object);
 	
-	public void synchronizeMongoDB(DBObject c){
+	public void synchronizeMongoDB(DBObject c) {
 		if (Action.save.equals(action)) {
 			MongoDBDAO.save(collectionName, c);
 		} else if(Action.update.equals(action)) {
@@ -111,8 +111,8 @@ public abstract class Mapping<T extends DBObject> {
 		}		
 	}
 	
-	public void rollbackInMongoDB(DBObject c){
-		if (Action.save.equals(action) && c._id == null) { //Delete sample and support if already exist !!!!
+	public void rollbackInMongoDB(DBObject c) {
+		if (Action.save.equals(action) && c._id == null) { // Delete sample and support if already exist !!!!
 			MongoDBDAO.deleteByCode(collectionName, c.getClass(), c.code);
 		} else if(Action.update.equals(action)) {
 			//replace by old version of the object
