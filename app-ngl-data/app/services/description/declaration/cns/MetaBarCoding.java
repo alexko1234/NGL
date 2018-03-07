@@ -383,13 +383,13 @@ public class MetaBarCoding extends AbstractDeclaration {
 	private List<PropertyDefinition> getPropertyMetaBarCodingDouble() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
 		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, getBanqueProcessTypeMetaTC(), 
-				null,null,null,"single", 13, true, null, null));
+				null,null,null,"single", 13, true, "TC", null));
 		propertyDefinitions.add(newPropertiesDefinition("Amorces", "amplificationPrimers", LevelService.getLevels(Level.CODE.Process), String.class, true, null, 
-				DescriptionFactory.newValues("16S primer + Fuhrman primer"), null,null,null,"single", 14, true, null, null));
+				DescriptionFactory.newValues("16S primer + Fuhrman primer"), null,null,null,"single", 14, true, "16S primer + Fuhrman primer", null));
 		propertyDefinitions.add(newPropertiesDefinition("Région ciblée", "targetedRegion", LevelService.getLevels(Level.CODE.Process), String.class, true, null,
-				DescriptionFactory.newValues("16S_Full Length + 16S_V4V5"),	null,null,null,"single", 15, true, null, null));
+				DescriptionFactory.newValues("16S_Full Length + 16S_V4V5"),	null,null,null,"single", 15, true, "16S_Full Length + 16S_V4V5", null));
 		propertyDefinitions.add(newPropertiesDefinition("Taille amplicon attendue", "expectedAmpliconSize", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, 
-				DescriptionFactory.newValues("400"),null,null,null,"single", 16, true, null, null));
+				DescriptionFactory.newValues("400"),null,null,null,"single", 16, true, "400", null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
 				null,null,null,"single", 17, true, null, null));

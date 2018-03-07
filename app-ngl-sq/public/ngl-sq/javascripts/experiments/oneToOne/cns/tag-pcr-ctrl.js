@@ -250,13 +250,16 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse','$filter', 'a
 
 		var nestedDetectionBlank1  = $filter('filter')(experiment.atomicTransfertMethods,{inputContainerUseds:{contents:{properties:{tagPcrBlank1SampleCode:{value:'CEB'}}}}});
 		var nestedDetectionBlank2  = $filter('filter')(experiment.atomicTransfertMethods,{inputContainerUseds:{contents:{properties:{tagPcrBlank2SampleCode:{value:'CEB'}}}}});
+		var nestedNonBlanck =  $filter('filter')(experiment.atomicTransfertMethods,{inputContainerUseds:{contents:{properties:{tagPcrBlank2SampleCode:{value:'!CEA'}}}}});
+		nestedNonBlanck =  $filter('filter')(nestedNonBlanck,{inputContainerUseds:{contents:{properties:{tagPcrBlank2SampleCode:{value:'!CAM'}}}}});
+		
 		var isNested = false;
 		if(nestedDetectionBlank1.length > 0 && nestedDetectionBlank2.length > 0){
 			isNested = true;
 		}
 				
 		if(isNested && (nestedDetectionBlank1.length !== nestedDetectionBlank2.length 
-				|| nestedDetectionBlank1.length !== experiment.atomicTransfertMethods.length)){
+				|| nestedDetectionBlank1.length !== nestedNonBlanck.length)){
 			$scope.messages.setError(Messages("Attention problème avec tag-pcr nested, tous les inputs n'ont pas les 2 échantillons témoins"));	
 			return false;
 		}

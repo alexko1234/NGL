@@ -1469,9 +1469,9 @@ public class ExpWorkflowsHelper {
 				newSample.taxonCode=sampleIn.taxonCode;
 				
 				Map<String, PropertyValue> newSampleProperties = getCommonPropertiesForALevel(exp, CODE.Sample);
+				newSampleProperties.putAll(sampleIn.properties);
 				newSampleProperties.putAll(getInputPropertiesForALevel(exp, icu, CODE.Sample));
 				newSampleProperties.putAll(getOutputPropertiesForALevel(exp, ocu, CODE.Sample));
-				newSampleProperties.putAll(sampleIn.properties);
 				newSample.properties=newSampleProperties;
 				
 				newSample.importTypeCode=sampleIn.importTypeCode;
