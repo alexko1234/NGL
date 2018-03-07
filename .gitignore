@@ -18,5 +18,9 @@
 **/app-2.12
 **/test-2.12
 /ejacoby@appdev.genoscope.cns.fr
+<<<<<<< HEAD
 ngl.logs*/*
 /authentication
+=======
+/ngl.logs.dir_IS_UNDEFINED/
+>>>>>>> master-isoprod-sub-2.0.X

@@ -96,7 +96,9 @@ object ApplicationBuild extends Build {
 	val projectsVersion        = "2.2.0"  + distSuffix
 	val reagentsVersion        = "2.1.0"  + distSuffix
 
+
 	val subVersion             = "2.2.0"  + distSuffix
+
 	
 	
 	// val dataVersion            = "2.0.0"  + distSuffix
