@@ -153,10 +153,10 @@ public abstract class Mapping<T extends DBObject> {
 					String code = object.code;
 					object = MongoDBDAO.findByCode(collectionName, type, object.code);	
 					if (errorIsNotFound && object == null) {
-						contextValidation.addErrors("Error", "not found "+type.getSimpleName()+" for code "+code);
+						contextValidation.addErrors("Error", "not found " + type.getSimpleName() + " for code " + code);
 					}
 				} else if (codeConfig.required) {
-					contextValidation.addErrors("Error", "not found "+type.getSimpleName()+" code !!!");
+					contextValidation.addErrors("Error", "not found " + type.getSimpleName() + " code !!!");
 				} else {
 					object = null;
 				}
