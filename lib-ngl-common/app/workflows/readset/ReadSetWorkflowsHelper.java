@@ -83,7 +83,7 @@ public class ReadSetWorkflowsHelper {
 		State state = cloneState(readSet.state, contextValidation.getUser());
 		if (readSet.files != null) {
 			for (File f : readSet.files) {
-				WriteResult<ReadSet, String> r = 
+//				WriteResult<ReadSet, String> r = 
 						MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, 
 								          ReadSet.class, 
 						                  DBQuery.and(DBQuery.is("code", readSet.code), DBQuery.is("files.fullname", f.fullname)),

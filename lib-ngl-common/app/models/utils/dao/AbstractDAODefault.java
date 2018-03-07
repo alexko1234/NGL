@@ -106,7 +106,8 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 	}
 
 	public List<ListObject> findAllForList() {
-		String sql = "SELECT code, name from " + tableName + " ORDER by t.code";
+//		String sql = "SELECT code, name from " + tableName + " ORDER by t.code";
+		String sql = "SELECT code, name from " + tableName + " ORDER by code";
 		BeanPropertyRowMapper<ListObject> mapper = new BeanPropertyRowMapper<ListObject>(ListObject.class);
 		return this.jdbcTemplate.query(sql, mapper);
 	}
@@ -129,7 +130,7 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 		// if (code == null) throw new DAOIllegalArgumentException("code",code); // ("code is mandatory");
 		daoAssertNotNull("code",code);
 		T o = getObjectInCache(code);
-		if (null != o) {
+		if (o != null) {
 			//Logger.debug("find in cache "+entityClass.getCanonicalName() + " : "+code);
 			return o;
 		} else {
@@ -152,7 +153,8 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 		try {
 			String sql = getSqlCommon() + " WHERE t.code in (" + listToParameters(codes) + ")";
 			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
-			return this.jdbcTemplate.query(sql, mapper, listToSqlParameters(codes ,"t.code", Types.VARCHAR));
+//			return this.jdbcTemplate.query(sql, mapper, listToSqlParameters(codes ,"t.code", Types.VARCHAR));
+			return jdbcTemplate.query(sql, mapper, listToSqlParameters(codes ,"t.code", Types.VARCHAR));
 		} catch (DataAccessException e) {
 			logger.warn(e.getMessage());
 			return null;

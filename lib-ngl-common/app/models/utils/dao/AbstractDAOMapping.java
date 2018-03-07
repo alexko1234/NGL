@@ -10,8 +10,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
-import play.Logger;
-
+//import play.Logger;
 
 /*
  * Generic operation DAO with MappingSQL object 
@@ -23,6 +22,8 @@ import play.Logger;
  */
 public abstract class AbstractDAOMapping<T> extends AbstractDAO<T> {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(AbstractDAOMapping.class);
+	
 	// table of class <T> must be named as "t" and "code" field must be unique
 	protected String sqlCommon;
 	
@@ -72,11 +73,12 @@ public abstract class AbstractDAOMapping<T> extends AbstractDAO<T> {
 		if (codes == null)
 			throw new DAOException("codes is mandatory");
 		try {
-			String sql =sqlCommon+" WHERE t.code in ("+listToParameters(codes)+")";
-			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
-			return initializeMapping(sql, listToSqlParameters(codes ,"t.code", Types.VARCHAR)).execute(codes.toArray( new String[0]));			
+			String sql = sqlCommon + " WHERE t.code in (" + listToParameters(codes) + ")";
+//			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
+//			return initializeMapping(sql, listToSqlParameters(codes ,"t.code", Types.VARCHAR)).execute(codes.toArray( new String[0]));			
+			return initializeMapping(sql, listToSqlParameters(codes ,"t.code", Types.VARCHAR)).execute(codes.toArray(new Object[codes.size()]));			
 		} catch (DataAccessException e) {
-			Logger.warn(e.getMessage());
+			logger.warn(e.getMessage());
 			return null;
 		}
 	}

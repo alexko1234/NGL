@@ -115,11 +115,10 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 
 	}
 
-
 	@Override
-	public void update(ExperimentType experimentType) throws DAOException
-	{
-		ExperimentType expTypeDB = findById(experimentType.id);
+	public void update(ExperimentType experimentType) throws DAOException {
+//		ExperimentType expTypeDB = 
+				findById(experimentType.id);
 		//Add list instruments
 		insertInstrumentUsedTypes(experimentType.instrumentUsedTypes, experimentType.id, true);
 		insertSampleTypes(experimentType.sampleTypes, experimentType.id, true);

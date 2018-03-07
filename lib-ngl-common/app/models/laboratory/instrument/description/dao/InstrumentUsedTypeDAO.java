@@ -17,11 +17,13 @@ import org.springframework.asm.Type;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
-import play.Logger;
+//import play.Logger;
 import play.api.modules.spring.Spring;
 
 @Repository
 public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentUsedType> {
+
+	private static final play.Logger.ALogger logger = play.Logger.of(InstrumentUsedTypeDAO.class);
 	
 	InstrumentDAO instrumentDAO = Spring.getBeanOfType(InstrumentDAO.class);
 	
@@ -117,7 +119,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 		if(containerSupportCategories!=null && containerSupportCategories.size()>0){
 			String sql = "INSERT INTO instrument_ut_out_container_support_cat (fk_instrument_used_type,fk_container_support_category) VALUES(?,?)";
 			for(ContainerSupportCategory containerSupportCategory:containerSupportCategories){
-				Logger.debug("Out container support type save "+containerSupportCategory);
+				logger.debug("Out container support type save "+containerSupportCategory);
 				if(containerSupportCategory == null || containerSupportCategory.id == null ){
 					throw new DAOException("containerSupportCategory is mandatory");
 				}
@@ -172,13 +174,13 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 		if(deleteBefore){
 			deleteFKFromInstruments(instrumentUsedType.id);
 		}		
-		if(instruments!=null && instruments.size()>0){
-			for(Instrument instrument : instruments){
-				if(!instrumentDAO.isCodeExist(instrument.code)){
-					Logger.debug("create new instrument : "+instrument.code);
+		if (instruments != null && instruments.size() > 0){
+			for (Instrument instrument : instruments) {
+				if (!instrumentDAO.isCodeExist(instrument.code)) {
+					logger.debug("create new instrument : "+instrument.code);
 					instrument.instrumentUsedType = instrumentUsedType;
 					instrumentDAO.save(instrument);
-				}else{
+				} else {
 					instrumentDAO.updateByCode(instrument);
 					updateFKInstrumentUsedType(instrument.code, instrumentUsedType.id);
 				}
@@ -191,17 +193,15 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 		jdbcTemplate.update(sqlInst, id, code);
 	}
 
-	private void removeInstruments(List<Instrument> instruments) {
-		for(Instrument instrument : instruments){
-			instrumentDAO.remove(instrument);
-		}
-		
-	}
+//	private void removeInstruments(List<Instrument> instruments) {
+//		for(Instrument instrument : instruments){
+//			instrumentDAO.remove(instrument);
+//		}
+//	}
 
 	private void deleteFKFromInstruments(Long id) {
 		String sqlInst = "update instrument set fk_instrument_used_type=null WHERE fk_instrument_used_type=?";
 		jdbcTemplate.update(sqlInst, id);
 	}
 
-	
 }

@@ -295,7 +295,7 @@ public class SampleAPI extends CRUDAPI<Sample> {
 			           CodeReference<NCBITaxon>      taxon, 
 			           Boolean                       metagenomic,
 			           Optional<String>              refCollab) throws DAOException, APIException {
-		Sample sample = new Sample();
+//		Sample sample = new Sample();
 		// Building the query depends on the provided data. The sample
 		// object is kind of a DTO. We basically build the sample object
 		// part that is the creation data and then build some appropriate query
