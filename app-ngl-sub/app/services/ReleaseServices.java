@@ -69,7 +69,7 @@ import fr.cea.ig.ngl.NGLConfig;
 
 public class ReleaseServices  {
 
-	private static final play.Logger.ALogger logger = play.Logger.of(ReleaseServices.class);
+//	private static final play.Logger.ALogger logger = play.Logger.of(ReleaseServices.class);
 
 	// final static SubmissionWorkflows submissionWorkflows = Spring.get BeanOfType(SubmissionWorkflows.class);
 	

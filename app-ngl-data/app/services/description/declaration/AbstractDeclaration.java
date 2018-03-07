@@ -26,7 +26,7 @@ import fr.cea.ig.MongoDBDAO;
 
 public abstract class AbstractDeclaration {
 	
-	private static final play.Logger.ALogger logger = play.Logger.of(AbstractDeclaration.class);
+//	private static final play.Logger.ALogger logger = play.Logger.of(AbstractDeclaration.class);
 	
 	protected abstract List<ExperimentType> getExperimentTypeCommon();
 	protected abstract List<ExperimentType> getExperimentTypeDEV();
@@ -104,9 +104,7 @@ public abstract class AbstractDeclaration {
 		}else {
 			throw new RuntimeException("ngl.env value not implemented");
 		}
-		
 	}
-	
 	
 	protected static ProcessExperimentType getPET(String expCode, Integer index) {
 		return new ProcessExperimentType(getExperimentType(expCode), index);
@@ -132,7 +130,6 @@ public abstract class AbstractDeclaration {
 		return DAOHelpers.getModelByCodes(ExperimentTypeNode.class,ExperimentTypeNode.find, codes);
 	}
 
-	
 	protected List<Value> getTagIllumina() {
 		
 		List<IlluminaIndex> indexes = MongoDBDAO.find(InstanceConstants.PARAMETER_COLL_NAME, IlluminaIndex.class, DBQuery.is("typeCode", "index-illumina-sequencing")).sort("name").toList();

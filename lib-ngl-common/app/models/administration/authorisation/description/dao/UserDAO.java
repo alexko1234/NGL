@@ -61,30 +61,31 @@ public class UserDAO extends AbstractDAOMapping<User> {
 	}
 
 	public String  getUserPassword(String login) throws DAOException {
-		String sql = "SELECT login , password "+
-				"FROM user WHERE login='"+login+"' ";
-		
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("login", login);
-		
+		String sql = "SELECT login , password FROM user WHERE login='" + login + "'";
+//		Map<String, Object> parameters = new HashMap<String, Object>();
+//		parameters.put("login", login);	
 		BeanPropertyRowMapper<User> mapper = new BeanPropertyRowMapper<User>(User.class);
 //		List<User> users =  this.jdbcTemplate.query(sql, mapper);
 		List<User> users = jdbcTemplate.query(sql, mapper);
-		if (users != null && users.size() == 1 && users.get(0).password != null) {
-			return users.get(0).password.toString();
-		} else {
+//		if (users != null && users.size() == 1 && users.get(0).password != null) {
+//			return users.get(0).password.toString();
+//		} else {
+//			return null;
+//		}
+		if (users == null || users.size() != 1)
 			return null;
-		}
+		return users.get(0).password;
 	}	
 	
 	public boolean isUserActive(String login) throws DAOException {
 		String sql = "SELECT active " + "FROM user WHERE login = '" + login + "' ";
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("login", login);
+//		Map<String, Object> parameters = new HashMap<String, Object>();
+//		parameters.put("login", login);
 		BeanPropertyRowMapper<User> mapper = new BeanPropertyRowMapper<User>(User.class);
-		logger.debug("UserDAO - isUserActive : requête SQL : " + sql + "  for " + login);
+		logger.debug("UserDAO - isUserActive : requête SQL : " + sql + " for " + login);
 //		List<User> users =  this.jdbcTemplate.query(sql, mapper, parameters);
-		List<User> users = jdbcTemplate.query(sql, mapper, parameters);
+//		List<User> users = jdbcTemplate.query(sql, mapper, parameters);
+		List<User> users = jdbcTemplate.query(sql, mapper);
 		/*if (users != null && users.size() == 1 ) {
 			return users.get(0).active;
 		}
