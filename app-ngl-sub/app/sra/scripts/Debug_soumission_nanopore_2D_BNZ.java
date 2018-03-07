@@ -37,13 +37,13 @@ import models.utils.InstanceConstants;
 public class Debug_soumission_nanopore_2D_BNZ extends AbstractScript {
 	
 	private FileAcServices     fileAcServices;
-	private SubmissionServices submissionServices;
+//	private SubmissionServices submissionServices;
 	
 	@Inject
 	public Debug_soumission_nanopore_2D_BNZ(FileAcServices fileAcServices, SubmissionServices submissionServices) {
 //		super();
 		this.fileAcServices     = fileAcServices;
-		this.submissionServices = submissionServices;
+//		this.submissionServices = submissionServices;
 	}
 	
 	@Override

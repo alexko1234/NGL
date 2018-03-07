@@ -51,20 +51,17 @@ public class OriRepriseHistoSample_extId extends AbstractScript {
 	*/
 	
 	// version 2 : On demande à play d'instancier la classe avec un objet EbiAPI
-	private final EbiAPI ebiAPI;	
+//	private final EbiAPI ebiAPI;	
 
 	@Inject
 	public OriRepriseHistoSample_extId(EbiAPI ebiAPI) {
-		this.ebiAPI = ebiAPI;
+//		this.ebiAPI = ebiAPI;
 	}
 	
-	
-	private static class SampleInfos {
-		String accession;
-		String extIdAccession;
-		
-	}
-	
+//	private static class SampleInfos {
+//		String accession;
+//		String extIdAccession;		
+//	}
 	
 	@Override
 	public void execute() throws IOException, ParseException {

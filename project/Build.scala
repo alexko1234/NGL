@@ -112,14 +112,16 @@ object ApplicationBuild extends Build {
     else*/ 
       Seq()
           
+  EclipseKeys.skipParents in ThisBuild := true
+          
 	override def settings = super.settings ++ Seq(
-		// EclipseKeys.skipParents in ThisBuild := false,
+		//  EclipseKeys.skipParents in ThisBuild := false,
     // com.typesafe.sbteclipse.core.EclipsePlugin.EclipseKeys.skipParents in ThisBuild := false,
     // Compile the project before generating Eclipse files,
     // so that generated .scala or .class files for views and routes are present
     // EclipseKeys.preTasks := Seq(compile in Compile),
     // Java project. Don't expect Scala IDE
-    // EclipseKeys.projectFlavor := EclipseProjectFlavor.Java
+    EclipseKeys.projectFlavor := com.typesafe.sbteclipse.plugin.EclipsePlugin.EclipseProjectFlavor.Java,
     // com.typesafe.sbteclipse.core.EclipsePlugin.EclipseKeys.projectFlavor := EclipseProjectFlavor.Java,
     // Use .class files instead of generated .scala files for views and routes
     EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.ManagedClasses, EclipseCreateSrc.ManagedResources)	
@@ -344,7 +346,7 @@ object ApplicationBuild extends Build {
   // external dependency.
   val authentication = 
     if (embeddedAuth)
-      Project("xt-auth",file("authentication"),settings = buildSettings)
+      Project("xt-auth",file("authentication"),settings = buildSettingsLib)
         .enablePlugins(play.sbt.PlayJava)
         .settings(
           libraryDependencies ++= authenticationDependencies,
@@ -352,17 +354,17 @@ object ApplicationBuild extends Build {
           resolvers            := nexus
         )
     else
-      Project("xt-auth",file("dependency-authentication"),settings = buildSettings)
+      Project("xt-auth",file("dependency-authentication"),settings = buildSettingsLib)
         .enablePlugins(play.sbt.PlayJava)
         .settings(
-      libraryDependencies  += ceaAuth,
-      version              := "0.0.1-SNAPSHOT",
-      resolvers            := nexus
-    )
+          libraryDependencies  += ceaAuth,
+          version              := "0.0.1-SNAPSHOT",
+          resolvers            := nexus
+        )
   
   val springPlugin =
     if (embeddedSpring)
-       Project("xt-spring",file("playSpringModule"),settings = buildSettings)
+       Project("xt-spring",file("playSpringModule"),settings = buildSettingsLib)
         .enablePlugins(play.sbt.PlayJava)
         .settings(
           libraryDependencies ++= springPluginDependencies,
@@ -370,7 +372,7 @@ object ApplicationBuild extends Build {
           resolvers            := nexus
         )
     else
-      Project("xt-spring",file("dependency-springplugin"),settings = buildSettings)
+      Project("xt-spring",file("dependency-springplugin"),settings = buildSettingsLib)
         .enablePlugins(play.sbt.PlayJava)
         .settings(
           libraryDependencies  += ceaSpring,
@@ -380,7 +382,7 @@ object ApplicationBuild extends Build {
     
   val mongoPlugin =
     if (embeddedMongo) 
-      Project("xt-mongo",file("mongoDBplugin"),settings = buildSettings)
+      Project("xt-mongo",file("mongoDBplugin"),settings = buildSettingsLib)
         .enablePlugins(play.sbt.PlayJava)
         .settings(
           libraryDependencies ++= mongoPluginDependencies,
@@ -388,7 +390,7 @@ object ApplicationBuild extends Build {
           resolvers            := nexus
         )
      else
-      Project("xt-mongo",file("dependency-mongoplugin"),settings = buildSettings)
+      Project("xt-mongo",file("dependency-mongoplugin"),settings = buildSettingsLib)
         .enablePlugins(play.sbt.PlayJava)
         .settings(
           libraryDependencies  += ceaMongo,
@@ -413,41 +415,45 @@ object ApplicationBuild extends Build {
         resolvers                  := nexus
       ).dependsOn(mongoPlugin)    
 
-  val ngldatatable = Project("datatable", file("lib-ngl-datatable"), settings = buildSettingsLib).enablePlugins(play.sbt.Play).settings(
-    version                    := libDatatableVersion,
-    libraryDependencies       ++= ngldatatableDependencies,
-    resolvers                  := nexus,
-    sbt.Keys.fork in Test      := false,
-    publishTo                  := Some(nexusigpublish),
-    packagedArtifacts in publishLocal := {
-      val artifacts: Map[sbt.Artifact, java.io.File] = (packagedArtifacts in publishLocal).value
-      val assets: java.io.File = (PlayKeys.playPackageAssets in Compile).value
-      artifacts + (Artifact(moduleName.value, "asset", "jar", "assets") -> assets)
-    },
-    packagedArtifacts in publish := {
-      val artifacts: Map[sbt.Artifact, java.io.File] = (packagedArtifacts in publishLocal).value
-      val assets: java.io.File = (PlayKeys.playPackageAssets in Compile).value
-      artifacts + (Artifact(moduleName.value, "asset", "jar", "assets") -> assets)
-    }
-  ).dependsOn(nglPlayMigration)
+  val ngldatatable = Project("datatable", file("lib-ngl-datatable"), settings = buildSettingsLib)
+      .enablePlugins(play.sbt.Play)
+      .settings(
+        version                    := libDatatableVersion,
+        libraryDependencies       ++= ngldatatableDependencies,
+        resolvers                  := nexus,
+        sbt.Keys.fork in Test      := false,
+        publishTo                  := Some(nexusigpublish),
+        packagedArtifacts in publishLocal := {
+          val artifacts: Map[sbt.Artifact, java.io.File] = (packagedArtifacts in publishLocal).value
+          val assets: java.io.File = (PlayKeys.playPackageAssets in Compile).value
+          artifacts + (Artifact(moduleName.value, "asset", "jar", "assets") -> assets)
+        },
+        packagedArtifacts in publish := {
+          val artifacts: Map[sbt.Artifact, java.io.File] = (packagedArtifacts in publishLocal).value
+          val assets: java.io.File = (PlayKeys.playPackageAssets in Compile).value
+          artifacts + (Artifact(moduleName.value, "asset", "jar", "assets") -> assets)
+        }
+      ).dependsOn(nglPlayMigration)
 
-  val nglframeworkweb = Project("lib-frameworkweb", file("lib-ngl-frameworkweb"), settings = buildSettingsLib).enablePlugins(play.sbt.Play).settings(
-    version                    := libFrameworkWebVersion,
-    libraryDependencies       ++= nglframeworkwebDependencies,
-    resolvers                  := nexus,
-    sbt.Keys.fork in Test      := false,
-    publishTo := Some(nexusigpublish),
-    packagedArtifacts in publishLocal := {
-      val artifacts: Map[sbt.Artifact, java.io.File] = (packagedArtifacts in publishLocal).value
-      val assets: java.io.File = (PlayKeys.playPackageAssets in Compile).value
-      artifacts + (Artifact(moduleName.value, "asset", "jar", "assets") -> assets)
-    },
-    packagedArtifacts in publish := {
-      val artifacts: Map[sbt.Artifact, java.io.File] = (packagedArtifacts in publishLocal).value
-      val assets: java.io.File = (PlayKeys.playPackageAssets in Compile).value
-      artifacts + (Artifact(moduleName.value, "asset", "jar", "assets") -> assets)
-    }
-  ).dependsOn(ngldatatable,authentication,springPlugin)
+  val nglframeworkweb = Project("lib-frameworkweb", file("lib-ngl-frameworkweb"), settings = buildSettingsLib)
+      .enablePlugins(play.sbt.Play)
+      .settings(
+        version                    := libFrameworkWebVersion,
+        libraryDependencies       ++= nglframeworkwebDependencies,
+        resolvers                  := nexus,
+        sbt.Keys.fork in Test      := false,
+        publishTo := Some(nexusigpublish),
+        packagedArtifacts in publishLocal := {
+          val artifacts: Map[sbt.Artifact, java.io.File] = (packagedArtifacts in publishLocal).value
+          val assets: java.io.File = (PlayKeys.playPackageAssets in Compile).value
+          artifacts + (Artifact(moduleName.value, "asset", "jar", "assets") -> assets)
+        },
+        packagedArtifacts in publish := {
+          val artifacts: Map[sbt.Artifact, java.io.File] = (packagedArtifacts in publishLocal).value
+          val assets: java.io.File = (PlayKeys.playPackageAssets in Compile).value
+          artifacts + (Artifact(moduleName.value, "asset", "jar", "assets") -> assets)
+        }
+      ).dependsOn(ngldatatable,authentication,springPlugin)
   
   val nglcommon = Project(appName + "-common", file("lib-ngl-common"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
     // version                    := appVersion,
