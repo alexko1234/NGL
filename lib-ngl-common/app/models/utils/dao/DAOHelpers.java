@@ -43,7 +43,7 @@ public class DAOHelpers {
 		}	
 		return errors;
 	}
-
+	
 	public static <T extends Model> void removeAll(Class<T> type, Finder<T> finder) throws DAOException {
 //	public static <T extends Model<T>> void removeAll(Class<T> type, Finder<T> finder) throws DAOException {
 		List<T> list = finder.findAll();

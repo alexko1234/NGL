@@ -12,21 +12,20 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * @author galbini
  *
  */
-public class ObjectSGBDReference<T extends Model<T>> implements IFetch<T>{
+public class ObjectSGBDReference<T extends Model<T>> implements IFetch<T> {
 	
 	@JsonIgnore
 	private Class<T> className;
 	
 	public String code;
 	
-	public ObjectSGBDReference(Class<T> className, String code) {
-		super();
-		this.className = className;
-		this.code = code;
+	public ObjectSGBDReference() {		
 	}
 	
-	public ObjectSGBDReference(){
-		
+	public ObjectSGBDReference(Class<T> className, String code) {
+//		super();
+		this.className = className;
+		this.code = code;
 	}
 	
 	public ObjectSGBDReference(Class<T> className){
@@ -36,7 +35,7 @@ public class ObjectSGBDReference<T extends Model<T>> implements IFetch<T>{
 	@Override
 	public T getObject() throws DAOException {
 		// init Finder from class DAO associated to this class in package ./dao
-		Finder<T> find = new Finder<T>(className.getName().replaceAll("description", "description.dao")+"DAO");
+		Finder<T> find = new Finder<T>(className.getName().replaceAll("description", "description.dao") + "DAO");
 		return find.findByCode(code);
 	}
 
