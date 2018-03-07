@@ -41,6 +41,7 @@ public class PropertySingleValue extends PropertyValue {
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		super.validate(contextValidation);
+		@SuppressWarnings("unchecked") // Uncheckable access to validation context objects
 		PropertyDefinition propertyDefinition = (PropertyDefinition) ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).toArray()[0];
 		if (ValidationHelper.checkIfActive(contextValidation, propertyDefinition)) {
 			if (ValidationHelper.required(contextValidation, this, propertyDefinition)) {				

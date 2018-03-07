@@ -20,24 +20,27 @@ public class HelperObjects<T> {
 	@JsonIgnore
 	public List<T> getObjects(Class<T> type, List<String> values) {
 		List<T> objects = new ArrayList<T>();
-		if (type.getSuperclass().getName().equals(DBObject.class.getName())) {
-			for (int i = 0; i < values.size(); i++) {
-				objects.add((T) new ObjectMongoDBReference(type,values.get(i)).getObject());				
-			}
-		} else {
-			for (int i = 0; i < values.size(); i++) {
-				try {
-					objects.add( (T) new ObjectSGBDReference(type,values.get(i)).getObject());
-				} catch (DAOException e) {
-					logger.error("getObject", e);
-					throw new RuntimeException(e);
-				}
-			}
-		}
+//		if (type.getSuperclass().getName().equals(DBObject.class.getName())) {
+//			for (int i = 0; i < values.size(); i++) {
+//				objects.add((T) new ObjectMongoDBReference(type,values.get(i)).getObject());				
+//			}
+//		} else {
+//			for (int i = 0; i < values.size(); i++) {
+//				try {
+//					objects.add( (T) new ObjectSGBDReference(type,values.get(i)).getObject());
+//				} catch (DAOException e) {
+//					logger.error("getObject", e);
+//					throw new RuntimeException(e);
+//				}
+//			}
+//		}
+		for (String s : values)
+			objects.add(getObject(type,s));
 		return objects;
 	}
 
 //	@SuppressWarnings({ "unchecked", "rawtypes", "hiding" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@JsonIgnore
 //	public <T> T getObject(Class<T> type, String value) {
 	public T getObject(Class<T> type, String value) {

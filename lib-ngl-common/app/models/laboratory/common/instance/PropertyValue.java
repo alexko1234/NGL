@@ -92,6 +92,7 @@ public abstract class PropertyValue implements IValidation {
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		// Validate type of property against propertyDefinition
+		@SuppressWarnings("unchecked") // Uncheckable access to the validation context objects
 		Collection<PropertyDefinition> propertyDefinitions = (Collection<PropertyDefinition>) contextValidation.getObject("propertyDefinitions");
 		ValidationHelper.checkType(contextValidation, this, propertyDefinitions);
 	}
