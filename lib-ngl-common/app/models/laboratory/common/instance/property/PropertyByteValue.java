@@ -41,6 +41,7 @@ public class PropertyByteValue extends PropertyValue {
 	@Override
 	public void validate(ContextValidation contextValidation) { 
 		super.validate(contextValidation);
+		@SuppressWarnings("unchecked") // uncheckable access to validation context object 
 		PropertyDefinition propertyDefinition = (PropertyDefinition) ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).toArray()[0];
 		if (ValidationHelper.checkIfActive(contextValidation, propertyDefinition)) {
 			ValidationHelper.required(contextValidation, this, propertyDefinition); 

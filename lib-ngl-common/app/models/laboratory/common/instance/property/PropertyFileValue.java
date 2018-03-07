@@ -1,5 +1,9 @@
 package models.laboratory.common.instance.property;
 
+import static fr.cea.ig.lfw.utils.Hashing.hash;
+import static fr.cea.ig.lfw.utils.Equality.objectEquals;
+import static fr.cea.ig.lfw.utils.Equality.typedEquals;
+
 import java.io.IOException;
 import java.util.Collection;
 
@@ -40,6 +44,7 @@ public class PropertyFileValue extends PropertyByteValue {
 		
 	@Override
 	public void validate(ContextValidation contextValidation) {
+		@SuppressWarnings("unchecked") // Uncheckable access to validation context object 
 		PropertyDefinition propertyDefinition = (PropertyDefinition) ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).toArray()[0];
 		super.validate(contextValidation);
 		ValidationHelper.required(contextValidation, this.fullname, propertyDefinition.code + ".fullname");
@@ -48,33 +53,38 @@ public class PropertyFileValue extends PropertyByteValue {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((extension == null) ? 0 : extension.hashCode());
-		result = prime * result + ((fullname == null) ? 0 : fullname.hashCode());
-		return result;
+//		final int prime = 31;
+//		int result = super.hashCode();
+//		result = prime * result + ((extension == null) ? 0 : extension.hashCode());
+//		result = prime * result + ((fullname == null) ? 0 : fullname.hashCode());
+//		return result;
+		return hash(super.hashCode(),extension,fullname);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		PropertyFileValue other = (PropertyFileValue) obj;
-		if (extension == null) {
-			if (other.extension != null)
-				return false;
-		} else if (!extension.equals(other.extension))
-			return false;
-		if (fullname == null) {
-			if (other.fullname != null)
-				return false;
-		} else if (!fullname.equals(other.fullname))
-			return false;
-		return true;
+//		if (this == obj)
+//			return true;
+//		if (!super.equals(obj))
+//			return false;
+//		if (getClass() != obj.getClass())
+//			return false;
+//		PropertyFileValue other = (PropertyFileValue) obj;
+//		if (extension == null) {
+//			if (other.extension != null)
+//				return false;
+//		} else if (!extension.equals(other.extension))
+//			return false;
+//		if (fullname == null) {
+//			if (other.fullname != null)
+//				return false;
+//		} else if (!fullname.equals(other.fullname))
+//			return false;
+//		return true;
+		return typedEquals(PropertyFileValue.class, this, obj,
+				           (x,y) -> super.equals(obj) 
+				                    && objectEquals(x.extension,y.extension) 
+				                    && objectEquals(x.fullname,y.fullname));
 	}
 
 }

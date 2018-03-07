@@ -1,5 +1,9 @@
 package models.laboratory.common.instance.property;
 
+import static fr.cea.ig.lfw.utils.Hashing.hash;
+import static fr.cea.ig.lfw.utils.Equality.objectEquals;
+import static fr.cea.ig.lfw.utils.Equality.typedEquals;
+
 import java.util.Collection;
 
 import validation.ContextValidation;
@@ -55,27 +59,30 @@ public class PropertySingleValue extends PropertyValue {
 	
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((unit == null) ? 0 : unit.hashCode());
-		return result;
+//		final int prime = 31;
+//		int result = super.hashCode();
+//		result = prime * result + ((unit == null) ? 0 : unit.hashCode());
+//		return result;
+		return hash(super.hashCode(), unit);
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		PropertySingleValue other = (PropertySingleValue) obj;
-		if (unit == null) {
-			if (other.unit != null)
-				return false;
-		} else if (!unit.equals(other.unit))
-			return false;
-		return true;
+//		if (this == obj)
+//			return true;
+//		if (!super.equals(obj))
+//			return false;
+//		if (getClass() != obj.getClass())
+//			return false;
+//		PropertySingleValue other = (PropertySingleValue) obj;
+//		if (unit == null) {
+//			if (other.unit != null)
+//				return false;
+//		} else if (!unit.equals(other.unit))
+//			return false;
+//		return true;
+		return typedEquals(PropertySingleValue.class, this, obj,
+				           (x,y) -> super.equals(obj) && objectEquals(x.unit,y.unit));
 	}
 	
 }

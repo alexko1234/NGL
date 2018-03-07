@@ -1,6 +1,5 @@
 package models.laboratory.common.instance;
 
-
 import java.util.Collection;
 
 import  com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -8,6 +7,9 @@ import  com.fasterxml.jackson.annotation.JsonTypeInfo;
 import  com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import  com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
+import static fr.cea.ig.lfw.utils.Hashing.hash;
+import static fr.cea.ig.lfw.utils.Equality.objectEquals;
+import static fr.cea.ig.lfw.utils.Equality.typedEquals;
 import models.laboratory.common.description.PropertyDefinition;
 import validation.ContextValidation;
 import validation.IValidation;
@@ -41,6 +43,7 @@ public abstract class PropertyValue implements IValidation {
 	
 	public String _type;
 	
+	// TODO: use and abstract getValue accessor so the value field can be moved in subclasses and properly typed.
 	public Object value;
 	
 	// TODO: remove super() calls that are implicit
@@ -97,36 +100,42 @@ public abstract class PropertyValue implements IValidation {
 		ValidationHelper.checkType(contextValidation, this, propertyDefinitions);
 	}
 	
+//	public static final int hash(Object... objects) {
+//		return hash(1,objects);
+//	}
+		
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((_type == null) ? 0 : _type.hashCode());
-		result = prime * result + ((value == null) ? 0 : value.hashCode());
-		return result;
+//		final int prime = 31;
+//		int result = 1;
+//		result = prime * result + ((_type == null) ? 0 : _type.hashCode());
+//		result = prime * result + ((value == null) ? 0 : value.hashCode());
+//		return result;
+		return hash(1,_type,value);
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-//		PropertyValue<?> other = (PropertyValue<?>) obj;
-		PropertyValue other = (PropertyValue) obj;
-		if (_type == null) {
-			if (other._type != null)
-				return false;
-		} else if (!_type.equals(other._type))
-			return false;
-		if (value == null) {
-			if (other.value != null)
-				return false;
-		} else if (!value.equals(other.value))
-			return false;
-		return true;
+//		if (this == obj)
+//			return true;
+//		if (obj == null)
+//			return false;
+//		if (getClass() != obj.getClass())
+//			return false;
+////		PropertyValue<?> other = (PropertyValue<?>) obj;
+//		PropertyValue other = (PropertyValue) obj;
+//		if (_type == null) {
+//			if (other._type != null)
+//				return false;
+//		} else if (!_type.equals(other._type))
+//			return false;
+//		if (value == null) {
+//			if (other.value != null)
+//				return false;
+//		} else if (!value.equals(other.value))
+//			return false;
+//		return true;
+		return typedEquals(PropertyValue.class, this, obj, (x,y) -> objectEquals(x._type,y._type) && objectEquals(x.value,y.value));
 	}
 	
 }
