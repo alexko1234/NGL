@@ -129,7 +129,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','$filter
 			"choiceInList" : true,
 			"listStyle" : 'bt-select',
 			"possibleValues" : 'lists.getValuations()',
-			"position" : 30,
+			"position" : 530,
 			"extraHeaders" : {0 : Messages("experiments.inputs")}
 		});
 		
@@ -146,7 +146,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','$filter
 			"possibleValues" : [{code:"TRUE", name:Messages("containers.table.valuationqc.copyToInput.value.TRUE")}, 
 								{code:"FALSE", name:Messages("containers.table.valuationqc.copyToInput.value.FALSE")},
 								{code:"UNSET", name:Messages("containers.table.valuationqc.copyToInput.value.UNSET")}],
-			"position" : 30.1,
+			"position" : 531,
 			"extraHeaders" : {0 : Messages("experiments.inputs")}
 		});
 		
@@ -158,7 +158,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','$filter
 			"edit" : true,
 			"hide" : true,
 			"type" : "text",			
-			"position" : 31,
+			"position" : 532,
 			"extraHeaders" : {0 : Messages("experiments.inputs")}
 		});
 		columns.push({

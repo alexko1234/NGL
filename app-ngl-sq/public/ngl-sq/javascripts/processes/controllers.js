@@ -53,6 +53,11 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$filter','$
 		$scope.removeTab(1);
 		$scope.basket.reset();
 		$scope.searchService.datatable.setData([]);
+		
+		$http.get(jsRoutes.controllers.processes.api.ProcessTypes.get($scope.searchService.form.nextProcessTypeCode).url)
+			.then(function(result){
+				console.log(result);
+			});
 		$scope.processGraphService.changeProcessType($scope.searchService.form.nextProcessTypeCode);
 	};
 	

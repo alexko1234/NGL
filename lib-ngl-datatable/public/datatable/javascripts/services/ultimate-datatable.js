@@ -2515,34 +2515,43 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
 ;angular.module('ultimateDataTableServices').
 //If the select or multiple choices contain 1 element, this directive select it automaticaly
 //EXAMPLE: <select ng-model="x" ng-option="x as x for x in x" udtAutoselect>...</select>
-directive('udtAutoselect',['$parse', function($parse) {
-    		var OPTIONS_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?(?:\s+group\s+by\s+(.*))?\s+for\s+(?:([\$\w][\$\w\d]*)|(?:\(\s*([\$\w][\$\w\d]*)\s*,\s*([\$\w][\$\w\d]*)\s*\)))\s+in\s+(.*)$/;
-    		return {
-    			require: 'ngModel',
-    			link: function(scope, element, attrs, ngModel) {
-    				var valOption = undefined;
-					if(attrs.ngOptions){	
-						valOption = attrs.ngOptions;
-					}else if(attrs.btOptions){
-						valOption = attrs.btOptions;
-					}
-					
-					if(valOption !== undefined){
-						var match = valOption.match(OPTIONS_REGEXP);
-						var model = $parse(match[7]);
-						scope.$watch(model, function(value){
-							if(value){
-				                if(value.length === 1 && (ngModel.$modelValue === undefined || ngModel.$modelValue === "")){
-									ngModel.$setViewValue(value[0].code);
-									ngModel.$render();
-								}
+directive('udtAutoSelect',['$parse', function($parse) {
+		var OPTIONS_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?(?:\s+group\s+by\s+(.*))?\s+for\s+(?:([\$\w][\$\w\d]*)|(?:\(\s*([\$\w][\$\w\d]*)\s*,\s*([\$\w][\$\w\d]*)\s*\)))\s+in\s+(.*)$/;
+		return {
+			require: 'ngModel',
+			link: function(scope, element, attrs, ngModel) {
+				var valOption = undefined;
+				var multiple = false;
+				if(attrs.ngOptions){	
+					valOption = attrs.ngOptions;
+				}else if(attrs.btOptions){
+					valOption = attrs.btOptions;
+				}
+				
+				if(attrs.multiple === true || attrs.multiple === "true"){
+					multiple = true;
+				}
+				
+				if(valOption != undefined){
+					var match = valOption.match(OPTIONS_REGEXP);
+					var getModelValue = $parse(match[1].replace(match[4]+'.',''));
+					var model = $parse(match[7]);
+					scope.$watch(model, function(value){
+						if(value){
+			                if(value.length === 1 && (ngModel.$modelValue == undefined || ngModel.$modelValue == "")){
+								
+			                	var value = (multiple)?[getModelValue(value[0])]:getModelValue(value[0]);
+			                	
+			                	ngModel.$setViewValue(value);
+								ngModel.$render();
 							}
-				        });
-					}else{
-						console.log("ng-options or bt-options required");
-					}
-    			}
-    		};
+						}
+			        });
+				}else{
+					console.log("ng-options or bt-options required");
+				}
+			}
+	};
     	}]);;
 angular.module('ultimateDataTableServices')
 .directive('udtBase64Img', [function () {
@@ -2965,10 +2974,12 @@ directive("udtTbody", function(){
     			    		ngChange = '" udt-change="udtTable.updateColumn(col.property, col.id)"';
 						}else if(filter){
 							ngChange = '" udt-change="udtTable.searchLocal(udtTable.searchTerms)"';
-    			    	}else{
+    			    	}else if(col.defaultValues){
     			    		defaultValueDirective = 'udt-default-value="col"';
+    			    	}else if(col.choiceInList){
+    			    		defaultValueDirective= " udt-auto-select";
     			    	}
-
+    			    	
 						var userDirectives = "";
 						if(col.editDirectives !== undefined){
 							userDirectives = col.editDirectives;

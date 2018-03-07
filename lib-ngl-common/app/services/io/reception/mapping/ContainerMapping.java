@@ -29,6 +29,7 @@ import models.utils.InstanceHelpers;
 import play.Logger;
 import services.io.reception.Mapping;
 import validation.ContextValidation;
+import validation.utils.ValidationConstants;
 
 
 
@@ -90,20 +91,24 @@ public class ContainerMapping extends Mapping<Container> {
 	 */
 	private String computeCode(Container container) {
 		String code = null;
-		if(container.support != null && 
-				container.support.code != null && container.support.line != null && container.support.column != null){
-			ContainerSupportCategory csc = ContainerSupportCategory.find.findByCode(container.support.categoryCode);
-			if(csc.nbLine == 1 && csc.nbColumn == 1){
-				code= container.support.code;
-			}else if(csc.nbLine > 1 && csc.nbColumn == 1){
-				container.support.line = container.support.line.toUpperCase();
-				code=container.support.code+"_"+container.support.line;
-	
-			}else if(csc.nbLine > 1 && csc.nbColumn > 1){
-				container.support.line = container.support.line.toUpperCase();
-				container.support.column = container.support.column.toUpperCase();
-				
-				code=container.support.code+"_"+container.support.line+container.support.column;
+		if(container.support != null && container.support.code != null && container.support.line != null && container.support.column != null){
+			// FDS 03/03/2018 verifier que container.support.categoryCode existe bien !!
+			if ( null == ContainerSupportCategory.find.findByCode(container.support.categoryCode)) {
+				contextValidation.addErrors("container.support.categoryCode", ValidationConstants.ERROR_NOTEXISTS_MSG, container.support.categoryCode);
+			} else {
+				ContainerSupportCategory csc = ContainerSupportCategory.find.findByCode(container.support.categoryCode);
+				if(csc.nbLine == 1 && csc.nbColumn == 1){
+					code= container.support.code;
+				}else if(csc.nbLine > 1 && csc.nbColumn == 1){
+					container.support.line = container.support.line.toUpperCase();
+					code=container.support.code+"_"+container.support.line;
+		
+				}else if(csc.nbLine > 1 && csc.nbColumn > 1){
+					container.support.line = container.support.line.toUpperCase();
+					container.support.column = container.support.column.toUpperCase();
+					
+					code=container.support.code+"_"+container.support.line+container.support.column;
+				}
 			}
 		}
 		return code;

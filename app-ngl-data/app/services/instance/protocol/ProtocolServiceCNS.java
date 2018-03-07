@@ -194,6 +194,7 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("Tag_ITS2_ITSD","Tag ITS2_ITSD","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
 		lp.add(newProtocol("Tag_CP23S","Tag_CP23S","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
 		lp.add(newProtocol("Tag_COI","Tag COI","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
+		
 		lp.add(newProtocol("Access_Array_48.48","Access Array 48.48","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr","dna-illumina-indexed-library")));
 		lp.add(newProtocol("Protocole_EPGV","Protocole EPGV","path2","1","production",InstanceFactory.setExperimentTypeCodes("solution-stock","chip-migration","reception-fluo-quantification","pool")));
 		
@@ -205,7 +206,7 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("Tag_16S_V5V6_Procaryote","Tag 16S_V5V6_Procaryote","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
 		lp.add(newProtocol("Tag_18S_V1_Metazoaire","Tag 18S_V1_Metazoaire","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
 		lp.add(newProtocol("Tag_16S_V4_Procaryote","Tag 16S_V4_Procaryote","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
-		
+		lp.add(newProtocol("Tag_16S_Full_Length","Tag 16S_Full Length","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
 		
 		lp.add(newProtocol("amplif_ptr_sox_144-4","Amplif ptr Sox 144-4","path2","1","production",InstanceFactory.setExperimentTypeCodes("pcr-amplification-and-purification")));
 		lp.add(newProtocol("amplif_nebnext_ultraii_ptr_151_1","Amplif_NebNext_UltraII ptr 151_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("pcr-amplification-and-purification")));

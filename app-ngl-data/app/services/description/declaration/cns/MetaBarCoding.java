@@ -17,6 +17,7 @@ import models.laboratory.common.description.Value;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.parameter.index.IlluminaIndex;
+import models.laboratory.processes.description.ExperimentTypeNode;
 import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
 import models.utils.InstanceConstants;
@@ -51,6 +52,11 @@ public class MetaBarCoding extends AbstractDeclaration {
                              ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne",
                              DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
+             l.add(newExperimentType("Ext to MetaBarcoding double PCR (nested)","ext-to-double-tag-pcr-and-dna-library",null,-1,
+                     ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne",
+                     DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+             
              l.add(newExperimentType("Tags-PCR","tag-pcr","TAG",750,
                              ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsTagPCR(),
                              getInstrumentUsedTypes("thermocycler"),"OneToOne", getSampleTypes("amplicon"),true,
@@ -145,6 +151,23 @@ public class MetaBarCoding extends AbstractDeclaration {
                                             getExperimentTypes("tag-pcr").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-tag-pcr-and-dna-library").get(0),
                                             DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
+            l.add(DescriptionFactory.newProcessType("MetaBarcoding double PCR (nested)", "double-tag-pcr-and-dna-library", ProcessCategory.find.findByCode("library"), 13,
+                    getPropertyMetaBarCodingDouble(),
+                    Arrays.asList(getPET("ext-to-double-tag-pcr-and-dna-library",-1)
+                                    ,getPET("dna-rna-extraction",-1)
+                                    ,getPET("cdna-synthesis",-1)
+                                    ,getPET("tag-pcr",0)
+                                    ,getPET("tag-pcr",1)
+                                    ,getPET("dna-illumina-indexed-library",2)
+                                    ,getPET("pcr-amplification-and-purification",3)
+                                    ,getPET("solution-stock",4)
+                                    ,getPET("prepa-flowcell",5)
+                                    ,getPET("prepa-fc-ordered",5)
+                                    ,getPET("illumina-depot",6)),
+                                    getExperimentTypes("tag-pcr").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-double-tag-pcr-and-dna-library").get(0),
+                                    DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+            
             return l;
     }
 
@@ -171,10 +194,17 @@ public class MetaBarCoding extends AbstractDeclaration {
 	public void getExperimentTypeNodeCommon() {
 		
 		newExperimentTypeNode("ext-to-tag-pcr-and-dna-library", getExperimentTypes("ext-to-tag-pcr-and-dna-library").get(0), false, false, false, null, null, null, null).save();
+		newExperimentTypeNode("ext-to-double-tag-pcr-and-dna-library", getExperimentTypes("ext-to-double-tag-pcr-and-dna-library").get(0), false, false, false, null, null, null, null).save();
+		
 		newExperimentTypeNode("ext-to-tag-pcr-and-dna-library-with-sizing", getExperimentTypes("ext-to-tag-pcr-and-dna-library-with-sizing").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("tag-pcr",getExperimentTypes("tag-pcr").get(0),true, true,false,getExperimentTypeNodes("dna-rna-extraction", "cdna-synthesis", "ext-to-tag-pcr-and-dna-library","ext-to-tag-pcr-and-dna-library-with-sizing")
+		newExperimentTypeNode("tag-pcr",getExperimentTypes("tag-pcr").get(0),true, true,false,getExperimentTypeNodes("dna-rna-extraction", "cdna-synthesis", "ext-to-tag-pcr-and-dna-library","ext-to-tag-pcr-and-dna-library-with-sizing","ext-to-double-tag-pcr-and-dna-library")
 				,null,getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
-		newExperimentTypeNode("dna-illumina-indexed-library",getExperimentTypes("dna-illumina-indexed-library").get(0),true, true,false,getExperimentTypeNodes("ext-to-dna-illumina-indexed-library-process","ext-to-dna-illumina-indexed-lib-sizing-process","ext-to-dna-illumina-indexed-lib-spri-select-process","tag-pcr","fragmentation")
+		
+		newExperimentTypeNode("tag-pcr-nested",getExperimentTypes("tag-pcr").get(0),true, true,false,getExperimentTypeNodes("tag-pcr")
+				,null,getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
+		
+		
+		newExperimentTypeNode("dna-illumina-indexed-library",getExperimentTypes("dna-illumina-indexed-library").get(0),true, true,false,getExperimentTypeNodes("ext-to-dna-illumina-indexed-library-process","ext-to-dna-illumina-indexed-lib-sizing-process","ext-to-dna-illumina-indexed-lib-spri-select-process","tag-pcr","tag-pcr-nested","fragmentation")
 				,getExperimentTypes("post-pcr-ampure"),getExperimentTypes("fluo-quantification"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 		newExperimentTypeNode("pcr-amplification-and-purification",getExperimentTypes("pcr-amplification-and-purification").get(0),true, true,false,getExperimentTypeNodes("ext-to-ampli-spri-select-stk-illumina-depot","ext-to-ampli-sizing-stk-illumina-depot", "ext-to-ampli-stk-illumina-depot","dna-illumina-indexed-library","rna-illumina-indexed-library")
 				,getExperimentTypes("post-pcr-ampure"),getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
@@ -187,7 +217,11 @@ public class MetaBarCoding extends AbstractDeclaration {
 		newExperimentTypeNode("spri-select",getExperimentTypes("spri-select").get(0),true, true,false,getExperimentTypeNodes("ext-to-spri-select-stk-illumina-depot","pcr-amplification-and-purification")
 				,getExperimentTypes("post-pcr-ampure"),getExperimentTypes("fluo-quantification","chip-migration","qpcr-quantification"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 	
-		
+		/*
+		ExperimentTypeNode etn = getExperimentTypeNodes("tag-pcr").get(0);
+	    etn.previousExperimentTypeNodes=getExperimentTypeNodes("dna-rna-extraction", "cdna-synthesis", "tag-pcr","ext-to-tag-pcr-and-dna-library","ext-to-tag-pcr-and-dna-library-with-sizing","ext-to-double-tag-pcr-and-dna-library");
+	    etn.update();
+		*/
 	}
 
 	@Override
@@ -328,10 +362,10 @@ public class MetaBarCoding extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Amorces", "amplificationPrimers", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content,Level.CODE.Sample), String.class, true, null, 
 				DescriptionFactory.newValues("Fuhrman primer","V9 primer", "16S primer + Fuhrman primer", "ITS2 primer", "ITSintfor2 / ITS-Reverse", "SYM_VAR_5.8S2 / SYM_VAR_REV", 
 						"ITSD / ITS2REV","CP23S primers","18S_V4 primer", "COI primer m1COIintF / jgHCO2198", "Sneed2015 27F / 519Rmodbio",
-						"16SV4V5 Archae","16SV5V6 Prok","18SV1V2 Metazoaire","16SV4 Procaryote","Amp 48-1", "Amp 48-2","autre"),null, null, null,"single", 2, true, null,null));
+						"16SV4V5 Archae","16SV5V6 Prok","18SV1V2 Metazoaire","16SV4 Procaryote","Amp 48-1", "Amp 48-2", "16S FL 27F/1390R", "autre"),null, null, null,"single", 2, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Région ciblée", "targetedRegion", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content,Level.CODE.Sample), String.class, true, null, 
 				DescriptionFactory.newValues("16S_V4V5","18S_V9", "16S_Full Length + 16S_V4V5", "ITS2","CP23S","18S_V4","COI", "16S_V1V2V3",
-						"16S_V5V6","18S_V1V2","16S_V4", "Multi-Amplicons"), null, null, null,"single", 3, true, null,null));
+						"16S_V5V6","18S_V1V2","16S_V4", "16SFL", "Multi-Amplicons"), null, null, null,"single", 3, true, null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Nb cycles", "nbCycles", LevelService.getLevels(Level.CODE.Experiment), Integer.class, true, null, null, 
 				"single", 4, true, null,null));
@@ -343,6 +377,23 @@ public class MetaBarCoding extends AbstractDeclaration {
 				null, null, null, null,"single", 27, false, null,null));
 
 		
+		return propertyDefinitions;
+	}
+	
+	private List<PropertyDefinition> getPropertyMetaBarCodingDouble() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
+		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, getBanqueProcessTypeMetaTC(), 
+				null,null,null,"single", 13, true, "TC", null));
+		propertyDefinitions.add(newPropertiesDefinition("Amorces", "amplificationPrimers", LevelService.getLevels(Level.CODE.Process), String.class, true, null, 
+				DescriptionFactory.newValues("16S primer + Fuhrman primer"), null,null,null,"single", 14, true, "16S primer + Fuhrman primer", null));
+		propertyDefinitions.add(newPropertiesDefinition("Région ciblée", "targetedRegion", LevelService.getLevels(Level.CODE.Process), String.class, true, null,
+				DescriptionFactory.newValues("16S_Full Length + 16S_V4V5"),	null,null,null,"single", 15, true, "16S_Full Length + 16S_V4V5", null));
+		propertyDefinitions.add(newPropertiesDefinition("Taille amplicon attendue", "expectedAmpliconSize", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, 
+				DescriptionFactory.newValues("411/600"),null,null,null,"single", 16, true, "411/600", null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
+				null,null,null,"single", 17, true, null, null));
+		propertyDefinitions.addAll(RunIllumina.getIlluminaDepotProperties());
 		return propertyDefinitions;
 	}
 	
@@ -398,6 +449,12 @@ public class MetaBarCoding extends AbstractDeclaration {
 	public static  List<Value> getBanqueProcessTypeMetaTA(){
 		List<Value> values = new ArrayList<Value>();
 		values.add(DescriptionFactory.newValue("TA", "TA - Targeted DNAseq"));
+		return values;
+	}
+	
+	public static  List<Value> getBanqueProcessTypeMetaTC(){
+		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("TC", "TC - Targeted DNAseq (nested)"));
 		return values;
 	}
 	

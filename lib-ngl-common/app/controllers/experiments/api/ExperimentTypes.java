@@ -112,7 +112,7 @@ public class ExperimentTypes extends APICommonController<ExperimentTypesSearchFo
 	@Permission(value={"reading"})
 	public Result getDefaultFirstExperiments(String processTypeCode) throws DAOException{		
 			ProcessType processType = ProcessType.find.findByCode(processTypeCode);
-			List<ExperimentType> expTypes = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCodeAndProcessTypeCode(processType.firstExperimentType.code, processType.code);
+			List<ExperimentType> expTypes = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCodeAndProcessTypeCode(processType.firstExperimentType.code, processType.code, -1);
 			return ok(Json.toJson(expTypes));		
 	}
 	

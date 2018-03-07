@@ -1772,7 +1772,7 @@ angular.module('ngl-sq.processesServices', [])
 					$q.all(nodeQueries).then(function(expNodes){
 						expNodes.forEach(function(experimentNode){
 							graphNodes[experimentNode.experimentType.code].parentNodes.forEach(function(parent){
-								if(graphNodes[parent.code])
+								if(graphNodes[parent.code] && $filter('filter')(graphNodes[parent.code].childNodes,{code:this.code}).length === 0)
 									graphNodes[parent.code].childNodes.push(this);
 							}, experimentNode.experimentType) 
 						});
@@ -1901,7 +1901,7 @@ angular.module('ngl-sq.processesServices', [])
 								            })
 								          .selector('edge')
 								            .css({
-								              'curve-style': 'bezier',
+								              'curve-style': "bezier", 
 								              'opacity': 0.666,
 								              'width': '3',
 								              'label': 'data(label)',
@@ -1912,7 +1912,7 @@ angular.module('ngl-sq.processesServices', [])
 								              'source-arrow-shape': 'circle',
 								              'line-color': 'data(faveColor)',
 								              'source-arrow-color': 'data(faveColor)',
-								              'target-arrow-color': 'data(faveColor)'
+								              'target-arrow-color': 'data(faveColor)'								              
 								            })
 								            /*
 								          .selector('edge.questionable')
