@@ -739,9 +739,9 @@ public class ProcessServiceCNG  extends AbstractProcessService{
         values.add(DescriptionFactory.newValue("CZ","CZ - Agilent : V6 (DefCap022)"));
         values.add(DescriptionFactory.newValue("CAA","CAA - Agilent : V6+UTR (DefCap023)"));
         values.add(DescriptionFactory.newValue("CAC","CAC - Agilent : V6+Cosmic (DefCap025)"));
-        values.add(DescriptionFactory.newValue("CAD","CAD - Nimblegen : MedExome (DefCap026)"));
+        values.add(DescriptionFactory.newValue("CAD","CAD - Roche-Nimblegen : MedExome (DefCap026)"));
         //values.add(DescriptionFactory.newValue("CAE","CAE - Nimblegen : MedExome+Mitome (DefCap027)"));   
-        //values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028"));
+        //values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028)"));
         
         return values;
 	}
