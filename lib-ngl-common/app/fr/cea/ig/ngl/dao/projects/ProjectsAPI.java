@@ -24,13 +24,13 @@ import play.data.validation.ValidationError;
 import validation.ContextValidation;
 
 @Singleton
-public class ProjectAPI {
+public class ProjectsAPI {
 
-	private final ProjectDAO dao; 
-	private static final play.Logger.ALogger logger = play.Logger.of(ProjectAPI.class);
+	private final ProjectsDAO dao; 
+	private static final play.Logger.ALogger logger = play.Logger.of(ProjectsAPI.class);
 	
 	@Inject
-	public ProjectAPI(ProjectDAO dao) {
+	public ProjectsAPI(ProjectsDAO dao) {
 		this.dao = dao;
 	}
 	

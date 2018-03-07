@@ -20,7 +20,7 @@ import org.mongojack.DBQuery.Query;
 
 import fr.cea.ig.MongoDBResult.Sort;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
-import fr.cea.ig.ngl.dao.projects.ProjectAPI;
+import fr.cea.ig.ngl.dao.projects.ProjectsAPI;
 import fr.cea.ig.ngl.test.dao.api.factory.TestProjectFactory;
 import models.laboratory.project.instance.Project;
 import play.data.validation.ValidationError;
@@ -31,7 +31,7 @@ public class ProjectAPITest extends AbstractTests {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(ProjectAPITest.class);
 
-	private static ProjectAPI api;
+	private static ProjectsAPI api;
 
 	private static final String currentUser = "ngsrg";
 
@@ -43,7 +43,7 @@ public class ProjectAPITest extends AbstractTests {
 	@BeforeClass
 	public static void setUpClass() {
 		assertTrue(app.isDev());
-		api = app.injector().instanceOf(ProjectAPI.class);
+		api = app.injector().instanceOf(ProjectsAPI.class);
 		assertNotNull(api);
 	}
 

@@ -5,7 +5,7 @@ import javax.inject.Singleton;
 
 import fr.cea.ig.ngl.dao.codelabels.CodeLabelAPI;
 import fr.cea.ig.ngl.dao.permissions.PermissionAPI;
-import fr.cea.ig.ngl.dao.projects.ProjectAPI;
+import fr.cea.ig.ngl.dao.projects.ProjectsAPI;
 import fr.cea.ig.ngl.dao.protocols.ProtocolAPI;
 import fr.cea.ig.ngl.dao.users.UserAPI;
 
@@ -14,7 +14,7 @@ public class APIs {
 	
 	private final CodeLabelAPI         codeLabelAPI;
 	private final PermissionAPI        permissionAPI;
-	private final ProjectAPI           projectAPI;
+	private final ProjectsAPI           projectAPI;
 	private final ProtocolAPI          protocolAPI;
 	private final ReagentCatalogAPI    reagentCatalogAPI; 
 	private final ResolutionConfigurationAPI resolutionConfigurationAPI;
@@ -25,7 +25,7 @@ public class APIs {
 	@Inject
 	public APIs(CodeLabelAPI         codeLabelAPI,
 				PermissionAPI        permissionAPI,
-				ProjectAPI           projectAPI,
+				ProjectsAPI           projectAPI,
 				ProtocolAPI          protocolAPI,
 				ReagentCatalogAPI    reagentCatalogAPI,
 				ResolutionConfigurationAPI resolutionConfigurationAPI,
@@ -45,7 +45,7 @@ public class APIs {
 	
 	public CodeLabelAPI         codeLabel()         { return codeLabelAPI;         }
 	public PermissionAPI        permission()        { return permissionAPI;        }
-	public ProjectAPI           project()           { return projectAPI;           }
+	public ProjectsAPI           project()           { return projectAPI;           }
 	public ProtocolAPI          protocol()          { return protocolAPI;          }
 	public ReagentCatalogAPI    reagentCatalog()    { return reagentCatalogAPI;    }
 	public ResolutionConfigurationAPI resolutionConfiguration() { return resolutionConfigurationAPI; }
