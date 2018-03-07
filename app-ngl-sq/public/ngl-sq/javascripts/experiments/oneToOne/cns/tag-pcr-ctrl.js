@@ -268,6 +268,7 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse','$filter', 'a
 		if(isNested){
 			//search only where input is on CEB project
 			atmWithBlanckSamples = $filter('filter')(atmWithBlanckSamples,{inputContainerUseds:{contents:{projectCode:'CEB'}}});
+			$parse("protocolCode").assign(experiment,"tag16s_full_length_16s_v4v5_fuhrman");
 			$parse("experimentProperties.amplificationPrimers.value").assign(experiment,'16S primer + Fuhrman primer');
 			$parse("experimentProperties.targetedRegion.value").assign(experiment,'16S_Full Length + 16S_V4V5');
 			
