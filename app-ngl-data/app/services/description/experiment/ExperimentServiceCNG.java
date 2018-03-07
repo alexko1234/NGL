@@ -1126,6 +1126,10 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		propertyDefinitions.add(newPropertiesDefinition("Profil de migration", "migrationProfile", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, false, null, null, 				
 				"img", 14, false, null, null));
 		
+		// 07/03/2018 NGL-1859: propriété pour demander a l'utilisateur s'il faut copier concentration/quantité
+		propertyDefinitions.add(newPropertiesDefinition("Copier concentration dans concentration finale ?", "copyConcentration", LevelService.getLevels(Level.CODE.Experiment), Boolean.class, true, null,
+				null, "single",15, true,"true", null));
+		
 		return propertyDefinitions;
 	}
 	
