@@ -240,12 +240,12 @@ angular.module('home')
 						var column = selectedColumns[0];
 						
 						if(("Tout" === visualChoice && i >=12 && i <= 28 
-								|| "BR1 + HS1"  === visualChoice && i >=12 && i <= 20
+								|| "BR1 + HS1 + HS2"  === visualChoice && i >=12 && i <= 24
 								|| "HS1 + HS2 + HS3"  === visualChoice && i >=17 && i <= 28)
 								&& udt.isHide(column.id)
 								){
 							udt.setHideColumn(column);
-						}else if( ("BR1 + HS1"  === visualChoice && i > 20
+						}else if( ("BR1 + HS1 + HS2"  === visualChoice && i > 24
 								|| "HS1 + HS2 + HS3"  === visualChoice && i < 17) && !udt.isHide(column.id) ){
 							udt.setHideColumn(column);
 						}						

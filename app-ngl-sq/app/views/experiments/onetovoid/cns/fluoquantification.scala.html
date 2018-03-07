@@ -1,6 +1,15 @@
 @()
 <div ng-controller="OneToVoidQCCtrl">	
 	<div class="col-md-12 col-lg-12" ng-controller="OneToVoidFluoQuantificationCNSCtrl">
+	<div class="row">
+	<div class="col-md-12 col-lg-12">
+	<ul class="list-unstyled">
+	<li><i class="fa fa-info-circle"></i> volume engagé = volume total prélevé du tube d'entrée (pour réaliser les différents dosages, qu'il y ait dilutions ou non)
+	<li><i class="fa fa-info-circle"></i> volume engagé dans dosage "BR" ou "HS1" ou "HS2" ou "HS3" = volume engagé dans dosage (volume de la dilution s'il y a eu dilution)
+	</ul>	
+	</div>
+	</div>
+	
 	<div class="row margin-bottom-7" ng-show="button.isShow()">
 	<div class="col-md-12 col-lg-12">
 	<form class="form-horizontal">
