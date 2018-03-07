@@ -204,7 +204,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 				"					inner join common_info_type as current_pt on current_pt.id = current_pet.fk_process_type and current_pt.code=?"+
 				" where current_t.code=? and previous_pet.position_in_process = "+((position != null)?position.toString():"current_pet.position_in_process-1");
 
-		Logger.debug(sql);
+		//Logger.debug(sql);
 		
 		return initializeMapping(sql, new SqlParameter("previous_cpt.code", Types.VARCHAR),
 				new SqlParameter("current_pt.code", Types.VARCHAR),new SqlParameter("current_t.code", Types.VARCHAR)).execute(processTypeCode, processTypeCode, code);
