@@ -23,7 +23,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				withoutSelect : true,
 				columnMode : true,
 				lineMode : function(line){
-					if((line.state.code === "N")||(line.state.code === "U-SUB"))
+					if((line.state.code === "NONE")||(line.state.code === "N"))
 						return true;
 					else 
 						return false;
@@ -82,13 +82,13 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 					edit:false,
 					choiceInList:false  
 				},
-				/*{property:"centerProjectName",
+				{property:"centerProjectName",
 			        	header: Messages("study.centerProjectName"),
 			        	type :"text",		    	  	
 			        	order:false,
-			        	edit:false,
+			        	edit:true,
 			        	choiceInList:false  
-			        },*/
+			    },
 				{property:"projectCodes",
 					header: Messages("study.projectCodes"),
 					type :"text",		    	  	
@@ -217,7 +217,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 					edit:true,
 					editTemplate:"<textarea class='form-control' #ng-model rows='1'></textarea>",
 					choiceInList:false
-				},
+				},				
 				{property:"clone",
 					header: Messages("sample.clone"),
 					type :"text",	
@@ -231,29 +231,22 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 					type :"int",
 					hide:true,
 					order:false,
-					edit:true,
+					edit:false,
 					choiceInList:false
 				},
-				{property:"classification",
-					header: Messages("sample.classification"),
-					type :"text",		    	  	
-					order:false,
-					edit:true,
-					choiceInList:false
-				},
-				{property:"commonName",
+				/*{property:"commonName",
 					header: Messages("sample.commonName"),
 					type :"text",		    	  	
 					hide:true,
 					order:false,
-					edit:true,
+					edit:false,
 					choiceInList:false
-				},
+				},*/
 				{property:"scientificName",
 					header: Messages("sample.scientificName"),
 					type :"text",		    	  	
 					order:false,
-					edit:true,
+					edit:false,
 					choiceInList:false
 				},
 				{property:"state.code",

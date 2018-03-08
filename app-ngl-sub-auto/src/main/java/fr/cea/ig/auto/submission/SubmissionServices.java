@@ -42,7 +42,8 @@ import fr.genoscope.lis.devsi.birds.impl.properties.ProjectProperties;
 public class SubmissionServices implements ISubmissionServices{
 
 	private static Logger log = Logger.getLogger(SubmissionServices.class);
-
+	
+	
 	//TODO
 	@Override
 	public Set<ResourceProperties> getRawDataResources(String submissionCode)

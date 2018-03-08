@@ -44,6 +44,7 @@ public abstract class TransitionWorkflows <T extends DBObject & TransitionObject
 	public abstract String getCollectionName();
 	//Submission.class
 	public abstract Class <T> getElementClass();
+	
 	@Override
 	public void setState(ContextValidation contextValidation, T t, State nextState) {
 		logger.debug("dans setState object code {} transition de {} vers {} ", t.getCode(), t.getState().code, nextState.code);
@@ -53,23 +54,29 @@ public abstract class TransitionWorkflows <T extends DBObject & TransitionObject
 		String currentStateCode = t.getState().code;
 		String nextStateCode = nextState.code;
 		Transition<T> tr = get(currentStateCode, nextStateCode);  //trs.get(currentStateCode, nextStateCode);
+		// TODO
+		// implementer sous-classe de RuntimeException : SbmissionTransitionException avec champs currentStateCode 
+		// et champs nextStateCode
 		if (tr == null) {
-			throw new RuntimeException();
+			throw new RuntimeException("Pas de transition de " + currentStateCode + " vers "+ nextStateCode);
 		}	
 		
-
 		//CommonValidationHelper.validateState(ObjectType.CODE.SRASubmission, nextState, contextValidation); 
 		CommonValidationHelper.validateState(getObjectType(), nextState, contextValidation); 
 		
 		if (contextValidation.hasErrors()) { 
 			throw new RuntimeException();
 		}
-		tr.execute(contextValidation, t, nextState);
+		
+		tr.execute(contextValidation, t, nextState); 
 		
 		// --------------------------
 		
 		
 		if (!contextValidation.hasErrors()) {
+			updateTraceInformation(t.getTraceInformation(), nextState);			
+			// installation du nouveau state et mise à jour de l'historique :
+			// t.state = updateHistoricalNextState(t.state, nextState);
 			t.setState(updateHistoricalNextState(t.getState(), nextState));	
 			// sauver le state dans la base avec traceInformation
 			MongoDBDAO.update(getCollectionName(), getElementClass(), 

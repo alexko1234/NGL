@@ -19,7 +19,6 @@ import org.mongojack.DBQuery.Query;
 
 import controllers.DocumentController;
 import controllers.QueryFieldsForm;
-//import models.sra.submit.util.VariableSRA;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
@@ -31,7 +30,6 @@ import models.sra.submit.util.SraCodeHelper;
 import models.sra.submit.util.SraException;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
-//import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
@@ -39,7 +37,6 @@ import play.mvc.Result;
 import services.SubmissionServices;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
-import workflows.sra.study.StudyWorkflows;
 
 
 public class StudiesInternal extends DocumentController<Study> {

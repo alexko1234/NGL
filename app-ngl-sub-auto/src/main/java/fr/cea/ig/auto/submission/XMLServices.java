@@ -17,11 +17,12 @@ import fr.genoscope.lis.devsi.birds.api.exception.BirdsException;
 import fr.genoscope.lis.devsi.birds.api.exception.FatalException;
 import fr.genoscope.lis.devsi.birds.api.exception.JSONDeviceException;
 import fr.genoscope.lis.devsi.birds.impl.properties.ProjectProperties;
+import Tools;
 
 public class XMLServices implements IXMLServices{
 
 	private static Logger log = Logger.getLogger(XMLServices.class);
-
+	
 	@Override
 	public void writeStudyXml(File outputFile, String code) throws IOException, JSONDeviceException, FatalException
 	{
@@ -97,6 +98,7 @@ public class XMLServices implements IXMLServices{
 				String commonName = rpsSample.get("commonName");
 				String anonymizedName = rpsSample.get("anonymizedName");
 				String description = rpsSample.get("description");
+				String clone = rpsSample.get("clone");
 				// Recuperer objet sample dans la base :
 				chaine = chaine + "  <SAMPLE alias=\""+ sampleCode + "\"";
 
@@ -121,6 +123,14 @@ public class XMLServices implements IXMLServices{
 				chaine = chaine + "    </SAMPLE_NAME>\n";
 				if (SRAFilesUtil.isNotNullValue(description)) {
 					chaine = chaine + "      <DESCRIPTION>" + description + "</DESCRIPTION>\n";
+				}
+				if (SRAFilesUtil.isNotNullValue(clone)) {
+					chaine = chaine + "      <SAMPLE_ATTRIBUTES>\n";
+					chaine = chaine + "      	<SAMPLE_ATTRIBUTE>\n";
+					chaine = chaine + "      		<TAG>Clone</TAG>\n";
+					chaine = chaine + "      		<VALUE>" + clone + "</VALUE>\n";
+					chaine = chaine + "      	</SAMPLE_ATTRIBUTE>\n";
+					chaine = chaine + "      </SAMPLE_ATTRIBUTES>\n";
 				}
 				chaine = chaine + "  </SAMPLE>\n";
 			}

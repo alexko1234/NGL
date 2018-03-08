@@ -20,6 +20,8 @@ GET		/tpl/sra/submissions/details					controllers.sra.submissions.tpl.Submission
 GET		/tpl/sra/submissions/validation				    controllers.sra.submissions.tpl.Submissions.validation()
 GET		/tpl/sra/submissions/js-routes					controllers.sra.submissions.tpl.Submissions.javascriptRoutes()
 PUT		/api/sra/submissions/:submissionCode/activate	controllers.sra.submissions.api.Submissions.activate(submissionCode : java.lang.String)
+PUT		/api/sra/submissions/createFromStudy/:studyCode controllers.sra.submissions.api.Submissions.createFromStudy(studyCode : java.lang.String)
+#GET		/api/sra/submissions/create          		controllers.sra.submissions.api.Submissions.create()
 
 # Mise à jour d'un objet submission et de ses composants :
 PUT		/sra/submissions/:code 							controllers.sra.submissions.api.Submissions.update(code: java.lang.String) 
@@ -85,7 +87,7 @@ PUT		/sra/studies/internal/:code					controllers.sra.studies.api.StudiesInternal
 POST	/api/sra/studies					    	controllers.sra.studies.api.Studies.save()
 PUT		/api/sra/studies/:studyCode/release	        controllers.sra.studies.api.Studies.release(studyCode : java.lang.String)
 
-PUT		/sra/studies/:code/state				    controllers.sra.studies.api.Studies.updateState(code:java.lang.String)
+#PUT		/sra/studies/:code/state				    controllers.sra.studies.api.Studies.updateState(code:java.lang.String)
 
 #--------
 # Samples

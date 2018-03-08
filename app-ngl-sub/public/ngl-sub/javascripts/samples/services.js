@@ -46,7 +46,32 @@ angular.module('ngl-sub.SamplesServices', []).
 			          hide     : true,
 			          type     : "text",		    	  	
 			          order    : true
-			     	});			     		     			        			        
+			     	});			     		     			        			            
+		columns.push({property : "taxonId",
+				      header   : Messages("sample.taxonId"),
+				      type     : "String",
+			          hide     : true,
+			          edit     : false,
+				      order    : true,
+				      choiceInList:false
+					});	
+		columns.push({property : "scientificName",
+				      header   : Messages("sample.scientificName"),
+				      type     : "String",
+			          hide     : true,
+			          edit     : false,
+				      order    : true,
+				      choiceInList : false
+					});						
+/*		columns.push({property : "commonName",
+				      header   : Messages("sample.commonName"),
+				      type     : "String",
+			          hide     : true,
+			          edit     : false,
+				      order    : true,
+				      choiceInList : false
+					});		
+*/
 		columns.push({property : "title",
 				      header   : Messages("sample.title"),
 				      type     : "String",
@@ -54,41 +79,15 @@ angular.module('ngl-sub.SamplesServices', []).
 			          edit     : true,
 				      order    : true,
 				      choiceInList : false
-					});	
+					});					 
 		columns.push({property : "description",
-				  	  header   : Messages("sample.description"),
+				      header   : Messages("sample.description"),
 				      type     : "String",
 			          hide     : true,
 			          edit     : true,
 				      order    : true,
 				      choiceInList : false
-				 	});						    
-		columns.push({property : "taxonId",
-				      header   : Messages("sample.taxonId"),
-				      type     : "String",
-			          hide     : true,
-			          edit     : true,
-				      order    : true,
-				      choiceInList:false
-					});	
-		columns.push({property:"commonName",
-				      header   : Messages("sample.commonName"),
-				      type     : "String",
-			          hide     : true,
-			          edit     : true,
-				      order    : true,
-				      choiceInList : false
-					});	
-		columns.push({property : "scientificName",
-				      header   : Messages("sample.scientificName"),
-				      type     : "String",
-			          hide     : true,
-			          edit     : true,
-				      order    : true,
-				      choiceInList : false
-					});						
-
-				 
+					});			
 		return columns;
 	};
 	

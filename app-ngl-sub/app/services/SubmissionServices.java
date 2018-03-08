@@ -17,6 +17,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+
+
 //import play.Logger;
 import validation.ContextValidation;
 import workflows.sra.submission.ConfigurationWorkflows;
@@ -80,6 +82,8 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+
+
 // import play.api.modules.spring.Spring;
 // import play.libs.F.Promise;
 // import play.libs.ws.WS;
@@ -96,16 +100,25 @@ public class SubmissionServices {
 	// final SubmissionWorkflows submissionWorkflows = Spring.get BeanOfType(SubmissionWorkflows.class);
 	// SubmissionWorkflowsHelper submissionWorkflowsHelper;
 
-	private final ConfigurationWorkflows    configWorkflows;
+	//private final ConfigurationWorkflows    configWorkflows;
 	private final SubmissionWorkflows       submissionWorkflows;
 	private final SubmissionWorkflowsHelper submissionWorkflowsHelper;
 	private final NGLContext ctx;
-	
+	public static final String initialStateCode = "NONE";
+
+//	@Inject
+//	public SubmissionServices(ConfigurationWorkflows configWorkflows, 
+//			                  SubmissionWorkflows submissionWorkflows, 
+//			                  SubmissionWorkflowsHelper submissionWorkflowsHelper, NGLContext ctx) {
+//		this.configWorkflows           = configWorkflows;
+//		this.submissionWorkflows       = submissionWorkflows;
+//		this.submissionWorkflowsHelper = submissionWorkflowsHelper;
+//		this.ctx = ctx;
+//	}
+//	
 	@Inject
-	public SubmissionServices(ConfigurationWorkflows configWorkflows, 
-			                  SubmissionWorkflows submissionWorkflows, 
+	public SubmissionServices(SubmissionWorkflows submissionWorkflows, 
 			                  SubmissionWorkflowsHelper submissionWorkflowsHelper, NGLContext ctx) {
-		this.configWorkflows           = configWorkflows;
 		this.submissionWorkflows       = submissionWorkflows;
 		this.submissionWorkflowsHelper = submissionWorkflowsHelper;
 		this.ctx = ctx;
@@ -265,7 +278,7 @@ public class SubmissionServices {
 
 		System.out.println("\ntaille de la map des userClone dans init = " + mapUserClones.size());
 		
-		
+
 		String user = contextValidation.getUser();
 		
 		System.out.println("Dans init : acStudy = " + acStudy + " et acSample= " + acSample);
@@ -286,9 +299,7 @@ public class SubmissionServices {
 		}
 		System.out.println("dans init, config.state.code='"+config.state.code+"'");
 		
-		if (! "N".equalsIgnoreCase(config.state.code) && ! "U-SUB".equalsIgnoreCase(config.state.code)) {
-			throw new SraException("Configuration " + config.code + " avec state.code = '"+ config.state.code+"'");
-		}
+
 		if (config.strategyStudy.equalsIgnoreCase("strategy_internal_study")) {
 			if (StringUtils.isNotBlank(acStudy)) {
 				// Recuperer le study si acStudy renseigné et strategy_internal_study :
@@ -308,6 +319,12 @@ public class SubmissionServices {
 					}	
 				}
 			}
+			// updater le studyà soumettre pour son status (avant controle de validation)
+			if (study.state != null && StringUtils.isNotBlank(study.state.code) && initialStateCode.equals(study.state.code)) {
+				study.state.code = "N";
+				study.traceInformation.modifyDate = new Date();
+				study.traceInformation.modifyUser = user;
+			}
 		} else if (config.strategyStudy.equalsIgnoreCase("strategy_external_study")) {
 			if (StringUtils.isNotBlank(acStudy)) {
 				uniqExternalStudy = fetchExternalStudy(acStudy, user);
@@ -323,6 +340,11 @@ public class SubmissionServices {
 			throw new SraException("Configuration " + config.code + " avec strategy_study = '"+ config.strategyStudy + "' (valeur non attendue)");
 		}
 		
+		if (config.state != null && StringUtils.isNotBlank(config.state.code) && initialStateCode.equals(config.state.code)) {
+			config.state.code = "N";
+			config.traceInformation.modifyDate = new Date();
+			config.traceInformation.modifyUser = user;
+		}	
 		ExternalSample uniqExternalSample = null;
 		Sample uniqSample = null;
 
@@ -654,39 +676,10 @@ public class SubmissionServices {
 				
 				// Mise a jour de l'objet submission pour le study à soumettre :// normalement deja fait dans createSubmissionEntity
 				//--------------------------------------------------------------
-				if (StringUtils.isBlank(acStudy) && ("N").equalsIgnoreCase(study.state.code)) {
+				if (StringUtils.isBlank(acStudy) && ("NONE").equalsIgnoreCase(study.state.code)) {
 					submission.studyCode = study.code;
 				}
-			}
-			
-			// surcharger l'experiment avec valeurs de l'utilisateur si mapUserExperiments exist
-			
-//			UserExperimentType userExperiment = mapUserExperiments.get(experiment.code);
-//			if (userExperiment != null) {
-//								
-//				if (StringUtils.isNotBlank(userExperiment.getLibrarySource())){
-//					experiment.librarySource = userExperiment.getLibrarySource();
-//				}
-//				if (StringUtils.isNotBlank(userExperiment.getLibraryStrategy())){
-//					experiment.libraryStrategy = userExperiment.getLibraryStrategy();
-//				}
-//				if (StringUtils.isNotBlank(userExperiment.getLibrarySelection())){
-//					experiment.librarySelection = userExperiment.getLibrarySelection();
-//				}
-//				if (StringUtils.isNotBlank(userExperiment.getLibraryProtocol())){
-//					experiment.libraryConstructionProtocol = userExperiment.getLibraryProtocol();
-//				}
-//				if (StringUtils.isNotBlank(userExperiment.getLibraryName())){
-//					experiment.libraryName = userExperiment.getLibraryName();
-//				}
-//				if (StringUtils.isNotBlank(userExperiment.getNominalLength())){
-//					experiment.libraryLayoutNominalLength = new Integer(userExperiment.getNominalLength());
-//				}
-//				if (StringUtils.isNotBlank(userExperiment.getTitle())){
-//					experiment.title = userExperiment.getTitle();
-//				}
-//			}
-//					
+			}	
 			
 			// Ajouter l'experiment avec le statut forcement à 'N' à l'objet submission :
 			// Mise à jour de l'objet submission avec les experiments à soumettre :
@@ -741,20 +734,15 @@ public class SubmissionServices {
 		// updater la configuration pour le statut 'used' 
 		State confState = new State();
 		confState.date = new Date();
-		confState.code = "U-SUB";
+		confState.code = "N";
 		confState.user = user;
-		configWorkflows.setState(contextValidation, config, confState);
-		System.out.println("on est passé par configWorkflows.setState et state.code='" + config.state.code+"'");		
 
-		// updater si besoin le study pour le statut 'V-SUB'
-		if (study != null && StringUtils.isNotBlank(submission.studyCode)){
-			study.state.code = "U-SUB";
-			study.traceInformation.modifyDate = new Date();
-			study.traceInformation.modifyUser = user;
-			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
-					DBQuery.is("code", study.code),
-					DBUpdate.set("state.code", study.state.code).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date()));	
-		}
+		// updater si besoin le study pour le statut 'N'
+		MongoDBDAO.save(InstanceConstants.SRA_STUDY_COLL_NAME, study);
+
+		// updater si besoin la config pour le statut 'N'
+		MongoDBDAO.save(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, config);
+			
 		// Updater les readSets pour le status dans la base: 
 		for (ReadSet readSet : readSets) {
 			if (readSet == null){
@@ -1028,13 +1016,13 @@ public class SubmissionServices {
 				if (! submission.refStudyCodes.contains("study.code")){
 					submission.refStudyCodes.add(study.code);
 				}
-				if (study.state.code.equals("N")) {
+				if (study.state.code.equals("NONE")) {
 					submission.studyCode = study.code; // studyCode à soumettre
 				
 				} else if (study.state.code.equals("F-SUB")) {
 				    // pas de soumission du study
 				} else {
-					throw new SraException("study.state.code not in ('N', 'F-SUB') => utilisation pour cette soumission d'un study en cours de soumission ?");
+					throw new SraException("study.state.code" + study.state.code + " not in ('NONE', 'F-SUB') => utilisation pour cette soumission d'un study en cours de soumission ?");
 				}
 			} 
 		
@@ -1699,6 +1687,9 @@ public class SubmissionServices {
 		System.out.println("deletion dans base pour submission "+submissionCode);
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
 	}
+
+	
+	
 	
 }
 

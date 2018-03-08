@@ -17,9 +17,11 @@ import java.util.Set;
 // import java.util.regex.Matcher;
 // import java.util.regex.Pattern;
 
+
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+
 
 //import play.Logger;
 // import play.Play;
@@ -38,6 +40,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 // import java.util.Date;
 
+
 // import javax.xml.parsers.DocumentBuilder;
 // import javax.xml.parsers.DocumentBuilderFactory;
 // import javax.xml.parsers.ParserConfigurationException;
@@ -50,6 +53,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 // import org.apache.commons.lang3.StringUtils;
+
 
 
 import mail.MailServiceException;
@@ -81,7 +85,9 @@ public class FileAcServices  {
 		this.submissionWorkflows = submissionWorkflows;
 	}
 	
-	public /*static*/ Submission traitementFileAC(ContextValidation ctxVal, String submissionCode, File ebiFileAc) throws IOException, SraException, MailServiceException {
+
+	
+	public Submission traitementFileAC(ContextValidation ctxVal, String submissionCode, File ebiFileAc) throws IOException, SraException, MailServiceException {
 		if (StringUtils.isBlank(submissionCode) || (ebiFileAc == null)) {
 			throw new SraException("traitementFileAC :: parametres d'entree à null" );
 		}
@@ -244,7 +250,6 @@ public class FileAcServices  {
 		sujet = "Probleme parsing fichier des AC : ";
 		message = "Pour la soumission " + submissionCode + ", le fichier des AC "+ ebiFileAc.getPath() + "</br>";
 		String destinataire = submission.creationUser;
-		
 		if (StringUtils.isNotBlank(destinataire)) {
 			if(!destinataire.endsWith("@genoscope.cns.fr")) {
 				destinataire = destinataire + "@genoscope.cns.fr";

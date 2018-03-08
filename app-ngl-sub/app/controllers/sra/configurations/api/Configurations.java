@@ -72,7 +72,7 @@ public class Configurations extends DocumentController<Configuration> {
 		if (userConfiguration._id == null) {
 			userConfiguration.traceInformation = new TraceInformation(); 
 			userConfiguration.traceInformation.setTraceInformation(getCurrentUser());
-			State state = new State("N", getCurrentUser());
+			State state = new State("NONE", getCurrentUser());
 			// Ne pas passer par configWorkflows ici car setState possible si mode update si object existe deja
 			//configWorkflows.setState(contextValidation, userConfiguration, state);
 			userConfiguration.state = state;

@@ -19,6 +19,7 @@ import validation.sra.SraValidationHelper;
 
 //Declaration d'une collection Configuration (herite de DBObject)
 public class Configuration  extends DBObject implements IValidation {
+		public static final String initialStateCode = "NONE";
 
 		//public String alias;            // required mais remplacé par code herité de DBObject, et valeur = conf_projectCode_num
 		public List<String> projectCodes = new ArrayList<String>(); // de type BAT, required pour nos stats
@@ -71,8 +72,9 @@ public class Configuration  extends DBObject implements IValidation {
 			SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySelection, VariableSRA.mapLibrarySelection(), "librarySelection");
 			SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryStrategy, VariableSRA.mapLibraryStrategy(), "libraryStrategy");
 			SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySource, VariableSRA.mapLibrarySource(), "librarySource");
-			SraValidationHelper.validateState(ObjectType.CODE.SRAConfiguration, this.state, contextValidation);
-
+			if ( this.state != null && StringUtils.isNotBlank(this.state.code) && !initialStateCode.equals(this.state.code)) {
+				SraValidationHelper.validateState(ObjectType.CODE.SRASubmission, this.state, contextValidation);
+			}
 			SraValidationHelper.requiredAndConstraint(contextValidation, this.strategySample, VariableSRA.mapStrategySample, "strategySample");
 			SraValidationHelper.requiredAndConstraint(contextValidation, this.strategyStudy, VariableSRA.mapStrategyStudy, "strategyStudy");
 			

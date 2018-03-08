@@ -31,10 +31,12 @@ import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
 import mail.MailServiceException;
 import models.laboratory.common.instance.State;
+import models.sra.submit.common.instance.Study;
 import models.sra.submit.common.instance.Submission;
 import models.sra.submit.common.instance.UserCloneType;
 import models.sra.submit.common.instance.UserExperimentType;
 import models.sra.submit.common.instance.UserSampleType;
+import models.sra.submit.util.SraCodeHelper;
 import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;
 //import play.Logger;
@@ -54,6 +56,8 @@ import services.XmlServices;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
 import workflows.sra.submission.SubmissionWorkflows;
+
+//import workflows.sra.submission.SubmissionWorkflows;
 
 public class Submissions extends DocumentController<Submission>{
 	
@@ -84,7 +88,7 @@ public class Submissions extends DocumentController<Submission>{
 	private final Form<SubmissionsSearchForm>   submissionsSearchForm;
 	private final Form<SubmissionsFileForm>     submissionsACForm; 
 	private final Form<State>                   stateForm;
-	private final SubmissionWorkflows           subWorkflows;
+	private final SubmissionWorkflows       subWorkflows;
 	private final SubmissionServices            submissionServices;
 	private final ReleaseServices               releaseServices;
 	private final FileAcServices                fileAcServices;
@@ -240,6 +244,7 @@ public class Submissions extends DocumentController<Submission>{
 		}
 
 		subWorkflows.setState(ctxVal, submission, state);
+		
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getObject(code)));
 		} else {
@@ -469,5 +474,69 @@ public class Submissions extends DocumentController<Submission>{
 		return ok(Json.toJson(submission));
 	}
 
+
+	/**
+	 * Cree une soumission pour la release du study indiqué et active cette soumission en la mettant dans un status IW_SUB_R
+	 * @param studyCode
+	 * @return ok(Json.toJson(submission))
+	 */           
+	public Result createFromStudy(String studyCode) {
+		//logger.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+		Submission submission = null;
+		Date courantDate = new java.util.Date();
+		String user = getCurrentUser();
+
+		ContextValidation contextValidation = new ContextValidation(user);
+		try {
+			Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, studyCode);
+			if (study == null) {
+				contextValidation.addErrors("createfromStudy appele avec le codeStudy" + studyCode , " qui n'existe pas dans base"); // si solution avec ctxVal
+				logger.debug("createfromStudy: " + contextValidation.errors);
+				return badRequest(errorsAsJson(contextValidation.getErrors()));
+			}
+			if (study.traceInformation.createUser == null) {
+				return unauthorized("le study " + study.code + "n'est pas renseigné pour le createUser" );
+			}
+			if (user == null) {
+				return unauthorized("l'utilisateur n'est pas authentifié" );
+			}
+			if (study.traceInformation.createUser.equals(user)) {
+				//lcontextValidation.addErrors("createfromStudy appele avec le codeStudy" + studyCode , " qui n'existe pas dans base"); // si solution avec ctxVal
+				return unauthorized(user + "n'est pas autorisé à rendre publique le study " + study.code + " crée par " + study.traceInformation.createUser);
+			}
+			submission = new Submission(user, study.projectCodes);
+			submission.code = SraCodeHelper.getInstance().generateSubmissionCode(study.projectCodes);
+			
+			submission.creationDate = courantDate;
+			logger.debug("submissionCode="+ submission.code);
+			// mettre à jour l'objet submission pour le cas d'une release de study :
+			submission.release = true;
+			submission.refStudyCodes.add(study.code);
+			submission.studyCode = study.code;		
+			submission.state = new State(SubmissionWorkflows.N_R, contextValidation.getUser());
+
+			// valider et sauver submission
+			contextValidation.setCreationMode();
+			contextValidation.getContextObjects().put("type", "sra");
+			logger.debug("AVANT submission.validate="+contextValidation.errors);
+			submission.validate(contextValidation);
+			logger.debug("APRES submission.validate="+contextValidation.errors);
+			if (contextValidation.hasErrors()) {
+				logger.debug("createfromStudy: " + contextValidation.errors);
+				return badRequest(errorsAsJson(contextValidation.getErrors()));
+			}
+			if (!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "code",submission.code)){	
+				MongoDBDAO.save(InstanceConstants.SRA_SUBMISSION_COLL_NAME, submission);
+				logger.debug("sauvegarde dans la base du submission " + submission.code);
+			}
+			subWorkflows.activateSubmissionRelease(contextValidation, submission);
+		} catch (SraException e) {
+			contextValidation.addErrors("Submission " + submission.code, e.getMessage()); 
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
+		}		
+		return ok(Json.toJson(submission));
+	}
+
+	
 }
 
