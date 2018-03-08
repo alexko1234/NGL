@@ -1,7 +1,10 @@
 package controllers.projects.api;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.inject.Inject;
 
@@ -30,6 +33,7 @@ import fr.cea.ig.ngl.support.api.ProjectAPIHolder;
 import fr.cea.ig.util.Streamer;
 import models.laboratory.project.instance.Project;
 import play.data.Form;
+import play.data.validation.ValidationError;
 import play.libs.Json;
 import play.mvc.Result;
 /**
@@ -103,30 +107,33 @@ public class Projects extends NGLController implements APINGLController, NGLForm
 	public Result get(String code) {
 		return ok(Json.toJson(getProjectAPI().get(code)));
 	}
-	
+
 	@Override
 	@Authenticated
 	@Authorized.Write
 	public Result save() {
 		Form<Project> filledForm = getFilledForm(projectForm, Project.class);
 		Project projectInput = filledForm.get();
-		try {
-			Project p = getProjectAPI().create(projectInput, getCurrentUser(), filledForm.errors());
-			return ok(Json.toJson(p));
-		} catch (APIValidationException e) {
-			getLogger().error(e.getMessage());
-			if(e.getErrors() != null) {
-				return badRequest(errorsAsJson(e.getErrors()));
-			} else {
-				return badRequest(e.getMessage());
+		if(! filledForm.hasErrors()) {
+			try {
+				Project p = getProjectAPI().create(projectInput, getCurrentUser());
+				return ok(Json.toJson(p));
+			} catch (APIValidationException e) {
+				getLogger().error(e.getMessage());
+				if(e.getErrors() != null) {
+					return badRequest(errorsAsJson(e.getErrors()));
+				} else {
+					return badRequest(e.getMessage());
+				}
+			} catch (APIException e) {
+				getLogger().error(e.getMessage());
+				return badRequest("use PUT method to update the project");
 			}
-		} catch (APIException e) {
-			getLogger().error(e.getMessage());
-			return badRequest("use PUT method to update the project");
+		} else {
+			return badRequest(errorsAsJson(mapErrors(filledForm.allErrors())));
 		}
-		
 	}
-	
+
 	@Override
 	@Authenticated
 	@Authorized.Write
@@ -137,26 +144,40 @@ public class Projects extends NGLController implements APINGLController, NGLForm
 		}
 		Form<Project> filledForm = getFilledForm(projectForm, Project.class);
 		Project projectInput = filledForm.get();
-		
-		try {
-			getProjectAPI().update(code, projectInput, getCurrentUser(), filledForm.errors());
-		} catch (APIValidationException e) {
-			getLogger().error(e.getMessage());
-			if(e.getErrors() != null) {
-				return badRequest(errorsAsJson(e.getErrors()));
-			} else {
+		if(! filledForm.hasErrors()) {
+			try {
+				getProjectAPI().update(code, projectInput, getCurrentUser());
+			} catch (APIValidationException e) {
+				getLogger().error(e.getMessage());
+				if(e.getErrors() != null) {
+					return badRequest(errorsAsJson(e.getErrors()));
+				} else {
+					return badRequest(e.getMessage());
+				}
+			} catch (APIException e) {
+				getLogger().error(e.getMessage());
 				return badRequest(e.getMessage());
 			}
-		} catch (APIException e) {
-			getLogger().error(e.getMessage());
-			return badRequest(e.getMessage());
+
+			return ok(Json.toJson(projectInput));
+		} else {
+			return badRequest(errorsAsJson(mapErrors(filledForm.allErrors())));
 		}
-		
-		return ok(Json.toJson(projectInput));
 	}
 	
+	private Map<String, List<ValidationError>> mapErrors(List<ValidationError> formErrors) {
+		Map<String, List<ValidationError>> map = new TreeMap<String, List<ValidationError>>(); 
+		formErrors.forEach(ve -> {
+			if(map.containsKey(ve.key())) {
+				map.get(ve.key()).add(ve);
+			} else {
+				map.put(ve.key(), Arrays.asList(ve));
+			}
+		});
+		return map;
+	}
 	
-	// TODO voir class fr.cea.ig.mongo.QueryBuilder
+	// TODO factoriser avec class fr.cea.ig.mongo.QueryBuilder
 	private Query getQuery(ProjectsSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;

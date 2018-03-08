@@ -53,7 +53,7 @@ public class ProjectAPITest extends AbstractTests {
 	 */
 	public void setUpData() {
 		try {
-			createdProject = api.create(PROJECT_REF, currentUser, new TreeMap<String, List<ValidationError>>());
+			createdProject = api.create(PROJECT_REF, currentUser);
 		} catch (APIValidationException e) {
 			logger.error(e.getMessage());
 			logger.error("invalid fields: " + e.getErrors().keySet().toString());
@@ -75,7 +75,7 @@ public class ProjectAPITest extends AbstractTests {
 	@Test
 	public void createTest() {
 		try {
-			createdProject = api.create(PROJECT_REF, currentUser, new TreeMap<String, List<ValidationError>>());
+			createdProject = api.create(PROJECT_REF, currentUser);
 			assertNotNull(createdProject);
 			logger.debug("Project ID: " + createdProject._id);
 			assertEquals(PROJECT_REF.code, createdProject.code);
@@ -155,7 +155,7 @@ public class ProjectAPITest extends AbstractTests {
 			updatedProj.traceInformation.modifyUser = currentUser;
 			updatedProj.traceInformation.modifyDate = new Date();
 
-			api.update(PROJECT_REF.code, updatedProj, currentUser, new TreeMap<String, List<ValidationError>>());
+			api.update(PROJECT_REF.code, updatedProj, currentUser);
 			Project proj = api.get(TestProjectFactory.projectArchived(currentUser).code);
 			assertNotEquals(PROJECT_REF.archive, proj.archive);
 			assertEquals(TestProjectFactory.projectArchived(currentUser).archive, proj.archive);

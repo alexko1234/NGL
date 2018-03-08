@@ -77,8 +77,8 @@ public class ProjectsAPI {
 		return MongoStreamer.streamUDT(dao.mongoDBFinderWithPagination(query, orderBy, orderSense, pageNumber, numberRecordsPerPage, keys));
 	}
 	
-	public Project create(Project project, String currentUser, Map<String,List<ValidationError>> errors) throws APIException, APIValidationException {
-		ContextValidation ctxVal = new ContextValidation(currentUser, errors); 
+	public Project create(Project project, String currentUser) throws APIException, APIValidationException {
+		ContextValidation ctxVal = new ContextValidation(currentUser); 
 		if (project._id == null) { 
 			project.traceInformation = new TraceInformation();
 			project.traceInformation.creationStamp(ctxVal, currentUser);
@@ -108,12 +108,12 @@ public class ProjectsAPI {
 		this.dao.deleteObject(code);
 	}
 	
-	public Project update(String code, Project input, String currentUser, Map<String,List<ValidationError>> errors) throws APIException, APIValidationException {
+	public Project update(String code, Project input, String currentUser) throws APIException, APIValidationException {
 		Project project = this.get(code);
 		if (project == null) {
 			throw new APIException("Project with code " + code + " not exist");
 		}
-		ContextValidation ctxVal = new ContextValidation(currentUser, errors); 
+		ContextValidation ctxVal = new ContextValidation(currentUser); 
 		if (code.equals(input.code)) {
 			if(input.traceInformation != null){
 				input.traceInformation.modificationStamp(ctxVal, currentUser);
