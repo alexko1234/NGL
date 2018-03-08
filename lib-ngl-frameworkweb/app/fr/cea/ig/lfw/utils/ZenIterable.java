@@ -1,5 +1,6 @@
 package fr.cea.ig.lfw.utils;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -57,6 +58,15 @@ public interface ZenIterable <A> extends Iterable <A> {
 	default Optional<A> first() {
 		return Iterables.first(this);
 	}
+	
+	default List<A> toList() {
+		return Iterables.toList(this);
+	}
+	
+	default ZenIterable<A> prepend    (A a) { return Iterables.prepend    (this, a); }
+	default ZenIterable<A> append     (A a) { return Iterables.append     (this, a); }
+	default ZenIterable<A> intercalate(A a) { return Iterables.intercalate(this, a); }
+	default ZenIterable<A> surround(A before, A between, A after) { return Iterables.surround(this, before, between, after); }
 	
 }
 

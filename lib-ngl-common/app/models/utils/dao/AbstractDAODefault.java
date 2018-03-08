@@ -18,6 +18,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.jdbc.support.MetaDataAccessException;
 
+import fr.cea.ig.lfw.utils.Iterables;
+
 // import fr.cea.ig.play.NGLContext;
 //import play.Logger;
 
@@ -88,6 +90,12 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 			sql = sql.substring(0, sql.lastIndexOf(","));
 			sql += " WHERE id=:id";
 			return sql;
+//			return Iterables.concat(
+//					Iterables.filter(getColumns(), c -> !c.equals("id"))
+//					        .map(c -> c + "=:" + c)
+//					        .surround("UPDATE " + tableName + " SET ",
+//					        		  ",",
+//					        		  " WHERE id=:id"));
 		} catch (MetaDataAccessException e) {
 			throw new DAOException(e);
 		}
@@ -154,7 +162,8 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 			String sql = getSqlCommon() + " WHERE t.code in (" + listToParameters(codes) + ")";
 			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
 //			return this.jdbcTemplate.query(sql, mapper, listToSqlParameters(codes ,"t.code", Types.VARCHAR));
-			return jdbcTemplate.query(sql, mapper, listToSqlParameters(codes ,"t.code", Types.VARCHAR));
+//			return jdbcTemplate.query(sql, mapper, listToSqlParameters(codes ,"t.code", Types.VARCHAR));
+			return jdbcTemplate.query(sql, mapper, codes.toArray(new Object[codes.size()]));
 		} catch (DataAccessException e) {
 			logger.warn(e.getMessage());
 			return null;

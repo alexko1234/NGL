@@ -49,6 +49,9 @@ public interface Equality {
 		return p.test(ta, tb);
 	}
 	
+	public static boolean ea(Object a, Object b) { return objectEquals(a,b); }
+	public static <T> boolean eq(Class<T> c, Object a, Object b, BiPredicate<T,T> p) { return typedEquals(c,a,b,p); }
+	
 //	default <T> boolean equals(Class<T> c, Object o, BiPredicate<T,T> p) {
 //		if (o == null)
 //			return false;
