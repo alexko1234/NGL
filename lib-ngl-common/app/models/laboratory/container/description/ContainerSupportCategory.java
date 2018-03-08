@@ -28,10 +28,11 @@ public class ContainerSupportCategory extends AbstractCategory<ContainerSupportC
 	
 	public static class ContainerSupportCategoryFinder extends Finder<ContainerSupportCategory> {
 	
-		public ContainerSupportCategoryFinder() {
-			super(ContainerSupportCategoryDAO.class.getName());
-			
-		}
+//		public ContainerSupportCategoryFinder() {
+//			super(ContainerSupportCategoryDAO.class.getName());
+//			
+//		}
+		public ContainerSupportCategoryFinder() { super(ContainerSupportCategoryDAO.class);	}
 
 		public List<ContainerSupportCategory> findByContainerCategoryCode(String categoryCode) throws DAOException {
 			return ((ContainerSupportCategoryDAO) getInstance()).findByContainerCategoryCode(categoryCode);

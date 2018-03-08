@@ -16,7 +16,8 @@ public class TreatmentCategory extends AbstractCategory<TreatmentCategory>{
 		ba
 	};
 
-	public static Finder<TreatmentCategory> find = new Finder<TreatmentCategory>(TreatmentCategoryDAO.class.getName());
+//	public static Finder<TreatmentCategory> find = new Finder<TreatmentCategory>(TreatmentCategoryDAO.class.getName());
+	public static Finder<TreatmentCategory> find = new Finder<>(TreatmentCategoryDAO.class);
 	
 	public TreatmentCategory() {
 		super(TreatmentCategoryDAO.class.getName());

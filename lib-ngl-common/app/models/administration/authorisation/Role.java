@@ -25,9 +25,10 @@ public class Role extends Model<Role> {
 	// public static class RoleFinder extends Finder<Role> {
 	public static class RoleFinder extends Model.Finder<Role> {
 		
-		public RoleFinder() {
-			super(RoleDAO.class.getName());
-		}
+//		public RoleFinder() {
+//			super(RoleDAO.class.getName());
+//		}
+		public RoleFinder() { super(RoleDAO.class); }
 		
 		public List<Role> findAll() throws DAOException {
 			return ((RoleDAO)getInstance()).findAll();

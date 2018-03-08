@@ -83,11 +83,11 @@ public class CommonInfoType extends Model<CommonInfoType> {
 	 */
 	public List<PropertyDefinition> getPropertyDefinitionByLevel(Level.CODE... levels) {
 		List<PropertyDefinition> proDefinitions = new ArrayList<PropertyDefinition>();
-		for(PropertyDefinition propertyDefinition:this.propertiesDefinitions) {
+		for (PropertyDefinition propertyDefinition:this.propertiesDefinitions) {
 			boolean containsAll = true;
-			for(int i=0;i<levels.length;i++){
+			for (int i=0; i<levels.length; i++) {
 				Level level = new Level(levels[i]);
-				if(!propertyDefinition.levels.contains(level)){
+				if (!propertyDefinition.levels.contains(level)) {
 					containsAll = false;
 					break;
 				}						
@@ -101,10 +101,11 @@ public class CommonInfoType extends Model<CommonInfoType> {
 	
 	public static class CommonInfoTypeFinder extends Finder<CommonInfoType> {
 
-		public CommonInfoTypeFinder() {
-			super(CommonInfoTypeDAO.class.getName());
-		}
+//		public CommonInfoTypeFinder() {
+//			super(CommonInfoTypeDAO.class.getName());
+//		}
 
+		public CommonInfoTypeFinder() { super(CommonInfoTypeDAO.class); }
 		public List<CommonInfoType> findByObjectTypeCode(CODE objectTypeCode) throws DAOException {
 			return ((CommonInfoTypeDAO)getInstance()).findByObjectTypeCode(objectTypeCode);
 		}
@@ -115,14 +116,28 @@ public class CommonInfoType extends Model<CommonInfoType> {
 		
 	}
 
-	public static class AbstractCommonInfoTypeFinder<T> extends Finder<T> { 
-	
-		public AbstractCommonInfoTypeFinder(Class<? extends AbstractDAOCommonInfoType> type) {
-			super(type.getName());
-		}
+//	public static class AbstractCommonInfoTypeFinder<T> extends Finder<T> { 
+//	
+////		public AbstractCommonInfoTypeFinder(Class<? extends AbstractDAOCommonInfoType> type) {
+////			super(type.getName());
+////		}
+//		public AbstractCommonInfoTypeFinder(Class<? extends AbstractDAOCommonInfoType> type) { super(type); }
+//	
+//		public List<ListObject> findAllForList() throws DAOException {
+//			return ((AbstractDAOCommonInfoType) getInstance()).findAllForList();
+//		}
+//		
+//	}
+	public static class AbstractCommonInfoTypeFinder<T extends CommonInfoType> extends Finder<T> { 
+		
+//		public AbstractCommonInfoTypeFinder(Class<? extends AbstractDAOCommonInfoType> type) {
+//			super(type.getName());
+//		}
+		public AbstractCommonInfoTypeFinder(Class<? extends AbstractDAOCommonInfoType<T>> type) { super(type); }
 	
 		public List<ListObject> findAllForList() throws DAOException {
-			return ((AbstractDAOCommonInfoType) getInstance()).findAllForList();
+//			return ((AbstractDAOCommonInfoType) getInstance()).findAllForList();
+			return ((AbstractDAOCommonInfoType<T>) getInstance()).findAllForList();
 		}
 		
 	}

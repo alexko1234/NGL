@@ -13,7 +13,8 @@ import models.utils.Model.Finder;
  */
 public class ImportCategory extends AbstractCategory<ImportCategory> {
 
-	public static Finder<ImportCategory> find = new Finder<ImportCategory>(ImportCategoryDAO.class.getName());
+//	public static Finder<ImportCategory> find = new Finder<ImportCategory>(ImportCategoryDAO.class.getName());
+	public static Finder<ImportCategory> find = new Finder<ImportCategory>(ImportCategoryDAO.class);
 	
 	public ImportCategory() {
 		super(ImportCategoryDAO.class.getName());

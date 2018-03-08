@@ -7,7 +7,8 @@ import models.utils.Model.Finder;
 
 public class ProtocolCategory extends AbstractCategory<ProtocolCategory> {
 
-	public static Finder<ProtocolCategory> find = new Finder<ProtocolCategory>(ProtocolCategoryDAO.class.getName()); 
+//	public static Finder<ProtocolCategory> find = new Finder<ProtocolCategory>(ProtocolCategoryDAO.class.getName()); 
+	public static Finder<ProtocolCategory> find = new Finder<ProtocolCategory>(ProtocolCategoryDAO.class); 
 	
 	public ProtocolCategory() {
 		super(ProtocolCategoryDAO.class.getName());

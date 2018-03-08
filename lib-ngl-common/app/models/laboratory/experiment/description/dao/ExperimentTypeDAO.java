@@ -42,8 +42,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 	
 	@Override
 	public long save(ExperimentType experimentType) throws DAOException	{
-
-		if(null == experimentType) {
+		if (experimentType == null) {
 			throw new DAOException("ExperimentType is mandatory");
 		}
 		//Check if category exist
@@ -72,10 +71,10 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 	}
 
 	private void insertSampleTypes(List<SampleType> sampleTypes, Long id, boolean deleteBefore) {
-		if(deleteBefore){
+		if (deleteBefore) {
 			removeSampleTypes(id);
 		}
-		if(sampleTypes!=null && sampleTypes.size()>0){
+		if (sampleTypes!=null && sampleTypes.size() > 0) {
 			String sql = "INSERT INTO experiment_type_sample_type (fk_experiment_type, fk_sample_type) VALUES(?,?)";
 			for(SampleType sampleType:sampleTypes){
 				if(sampleType == null || sampleType.id == null ){

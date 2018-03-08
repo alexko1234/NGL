@@ -57,9 +57,10 @@ public class PropertyDefinition extends Model<PropertyDefinition> {
 
 	public static class PropertyDefinitionFinder extends Finder<PropertyDefinition> {
 
-		public PropertyDefinitionFinder() {
-			super(PropertyDefinitionDAO.class.getName());			
-		}
+//		public PropertyDefinitionFinder() {
+//			super(PropertyDefinitionDAO.class.getName());			
+//		}
+		public PropertyDefinitionFinder() {	super(PropertyDefinitionDAO.class); }
 		
 		public PropertyDefinition findUnique(String code, Level.CODE levelCode) throws DAOException{
 			return ((PropertyDefinitionDAO)getInstance()).findUnique(code, levelCode);

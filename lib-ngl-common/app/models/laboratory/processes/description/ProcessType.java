@@ -35,9 +35,10 @@ public class ProcessType extends CommonInfoType {
 	
 	public static class ProcessTypeFinder extends Finder<ProcessType> {
 
-		public ProcessTypeFinder() {
-			super(ProcessTypeDAO.class.getName());			
-		}
+//		public ProcessTypeFinder() {
+//			super(ProcessTypeDAO.class.getName());			
+//		}
+		public ProcessTypeFinder() { super(ProcessTypeDAO.class);	}
 		
 		public List<ProcessType> findByProcessCategoryCodes(String...processCategoryCode) throws DAOException {
 			return ((ProcessTypeDAO)getInstance()).findByProcessCategoryCodes(processCategoryCode);

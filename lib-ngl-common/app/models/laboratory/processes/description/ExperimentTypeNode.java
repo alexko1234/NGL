@@ -13,7 +13,8 @@ import play.api.modules.spring.Spring;
 
 public class ExperimentTypeNode extends Model<ExperimentTypeNode>{
 
-	public static final Finder<ExperimentTypeNode> find = new Finder<ExperimentTypeNode>(ExperimentTypeNodeDAO.class.getName());
+//	public static final Finder<ExperimentTypeNode> find = new Finder<ExperimentTypeNode>(ExperimentTypeNodeDAO.class.getName());
+	public static final Finder<ExperimentTypeNode> find = new Finder<>(ExperimentTypeNodeDAO.class);
 
 	//Possibility to do purification
 	public boolean doPurification = false; // Boolean.FALSE;

@@ -37,9 +37,10 @@ public class Instrument extends Model<Instrument> {
 		
 	public static class InstrumentFinder extends Finder<Instrument>{
 
-		public InstrumentFinder() {
-			super(InstrumentDAO.class.getName());			
-		}
+//		public InstrumentFinder() {
+//			super(InstrumentDAO.class.getName());			
+//		}
+		public InstrumentFinder() { super(InstrumentDAO.class); }
 		
 		public List<Instrument> findByQueryParams(InstrumentQueryParams instrumentsQueryParams) throws DAOException {
 			return ((InstrumentDAO)getInstance()).findByQueryParams(instrumentsQueryParams);

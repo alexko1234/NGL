@@ -31,9 +31,10 @@ public class Value extends Model<Value>{
 
 	 public static class ValueFinder extends Finder<Value> {
 
-			public ValueFinder() {
-			    super(ValueDAO.class.getName());
-			}
+//			public ValueFinder() {
+//			    super(ValueDAO.class.getName());
+//			}
+			public ValueFinder() { super(ValueDAO.class);	}
 		
 			public List<Value> findUnique(String propertyDefinitionCode) throws DAOException{
 				return ((ValueDAO)getInstance()).findUnique(propertyDefinitionCode);

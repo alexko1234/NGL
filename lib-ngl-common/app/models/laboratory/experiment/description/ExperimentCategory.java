@@ -27,9 +27,10 @@ public class ExperimentCategory extends AbstractCategory<ExperimentCategory>{
 	
 	public static class ExperimentCategoryFinder extends Finder<ExperimentCategory> {
 
-		public ExperimentCategoryFinder() {
-			super(ExperimentCategoryDAO.class.getName());			
-		}
+//		public ExperimentCategoryFinder() {
+//			super(ExperimentCategoryDAO.class.getName());			
+//		}
+		public ExperimentCategoryFinder() { super(ExperimentCategoryDAO.class);	}
 		
 		public List<ExperimentCategory> findByProcessTypeCode(String processTypeCode) throws DAOException{
 			return ((ExperimentCategoryDAO)getInstance()).findByProcessTypeCode(processTypeCode);

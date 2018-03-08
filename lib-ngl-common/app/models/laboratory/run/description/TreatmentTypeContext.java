@@ -24,9 +24,10 @@ public class TreatmentTypeContext extends TreatmentContext {
 	
 	public static class TreatmentTypeContextFinder extends Finder<TreatmentTypeContext> {
 
-		public TreatmentTypeContextFinder() {
-			super(TreatmentTypeContextDAO.class.getName());
-		}
+//		public TreatmentTypeContextFinder() {
+//			super(TreatmentTypeContextDAO.class.getName());
+//		}
+		public TreatmentTypeContextFinder() { super(TreatmentTypeContextDAO.class); }
 
 		public List<TreatmentTypeContext> findByTreatmentTypeId(Long id) throws DAOException {
 			return ((TreatmentTypeContextDAO) getInstance()).findByTreatmentTypeId(id);

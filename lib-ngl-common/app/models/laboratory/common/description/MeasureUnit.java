@@ -24,9 +24,10 @@ public class MeasureUnit extends Model<MeasureUnit> {
 
 	public static class MeasureUnitFinder extends Finder<MeasureUnit> {
 
-		public MeasureUnitFinder() {
-		    super(MeasureUnitDAO.class.getName());
-		}
+//		public MeasureUnitFinder() {
+//		    super(MeasureUnitDAO.class.getName());
+//		}
+		public MeasureUnitFinder() { super(MeasureUnitDAO.class); }
 		
 		public MeasureUnit findByValue(String value) throws DAOException {
 			return ((MeasureUnitDAO) getInstance()).findByValue(value);

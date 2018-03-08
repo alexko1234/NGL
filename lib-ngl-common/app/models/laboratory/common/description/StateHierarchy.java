@@ -28,9 +28,10 @@ public class StateHierarchy extends Model<StateHierarchy> {
   
     public static class StateHierarchyFinder extends Finder<StateHierarchy> {
 
-		public StateHierarchyFinder() {
-		    super(StateHierarchyDAO.class.getName());
-		}
+//		public StateHierarchyFinder() {
+//		    super(StateHierarchyDAO.class.getName());
+//		}
+		public StateHierarchyFinder() { super(StateHierarchyDAO.class); }
 		
 		public List<StateHierarchy> findByObjectTypeCode(CODE objectTypeCode) throws DAOException {
 		    return ((StateHierarchyDAO) getInstance()).findByObjectTypeCode(objectTypeCode);

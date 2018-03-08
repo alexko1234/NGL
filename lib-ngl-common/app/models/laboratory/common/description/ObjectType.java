@@ -32,7 +32,8 @@ public class ObjectType extends Model<ObjectType> {
 		SRAExperiment 
 	}; 
 
-	public static Finder<ObjectType> find = new Finder<ObjectType>(ObjectTypeDAO.class.getName()); 
+//	public static Finder<ObjectType> find = new Finder<ObjectType>(ObjectTypeDAO.class.getName()); 
+	public static Finder<ObjectType> find = new Finder<>(ObjectTypeDAO.class); 
 
 	public ObjectType() {
 		super(ObjectTypeDAO.class.getName());

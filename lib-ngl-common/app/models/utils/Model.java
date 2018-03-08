@@ -1,9 +1,11 @@
 package models.utils;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import fr.cea.ig.lfw.utils.LazyLambdaSupplier;
 import models.utils.dao.AbstractDAO;
 import models.utils.dao.DAOException;
 //import play.Logger;
@@ -79,16 +81,78 @@ public class Model<T> {
 	// - implement a mongo version, requires a mongo based abstract DAO implementation
 	// - swap implementations
 	
+//	public static class Finder<T> {
+//
+//		private String className;
+//
+//		// Could take a class object.
+//		@JsonIgnore
+//		public Finder(String className) {
+//			this.className = className;
+//		}
+//
+//		@JsonIgnore
+//		public T findByCode(String code) throws DAOException {
+//			return getInstance().findByCode(code);
+//		}
+//		
+//		@JsonIgnore
+//		public List<T> findByCodes(List<String> codes) throws DAOException {
+//			return getInstance().findByCodes(codes);
+//		}
+//
+//		@JsonIgnore
+//		public Boolean isCodeExist(String code) throws DAOException {
+//			return getInstance().isCodeExist(code);
+//		}
+//
+//		@JsonIgnore
+//		public List<T> findAll() throws DAOException {
+//			return getInstance().findAll();
+//		}
+//
+//		@JsonIgnore
+//		public T findById(Long id) throws DAOException {
+//			return getInstance().findById(id);
+//		}
+//
+//		@JsonIgnore
+//		@SuppressWarnings("unchecked")
+//		public AbstractDAO<T> getInstance() throws DAOException {
+//			try {
+//				return (AbstractDAO<T>)Spring.getBeanOfType(Class.forName(className));
+//			} catch (ClassNotFoundException e) {
+//				throw new DAOException(e);
+//			}
+//		}
+//		
+////		public String getClassName() {
+////			return className;
+////		}
+//		
+//	}
+	
 	public static class Finder<T> {
 
-		private String className;
+//		private String className;
+//
+//		// Could take a class object.
+//		@JsonIgnore
+//		public Finder(String className) {
+//			this.className = className;
+//		}
 
-		// Could take a class instance.
-		@JsonIgnore
-		public Finder(String className) {
-			this.className = className;
+//		private final LazyLambdaSupplier<AbstractDAO<T>> daoRef;
+		private final Supplier<AbstractDAO<T>> daoRef;
+
+		public Finder(Supplier<AbstractDAO<T>> s) {
+			daoRef = s;
 		}
-
+		
+		public Finder(Class<? extends AbstractDAO<T>> c) {
+			this(() -> Spring.getBeanOfType(c));
+		}
+		
 		@JsonIgnore
 		public T findByCode(String code) throws DAOException {
 			return getInstance().findByCode(code);
@@ -114,15 +178,19 @@ public class Model<T> {
 			return getInstance().findById(id);
 		}
 
-		@JsonIgnore
-		@SuppressWarnings("unchecked")
-		public AbstractDAO<T> getInstance() throws DAOException {
-			try {
-				return (AbstractDAO<T>)Spring.getBeanOfType(Class.forName(className));
-			} catch (ClassNotFoundException e) {
-				throw new DAOException(e);
-			}
+		public AbstractDAO<T> getInstance() {
+			return daoRef.get();
 		}
+		
+//		@JsonIgnore
+//		@SuppressWarnings("unchecked")
+//		public AbstractDAO<T> getInstance() throws DAOException {
+//			try {
+//				return (AbstractDAO<T>)Spring.getBeanOfType(Class.forName(className));
+//			} catch (ClassNotFoundException e) {
+//				throw new DAOException(e);
+//			}
+//		}
 		
 //		public String getClassName() {
 //			return className;

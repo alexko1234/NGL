@@ -39,9 +39,10 @@ public class State extends Model<State> {
 
     public static class StateFinder extends Finder<State> {
 
-		public StateFinder() {
-		    super(StateDAO.class.getName());
-		}
+//		public StateFinder() {
+//		    super(StateDAO.class.getName());
+//		}
+		public StateFinder() { super(StateDAO.class); }
 	
 		public List<State> findByCategoryCode(String code) throws DAOException {
 		    return ((StateDAO) getInstance()).findByCategoryCode(code);

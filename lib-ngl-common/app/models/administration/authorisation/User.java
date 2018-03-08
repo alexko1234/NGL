@@ -69,9 +69,10 @@ public class User extends Model<User> {
 	// public static class UserFinder extends Finder<User> {
 	public static class UserFinder extends Model.Finder<User> {
 
-		public UserFinder() {
-			super(UserDAO.class.getName());
-		}
+//		public UserFinder() {
+//			super(UserDAO.class.getName());
+//		}
+		public UserFinder() { super(UserDAO.class); }
 
 		public List<User> findAll() throws DAOException {
 			return ((UserDAO)getInstance()).findAll();

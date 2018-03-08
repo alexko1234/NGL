@@ -22,10 +22,11 @@ public class ContainerCategory extends AbstractCategory<ContainerCategory> {
 
 	public static class ContainerCategoryFinder extends Finder<ContainerCategory> {
 		
-		public ContainerCategoryFinder() {
-			super(ContainerCategoryDAO.class.getName());
-			
-		}
+//		public ContainerCategoryFinder() {
+//			super(ContainerCategoryDAO.class.getName());
+//			
+//		}
+		public ContainerCategoryFinder() { super(ContainerCategoryDAO.class); }
 
 		public ContainerCategory findByContainerSupportCategoryCode(String containerSupportCategoryCode) {
 			return ((ContainerCategoryDAO) getInstance()).findByContainerSupportCategoryCode(containerSupportCategoryCode);

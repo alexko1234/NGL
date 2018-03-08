@@ -39,9 +39,10 @@ public class InstrumentUsedType extends CommonInfoType {
 	
 	public static class InstrumentUsedTypeFinder extends Finder<InstrumentUsedType> {
 
-		public InstrumentUsedTypeFinder() {
-			super(InstrumentUsedTypeDAO.class.getName());			
-		}
+//		public InstrumentUsedTypeFinder() {
+//			super(InstrumentUsedTypeDAO.class.getName());			
+//		}
+		public InstrumentUsedTypeFinder() { super(InstrumentUsedTypeDAO.class);	}
 		
 		public List<InstrumentUsedType> findByExperimentTypeCode(String instrumentUsedTypeCode) throws DAOException {
 			return ((InstrumentUsedTypeDAO)getInstance()).findByExperimentTypeCode(instrumentUsedTypeCode);

@@ -19,9 +19,10 @@ public class InstrumentCategory extends AbstractCategory<InstrumentCategory> {
 	
 	public static class InstrumentCategoryFinder extends Finder<InstrumentCategory> {
 
-		public InstrumentCategoryFinder() {
-			super(InstrumentCategoryDAO.class.getName());			
-		}
+//		public InstrumentCategoryFinder() {
+//			super(InstrumentCategoryDAO.class.getName());			
+//		}
+		public InstrumentCategoryFinder() { super(InstrumentCategoryDAO.class); }
 		
 		public List<InstrumentCategory> findByInstrumentUsedTypeCode(String instrumentTypeCode) throws DAOException {
 			return ((InstrumentCategoryDAO)getInstance()).findByInstrumentUsedTypeCode(instrumentTypeCode);
