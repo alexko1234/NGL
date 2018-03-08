@@ -64,12 +64,13 @@ import models.sra.submit.common.instance.Submission;
 import models.sra.submit.util.SraException;
 // import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
+//import play.Logger;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.ngl.NGLConfig;
 
 public class ReleaseServices  {
 
-//	private static final play.Logger.ALogger logger = play.Logger.of(ReleaseServices.class);
+	private static final play.Logger.ALogger logger = play.Logger.of(ReleaseServices.class);
 
 	// final static SubmissionWorkflows submissionWorkflows = Spring.get BeanOfType(SubmissionWorkflows.class);
 	
@@ -86,17 +87,18 @@ public class ReleaseServices  {
 		if (StringUtils.isBlank(submissionCode) || (retourEbiRelease == null)) {
 			throw new SraException("traitementRelease :: parametres d'entree à null" );
 		}
-		System.out.println("submissionCode=" + submissionCode);
+//		System.out.println("submissionCode=" + submissionCode);
+		logger.debug("submissionCode = {}", submissionCode);
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
 		Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, submission.studyCode);
 
 		if (submission == null) 
 			throw new SraException("soumission " + submissionCode + " impossible à recuperer dans base");
 		if (! retourEbiRelease.exists())
-			throw new SraException("Fichier resultat de l'ebi pour la release absent des disques : "+ retourEbiRelease.getAbsolutePath());
-		if (!submission.release) {
-			throw new SraException("soumission "+submission.code+" ne correspond pas a une soumission pour release");
-		}
+			throw new SraException("Fichier resultat de l'ebi pour la release absent des disques : " + retourEbiRelease.getAbsolutePath());
+		if (!submission.release)
+			throw new SraException("soumission " + submission.code + " ne correspond pas a une soumission pour release");
+
 //		BufferedReader inputBuffer = null;
 //		try {
 //			inputBuffer = new BufferedReader(new FileReader(retourEbiRelease));
@@ -117,10 +119,12 @@ public class ReleaseServices  {
 //		String expediteur = ConfigFactory.load().getString("releaseReporting.email.from"); 
 		// String expediteur = Play.application().configuration().getString("releaseReporting.email.from");
 		String expediteur = config.getReleaseReportingEmailFrom();
-		System.out.println("expediteur=" + expediteur);
+//		System.out.println("expediteur=" + expediteur);
+		logger.debug("expediteur=" + expediteur);
 		// String dest = Play.application().configuration().getString("releaseReporting.email.to");
 		String dest = config.getReleaseReportingEmailTo();
-		System.out.println("destinataires = " + dest);
+//		System.out.println("destinataires = " + dest);
+		logger.debug("destinataires = " + dest);
 		// String subjectSuccess = Play.application().configuration().getString("releaseReporting.email.subject.success");
 		String subjectSuccess = config.getReleaseReportingEmailSubjectSuccess();
 		//l.debug("subjectSuccess = "+Play.application().configuration().getString("releaseReporting.email.subject.success"));
@@ -176,7 +180,8 @@ public class ReleaseServices  {
 			final NodeList racineNoeuds = racine.getChildNodes();
 			final int nbRacineNoeuds = racineNoeuds.getLength();
 			
-			System.out.println("Nombre de racine noeud = "+ nbRacineNoeuds);
+//			System.out.println("Nombre de racine noeud = "+ nbRacineNoeuds);
+			logger.debug("Nombre de racine noeud = "+ nbRacineNoeuds);
 			
 			if ( racine.getAttribute("success").equalsIgnoreCase ("true")) {
 				ebiSuccess = true;
@@ -204,7 +209,8 @@ public class ReleaseServices  {
 							Matcher m = p.matcher(infos);
 							if ( m.find() ) { 
 								studyAccession = m.group(1);
-								System.out.println("studyAccession="+ studyAccession);
+//								System.out.println("studyAccession="+ studyAccession);
+								logger.debug("studyAccession="+ studyAccession);
 							}
 						}
 					}
@@ -218,24 +224,29 @@ public class ReleaseServices  {
 			e.printStackTrace();
 		} 
 		if (submissionCode.equals(submission.code)) {
-			System.out.println("ok submissionCode = submission.code");
+//			System.out.println("ok submissionCode = submission.code");
+			logger.debug("ok submissionCode = submission.code");
 		}
 		if (StringUtils.isNotBlank(studyAccession)) {
 			if(studyAccession.equals(study.accession)) {
-				System.out.println("studyAccession :'"+ studyAccession + "' ==  study.accession :'" +  study.accession +"'");
+//				System.out.println("studyAccession :'"+ studyAccession + "' ==  study.accession :'" +  study.accession +"'");
+				logger.debug("studyAccession :'"+ studyAccession + "' ==  study.accession :'" +  study.accession +"'");
 				ebiSuccess = true;
 				message = "Objets lies au studyAccession = " + studyAccession + " mis dans le domaine public via la soumission "+ submissionCode + "</br>"; 
 			} else {
 				ebiSuccess = false;
-				System.out.println("studyAccession :'"+ studyAccession + "' !=  study.accession :'" +  study.accession +"' pour study.code = '"+ study.code +"'");
+//				System.out.println("studyAccession :'"+ studyAccession + "' !=  study.accession :'" +  study.accession +"' pour study.code = '"+ study.code +"'");
+				logger.debug("studyAccession :'"+ studyAccession + "' !=  study.accession :'" +  study.accession +"' pour study.code = '"+ study.code +"'");
 				message = "La soumission ."+ submission.code + " indique un study à releaser "+ submission.studyCode + " different du studyAccession indiqué dans " + retourEbiRelease.getName();
 			}
 		} else {
-			System.out.println("Pas de recuperation du studyAccession");
+//			System.out.println("Pas de recuperation du studyAccession");
+			logger.debug("Pas de recuperation du studyAccession");
 			message = "La soumission ."+ submission.code + " a un retour incorrect " + retourEbiRelease.getName();
 		}
 		String destinataire = submission.creationUser;
-		System.out.println("destinataire="+destinataire);
+//		System.out.println("destinataire="+destinataire);
+		logger.debug("destinataire="+destinataire);
 		// ne pas envoyer de mail à ngsrg:
 		if (destinataire.equals("ngsrg")) {
 			destinataire = "";

@@ -57,7 +57,7 @@ public class CommonInfoType extends Model<CommonInfoType> {
 	@JsonIgnore
 	public Map<String, PropertyDefinition> getMapPropertyDefinition() {
 		Map<String, PropertyDefinition> mapProperties = new HashMap<String, PropertyDefinition>();
-		for(PropertyDefinition propertyDefinition : propertiesDefinitions){
+		for (PropertyDefinition propertyDefinition : propertiesDefinitions) {
 			mapProperties.put(propertyDefinition.code, propertyDefinition);
 		}
 		return mapProperties;
