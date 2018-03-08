@@ -315,8 +315,9 @@ public abstract class FileService {
 //			ObjectFieldConfiguration ofc = (ObjectFieldConfiguration)afc;
 			ObjectFieldConfiguration<?> ofc = (ObjectFieldConfiguration<?>)afc;
 			Set<String> propertyNames = ofc.configs.keySet();
-			propertyNames.stream().forEach(_pName ->{
-				updateAbstractFieldConfigurationHeader((AbstractFieldConfiguration) ofc.configs.get(_pName));
+			propertyNames.stream().forEach(_pName -> {
+//				updateAbstractFieldConfigurationHeader((AbstractFieldConfiguration) ofc.configs.get(_pName));
+				updateAbstractFieldConfigurationHeader(ofc.configs.get(_pName));
 			});
 		} else if (TagExcelFieldConfiguration.class.isAssignableFrom(afc.getClass())) {
 			updateTagExcelConfigurationHeader((TagExcelFieldConfiguration)afc);

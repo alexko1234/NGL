@@ -21,7 +21,7 @@ public class RunCategory extends AbstractCategory<RunCategory> {
 	public static RunCategoryFinder find = new RunCategoryFinder(); 
 	
 	
-	public static class RunCategoryFinder extends Finder<RunCategory> {
+	public static class RunCategoryFinder extends Finder<RunCategory,RunCategoryDAO> {
 
 //		public RunCategoryFinder() {
 //			super(RunCategoryDAO.class.getName());			
@@ -29,7 +29,10 @@ public class RunCategory extends AbstractCategory<RunCategory> {
 		public RunCategoryFinder() { super(RunCategoryDAO.class); }
 		
 		public RunCategory findByTypeCode(String typeCode) throws DAOException{
-			return ((RunCategoryDAO)getInstance()).findByTypeCode(typeCode);
+//			return ((RunCategoryDAO)getInstance()).findByTypeCode(typeCode);
+			return getInstance().findByTypeCode(typeCode);
 		}
+		
 	}
+	
 }

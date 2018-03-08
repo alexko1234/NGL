@@ -278,7 +278,8 @@ public class LimsAbandonDAO {
     	ls.lmnbclust= (Long)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCluster"); 
     	ls.lmperclustfiltr= (Double)getNGSRGProperty(lane.treatments.get("ngsrg"),"percentClusterIlluminaFilter"); 
     	ls.lmnbbase= (Long)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbBaseInternalAndIlluminaFilter");
-    	ls.lmnbcycle= (Integer)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCycleRead1")+","+(Integer)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCycleRead2"); 
+//    	ls.lmnbcycle= (Integer)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCycleRead1")+","+(Integer)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCycleRead2"); 
+       	ls.lmnbcycle = getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCycleRead1") + "," + getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCycleRead2"); 
     	ls.pistnbcycle= (Integer)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCycleRead1")+(Integer)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCycleRead2");
     	//ls.lmphasing= (String)getNGSRGProperty(lane.treatments.get("ngsrg"),"phasing");
     	//ls.lmprephasing= (String)getNGSRGProperty(lane.treatments.get("ngsrg"),"prephasing");

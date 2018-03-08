@@ -10,7 +10,8 @@ import models.laboratory.run.description.dao.ReadSetTypeDAO;
 
 public class ReadSetType extends CommonInfoType{
 
-	public static CommonInfoType.AbstractCommonInfoTypeFinder<ReadSetType> find = new CommonInfoType.AbstractCommonInfoTypeFinder<ReadSetType>(ReadSetTypeDAO.class); 
+	public static CommonInfoType.AbstractCommonInfoTypeFinder<ReadSetType,ReadSetTypeDAO> find = 
+			new CommonInfoType.AbstractCommonInfoTypeFinder<>(ReadSetTypeDAO.class); 
 	
 	public ReadSetType() {
 		super(ReadSetTypeDAO.class.getName());
@@ -19,4 +20,5 @@ public class ReadSetType extends CommonInfoType{
 	public List<PropertyDefinition> getPropertiesDefinitionDefaultLevel(){
 		return getPropertyDefinitionByLevel(Level.CODE.ReadSet);
 	}
+	
 }

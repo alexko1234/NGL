@@ -14,7 +14,7 @@ public class StateCategory extends AbstractCategory<StateCategory> {
 	}; 
 	
 //	public static Finder<StateCategory> find = new Finder<StateCategory>(StateCategoryDAO.class.getName()); 
-	public static Finder<StateCategory> find = new Finder<>(StateCategoryDAO.class); 
+	public static Finder<StateCategory,StateCategoryDAO> find = new Finder<>(StateCategoryDAO.class); 
 	
 	public StateCategory() {
 		super(StateCategoryDAO.class.getName());

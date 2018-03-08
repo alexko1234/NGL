@@ -44,12 +44,13 @@ public abstract class AbstractDAOCommonInfoType<T extends CommonInfoType> extend
 		if (code == null) 
 			throw new DAOException("code is mandatory");
 		try {
-			String	sql = "SELECT t.id FROM common_info_type t "+DAOHelpers.getCommonInfoTypeDefaultSQLForInstitute()+" where t.code=?";
+			String	sql = "SELECT t.id FROM common_info_type t " + DAOHelpers.getCommonInfoTypeDefaultSQLForInstitute() + " where t.code=?";
 			try {
-				long id =  this.jdbcTemplate.queryForLong(sql, code);
-				if(id > 0) {
+//				long id =  this.jdbcTemplate.queryForLong(sql, code);
+				long id =  jdbcTemplate.queryForLong(sql, code);
+				if (id > 0) {
 					return Boolean.TRUE;
-				}else{
+				} else {
 					return Boolean.FALSE;
 				}
 			} catch (EmptyResultDataAccessException e) {

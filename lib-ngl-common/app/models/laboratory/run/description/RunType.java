@@ -12,7 +12,8 @@ public class RunType extends CommonInfoType {
 	public RunCategory category;
 	public Integer nbLanes;
 
-	public static CommonInfoType.AbstractCommonInfoTypeFinder<RunType> find = new CommonInfoType.AbstractCommonInfoTypeFinder<RunType>(RunTypeDAO.class); 
+	public static CommonInfoType.AbstractCommonInfoTypeFinder<RunType,RunTypeDAO> find = 
+			new CommonInfoType.AbstractCommonInfoTypeFinder<>(RunTypeDAO.class); 
 	
 	public RunType() {
 		super(RunTypeDAO.class.getName());

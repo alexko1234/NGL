@@ -17,7 +17,7 @@ public class Institute extends Model<Institute> {
 	// Doc generation produces an error with the unqualified name.
 	// public static Finder<Institute> find = new Finder<Institute>(InstituteDAO.class.getName()); 
 //	public static Model.Finder<Institute> find = new Model.Finder<Institute>(InstituteDAO.class.getName()); 
-	public static Finder<Institute> find = new Finder<>(InstituteDAO.class); 
+	public static Finder<Institute,InstituteDAO> find = new Finder<>(InstituteDAO.class); 
 	
 	public Institute() {
 		super(InstituteDAO.class.getName());

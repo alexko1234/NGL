@@ -11,7 +11,8 @@ public class ProjectType extends CommonInfoType{
 
 	public ProjectCategory category;
 
-	public static CommonInfoType.AbstractCommonInfoTypeFinder<ProjectType> find = new CommonInfoType.AbstractCommonInfoTypeFinder<ProjectType>(ProjectTypeDAO.class); 
+	public static CommonInfoType.AbstractCommonInfoTypeFinder<ProjectType,ProjectTypeDAO> find = 
+			new CommonInfoType.AbstractCommonInfoTypeFinder<>(ProjectTypeDAO.class); 
 	
 	public ProjectType() {
 		super(ProjectTypeDAO.class.getName());

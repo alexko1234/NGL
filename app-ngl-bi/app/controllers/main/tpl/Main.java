@@ -48,8 +48,8 @@ public class Main extends NGLController
                 implements NGLJavascript,
                            CodeLabelAPIHolder,
                            ResolutionConfigurationAPIHolder, 
-                           ValuationCriteriaAPIHolder,
-                           Executor {
+                           ValuationCriteriaAPIHolder/*,
+                           Executor*/ {
 
 	// final static JsMessages messages = JsMessages.create(play.Play.application());	
 	// private final JsMessages messages;

@@ -534,7 +534,8 @@ public class ValidationHelper {
 		try {
 			Class<?> valueClass = getClass(propertyDefinition.valueType);
 //			Map<String, Object> map = (Map<String, Object>) propertyValue.value;
-			Map<String, Object> map = (Map<String, Object>) propertyValue.value;
+//			Map<String, Object> map = (Map<String, Object>) propertyValue.value;
+			Map<String, Object> map = propertyValue.getValue();
 //			Map<String, ?> map = propertyValue.value;
 			Object value = map.get(codes[1]);
 			if (!valueClass.isInstance(value) && value != null) { //transform only if not the good type

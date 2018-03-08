@@ -25,7 +25,7 @@ public class ExperimentCategory extends AbstractCategory<ExperimentCategory>{
 	public static ExperimentCategoryFinder find = new ExperimentCategoryFinder(); 
 	
 	
-	public static class ExperimentCategoryFinder extends Finder<ExperimentCategory> {
+	public static class ExperimentCategoryFinder extends Finder<ExperimentCategory,ExperimentCategoryDAO> {
 
 //		public ExperimentCategoryFinder() {
 //			super(ExperimentCategoryDAO.class.getName());			
@@ -33,7 +33,8 @@ public class ExperimentCategory extends AbstractCategory<ExperimentCategory>{
 		public ExperimentCategoryFinder() { super(ExperimentCategoryDAO.class);	}
 		
 		public List<ExperimentCategory> findByProcessTypeCode(String processTypeCode) throws DAOException{
-			return ((ExperimentCategoryDAO)getInstance()).findByProcessTypeCode(processTypeCode);
+//			return ((ExperimentCategoryDAO)getInstance()).findByProcessTypeCode(processTypeCode);
+			return getInstance().findByProcessTypeCode(processTypeCode);
 		}
 		
 	}

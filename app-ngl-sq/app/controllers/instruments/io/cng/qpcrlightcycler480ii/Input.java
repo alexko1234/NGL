@@ -310,7 +310,8 @@ public class Input extends AbstractInput {
 		int col96=0;
 		
 		//recuperer le code ASCII du premier caractere de la position
-		int asciiRow384=(int)pos384.charAt(0);
+//		int asciiRow384=(int)pos384.charAt(0);
+		int asciiRow384 = pos384.charAt(0);
 		//recuper la colonne
 		int col384 = Integer.parseInt(pos384.substring(1));
 		

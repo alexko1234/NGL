@@ -20,7 +20,7 @@ public class ContainerCategory extends AbstractCategory<ContainerCategory> {
 		super(ContainerCategoryDAO.class.getName());
 	}
 
-	public static class ContainerCategoryFinder extends Finder<ContainerCategory> {
+	public static class ContainerCategoryFinder extends Finder<ContainerCategory,ContainerCategoryDAO> {
 		
 //		public ContainerCategoryFinder() {
 //			super(ContainerCategoryDAO.class.getName());
@@ -29,7 +29,8 @@ public class ContainerCategory extends AbstractCategory<ContainerCategory> {
 		public ContainerCategoryFinder() { super(ContainerCategoryDAO.class); }
 
 		public ContainerCategory findByContainerSupportCategoryCode(String containerSupportCategoryCode) {
-			return ((ContainerCategoryDAO) getInstance()).findByContainerSupportCategoryCode(containerSupportCategoryCode);
+//			return ((ContainerCategoryDAO) getInstance()).findByContainerSupportCategoryCode(containerSupportCategoryCode);
+			return getInstance().findByContainerSupportCategoryCode(containerSupportCategoryCode);
 		}
 		
 	}

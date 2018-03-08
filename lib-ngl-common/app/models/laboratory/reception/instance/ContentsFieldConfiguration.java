@@ -30,6 +30,7 @@ public class ContentsFieldConfiguration extends ObjectFieldConfiguration<Content
 			if (!pool) {
 				populateField(field, dbObject,Collections.singletonList(content));	
 			} else {
+				@SuppressWarnings("unchecked") // Reflective and recursive code, uncheckable
 				List<Content> contents = (List<Content>)field.get(dbObject);
 				if (contents == null) 
 					contents = new ArrayList<Content>(0);
@@ -40,6 +41,7 @@ public class ContentsFieldConfiguration extends ObjectFieldConfiguration<Content
 		} else if(Action.update.equals(action)) {
 			//in case on update we need to retrieve the good content, we used the sampleCode for that so the sampleCode must be declared in content configs
 			if (!pool) {
+				@SuppressWarnings("unchecked") // Reflective and recursive code, uncheckable
 				List<Content> contents = (List<Content>) field.get(dbObject);
 				if (contents.size() > 0) {
 					Content content = contents.get(0);

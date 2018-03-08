@@ -18,26 +18,29 @@ import models.utils.dao.DAOException;
 public class Value extends Model<Value>{
 
 	public String value;  //used as code but not rename because strong impact will be remove after
-	
+
 	public String name;
-	
+
 	public Boolean defaultValue = Boolean.FALSE;
 
 	public static ValueFinder find = new ValueFinder(); 
-	
+
 	public Value() {
 		super(ValueDAO.class.getName());
 	}
 
-	 public static class ValueFinder extends Finder<Value> {
+	public static class ValueFinder extends Finder<Value,ValueDAO> {
 
 //			public ValueFinder() {
 //			    super(ValueDAO.class.getName());
 //			}
-			public ValueFinder() { super(ValueDAO.class);	}
+		public ValueFinder() { super(ValueDAO.class);	}
+
+		public List<Value> findUnique(String propertyDefinitionCode) throws DAOException {
+//			return ((ValueDAO)getInstance()).findUnique(propertyDefinitionCode);
+			return getInstance().findUnique(propertyDefinitionCode);
+		}
 		
-			public List<Value> findUnique(String propertyDefinitionCode) throws DAOException{
-				return ((ValueDAO)getInstance()).findUnique(propertyDefinitionCode);
-			}
-	    }
+	}
+	
 }

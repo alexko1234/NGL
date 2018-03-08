@@ -40,7 +40,8 @@ public class PermissionAPI {
     }
 
     private UserDAO getUserDAO() {
-        return (UserDAO) Spring.getBeanOfType(UserDAO.class);
+//        return (UserDAO) Spring.getBeanOfType(UserDAO.class);
+        return Spring.getBeanOfType(UserDAO.class);
     }
 
     /**

@@ -55,7 +55,7 @@ public class PropertyDefinition extends Model<PropertyDefinition> {
 		super(PropertyDefinitionDAO.class.getName());
 	}
 
-	public static class PropertyDefinitionFinder extends Finder<PropertyDefinition> {
+	public static class PropertyDefinitionFinder extends Finder<PropertyDefinition,PropertyDefinitionDAO> {
 
 //		public PropertyDefinitionFinder() {
 //			super(PropertyDefinitionDAO.class.getName());			
@@ -63,15 +63,18 @@ public class PropertyDefinition extends Model<PropertyDefinition> {
 		public PropertyDefinitionFinder() {	super(PropertyDefinitionDAO.class); }
 		
 		public PropertyDefinition findUnique(String code, Level.CODE levelCode) throws DAOException{
-			return ((PropertyDefinitionDAO)getInstance()).findUnique(code, levelCode);
+//			return ((PropertyDefinitionDAO)getInstance()).findUnique(code, levelCode);
+			return getInstance().findUnique(code, levelCode);
 		}
 		
 		public List<PropertyDefinition> findUnique(Level.CODE levelCode) throws DAOException{
-			return ((PropertyDefinitionDAO)getInstance()).findUnique(levelCode);
+//			return ((PropertyDefinitionDAO)getInstance()).findUnique(levelCode);
+			return getInstance().findUnique(levelCode);
 		}
 		
 		public List<PropertyDefinition> findUnique() throws DAOException{
-			return ((PropertyDefinitionDAO)getInstance()).findUnique();
+//			return ((PropertyDefinitionDAO)getInstance()).findUnique();
+			return getInstance().findUnique();
 		}
 		
 	}

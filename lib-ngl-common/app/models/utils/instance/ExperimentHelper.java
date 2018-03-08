@@ -38,8 +38,10 @@ public class ExperimentHelper extends InstanceHelpers {
 //		List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), rulesName, facts);
 		List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(configuration().getString("rules.key"), rulesName, facts);
 		for(Object obj:factsAfterRules) {
-			if (ManyToOneContainer.class.isInstance(obj)) {
-				exp.atomicTransfertMethods.remove((ManyToOneContainer)obj);
+//			if (ManyToOneContainer.class.isInstance(obj)) {
+			if (obj instanceof ManyToOneContainer) {
+//				exp.atomicTransfertMethods.remove((ManyToOneContainer)obj);
+				exp.atomicTransfertMethods.remove(obj);
 				exp.atomicTransfertMethods.add((ManyToOneContainer) obj);
 			}
 		}	

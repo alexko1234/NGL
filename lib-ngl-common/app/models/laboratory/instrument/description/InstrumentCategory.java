@@ -17,7 +17,7 @@ public class InstrumentCategory extends AbstractCategory<InstrumentCategory> {
 		super(InstrumentCategoryDAO.class.getName());
 	}
 	
-	public static class InstrumentCategoryFinder extends Finder<InstrumentCategory> {
+	public static class InstrumentCategoryFinder extends Finder<InstrumentCategory,InstrumentCategoryDAO> {
 
 //		public InstrumentCategoryFinder() {
 //			super(InstrumentCategoryDAO.class.getName());			
@@ -25,7 +25,8 @@ public class InstrumentCategory extends AbstractCategory<InstrumentCategory> {
 		public InstrumentCategoryFinder() { super(InstrumentCategoryDAO.class); }
 		
 		public List<InstrumentCategory> findByInstrumentUsedTypeCode(String instrumentTypeCode) throws DAOException {
-			return ((InstrumentCategoryDAO)getInstance()).findByInstrumentUsedTypeCode(instrumentTypeCode);
+//			return ((InstrumentCategoryDAO)getInstance()).findByInstrumentUsedTypeCode(instrumentTypeCode);
+			return getInstance().findByInstrumentUsedTypeCode(instrumentTypeCode);
 		}
 		
 	}

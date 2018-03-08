@@ -28,7 +28,7 @@ public class TreatmentContext extends Model<TreatmentContext> {
 	}
 	
 //	public static Finder<TreatmentContext> find = new Finder<TreatmentContext>(TreatmentContextDAO.class.getName());
-	public static Finder<TreatmentContext> find = new Finder<>(TreatmentContextDAO.class);
+	public static Finder<TreatmentContext,TreatmentContextDAO> find = new Finder<>(TreatmentContextDAO.class);
 
 	@Override
 	public int hashCode() {

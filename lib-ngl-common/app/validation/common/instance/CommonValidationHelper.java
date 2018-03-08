@@ -23,6 +23,7 @@ import models.laboratory.sample.instance.Sample;
 import models.laboratory.valuation.instance.ValuationCriteria;
 import models.utils.InstanceConstants;
 import models.utils.Model.Finder;
+import models.utils.dao.AbstractDAO;
 import models.utils.dao.DAOException;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -122,7 +123,7 @@ public class CommonValidationHelper {
 //		}
 	}
 		
-	public static <T> void validateRequiredDescriptionCode(ContextValidation contextValidation, String code, String key, Finder<T> find) {
+	public static <T> void validateRequiredDescriptionCode(ContextValidation contextValidation, String code, String key, Finder<T,? extends AbstractDAO<T>> find) {
 		 validateRequiredDescriptionCode(contextValidation, code, key, find,false);
 	}
 
@@ -138,7 +139,7 @@ public class CommonValidationHelper {
 	public static <T> T validateRequiredDescriptionCode(ContextValidation contextValidation, 
 			                                            String code, 
 			                                            String key, 
-			                                            Finder<T> find, 
+			                                            Finder<T,? extends AbstractDAO<T>> find, 
 			                                            boolean returnObject) {
 		T o = null;
 		if (required(contextValidation, code, key))
@@ -155,7 +156,7 @@ public class CommonValidationHelper {
 	 * @param returnObject
 	 * @return void
 	 */
-	public static <T> void validateExistDescriptionCode(ContextValidation contextValidation, String code, String key, Finder<T> find) {
+	public static <T> void validateExistDescriptionCode(ContextValidation contextValidation, String code, String key, Finder<T,? extends AbstractDAO<T>> find) {
 		 validateExistDescriptionCode(contextValidation, code, key, find, false);
 	}
 
@@ -171,7 +172,7 @@ public class CommonValidationHelper {
 	public static <T> T validateExistDescriptionCode(ContextValidation contextValidation, 
 			                                         String code, 
 			                                         String key, 
-			                                         Finder<T> find, 
+			                                         Finder<T,? extends AbstractDAO<T>> find, 
 			                                         boolean returnObject) {
 //		if (StringUtils.isBlank(code))
 //			throw new IllegalArgumentException("code '" + code + "'");

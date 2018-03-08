@@ -48,7 +48,8 @@ public class PermissionAction extends Action<Permission> {
 		if (configuration.value().length == 0) 
 			throw new RuntimeException("badly configured permission control with no values");
 		
-		String userAgent = context.request().getHeader("User-Agent");
+//		String userAgent = context.request().getHeader("User-Agent");
+		String userAgent = context.request().header("User-Agent").orElse(null);
 		String agentByPass = authConfiguration.agentByPass(userAgent);
 		if (agentByPass != null && authorizator.authorize(agentByPass, configuration.value()))
 			return delegate.call(context);

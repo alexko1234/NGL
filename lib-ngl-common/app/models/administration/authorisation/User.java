@@ -67,7 +67,7 @@ public class User extends Model<User> {
 	
 	// Doc generation produces an error with the parent unqualified name.
 	// public static class UserFinder extends Finder<User> {
-	public static class UserFinder extends Model.Finder<User> {
+	public static class UserFinder extends Model.Finder<User,UserDAO> {
 
 //		public UserFinder() {
 //			super(UserDAO.class.getName());
@@ -75,15 +75,18 @@ public class User extends Model<User> {
 		public UserFinder() { super(UserDAO.class); }
 
 		public List<User> findAll() throws DAOException {
-			return ((UserDAO)getInstance()).findAll();
+//			return ((UserDAO)getInstance()).findAll();
+			return getInstance().findAll();
 		}
 
 		public User findByLogin(String login) throws DAOException {			
-			return ((UserDAO)getInstance()).findByLogin(login);
+//			return ((UserDAO)getInstance()).findByLogin(login);
+			return getInstance().findByLogin(login);
 		}
 
 		public List<User> findByLikeLogin(String aLike) throws DAOException {
-			return ((UserDAO)getInstance()).findByLikeLogin(aLike);
+//			return ((UserDAO)getInstance()).findByLikeLogin(aLike);
+			return getInstance().findByLikeLogin(aLike);
 		}
 		
 	}

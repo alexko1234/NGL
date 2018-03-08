@@ -1047,7 +1047,7 @@ public class ImportServiceCNS extends AbstractImportService {
 	
 	public static List<Institute> getInstitutes(Constants.CODE...codes) throws DAOException {
 		List<Institute> institutes = new ArrayList<Institute>();
-		for(Constants.CODE code : codes){
+		for (Constants.CODE code : codes) {
 			institutes.add(Institute.find.findByCode(code.name()));
 		}
 		return institutes;

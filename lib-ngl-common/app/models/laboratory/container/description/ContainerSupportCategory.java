@@ -26,7 +26,7 @@ public class ContainerSupportCategory extends AbstractCategory<ContainerSupportC
 		super(ContainerSupportCategoryDAO.class.getName());
 	}
 	
-	public static class ContainerSupportCategoryFinder extends Finder<ContainerSupportCategory> {
+	public static class ContainerSupportCategoryFinder extends Finder<ContainerSupportCategory,ContainerSupportCategoryDAO> {
 	
 //		public ContainerSupportCategoryFinder() {
 //			super(ContainerSupportCategoryDAO.class.getName());
@@ -35,11 +35,13 @@ public class ContainerSupportCategory extends AbstractCategory<ContainerSupportC
 		public ContainerSupportCategoryFinder() { super(ContainerSupportCategoryDAO.class);	}
 
 		public List<ContainerSupportCategory> findByContainerCategoryCode(String categoryCode) throws DAOException {
-			return ((ContainerSupportCategoryDAO) getInstance()).findByContainerCategoryCode(categoryCode);
+//			return ((ContainerSupportCategoryDAO) getInstance()).findByContainerCategoryCode(categoryCode);
+			return getInstance().findByContainerCategoryCode(categoryCode);
 		}
 		
 		public List<ContainerSupportCategory> findInputByExperimentTypeCode(String experimentTypeCode) throws DAOException {
-			return ((ContainerSupportCategoryDAO) getInstance()).findInputByExperimentTypeCode(experimentTypeCode);
+//			return ((ContainerSupportCategoryDAO) getInstance()).findInputByExperimentTypeCode(experimentTypeCode);
+			return getInstance().findInputByExperimentTypeCode(experimentTypeCode);
 		}
 
 	}	

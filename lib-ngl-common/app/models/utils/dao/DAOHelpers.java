@@ -35,16 +35,16 @@ public class DAOHelpers {
 			if (samp != null) {
 				samp.remove(); // TODO: Remove ???
 			}
-			logger.debug(" Before save :"+model.getValue().code);
+			logger.debug(" Before save :" + model.getValue().code);
 			model.getValue().save();
-			logger.debug(" After save :"+model.getValue().code);
+			logger.debug(" After save :" + model.getValue().code);
 			samp = new  HelperObjects<T>().getObject(type, model.getKey());
-			logger.debug(" After find :"+model.getValue().code);
+			logger.debug(" After find :" + model.getValue().code);
 		}	
 		return errors;
 	}
 	
-	public static <T extends Model> void removeAll(Class<T> type, Finder<T> finder) throws DAOException {
+	public static <T extends Model> void removeAll(Class<T> type, Finder<T,? extends AbstractDAO<T>> finder) throws DAOException {
 //	public static <T extends Model<T>> void removeAll(Class<T> type, Finder<T> finder) throws DAOException {
 		List<T> list = finder.findAll();
 		for(T t : list){
@@ -53,12 +53,12 @@ public class DAOHelpers {
 		}		
 	}
 
-	public static <T extends Model> T getModelByCode(Class<T> type, Finder<T> finder, String code) throws DAOException {
+	public static <T extends Model> T getModelByCode(Class<T> type, Finder<T,? extends AbstractDAO<T>> finder, String code) throws DAOException {
 //	public static <T extends Model<T>> T getModelByCode(Class<T> type, Finder<T> finder, String code) throws DAOException {
 		return getModelByCodes(type, finder, code).get(0);
 	}
 
-	public static <T extends Model> List<T> getModelByCodes(Class<T> type, Finder<T> finder, String...codes) throws DAOException {
+	public static <T extends Model> List<T> getModelByCodes(Class<T> type, Finder<T,? extends AbstractDAO<T>> finder, String...codes) throws DAOException {
 //	public static <T extends Model<T>> List<T> getModelByCodes(Class<T> type, Finder<T> finder, String...codes) throws DAOException {
 		List<T> l = new ArrayList<T>();
 		for (String code : codes) {

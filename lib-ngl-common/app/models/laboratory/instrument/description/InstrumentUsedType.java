@@ -37,7 +37,7 @@ public class InstrumentUsedType extends CommonInfoType {
 		return getPropertyDefinitionByLevel(Level.CODE.Instrument);
 	}
 	
-	public static class InstrumentUsedTypeFinder extends Finder<InstrumentUsedType> {
+	public static class InstrumentUsedTypeFinder extends Finder<InstrumentUsedType,InstrumentUsedTypeDAO> {
 
 //		public InstrumentUsedTypeFinder() {
 //			super(InstrumentUsedTypeDAO.class.getName());			
@@ -45,11 +45,13 @@ public class InstrumentUsedType extends CommonInfoType {
 		public InstrumentUsedTypeFinder() { super(InstrumentUsedTypeDAO.class);	}
 		
 		public List<InstrumentUsedType> findByExperimentTypeCode(String instrumentUsedTypeCode) throws DAOException {
-			return ((InstrumentUsedTypeDAO)getInstance()).findByExperimentTypeCode(instrumentUsedTypeCode);
+//			return ((InstrumentUsedTypeDAO)getInstance()).findByExperimentTypeCode(instrumentUsedTypeCode);
+			return getInstance().findByExperimentTypeCode(instrumentUsedTypeCode);
 		}
 		
 		public void cleanCache() throws DAOException{
-			 ((InstrumentUsedTypeDAO)getInstance()).cleanCache();
+//			 ((InstrumentUsedTypeDAO)getInstance()).cleanCache();
+			 getInstance().cleanCache();
 		}
 		
 	}

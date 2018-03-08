@@ -120,13 +120,16 @@ public abstract class AbstractCRUDAPIController<T extends DBObject & ICRUDValida
 			return null;
 		// If it's a IValidatable, set context mode to creation and 
 		// call the validate.
-		if (t instanceof ICRUDValidatable) {
-			((ICRUDValidatable<?>)t).validateInvariants(ctx);
-			((ICRUDValidatable<?>)t).validateCreation(ctx);
-		} else if (t instanceof IValidation) {
-			ctx.setCreationMode();
-			((IValidation)t).validate(ctx);
-		}
+//		if (t instanceof ICRUDValidatable) {
+//			((ICRUDValidatable<?>)t).validateInvariants(ctx);
+//			((ICRUDValidatable<?>)t).validateCreation(ctx);
+//		} else if (t instanceof IValidation) {
+//			ctx.setCreationMode();
+//			((IValidation)t).validate(ctx);
+//		}
+		// Enforced by type constraints in class declaration
+		t.validateInvariants(ctx);
+		t.validateCreation(ctx);
 		if ((t = afterCreationValidation(ctx,t)) == null)
 			return null;
 		// Check for validation errors and abort creation if errors are present 
@@ -248,15 +251,18 @@ public abstract class AbstractCRUDAPIController<T extends DBObject & ICRUDValida
 			return null;
 		// If it's a IValidatable, set context mode to creation and 
 		// call the validate.
-		if (t instanceof ICRUDValidatable) {
-//			((ICRUDValidatable)t).validateInvariants(ctx);
-//			((ICRUDValidatable)t).validateUpdate(ctx,past);
-			t.validateInvariants(ctx);
-			t.validateUpdate(ctx,past);
-		} else if (t instanceof IValidation) {
-			ctx.setUpdateMode();
-			((IValidation)t).validate(ctx);
-		} 
+//		if (t instanceof ICRUDValidatable) {
+////			((ICRUDValidatable)t).validateInvariants(ctx);
+////			((ICRUDValidatable)t).validateUpdate(ctx,past);
+//			t.validateInvariants(ctx);
+//			t.validateUpdate(ctx,past);
+//		} else if (t instanceof IValidation) {
+//			ctx.setUpdateMode();
+//			((IValidation)t).validate(ctx);
+//		}
+		// Enforced by class declaration constraints
+		t.validateInvariants(ctx);
+		t.validateUpdate(ctx,past);
 		if ((t = afterUpdateValidation(ctx,past,t)) == null)
 			return null;
 		// Check for validation errors and abort creation if errors are present 
@@ -405,13 +411,16 @@ public abstract class AbstractCRUDAPIController<T extends DBObject & ICRUDValida
 			return null;
 		// If it's a IValidatable, set context mode to creation and 
 		// call the validate.
-		if (t instanceof IValidation) {
-			ctx.setDeleteMode();
-			((IValidation)t).validate(ctx);
-		} else if (t instanceof ICRUDValidatable) {
-			((ICRUDValidatable<T>)t).validateInvariants(ctx);
-			((ICRUDValidatable<T>)t).validateDelete(ctx);
-		}
+//		if (t instanceof IValidation) {
+//			ctx.setDeleteMode();
+//			((IValidation)t).validate(ctx);
+//		} else if (t instanceof ICRUDValidatable) {
+//			((ICRUDValidatable<T>)t).validateInvariants(ctx);
+//			((ICRUDValidatable<T>)t).validateDelete(ctx);
+//		}
+		// Enforced by class declaration type constraints
+		t.validateInvariants(ctx);
+		t.validateDelete(ctx);
 		if ((t = afterDeletionValidation(ctx,t)) == null)
 			return null;
 		// Check for validation errors and abort creation if errors are present 

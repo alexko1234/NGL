@@ -86,7 +86,7 @@ public class ValuationCriterias extends DocumentController<ValuationCriteria> {/
 		
 		if (CollectionUtils.isNotEmpty(form.typeCodes)) { //all
 			queries.add(DBQuery.in("typeCodes", form.typeCodes));
-		}else if(StringUtils.isNotBlank(form.typeCode)){
+		} else if(StringUtils.isNotBlank(form.typeCode)) {
 			queries.add(DBQuery.in("typeCodes", form.typeCode));
 		}
 		
@@ -103,10 +103,9 @@ public class ValuationCriterias extends DocumentController<ValuationCriteria> {/
 
 	public /*static*/ Result get(String code) {
 		ValuationCriteria reportingConfiguration =  getByCode(code);		
-		if(reportingConfiguration != null) {
+		if (reportingConfiguration != null) {
 			return ok(Json.toJson(reportingConfiguration));	
-		} 		
-		else {
+		} else {
 			return notFound();
 		}			
 	}

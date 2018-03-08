@@ -33,7 +33,7 @@ public class ProcessType extends CommonInfoType {
 		return getPropertyDefinitionByLevel(Level.CODE.Process);
 	}
 	
-	public static class ProcessTypeFinder extends Finder<ProcessType> {
+	public static class ProcessTypeFinder extends Finder<ProcessType,ProcessTypeDAO> {
 
 //		public ProcessTypeFinder() {
 //			super(ProcessTypeDAO.class.getName());			
@@ -41,15 +41,18 @@ public class ProcessType extends CommonInfoType {
 		public ProcessTypeFinder() { super(ProcessTypeDAO.class);	}
 		
 		public List<ProcessType> findByProcessCategoryCodes(String...processCategoryCode) throws DAOException {
-			return ((ProcessTypeDAO)getInstance()).findByProcessCategoryCodes(processCategoryCode);
+//			return ((ProcessTypeDAO)getInstance()).findByProcessCategoryCodes(processCategoryCode);
+			return getInstance().findByProcessCategoryCodes(processCategoryCode);
 		}
 
 		public List<ProcessType> findByExperimentTypeCode(String experimentTypeCode) throws DAOException {
-			return ((ProcessTypeDAO)getInstance()).findByExperimentCode(experimentTypeCode);
+//			return ((ProcessTypeDAO)getInstance()).findByExperimentCode(experimentTypeCode);
+			return getInstance().findByExperimentCode(experimentTypeCode);
 		}
 		
 		public List<ProcessType> findAllLight() throws DAOException {
-			return ((ProcessTypeDAO)getInstance()).findAllLight();
+//			return ((ProcessTypeDAO)getInstance()).findAllLight();
+			return getInstance().findAllLight();
 		}
 		
 	}

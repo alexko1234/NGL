@@ -26,7 +26,7 @@ public class Permission extends Model<Permission> {
 	
 	// Doc generation produces an error with the parent unqualified name.
 	// public static class PermissionFinder extends Finder<Permission> {
-	public static class PermissionFinder extends Finder<Permission> {
+	public static class PermissionFinder extends Finder<Permission,PermissionDAO> {
 
 //		public PermissionFinder() {
 //			super(PermissionDAO.class.getName());
@@ -34,7 +34,8 @@ public class Permission extends Model<Permission> {
 		public PermissionFinder() { super(PermissionDAO.class); }
 		
 		public List<Permission> findByUserLogin(String aLogin) throws DAOException {
-			return ((PermissionDAO)getInstance()).findByUserLogin(aLogin);
+//			return ((PermissionDAO)getInstance()).findByUserLogin(aLogin);
+			return getInstance().findByUserLogin(aLogin);
 		}
 		
 	}

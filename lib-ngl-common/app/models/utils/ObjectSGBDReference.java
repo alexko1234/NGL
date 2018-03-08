@@ -51,7 +51,7 @@ public class ObjectSGBDReference<T extends Model<T>> implements IFetch<T> {
 //		Finder<T> find = new Finder<T>(className.getName().replaceAll("description", "description.dao") + "DAO");
 		try {
 			Class<AbstractDAO<T>> c = (Class<AbstractDAO<T>>)Class.forName(className.getName().replaceAll("description", "description.dao") + "DAO");
-			Finder<T> find = new Finder<T>(c);
+			Finder<T,AbstractDAO<T>> find = new Finder<>(c);
 			return find.findByCode(code);
 //			return new Finder<>(className).findByCode(code);
 		} catch (ClassNotFoundException e) {

@@ -35,7 +35,7 @@ public class Instrument extends Model<Instrument> {
 		super(InstrumentDAO.class.getName());
 	}
 		
-	public static class InstrumentFinder extends Finder<Instrument>{
+	public static class InstrumentFinder extends Finder<Instrument,InstrumentDAO> {
 
 //		public InstrumentFinder() {
 //			super(InstrumentDAO.class.getName());			
@@ -43,16 +43,20 @@ public class Instrument extends Model<Instrument> {
 		public InstrumentFinder() { super(InstrumentDAO.class); }
 		
 		public List<Instrument> findByQueryParams(InstrumentQueryParams instrumentsQueryParams) throws DAOException {
-			return ((InstrumentDAO)getInstance()).findByQueryParams(instrumentsQueryParams);
+//			return ((InstrumentDAO)getInstance()).findByQueryParams(instrumentsQueryParams);
+			return getInstance().findByQueryParams(instrumentsQueryParams);
 		}
 		
 		public List<Instrument> findByExperimentTypeQueryParams(InstrumentQueryParams instrumentsQueryParams) throws DAOException {
-			return ((InstrumentDAO)getInstance()).findByExperimentTypeQueryParams(instrumentsQueryParams);
+//			return ((InstrumentDAO)getInstance()).findByExperimentTypeQueryParams(instrumentsQueryParams);
+			return getInstance().findByExperimentTypeQueryParams(instrumentsQueryParams);
 		}
 		
-		public void cleanCache() throws DAOException{
-			 ((InstrumentDAO)getInstance()).cleanCache();
+		public void cleanCache() throws DAOException {
+//			 ((InstrumentDAO)getInstance()).cleanCache();
+			 getInstance().cleanCache();
 		}
+		
 	}
 	
 }

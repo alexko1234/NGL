@@ -22,7 +22,7 @@ public class MeasureUnit extends Model<MeasureUnit> {
 	
 	public static MeasureUnitFinder find = new MeasureUnitFinder();
 
-	public static class MeasureUnitFinder extends Finder<MeasureUnit> {
+	public static class MeasureUnitFinder extends Finder<MeasureUnit,MeasureUnitDAO> {
 
 //		public MeasureUnitFinder() {
 //		    super(MeasureUnitDAO.class.getName());
@@ -30,7 +30,8 @@ public class MeasureUnit extends Model<MeasureUnit> {
 		public MeasureUnitFinder() { super(MeasureUnitDAO.class); }
 		
 		public MeasureUnit findByValue(String value) throws DAOException {
-			return ((MeasureUnitDAO) getInstance()).findByValue(value);
+//			return ((MeasureUnitDAO) getInstance()).findByValue(value);
+			return getInstance().findByValue(value);
 		}
 		
 	}

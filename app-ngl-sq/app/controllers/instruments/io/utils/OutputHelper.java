@@ -287,17 +287,18 @@ public class OutputHelper {
 	// Cet algorithme est utile pour les robots qui numerotent les plaques 96 en colonne 
 	// A1=1, B1=2...A2=9
 	public static int getNumberPositionInPlateByColumn(String line,String column){
-		int asciiValue=(int) line.toCharArray()[0];
-		int columnValue=Integer.parseInt(column);
-		
-		return (asciiValue-64)+(columnValue-1)*8;
+//		int asciiValue=(int) line.toCharArray()[0];
+		int asciiValue  = line.toCharArray()[0];
+		int columnValue = Integer.parseInt(column);
+		return (asciiValue - 64) + (columnValue - 1) * 8;
 	}
 	
 	// Cet algorithme est utile pour les robots qui numerotent les plaques 96 en ligne 
 		// A1=1, A2=2
 	public static int getNumberPositionInPlateByLine(String line,String column){
-		int asciiValue=(int) line.toCharArray()[0];
-		int columnValue=Integer.parseInt(column);
+//		int asciiValue=(int) line.toCharArray()[0];
+		int asciiValue  = line.toCharArray()[0];
+		int columnValue = Integer.parseInt(column);
 		
 		return (asciiValue-64)*12-12+columnValue;
 	}

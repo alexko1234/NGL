@@ -17,8 +17,8 @@ public class ImportType extends CommonInfoType {
 
 	public ImportCategory category;
 	
-	public static CommonInfoType.AbstractCommonInfoTypeFinder<ImportType> find = 
-			new CommonInfoType.AbstractCommonInfoTypeFinder<ImportType>(ImportTypeDAO.class);
+	public static CommonInfoType.AbstractCommonInfoTypeFinder<ImportType,ImportTypeDAO> find = 
+			new CommonInfoType.AbstractCommonInfoTypeFinder<ImportType,ImportTypeDAO>(ImportTypeDAO.class);
 	
 	public ImportType()	{
 		super(ImportTypeDAO.class.getName());

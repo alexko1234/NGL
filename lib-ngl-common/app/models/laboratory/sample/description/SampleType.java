@@ -12,8 +12,8 @@ public class SampleType extends CommonInfoType {
 
 	public SampleCategory category;
 
-	public static CommonInfoType.AbstractCommonInfoTypeFinder<SampleType> find = 
-			new CommonInfoType.AbstractCommonInfoTypeFinder<SampleType>(SampleTypeDAO.class);
+	public static CommonInfoType.AbstractCommonInfoTypeFinder<SampleType,SampleTypeDAO> find = 
+			new CommonInfoType.AbstractCommonInfoTypeFinder<>(SampleTypeDAO.class);
 	
 	public SampleType() {
 		super(SampleTypeDAO.class.getName());

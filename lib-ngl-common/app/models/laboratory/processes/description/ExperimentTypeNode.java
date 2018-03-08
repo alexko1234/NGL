@@ -14,7 +14,7 @@ import play.api.modules.spring.Spring;
 public class ExperimentTypeNode extends Model<ExperimentTypeNode>{
 
 //	public static final Finder<ExperimentTypeNode> find = new Finder<ExperimentTypeNode>(ExperimentTypeNodeDAO.class.getName());
-	public static final Finder<ExperimentTypeNode> find = new Finder<>(ExperimentTypeNodeDAO.class);
+	public static final Finder<ExperimentTypeNode,ExperimentTypeNodeDAO> find = new Finder<>(ExperimentTypeNodeDAO.class);
 
 	//Possibility to do purification
 	public boolean doPurification = false; // Boolean.FALSE;
@@ -29,7 +29,7 @@ public class ExperimentTypeNode extends Model<ExperimentTypeNode>{
 	public boolean mandatoryTransfert = false; // Boolean.FALSE;
 
 	public ExperimentType experimentType;
-	public List<ExperimentTypeNode> previousExperimentTypeNodes=new ArrayList<ExperimentTypeNode>();;
+	public List<ExperimentTypeNode> previousExperimentTypeNodes=new ArrayList<ExperimentTypeNode>();
 	public List<ExperimentType> previousExperimentTypes;
 	public List<ExperimentType> possibleQualityControlTypes=new ArrayList<ExperimentType>();
 	public List<ExperimentType> possiblePurificationTypes=new ArrayList<ExperimentType>();

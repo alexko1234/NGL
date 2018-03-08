@@ -9,6 +9,7 @@ import java.util.List;
 
 
 import models.utils.Model.Finder;
+import models.utils.dao.AbstractDAO;
 import models.utils.dao.DAOException;
 
 import validation.ContextValidation;
@@ -83,7 +84,7 @@ public class BusinessValidationHelper {
 	 * @param find
 	 */
 	public static <T> void validateRequiredDescriptionCode(ContextValidation contextValidation, String code, String key,
-			Finder<T> find) {
+			Finder<T,? extends AbstractDAO<T>> find) {
 		 validateRequiredDescriptionCode(contextValidation, code, key, find,false);
 	}
 
@@ -97,7 +98,7 @@ public class BusinessValidationHelper {
 	 * @return object de T or null if returnObject is false
 	 */
 	public static <T> T validateRequiredDescriptionCode(ContextValidation contextValidation, String code, String key,
-			Finder<T> find, boolean returnObject) {
+			Finder<T,? extends AbstractDAO<T>> find, boolean returnObject) {
 		T o = null;
 		if(required(contextValidation, code, key)){
 			o = validateExistDescriptionCode(contextValidation, code, key, find, returnObject);
@@ -117,7 +118,7 @@ public class BusinessValidationHelper {
 	 */
 	public static <T> void validateExistDescriptionCode(
 			ContextValidation contextValidation, String code, String key,
-			Finder<T> find) {
+			Finder<T,? extends AbstractDAO<T>> find) {
 		 validateExistDescriptionCode(contextValidation, code, key, find, false);
 	}
 
@@ -132,7 +133,7 @@ public class BusinessValidationHelper {
 	 */
 	public static <T> T validateExistDescriptionCode(
 			ContextValidation contextValidation, String code, String key,
-			Finder<T> find, boolean returnObject) {
+			Finder<T,? extends AbstractDAO<T>> find, boolean returnObject) {
 		T o = null;
 		try {
 			if(code != "" && null != code && returnObject){

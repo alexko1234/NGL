@@ -1445,7 +1445,8 @@ public class SubmissionServices {
 				readSpec_1.readLabel = "F";
 				readSpec_1.readClass = "Application Read";
 				readSpec_1.readType = "forward";
-				readSpec_1.baseCoord = (Integer) 1;
+//				readSpec_1.baseCoord = (Integer) 1;
+				readSpec_1.baseCoord = 1;
 				experiment.readSpecs.add(readSpec_1);
 			}
 			// IF ILLUMINA ET PAIRED ET "forward-reverse"
@@ -1456,7 +1457,8 @@ public class SubmissionServices {
 				readSpec_1.readLabel = "F";
 				readSpec_1.readClass = "Application Read";
 				readSpec_1.readType = "Forward";
-				readSpec_1.baseCoord = (Integer) 1;
+//				readSpec_1.baseCoord = (Integer) 1;
+				readSpec_1.baseCoord = 1;
 				experiment.readSpecs.add(readSpec_1);
 
 				ReadSpec readSpec_2 = new ReadSpec();
@@ -1476,7 +1478,8 @@ public class SubmissionServices {
 				readSpec_1.readLabel = "R";
 				readSpec_1.readClass = "Application Read";
 				readSpec_1.readType = "Reverse";
-				readSpec_1.baseCoord = (Integer) 1;
+//				readSpec_1.baseCoord = (Integer) 1;
+				readSpec_1.baseCoord = 1;
 				experiment.readSpecs.add(readSpec_1);
 
 				ReadSpec readSpec_2 = new ReadSpec();

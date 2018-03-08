@@ -33,7 +33,7 @@ public class ObjectType extends Model<ObjectType> {
 	}; 
 
 //	public static Finder<ObjectType> find = new Finder<ObjectType>(ObjectTypeDAO.class.getName()); 
-	public static Finder<ObjectType> find = new Finder<>(ObjectTypeDAO.class); 
+	public static Finder<ObjectType,ObjectTypeDAO> find = new Finder<>(ObjectTypeDAO.class); 
 
 	public ObjectType() {
 		super(ObjectTypeDAO.class.getName());

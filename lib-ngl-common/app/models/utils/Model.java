@@ -15,7 +15,7 @@ import play.api.modules.spring.Spring;
 // TODO: fix @JsonIgnore, seems overkill
 
 
-public class Model<T> {
+public abstract class Model<T> {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(Model.class);
 	
@@ -32,6 +32,7 @@ public class Model<T> {
 	// Should be Class<AbstractDAO<T>> or close to that
 	protected String classNameDAO;
 
+	// Some subclasses do not provide the dao class name.
 	@JsonIgnore
 	public Model() {
 		// super(); // ??
@@ -42,26 +43,31 @@ public class Model<T> {
 		this.classNameDAO = classNameDAO;
 	}
 
+	protected T self() { return (T)this; }
+	
 	@JsonIgnore
-	@SuppressWarnings("unchecked")
+//	@SuppressWarnings("unchecked")
 	public void update() throws DAOException {
-		getInstance().update((T) this);
+//		getInstance().update((T) this);
+		getInstance().update(self());
 	}
 
 	@JsonIgnore
-	@SuppressWarnings("unchecked")
+//	@SuppressWarnings("unchecked")
 	public long save() throws DAOException {
-		return getInstance().save((T) this);
+//		return getInstance().save((T) this);
+		return getInstance().save(self());
 	}
 
 	@JsonIgnore
-	@SuppressWarnings("unchecked")
+//	@SuppressWarnings("unchecked")
 	public void remove() throws DAOException {
-		getInstance().remove((T) this);
+//		getInstance().remove((T) this);
+		getInstance().remove(self());
 	}
 
 	@JsonIgnore
-	@SuppressWarnings("unchecked")
+//	@SuppressWarnings("unchecked")
 	// This is more a getDAO than a get instance.
 	public AbstractDAO<T> getInstance() throws DAOException {
 		try {
@@ -74,7 +80,10 @@ public class Model<T> {
 			throw new DAOException(e);
 		}
 	}
-
+	
+//	public AbstractDAO<T> getInstance() throws DAOException { return Spring.getBeanOfType(getDAOClass()); }
+//	public abstract Class<? extends AbstractDAO<T>> getDAOClass();
+	
 	// TODO: 
 	// - make Finder<T> an interface
 	// - modify finders to inherit from the SQL version
@@ -132,7 +141,8 @@ public class Model<T> {
 //		
 //	}
 	
-	public static class Finder<T> {
+	// Could be parametric using the actual DAOclass type.
+	public static class Finder<T, U extends AbstractDAO<T>> {
 
 //		private String className;
 //
@@ -143,13 +153,18 @@ public class Model<T> {
 //		}
 
 //		private final LazyLambdaSupplier<AbstractDAO<T>> daoRef;
-		private final Supplier<AbstractDAO<T>> daoRef;
+//		private final Supplier<AbstractDAO<T>> daoRef;
+//
+//		public Finder(Supplier<AbstractDAO<T>> s) {
+//			daoRef = s;
+//		}
+		private final Supplier<U> daoRef;
 
-		public Finder(Supplier<AbstractDAO<T>> s) {
+		public Finder(Supplier<U> s) {
 			daoRef = s;
 		}
 		
-		public Finder(Class<? extends AbstractDAO<T>> c) {
+		public Finder(Class<U> c) {
 			this(() -> Spring.getBeanOfType(c));
 		}
 		
@@ -178,7 +193,10 @@ public class Model<T> {
 			return getInstance().findById(id);
 		}
 
-		public AbstractDAO<T> getInstance() {
+//		public AbstractDAO<T> getInstance() {
+//			return daoRef.get();
+//		}
+		public U getInstance() {
 			return daoRef.get();
 		}
 		

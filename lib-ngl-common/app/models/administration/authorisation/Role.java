@@ -23,7 +23,7 @@ public class Role extends Model<Role> {
 	
 	// Doc generation produces an error with the parent unqualified name.
 	// public static class RoleFinder extends Finder<Role> {
-	public static class RoleFinder extends Model.Finder<Role> {
+	public static class RoleFinder extends Model.Finder<Role,RoleDAO> {
 		
 //		public RoleFinder() {
 //			super(RoleDAO.class.getName());
@@ -31,11 +31,13 @@ public class Role extends Model<Role> {
 		public RoleFinder() { super(RoleDAO.class); }
 		
 		public List<Role> findAll() throws DAOException {
-			return ((RoleDAO)getInstance()).findAll();
+//			return ((RoleDAO)getInstance()).findAll();
+			return getInstance().findAll();
 		}
 		
 		public List<Role> findByUserLogin(String aLogin) throws DAOException {
-			return ((RoleDAO)getInstance()).findByUserLogin(aLogin);
+//			return ((RoleDAO)getInstance()).findByUserLogin(aLogin);
+			return getInstance().findByUserLogin(aLogin);
 		}
 		
 	}

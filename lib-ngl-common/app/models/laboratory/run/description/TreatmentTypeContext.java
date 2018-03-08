@@ -22,7 +22,7 @@ public class TreatmentTypeContext extends TreatmentContext {
 	
 	public static TreatmentTypeContextFinder find = new TreatmentTypeContextFinder();
 	
-	public static class TreatmentTypeContextFinder extends Finder<TreatmentTypeContext> {
+	public static class TreatmentTypeContextFinder extends Finder<TreatmentTypeContext,TreatmentTypeContextDAO> {
 
 //		public TreatmentTypeContextFinder() {
 //			super(TreatmentTypeContextDAO.class.getName());
@@ -30,23 +30,29 @@ public class TreatmentTypeContext extends TreatmentContext {
 		public TreatmentTypeContextFinder() { super(TreatmentTypeContextDAO.class); }
 
 		public List<TreatmentTypeContext> findByTreatmentTypeId(Long id) throws DAOException {
-			return ((TreatmentTypeContextDAO) getInstance()).findByTreatmentTypeId(id);
+//			return ((TreatmentTypeContextDAO) getInstance()).findByTreatmentTypeId(id);
+			return getInstance().findByTreatmentTypeId(id);
 		}
 		
 		public TreatmentTypeContext findByTreatmentTypeId(String code, Long id) throws DAOException {
-			return ((TreatmentTypeContextDAO) getInstance()).findByTreatmentTypeId(code, id);
+//			return ((TreatmentTypeContextDAO) getInstance()).findByTreatmentTypeId(code, id);
+			return getInstance().findByTreatmentTypeId(code, id);
 		}
 
 	}
 
 	// TODO: provide some helper method to compute hash(this.hashCode,super.hashCode);
+//	@Override
+//	public int hashCode() {
+//		final int prime = 31;
+//		int result = super.hashCode();
+//		result = prime * result
+//				+ ((required == null) ? 0 : required.hashCode());
+//		return result;
+//	}
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result
-				+ ((required == null) ? 0 : required.hashCode());
-		return result;
+		return hash(super.hashCode(),required);
 	}
 
 	@Override

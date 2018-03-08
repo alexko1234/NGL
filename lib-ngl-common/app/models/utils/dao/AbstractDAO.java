@@ -142,13 +142,20 @@ public abstract class AbstractDAO<T> {
 		return params;
 	}
 	
-	@SuppressWarnings("unchecked")
+	private String key(String code) {
+		return entityClass.toString() + "." + code;
+	}
+	
+//	@SuppressWarnings("unchecked")
 	protected T getObjectInCache(String code) {
 		if (code != null) {
 			try {
-				String key = entityClass.toString()+"."+code;
+//				String key = entityClass.toString() + "." + code;
 				// return (T) Cache.get(key);
-				return (T)cache().get(key);
+				@SuppressWarnings("unchecked") // Uncheckable cache access
+//				T t = (T)cache().get(key);
+				T t = (T)cache().get(key(code));
+				return t;
 			} catch (DAOException e) {
 				throw new RuntimeException(e);
 			}
@@ -160,15 +167,18 @@ public abstract class AbstractDAO<T> {
 	protected void setObjectInCache(T o, String code) {
 		if (o != null && code != null) {
 			// Cache.set(entityClass.toString()+"."+code, o, 60 * 60);
-			cache().set(entityClass.toString() + "." + code, o, 60 * 60);
+//			cache().set(entityClass.toString() + "." + code, o, 60 * 60);
+			cache().set(key(code), o, 60 * 60);
 		}		
 	}
 	
 	public void cleanCache() {
-		List<T> l = this.findAll();
+//		List<T> l = this.findAll();
+		List<T> l = findAll();
 		l.forEach(o -> {
 			// Cache.remove(entityClass.toString()+"."+((Model)o).code);
-			cache().remove(entityClass.toString() + "." + ((Model)o).code);
+//			cache().remove(entityClass.toString() + "." + ((Model)o).code);
+			cache().remove(key(((Model<?>)o).code));
 		});
 	}
 

@@ -30,7 +30,7 @@ public class Level extends Model<Level> {
 	};
 		
 //	public static Model.Finder<Level> find = new Model.Finder<Level>(LevelDAO.class.getName()); 
-	public static Model.Finder<Level> find = new Model.Finder<>(LevelDAO.class); 
+	public static Model.Finder<Level,LevelDAO> find = new Model.Finder<>(LevelDAO.class); 
 	
 	public Level() {
 		super(LevelDAO.class.getName());
