@@ -13,13 +13,11 @@ import models.utils.dao.DAOException;
 
 public class RunCategory extends AbstractCategory<RunCategory> {
 	
+	public static final RunCategoryFinder find = new RunCategoryFinder(); 
+		
 	public RunCategory() {
 		super(RunCategoryDAO.class.getName());
 	}
-	
-	
-	public static RunCategoryFinder find = new RunCategoryFinder(); 
-	
 	
 	public static class RunCategoryFinder extends Finder<RunCategory,RunCategoryDAO> {
 

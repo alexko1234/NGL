@@ -8,20 +8,17 @@ import models.utils.dao.DAOException;
 
 public class MeasureUnit extends Model<MeasureUnit> {
 
-	public String value;   
-	
+	public static MeasureUnitFinder find = new MeasureUnitFinder();
+
+	public String value;   	
 	public Boolean defaultUnit = Boolean.FALSE;
-  	
 	//multiple par rapport à une référence ex L et µL 10-6
-	
 	public MeasureCategory category;
 	
 	public MeasureUnit() {
 		super(MeasureUnitDAO.class.getName());
 	}
 	
-	public static MeasureUnitFinder find = new MeasureUnitFinder();
-
 	public static class MeasureUnitFinder extends Finder<MeasureUnit,MeasureUnitDAO> {
 
 //		public MeasureUnitFinder() {

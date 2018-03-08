@@ -15,11 +15,11 @@ import models.utils.dao.DAOException;
  */
 public class Role extends Model<Role> {
 	
-	public String label;
-	public List<Permission> permissions;
-	
 	@JsonIgnore
 	public static RoleFinder find = new RoleFinder();
+	
+	public String label;
+	public List<Permission> permissions;
 	
 	// Doc generation produces an error with the parent unqualified name.
 	// public static class RoleFinder extends Finder<Role> {

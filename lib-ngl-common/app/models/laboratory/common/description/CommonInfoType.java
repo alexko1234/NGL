@@ -30,6 +30,8 @@ import models.utils.dao.DAOException;
  */
 public class CommonInfoType extends Model<CommonInfoType> {
 
+	public static final CommonInfoTypeFinder find = new CommonInfoTypeFinder();	
+	
 	public String name; //used as label
 	
 	public Integer displayOrder; //position on display
@@ -43,8 +45,6 @@ public class CommonInfoType extends Model<CommonInfoType> {
 	public List<Institute> institutes = new ArrayList<Institute>();
 
 	public Boolean active = Boolean.TRUE;
-	
-	public static CommonInfoTypeFinder find = new CommonInfoTypeFinder();	
 	
 	public CommonInfoType() {
 		super(CommonInfoTypeDAO.class.getName());

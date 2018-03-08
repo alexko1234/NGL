@@ -1,5 +1,9 @@
 package models.utils;
 
+import static fr.cea.ig.lfw.utils.Hashing.hash;
+import static fr.cea.ig.lfw.utils.Equality.objectEquals;
+import static fr.cea.ig.lfw.utils.Equality.typedEquals;
+
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -14,6 +18,24 @@ import play.api.modules.spring.Spring;
 // TODO: fix serialization uid but not serializable
 // TODO: fix @JsonIgnore, seems overkill
 
+// T is the self class, U the exact DAO class
+interface IDAOSupplier<T,U extends AbstractDAO<T>> {
+	
+	
+	AbstractDAO<T> getDAO();
+	
+	// T self();
+	// Can define ourselves
+	default T self() { return (T)this; }
+	
+	default void update() throws DAOException {	getDAO().update(self()); }
+	default long save()   throws DAOException { return getDAO().save(self()); }
+	default void remove() throws DAOException {	getDAO().remove(self()); }
+	
+}
+
+abstract class M2<T,U extends AbstractDAO<T>> implements IDAOSupplier<T,U> {	
+}
 
 public abstract class Model<T> {
 
@@ -218,14 +240,14 @@ public abstract class Model<T> {
 
 	// Model equality and hashing is defined for code.
 	
-	// Hashing using the same algorithm here and in subclasses.
-	protected int hash(int hash, Object toAdd) {
-		final int prime = 31;
-		int result = prime * hash;
-		if (code != null) 
-			result += code.hashCode();
-		return result;		
-	}
+//	// Hashing using the same algorithm here and in subclasses.
+//	protected int hash(int hash, Object toAdd) {
+//		final int prime = 31;
+//		int result = prime * hash;
+//		if (code != null) 
+//			result += code.hashCode();
+//		return result;		
+//	}
 	
 	/*@Override
 	public int hashCode() {
@@ -243,21 +265,23 @@ public abstract class Model<T> {
 	@JsonIgnore
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		/*@SuppressWarnings("unchecked")
-		Model<T> other = (Model<T>) obj;*/
-		Model<?> other = (Model<?>) obj;
-		if (code == null) {
-			if (other.code != null)
-				return false;
-		} else if (!code.equals(other.code))
-			return false;
-		return true;
+//		if (this == obj)
+//			return true;
+//		if (obj == null)
+//			return false;
+//		if (getClass() != obj.getClass())
+//			return false;
+//		/*@SuppressWarnings("unchecked")
+//		Model<T> other = (Model<T>) obj;*/
+//		Model<?> other = (Model<?>) obj;
+//		if (code == null) {
+//			if (other.code != null)
+//				return false;
+//		} else if (!code.equals(other.code))
+//			return false;
+//		return true;
+		return typedEquals(Model.class, this, obj,
+				           (a,b) -> objectEquals(a.code, b.code));
 	}
 
 }

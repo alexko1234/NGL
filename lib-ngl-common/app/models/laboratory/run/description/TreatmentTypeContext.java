@@ -1,5 +1,9 @@
 package models.laboratory.run.description;
 
+import static fr.cea.ig.lfw.utils.Hashing.hash;
+import static fr.cea.ig.lfw.utils.Equality.objectEquals;
+import static fr.cea.ig.lfw.utils.Equality.typedEquals;
+
 import java.util.List;
 
 import models.laboratory.run.description.dao.TreatmentTypeContextDAO;
@@ -8,9 +12,13 @@ import models.utils.dao.DAOException;
 import models.utils.Model.Finder;
 
 public class TreatmentTypeContext extends TreatmentContext {
+
+	public static final TreatmentTypeContextFinder find = new TreatmentTypeContextFinder();
+
+	public Boolean required = false; // Boolean.FALSE;
 	
 	public TreatmentTypeContext() {
-		super();		
+//		super();		
 	}
 
 	public TreatmentTypeContext(TreatmentContext tc, Boolean required) {
@@ -18,9 +26,6 @@ public class TreatmentTypeContext extends TreatmentContext {
 		this.required = required;
 	}
 
-	public Boolean required = false; // Boolean.FALSE;
-	
-	public static TreatmentTypeContextFinder find = new TreatmentTypeContextFinder();
 	
 	public static class TreatmentTypeContextFinder extends Finder<TreatmentTypeContext,TreatmentTypeContextDAO> {
 
@@ -57,19 +62,21 @@ public class TreatmentTypeContext extends TreatmentContext {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		TreatmentTypeContext other = (TreatmentTypeContext) obj;
-		if (required == null) {
-			if (other.required != null)
-				return false;
-		} else if (!required.equals(other.required))
-			return false;
-		return true;
+//		if (this == obj)
+//			return true;
+//		if (!super.equals(obj))
+//			return false;
+//		if (getClass() != obj.getClass())
+//			return false;
+//		TreatmentTypeContext other = (TreatmentTypeContext) obj;
+//		if (required == null) {
+//			if (other.required != null)
+//				return false;
+//		} else if (!required.equals(other.required))
+//			return false;
+//		return true;
+		return typedEquals(TreatmentTypeContext.class, this, obj,
+				           (a,b) -> super.equals(obj) && objectEquals(a.required,b.required));
 	}
 		
 }

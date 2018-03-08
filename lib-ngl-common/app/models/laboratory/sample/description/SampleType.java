@@ -10,11 +10,11 @@ import models.laboratory.sample.description.dao.SampleTypeDAO;
 
 public class SampleType extends CommonInfoType {
 
-	public SampleCategory category;
-
-	public static CommonInfoType.AbstractCommonInfoTypeFinder<SampleType,SampleTypeDAO> find = 
+	public static final CommonInfoType.AbstractCommonInfoTypeFinder<SampleType,SampleTypeDAO> find = 
 			new CommonInfoType.AbstractCommonInfoTypeFinder<>(SampleTypeDAO.class);
 	
+	public SampleCategory category;
+
 	public SampleType() {
 		super(SampleTypeDAO.class.getName());
 	}

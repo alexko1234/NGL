@@ -642,23 +642,23 @@ public class DescriptionFactory {
 		return l;
 	}
 	
-	/*
-	 * 
-	 * @param code
-	 * @param states
-	 * @return
-	 */
-	public static CommonInfoType setStatesToCommonInfoType(String code, List<State> states) {
-		CommonInfoType cit = new CommonInfoType();
-		try {
-			cit = CommonInfoType.find.findByCode(code);
-		} catch (DAOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		cit.states = states;
-		return cit;
-	}
+//	/*
+//	 * 
+//	 * @param code
+//	 * @param states
+//	 * @return
+//	 */
+//	public static CommonInfoType setStatesToCommonInfoType(String code, List<State> states) {
+//		CommonInfoType cit = new CommonInfoType();
+//		try {
+//			cit = CommonInfoType.find.findByCode(code);
+//		} catch (DAOException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+//		cit.states = states;
+//		return cit;
+//	}
 	
 	/*
 	 * 

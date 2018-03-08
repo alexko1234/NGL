@@ -13,6 +13,8 @@ import models.utils.dao.DAOException;
 
 public class StateHierarchy extends Model<StateHierarchy> {
 	
+    public static final StateHierarchyFinder find = new StateHierarchyFinder();
+    
     public String childStateCode;
     public String childStateName;
     public String parentStateCode;
@@ -24,8 +26,6 @@ public class StateHierarchy extends Model<StateHierarchy> {
     	super(StateHierarchyDAO.class.getName());
     }
 
-    public static StateHierarchyFinder find = new StateHierarchyFinder();
-  
     public static class StateHierarchyFinder extends Finder<StateHierarchy,StateHierarchyDAO> {
 
 //		public StateHierarchyFinder() {

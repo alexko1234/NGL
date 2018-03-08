@@ -21,6 +21,8 @@ import models.utils.dao.DAOException;
  */
 public class State extends Model<State> {
 
+    public static final StateFinder find = new StateFinder();
+
     public String name;
     public boolean active;
     public Integer position;
@@ -30,9 +32,6 @@ public class State extends Model<State> {
     public boolean display;
     public String functionnalGroup;
     
-
-    public static StateFinder find = new StateFinder();
-
     public State() {
     	super(StateDAO.class.getName());
     }

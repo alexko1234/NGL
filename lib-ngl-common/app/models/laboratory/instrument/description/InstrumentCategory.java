@@ -11,7 +11,7 @@ import models.utils.Model.Finder;
 
 public class InstrumentCategory extends AbstractCategory<InstrumentCategory> {
 	
-	public static InstrumentCategoryFinder find = new InstrumentCategoryFinder(); 
+	public static final InstrumentCategoryFinder find = new InstrumentCategoryFinder(); 
 	
 	public InstrumentCategory() {
 		super(InstrumentCategoryDAO.class.getName());

@@ -12,6 +12,9 @@ import models.utils.Model.Finder;
  */
 public class ObjectType extends Model<ObjectType> {
 	
+//	public static Finder<ObjectType> find = new Finder<ObjectType>(ObjectTypeDAO.class.getName()); 
+	public static final Finder<ObjectType,ObjectTypeDAO> find = new Finder<>(ObjectTypeDAO.class); 
+
 	public enum CODE {
 		Project, 
 		Process, 
@@ -31,9 +34,6 @@ public class ObjectType extends Model<ObjectType> {
 		SRASample, 
 		SRAExperiment 
 	}; 
-
-//	public static Finder<ObjectType> find = new Finder<ObjectType>(ObjectTypeDAO.class.getName()); 
-	public static Finder<ObjectType,ObjectTypeDAO> find = new Finder<>(ObjectTypeDAO.class); 
 
 	public ObjectType() {
 		super(ObjectTypeDAO.class.getName());

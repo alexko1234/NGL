@@ -18,12 +18,12 @@ import models.utils.dao.DAOException;
  */
 public class Permission extends Model<Permission> {
 
+	@JsonIgnore
+	public static final PermissionFinder find = new PermissionFinder();
+	
 	public String label;
 	public String code;
 
-	@JsonIgnore
-	public static PermissionFinder find = new PermissionFinder();
-	
 	// Doc generation produces an error with the parent unqualified name.
 	// public static class PermissionFinder extends Finder<Permission> {
 	public static class PermissionFinder extends Finder<Permission,PermissionDAO> {

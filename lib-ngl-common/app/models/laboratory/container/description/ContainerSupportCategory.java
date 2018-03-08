@@ -12,15 +12,12 @@ import models.utils.Model.Finder;
 
 public class ContainerSupportCategory extends AbstractCategory<ContainerSupportCategory> {
 	
-	public Integer nbUsableContainer;
+	public static final ContainerSupportCategoryFinder find = new ContainerSupportCategoryFinder(); 
 	
-	public Integer nbLine;
-	
-	public Integer nbColumn;
-
+	public Integer           nbUsableContainer;
+	public Integer           nbLine;
+	public Integer           nbColumn;
 	public ContainerCategory containerCategory;
-	
-	public static ContainerSupportCategoryFinder find = new ContainerSupportCategoryFinder(); 
 	
 	public ContainerSupportCategory() {
 		super(ContainerSupportCategoryDAO.class.getName());

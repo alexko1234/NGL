@@ -21,12 +21,12 @@ import models.utils.Model.Finder;
  */
 public class InstrumentUsedType extends CommonInfoType {
 	
+	public static final InstrumentUsedTypeFinder find = new InstrumentUsedTypeFinder(); 
+	
 	public List<Instrument> instruments;
 	public InstrumentCategory category;
 	public List<ContainerSupportCategory> inContainerSupportCategories;
 	public List<ContainerSupportCategory> outContainerSupportCategories;
-	
-	public static InstrumentUsedTypeFinder find = new InstrumentUsedTypeFinder(); 
 	
 	public InstrumentUsedType() {
 		super(InstrumentUsedTypeDAO.class.getName());

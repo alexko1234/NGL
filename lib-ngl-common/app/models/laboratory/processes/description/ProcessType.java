@@ -13,17 +13,13 @@ import models.utils.Model.Finder;
 
 public class ProcessType extends CommonInfoType {
 
-	public ProcessCategory category;
+	public static final ProcessTypeFinder find = new ProcessTypeFinder(); 
 	
+	public ProcessCategory             category;
 	public List<ProcessExperimentType> experimentTypes;
-	
-	public ExperimentType voidExperimentType;
-	
-	public ExperimentType firstExperimentType;
-	
-	public ExperimentType lastExperimentType;
-	
-	public static ProcessTypeFinder find = new ProcessTypeFinder(); 
+	public ExperimentType              voidExperimentType;
+	public ExperimentType              firstExperimentType;
+	public ExperimentType              lastExperimentType;
 	
 	public ProcessType() {
 		super(ProcessTypeDAO.class.getName());

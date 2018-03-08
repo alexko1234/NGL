@@ -10,6 +10,8 @@ import models.utils.Model.Finder;
 
 public class ExperimentCategory extends AbstractCategory<ExperimentCategory>{
 
+	public static final ExperimentCategoryFinder find = new ExperimentCategoryFinder(); 
+		
 	public enum CODE {
 		purification, 
 		qualitycontrol, 
@@ -22,9 +24,6 @@ public class ExperimentCategory extends AbstractCategory<ExperimentCategory>{
 		super(ExperimentCategoryDAO.class.getName());
 	}
 
-	public static ExperimentCategoryFinder find = new ExperimentCategoryFinder(); 
-	
-	
 	public static class ExperimentCategoryFinder extends Finder<ExperimentCategory,ExperimentCategoryDAO> {
 
 //		public ExperimentCategoryFinder() {

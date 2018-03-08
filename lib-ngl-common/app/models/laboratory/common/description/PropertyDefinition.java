@@ -19,15 +19,18 @@ import models.utils.dao.DAOException;
 
 public class PropertyDefinition extends Model<PropertyDefinition> {
 
+	@JsonIgnore
+	public static final PropertyDefinitionFinder find = new PropertyDefinitionFinder(); 
+
 	public String name;
 
 	public String description;
 
-	public Boolean required = Boolean.FALSE;
-	public String requiredState = null;
-	public Boolean editable=Boolean.TRUE;
-	public Boolean active = Boolean.TRUE;
-	public Boolean choiceInList = Boolean.FALSE;
+	public Boolean required      = Boolean.FALSE;
+	public String  requiredState = null;
+	public Boolean editable      = Boolean.TRUE;
+	public Boolean active        = Boolean.TRUE;
+	public Boolean choiceInList  = Boolean.FALSE;
 
 	public String propertyValueType ;
 	public String valueType;  //String, Integer, Boolean, TBoolean, etc.
@@ -47,9 +50,6 @@ public class PropertyDefinition extends Model<PropertyDefinition> {
 	//Unité d'affichage
 	public MeasureUnit displayMeasureValue;
 	
-	@JsonIgnore
-	public static PropertyDefinitionFinder find = new PropertyDefinitionFinder(); 
-
 	@JsonIgnore
 	public PropertyDefinition() {
 		super(PropertyDefinitionDAO.class.getName());

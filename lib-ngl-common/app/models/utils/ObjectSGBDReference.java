@@ -50,6 +50,7 @@ public class ObjectSGBDReference<T extends Model<T>> implements IFetch<T> {
 		// init Finder from class DAO associated to this class in package ./dao
 //		Finder<T> find = new Finder<T>(className.getName().replaceAll("description", "description.dao") + "DAO");
 		try {
+			// Perlish hackery, PHP level hackery if i may say so
 			Class<AbstractDAO<T>> c = (Class<AbstractDAO<T>>)Class.forName(className.getName().replaceAll("description", "description.dao") + "DAO");
 			Finder<T,AbstractDAO<T>> find = new Finder<>(c);
 			return find.findByCode(code);

@@ -14,6 +14,8 @@ import models.utils.dao.DAOException;
 
 public class Instrument extends Model<Instrument> {
 
+	public static final InstrumentFinder find = new InstrumentFinder();
+
 	public String shortName;
 	public String name;
 	public Boolean active;
@@ -29,8 +31,6 @@ public class Instrument extends Model<Instrument> {
 	public String typeCode;
 	public String categoryCode;	
 	
-	public static InstrumentFinder find = new InstrumentFinder();
-
 	public Instrument() {
 		super(InstrumentDAO.class.getName());
 	}

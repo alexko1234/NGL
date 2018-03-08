@@ -14,7 +14,7 @@ import models.laboratory.container.description.dao.ContainerCategoryDAO;
 
 public class ContainerCategory extends AbstractCategory<ContainerCategory> {
 
-	public static ContainerCategoryFinder find = new ContainerCategoryFinder(); 
+	public static final ContainerCategoryFinder find = new ContainerCategoryFinder(); 
 	
 	public ContainerCategory() {
 		super(ContainerCategoryDAO.class.getName());

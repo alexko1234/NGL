@@ -20,6 +20,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 public class ExperimentType extends CommonInfoType {
  
+	@JsonIgnore
+	public static final ExperimentTypeFinder find = new ExperimentTypeFinder();
+	
 	public ExperimentCategory category;
 	//Relationship accessible by the parent table in the database
 	public List<InstrumentUsedType> instrumentUsedTypes = new ArrayList<InstrumentUsedType>();
@@ -35,9 +38,6 @@ public class ExperimentType extends CommonInfoType {
 	public ExperimentType() {
 		super(ExperimentTypeDAO.class.getName());		
 	}
-	
-	@JsonIgnore
-	public static ExperimentTypeFinder find = new ExperimentTypeFinder();
 	
 	@JsonIgnore
 	public List<PropertyDefinition> getPropertiesDefinitionDefaultLevel(){

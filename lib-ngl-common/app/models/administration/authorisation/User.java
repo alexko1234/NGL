@@ -16,6 +16,9 @@ import play.data.validation.ValidationError;
 
 public class User extends Model<User> {
 
+	@JsonIgnore
+	public static final UserFinder find = new UserFinder();
+
 	public String login;
 	public String firstname;
 	public String lastname;
@@ -38,9 +41,6 @@ public class User extends Model<User> {
 	public List<Team> teams;
 	public List<Application> applications;
 	public Boolean active;
-
-	@JsonIgnore
-	public static UserFinder find = new UserFinder();
 
 	public User() {
 		super(UserDAO.class.getName());

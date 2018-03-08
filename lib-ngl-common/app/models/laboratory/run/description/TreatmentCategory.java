@@ -8,6 +8,9 @@ import models.utils.Model.Finder;
 
 public class TreatmentCategory extends AbstractCategory<TreatmentCategory>{
 	
+//	public static Finder<TreatmentCategory> find = new Finder<TreatmentCategory>(TreatmentCategoryDAO.class.getName());
+	public static final Finder<TreatmentCategory,TreatmentCategoryDAO> find = new Finder<>(TreatmentCategoryDAO.class);
+	
 	public static enum CODE {
 		ngsrg, 
 		global, 
@@ -16,9 +19,6 @@ public class TreatmentCategory extends AbstractCategory<TreatmentCategory>{
 		ba
 	};
 
-//	public static Finder<TreatmentCategory> find = new Finder<TreatmentCategory>(TreatmentCategoryDAO.class.getName());
-	public static Finder<TreatmentCategory,TreatmentCategoryDAO> find = new Finder<>(TreatmentCategoryDAO.class);
-	
 	public TreatmentCategory() {
 		super(TreatmentCategoryDAO.class.getName());
 	}

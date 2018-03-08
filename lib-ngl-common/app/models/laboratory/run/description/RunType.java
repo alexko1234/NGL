@@ -9,12 +9,13 @@ import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.run.description.dao.RunTypeDAO;
 
 public class RunType extends CommonInfoType {
-	public RunCategory category;
-	public Integer nbLanes;
-
-	public static CommonInfoType.AbstractCommonInfoTypeFinder<RunType,RunTypeDAO> find = 
-			new CommonInfoType.AbstractCommonInfoTypeFinder<>(RunTypeDAO.class); 
 	
+	public static final CommonInfoType.AbstractCommonInfoTypeFinder<RunType,RunTypeDAO> find = 
+			new CommonInfoType.AbstractCommonInfoTypeFinder<>(RunTypeDAO.class); 
+
+	public RunCategory category;
+	public Integer     nbLanes;
+
 	public RunType() {
 		super(RunTypeDAO.class.getName());
 	}
@@ -22,6 +23,7 @@ public class RunType extends CommonInfoType {
 	public List<PropertyDefinition> getPropertiesDefinitionDefaultLevel(){
 		return getPropertyDefinitionByLevel(Level.CODE.Run);
 	}
+	
 }
 
 
