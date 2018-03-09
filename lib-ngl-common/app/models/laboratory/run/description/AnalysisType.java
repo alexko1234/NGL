@@ -13,7 +13,7 @@ public class AnalysisType extends CommonInfoType {
 //	public static CommonInfoType.AbstractCommonInfoTypeFinder<AnalysisType> find = new CommonInfoType.AbstractCommonInfoTypeFinder<AnalysisType>(AnalysisTypeDAO.class);
 	
 	// AnalysisTypeDAO = AbstractDAOCommonInfoType<AnalysisType>
-	public static CommonInfoType.AbstractCommonInfoTypeFinder<AnalysisType,AnalysisTypeDAO> find = 
+	public static final CommonInfoType.AbstractCommonInfoTypeFinder<AnalysisType,AnalysisTypeDAO> find = 
 			new CommonInfoType.AbstractCommonInfoTypeFinder<>(AnalysisTypeDAO.class); 
 	
 	public AnalysisType() {

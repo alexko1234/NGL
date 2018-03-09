@@ -18,24 +18,14 @@ import play.api.modules.spring.Spring;
 // TODO: fix serialization uid but not serializable
 // TODO: fix @JsonIgnore, seems overkill
 
-// T is the self class, U the exact DAO class
-interface IDAOSupplier<T,U extends AbstractDAO<T>> {
-	
-	
-	AbstractDAO<T> getDAO();
-	
-	// T self();
-	// Can define ourselves
-	default T self() { return (T)this; }
-	
-	default void update() throws DAOException {	getDAO().update(self()); }
-	default long save()   throws DAOException { return getDAO().save(self()); }
-	default void remove() throws DAOException {	getDAO().remove(self()); }
-	
+// Lighter version, requires the class.
+interface IDAOCSupplier<T,U extends AbstractDAO<T>> {
+	default U getDAO() { return Spring.getBeanOfType(daoClass()); }
+	Class<U> daoClass();
 }
 
-abstract class M2<T,U extends AbstractDAO<T>> implements IDAOSupplier<T,U> {	
-}
+//abstract class M2<T,U extends AbstractDAO<T>> implements IDAOSupplier<T,U> {	
+//}
 
 public abstract class Model<T> {
 
@@ -65,7 +55,7 @@ public abstract class Model<T> {
 		this.classNameDAO = classNameDAO;
 	}
 
-	protected T self() { return (T)this; }
+	public T self() { return (T)this; }
 	
 	@JsonIgnore
 //	@SuppressWarnings("unchecked")
@@ -88,12 +78,21 @@ public abstract class Model<T> {
 		getInstance().remove(self());
 	}
 
+	// Get a copy of this object from the DB
+	public Model<T> fromDB() throws DAOException {
+		@SuppressWarnings("unchecked") // Can possibly be avoided using Model<T extends Model<T>> or not
+		Model<T> m  = (Model<T>)getInstance().findByCode(code);
+		return m;
+	}
+	
 	@JsonIgnore
 //	@SuppressWarnings("unchecked")
 	// This is more a getDAO than a get instance.
 	public AbstractDAO<T> getInstance() throws DAOException {
 		try {
-			return (AbstractDAO<T>) Spring.getBeanOfType(Class.forName(classNameDAO));
+//			return (AbstractDAO<T>) Spring.getBeanOfType(Class.forName(classNameDAO));
+			AbstractDAO<T> dao = (AbstractDAO<T>) Spring.getBeanOfType(Class.forName(classNameDAO));
+			return dao;
 		} catch (ClassNotFoundException e) {
 			logger.error("Class error: " + e.getMessage(), e);
 			throw new DAOException(e);

@@ -31,7 +31,7 @@ public class ExperimentType extends CommonInfoType {
 	
 	public String shortCode;
 	
-	public Boolean newSample=Boolean.FALSE;
+	public Boolean newSample = Boolean.FALSE;
 	
 	public  List<SampleType> sampleTypes=new ArrayList<SampleType>();
 	
