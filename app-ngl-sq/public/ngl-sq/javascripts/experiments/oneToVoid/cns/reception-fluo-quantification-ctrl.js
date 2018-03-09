@@ -51,7 +51,7 @@ angular.module('home')
 				
 				var calMethod=$parse("inputContainerUsed.experimentProperties.calculationMethod.value")(udtData);
 				if(calMethod){
-					console.log("CalMethod")
+					console.log("CalMethod "+calMethod);
 					if(calMethod==="Moyenne HS1 HS2"){
 						
 						compute = {
@@ -68,13 +68,26 @@ angular.module('home')
 					}else if(calMethod==="Moyenne HS2 HS3"){
 						
 						compute = {
-							inputConcHS1 : $parse("inputContainerUsed.experimentProperties.concentrationHS2.value")(udtData),
-							inputConcHS2 : $parse("inputContainerUsed.experimentProperties.concentrationHS3.value")(udtData),
+							inputConcHS2 : $parse("inputContainerUsed.experimentProperties.concentrationHS2.value")(udtData),
+							inputConcHS3 : $parse("inputContainerUsed.experimentProperties.concentrationHS3.value")(udtData),
 							isReady:function(){
-								return (this.inputConcHS1 && this.inputConcHS2);
+								return (this.inputConcHS2 && this.inputConcHS3);
 							},
 							getResult : function(){
-								return $parse("(inputConcHS1 + inputConcHS2)/2")(this);
+								return $parse("(inputConcHS2 + inputConcHS3)/2")(this);
+							}
+						};
+						
+					}else if(calMethod==="Moyenne HS1 HS3"){
+						
+						compute = {
+							inputConcHS1 : $parse("inputContainerUsed.experimentProperties.concentrationHS1.value")(udtData),
+							inputConcHS3 : $parse("inputContainerUsed.experimentProperties.concentrationHS3.value")(udtData),
+							isReady:function(){
+								return (this.inputConcHS1 && this.inputConcHS3);
+							},
+							getResult : function(){
+								return $parse("(inputConcHS1 + inputConcHS3)/2")(this);
 							}
 						};
 						
@@ -518,6 +531,19 @@ angular.module('home').controller('OneToVoidReceptionFluoQuantificationCNSCtrl',
 		"hide" : true,
 		"type" : "text",
 		"position" : 8.1,
+		"extraHeaders" : {
+			0 : Messages("experiments.inputs")
+		}
+	});
+	
+	columns.push({
+		"header" : Messages("containers.table.volume") + " (µL)",
+		"property" : "inputContainerUsed.volume.value",
+		"order" : true,
+		"edit" : false,
+		"hide" : true,
+		"type" : "number",
+		"position" : 10.6,
 		"extraHeaders" : {
 			0 : Messages("experiments.inputs")
 		}
