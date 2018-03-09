@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>fr.cea.ig.auto.submission</groupId>
+  <artifactId>app-ngl-sub-auto</artifactId>
+  <versioning>
+    <versions>
+      <version>1.2-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20180309143921</lastUpdated>
+  </versioning>
+</metadata>

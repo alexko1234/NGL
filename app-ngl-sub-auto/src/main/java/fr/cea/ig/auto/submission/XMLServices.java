@@ -17,12 +17,12 @@ import fr.genoscope.lis.devsi.birds.api.exception.BirdsException;
 import fr.genoscope.lis.devsi.birds.api.exception.FatalException;
 import fr.genoscope.lis.devsi.birds.api.exception.JSONDeviceException;
 import fr.genoscope.lis.devsi.birds.impl.properties.ProjectProperties;
-import Tools;
+import fr.cea.ig.auto.submission.Tools;
 
 public class XMLServices implements IXMLServices{
 
 	private static Logger log = Logger.getLogger(XMLServices.class);
-	
+
 	@Override
 	public void writeStudyXml(File outputFile, String code) throws IOException, JSONDeviceException, FatalException
 	{
@@ -77,7 +77,6 @@ public class XMLServices implements IXMLServices{
 	@Override
 	public void writeSampleXml(File outputFile, String codes) throws IOException, JSONDeviceException, FatalException
 	{
-
 		String[] sampleCodes = codes.split(",");
 		// ouvrir fichier en ecriture
 		log.debug("Creation du fichier " + outputFile);
@@ -133,8 +132,8 @@ public class XMLServices implements IXMLServices{
 					chaine = chaine + "      </SAMPLE_ATTRIBUTES>\n";
 				}
 				chaine = chaine + "  </SAMPLE>\n";
-			}
-		}
+			}// end if sampleCode
+		}// end for sample
 		chaine = chaine + "</SAMPLE_SET>\n";
 		output_buffer.write(chaine);
 		output_buffer.close();
