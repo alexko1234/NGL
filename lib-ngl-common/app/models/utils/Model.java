@@ -18,11 +18,11 @@ import play.api.modules.spring.Spring;
 // TODO: fix serialization uid but not serializable
 // TODO: fix @JsonIgnore, seems overkill
 
-// Lighter version, only requires the DAO class.
-interface IDAOCSupplier<T,U extends AbstractDAO<T>> {
-	default U getDAO() { return Spring.getBeanOfType(daoClass()); }
-	Class<U> daoClass();
-}
+//// Lighter version, only requires the DAO class.
+//interface IDAOCSupplier<T,U extends AbstractDAO<T>> {
+//	default U getDAO() { return Spring.getBeanOfType(daoClass()); }
+//	Class<U> daoClass();
+//}
 
 //abstract class M2<T,U extends AbstractDAO<T>> implements IDAOSupplier<T,U> {	
 //}
@@ -57,7 +57,7 @@ public abstract class Model<T> {
 
 	// This is a covariance warning that cannot be suppressed even using
 	// Model<T extends Model<T>>. Could require that subclasses provide the
-	// proper definition.
+	// proper definition so the subclasses can "prove" that they are indeed a T.
 	public T self() { return (T)this; }
 	
 	@JsonIgnore
@@ -91,7 +91,7 @@ public abstract class Model<T> {
 	@JsonIgnore
 //	@SuppressWarnings("unchecked")
 	// This is more a getDAO than a get instance.
-	public AbstractDAO<T> getInstance() throws DAOException {
+	private AbstractDAO<T> getInstance() throws DAOException {
 		try {
 //			return (AbstractDAO<T>) Spring.getBeanOfType(Class.forName(classNameDAO));
 			AbstractDAO<T> dao = (AbstractDAO<T>) Spring.getBeanOfType(Class.forName(classNameDAO));
@@ -104,6 +104,8 @@ public abstract class Model<T> {
 			throw new DAOException(e);
 		}
 	}
+	
+//	protected abstract Class<? extends AbstractDAO<T>> daoClass();
 	
 //	public AbstractDAO<T> getInstance() throws DAOException { return Spring.getBeanOfType(getDAOClass()); }
 //	public abstract Class<? extends AbstractDAO<T>> getDAOClass();

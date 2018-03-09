@@ -134,7 +134,8 @@ public class DAOHelpers {
 	public static <T,U extends Model<T>> void saveModel(Class<U> type, U model, Map<String,List<ValidationError>> errors) throws DAOException {
 		//		public static <T extends Model<T>> void saveModel(Class<T> type, T model, Map<String,List<ValidationError>> errors) throws DAOException {
 		//			T t = (T) model.getInstance().findByCode(model.code);
-		T t = model.getInstance().findByCode(model.code);
+//		T t = model.getInstance().findByCode(model.code);
+		Model<T> t = model.fromDB();
 		if (t == null) {
 			logger.info("Save "+type.getName() + " : "+model.code);
 			model.save();
@@ -183,8 +184,9 @@ public class DAOHelpers {
 	
 	public static <T, U extends Model<T>> void updateModel(Class<U> type, U model, Map<String,List<ValidationError>> errors) throws DAOException {
 		//		public static <T extends Model<T>> void updateModel(Class<T> type, T model, Map<String,List<ValidationError>> errors) throws DAOException {
-		T t = model.getInstance().findByCode(model.code);
+//		T t = model.getInstance().findByCode(model.code);
 		//			T t = model.getInstance().findByCode(model.code);
+		Model<T> t = model.fromDB();
 		if (t != null) {
 			model.update();
 		} else {
