@@ -2,6 +2,7 @@ package fr.cea.ig.mongo;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import org.bson.BSONObject;
 
@@ -36,4 +37,15 @@ public interface DBObjectRestrictor {
 		}
 		return values;
     }
+	
+	default IDatatableForm updateForm(IDatatableForm form, List<String> defaultKeys) {
+		if(form.includes().contains("default")){
+			form.includes().remove("default");
+			if(defaultKeys != null){
+				form.includes().addAll(defaultKeys);
+			}
+			
+		}
+		return form;
+	}
 }

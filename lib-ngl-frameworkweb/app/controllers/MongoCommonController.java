@@ -116,6 +116,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 	 * @param query
 	 * @return a MongoDBResult
 	 */
+	// Moved to GenericMongoDAO
 	protected MongoDBResult<T> mongoDBFinder(ListForm form,  DBQuery.Query query) {
 		MongoDBResult<T> results = null;
 		if (form.datatable) {
@@ -135,6 +136,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		return results;
 	}
 
+	// Moved to GenericMongoDAO
 	protected MongoDBResult<T> mongoDBFinder(ListForm form, DBQuery.Query query, BasicDBObject keys){
 		MongoDBResult<T> results = null;
 		
@@ -155,6 +157,8 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		return results;
 	}
 	
+	
+	// moved to DBObjectRestrictor
 	protected BasicDBObject getKeys(DatatableForm form) {
 		BasicDBObject keys = new BasicDBObject();
 		if(!form.includes.contains("*")){
@@ -163,7 +167,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		keys.putAll((BSONObject)getExcludeKeys(form.excludes.toArray(new String[form.excludes.size()])));		
 		return keys;
 	}
-	
+	// moved to DBObjectRestrictor
 	protected BasicDBObject getIncludeKeys(String[] keys) {
 		Arrays.sort(keys, Collections.reverseOrder());
 		BasicDBObject values = new BasicDBObject();
@@ -172,7 +176,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		}
 		return values;
     }
-	
+	// moved to DBObjectRestrictor
 	protected BasicDBObject getExcludeKeys(String[] keys) {
 		Arrays.sort(keys, Collections.reverseOrder());
 		BasicDBObject values = new BasicDBObject();
@@ -207,6 +211,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 	 * @param clazz
 	 * @return
 	 */
+	// moved to GenericMongoDAO<T extends DBObject>
 	protected Builder getBuilder(Object value, List<String> fields, Class clazz, String prefix) {
 		Builder builder = new Builder();
 		try {
@@ -227,6 +232,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 	 * @param fields
 	 * @param authorizedUpdateFields
 	 */
+	//redefined into SamplesAPI TODO move to an interface ? 
 	protected void validateAuthorizedUpdateFields(ContextValidation ctxVal, List<String> fields,
 			List<String> authorizedUpdateFields) {
 		for (String field: fields) {
@@ -242,6 +248,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 	 * @param fields
 	 * @param filledForm
 	 */
+	//redefined into SamplesAPI TODO move to an interface ?
 	protected void validateIfFieldsArePresentInForm(
 			ContextValidation ctxVal, List<String> fields, Form<?> filledForm) {
 		Object o = filledForm.get();
@@ -285,6 +292,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		return ok();	
 	}
 		
+	//moved to GenericMongoDAO<T extends DBObject>
 	protected Result nativeMongoDBQuery(ListForm form) {
 		MongoCollection collection = MongoDBPlugin.getCollection(collectionName);
 		MongoCursor<T> all = (MongoCursor<T>) collection.find(form.reportingQuery).as(type);
@@ -375,6 +383,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		}
 	}
 	
+	//moved to DBObjectRestrictor
 	protected DatatableForm updateForm(DatatableForm form) {
 		if(form.includes.contains("default")){
 			form.includes.remove("default");
