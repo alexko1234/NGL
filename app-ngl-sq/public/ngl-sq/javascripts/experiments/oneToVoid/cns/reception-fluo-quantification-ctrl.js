@@ -543,7 +543,7 @@ angular.module('home').controller('OneToVoidReceptionFluoQuantificationCNSCtrl',
 		"edit" : false,
 		"hide" : true,
 		"type" : "number",
-		"position" : 10.6,
+		"position" : 8.05,
 		"extraHeaders" : {
 			0 : Messages("experiments.inputs")
 		}
