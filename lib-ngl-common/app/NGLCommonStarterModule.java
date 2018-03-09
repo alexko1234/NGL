@@ -39,8 +39,12 @@ public class NGLCommonStarterModule extends NGLBaseModule {
 		List<Binding<?>> l = super.nglCustomBindings(environment,configuration);
 		l.add(bind(play.modules.jongo.MongoDBPlugin.class           ).toSelf().eagerly());
 		l.add(bind(play.modules.mongojack.MongoDBPlugin.class       ).toSelf().eagerly());
-		if (enableDrools)
-			l.add(bind(rules.services.Rules6Component.class             ).toSelf().eagerly());
+		if(enableDrools) {
+			l.add(bind(rules.services.Rules6Component.class         ).toSelf().eagerly());
+		} else {
+			//Default behavior: disable Drools but it could be overridden into tests
+			l.add(bind(rules.services.Rules6Component.class).to(rules.services.Rules6ComponentDisable.class).eagerly());
+		}
 		return l;
 	}
 
