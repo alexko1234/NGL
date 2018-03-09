@@ -128,10 +128,10 @@ public class SamplesAPI {
 		}
 	}
 
-	public Sample update(String code, Sample input, String currentUser, Map<String,List<ValidationError>> errors) throws APIException, APIValidationException {
+	public Sample update(String code, Sample input, String currentUser) throws APIException, APIValidationException {
 		// throw an exception if no object is found
 		get(code);
-		ContextValidation ctxVal = new ContextValidation(currentUser, errors);
+		ContextValidation ctxVal = new ContextValidation(currentUser);
 		ctxVal.setUpdateMode();
 		input.comments = InstanceHelpers.updateComments(input.comments, ctxVal);
 		input.validate(ctxVal);
@@ -178,6 +178,10 @@ public class SamplesAPI {
 	
 	public void delete(String code) {
 		this.dao.deleteObject(code);
+	}
+
+	public List<Sample> list(Query query, String orderBy, Sort orderSense) {
+		return dao.mongoDBFinder(query, orderBy, orderSense).toList();
 	}
 	
 }

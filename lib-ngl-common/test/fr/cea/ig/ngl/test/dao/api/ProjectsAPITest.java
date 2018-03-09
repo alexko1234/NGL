@@ -21,13 +21,15 @@ import org.mongojack.DBQuery.Query;
 import fr.cea.ig.MongoDBResult.Sort;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.projects.ProjectsAPI;
+import fr.cea.ig.ngl.test.AbstractAPITests;
 import fr.cea.ig.ngl.test.dao.api.factory.TestProjectFactory;
 import models.laboratory.project.instance.Project;
+import play.Logger.ALogger;
 import play.data.validation.ValidationError;
 import utils.AbstractTests;
 
 @Singleton  
-public class ProjectsAPITest extends AbstractTests {
+public class ProjectsAPITest extends AbstractTests implements AbstractAPITests {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(ProjectsAPITest.class);
 
@@ -49,9 +51,7 @@ public class ProjectsAPITest extends AbstractTests {
 	}
 
 
-	/**
-	 * Create required Data for test
-	 */
+	@Override
 	public void setUpData() {
 		try {
 			createdProject = api.create(refProject, USER);
@@ -66,9 +66,7 @@ public class ProjectsAPITest extends AbstractTests {
 		}
 	}
 
-	/**
-	 * Delete Data used in test
-	 */
+	@Override
 	public void deleteData() {
 		api.delete(createdProject.code);
 	}
@@ -172,27 +170,8 @@ public class ProjectsAPITest extends AbstractTests {
 	}
 
 
-	/**
-	 * 
-	 * @param message
-	 */
-	private void exit(String message) {
-		deleteData();
-		fail(message);
-	}
-
-	/**
-	 * Log Validation Errors only if logger level is DEBUG or less
-	 * @param e
-	 */
-	private static void logValidationErrors(APIValidationException e) {
-		if(logger.isDebugEnabled()) {
-			e.getErrors().keySet().forEach(key -> {
-				e.getErrors().get(key).forEach(err -> {
-					logger.error(key + " - "+ err.message());						
-				});
-
-			});
-		}
+	@Override
+	public ALogger logger() {
+		return logger;
 	}
 }

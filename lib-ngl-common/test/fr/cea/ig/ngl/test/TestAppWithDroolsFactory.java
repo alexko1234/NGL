@@ -8,6 +8,10 @@ import play.inject.guice.GuiceApplicationBuilder;
 import rules.services.Rules6Component;
 import rules.services.test.TestRules6Component;
 
+/**
+ * @author ajosso
+ *
+ */
 public class TestAppWithDroolsFactory extends ApplicationFactory {
 
 	public TestAppWithDroolsFactory(String configFileName) {
