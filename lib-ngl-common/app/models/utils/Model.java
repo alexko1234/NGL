@@ -58,6 +58,7 @@ public abstract class Model<T> {
 	// This is a covariance warning that cannot be suppressed even using
 	// Model<T extends Model<T>>. Could require that subclasses provide the
 	// proper definition so the subclasses can "prove" that they are indeed a T.
+	@SuppressWarnings("unchecked") // solution is to abstract this method and define in subclasses
 	public T self() { return (T)this; }
 	
 	@JsonIgnore
@@ -94,6 +95,7 @@ public abstract class Model<T> {
 	private AbstractDAO<T> getInstance() throws DAOException {
 		try {
 //			return (AbstractDAO<T>) Spring.getBeanOfType(Class.forName(classNameDAO));
+			@SuppressWarnings("unchecked") // To much changes need to avoid this.
 			AbstractDAO<T> dao = (AbstractDAO<T>) Spring.getBeanOfType(Class.forName(classNameDAO));
 			return dao;
 		} catch (ClassNotFoundException e) {
