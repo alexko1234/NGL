@@ -30,10 +30,12 @@ public class Receptions extends TPLCommonController {
 	final Form<PropertyFileValue> fileForm;// = form(PropertyFileValue.class);
 	
 	private final NGLContext ctx;
+	private final ReceptionFileService receptionFileService;
 	@Inject
-	public Receptions(NGLContext ctx) {
+	public Receptions(NGLContext ctx, ReceptionFileService receptionFileService) {
 		fileForm = ctx.form(PropertyFileValue.class);
 		this.ctx = ctx;
+		this.receptionFileService = receptionFileService;
 	}
 	
 	private ReceptionConfiguration getReceptionConfig(String code){
@@ -52,13 +54,12 @@ public class Receptions extends TPLCommonController {
 		if(null != pfv){
 			
 			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
-			try {
-				ReceptionFileService receptionFileService = new ReceptionFileService(ctx);
+			try {				
 				FileService fileService = receptionFileService.getFileService(configuration, pfv, contextValidation);
 				fileService.analyse();
 			} catch(Throwable e) {
 				e.printStackTrace();
-				contextValidation.addErrors("Error", e.getMessage());
+				contextValidation.addErrors("Error", (e.getMessage() != null)?e.getMessage():"null");
 			}
 			if (contextValidation.hasErrors()) {
 				// return badRequest(filledForm.errors-AsJson());

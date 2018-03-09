@@ -18,7 +18,7 @@ import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 import services.description.declaration.cns.BanqueIllumina;
 import services.description.declaration.cns.Bionano;
-import services.description.declaration.cns.ExtractionDNARNA;
+import services.description.declaration.cns.SamplePrep;
 import services.description.declaration.cns.MetaBarCoding;
 import services.description.declaration.cns.MetaGenomique;
 import services.description.declaration.cns.MetaTProcess;
@@ -73,7 +73,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 			l.addAll(new Transfert().getExperimentType());
 			l.addAll(new Purif().getExperimentType());
 			
-		l.addAll(new ExtractionDNARNA().getExperimentType());
+		l.addAll(new SamplePrep().getExperimentType());
 		l.addAll(new MetaBarCoding().getExperimentType());
 		l.addAll(new MetaGenomique().getExperimentType());
 		l.addAll(new MetaTProcess().getExperimentType());
@@ -116,7 +116,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 
 		
-		new ExtractionDNARNA().getExperimentTypeNode();
+		new SamplePrep().getExperimentTypeNode();
 		
 		new Opgen().getExperimentTypeNode();
 		new Bionano().getExperimentTypeNode();		

@@ -50,10 +50,10 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 	}
 	
 	
-//	@Permission(value={"writing"})	
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})	
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	//@Permission(value={"creation_update_treatments"})
 	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
@@ -86,10 +86,10 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 		}		
 	}
 
-//	@Permission(value={"writing"})
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	//@Permission(value={"creation_update_treatments"})
 	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
@@ -122,10 +122,10 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 		}
 	}
 	
-//	@Permission(value={"writing"})	
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})	
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	//@Permission(value={"delete_treatments"})
 	public Result delete(String parentCode, String code){
 		Analysis objectInDB = getObject(getSubObjectQuery(parentCode, code));
@@ -138,10 +138,10 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 		return ok();		
 	}
 	
-//	@Permission(value={"writing"})
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	public  Result deleteAll(String parentCode){
 		Analysis objectInDB = getObject(parentCode);
 		if (objectInDB == null) {

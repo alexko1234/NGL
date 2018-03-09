@@ -58,10 +58,10 @@ public class Files extends SubDocumentController<Analysis, File> {
 		return objectInDB.files;
 	}
 	
-//	@Permission(value={"writing"})	
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})	
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	//@Permission(value={"creation_update_files"})
 	public Result save(String parentCode) {
 		Analysis objectInDB = getObject(parentCode);
@@ -89,10 +89,10 @@ public class Files extends SubDocumentController<Analysis, File> {
 		}
 	}
 	
-//	@Permission(value={"writing"})
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	//@Permission(value={"creation_update_files"})
 	public Result update(String parentCode, String fullname) {
 		Analysis objectInDB = getObject(getSubObjectQuery(parentCode, fullname));
@@ -152,10 +152,10 @@ public class Files extends SubDocumentController<Analysis, File> {
 		}
 	}
 
-//	@Permission(value={"writing"})	
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})	
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	//@Permission(value={"delete_files"})
 	public Result delete(String parentCode, String fullname) {
 		Analysis objectInDB = getObject(getSubObjectQuery(parentCode, fullname));
@@ -168,10 +168,10 @@ public class Files extends SubDocumentController<Analysis, File> {
 		return ok();
 	}
 	
-//	@Permission(value={"writing"})
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	public Result deleteByParentCode(String parentCode) {
 		Analysis objectInDB = getObject(parentCode);
 		if (objectInDB == null) {

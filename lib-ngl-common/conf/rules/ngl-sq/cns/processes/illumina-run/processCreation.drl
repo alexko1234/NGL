@@ -13,9 +13,9 @@ rule "Calculation of estimatedPercent property of pool process "
 	salience 1000
 	no-loop
     when
-        $process : Process($properties:properties,$properties != null)
+        $process : Process($properties:properties,$properties != null, $sampleOnInputContainer:sampleOnInputContainer, $sampleOnInputContainer != null)
         $estimatedPercentPerLane : PropertyValue() from $properties.get("estimatedPercentPerLane")
-        $percentage : Double() from $process.sampleOnInputContainer.percentage
+        $percentage : Double() from $sampleOnInputContainer.percentage
         $contextValidation : ContextValidation()      
      	eval ($contextValidation.isCreationMode()==true && $estimatedPercentPerLane.value !=null && Double.class.isInstance($estimatedPercentPerLane.value) && $percentage!=null) 
     then

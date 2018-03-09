@@ -73,7 +73,7 @@ public class LaneTreatmentTest extends AbstractBIServerTest{
 	public void test1list()
 	{
 		Logger.debug("list LaneTreatment");
-		WSResponse response = WSHelper.get(ws, "/api/runs/"+run.code+"/lanes/1/treatments", 200);
+		WSResponse response = WSHelper.getAsBot(ws, "/api/runs/"+run.code+"/lanes/1/treatments", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 
@@ -81,7 +81,7 @@ public class LaneTreatmentTest extends AbstractBIServerTest{
 	public void test2get()
 	{
 		Logger.debug("get LaneTreatment");
-		WSResponse response = WSHelper.get(ws, "/api/runs/"+run.code+"/lanes/1/treatments/ngsrg", 200);
+		WSResponse response = WSHelper.getAsBot(ws, "/api/runs/"+run.code+"/lanes/1/treatments/ngsrg", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 
@@ -89,7 +89,7 @@ public class LaneTreatmentTest extends AbstractBIServerTest{
 	public void test3head()
 	{
 		Logger.debug("head LaneTreatment");
-		WSResponse response = WSHelper.head(ws, "/api/runs/"+run.code+"/lanes/1/treatments/ngsrg", 200);
+		WSResponse response = WSHelper.headAsBot(ws, "/api/runs/"+run.code+"/lanes/1/treatments/ngsrg", 200);
 		assertThat(response).isNotNull();
 	}
 	
@@ -97,7 +97,7 @@ public class LaneTreatmentTest extends AbstractBIServerTest{
 	public void test4save()
 	{
 		Logger.debug("save LaneTreatment");
-		WSHelper.post(ws, "/api/runs/"+run.code+"/lanes/"+nbLane+"/treatments", jsonTopIndex, 200);
+		WSHelper.postAsBot(ws, "/api/runs/"+run.code+"/lanes/"+nbLane+"/treatments", jsonTopIndex, 200);
 		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
 		Logger.debug("Run "+run.code);
 		assertThat(run.lanes.get(0).treatments.get("topIndex")).isNotNull();
@@ -110,7 +110,7 @@ public class LaneTreatmentTest extends AbstractBIServerTest{
 		//Get Treatment ngsrg
 		Treatment ngsrg = run.lanes.get(0).treatments.get("ngsrg");
 		ngsrg.results.get("default").put("nbClusterIlluminaFilter", new PropertySingleValue(new Long(0)));
-		WSHelper.putObject(ws, "/api/runs/"+run.code+"/lanes/"+nbLane+"/treatments/ngsrg", ngsrg, 200);
+		WSHelper.putObjectAsBot(ws, "/api/runs/"+run.code+"/lanes/"+nbLane+"/treatments/ngsrg", ngsrg, 200);
 		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
 		assertThat(run.lanes.get(0).treatments.get("ngsrg").results.get("default").get("nbClusterIlluminaFilter").getValue()).isEqualTo(new Long(0));
 	}
@@ -119,7 +119,7 @@ public class LaneTreatmentTest extends AbstractBIServerTest{
 	public void test6delete()
 	{
 		Logger.debug("delete LaneTreatment");
-		WSHelper.delete(ws,"/api/runs/"+run.code+"/lanes/"+nbLane+"/treatments/topIndex",200);
+		WSHelper.deleteAsBot(ws,"/api/runs/"+run.code+"/lanes/"+nbLane+"/treatments/topIndex",200);
 		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
 		assertThat(run.lanes.get(0).treatments.get("topIndex")).isNull();
 	}

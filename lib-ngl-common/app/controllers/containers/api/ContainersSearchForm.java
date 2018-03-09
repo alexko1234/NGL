@@ -56,6 +56,8 @@ public class ContainersSearchForm extends ListForm{
 	public Map<String, Boolean> existingFields;
 	public Map<String, String> queryFields;
 	
+	public Boolean sampleCodesFromIWCProcess = Boolean.FALSE;
+	
 	@Override
 	public String toString() {
 		return "ContainersSearchForm [projectCode=" + projectCode

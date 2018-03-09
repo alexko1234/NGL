@@ -36,7 +36,7 @@ public class Analysis extends DBObject implements IValidation{
 	public String path;
 	public List<File> files;
 	public Map<String, Treatment> treatments = new HashMap<String, Treatment>();
-	public List<ReadSetProperties> masterReadSetProperties = null; //used to add with drools readset properties need to evaluate anaysis
+	public List<ReadSetProperties> masterReadSetProperties = null; //used to add with drools readset properties need to evaluate analysis
 	public Map<String, PropertyValue> properties= new HashMap<String, PropertyValue>();
 	
 	@Override

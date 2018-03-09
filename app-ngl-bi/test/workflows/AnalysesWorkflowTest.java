@@ -59,7 +59,7 @@ public class AnalysesWorkflowTest extends AbstractTests {
 					State state = new State("IP-BA","bot");
 					//Result r = callAction(controllers.analyses.api.routes.ref.Analyses.state(analysis.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
-					WSHelper.put(ws, "/api/analyses/"+analysis.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
+					WSHelper.putAsBot(ws, "/api/analyses/"+analysis.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 					analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
 					Logger.debug("state code"+analysis.state.code);
 					assertThat(analysis.state.code).isEqualTo("IP-BA");
@@ -85,7 +85,7 @@ public class AnalysesWorkflowTest extends AbstractTests {
 					State state = new State("F-BA","bot");
 					//Result r = callAction(controllers.analyses.api.routes.ref.Analyses.state(analysis.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
-					WSHelper.put(ws, "/api/analyses/"+analysis.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
+					WSHelper.putAsBot(ws, "/api/analyses/"+analysis.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 					analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
 					Logger.debug("state code"+analysis.state.code);
 					assertThat(analysis.state.code).isEqualTo("F-V");
@@ -109,7 +109,7 @@ public class AnalysesWorkflowTest extends AbstractTests {
 					State state = new State("IW-V","bot");
 					//Result r = callAction(controllers.analyses.api.routes.ref.Analyses.state(analysis.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
-					WSHelper.put(ws, "/api/analyses/"+analysis.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
+					WSHelper.putAsBot(ws, "/api/analyses/"+analysis.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 
 					analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
 					Logger.debug("state code"+analysis.state.code);
@@ -135,7 +135,7 @@ public class AnalysesWorkflowTest extends AbstractTests {
 					State state = new State("IW-V","bot");
 					//Result r = callAction(controllers.analyses.api.routes.ref.Analyses.state(analysis.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
-					WSHelper.put(ws, "/api/analyses/"+analysis.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
+					WSHelper.putAsBot(ws, "/api/analyses/"+analysis.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 					
 					analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
 					Logger.debug("state code"+analysis.state.code);

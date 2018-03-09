@@ -3,7 +3,7 @@
 */
 "use strict";
 
-angular.module('ultimateDataTableServices', []).
+angular.module('ultimateDataTableServices', ['infinite-scroll']).
 factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', '$timeout', '$anchorScroll', '$location',
 		function($http, $filter, $parse, $window, $q, udtI18n, $timeout, $anchorScroll, $location) { //service to manage datatable
     var constructor = function(iConfig) {
@@ -217,6 +217,12 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                 spinner: {
                     start: false
                 },
+                infiniteScroll :{
+                	active: true,
+                	defaultLimitTo : 20,
+                	stepLimitTo : 20,
+                	currentLimitTo : undefined
+                },                
                 callbackEndDisplayResult : function(){},
                 compact: true, //mode compact pour le nom des bouttons
                 objectsMustBeAddInGetFinalValue:{} //object used in $parse to apply function on extract value.
@@ -245,6 +251,32 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
             },
             messages: udtI18n(navigator.languages || navigator.language || navigator.userLanguage), //i18n intern service instance
             //errors functions
+            /**
+             * Reset the displayLimit
+             */
+            resetScrollCurrentLimitTo : function(maxLimitTo){
+            	if(this.config.infiniteScroll.active)
+            		this.config.infiniteScroll.currentLimitTo = this.config.infiniteScroll.defaultLimitTo;
+            		this.config.infiniteScroll.maxLimitTo = maxLimitTo;
+            		if(this.config.infiniteScroll.currentLimitTo > this.config.infiniteScroll.maxLimitTo){
+            			this.config.infiniteScroll.currentLimitTo = this.config.infiniteScroll.maxLimitTo
+            		}
+            },
+            addScrollCurrentLimitTo : function(){
+            	if(this.config.infiniteScroll.active && this.config.infiniteScroll.currentLimitTo < this.config.infiniteScroll.maxLimitTo)
+            		this.config.infiniteScroll.currentLimitTo = this.config.infiniteScroll.currentLimitTo + this.config.infiniteScroll.stepLimitTo;
+            },
+            getScrollCurrentLimitTo : function(){
+            	if(this.displayResult && this.config.infiniteScroll.active)
+            		return this.config.infiniteScroll.currentLimitTo
+            	else if(this.displayResult)
+            		return this.displayResult.length;
+            	else
+            		return 0;
+            },
+            disabledScroll : function(){
+            	return (this.displayResult && this.config.infiniteScroll.currentLimitTo > this.displayResult.length);
+            },
             /**
              * Reset all the errors for a line
              */
@@ -776,7 +808,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
              * Based on pagination configuration
              */
             computeDisplayResult: function() {
-                var time = 100;
+            	var time = 100;
                 if (this.computeDisplayResultTimeOut !== undefined) {
                     $timeout.cancel(this.computeDisplayResultTimeOut);
                 } else {
@@ -838,6 +870,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                             that.displayResult = displayResultTmp;
                             that.computeRowSpans();
                         }
+                        that.resetScrollCurrentLimitTo(that.displayResult.length);
                         
                     	if (that.config.edit.byDefault) {
                             that.setEdit();                           
@@ -1997,7 +2030,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                         }
                         
                         if(null === columns[i].headerTpl || undefined === columns[i].headerTpl){
-                        	columns[i].headerTpl = '<span class="header" ng-model="udtTable" ng-bind="udtTableFunctions.messages.Messages(column.header)"/>';
+                        	columns[i].headerTpl = '<span class="header" ng-model="udtTable" ng-bind="udtHelpers.messages.Messages(column.header)"/>';
                         }
                     }
 
@@ -2482,34 +2515,43 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
 ;angular.module('ultimateDataTableServices').
 //If the select or multiple choices contain 1 element, this directive select it automaticaly
 //EXAMPLE: <select ng-model="x" ng-option="x as x for x in x" udtAutoselect>...</select>
-directive('udtAutoselect',['$parse', function($parse) {
-    		var OPTIONS_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?(?:\s+group\s+by\s+(.*))?\s+for\s+(?:([\$\w][\$\w\d]*)|(?:\(\s*([\$\w][\$\w\d]*)\s*,\s*([\$\w][\$\w\d]*)\s*\)))\s+in\s+(.*)$/;
-    		return {
-    			require: 'ngModel',
-    			link: function(scope, element, attrs, ngModel) {
-    				var valOption = undefined;
-					if(attrs.ngOptions){	
-						valOption = attrs.ngOptions;
-					}else if(attrs.btOptions){
-						valOption = attrs.btOptions;
-					}
-					
-					if(valOption !== undefined){
-						var match = valOption.match(OPTIONS_REGEXP);
-						var model = $parse(match[7]);
-						scope.$watch(model, function(value){
-							if(value){
-				                if(value.length === 1 && (ngModel.$modelValue === undefined || ngModel.$modelValue === "")){
-									ngModel.$setViewValue(value[0].code);
-									ngModel.$render();
-								}
+directive('udtAutoSelect',['$parse', function($parse) {
+		var OPTIONS_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?(?:\s+group\s+by\s+(.*))?\s+for\s+(?:([\$\w][\$\w\d]*)|(?:\(\s*([\$\w][\$\w\d]*)\s*,\s*([\$\w][\$\w\d]*)\s*\)))\s+in\s+(.*)$/;
+		return {
+			require: 'ngModel',
+			link: function(scope, element, attrs, ngModel) {
+				var valOption = undefined;
+				var multiple = false;
+				if(attrs.ngOptions){	
+					valOption = attrs.ngOptions;
+				}else if(attrs.btOptions){
+					valOption = attrs.btOptions;
+				}
+				
+				if(attrs.multiple === true || attrs.multiple === "true"){
+					multiple = true;
+				}
+				
+				if(valOption != undefined){
+					var match = valOption.match(OPTIONS_REGEXP);
+					var getModelValue = $parse(match[1].replace(match[4]+'.',''));
+					var model = $parse(match[7]);
+					scope.$watch(model, function(value){
+						if(value){
+			                if(value.length === 1 && (ngModel.$modelValue == undefined || ngModel.$modelValue == "")){
+								
+			                	var value = (multiple)?[getModelValue(value[0])]:getModelValue(value[0]);
+			                	
+			                	ngModel.$setViewValue(value);
+								ngModel.$render();
 							}
-				        });
-					}else{
-						console.log("ng-options or bt-options required");
-					}
-    			}
-    		};
+						}
+			        });
+				}else{
+					console.log("ng-options or bt-options required");
+				}
+			}
+	};
     	}]);;
 angular.module('ultimateDataTableServices')
 .directive('udtBase64Img', [function () {
@@ -2881,15 +2923,49 @@ directive('udtBtselect',  ['$parse', '$document', '$window', '$filter', function
 	      		  
   		    };
     	}]);;angular.module('ultimateDataTableServices').
-directive("udtCell", function(){
-    		return {
-    			restrict: 'A',
-  		    	replace:true,
-  		    	templateUrl:'udt-cell.html',
-	    		link: function(scope, element, attr) {
-	    			if(!scope.udtTableFunctions){scope.udtTableFunctions = {};}
+directive("udtTbody", function(){
+	return {
+		restrict: 'A',    	
+    	link: function(scope, element, attr) {	    		
+    		var getEditProperty = function(col, header, filter){
+				if(header){
+		    		return  "udtTable.config.edit.columns."+col.id+".value";
+		    	} else if(filter){
+					return "udtTable.searchTerms."+col.property;
+				} else if(angular.isString(col.property)){
+		    		return "value.data."+col.property;
+		    	} else {
+		    		throw "Error property is not editable !";
+		    	}
+	    	};
 
-	    			scope.udtTableFunctions.getEditElement = function(col, header, filter){
+	    	var getConvertDirective = function(col, header){
+	    		if(col.convertValue !== undefined && col.convertValue !== null && col.convertValue.active === true && col.convertValue.saveMeasureValue !== col.convertValue.displayMeasureValue){
+	    			return 'udt-convertvalue="col.convertValue"';
+	    		}
+	    		return "";
+	    	}
+
+	    	
+	    	var getOptions = function(col){
+				if(angular.isString(col.possibleValues)){
+					return col.possibleValues;
+				}else{ //function
+					return 'col.possibleValues';
+				}
+			};
+
+			var getGroupBy = function(col){
+				if(angular.isString(col.groupBy)){
+					return 'group by opt.'+col.groupBy;
+				}else{
+					return '';
+				}
+
+			};
+			
+    		var udtTbodyHelpers = {
+    				getEditElement : function(col, header, filter){
 						var editElement = '';
 	    				var ngChange = '"';
 	    				var defaultValueDirective = "";
@@ -2898,10 +2974,12 @@ directive("udtCell", function(){
     			    		ngChange = '" udt-change="udtTable.updateColumn(col.property, col.id)"';
 						}else if(filter){
 							ngChange = '" udt-change="udtTable.searchLocal(udtTable.searchTerms)"';
-    			    	}else{
+    			    	}else if(col.defaultValues){
     			    		defaultValueDirective = 'udt-default-value="col"';
+    			    	}else if(col.choiceInList){
+    			    		defaultValueDirective= " udt-auto-select";
     			    	}
-
+    			    	
 						var userDirectives = "";
 						if(col.editDirectives !== undefined){
 							userDirectives = col.editDirectives;
@@ -2921,26 +2999,26 @@ directive("udtCell", function(){
 						}
 						
 						if(col.editTemplate){
-							editElement = col.editTemplate.replace(/#ng-model/g, 'ng-model="'+this.getEditProperty(col, header, filter)+ngChange+' '+requiredDirective);														
+							editElement = col.editTemplate.replace(/#ng-model/g, 'ng-model="'+getEditProperty(col, header, filter)+ngChange+' '+requiredDirective);														
 						}else if(col.type === "boolean"){
-	    					editElement = '<input class="form-control"' +defaultValueDirective+'type="checkbox" class="input-small" ng-model="'+this.getEditProperty(col, header, filter)+ngChange+'/>';	    					
+	    					editElement = '<input class="form-control"' +defaultValueDirective+'type="checkbox" class="input-small" ng-model="'+getEditProperty(col, header, filter)+ngChange+'/>';	    					
 	    				}else if (col.type === "textarea") {
-                            editElement = '<textarea class="form-control"' + defaultValueDirective + userDirectives + 'ng-model="' + this.getEditProperty(col, header, filter) + ngChange + '></textarea>';
+                            editElement = '<textarea class="form-control"' + defaultValueDirective + userDirectives + 'ng-model="' + getEditProperty(col, header, filter) + ngChange + '></textarea>';
 	    				}else if(col.type === "img"){
 	    					editElement=
-	    						'<input type="file" class="form-control" udt-base64-img ng-model="'+this.getEditProperty(col, header, filter)+'" id="{{\''+col.id+'_\'+value.line.id}}" '+requiredDirective+' ng-if="'+this.getEditProperty(col, header, filter)+' === undefined" />'
-	    						+'<div  ng-click="udtTableFunctions.setImage('+this.getEditProperty(col, header, filter)+'.value,'
-	                        	+this.getEditProperty(col, header, filter)+'.fullname,'
-	                        	+this.getEditProperty(col, header, filter)+'.width,'
-	                        	+this.getEditProperty(col, header, filter)+'.height)" '
-	                        	+'  class="thumbnail" ng-if="'+this.getEditProperty(col, header, filter)+' !== undefined" >'
+	    						'<input type="file" class="form-control" udt-base64-img ng-model="'+getEditProperty(col, header, filter)+'" id="{{\''+col.id+'_\'+value.line.id}}" '+requiredDirective+' ng-if="'+getEditProperty(col, header, filter)+' === undefined" />'
+	    						+'<div  ng-click="udtTableHelpers.setImage('+getEditProperty(col, header, filter)+'.value,'
+	                        	+getEditProperty(col, header, filter)+'.fullname,'
+	                        	+getEditProperty(col, header, filter)+'.width,'
+	                        	+getEditProperty(col, header, filter)+'.height)" '
+	                        	+'  class="thumbnail" ng-if="'+getEditProperty(col, header, filter)+' !== undefined" >'
 	                            +'  <div data-target="#udtModalImage" role="button" data-toggle="modal" >'
 	                            +'     <a href="#">'
-	                            +'    <img  ng-src="data:image/{{'+this.getEditProperty(col, header, filter)+'.extension}};base64,{{'+this.getEditProperty(col, header, filter)+'.value}}" width="{{'+this.getEditProperty(col, header, filter)+'.width*0.1}}" height="{{'+this.getEditProperty(col, header, filter)+'.height*0.1}}" />'
+	                            +'    <img  ng-src="data:image/{{'+getEditProperty(col, header, filter)+'.extension}};base64,{{'+getEditProperty(col, header, filter)+'.value}}" width="{{'+getEditProperty(col, header, filter)+'.width*0.1}}" height="{{'+getEditProperty(col, header, filter)+'.height*0.1}}" />'
 	                            +'     </a>'
 	                            +' </div>'
 	                            +' </div>'
-	    						+' <button ng-if="'+this.getEditProperty(col, header, filter)+' !== undefined" class="btn btn-default btn-xs" ng-click="'+this.getEditProperty(col, header, filter)+' = undefined" >'
+	    						+' <button ng-if="'+getEditProperty(col, header, filter)+' !== undefined" class="btn btn-default btn-xs" ng-click="'+getEditProperty(col, header, filter)+' = undefined" >'
 	    						+' <i class="fa fa-trash-o"></i>'
                                 +' </button>';
 
@@ -2950,42 +3028,42 @@ directive("udtCell", function(){
 	    				}
 	    				else if(col.type === "file"){
 	    					editElement=
-	    						'<input ng-if="'+this.getEditProperty(col, header, filter)+' === undefined"  type="file" class="form-control" udt-base64-file ng-model="'+this.getEditProperty(col, header, filter)+'" id="{{\''+col.id+'_\'+value.line.id}} '+requiredDirective+' />'
-	    						+'<div ng-if="'+this.getEditProperty(col, header, filter)+' !== undefined" >'
-                                +'<a target="_blank" ng-href="data:application/{{'+this.getEditProperty(col, header, filter)+'.extension}};base64,{{'+this.getEditProperty(col, header, filter)+'.value}}">'
-                                +'{{'+this.getEditProperty(col, header, filter)+'.fullname}}'
+	    						'<input ng-if="'+getEditProperty(col, header, filter)+' === undefined"  type="file" class="form-control" udt-base64-file ng-model="'+getEditProperty(col, header, filter)+'" id="{{\''+col.id+'_\'+value.line.id}} '+requiredDirective+' />'
+	    						+'<div ng-if="'+getEditProperty(col, header, filter)+' !== undefined" >'
+                                +'<a target="_blank" ng-href="data:application/{{'+getEditProperty(col, header, filter)+'.extension}};base64,{{'+getEditProperty(col, header, filter)+'.value}}">'
+                                +'{{'+getEditProperty(col, header, filter)+'.fullname}}'
                                 +'</a>'
                                 +' </div>'
 	    						
-	    						+' <button ng-if="'+this.getEditProperty(col, header, filter)+' !== undefined" class="btn btn-default btn-xs" ng-click="'+this.getEditProperty(col, header, filter)+' = undefined" ><i class="fa fa-trash-o"></i>'
+	    						+' <button ng-if="'+getEditProperty(col, header, filter)+' !== undefined" class="btn btn-default btn-xs" ng-click="'+getEditProperty(col, header, filter)+' = undefined" ><i class="fa fa-trash-o"></i>'
                                 +' </button>';
 	    					if(header){
 	    						editElement = '';
 	    					}
 	    				}else if(!col.choiceInList){
 							//TODO: type='text' because html5 autoformat return a string before that we can format the number ourself
-	    					editElement = '<input class="form-control" '+requiredDirective+' '+defaultValueDirective+' '+this.getConvertDirective(col, header)+' udt-html-filter="{{col.type}}" type="text" class="input-small" ng-model="'+this.getEditProperty(col,header,filter)+ngChange+userDirectives+'/>';
+	    					editElement = '<input class="form-control" '+requiredDirective+' '+defaultValueDirective+' '+getConvertDirective(col, header)+' udt-html-filter="{{col.type}}" type="text" class="input-small" ng-model="'+getEditProperty(col,header,filter)+ngChange+userDirectives+'/>';
 	    				}else if(col.choiceInList){
 	    					switch (col.listStyle) {
 	    						case "radio":
-	    							editElement = '<label class="radio-inline" ng-repeat="opt in '+this.getOptions(col)+' track by $index" '+userDirectives+'>'
-	    										   +'<input udt-html-filter="{{col.type}}" type="radio" ng-model="'+this.getEditProperty(col,header,filter)+ngChange+' ng-value="{{opt.code}}"> {{opt.name}}'
+	    							editElement = '<label class="radio-inline" ng-repeat="opt in '+getOptions(col)+' track by $index" '+userDirectives+'>'
+	    										   +'<input udt-html-filter="{{col.type}}" type="radio" ng-model="'+getEditProperty(col,header,filter)+ngChange+' ng-value="{{opt.code}}"> {{opt.name}}'
 	    										   +'</label>';
 									break;
 	    						case "multiselect":
-	    							editElement = '<select class="form-control" multiple="true" '+requiredDirective+' '+defaultValueDirective+' ng-options="opt.code '+this.getFormatter(col)+' as opt.name '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+userDirectives+'></select>';
+	    							editElement = '<select class="form-control" multiple="true" '+requiredDirective+' '+defaultValueDirective+' ng-options="opt.code '+scope.udtTable.getFormatter(col)+' as opt.name '+getGroupBy(col)+' for opt in '+getOptions(col)+'" '+' ng-model="'+getEditProperty(col,header,filter)+ngChange+userDirectives+'></select>';
 		    						break;
 	    						case "bt-select":
-	    							editElement = '<div udt-html-filter="{{col.type}}" class="form-control" udt-btselect '+requiredDirective+' '+defaultValueDirective+' placeholder="" bt-dropdown-class="dropdown-menu-right" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+userDirectives+'></div>';
+	    							editElement = '<div udt-html-filter="{{col.type}}" class="form-control" udt-btselect '+requiredDirective+' '+defaultValueDirective+' placeholder="" bt-dropdown-class="dropdown-menu-right" bt-options="opt.code as opt.name  '+getGroupBy(col)+' for opt in '+getOptions(col)+'" '+' ng-model="'+getEditProperty(col,header,filter)+ngChange+userDirectives+'></div>';
 	    							break;
 								case "bt-select-filter":
-	    							editElement = '<div udt-html-filter="{{col.type}}" class="form-control" filter="true" udt-btselect '+requiredDirective+' '+defaultValueDirective+' placeholder="" bt-dropdown-class="dropdown-menu-right" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+userDirectives+'></div>';
+	    							editElement = '<div udt-html-filter="{{col.type}}" class="form-control" filter="true" udt-btselect '+requiredDirective+' '+defaultValueDirective+' placeholder="" bt-dropdown-class="dropdown-menu-right" bt-options="opt.code as opt.name  '+getGroupBy(col)+' for opt in '+getOptions(col)+'" '+' ng-model="'+getEditProperty(col,header,filter)+ngChange+userDirectives+'></div>';
 	    							break;
 	    						case "bt-select-multiple":
-	    							editElement = '<div class="form-control" '+requiredDirective+' '+defaultValueDirective+' udt-btselect multiple="true" bt-dropdown-class="dropdown-menu-right" placeholder="" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+userDirectives+'></div>';
+	    							editElement = '<div class="form-control" '+requiredDirective+' '+defaultValueDirective+' udt-btselect multiple="true" bt-dropdown-class="dropdown-menu-right" placeholder="" bt-options="opt.code as opt.name  '+getGroupBy(col)+' for opt in '+getOptions(col)+'" '+' ng-model="'+getEditProperty(col,header,filter)+ngChange+userDirectives+'></div>';
 	    							break;
 	    						default:
-	    							editElement = '<select udt-html-filter="{{col.type}}" class="form-control" '+requiredDirective+' '+defaultValueDirective+' ng-options="opt.code '+this.getFormatter(col)+' as opt.name '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+userDirectives+'>'
+	    							editElement = '<select udt-html-filter="{{col.type}}" class="form-control" '+requiredDirective+' '+defaultValueDirective+' ng-options="opt.code '+scope.udtTable.getFormatter(col)+' as opt.name '+getGroupBy(col)+' for opt in '+getOptions(col)+'" '+' ng-model="'+getEditProperty(col,header,filter)+ngChange+userDirectives+'>'
 	    										  + '<option></option>'
 	    										  + '</select>';
 		    						break;
@@ -2994,66 +3072,10 @@ directive("udtCell", function(){
 	    					editElement = "Edit Not Defined for col.type !";
 	    				}
 	    				//return '<div class="form-group"  ng-class="{\'has-error\': value.line.errors[\''+col.property+'\'] !== undefined}">'+editElement+'<span class="help-block" ng-if="value.line.errors[\''+col.property+'\'] !== undefined">{{value.line.errors["'+col.property+'"]}}<br></span></div>';
-	    				return '<div class="form-group"  ng-class="udtTableFunctions.getValidationClass(\'subForm\'+value.line.id, col)">'+editElement+'<span class="help-block" ng-if="value.line.errors[\''+col.property+'\'] !== undefined">{{value.line.errors["'+col.property+'"]}}<br></span></div>';
+	    				return '<div class="form-group"  ng-class="udtTbodyHelpers.getValidationClass(\'subForm\'+value.line.id, col)">'+editElement+'<span class="help-block" ng-if="value.line.errors[\''+col.property+'\'] !== undefined">{{value.line.errors["'+col.property+'"]}}<br></span></div>';
 		    			
-	    			};
-
-
-	    			scope.udtTableFunctions.getEditProperty = function(col, header, filter){
-	    				if(header){
-    			    		return  "udtTable.config.edit.columns."+col.id+".value";
-    			    	} else if(filter){
-							return "udtTable.searchTerms."+col.property;
-						} else if(angular.isString(col.property)){
-    			    		return "value.data."+col.property;
-    			    	} else {
-    			    		throw "Error property is not editable !";
-    			    	}
-			    	};
-
-			    	scope.udtTableFunctions.getConvertDirective = function(col, header){
-			    		if(col.convertValue !== undefined && col.convertValue !== null && col.convertValue.active === true && col.convertValue.saveMeasureValue !== col.convertValue.displayMeasureValue){
-			    			return 'udt-convertvalue="col.convertValue"';
-			    		}
-			    		return "";
-			    	}
-
-			    	scope.udtTableFunctions.getInputType = function(col){
-	    				if(col.type === "date" || col.type === "datetime" || col.type === "datetime-local"){
-    			    		return "text";
-	    				}
-	    				return col.type
-			    	};
-
-			    	scope.udtTableFunctions.getFormatter = scope.udtTable.getFormatter;
-	    			scope.udtTableFunctions.getFilter = scope.udtTable.getFilter;
-	    			
-	    			scope.udtTableFunctions.getOptions = function(col){
-	    				if(angular.isString(col.possibleValues)){
-	    					return col.possibleValues;
-	    				}else{ //function
-	    					return 'col.possibleValues';
-	    				}
-	    			};
-
-	    			scope.udtTableFunctions.getGroupBy = function(col){
-	    				if(angular.isString(col.groupBy)){
-	    					return 'group by opt.'+col.groupBy;
-	    				}else{
-	    					return '';
-	    				}
-
-	    			};
-
-	    			scope.udtTableFunctions.getDateTimestamp = function(colType){
-	    				if(colType==="date"){
-	    					return 'udt-date-timestamp';
-	    				}
-
-	    				return '';
-	    			};
-					
-	    			scope.udtTableFunctions.getValidationClass = function(formName, col){
+	    			},
+	    			getValidationClass : function(formName, col){
 	    				
 	    				if(scope.udtTable.config.save.enableValidation
 	    					&& scope.datatableForm[formName] 
@@ -3064,7 +3086,46 @@ directive("udtCell", function(){
 	    					return undefined;
 	    				}
 	    				    				
-	    			};
+	    			},
+	    			getDisplayElement : function(col){
+	    				if(angular.isDefined(col.render) && col.render !== null){
+    						if(angular.isFunction(col.render)){
+    							return '<span udt-compile="udtTable.config.columns[$index].render(value.data, value.line)"></span>';
+    						}else if(angular.isString(col.render)){
+    							return '<span udt-compile="udtTable.config.columns[$index].render"></span>';
+    						}
+	    				}else{
+	    					if(col.type !== "boolean" && col.type !== "img" && col.type !=="file"){
+	    						//return '<span udt-highlight="cellValue" keywords="udtTable.searchTerms.$" active="udtTable.config.filter.highlight"></span>';
+								return '<span ng-bind="cellValue"></span>'
+	    					}else if(col.type === "boolean"){
+	    						return '<div ng-switch on="cellValue"><i ng-switch-when="true" class="fa fa-check-square-o"></i><i ng-switch-default class="fa fa-square-o"></i></div>';
+	    					}else if(col.type==="img"){	    						
+	    						return '<div  ng-click="udtTableHelpers.setImage(cellValue.value,cellValue.fullname,cellValue.width,cellValue.height)" class="thumbnail" ng-if="cellValue !== undefined" >' 
+	    						+'<div data-target="#udtModalImage" role="button" data-toggle="modal" ><a href="#"><img ng-src="data:image/{{cellValue.extension}};base64,{{cellValue.value}}" width="{{cellValue.width*0.1}}" height="{{cellValue.height*0.1}}"/></a></div></div>';		    					    
+	    					}else if(col.type==="file"){
+	    						return  '<a ng-href="data:application/{{cellValue.extension}};base64,{{cellValue.value}}" download="{{cellValue.fullname}}">'
+                                +'{{cellValue.fullname}}'
+                                +'</a>';
+	    					} else{
+	    						return ''
+	    					}
+	    				}
+	    			}
+    		};
+    		
+    		scope.udtTbodyHelpers = udtTbodyHelpers;
+    	}
+
+	};
+})
+.directive("udtCell", function(){
+    		return {
+    			restrict: 'A',
+  		    	replace:true,
+  		    	templateUrl:'udt-cell.html',
+	    		link: function(scope, element, attr) {
+	    			
   		    	}
     		};
     	}).directive("udtEditableCell", function(){
@@ -3108,40 +3169,13 @@ directive("udtCell", function(){
   		    	replace:true,
   		    	templateUrl:'udt-cellRead.html' ,
   		    	link: function(scope, element, attr) {
-  		    		if(!scope.udtTableFunctions){scope.udtTableFunctions = {};}
-
-  		    		scope.udtTableFunctions.getDisplayElement = function(col){
-	    				if(angular.isDefined(col.render) && col.render !== null){
-    						if(angular.isFunction(col.render)){
-    							return '<span udt-compile="udtTable.config.columns[$index].render(value.data, value.line)"></span>';
-    						}else if(angular.isString(col.render)){
-    							return '<span udt-compile="udtTable.config.columns[$index].render"></span>';
-    						}
-	    				}else{
-	    					if(col.type !== "boolean" && col.type !== "img" && col.type !=="file"){
-	    						//return '<span udt-highlight="cellValue" keywords="udtTable.searchTerms.$" active="udtTable.config.filter.highlight"></span>';
-								return '<span ng-bind="cellValue"></span>'
-	    					}else if(col.type === "boolean"){
-	    						return '<div ng-switch on="cellValue"><i ng-switch-when="true" class="fa fa-check-square-o"></i><i ng-switch-default class="fa fa-square-o"></i></div>';
-	    					}else if(col.type==="img"){	    						
-	    						return '<div  ng-click="udtTableFunctions.setImage(cellValue.value,cellValue.fullname,cellValue.width,cellValue.height)" class="thumbnail" ng-if="cellValue !== undefined" >' 
-	    						+'<div data-target="#udtModalImage" role="button" data-toggle="modal" ><a href="#"><img ng-src="data:image/{{cellValue.extension}};base64,{{cellValue.value}}" width="{{cellValue.width*0.1}}" height="{{cellValue.height*0.1}}"/></a></div></div>';		    					    
-	    					}else if(col.type==="file"){
-	    						return  '<a ng-href="data:application/{{cellValue.extension}};base64,{{cellValue.value}}" download="{{cellValue.fullname}}">'
-                                +'{{cellValue.fullname}}'
-                                +'</a>';
-	    					} else{
-	    						return ''
-	    					}
-	    				}
-	    			};
-
-	    			
+  		    		
 			    	var getDisplayValue = function(column, value, currentScope){
-			    		var filter  = currentScope.udtTableFunctions.getFilter(column);
-		    			var formatter = currentScope.udtTableFunctions.getFormatter(column);
-	    				
+			    		
 		    			if(column.watch === true && !value.line.group && (column.url === undefined || column.url === null)){
+		    				var filter  = currentScope.udtTable.getFilter(column);
+			    			var formatter = currentScope.udtTable.getFormatter(column);
+		    				
 		    				scope.$watch("value.data."+column.property+filter+formatter, function(newValue, oldValue) {
                                     if ( newValue !== oldValue ) {
                                     	scope.cellValue = newValue;
@@ -3190,23 +3224,34 @@ directive('udtCompile', ['$compile', function($compile) {
 			return {
 				restrict: 'A',
   		    	link: function(scope, element, attrs) {
-  				    scope.$watch(
+  		    		/*
+  		    		 * Normaly no need to watch because the attribute udtCompile not change during the life of UDT
+  		    		scope.$watch(
   				        function(scope) {
   				             // watch the 'compile' expression for changes
   				            return scope.$eval(attrs.udtCompile);
   				        },
-  				        function(value) {
-  				            // when the 'compile' expression changes
-  				            // assign it into the current DOM
-  				            element.html(value);
+  				        function(newValue, oldValue) {
+  				        	//if(newValue !== oldValue){
+  				        		console.log("watch udtCompile");
+  	  				            // when the 'compile' expression changes
+  	  				            // assign it into the current DOM
+  	  				            element.html(newValue);
 
-  				            // compile the new DOM and link it to the current
-  				            // scope.
-  				            // NOTE: we only compile .childNodes so that
-  				            // we don't get into infinite loop compiling ourselves
-  				            $compile(element.contents())(scope);
+  	  				            // compile the new DOM and link it to the current
+  	  				            // scope.
+  	  				            // NOTE: we only compile .childNodes so that
+  	  				            // we don't get into infinite loop compiling ourselves
+  	  				            $compile(element.contents())(scope);
+  				        	//}
+  				        	
   				        }
   				    );
+  		    		*/
+  		    		var value = scope.$eval(attrs.udtCompile);
+  		    		element.html(value);
+  		    		$compile(element.contents())(scope);
+  		    		
   				}
 			};
 						
@@ -3319,8 +3364,11 @@ directive('udtDefaultValue',['$parse', function($parse) {
 											ngModel.$setViewValue(false);
 											ngModel.$render();
 										}											
-									}else{
+									}else if(!angular.isFunction(_col.defaultValues)){
 										ngModel.$setViewValue(_col.defaultValues);
+										ngModel.$render();
+									}else{
+										ngModel.$setViewValue(_col.defaultValues(scope.value.data));
 										ngModel.$render();
 									}
 				                	
@@ -3448,7 +3496,6 @@ directive('udtTable', function(){
   		    	replace:true,
   		    	templateUrl:'udt-table.html',
   		    	link: function(scope, element, attr) {
-  		    		if(!scope.udtTableFunctions){scope.udtTableFunctions = {};}
   		    		
   		    		if(scope.udtTable && scope["datatableForm"]){
   		    			scope.udtTable.formController = scope["datatableForm"];
@@ -3460,133 +3507,130 @@ directive('udtTable', function(){
   		    			}
 		            });
 					
-  		    		scope.udtTableFunctions.setImage = function(imageData, imageName, imageFullSizeWidth, imageFullSizeHeight) {
-  		    			scope.udtModalImage = {};
-  		    			scope.udtModalImage.modalImage = imageData;
-  		    			scope.udtModalImage.modalTitle = imageName;
+  		    		var udtTableHelpers = {
+  		    				//todo in udtCell
+  		    				setImage : function(imageData, imageName, imageFullSizeWidth, imageFullSizeHeight) {
+  		  		    			scope.udtModalImage = {};
+  		  		    			scope.udtModalImage.modalImage = imageData;
+  		  		    			scope.udtModalImage.modalTitle = imageName;
 
-  		    			var margin = 25;		
-  		    			var zoom = Math.min((document.body.clientWidth - margin) / imageFullSizeWidth, 1);
+  		  		    			var margin = 25;		
+  		  		    			var zoom = Math.min((document.body.clientWidth - margin) / imageFullSizeWidth, 1);
 
-  		    			scope.udtModalImage.modalWidth = imageFullSizeWidth * zoom;
-  		    			scope.udtModalImage.modalHeight = imageFullSizeHeight * zoom; // in order to
-  		    			scope.udtModalImage.modalLeft = (document.body.clientWidth - scope.udtModalImage.modalWidth)/2;
-  		    			scope.udtModalImage.modalTop = (window.innerHeight - scope.udtModalImage.modalHeight)/2;
-  		    			scope.udtModalImage.modalTop = scope.udtModalImage.modalTop - 50; // height of header and footer
-  		    		};
+  		  		    			scope.udtModalImage.modalWidth = imageFullSizeWidth * zoom;
+  		  		    			scope.udtModalImage.modalHeight = imageFullSizeHeight * zoom; // in order to
+  		  		    			scope.udtModalImage.modalLeft = (document.body.clientWidth - scope.udtModalImage.modalWidth)/2;
+  		  		    			scope.udtModalImage.modalTop = (window.innerHeight - scope.udtModalImage.modalHeight)/2;
+  		  		    			scope.udtModalImage.modalTop = scope.udtModalImage.modalTop - 50; // height of header and footer
+  		  		    		},
+  		  		    		getTrClass : function(data, line, currentScope){
+  		  		    			var udtTable = scope.udtTable;
+  			    				if(line.trClass){
+  			    					return line.trClass; 
+  			    				} else if(angular.isFunction(udtTable.config.lines.trClass)){
+  			    					return udtTable.config.lines.trClass(data, line);
+  			    				} else if(angular.isString(udtTable.config.lines.trClass)){
+  			    					return currentScope.$eval(udtTable.config.lines.trClass) || udtTable.config.lines.trClass;
+  			    				} else if(line.group && !udtTable.config.group.showOnlyGroups){
+  			    					return "active";
+  			    				} else{
+  			    					return '';
+  			    				}		    				
+  			    			},
+  			    			getTdClass : function(data, col, currentScope){
+  			    				if(angular.isFunction(col.tdClass)){
+  			    					return col.tdClass(data);
+  			    				} else if(angular.isString(col.tdClass)){
+  			    					return currentScope.$eval(col.tdClass) ||  col.tdClass;
+  			    				}else{
+  			    					return '';
+  			    				}
+  			    			},
+  			    			getThClass : function(col, currentScope){
+  			    				var clazz = '';
+  			    				if(col && angular.isFunction(col.thClass)){
+  			    					clazz = col.thClass(col);
+  			    				} else if(col && angular.isString(col.thClass)){
+  			    					//we try to evaluation the string against the scope
+  			    					clazz =  currentScope.$eval(col.thClass) || col.thClass;
+  			    				}
+  			    				if((col && col.required != undefined && col.required != null)
+  			    						&& ((angular.isFunction(col.required) && col.required())
+  			    								|| col.required === true
+  			    								|| (angular.isString(col.required) && scope.$eval(col.required)))){
+  			    					clazz = clazz +' required';
+  			    				}
+  			    				return clazz;
+  			    			},
+  			    			select : function(data, line){
+  								var udtTable = scope.udtTable;
+  		                        if(line){
+  								if(udtTable.config.select.active){
+  				    					//separation of line type group and normal to simplify backward compatibility and avoid bugs
+  				    					//selected is used with edit, remove, save and show button
+  				    					if(!line.group){
+  					    					if(!line.selected){
+  					    						line.selected=true;
+  					    						line.trClass="info";
+  					    					} else{
+  												line.selected=false;
+  					    						line.trClass=undefined;
+  											}
+  				    					}else if(line.group && udtTable.config.group.enableLineSelection){
+  				    						if(!line.groupSelected){
+  					    						line.groupSelected=true;
+  					    						line.trClass="info";
+  					    					} else{
+  												line.groupSelected=false;
+  					    						line.trClass=undefined;
+  											}
+  				    					}
+  				    				}
+  		                            if (udtTable.config.select.active && angular.isFunction(udtTable.config.select.callback)) {
+  		                                console.warning('select.callback is deprecated. Use mouseevents.clickCallback instead.');
+  				    						udtTable.config.select.callback(line, data);
+  		                            } else if (udtTable.config.mouseevents.active && angular.isFunction(udtTable.config.mouseevents.clickCallback)) {
+  		                                udtTable.config.mouseevents.clickCallback(line, data);
+  				                        }
+  				    				}
+  			    			},
+  			    			mouseover : function(data, line){
+  		                        var udtTable = scope.udtTable;
+  		                        if (udtTable.config.mouseevents.active) {
+  		                            var cb = udtTable.config.mouseevents.overCallback;
+  		                            if (angular.isFunction(cb)) {
+  		                                cb(line, data);
+  		                            }
+  		                        }
+  		                    },
+  		                    mouseleave : function(data, line){
+  		                        var udtTable = scope.udtTable;
+  		                        if (udtTable.config.mouseevents.active) {
+  		                            var cb = udtTable.config.mouseevents.leaveCallback;
+  		                            if (angular.isFunction(cb)) {
+  		                                cb(line, data);
+  		                            }
+  								}
+  			    			},
+  			    			getRowSpanValue : function(i,j){
+  								var udtTable = scope.udtTable;
+  								if(udtTable.config.mergeCells.active && udtTable.config.mergeCells.rowspans !== undefined){
+  									return udtTable.config.mergeCells.rowspans[i][j];
+  								}else{
+  									return 1;
+  								}
+  							},
+  							isShowCell : function(col, i, j){
+  								var udtTable = scope.udtTable;
+  								var value = !udtTable.isHide(col.id);
+  								if(udtTable.config.mergeCells.active && value && udtTable.config.mergeCells.rowspans !== undefined){
+  									value = (udtTable.config.mergeCells.rowspans[i][j] !== 0)
+  								}						
+  								return value;
+  							}
+  		    		}
   		    		
-  		    		scope.udtTableFunctions.getTrClass = function(data, line, currentScope){
-  		    			var udtTable = scope.udtTable;
-	    				if(line.trClass){
-	    					return line.trClass; 
-	    				} else if(angular.isFunction(udtTable.config.lines.trClass)){
-	    					return udtTable.config.lines.trClass(data, line);
-	    				} else if(angular.isString(udtTable.config.lines.trClass)){
-	    					return currentScope.$eval(udtTable.config.lines.trClass) || udtTable.config.lines.trClass;
-	    				} else if(line.group && !udtTable.config.group.showOnlyGroups){
-	    					return "active";
-	    				} else{
-	    					return '';
-	    				}		    				
-	    			};
-	    			scope.udtTableFunctions.getTdClass = function(data, col, currentScope){
-	    				if(angular.isFunction(col.tdClass)){
-	    					return col.tdClass(data);
-	    				} else if(angular.isString(col.tdClass)){
-	    					return currentScope.$eval(col.tdClass) ||  col.tdClass;
-	    				}else{
-	    					return '';
-	    				}
-	    			};
-	    			scope.udtTableFunctions.getThClass = function(col, currentScope){
-	    				var clazz = '';
-	    				if(col && angular.isFunction(col.thClass)){
-	    					clazz = col.thClass(col);
-	    				} else if(col && angular.isString(col.thClass)){
-	    					//we try to evaluation the string against the scope
-	    					clazz =  currentScope.$eval(col.thClass) || col.thClass;
-	    				}
-	    				if((col && col.required != undefined && col.required != null)
-	    						&& ((angular.isFunction(col.required) && col.required())
-	    								|| col.required === true
-	    								|| (angular.isString(col.required) && scope.$eval(col.required)))){
-	    					clazz = clazz +' required';
-	    				}
-	    				return clazz;
-	    			};
-	    			/**
-					 * Select all the table line or just one
-					 */
-					scope.udtTableFunctions.select = function(data, line){
-						var udtTable = scope.udtTable;
-                        if(line){
-						if(udtTable.config.select.active){
-		    					//separation of line type group and normal to simplify backward compatibility and avoid bugs
-		    					//selected is used with edit, remove, save and show button
-		    					if(!line.group){
-			    					if(!line.selected){
-			    						line.selected=true;
-			    						line.trClass="info";
-			    					} else{
-										line.selected=false;
-			    						line.trClass=undefined;
-									}
-		    					}else if(line.group && udtTable.config.group.enableLineSelection){
-		    						if(!line.groupSelected){
-			    						line.groupSelected=true;
-			    						line.trClass="info";
-			    					} else{
-										line.groupSelected=false;
-			    						line.trClass=undefined;
-									}
-		    					}
-		    				}
-                            if (udtTable.config.select.active && angular.isFunction(udtTable.config.select.callback)) {
-                                console.warning('select.callback is deprecated. Use mouseevents.clickCallback instead.');
-		    						udtTable.config.select.callback(line, data);
-                            } else if (udtTable.config.mouseevents.active && angular.isFunction(udtTable.config.mouseevents.clickCallback)) {
-                                udtTable.config.mouseevents.clickCallback(line, data);
-		                        }
-		    				}
-	    			};
-
-                                scope.udtTableFunctions.mouseover = function(data, line){
-                                    var udtTable = scope.udtTable;
-                                    if (udtTable.config.mouseevents.active) {
-                                        var cb = udtTable.config.mouseevents.overCallback;
-                                        if (angular.isFunction(cb)) {
-                                            cb(line, data);
-                                        }
-                                    }
-                                };
-
-                                scope.udtTableFunctions.mouseleave = function(data, line){
-                                    var udtTable = scope.udtTable;
-                                    if (udtTable.config.mouseevents.active) {
-                                        var cb = udtTable.config.mouseevents.leaveCallback;
-                                        if (angular.isFunction(cb)) {
-                                            cb(line, data);
-                                        }
-						}
-	    			};
-					
-					scope.udtTableFunctions.getRowSpanValue = function(i,j){
-						var udtTable = scope.udtTable;
-						if(udtTable.config.mergeCells.active && udtTable.config.mergeCells.rowspans !== undefined){
-							return udtTable.config.mergeCells.rowspans[i][j];
-						}else{
-							return 1;
-						}
-					};
-					
-					scope.udtTableFunctions.isShowCell = function(col, i, j){
-						var udtTable = scope.udtTable;
-						var value = !udtTable.isHide(col.id);
-						if(udtTable.config.mergeCells.active && value && udtTable.config.mergeCells.rowspans !== undefined){
-							value = (udtTable.config.mergeCells.rowspans[i][j] !== 0)
-						}						
-						return value;
-					};
+					scope.udtTableHelpers = udtTableHelpers;
   		    	}
     		};
     	});;angular.module('ultimateDataTableServices').
@@ -3648,41 +3692,44 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
   		    	templateUrl:'ultimate-datatable.html',
   		    	link: function(scope, element, attr) {
   		    		if(!attr.ultimateDatatable) return;
-		            
+  		    		scope.udtTable = $parse(attr.ultimateDatatable)(scope);
+  		    		
   		    		scope.$watch(attr.ultimateDatatable, function(newValue, oldValue) {
   		    			if(newValue && (newValue !== oldValue || !scope.udtTable)){
   		    				scope.udtTable = newValue;
   		    			}
 		            });
   		    		
-  		    		scope.udtTable = $parse(attr.ultimateDatatable)(scope);
+  		    		var udtHelpers = {
+  		    				messages : {
+  		    					Messages : function(message,arg){	
+	  		  						if(angular.isFunction(message)){
+	  		  			    				message = message();
+	  		  			    		}
+	  		  						
+	  		  						if(arg==null || arg==undefined){
+	  		  			    			return scope.udtTable.config.messages.transformKey(message);
+	  		  						}else{
+	  		  							return scope.udtTable.config.messages.transformKey(message, arg);
+	  		  						}
+  		    					}
+  		    				},
+  		    				getTotalNumberRecords : function(){
+  				    			if(scope.udtTable.config.group.active && scope.udtTable.config.group.start && !scope.udtTable.config.group.showOnlyGroups){
+  				    				return scope.udtTable.totalNumberRecords + " - "+scope.udtTable.allGroupResult.length;
+  				    			}else if(scope.udtTable.config.group.active && scope.udtTable.config.group.start && scope.udtTable.config.group.showOnlyGroups){
+  				    				return (scope.udtTable.allGroupResult)?scope.udtTable.allGroupResult.length:0;
+  				    			}else{
+  				    				return scope.udtTable.totalNumberRecords;
+  				    			}  				    			  				    			
+  				    		}
+  		    				
+  		    		};
+  		    		scope.udtHelpers = udtHelpers;
+  		    		 
   		    		
   		    		if(!scope.udtTableFunctions){scope.udtTableFunctions = {};}
   		    		
-  		    		scope.udtTableFunctions.messages = {};
-  		    		scope.udtTableFunctions.messages.Messages = function(message,arg){	
-						if(angular.isFunction(message)){
-			    				message = message();
-			    		}
-						
-						if(arg==null || arg==undefined){
-			    			return scope.udtTable.config.messages.transformKey(message);
-						}else{
-							return scope.udtTable.config.messages.transformKey(message, arg);
-						}
-			    	};
-			    	
-			    	scope.udtTableFunctions.cancel = function(){
-		    			scope.udtTable.setSpinner(true);
-		    			$timeout(function(){scope.udtTable.cancel()}).finally(function(){
-		    				scope.udtTable.computeDisplayResultTimeOut.finally(function(){
-								scope.udtTable.setSpinner(false); 
-							});	   		    				
-		    			});
-		    			
-		    					    			
-		    		};
-			    	
 		    		scope.udtTableFunctions.setNumberRecordsPerPage = function(elt){
 		    			scope.udtTable.setSpinner(true);
 		    			$timeout(function(){scope.udtTable.setNumberRecordsPerPage(elt)}).finally(function(){
@@ -3707,13 +3754,6 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
 		    			});		    			
 		    		};
 		    		
-		    		scope.udtTableFunctions.setEdit = function(column){
-		    			scope.udtTable.setSpinner(true);
-		    			$timeout(function(){scope.udtTable.setEdit(column)}).finally(function(){
-		    				scope.udtTable.setSpinner(false);  		    				
-		    			});		    			
-		    		};
-		    		
 		    		scope.udtTableFunctions.setOrderColumn = function(column){
 		    			scope.udtTable.setSpinner(true);
 		    			$timeout(function(){scope.udtTable.setOrderColumn(column)}).finally(function(){
@@ -3726,13 +3766,6 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
 		    			
 		    		};
 		    		
-		    		scope.udtTableFunctions.setHideColumn = function(column){
-		    			scope.udtTable.setSpinner(true);
-		    			$timeout(function(){scope.udtTable.setHideColumn(column)}).finally(function(){
-		    				scope.udtTable.setSpinner(false);  		    				
-		    			});
-		    		};
-		    		
 		    		scope.udtTableFunctions.setGroupColumn = function(column){
 		    			scope.udtTable.setSpinner(true);
 		    			$timeout(function(){scope.udtTable.setGroupColumn(column)}).finally(function(){
@@ -3741,14 +3774,6 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
 							});  		    				
 		    			});
 		    		};			
-		    		
-		    		
-		    		scope.udtTableFunctions.exportCSV = function(exportType){
-		    			scope.udtTable.setSpinner(true);
-		    			$timeout(function(){scope.udtTable.exportCSV(exportType)}).finally(function(){
-		    				scope.udtTable.setSpinner(false);  		    				
-		    			});
-		    		};
 		    		
 		    		scope.udtTableFunctions.updateShowOnlyGroups = function(){
 		    			scope.udtTable.setSpinner(true);
@@ -3759,17 +3784,38 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
 		    			});
 		    		};
 		    		
-		    		scope.udtTableFunctions.getTotalNumberRecords = function(){
-		    			if(scope.udtTable.config.group.active && scope.udtTable.config.group.start && !scope.udtTable.config.group.showOnlyGroups){
-		    				return scope.udtTable.totalNumberRecords + " - "+scope.udtTable.allGroupResult.length;
-		    			}else if(scope.udtTable.config.group.active && scope.udtTable.config.group.start && scope.udtTable.config.group.showOnlyGroups){
-		    				return (scope.udtTable.allGroupResult)?scope.udtTable.allGroupResult.length:0;
-		    			}else{
-		    				return scope.udtTable.totalNumberRecords;
-		    			}
+		    		scope.udtTableFunctions.cancel = function(){
+		    			scope.udtTable.setSpinner(true);
+		    			$timeout(function(){scope.udtTable.cancel()}).finally(function(){
+		    				scope.udtTable.computeDisplayResultTimeOut.finally(function(){
+								scope.udtTable.setSpinner(false); 
+							});	   		    				
+		    			});
 		    			
+		    					    			
+		    		};
+		    		
+		    		scope.udtTableFunctions.setEdit = function(column){
+		    			scope.udtTable.setSpinner(true);
+		    			$timeout(function(){scope.udtTable.setEdit(column)}).finally(function(){
+		    				scope.udtTable.setSpinner(false);  		    				
+		    			});	
 		    			
 		    		};
+		    		
+		    		scope.udtTableFunctions.setHideColumn = function(column){
+		    			scope.udtTable.setSpinner(true);
+		    			$timeout(function(){scope.udtTable.setHideColumn(column)}).finally(function(){
+		    				scope.udtTable.setSpinner(false);  		    				
+		    			});
+		    			
+		    		};
+		    		scope.udtTableFunctions.exportCSV = function(exportType){
+		    			scope.udtTable.setSpinner(true);
+		    			$timeout(function(){scope.udtTable.exportCSV(exportType)}).finally(function(){
+		    				scope.udtTable.setSpinner(false);  		    				
+		    			});
+		    		};		    		
        		    } 		    		
     		};
 }]);;angular.module('ultimateDataTableServices').
@@ -4170,23 +4216,24 @@ run(['$templateCache', function($templateCache) {
    +                '<thead>'
    +                    '<tr ng-repeat="(key,headers) in udtTable.getExtraHeaderConfig()">'
    +                        '<th colspan="{{header.colspan}}" ng-repeat="header in headers" class="xheader">'
-   +                            '<span ng-bind="udtTableFunctions.messages.Messages(header.label)"/>'
+   +                            '<span ng-bind="udtHelpers.messages.Messages(header.label)"/>'
    +                        '</th>'
    +                    '</tr>'
    +                    '<tr>'
-   +						'<th ng-if="udtTable.isShowLineEditButton()" ng-class="udtTableFunctions.getThClass(column, this)"><!-- Edit button column --></th>'
-   +                        '<th id="{{column.id}}" ng-repeat="column in udtTable.getColumnsConfig()" ng-model="column" ng-if="!udtTable.isHide(column.id)" ng-class="udtTableFunctions.getThClass(column, this)">'
+   +						'<th ng-if="udtTable.isShowLineEditButton()" ng-class="udtTableHelpers.getThClass(column, this)"><!-- Edit button column --></th>'
+   +                        '<th id="{{column.id}}" ng-repeat="column in udtTable.getColumnsConfig()" ng-model="column" ng-if="!udtTable.isHide(column.id)" ng-class="udtTableHelpers.getThClass(column, this)">'
    +                            '<div udt-compile="column.headerTpl" class="pull-left"></div>'
    +							'<div class="btn-group pull-right">'
-   +                                '<button class="btn btn-xs" ng-click="udtTableFunctions.setEdit(column)"        ng-if="udtTable.isShowButton(\'edit\', column)"  ng-disabled="!udtTable.canEdit()" data-toggle="tooltip" title="{{udtTableFunctions.messages.Messages(\'datatable.button.edit\')}}"><i class="fa fa-edit"></i></button>'
-   +                                '<button class="btn btn-xs" ng-click="udtTableFunctions.setOrderColumn(column)" ng-if="udtTable.isShowButton(\'order\', column)" ng-disabled="!udtTable.canOrder()" data-toggle="tooltip" title="{{udtTableFunctions.messages.Messages(\'datatable.button.sort\')}}"><i ng-class="udtTable.getOrderColumnClass(column.id)"></i></button>'
-   +                                '<button class="btn btn-xs" ng-click="udtTableFunctions.setGroupColumn(column)" ng-if="udtTable.isShowButton(\'group\', column)" ng-disabled="udtTable.isEmpty()"  data-toggle="tooltip" title="{{udtTableFunctions.messages.Messages(\'datatable.button.group\')}}"><i ng-class="udtTable.getGroupColumnClass(column.id)"></i></button>'      
-   +                                '<button class="btn btn-xs" ng-click="udtTableFunctions.setHideColumn(column)"  ng-if="udtTable.isShowButton(\'hide\', column)"  data-toggle="tooltip" title="{{udtTableFunctions.messages.Messages(\'datatable.button.hide\')}}"><i class="fa fa-eye-slash"></i></button>'
+   +                                '<button class="btn btn-xs" ng-click="udtTableFunctions.setEdit(column)"        ng-if="udtTable.isShowButton(\'edit\', column)"  ng-disabled="!udtTable.canEdit()" data-toggle="tooltip" title="{{udtHelpers.messages.Messages(\'datatable.button.edit\')}}"><i class="fa fa-edit"></i></button>'
+   +                                '<button class="btn btn-xs" ng-click="udtTableFunctions.setOrderColumn(column)" ng-if="udtTable.isShowButton(\'order\', column)" ng-disabled="!udtTable.canOrder()" data-toggle="tooltip" title="{{udtHelpers.messages.Messages(\'datatable.button.sort\')}}"><i ng-class="udtTable.getOrderColumnClass(column.id)"></i></button>'
+   +                                '<button class="btn btn-xs" ng-click="udtTableFunctions.setGroupColumn(column)" ng-if="udtTable.isShowButton(\'group\', column)" ng-disabled="udtTable.isEmpty()"  data-toggle="tooltip" title="{{udtHelpers.messages.Messages(\'datatable.button.group\')}}"><i ng-class="udtTable.getGroupColumnClass(column.id)"></i></button>'      
+   +                                '<button class="btn btn-xs" ng-click="udtTableFunctions.setHideColumn(column)"  ng-if="udtTable.isShowButton(\'hide\', column)"  data-toggle="tooltip" title="{{udtHelpers.messages.Messages(\'datatable.button.hide\')}}"><i class="fa fa-eye-slash"></i></button>'
    +                            '</div>'
    +                        '</th>'
    +                    '</tr>'
    +                '</thead>'
-   +                '<tbody>'
+//   +                '<tbody infinite-scroll="udtTable.addScrollCurrentLimitTo()" infinite-scroll-distance="1" infinite-scroll-disabled="udtTable.disabledScroll()" udt-tbody>'
+   +                '<tbody udt-tbody>'
    +                    '<tr ng-if="udtTable.config.filter.columnMode && !udtTable.config.edit.start" class="filter">'
    +                        '<td ng-repeat="col in udtTable.config.columns" ng-if="!udtTable.isHide(col.id)">'
    +                            '<div ng-if="col.showFilter" udt-cell-filter/>'
@@ -4197,12 +4244,13 @@ run(['$templateCache', function($templateCache) {
    +                            '<div udt-cell-header/>'
    +                        '</td>'
    +                    '</tr>'
-   +                    '<tr ng-form name="subForm{{value.line.id}}" ng-repeat="value in udtTable.displayResult" ng-click="udtTableFunctions.select(value.data, value.line)" ng-mouseover="udtTableFunctions.mouseover(value.data, value.line)" ng-mouseleave="udtTableFunctions.mouseleave(value.data, value.line)" ng-class="udtTableFunctions.getTrClass(value.data, value.line, this)">'
+//   +                    '<tr ng-form name="subForm{{value.line.id}}" ng-repeat="value in udtTable.displayResult | limitTo:udtTable.getScrollCurrentLimitTo()" ng-click="udtTableHelpers.select(value.data, value.line)" ng-mouseover="udtTableHelpers.mouseover(value.data, value.line)" ng-mouseleave="udtTableHelpers.mouseleave(value.data, value.line)" ng-class="udtTableHelpers.getTrClass(value.data, value.line, this)">'
+   +                    '<tr ng-form name="subForm{{value.line.id}}" ng-repeat="value in udtTable.displayResult" ng-click="udtTableHelpers.select(value.data, value.line)" ng-mouseover="udtTableHelpers.mouseover(value.data, value.line)" ng-mouseleave="udtTableHelpers.mouseleave(value.data, value.line)" ng-class="udtTableHelpers.getTrClass(value.data, value.line, this)">'
    +                        '<td ng-if="udtTable.isShowLineEditButton()">'
    +                            '<button class="btn btn-default ng-scope" ng-click="udtTable.setEdit()" ng-show="!udtTable.isEdit(null, value.line)" ng-disabled="!udtTable.canEdit()" data-toggle="tooltip" title="Edit"><i class="fa fa-edit"></i></button>'
    +                            '<button class="btn btn-default ng-scope" ng-click="udtTable.save()" ng-show="udtTable.isEdit(null, value.line)" ng-disabled="!udtTable.canSave()" data-toggle="tooltip" title="Save"><i class="fa fa-save"></i></button>'
    +                        '</td>'
-   +                        '<td ng-repeat="col in udtTable.config.columns" ng-if="udtTableFunctions.isShowCell(col, $parent.$index, $index)" ng-class="udtTableFunctions.getTdClass(value.data, col, this)" rowspan="{{udtTableFunctions.getRowSpanValue($parent.$parent.$index, $parent.$index)}}">'
+   +                        '<td ng-repeat="col in udtTable.config.columns" ng-if="udtTableHelpers.isShowCell(col, $parent.$index, $index)" ng-class="udtTableHelpers.getTdClass(value.data, col, this)" rowspan="{{udtTableHelpers.getRowSpanValue($parent.$parent.$index, $parent.$index)}}">'
    +                            '<div udt-cell/>'
    +                        '</td>'
    +                    '</tr>'
@@ -4246,20 +4294,20 @@ run(['$templateCache', function($templateCache) {
 }])
 .run(['$templateCache', function($templateCache) {
   $templateCache.put('udt-cellRead.html',
-    '<div udt-compile="udtTableFunctions.getDisplayElement(col)"></div>');
+    '<div udt-compile="udtTbodyHelpers.getDisplayElement(col)"></div>');
 }])
 .run(['$templateCache', function($templateCache) {
   $templateCache.put('udt-cellEdit.html',
-    '<div udt-compile="udtTableFunctions.getEditElement(col)"></div>');
+    '<div udt-compile="udtTbodyHelpers.getEditElement(col)"></div>');
 }])
 .run(['$templateCache', function($templateCache) {
   $templateCache.put('udt-cellFilter.html',
-    '<div udt-compile="udtTableFunctions.getEditElement(col, false, true)"></div>');
+    '<div udt-compile="udtTbodyHelpers.getEditElement(col, false, true)"></div>');
 }])
 .run(['$templateCache', function($templateCache) {
   $templateCache.put('udt-cellHeader.html',
     '<div ng-if="col.edit" ng-switch on="udtTable.isEdit(col.id)">'
-   +    '<div ng-switch-when="true" udt-compile="udtTableFunctions.getEditElement(col, true)"></div>'
+   +    '<div ng-switch-when="true" udt-compile="udtTbodyHelpers.getEditElement(col, true)"></div>'
    +    '<div ng-switch-default></div>'
    +'</div>');
 }])
@@ -4283,70 +4331,70 @@ run(['$templateCache', function($templateCache) {
    +    '<div class="col-md-12 col-lg-12">'
    +        '<div class="btn-toolbar pull-left" name="udt-toolbar-buttons" ng-if="udtTable.isShowToolbarButtons()">'
    +            '<div class="btn-group" ng-switch on="udtTable.config.select.isSelectAll">'
-   +                '<button class="btn btn-default" ng-disabled="udtTable.isEmpty()" ng-click="udtTable.selectAll(true)" ng-show="udtTable.isShowButton(\'select\')" ng-switch-when="false" data-toggle="tooltip" title="{{udtTableFunctions.messages.Messages(\'datatable.button.selectall\')}}">'
+   +                '<button class="btn btn-default" ng-disabled="udtTable.isEmpty()" ng-click="udtTable.selectAll(true)" ng-show="udtTable.isShowButton(\'select\')" ng-switch-when="false" data-toggle="tooltip" title="{{udtHelpers.messages.Messages(\'datatable.button.selectall\')}}">'
    +                    '<i class="fa fa-check-square"></i>'
-   +                    '<span ng-if="!udtTable.isCompactMode()"> {{udtTableFunctions.messages.Messages(\'datatable.button.selectall\')}}</span>'
+   +                    '<span ng-if="!udtTable.isCompactMode()"> {{udtHelpers.messages.Messages(\'datatable.button.selectall\')}}</span>'
    +                '</button>'
-   +                '<button class="btn btn-default" ng-disabled="udtTable.isEmpty()" ng-click="udtTable.selectAll(false)" ng-show="udtTable.isShowButton(\'select\')" ng-switch-when="true" data-toggle="tooltip" title="{{udtTableFunctions.messages.Messages(\'datatable.button.unselectall\')}}">'
+   +                '<button class="btn btn-default" ng-disabled="udtTable.isEmpty()" ng-click="udtTable.selectAll(false)" ng-show="udtTable.isShowButton(\'select\')" ng-switch-when="true" data-toggle="tooltip" title="{{udtHelpers.messages.Messages(\'datatable.button.unselectall\')}}">'
    +                    '<i class="fa fa-square"></i>'
-   +                    '<span ng-if="!udtTable.isCompactMode()"> {{udtTableFunctions.messages.Messages(\'datatable.button.unselectall\')}}</span>'
+   +                    '<span ng-if="!udtTable.isCompactMode()"> {{udtHelpers.messages.Messages(\'datatable.button.unselectall\')}}</span>'
    +                '</button>'
-   +                '<button class="btn btn-default" ng-click="udtTableFunctions.cancel()"  ng-if="udtTable.isShowButton(\'cancel\')" data-toggle="tooltip" title="{{udtTableFunctions.messages.Messages(\'datatable.button.cancel\')}}">'
+   +                '<button class="btn btn-default" ng-click="udtTableFunctions.cancel()"  ng-if="udtTable.isShowButton(\'cancel\')" data-toggle="tooltip" title="{{udtHelpers.messages.Messages(\'datatable.button.cancel\')}}">'
    +                    '<i class="fa fa-undo"></i>'
-   +                    '<span ng-if="!udtTable.isCompactMode()"> {{udtTableFunctions.messages.Messages(\'datatable.button.cancel\')}}</span>'
+   +                    '<span ng-if="!udtTable.isCompactMode()"> {{udtHelpers.messages.Messages(\'datatable.button.cancel\')}}</span>'
    +                '</button>'
-   +                '<button class="btn btn-default" ng-click="udtTable.show()" ng-disabled="!udtTable.isSelect()" ng-if="udtTable.isShowButton(\'show\')" data-toggle="tooltip" title="{{udtTableFunctions.messages.Messages(\'datatable.button.show\')}}">'
+   +                '<button class="btn btn-default" ng-click="udtTable.show()" ng-disabled="!udtTable.isSelect()" ng-if="udtTable.isShowButton(\'show\')" data-toggle="tooltip" title="{{udtHelpers.messages.Messages(\'datatable.button.show\')}}">'
    +                    '<i class="fa fa-thumb-tack"></i>'
-   +                    '<span ng-if="!udtTable.isCompactMode()"> {{udtTableFunctions.messages.Messages(\'datatable.button.show\')}}</span>'
+   +                    '<span ng-if="!udtTable.isCompactMode()"> {{udtHelpers.messages.Messages(\'datatable.button.show\')}}</span>'
    +                '</button>'
    +            '</div>'
    +            '<div class="btn-group" ng-if="udtTable.isShowCRUDButtons()">'
-   +                '<button class="btn btn-default" ng-click="udtTableFunctions.setEdit()" ng-disabled="!udtTable.canEdit()"  ng-if="udtTable.isShowButton(\'edit\')" data-toggle="tooltip" title="{{udtTableFunctions.messages.Messages(\'datatable.button.edit\')}}">'
+   +                '<button class="btn btn-default" ng-click="udtTableFunctions.setEdit()" ng-disabled="!udtTable.canEdit()"  ng-if="udtTable.isShowButton(\'edit\')" data-toggle="tooltip" title="{{udtHelpers.messages.Messages(\'datatable.button.edit\')}}">'
    +                    '<i class="fa fa-edit"></i>'
-   +                    '<span ng-if="!udtTable.isCompactMode()"> {{udtTableFunctions.messages.Messages(\'datatable.button.edit\')}}</span>'
+   +                    '<span ng-if="!udtTable.isCompactMode()"> {{udtHelpers.messages.Messages(\'datatable.button.edit\')}}</span>'
    +                '</button>'
-   +                '<button class="btn btn-default" ng-click="udtTable.save()" ng-disabled="!udtTable.canSave()" ng-if="udtTable.isShowButton(\'save\')"  data-toggle="tooltip" title="{{udtTableFunctions.messages.Messages(\'datatable.button.save\')}}" >'
+   +                '<button class="btn btn-default" ng-click="udtTable.save()" ng-disabled="!udtTable.canSave()" ng-if="udtTable.isShowButton(\'save\')"  data-toggle="tooltip" title="{{udtHelpers.messages.Messages(\'datatable.button.save\')}}" >'
    +                    '<i class="fa fa-save"></i>'
-   +                    '<span ng-if="!udtTable.isCompactMode()"> {{udtTableFunctions.messages.Messages(\'datatable.button.save\')}}</span>'
+   +                    '<span ng-if="!udtTable.isCompactMode()"> {{udtHelpers.messages.Messages(\'datatable.button.save\')}}</span>'
    +                '</button>'
-   +                '<button class="btn btn-default" ng-click="udtTable.remove()" ng-disabled="!udtTable.canRemove()" ng-if="udtTable.isShowButton(\'remove\')"  data-toggle="tooltip" title="{{udtTableFunctions.messages.Messages(\'datatable.button.remove\')}}">'
+   +                '<button class="btn btn-default" ng-click="udtTable.remove()" ng-disabled="!udtTable.canRemove()" ng-if="udtTable.isShowButton(\'remove\')"  data-toggle="tooltip" title="{{udtHelpers.messages.Messages(\'datatable.button.remove\')}}">'
    +                    '<i class="fa fa-trash-o"></i>'
-   +                    '<span ng-if="!udtTable.isCompactMode()"> {{udtTableFunctions.messages.Messages(\'datatable.button.remove\')}}</span>'
+   +                    '<span ng-if="!udtTable.isCompactMode()"> {{udtHelpers.messages.Messages(\'datatable.button.remove\')}}</span>'
    +                '</button>'
    +            '</div>'
    +            '<div class="btn-group" ng-if="udtTable.config.add.active && udtTable.config.add.showButton">'
-   +                '<button class="btn btn-default" ng-click="udtTable.addBlankLine()" title="{{udtTableFunctions.messages.Messages(\'datatable.button.add\')}}">'
+   +                '<button class="btn btn-default" ng-click="udtTable.addBlankLine()" title="{{udtHelpers.messages.Messages(\'datatable.button.add\')}}">'
    +                    '<i class="fa fa-plus"></i>'
-   +                    '<span ng-if="!udtTable.isCompactMode()"> {{udtTableFunctions.messages.Messages(\'datatable.button.add\')}}</span>'
+   +                    '<span ng-if="!udtTable.isCompactMode()"> {{udtHelpers.messages.Messages(\'datatable.button.add\')}}</span>'
    +                '</button>'
    +            '</div>'
    +            '<div class="btn-group" ng-if="udtTable.isShowExportCSVButton()" ng-switch on="udtTable.config.group.active">'
-   +                '<button ng-switch-when="false" class="btn btn-default" ng-click="udtTableFunctions.exportCSV(\'all\')" ng-disabled="!udtTable.canExportCSV()" data-toggle="tooltip" title="{{udtTableFunctions.messages.Messages(\'datatable.button.exportCSV\')}}">'
+   +                '<button ng-switch-when="false" class="btn btn-default" ng-click="udtTableFunctions.exportCSV(\'all\')" ng-disabled="!udtTable.canExportCSV()" data-toggle="tooltip" title="{{udtHelpers.messages.Messages(\'datatable.button.exportCSV\')}}">'
    +                    '<i class="fa fa-file-text-o"></i>'
-   +                    '<span ng-if="!udtTable.isCompactMode()"> {{udtTableFunctions.messages.Messages(\'datatable.button.basicExportCSV\')}}</span>'
+   +                    '<span ng-if="!udtTable.isCompactMode()"> {{udtHelpers.messages.Messages(\'datatable.button.basicExportCSV\')}}</span>'
    +                '</button>'
-   +                '<button ng-switch-when="true" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-disabled="!udtTable.canExportCSV()"  title="{{udtTableFunctions.messages.Messages(\'datatable.button.exportCSV\')}}">'
+   +                '<button ng-switch-when="true" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-disabled="!udtTable.canExportCSV()"  title="{{udtHelpers.messages.Messages(\'datatable.button.exportCSV\')}}">'
    +                    '<i class="fa fa-file-text-o"></i> '
-   +                    '<span ng-if="!udtTable.isCompactMode()"> {{udtTableFunctions.messages.Messages(\'datatable.button.exportCSV\')}}</span>'
+   +                    '<span ng-if="!udtTable.isCompactMode()"> {{udtHelpers.messages.Messages(\'datatable.button.exportCSV\')}}</span>'
    +                    '<span class="caret"/>'
    +                '</button>'
    +                '<ul class="dropdown-menu" ng-switch-when="true">'
    +                    '<li>'
    +                        '<a href="" ng-click="udtTableFunctions.exportCSV(\'all\')">'
-   +                            '<i class="fa fa-file-text-o"></i> {{udtTableFunctions.messages.Messages(\'datatable.button.basicExportCSV\')}}'
+   +                            '<i class="fa fa-file-text-o"></i> {{udtHelpers.messages.Messages(\'datatable.button.basicExportCSV\')}}'
    +                        '</a>'
    +                    '</li>'
    +                    '<li>'
    +                        '<a href="" ng-click="udtTableFunctions.exportCSV(\'groupsOnly\')">'
-   +                            '<i class="fa fa-file-text-o"></i> {{udtTableFunctions.messages.Messages(\'datatable.button.groupedExportCSV\')}}'
+   +                            '<i class="fa fa-file-text-o"></i> {{udtHelpers.messages.Messages(\'datatable.button.groupedExportCSV\')}}'
    +                        '</a>'
    +                    '</li>'
    +                '</ul>'
    +            '</div>'
    +            '<div class="btn-group" ng-if="udtTable.isShowButton(\'group\')">'
-   +                '<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" ng-disabled="udtTable.isEmpty()" data-toggle="tooltip" title="{{udtTableFunctions.messages.Messages(\'datatable.button.group\')}}">'
+   +                '<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" ng-disabled="udtTable.isEmpty()" data-toggle="tooltip" title="{{udtHelpers.messages.Messages(\'datatable.button.group\')}}">'
    +                    '<i class="fa fa-bars"></i> '
-   +                    '<span ng-if="!udtTable.isCompactMode()"> {{udtTableFunctions.messages.Messages(\'datatable.button.group\')}} </span>'
+   +                    '<span ng-if="!udtTable.isCompactMode()"> {{udtHelpers.messages.Messages(\'datatable.button.group\')}} </span>'
    +                    '<span class="caret" />'
    +                '</button>'
    +                '<ul class="dropdown-menu">'
@@ -4354,7 +4402,7 @@ run(['$templateCache', function($templateCache) {
    +                        '<a href="" ng-click="udtTableFunctions.setGroupColumn(column)" ng-switch on="!udtTable.isGroup(column.id)">'
    +                            '<i class="fa fa-bars" ng-switch-when="true"></i>'
    +                            '<i class="fa fa-outdent" ng-switch-when="false"></i> '
-   +                            '<span ng-bind="udtTableFunctions.messages.Messages(column.header)"/>'
+   +                            '<span ng-bind="udtHelpers.messages.Messages(column.header)"/>'
    +                        '</a>' 
    +                    '</li>'
    +                    '<li class="divider"></li>'
@@ -4362,22 +4410,22 @@ run(['$templateCache', function($templateCache) {
    +                        '<a href="" ng-click="udtTable.setGroupColumn(\'all\')" ng-switch on="!udtTable.isGroup(\'all\')">'
    +                            '<i class="fa fa-bars" ng-switch-when="true"></i>'
    +                            '<i class="fa fa-outdent" ng-switch-when="false"></i> '
-   +                            '<span ng-bind="udtTableFunctions.messages.Messages(\'datatable.button.generalGroup\')"/>'
+   +                            '<span ng-bind="udtHelpers.messages.Messages(\'datatable.button.generalGroup\')"/>'
    +                        '</a>'
    +                    '</li>'
    +                    '<li class="dropdown-header" style="font-size:12px;color:#333">'
    +                        '<div class="checkbox">'
    +                            '<label>'
-   +                                '<input type="checkbox" ng-model="udtTable.config.group.showOnlyGroups" ng-click="udtTableFunctions.updateShowOnlyGroups()"/>{{udtTableFunctions.messages.Messages(\'datatable.button.showOnlyGroups\')}}'
+   +                                '<input type="checkbox" ng-model="udtTable.config.group.showOnlyGroups" ng-click="udtTableFunctions.updateShowOnlyGroups()"/>{{udtHelpers.messages.Messages(\'datatable.button.showOnlyGroups\')}}'
    +                            '</label>'
    +                        '</div>'
    +                    '</li>'
    +                '</ul>'
    +            '</div>'
    +            '<div class="btn-group" ng-if="udtTable.isShowHideButtons()">'
-   +                '<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" data-toggle="tooltip" title="{{udtTableFunctions.messages.Messages(\'datatable.button.hide\')}}">'
+   +                '<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" data-toggle="tooltip" title="{{udtHelpers.messages.Messages(\'datatable.button.hide\')}}">'
    +                    '<i class="fa fa-eye-slash"></i> '
-   +                    '<span ng-if="!udtTable.isCompactMode()"> {{udtTableFunctions.messages.Messages(\'datatable.button.hide\')}} </span>'
+   +                    '<span ng-if="!udtTable.isCompactMode()"> {{udtHelpers.messages.Messages(\'datatable.button.hide\')}} </span>'
    +                    '<span class="caret"></span>'
    +                '</button>'
    +                '<ul class="dropdown-menu">'
@@ -4385,7 +4433,7 @@ run(['$templateCache', function($templateCache) {
    +                        '<a href="" ng-click="udtTableFunctions.setHideColumn(column)" ng-switch on="udtTable.isHide(column.id)">'
    +                            '<i class="fa fa-eye" ng-switch-when="true"></i>'
    +                            '<i class="fa fa-eye-slash" ng-switch-when="false"></i> '
-   +                            '<span ng-bind="udtTableFunctions.messages.Messages(column.header)"/>'
+   +                            '<span ng-bind="udtHelpers.messages.Messages(column.header)"/>'
    +                        '</a>'
    +                    '</li>'
    +                '</ul>'
@@ -4397,10 +4445,10 @@ run(['$templateCache', function($templateCache) {
    +            '<div class="col-xs-12 .col-sm-6 col-md-7 col-lg-8 input-group" ng-if="udtTable.isCompactMode()">'
    +                '<input class="form-control input-compact" udt-change="udtTable.searchLocal(udtTable.searchTerms)" type="text" ng-model="udtTable.searchTerms.$" ng-keydown="$event.keyCode==13 ? udtTable.searchLocal(udtTable.searchTerms) : \'\'">'
    +                '<span class="input-group-btn">'
-   +                    '<button ng-if="udtTable.config.filter.active === true" class="btn btn-default search-button" ng-click="udtTable.searchLocal(udtTable.searchTerms)" title="{{udtTableFunctions.messages.Messages(\'datatable.button.searchLocal\')}}">'
+   +                    '<button ng-if="udtTable.config.filter.active === true" class="btn btn-default search-button" ng-click="udtTable.searchLocal(udtTable.searchTerms)" title="{{udtHelpers.messages.Messages(\'datatable.button.searchLocal\')}}">'
    +                        '<i class="fa fa-search"></i>'
    +                    '</button>'
-   +                    '<button ng-if="udtTable.config.filter.active === true" class="btn btn-default search-button" ng-click="udtTable.searchTerms={};udtTable.searchLocal()" title="{{udtTableFunctions.messages.Messages(\'datatable.button.resetSearchLocal\')}}">'
+   +                    '<button ng-if="udtTable.config.filter.active === true" class="btn btn-default search-button" ng-click="udtTable.searchTerms={};udtTable.searchLocal()" title="{{udtHelpers.messages.Messages(\'datatable.button.resetSearchLocal\')}}">'
    +                        '<i class="fa fa-times"></i>'
    +                    '</button>'
    +                '</span>'
@@ -4408,19 +4456,19 @@ run(['$templateCache', function($templateCache) {
    +            '<div class="col-xs-12 .col-sm-12 col-md-12 col-lg-12 input-group" ng-if="!udtTable.isCompactMode()">'
    +                '<input class="form-control" utd-change="udtTable.searchLocal(udtTable.searchTerms)" type="text" ng-model="udtTable.searchTerms.$">'
    +                '<span class="input-group-btn">'
-   +                    '<button ng-if="udtTable.config.filter.active === true" class="btn btn-default search-button" ng-click="udtTable.searchLocal(udtTable.searchTerms)" title="{{udtTableFunctions.messages.Messages(\'datatable.button.searchLocal\')}}">'
+   +                    '<button ng-if="udtTable.config.filter.active === true" class="btn btn-default search-button" ng-click="udtTable.searchLocal(udtTable.searchTerms)" title="{{udtHelpers.messages.Messages(\'datatable.button.searchLocal\')}}">'
    +                        '<i class="fa fa-search"></i>'
-   +                        '<span> {{udtTableFunctions.messages.Messages(\'datatable.button.searchLocal\')}} </span>'
+   +                        '<span> {{udtHelpers.messages.Messages(\'datatable.button.searchLocal\')}} </span>'
    +                    '</button>'
-   +                    '<button ng-if="udtTable.config.filter.active === true" class="btn btn-default search-button" ng-click="udtTable.searchTerms={};udtTable.searchLocal()" title="{{udtTableFunctions.messages.Messages(\'datatable.button.resetSearchLocal\')}}">'
+   +                    '<button ng-if="udtTable.config.filter.active === true" class="btn btn-default search-button" ng-click="udtTable.searchTerms={};udtTable.searchLocal()" title="{{udtHelpers.messages.Messages(\'datatable.button.resetSearchLocal\')}}">'
    +                        '<i class="fa fa-times"></i>'
-   +                        '<span> {{udtTableFunctions.messages.Messages(\'datatable.button.resetSearchLocal\')}} </span>'
+   +                        '<span> {{udtHelpers.messages.Messages(\'datatable.button.resetSearchLocal\')}} </span>'
    +                    '</button>'
    +                '</span>'
    +            '</div>'
    +        '</div>'
    +        '<div class="btn-toolbar pull-right" name="udt-toolbar-results" ng-if="udtTable.isShowToolbarResults()">'
-   +            '<button class="btn btn-info" disabled="disabled" ng-if="udtTable.config.showTotalNumberRecords">{{udtTableFunctions.messages.Messages(\'datatable.totalNumberRecords\', udtTableFunctions.getTotalNumberRecords())}}</button>'
+   +            '<button class="btn btn-info" disabled="disabled" ng-if="udtTable.config.showTotalNumberRecords">{{udtHelpers.messages.Messages(\'datatable.totalNumberRecords\', udtHelpers.getTotalNumberRecords())}}</button>'
    +        '</div>'
    +        '<div class="btn-toolbar pull-right" name="udt-toolbar-pagination" ng-if="udtTable.isShowToolbarPagination()">'
    +            '<div class="btn-group" ng-if="udtTable.isShowPagination()">'
@@ -4432,7 +4480,7 @@ run(['$templateCache', function($templateCache) {
    +            '</div>'
    +            '<div class="btn-group">'
    +                '<button data-toggle="dropdown" class="btn btn-default dropdown-toggle">'
-   +                    '{{udtTableFunctions.messages.Messages(\'datatable.button.length\', udtTable.config.pagination.numberRecordsPerPage)}} <span class="caret"></span>'
+   +                    '{{udtHelpers.messages.Messages(\'datatable.button.length\', udtTable.config.pagination.numberRecordsPerPage)}} <span class="caret"></span>'
    +                '</button>'
    +                '<ul class="dropdown-menu">'
    +                    '<li ng-repeat="elt in udtTable.config.pagination.numberRecordsPerPageList" class={{elt.clazz}}>'
@@ -4455,11 +4503,13 @@ run(['$templateCache', function($templateCache) {
 			   +                    '</li>'
 			   +                '</ul>'
 			   +            '</div>'
-			   +			'<button class="btn btn-default" ng-click="udtTable.goToAnchor(\'udt-top-\'+udtTable.config.name)" title="{{udtTableFunctions.messages.Messages(\'datatable.button.top\')}}">'
+			   +			'<button class="btn btn-default" ng-click="udtTable.goToAnchor(\'udt-top-\'+udtTable.config.name)" title="{{udtHelpers.messages.Messages(\'datatable.button.top\')}}">'
 			   +                        '<i class="fa fa-chevron-up"></i>'
-			   +                        '<span ng-if="!udtTable.isCompactMode()"> {{udtTableFunctions.messages.Messages(\'datatable.button.show\')}} </span>'
+			   +                        '<span ng-if="!udtTable.isCompactMode()"> {{udtHelpers.messages.Messages(\'datatable.button.show\')}} </span>'
 			   +             '</button>'
 			   +        '</div>'
 			   +    '</div>'
 			   +'</div>');
 }]);
+/* ng-infinite-scroll - v1.0.0 - 2013-02-23 */
+var mod;mod=angular.module("infinite-scroll",[]),mod.directive("infiniteScroll",["$rootScope","$window","$timeout",function(i,n,e){return{link:function(t,l,o){var r,c,f,a;return n=angular.element(n),f=0,null!=o.infiniteScrollDistance&&t.$watch(o.infiniteScrollDistance,function(i){return f=parseInt(i,10)}),a=!0,r=!1,null!=o.infiniteScrollDisabled&&t.$watch(o.infiniteScrollDisabled,function(i){return a=!i,a&&r?(r=!1,c()):void 0}),c=function(){var e,c,u,d;return d=n.height()+n.scrollTop(),e=l.offset().top+l.height(),c=e-d,u=n.height()*f>=c,u&&a?i.$$phase?t.$eval(o.infiniteScroll):t.$apply(o.infiniteScroll):u?r=!0:void 0},n.on("scroll",c),t.$on("$destroy",function(){return n.off("scroll",c)}),e(function(){return o.infiniteScrollImmediateCheck?t.$eval(o.infiniteScrollImmediateCheck)?c():void 0:c()},0)}}}]);

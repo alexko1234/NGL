@@ -2,6 +2,11 @@ package fr.cea.ig.play.test;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletionStage;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -9,6 +14,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import play.Logger;
 import play.libs.Json;
 import play.libs.ws.WSClient;
+import play.libs.ws.WSRequest;
 import play.libs.ws.WSResponse;
 import play.mvc.Http.Status;
 
@@ -29,13 +35,31 @@ public class WSHelper {
 	 * @param url url to get 
 	 * @return    web response for the given url
 	 */
-	public static WSResponse get(WSClient ws, String url) { // throws InterruptedException,ExecutionException {
+	public static WSResponse get(WSClient ws, String url, boolean asbot) { // throws InterruptedException,ExecutionException {
 		try {
-			CompletionStage<WSResponse> completionStage = ws.url(url).get();
+			CompletionStage<WSResponse> completionStage = addUserAgent(asbot, ws.url(url)).get();
 			WSResponse response = completionStage.toCompletableFuture().get();	
 			return response;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * add user-agent definition in http request header if asbot parameter is true
+	 * "User-Agent": ["bot"]
+	 * @param asbot
+	 * @param request
+	 * @return
+	 */
+	private static WSRequest addUserAgent(boolean asbot, WSRequest request) {
+		if(asbot) {
+			Map<String, List<String>> header = new HashMap<>();
+			header.put("User-Agent", Arrays.asList("bot"));
+			logger.debug("set User-Agent to bot");
+			return request.setHeaders(header);
+		} else {
+			return request;
 		}
 	}
 
@@ -47,7 +71,31 @@ public class WSHelper {
 	 * @return       request response
 	 */
 	public static WSResponse get(WSClient ws, String url, int status) {
-		return assertResponseStatus("GET " + url, get(ws,url), status);
+		return assertResponseStatus("GET " + url, get(ws, url, false), status);
+	}
+	
+	//TODO (Adrien) refactor authentification and permissions annotations into controllers to supress all *AsBot methods calls into Tests
+	public static WSResponse getAsBot(WSClient ws, String url, int status) { 
+		return assertResponseStatus("GET " + url, get(ws, url, true), status);
+	}
+	public static WSResponse putAsBot(WSClient ws, String url, String payload, int status) {
+		return assertResponseStatus("PUT " + url, put(ws, url, payload, true), status);
+	}
+	public static WSResponse headAsBot(WSClient ws, String url, int status) {
+		WSResponse r = head(ws, url, true);
+		assertEquals("GET " + url + " " + r.getBody(), status, r.getStatus());
+		return r;  
+	}
+	public static WSResponse postAsBot(WSClient ws, String url, String payload, int status) {
+		return assertResponseStatus("POST " + url, post(ws, url, payload, true), status);
+	}
+	public static WSResponse deleteAsBot(WSClient ws, String url, int status) {
+		WSResponse r = delete(ws, url, true);
+		assertEquals("DELETE " + url + " " + r.getBody(), status, r.getStatus());
+		return r;
+	}
+	public static WSResponse putObjectAsBot(WSClient ws, String url, Object payload, int status) {
+		return put(ws,url,Json.toJson(payload), true);
 	}
 
 	// assumes HTTP OK 
@@ -60,11 +108,12 @@ public class WSHelper {
 	 * @param ws      web client to use
 	 * @param url     url to put to
 	 * @param payload payload to send along the put request
+	 * @param asbot 
 	 * @return        web response
 	 */
-	public static WSResponse put(WSClient ws, String url, String payload) { // throws InterruptedException,ExecutionException {
+	public static WSResponse put(WSClient ws, String url, String payload, boolean asbot) { // throws InterruptedException,ExecutionException {
 		try {
-			CompletionStage<WSResponse> completionStage = ws.url(url).setContentType("application/json;charset=UTF-8").put(payload);
+			CompletionStage<WSResponse> completionStage = addUserAgent(asbot, ws.url(url)).setContentType("application/json;charset=UTF-8").put(payload);
 			WSResponse response = completionStage.toCompletableFuture().get();	
 			return response;
 		} catch (Exception e) {
@@ -72,11 +121,12 @@ public class WSHelper {
 		}
 	}
 	
-	public static WSResponse put(WSClient ws, String url, JsonNode payload) {
-		return put(ws,url,payload.toString());
+	public static WSResponse put(WSClient ws, String url, JsonNode payload, boolean asbot) {
+		return put(ws, url, payload.toString(), asbot);
 	}
+	
 	public static WSResponse putObject(WSClient ws, String url, Object payload) {
-		return put(ws,url,Json.toJson(payload));
+		return put(ws, url, Json.toJson(payload), false);
 	}
 	
 	
@@ -89,14 +139,21 @@ public class WSHelper {
 	 * @return        web response
 	 */
 	public static WSResponse put(WSClient ws, String url, String payload, int status) {
-		return assertResponseStatus("PUT " + url, put(ws,url,payload), status);
+		return put(ws, url, payload, status, false);
+	}
+	
+	public static WSResponse put(WSClient ws, String url, String payload, int status, boolean asbot) {
+		return assertResponseStatus("PUT " + url, put(ws, url, payload, asbot), status);
 	}
 
-	public static WSResponse put(WSClient ws, String url, JsonNode payload, int status) {
-		return put(ws,url,payload.toString(),status);
+	public static WSResponse put(WSClient ws, String url, JsonNode payload, int status, boolean asbot) {
+		return put(ws, url, payload.toString(), status, asbot);
 	}
 	public static WSResponse putObject(WSClient ws, String url, Object payload, int status) {
-		return put(ws,url,Json.toJson(payload),status);
+		return put(ws, url, Json.toJson(payload), status, false);
+	}
+	public static WSResponse putObject(WSClient ws, String url, Object payload, int status, boolean asbot) {
+		return put(ws, url, Json.toJson(payload), status, asbot);
 	}
 	
 	/**
@@ -106,9 +163,9 @@ public class WSHelper {
 	 * @param payload payload to send along the post request
 	 * @return        web response
 	 */
-	public static WSResponse post(WSClient ws, String url, String payload) { // throws InterruptedException,ExecutionException {
+	public static WSResponse post(WSClient ws, String url, String payload, boolean asbot) { // throws InterruptedException,ExecutionException {
 		try {
-			CompletionStage<WSResponse> completionStage = ws.url(url).setContentType("application/json;charset=UTF-8").post(payload);
+			CompletionStage<WSResponse> completionStage = addUserAgent(asbot, ws.url(url)).setContentType("application/json;charset=UTF-8").post(payload);
 			WSResponse response = completionStage.toCompletableFuture().get();	
 			return response;
 		} catch (Exception e) {
@@ -125,11 +182,11 @@ public class WSHelper {
 	 * @return        web response
 	 */
 	public static WSResponse post(WSClient ws, String url, String payload, int status) {
-		return assertResponseStatus("POST " + url, post(ws,url,payload), status);
+		return assertResponseStatus("POST " + url, post(ws, url, payload, false), status);
 	}
 
 	public static WSResponse post(WSClient ws, String url, JsonNode payload) {
-		return post(ws,url,payload.toString());
+		return post(ws, url, payload.toString(), false);
 	}
 
 	public static WSResponse post(WSClient ws, String url, JsonNode payload, int status) {
@@ -155,9 +212,9 @@ public class WSHelper {
 	 * @param url     url to put to
 	 * @return        web response
 	 */
-	public static WSResponse delete(WSClient ws, String url) { 
+	public static WSResponse delete(WSClient ws, String url, boolean asbot) { 
 		try {
-			CompletionStage<WSResponse> completionStage = ws.url(url).delete();
+			CompletionStage<WSResponse> completionStage = addUserAgent(asbot, ws.url(url)).delete();
 			WSResponse response = completionStage.toCompletableFuture().get();	
 			return response;
 		} catch (Exception e) {
@@ -173,7 +230,7 @@ public class WSHelper {
 	 * @return        web response
 	 */
 	public static WSResponse delete(WSClient ws, String url, int status) {
-		WSResponse r = delete(ws,url);
+		WSResponse r = delete(ws, url, false);
 		assertEquals("DELETE " + url + " " + r.getBody(), status, r.getStatus());
 		return r;
 	}
@@ -187,7 +244,7 @@ public class WSHelper {
 	 * @return       request response
 	 */
 	public static WSResponse head(WSClient ws, String url, int status) {
-		WSResponse r = head(ws,url);
+		WSResponse r = head(ws, url, false);
 		assertEquals("GET " + url + " " + r.getBody(), status, r.getStatus());
 		return r; 
 	}
@@ -199,9 +256,9 @@ public class WSHelper {
 	 * @param url url to get 
 	 * @return    web response for the given url
 	 */
-	public static WSResponse head(WSClient ws, String url) { // throws InterruptedException,ExecutionException {
+	public static WSResponse head(WSClient ws, String url, boolean asbot) { // throws InterruptedException,ExecutionException {
 		try {
-			CompletionStage<WSResponse> completionStage = ws.url(url).head();
+			CompletionStage<WSResponse> completionStage = addUserAgent(asbot, ws.url(url)).head();
 			WSResponse response = completionStage.toCompletableFuture().get();	
 			return response;
 		} catch (Exception e) {

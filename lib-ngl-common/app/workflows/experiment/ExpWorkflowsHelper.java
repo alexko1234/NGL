@@ -1292,7 +1292,7 @@ public class ExpWorkflowsHelper {
 			
 			if(null == c.qualityControlResults)c.qualityControlResults = new ArrayList<QualityControlResult>(0);
 
-			c.qualityControlResults.add(new QualityControlResult(exp.code, exp.typeCode, c.qualityControlResults.size(), icu.experimentProperties, c.valuation));
+			c.qualityControlResults.add(new QualityControlResult(exp.code, exp.typeCode, c.qualityControlResults.size(), icu.experimentProperties, icu.valuation));
 
 			Map<String, PropertyValue> newContentProperties = getCommonPropertiesForALevelWithICU(exp, icu, CODE.Content);
 			c.contents.forEach(content -> {
@@ -1489,10 +1489,10 @@ public class ExpWorkflowsHelper {
 		
 				newSample.taxonCode=sampleIn.taxonCode;
 				
-				Map<String, PropertyValue> newSampleProperties = getCommonPropertiesForALevel(exp, CODE.Sample);
+				Map<String, PropertyValue> newSampleProperties = new HashMap<String, PropertyValue>(sampleIn.properties);
+				newSampleProperties.putAll(getCommonPropertiesForALevel(exp, CODE.Sample));
 				newSampleProperties.putAll(getInputPropertiesForALevel(exp, icu, CODE.Sample));
 				newSampleProperties.putAll(getOutputPropertiesForALevel(exp, ocu, CODE.Sample));
-				newSampleProperties.putAll(sampleIn.properties);
 				newSample.properties=newSampleProperties;
 				
 				newSample.importTypeCode=sampleIn.importTypeCode;

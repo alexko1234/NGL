@@ -101,7 +101,7 @@ public class ReadSetWorkflowTest extends AbstractTests{
 					State state = new State("IP-RG","bot");
 					//Result r = callAction(controllers.readsets.api.routes.ref.ReadSets.state(readSet.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
-					WSHelper.put(ws, "/api/readsets/"+readSet.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
+					WSHelper.putAsBot(ws, "/api/readsets/"+readSet.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 
 					readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 					Logger.debug("state code"+readSet.state.code);
@@ -121,7 +121,7 @@ public class ReadSetWorkflowTest extends AbstractTests{
 					State state = new State("F-RG","bot");
 					//Result r = callAction(controllers.readsets.api.routes.ref.ReadSets.state(readSet.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
-					WSHelper.put(ws, "/api/readsets/"+readSet.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
+					WSHelper.putAsBot(ws, "/api/readsets/"+readSet.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 
 					readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 					Logger.debug("state code"+readSet.state.code);
@@ -144,7 +144,7 @@ public class ReadSetWorkflowTest extends AbstractTests{
 					State state = new State("F-QC","bot");
 					//Result r = callAction(controllers.readsets.api.routes.ref.ReadSets.state(readSet.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
-					WSHelper.put(ws, "/api/readsets/"+readSet.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
+					WSHelper.putAsBot(ws, "/api/readsets/"+readSet.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 
 					readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 					Logger.debug("state code"+readSet.state.code);
@@ -165,7 +165,7 @@ public class ReadSetWorkflowTest extends AbstractTests{
 					State state = new State("F-QC","bot");
 					//Result r = callAction(controllers.readsets.api.routes.ref.ReadSets.state(readSet.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
-					WSHelper.put(ws, "/api/readsets/"+readSet.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
+					WSHelper.putAsBot(ws, "/api/readsets/"+readSet.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 
 					readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 					Logger.debug("state code"+readSet.state.code);
@@ -182,7 +182,7 @@ public class ReadSetWorkflowTest extends AbstractTests{
 					State state = new State("IW-BA","bot");
 					//Result r = callAction(controllers.readsets.api.routes.ref.ReadSets.state(readSet.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
-					WSHelper.put(ws, "/api/readsets/"+readSet.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
+					WSHelper.putAsBot(ws, "/api/readsets/"+readSet.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 
 					readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 					Logger.debug("state code"+readSet.state.code);
@@ -202,7 +202,7 @@ public class ReadSetWorkflowTest extends AbstractTests{
 					State state = new State("IP-VQC","bot");
 					//Result r = callAction(controllers.readsets.api.routes.ref.ReadSets.state(readSet.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
-					WSHelper.put(ws, "/api/readsets/"+readSet.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
+					WSHelper.putAsBot(ws, "/api/readsets/"+readSet.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 
 					readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 					Logger.debug("state code"+readSet.state.code);
@@ -224,7 +224,7 @@ public class ReadSetWorkflowTest extends AbstractTests{
 					State state = new State("IP-VQC","bot");
 					//Result r = callAction(controllers.readsets.api.routes.ref.ReadSets.state(readSet.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
-					WSHelper.put(ws, "/api/readsets/"+readSet.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
+					WSHelper.putAsBot(ws, "/api/readsets/"+readSet.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 					readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 					Logger.debug("state code"+readSet.state.code);
 					assertThat(readSet.state.code).isEqualTo("A");
@@ -245,7 +245,7 @@ public class ReadSetWorkflowTest extends AbstractTests{
 					State state = new State("IP-VQC","bot");
 					//Result r = callAction(controllers.readsets.api.routes.ref.ReadSets.state(readSet.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
-					WSHelper.put(ws, "/api/readsets/"+readSet.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
+					WSHelper.putAsBot(ws, "/api/readsets/"+readSet.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 					readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 					Logger.debug("state code"+readSet.state.code);
 					assertThat(readSet.state.code).isEqualTo("UA");
@@ -271,7 +271,7 @@ public class ReadSetWorkflowTest extends AbstractTests{
 					State state = new State("F-VQC","bot");
 					//Result r = callAction(controllers.readsets.api.routes.ref.ReadSets.state(readSet.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
-					WSHelper.put(ws, "/api/readsets/"+readSet.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
+					WSHelper.putAsBot(ws, "/api/readsets/"+readSet.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 					readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 					Logger.debug("state code"+readSet.state.code);
 					assertThat(readSet.state.code).isEqualTo("IW-BA");
@@ -293,7 +293,7 @@ public class ReadSetWorkflowTest extends AbstractTests{
 					State state = new State("F-BA","bot");
 					//Result r = callAction(controllers.readsets.api.routes.ref.ReadSets.state(readSet.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
-					WSHelper.put(ws, "/api/readsets/"+readSet.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
+					WSHelper.putAsBot(ws, "/api/readsets/"+readSet.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 
 					readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 					Logger.debug("state code"+readSet.state.code);
@@ -315,7 +315,7 @@ public class ReadSetWorkflowTest extends AbstractTests{
 					State state = new State("F-BA","bot");
 					//Result r = callAction(controllers.readsets.api.routes.ref.ReadSets.state(readSet.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
-					WSHelper.put(ws, "/api/readsets/"+readSet.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
+					WSHelper.putAsBot(ws, "/api/readsets/"+readSet.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 
 					readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 					Logger.debug("state code"+readSet.state.code);
@@ -337,7 +337,7 @@ public class ReadSetWorkflowTest extends AbstractTests{
 					State state = new State("F-BA","bot");
 					//Result r = callAction(controllers.readsets.api.routes.ref.ReadSets.state(readSet.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
-					WSHelper.put(ws, "/api/readsets/"+readSet.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
+					WSHelper.putAsBot(ws, "/api/readsets/"+readSet.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 
 					readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 					Logger.debug("state code"+readSet.state.code);

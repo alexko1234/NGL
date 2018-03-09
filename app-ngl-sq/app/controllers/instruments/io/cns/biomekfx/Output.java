@@ -56,13 +56,19 @@ public class Output extends AbstractOutput {
 			//rna-prep; pcr-purif; normalization-and-pooling a venir.....
 			throw new RuntimeException("Biomek-FX sampleSheet io combination not managed : "+experiment.instrument.inContainerSupportCategoryCode+" / "+experiment.instrument.outContainerSupportCategoryCode);
 		}
-		File file = new File(getFileName(experiment)+".csv", content);
+		String suffix ="";
+		if ("normalisation".equals(type)){
+			suffix="_norm";
+		}else if ("normalisation-post-pcr".equals(type)){
+			suffix="_norm_post_pcr";
+		}
+		File file = new File(getFileName(experiment)+suffix+".csv", content);
 		return file;
 	}
 	
 	private String getFileName(Experiment experiment) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyMMdd");
-		return experiment.typeCode.toUpperCase()+"_"+experiment.atomicTransfertMethods.get(0).outputContainerUseds.get(0).locationOnContainerSupport.code+"_"+sdf.format(new Date());
+		return experiment.code.toUpperCase();
 	}
 
 	

@@ -13,11 +13,9 @@ import javax.inject.Singleton;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.mongojack.DBQuery;
-// import org.mongojack.DBQuery.Query;
+
 import org.mongojack.DBUpdate;
 import org.mongojack.DBUpdate.Builder;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.stereotype.Service;
 
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
@@ -26,39 +24,26 @@ import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
-// import models.laboratory.container.instance.Content;
+
+import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
-// import models.laboratory.run.instance.ReadSet;
+
+import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
-// import play.Logger;
-// import play.Logger.ALogger;
+import models.utils.instance.SampleHelper;
 import validation.ContextValidation;
 import workflows.container.ContWorkflows;
 import workflows.container.ContentHelper;
 import static validation.common.instance.CommonValidationHelper.*;
 
-// @Service
+
 @Singleton
 public class ProcWorkflowHelper {
 	
-	/*private ALogger logger = Logger.of(ProcWorkflowHelper.class);
-	
-	@Autowired
-	ContWorkflows contWorkflows;
-	
-	@Autowired
-	ContentHelper contentHelper;*/
-	
 	private static final play.Logger.ALogger logger = play.Logger.of(ProcWorkflowHelper.class);
-	
-	/*private final WorkflowsCatalog wc;
-	
-	// Not an injection constructor on purpose
-	public ProcWorkflowHelper(WorkflowsCatalog wc) {
-		this.wc = wc;
-	}*/
+
 
 	public final ContWorkflows contWorkflows;
 	public final ContentHelper contentHelper;
@@ -236,6 +221,25 @@ public class ProcWorkflowHelper {
 		return query;
 	}
 
+
+	public void updateSampleOnContainer(ContextValidation validation, Process process) {
+		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,process.inputContainerCode);
+		if(container.contents.size() == 1 && process.sampleOnInputContainer == null){
+			process.sampleCodes = SampleHelper.getSampleParent(container.contents.get(0).sampleCode);
+			process.projectCodes = SampleHelper.getProjectParent(process.sampleCodes);
+	
+			process.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(container.contents.get(0), container);
+			MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("code", process.code)
+					,DBUpdate.set("sampleOnInputContainer", process.sampleOnInputContainer)
+								.set("projectCodes", process.projectCodes)
+								.set("sampleCodes", process.sampleCodes));
+		} else if(container.contents.size() > 1 && process.sampleOnInputContainer == null){
+			logger.error("container is a pool, sampleOnInputContainer cannot be updated : "+process.code);
+		}
+	}
+
+
+	
 
 	
 

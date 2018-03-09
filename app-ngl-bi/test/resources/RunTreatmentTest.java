@@ -72,7 +72,7 @@ public class RunTreatmentTest extends AbstractBIServerTest{
 	public void test1list()
 	{
 		Logger.debug("list RunTreatment");
-		WSResponse response = WSHelper.get(ws, "/api/runs/"+run.code+"/treatments", 200);
+		WSResponse response = WSHelper.getAsBot(ws, "/api/runs/"+run.code+"/treatments", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 
@@ -80,7 +80,7 @@ public class RunTreatmentTest extends AbstractBIServerTest{
 	public void test2get()
 	{
 		Logger.debug("get RunTreatment");
-		WSResponse response = WSHelper.get(ws, "/api/runs/"+run.code+"/treatments/ngsrg", 200);
+		WSResponse response = WSHelper.getAsBot(ws, "/api/runs/"+run.code+"/treatments/ngsrg", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 
@@ -88,7 +88,7 @@ public class RunTreatmentTest extends AbstractBIServerTest{
 	public void test3head()
 	{
 		Logger.debug("head RunTreatment");
-		WSResponse response = WSHelper.head(ws, "/api/runs/"+run.code+"/treatments/ngsrg", 200);
+		WSResponse response = WSHelper.headAsBot(ws, "/api/runs/"+run.code+"/treatments/ngsrg", 200);
 		assertThat(response).isNotNull();
 	}
 
@@ -96,7 +96,7 @@ public class RunTreatmentTest extends AbstractBIServerTest{
 	public void test4save()
 	{
 		Logger.debug("save RunTreatment");
-		WSHelper.post(ws, "/api/runs/"+run.code+"/treatments", jsonTopIndex, 200);
+		WSHelper.postAsBot(ws, "/api/runs/"+run.code+"/treatments", jsonTopIndex, 200);
 		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
 		Logger.debug("Run "+run.code);
 		assertThat(run.treatments.get("topIndex")).isNotNull();
@@ -109,7 +109,7 @@ public class RunTreatmentTest extends AbstractBIServerTest{
 		//Get Treatment ngsrg
 		Treatment ngsrg = run.treatments.get("ngsrg");
 		ngsrg.results.get("default").put("flowcellVersion", new PropertySingleValue("testVersion"));
-		WSHelper.putObject(ws, "/api/runs/"+run.code+"/treatments/ngsrg", ngsrg, 200);
+		WSHelper.putObjectAsBot(ws, "/api/runs/"+run.code+"/treatments/ngsrg", ngsrg, 200);
 		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
 		assertThat(run.treatments.get("ngsrg").results.get("default").get("flowcellVersion").getValue()).isEqualTo("testVersion");
 	}
@@ -119,7 +119,7 @@ public class RunTreatmentTest extends AbstractBIServerTest{
 	public void test6delete()
 	{
 		Logger.debug("delete RunTreatment");
-		WSHelper.delete(ws,"/api/runs/"+run.code+"/treatments/topIndex",200);
+		WSHelper.deleteAsBot(ws,"/api/runs/"+run.code+"/treatments/topIndex",200);
 		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
 		assertThat(run.treatments.get("topIndex")).isNull();
 	}

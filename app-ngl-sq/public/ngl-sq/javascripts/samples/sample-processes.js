@@ -76,6 +76,10 @@ angular.module('ngl-sq.samplesServices')
 				$event.stopPropagation();
 			}
 			
+			scope.$parent.$watchCollection(attr.dspProcesses, function(newValue, oldValue){
+				 init(newValue, scope.dspProcessCategoryCodes);	    	  
+			}, true);
+			
 			scope.$parent.$watch(attr.dspProcessCategoryCodes, function(newValue, oldValue){
 	    	     if(oldValue !== newValue){		    		
 	    	    	 init(scope.dspProcesses, newValue);

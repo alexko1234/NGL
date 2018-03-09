@@ -62,12 +62,13 @@ public abstract class FileService {
 		this.configuration = configuration;
 		this.fileValue = fileValue;
 		this.contextValidation = contextValidation;
+		this.ctx = ctx;
 		Set<String> objectTypes = configuration.configs.keySet();
 		objectTypes.stream().forEach(s -> {
 			objects.put(s, new TreeMap<String, DBObject>());
 			mappings.put(s, mappingFactory(s));						
 		});
-		this.ctx = ctx;
+		
 
 	}
 

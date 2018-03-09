@@ -53,23 +53,17 @@ public class Processes extends DocumentController<Process> {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(Processes.class);
 	
-	private final Form<State>                 stateForm;// = form(State.class);
-	// private final /*static*/ Form<ProcessesSearchForm> processesSearchForm;// = form(ProcessesSearchForm.class);
-	private final Form<ProcessesBatchElement> batchElementForm;// = form(ProcessesBatchElement.class);
-	// final static ProcWorkflows workflows = Spring.get BeanOfType(ProcWorkflows.class);
-	// final static ProcWorkflowHelper workflowHelper = Spring.get BeanOfType(ProcWorkflowHelper.class);
+	private final Form<State>                 stateForm;
+	private final Form<ProcessesBatchElement> batchElementForm;
 	private final ProcWorkflows               workflows;
-	// private final ProcWorkflowHelper workflowHelper;
 	
 	@Inject
-	public Processes(NGLContext ctx, ProcWorkflows workflows /*, ProcWorkflowHelper workflowHelper*/) {
+	public Processes(NGLContext ctx, ProcWorkflows workflows ) {
 		super(ctx,InstanceConstants.PROCESS_COLL_NAME, Process.class);		
 		defaultKeys         =  Arrays.asList("*");
 		stateForm           = ctx.form(State.class);
-		// processesSearchForm = ctx.form(ProcessesSearchForm.class);
 		batchElementForm    = ctx.form(ProcessesBatchElement.class);
-		this.workflows      = workflows;
-		// this.workflowHelper = workflowHelper;
+		this.workflows      = workflows;		
 	}
 
 	@Permission(value={"reading"})
@@ -239,7 +233,7 @@ public class Processes extends DocumentController<Process> {
 	
 	
 	@Permission(value={"writing"})
-	public Result save(){	
+	public Result save(String from){	
 		Form<Process> filledForm = getMainFilledForm();
 		Process input = filledForm.get();		
 		if (null != input._id) {
@@ -247,30 +241,23 @@ public class Processes extends DocumentController<Process> {
 		}
 		
 		ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm.errors());
-		List<Process> processes = saveOneElement(contextValidation, input);
+		List<Process> processes = saveOneElement(contextValidation, input, from);
 		if (!contextValidation.hasErrors())
 			return ok(Json.toJson(processes));
-		// return badRequest(filledForm.errors-AsJson());
 		return badRequest(errorsAsJson(contextValidation.getErrors()));
 	}
 
-	private List<Process> saveOneElement(ContextValidation contextValidation, Process input) {
+	private List<Process> saveOneElement(ContextValidation contextValidation, Process input, String from) {
 		//the trace
 		input.traceInformation = new TraceInformation();
 		input.traceInformation.setTraceInformation(contextValidation.getUser());
-		if (null == input.state) {
-			input.state = new State();
-		}
-		input.state.code = "N";
-		input.state.user = contextValidation.getUser();
-		input.state.date = new Date();
 		
 		contextValidation.setCreationMode();
 		contextValidation.putObject(CommonValidationHelper.FIELD_PROCESS_CREATION_CONTEXT, CommonValidationHelper.VALUE_PROCESS_CREATION_CONTEXT_COMMON);
 		input.validate(contextValidation);
 		
 		if (!contextValidation.hasErrors()) {
-			List<Process> processes = getNewProcessList(contextValidation, input);
+			List<Process> processes = ProcessHelper.getNewProcessList(contextValidation, input, from);
 			if (processes.size()>0) {
 				processes = ProcessHelper.applyRules(processes, contextValidation, "processCreation");
 			}
@@ -291,21 +278,15 @@ public class Processes extends DocumentController<Process> {
 		return null;
 	}
 	
-	private List<Process> getNewProcessList(ContextValidation contextValidation, Process input) {
-		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, input.inputContainerCode);
-		return container.contents.parallelStream().map(content ->{
-				Process process = input.cloneCommon();
-				process.sampleCodes = SampleHelper.getSampleParent(content.sampleCode);
-				process.projectCodes = SampleHelper.getProjectParent(process.sampleCodes);
-				process.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(content, container);
-				//need sampleOnInputContainer to generate code
-				process.code = CodeHelper.getInstance().generateProcessCode(process);
-				return process;
-			}).collect(Collectors.toList());		
-	}
 	
+	
+	/**
+	 * 
+	 * @param from : origin of process creation Container or Sample
+	 * @return
+	 */
 	@Permission(value={"writing"})
-	public Result saveBatch() {	
+	public Result saveBatch(String from){	
 		List<Form<ProcessesBatchElement>> filledForms =  getFilledFormList(batchElementForm, ProcessesBatchElement.class);
 		final String user = getCurrentUser();
 		final Lang lang = Http.Context.Implicit.lang();
@@ -315,11 +296,11 @@ public class Processes extends DocumentController<Process> {
 			Process process = element.data;
 			if (null == process._id) {
 				ContextValidation contextValidation = new ContextValidation(user, filledForm.errors());
-				List<Process> processes = saveOneElement(contextValidation, process);
+				List<Process> processes = saveOneElement(contextValidation, process, from);
 				if(!contextValidation.hasErrors()){
 					return new DatatableBatchResponseElement(OK,  processes, element.index);
 				}else {
-					return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);
+					return new DatatableBatchResponseElement(BAD_REQUEST, errorsAsJson(contextValidation.getErrors()), element.index);
 				}
 			}else{
 				return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
@@ -358,12 +339,50 @@ public class Processes extends DocumentController<Process> {
 				workflows.applyPostValidateCurrentStateRules(ctxVal, input);
 				return ok(Json.toJson(input));
 			} else {
-				// return badRequest(filledForm.errors-AsJson());
 				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}
 		} else {
 			return badRequest("process code are not the same");
 		}
+	}
+	
+	@Permission(value={"writing"})
+	public Result updateBatch(){
+		List<Form<ProcessesBatchElement>> filledForms =  getFilledFormList(batchElementForm, ProcessesBatchElement.class);
+		final String user = getCurrentUser();
+		List<DatatableBatchResponseElement> response = filledForms.parallelStream()
+		.map(filledForm -> {
+			ProcessesBatchElement element = filledForm.get();
+			Process input = element.data;
+			Process process = getObject(input.code);
+			if (null != process) {
+				if (null != input.traceInformation) {
+					input.traceInformation = getUpdateTraceInformation(input.traceInformation);
+				} else {
+					logger.error("traceInformation is null !!");
+				}
+				
+				if (!process.state.code.equals(input.state.code)) {
+					return new DatatableBatchResponseElement(BAD_REQUEST, "you cannot change the state code. Please used the state url ! ", element.index);					
+				}
+				
+				ContextValidation ctxVal = new ContextValidation(user, filledForm.errors()); 
+				ctxVal.setUpdateMode();
+				workflows.applyPreValidateCurrentStateRules(ctxVal, input);
+				input.validate(ctxVal);			
+				if (!ctxVal.hasErrors()) {
+					updateObject(input);
+					workflows.applyPostValidateCurrentStateRules(ctxVal, input);
+					return new DatatableBatchResponseElement(OK,  getObject(process.code), element.index);
+				} else {
+					return new DatatableBatchResponseElement(BAD_REQUEST, errorsAsJson(ctxVal.getErrors()), element.index);
+				}
+			} else {
+				return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
+			}
+		}).collect(Collectors.toList());
+		
+		return ok(Json.toJson(response));
 	}
 	
 	@Permission(value={"writing"})
@@ -381,7 +400,6 @@ public class Processes extends DocumentController<Process> {
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getObject(code)));
 		} else {
-			// return badRequest(filledForm.errors-AsJson());
 			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
@@ -391,7 +409,6 @@ public class Processes extends DocumentController<Process> {
 	public Result updateStateBatch(){
 		List<Form<ProcessesBatchElement>> filledForms =  getFilledFormList(batchElementForm, ProcessesBatchElement.class);
 		final String user = getCurrentUser();
-		final Lang lang = Http.Context.Implicit.lang();
 		List<DatatableBatchResponseElement> response = filledForms.parallelStream()
 		.map(filledForm -> {
 			ProcessesBatchElement element = filledForm.get();
@@ -405,7 +422,6 @@ public class Processes extends DocumentController<Process> {
 				if (!ctxVal.hasErrors()) {
 					return new DatatableBatchResponseElement(OK,  getObject(process.code), element.index);
 				} else {
-					//return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errors-AsJson(lang), element.index);
 					return new DatatableBatchResponseElement(BAD_REQUEST, errorsAsJson(ctxVal.getErrors()), element.index);
 				}
 			} else {
@@ -422,12 +438,13 @@ public class Processes extends DocumentController<Process> {
 		if (process == null) {
 			return notFound("Process with code "+code+" does not exist");
 		}
-		
-		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,process.inputContainerCode);
-		if(container==null) {
-			return notFound("Container process "+code+"with code "+process.inputContainerCode+" does not exist");
+		Container container = null;
+		if(process.inputContainerCode != null && !process.state.code.equals("IW-C")){
+			container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,process.inputContainerCode);
+			if(container==null) {
+				return notFound("Container process "+code+"with code "+process.inputContainerCode+" does not exist");
+			}
 		}
-		
 		DynamicForm deleteForm = getNGLContext().form();
 		ContextValidation contextValidation=new ContextValidation(getCurrentUser(),deleteForm.errors());
 		
@@ -435,7 +452,8 @@ public class Processes extends DocumentController<Process> {
 			contextValidation.addErrors("process.state.code", ValidationConstants.ERROR_BADSTATE_MSG, container.code);
 		} else if(CollectionUtils.isNotEmpty(process.experimentCodes)) {
 			contextValidation.addErrors("process.experimentCodes", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, process.experimentCodes);
-		} else if(!"IS".equals(container.state.code) && !"UA".equals(container.state.code)
+		} else if(container != null && !process.state.code.equals("IW-C")
+				 && !"IS".equals(container.state.code) && !"UA".equals(container.state.code)
 				 && !"IW-P".equals(container.state.code)) {
 			contextValidation.addErrors("process.inputContainerCode", ValidationConstants.ERROR_BADSTATE_MSG, container.state.code);
 		}

@@ -72,10 +72,10 @@ public class Analyses extends DocumentController<Analysis> {
 		this.workflows        = workflows;
 	}
 	
-//	@Permission(value={"reading"})
-	@Authenticated
-	@Historized
-	@Authorized.Read
+	@Permission(value={"reading"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Read
 	public Result list() {
 		//Form<AnalysesSearchForm> filledForm = filledFormQueryString(searchForm, AnalysesSearchForm.class);
 		//AnalysesSearchForm form = filledForm.get();
@@ -156,10 +156,10 @@ public class Analyses extends DocumentController<Analysis> {
 		return query;
 	}
 	
-//	@Permission(value={"writing"})
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	public Result save() {
 		
 		Form<Analysis> filledForm = getMainFilledForm();
@@ -206,10 +206,10 @@ public class Analyses extends DocumentController<Analysis> {
 		
 	}
 
-//	@Permission(value={"writing"})
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	public Result update(String code){
 		Analysis objectInDB =  getObject(code);
 		if(objectInDB == null) {
@@ -272,10 +272,10 @@ public class Analyses extends DocumentController<Analysis> {
 	}
 	
 	
-//	@Permission(value={"writing"})
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	public Result state(String code){
 		Analysis objectInDB = getObject(code);
 		if(objectInDB == null) {
@@ -295,10 +295,10 @@ public class Analyses extends DocumentController<Analysis> {
 		}
 	}
 	
-//	@Permission(value={"writing"})
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	public Result stateBatch(){
 		List<Form<AnalysesBatchElement>> filledForms =  getFilledFormList(batchElementForm, AnalysesBatchElement.class);
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
@@ -326,10 +326,10 @@ public class Analyses extends DocumentController<Analysis> {
 		return ok(Json.toJson(response));
 	}
 	
-//	@Permission(value={"writing"})
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	public Result valuation(String code){
 		Analysis objectInDB = getObject(code);
 		if(objectInDB == null) {
@@ -356,10 +356,10 @@ public class Analyses extends DocumentController<Analysis> {
 		}
 	}
 
-//	@Permission(value={"writing"})
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	public Result valuationBatch(){
 		List<Form<AnalysesBatchElement>> filledForms =  getFilledFormList(batchElementForm, AnalysesBatchElement.class);
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
@@ -392,10 +392,10 @@ public class Analyses extends DocumentController<Analysis> {
 		return ok(Json.toJson(response));
 	}
 	
-//	@Permission(value={"writing"})
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	public Result properties(String code){
 		Analysis objectInDB = getObject(code);
 		if(objectInDB == null) {
@@ -420,10 +420,10 @@ public class Analyses extends DocumentController<Analysis> {
 		}		
 	}
 	
-//	@Permission(value={"writing"})
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	public Result propertiesBatch() {
 		List<Form<AnalysesBatchElement>> filledForms =  getFilledFormList(batchElementForm, AnalysesBatchElement.class);
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
@@ -452,10 +452,10 @@ public class Analyses extends DocumentController<Analysis> {
 		return ok(Json.toJson(response));
 	}
 	
-//	@Permission(value={"writing"})
-	@Authenticated
-	@Historized
-	@Authorized.Write
+	@Permission(value={"writing"})
+//	@Authenticated
+//	@Historized
+//	@Authorized.Write
 	public Result applyRules(String code, String rulesCode)	{
 		Analysis objectInDB = getObject(code);
 		if(objectInDB == null) {

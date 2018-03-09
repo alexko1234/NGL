@@ -1,7 +1,8 @@
 "use strict";
 
-angular.module('ngl-sq.processesServices', []).factory('processesSearchService', [ '$http', '$parse', '$filter', 'mainService', 'lists', 'datatable', 
-                                                                                   function($http, $parse, $filter, mainService, lists, datatable) {
+angular.module('ngl-sq.processesServices', [])
+.factory('processesSearchService', [ '$http', '$parse', '$filter', 'mainService', 'lists', 'datatable', 'propertyDefHelpers',
+                                          function($http, $parse, $filter, mainService, lists, datatable, propertyDefHelpers) {
 	var isInit = false;
 
 	var initListService = function() {
@@ -275,17 +276,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 		extractDate: function(value){
 			return value.split(/(\d+_\d+)/)[1];
 		},
-		getPropertyColumnType : function(type) {
-			if (type === "java.lang.String") {
-				return "text";
-			} else if (type === "java.lang.Double") {
-				return "number";
-			} else if (type === "java.util.Date") {
-				return "date";
-			}
-
-			return type;
-		},
+		
 		initCommonPropertiesDefinitions : function(typeCodes){
 			if(angular.isArray(typeCodes)){
 				var processTypes = typeCodes.map(function(typeCode){
@@ -317,9 +308,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			
 		},
 		setColumns : function() {
-			var columns = [];
 			
-			var getPropertyColumnType = this.getPropertyColumnType;
 			var datatable = this.datatable;
 			var columnsDefault = this.columnsDefault;
 
@@ -328,66 +317,10 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 
 			}
 			if(angular.isArray(this.commonPropertiesDefinitions) && this.commonPropertiesDefinitions.length > 0){
-				angular.forEach(this.commonPropertiesDefinitions, function(propertyDefinition) {
-					
-					var getDisplayUnitFromProperty = function(propertyDefinition){
-						var unit = $parse("displayMeasureValue.value")(propertyDefinition);
-						if(undefined !== unit && null !== unit) return " ("+unit+")";
-						else return "";
-					};
-					var getPropertyColumnType = function(type){
-						if(type === "java.lang.String"){
-							return "text";
-						}else if(type === "java.lang.Double" || type === "java.lang.Integer" || type === "java.lang.Long"){
-							return "number";
-						}else if(type === "java.util.Date"){
-							return "date";
-						}else if(type ==="java.io.File"){
-							return "file";
-						}else if(type ==="java.awt.Image"){
-							return "img";
-						}else if(type ==="java.lang.Boolean"){
-							return "boolean";	
-						}else{
-							throw 'not manage : '+type;
-						}
-
-						return type;
-					};
-					
-					var column = {};
-					column.watch=true;
-					column.header = propertyDefinition.name + getDisplayUnitFromProperty(propertyDefinition);
-					column.required=propertyDefinition.required;
-					    				
-					column.property = "properties."+propertyDefinition.code+".value";
-					column.edit = (mainService.getHomePage() === 'state')?false:propertyDefinition.editable;
-					column.type = getPropertyColumnType(propertyDefinition.valueType);
-					column.choiceInList = propertyDefinition.choiceInList;
-					column.position = (5+(propertyDefinition.displayOrder/1000));
-					column.defaultValues = propertyDefinition.defaultValue;
-					column.format = propertyDefinition.displayFormat;
-					column.order=true;
-					
-					if(column.choiceInList){
-						if(propertyDefinition.possibleValues.length > 100){
-							column.editTemplate='<input class="form-control" type="text" #ng-model typeahead="v.code as v.name for v in col.possibleValues | filter:$viewValue | limitTo:20" typeahead-min-length="1" udt-change="updatePropertyFromUDT(value,col)"/>';        					
-						}else{
-							column.listStyle = "bt-select";
-						}
-						column.possibleValues = propertyDefinition.possibleValues; 
-						column.filter = "codes:'value."+propertyDefinition.code+"'";    					
-					}
-					
-					if(propertyDefinition.displayMeasureValue != undefined && propertyDefinition.displayMeasureValue != null){
-						column.convertValue = {"active":true, "displayMeasureValue":propertyDefinition.displayMeasureValue.value, 
-								"saveMeasureValue":propertyDefinition.saveMeasureValue.value};
-					}
-					
-					column.groupMethod = "collect:true"; //par defaut pour toutes les propriétés
-					
-					columns.push(column);
+				var columns = this.commonPropertiesDefinitions.map(function(propertyDefinition) {
+					return propertyDefHelpers.getProcessUDTColumn(propertyDefinition);					
 				});
+				
 				columns = columnsDefault.concat(columns);
 				datatable.setColumnsConfig(columns);
 					
@@ -535,16 +468,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			
 			if(angular.isArray(this.commonPropertiesDefinitions) && this.commonPropertiesDefinitions.length > 0){
 				allFilters = this.commonPropertiesDefinitions.map(function(pDef){
-					var html = null;
-					if(pDef.choiceInList){
-						html = "<div class='form-control' multiple=true bt-select ng-model='searchService.form[\"properties["+pDef.code+"]\"]' placeholder=\""+pDef.name+"\" bt-options='possibleValues.code as possibleValues.name for possibleValues in searchService.lists.getValues({propertyDefinitionCode:\""+pDef.code+"\"},\""+pDef.code+"\")'></div>";
-					}else{
-						html = "<input type='text' class='form-control' ng-model='searchService.form[\"properties["+pDef.code+"]\"]' placeholder=\""+pDef.name+"\" title=\""+pDef.name+"\">"; 				             
-					}						
-					return {
-						html:html,
-						position:pDef.displayOrder
-					};
+					return propertyDefHelpers.getHtmlFilter(pDef, 'searchService');
 				});				
 			} 
 			if (angular.isDefined(allFilters)) {
@@ -562,9 +486,6 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			
 		},	
 		getAddProcessFiltersToForm : function() {
-			if (this.additionalProcessFilters !== undefined && this.additionalProcessFilters.length === 0) {
-				this.initAdditionalProcessFilters();
-			}
 			return this.additionalProcessFilters;
 		},
 		
@@ -673,4 +594,1362 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 	};
 
 	return searchService;
-} ]);
+}]).factory('processesNewService', [ '$q', '$http', '$parse', '$filter', 'mainService', 'datatable', 'messages', 'propertyDefHelpers',
+    function($q, $http, $parse, $filter, mainService, datatable,messages,propertyDefHelpers) {
+
+	var	getEditDatatableConfig = function(newService){
+		var editDatatableConfig = {
+				 columns: [],
+		         pagination:{
+		        	 active:false
+		         },		
+		         search:{
+		        	 active:false
+		         },
+		         order:{
+		        	 mode:'local',
+		        	 active:true
+		         },
+		         edit:{  		
+		        	 active:true,
+		        	 columnMode:true,
+		        	 byDefault : true,
+		        	 showButton:false
+		         },
+		         save:{
+		        	 active: true,
+		        	 withoutEdit:true,
+		        	 showButton : true,
+		        	 mode:"local",
+		        	 changeClass : false,
+		        	 callback : function(datatable){
+		        		 newService.udtSaveCallback(datatable);
+		        	 }
+		         },
+		         remove:{
+		        	 active:true,
+		        	 mode:'local',
+		        	 withEdit:true,
+		        	 callback : function(datatable){
+		        		 newService.udtRemoveCallback(datatable);
+		        	 }
+		         },
+		         lines:{
+		        	trClass:function(data,line){
+		        		return newService.udtTrClass(data,line);
+		        	}
+		         },
+		         messages:{
+		        	 active:false,
+		        	 transformKey: function(key, args) {
+			             return Messages(key, args);
+		        	 }
+		         },
+		         cancel:{
+		        	 active:false
+		         },
+		         otherButtons :newService.udtOtherButtons()
+		};
+		return editDatatableConfig;
+	}
+
+	var getProcessColumnOk = function(){
+		var columns = [
+		         {
+		        	 "header":Messages("processes.table.inputContainerCode"),
+		        	 "property":"inputContainerCode",
+		        	 "order":true,
+		        	 "hide":true,
+		        	 "position":1,
+		        	 "type":"text"
+		         },
+		         {
+		 			"header":Messages("containers.table.contents.length"),
+		 			"property":"contents.length",
+		 			"url":"'/api/containers/'+inputContainerCode",
+		 			"order":true,
+		 			"hide":true,
+		 			"position":2,
+		 			"type":"number"
+			 	},
+		         {
+		        	 "header":Messages("processes.table.sampleCode"),
+		        	 "property":"sampleCodes",
+		        	 "order":true,
+		        	 "hide":true,
+		        	 "position":2.01,
+		        	 "type":"text"
+		         },			        
+		         {
+		        	"header" : Messages("containers.table.tags"),
+		 			"property" : "sampleOnInputContainer.properties.tag.value",
+		 			"type" : "text",
+		 			"order" : true,
+		 			"hide" : true,
+		 			"position":4,
+		 			"groupMethod" : "collect",
+		 			"render" : "<div list-resize='cellValue | unique' list-resize-min-size='3'>",		        	
+		         },		         
+		         {
+		        	 "header" : Messages("processes.table.typeCode"),
+		 			"property" : "typeCode",
+		 			"filter" : "codes:'type'",
+		 			"order" : true,
+		 			"hide" : true,
+		 			"position" : 9,
+		 			"type" : "text"		        	
+		         },
+		         {
+		        	 "header":Messages("processes.table.stateCode"),
+		        	 "property":"state.code",
+		        	 "order":true,
+		        	 "hide":true,
+		        	 "filter": "codes:'state'",
+		        	 "position":30,
+		        	 "type":"text"
+		         },
+		         {
+		        	 "header":Messages("processes.table.code"),
+		        	 "property":"code",
+		        	 "order":true,
+		        	 "hide":true,
+		        	 "position":33,
+		        	 "type":"text"
+		         },
+		         {
+		        	 "header":Messages("processes.table.creationDate"),
+		        	 "property":"traceInformation.creationDate",
+		        	 "order":true,
+		        	 "hide":true,
+		        	 "position":34,
+		        	 "type":"date"
+		         },
+		         {
+		        	 "header":Messages("processes.table.projectCode"),
+		        	 "property":"projectCodes",
+		        	 "order":true,
+		        	 "hide":true,
+		        	 "position":37,
+		        	 "type":"text"
+		         },
+		         {
+		         "header" : Messages("processes.table.comments"),
+					"property" : "comments[0].comment",
+					"position" : 500,
+					"order" : false,
+					"edit" : true,
+					"hide" : true,
+					"type" : "text"
+			        }
+		 ];
+		
+		
+		return columns;
+	};
+	
+	var	datatableConfigProcessOK = {
+			 columns: [],
+	         pagination:{
+	        	 active:true,
+	        	 mode:'local',
+	        	 numberRecordsPerPage:50
+	         },		
+	         search:{
+	        	 active:false
+	         },
+	         order:{
+	        	 mode:'local',
+	        	 active:true
+	         },
+	         lines:{
+	        	trClass:function(data, line){
+	        		return 'success';	        			        	
+	        	} 
+	         }
+	};
+	
+	var newService = {
+			datatable : undefined,
+			messages:messages(),
+			processesDoneWithSuccess : [],
+			getEditDatatableConfig : getEditDatatableConfig,
+			getProcessColumnOk : getProcessColumnOk,
+			datatableConfigProcessOK:datatableConfigProcessOK,
+			processType : undefined,
+			processPropertyColumns :[],
+			computeProcessColumns : function(properties){
+				this.processPropertyColumns = [];
+				if(properties){										
+					this.processPropertyColumns = properties.map(function(propertyDefinition){
+						return propertyDefHelpers.getProcessUDTColumn(propertyDefinition);
+						});					
+				}
+				
+			},
+			setDatatableProcessOk : function(){
+				var columns = this.getProcessColumnOk().concat(this.processPropertyColumns);
+				this.datatable = datatable(this.datatableConfigProcessOK);
+				this.datatable.setColumnsConfig(columns);
+				this.datatable.setData(this.processesDoneWithSuccess);				
+			},
+			initProcessType : function(processTypeCode) {
+				var promise = $q.when(this);
+				if(processTypeCode){
+					promise = $http.get(jsRoutes.controllers.processes.api.ProcessTypes.get(processTypeCode).url,{newService:this})
+						.then(function(result){
+							var newService = result.config.newService;
+							newService.processType = result.data;
+							newService.computeProcessColumns(newService.processType.propertiesDefinitions);
+							return newService;
+					});				
+				}		
+				return promise;
+			}
+		}
+		return newService;
+	
+}]).factory('processesNewFromSamplesService', ['$q', '$http', '$parse', '$filter', 'mainService', 'lists', 'datatable', 'processesNewService',
+    function($q, $http, $parse, $filter, mainService, lists, datatable, processesNewService) {
+	
+	var getDefaultColumns = function() {
+		var columns = [];
+		
+		columns.push({
+			"header":Messages("samples.table.projectCodes"),
+			"property":"projectCodes",
+			"order":true,
+			"hide":true,
+			"group":true,
+			"position":1,					
+			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='2'>",
+			"type":"text",
+			"groupMethod":"collect"
+		});	
+		
+		columns.push({
+			"header":Messages("samples.table.code"),
+			"property":"code",
+			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='3' vertical>",
+			"order":true,
+			"hide":true,
+			"position":2,
+			"type":"text",
+			"group":true,
+			"groupMethod":"collect"
+		});
+		columns.push({
+			"header":Messages("samples.table.typeCode"),
+			"property":"typeCode",
+			"filter":"codes:'type'",
+			"order":true,
+			"hide":true,
+			"position":3,
+			"type":"text",			
+			"groupMethod":"collect:true"
+		});
+		columns.push({
+			"header":Messages("samples.table.referenceCollab"),
+			"property":"referenceCollab",
+			"order":true,
+			"hide":true,
+			"position":4,
+			"type":"text",			
+			"groupMethod":"count:true"
+		});	
+		columns.push({
+			"header":Messages("samples.table.taxonCode"),
+			"property":"taxonCode",
+			"render":"<div list-resize='cellValue' ' list-resize-min-size='3' vertical>",
+			"order":true,
+			"hide":true,
+			"position":5,
+			"type":"text",			
+			"groupMethod":"collect:true"
+		});	
+		columns.push({
+			"header":Messages("samples.table.ncbiScientifiName"),
+			"property":"ncbiScientificName",
+			"render":"<div list-resize='cellValue' ' list-resize-min-size='3' vertical>",
+			"order":true,
+			"hide":true,
+			"position":6,
+			"type":"text",			
+			"groupMethod":"collect:true"
+		});	
+		columns.push({
+			"header" : Messages("processes.table.comments"),
+			"property" : "comments[0].comment",
+			"position" : 500,
+			"order" : false,
+			"edit" : true,
+			"editTemplate":"<textarea class='form-control' #ng-model rows='3'></textarea>",
+			"hide" : true,
+			"type" : "text"
+		});
+		return columns;
+	};
+	
+	
+	var newService = {
+		getDefaultColumns : getDefaultColumns,
+		sampleViewData : undefined,
+		computeData : function(samples, isFirst){
+			this.sampleViewData = {};
+			samples.forEach(function(sample){
+				if(isFirst){
+					sample.properties = null;
+					sample.comments = [];
+				}
+				this.sampleViewData[sample.code]=sample;
+			},this);
+			return samples;
+		},
+		swithToSampleErrorView : function(){
+			var samples = [];
+			this.messages.setError("save");
+			for(var key in this.sampleViewData){
+				if(this.sampleViewData[key].onError){
+					samples.push(this.sampleViewData[key]);
+					this.messages.addDetails(this.sampleViewData[key].errors);						
+				}
+			}
+			samples = $filter('orderBy')(samples, ['sampleCodes']);
+			
+			this.datatable = datatable(this.getEditDatatableConfig(newService));
+			this.datatable.setColumnsConfig(this.getDefaultColumns().concat(newService.processPropertyColumns))
+			this.datatable.setData(samples);
+		},
+		swithToGlobalErrorView : function(){
+			var samples = [];
+			this.messages.setError("save");
+			for(var key in this.sampleViewData){
+				samples.push(this.sampleViewData[key]);				
+			}
+			samples = $filter('orderBy')(samples, ['sampleCodes']);
+			
+			this.datatable = datatable(this.getEditDatatableConfig(newService));
+			this.datatable.setColumnsConfig(this.getDefaultColumns().concat(newService.processPropertyColumns))
+			this.datatable.setData(samples);
+		},
+		udtSaveCallback : function(datatable){
+			this.messages.clear();
+			var data = this.computeData(datatable.getData());
+			var allProcesses = [];
+			data.forEach(function(value, index){
+				var process = {};
+				process.typeCode = this.processType.code;
+				process.categoryCode = this.processType.category.code;
+				process.properties = value.properties;
+				process.comments = value.comments;	
+				process.sampleCodes = [value.code];
+				allProcesses.push({data:process, index:index});
+			},this);
+			
+			var nbElementByBatch = Math.ceil(allProcesses.length / 6);
+			var queries = [];
+	        for (var i = 0; i < 6 && allProcesses.length > 0; i++) {
+	        	var subsetOfProcesses = allProcesses.splice(0, nbElementByBatch);
+	        	queries.push($http.post(jsRoutes.controllers.processes.api.Processes.saveBatch("from-sample").url, subsetOfProcesses,{subsetOfProcesses:subsetOfProcesses}));
+	        }
+			var $that = this;
+			$q.all(queries).then(function(results) {
+				var atLeastOneError = false;
+				
+				results.forEach(function(result){
+					if (result.status !== 200) {
+						console.log("Batch in error");					
+		            } else {
+		            	result.data.forEach(function(data){
+		            		
+		            		if (data.status === 200) {
+		            			$that.sampleViewData[data.data[0].sampleCodes[0]].trClass = "success";
+		            			$that.processesDoneWithSuccess = $that.processesDoneWithSuccess.concat(data.data);
+		            		}else{
+		            			var process = $filter('filter')(result.config.subsetOfProcesses,{index:data.index}, true)[0];
+		            			$that.sampleViewData[process.data.sampleCodes[0]].trClass = "danger";
+		            			$that.sampleViewData[process.data.sampleCodes[0]].onError = true;
+		            			$that.sampleViewData[process.data.sampleCodes[0]].errors = {};
+		            			$that.sampleViewData[process.data.sampleCodes[0]].errors[process.data.sampleCodes[0]] = data.data;
+		            			atLeastOneError = true;		            					            			
+		            		}	            		
+		            	});	            	
+		            }
+				});
+				
+				if(atLeastOneError){
+					$that.swithToSampleErrorView();
+	    		}else{
+	    			$that.setDatatableProcessOk();		    					    		
+	    		}
+				
+			},function(result){
+				$that.swithToGlobalErrorView();						
+			});
+		},
+		udtRemoveCallback : function(datatable){
+			mainService.getBasket().reset();
+			datatable.getData().forEach(function(elt){
+				mainService.getBasket().add(elt);
+			});				 
+			this.computeData(mainService.getBasket().get());	 
+		},
+		udtTrClass : function(data, line){
+    		if(this.sampleViewData[data.code]){
+    			return this.sampleViewData[data.code].trClass
+    		}else{
+    			return '';
+    		}    		
+    	},
+    	udtOtherButtons : function(){return undefined;},
+    	/**
+		 * initialise the service
+		 */
+		init : function(processTypeCode) {
+			this.initProcessType(processTypeCode).then(function(newService){
+				if(newService.processType){
+					var data = newService.computeData(mainService.getBasket().get(),true);
+					newService.datatable = datatable(newService.getEditDatatableConfig(newService));
+					newService.datatable.setColumnsConfig(newService.getDefaultColumns().concat(newService.processPropertyColumns))
+					newService.datatable.setData(data);
+				}
+			});
+		}
+	}
+	
+	newService = $.extend(true,{},newService,processesNewService);
+	
+	return newService;
+	
+}]).factory('processesNewFromContainersService', [ '$q', '$http', '$parse', '$filter', 'mainService', 'lists', 'datatable', 'processesNewService',
+    function($q, $http, $parse, $filter, mainService, lists, datatable, processesNewService) {
+	
+	var getDefaultColumns = function(view) {
+		var columns = [];
+
+		if("container" === view){
+
+			columns.push({
+				"header":Messages("processes.table.supportCode"),
+				"property":"support.code",
+				"order":true,
+				"hide":true,
+				"position":1,
+				"type":"text"
+			});
+
+			columns.push({
+				"header":Messages("processes.table.line"),
+				"property":"support.line",
+				"order":true,
+				"hide":true,
+				"position":2,
+				"type":"text"
+			});
+			columns.push({
+				"header":Messages("processes.table.columns"),
+				"property":"support.column*1",
+				"order":true,
+				"hide":true,
+				"position":3,
+				"type":"number"
+			});			
+
+		}else{
+			columns.push({
+				"header":Messages("processes.table.supportCode"),
+				"property":"support.code",
+				"order":true,
+				"hide":true,
+				"position":1,
+				"type":"text"
+			});
+
+		}
+
+		columns.push({
+			"header":Messages("processes.table.projectCode"),
+			"property":"projectCodes",
+			"order":true,
+			"hide":true,
+			"position":4,
+			"render":"<div list-resize='value.data.projectCodes | unique' list-resize-min-size='3'>",
+			"type":"text"
+		});
+		columns.push({
+			"header":Messages("processes.table.sampleCode"),
+			"property":"sampleCodes",
+			"order":true,
+			"hide":true,
+			"position":5,
+			"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
+			"type":"text"
+		});
+
+		columns.push({
+			"header":Messages("containers.table.sampleTypes"),
+			"property":"contents",
+			"order":false,
+			"hide":false,
+			"position":5.01,
+			"type":"text",
+			"filter":"getArray:'sampleTypeCode' | unique | codes:\"type\"",
+			"groupMethod":"collect"
+		});
+
+		columns.push({
+			"header":Messages("containers.table.contents.length"),
+			"property":"contents.length",
+			"order":true,
+			"hide":true,
+			"position":5.05,
+			"type":"number"
+		});
+		columns.push({
+			"header":Messages("containers.table.stateCode"),
+			"property":"state.code",
+			"order":true,
+			"hide":true,
+			"position":6,
+			"filter": "codes:'state'",
+			"type":"text"
+		});
+		columns.push({
+			"header" : Messages("processes.table.comments"),
+			"property" : "comments[0].comment",
+			"position" : 500,
+			"order" : false,
+			"edit" : true,
+			"editTemplate":"<textarea class='form-control' #ng-model rows='3'></textarea>",
+			"hide" : true,
+			"type" : "text"
+		});
+		return columns;
+	};
+
+	
+	var newService = {
+			containerViewData : undefined,
+			supportViewData : undefined,
+			containerErroView : false,
+			getDefaultColumns : getDefaultColumns,
+			computeData : function(){
+				var containerViewData = this.containerViewData = {};
+				var supportViewData = this.supportViewData = {};
+
+				var containerCodes = [];
+				containerCodes = containerCodes.concat(mainService.getBasket().get());
+
+				if(containerCodes.length > 0){
+					var nbElementByBatch = Math.ceil(containerCodes.length / 6); //6 because 6 request max in parrallel with firefox and chrome
+					var queries = [];
+					for (var i = 0; i < 6 && containerCodes.length > 0; i++) {
+						var subContainerCodes = containerCodes.splice(0, nbElementByBatch);
+						queries.push( $http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{codes:subContainerCodes}}) );
+					}
+
+					return $q.all(queries).then(function(results) {
+						var allData = [];
+						results.forEach(function(result){
+							allData = allData.concat(result.data);
+						});
+
+						allData.forEach(function(data){
+							data.properties = null;
+							data.comments = [];
+							containerViewData[data.code]=data;
+							containerViewData[data.code].code = [data.code];
+							if(supportViewData[data.support.code]){
+								supportViewData[data.support.code].code = supportViewData[data.support.code].code.concat(data.code);
+								supportViewData[data.support.code].projectCodes = supportViewData[data.support.code].projectCodes.concat(data.projectCodes);
+								supportViewData[data.support.code].sampleCodes = supportViewData[data.support.code].sampleCodes.concat(data.sampleCodes);
+								supportViewData[data.support.code].contents = supportViewData[data.support.code].contents.concat(data.contents);
+							}else{
+								supportViewData[data.support.code] = $.extend(true,{},data);						
+							}	
+						});
+
+
+					});		
+				}
+			},
+			swithView : function(){		
+				if(this.supportView){
+					this.swithToContainerView();
+				}else{
+					this.swithToSupportView()
+				}
+			},
+			swithToContainerErrorView : function(){
+				var containers = [];
+				this.messages.setError("save");
+				for(var key in this.containerViewData){
+					if(this.containerViewData[key].onError){
+						containers.push(this.containerViewData[key]);
+						this.messages.addDetails(this.containerViewData[key].errors);
+					}
+				}
+				containers = $filter('orderBy')(containers, ['support.code', 'support.column*1', 'support.line']);
+				this.datatable.setColumnsConfig(this.getDefaultColumns("container").concat(newService.processPropertyColumns));
+				this.datatable.setData(containers);
+				this.containerErroView = true;
+			},
+			swithToGlobalErrorView : function(){
+				var containers = [];
+				this.messages.setError("save");
+				for(var key in this.containerViewData){
+					containers.push(this.containerViewData[key]);					
+				}
+				containers = $filter('orderBy')(containers, ['support.code', 'support.column*1', 'support.line']);
+				this.datatable.setColumnsConfig(this.getDefaultColumns("container").concat(newService.processPropertyColumns));
+				this.datatable.setData(containers);
+				this.containerErroView = true;
+			},
+			swithToContainerView : function(){
+				var containers = [];
+				for(var key in this.containerViewData){
+					containers.push(this.containerViewData[key]);
+				}
+				containers = $filter('orderBy')(containers, ['support.code', 'support.column*1', 'support.line']);
+				this.datatable.setColumnsConfig(this.getDefaultColumns("container").concat(newService.processPropertyColumns));
+				this.datatable.setData(containers);	
+				this.supportView = false;
+
+			},
+			swithToSupportView : function(){
+				var supports = [];
+				for(var key in this.supportViewData){
+					supports.push(this.supportViewData[key]);
+				}
+				supports = $filter('orderBy')(supports, 'support.code');
+				this.datatable.setColumnsConfig(this.getDefaultColumns("support").concat(newService.processPropertyColumns));
+				this.datatable.setData(supports);			
+				this.supportView = true;
+			},
+			udtSaveCallback : function(datatable){
+				this.messages.clear();
+				var data = datatable.getData();
+				var allProcesses = [];
+				data.forEach(function(value, index){
+					var process = {};
+					process.typeCode = this.processType.code;
+					process.categoryCode = this.processType.category.code;
+					process.properties = value.properties;
+					process.inputContainerSupportCode = value.support.code;
+					process.comments = value.comments;
+					value.code.forEach(function(containerCode){
+						var processContainer =  $.extend(true,{},process);
+						processContainer.inputContainerCode = containerCode;
+						allProcesses.push({data:processContainer, index:index});
+					})			
+				},this);
+				
+				var nbElementByBatch = Math.ceil(allProcesses.length / 6);
+				var queries = [];
+		        for (var i = 0; i < 6 && allProcesses.length > 0; i++) {
+		        	var subsetOfProcesses = allProcesses.splice(0, nbElementByBatch);
+		        	queries.push($http.post(jsRoutes.controllers.processes.api.Processes.saveBatch("from-container").url, subsetOfProcesses,{subsetOfProcesses:subsetOfProcesses}));
+		        }
+				var $that = this;
+				$q.all(queries).then(function(results) {
+					$that.containerErroView = false;
+					var atLeastOneError = false;
+					
+					results.forEach(function(result){
+						if (result.status !== 200) {
+							console.log("Batch in error");					
+			            } else {
+			            	result.data.forEach(function(data){
+			            		
+			            		if (data.status === 200) {
+			            			$that.containerViewData[data.data[0].inputContainerCode].trClass = "success";
+			            			if($that.supportViewData[data.data[0].inputContainerSupportCode].trClass !== "danger"){
+			            				$that.supportViewData[data.data[0].inputContainerSupportCode].trClass = "success";
+			            			}
+			            			$that.processesDoneWithSuccess = $that.processesDoneWithSuccess.concat(data.data);
+			            		}else{
+			            			var process = $filter('filter')(result.config.subsetOfProcesses,{index:data.index}, true)[0];
+			            			$that.containerViewData[process.data.inputContainerCode].trClass = "danger";
+			            			$that.containerViewData[process.data.inputContainerCode].onError = true;
+			            			$that.containerViewData[process.data.inputContainerCode].errors = {};
+			            			$that.containerViewData[process.data.inputContainerCode].errors[process.data.inputContainerCode] = data.data;
+			            			$that.supportViewData[process.data.inputContainerSupportCode].trClass = "danger";
+			            			atLeastOneError = true;
+			            		}	            		
+			            	});	            	
+			            }
+					});
+					
+					if(atLeastOneError){
+						$that.swithToContainerErrorView();
+		    		}else{
+		    			$that.setDatatableProcessOk();		    					    		
+		    		}
+					
+				},function(result){
+					$that.swithToGlobalErrorView();						
+				});
+			},
+			udtRemoveCallback : function(datatable){
+				mainService.getBasket().reset();
+				datatable.getData().forEach(function(elt){
+					mainService.getBasket().add(elt.code);
+				});
+				this.computeData();	        		 
+			},
+			udtTrClass:function(data, line){
+        		if(this.supportView && this.supportViewData[data.support.code]){
+        			return this.supportViewData[data.support.code].trClass
+        		}else if(this.containerViewData[data.code[0]]){	        			
+        			return this.containerViewData[data.code[0]].trClass	        			
+        		}else{
+        			return '';
+        		}	        		
+        	}, 
+        	udtOtherButtons : function(){
+        		return {
+        			active:true,
+        			template:''
+        				+' <button ng-click="newService.swithView()" ng-disabled="newService.loadView"  class="btn btn-info" ng-switch="newService.supportView" ng-if="!newService.containerErroView">'+Messages("baskets.switchView")+
+        				' '+'<b ng-switch-when="true" class="switchLabel">'+
+        				Messages("baskets.switchView.containers")+'</b>'+
+        				'<b ng-switch-when="false" class="switchLabel">'+Messages("baskets.switchView.supports")+'</b></button></button>'
+        		};
+        	},
+
+			/**
+			 * initialise the service
+			 */
+			init : function(processTypeCode) {
+				this.initProcessType(processTypeCode).then(function(newService){
+					if(newService.processType){
+						newService.supportView = false;
+						newService.computeData().then(function(){
+							newService.datatable = datatable(newService.getEditDatatableConfig(newService));
+							if(!newService.supportView){
+								newService.swithToContainerView();
+							}else{
+								newService.swithToSupportView()
+							}
+						});
+					}
+				});
+			}
+	}
+
+	newService = $.extend(true,{},newService,processesNewService);
+
+	return newService;
+
+}]).factory('assignToContainerService', [ '$q', '$http', '$parse', '$filter', 'mainService', 'messages', 'lists', 'datatable', 'propertyDefHelpers',
+    function($q, $http, $parse, $filter, mainService, messages, lists, datatable, propertyDefHelpers) {
+	
+	var getDefaultColumns = function(view) {
+		var columns = [];
+
+		columns.push({
+			"header":Messages("processes.table.supportCode"),
+			"property":"support.code",
+			"order":true,
+			"hide":true,
+			"position":1,
+			"type":"text"
+		});
+
+		columns.push({
+			"header":Messages("processes.table.line"),
+			"property":"support.line",
+			"order":true,
+			"hide":true,
+			"position":2,
+			"type":"text"
+		});
+		columns.push({
+			"header":Messages("processes.table.columns"),
+			"property":"support.column*1",
+			"order":true,
+			"hide":true,
+			"position":3,
+			"type":"number"
+		});			
+
+		columns.push({
+			"header":Messages("processes.table.projectCode"),
+			"property":"projectCodes",
+			"order":true,
+			"hide":true,
+			"position":4,
+			"render":"<div list-resize='value.data.projectCodes | unique' list-resize-min-size='3'>",
+			"type":"text"
+		});
+		columns.push({
+			"header":Messages("processes.table.sampleCode"),
+			"property":"sampleCodes",
+			"order":true,
+			"hide":true,
+			"position":5,
+			"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
+			"type":"text"
+		});
+
+		columns.push({
+			"header":Messages("containers.table.sampleTypes"),
+			"property":"contents",
+			"order":false,
+			"hide":false,
+			"position":5.001,
+			"type":"text",
+			"filter":"getArray:'sampleTypeCode' | unique | codes:\"type\"",
+			"groupMethod":"collect"
+		});
+		
+		columns.push({
+			"header":Messages("processes.table.availableProcesses"),
+			"property":"processCode",
+			"order":true,
+			"edit":true,
+			"required":true,
+			"editTemplate":"<div class='form-control' bt-select  bt-options='opt.code as opt.code for opt in assignService.getProcesses(value.data)' #ng-model udt-change='assignService.selectProcess(value.data)' auto-select></div>",
+			"position":5.002,
+			"type":"text"
+		});
+		/*
+		columns.push({
+			"header":Messages("containers.table.contents.length"),
+			"property":"contents.length",
+			"order":true,
+			"hide":true,
+			"position":5.05,
+			"type":"number"
+		});
+		*/
+		columns.push({
+			"header":Messages("containers.table.stateCode"),
+			"property":"state.code",
+			"order":true,
+			"hide":true,
+			"position":6,
+			"filter": "codes:'state'",
+			"type":"text"
+		});
+		columns.push({
+			"header" : Messages("processes.table.comments"),
+			"property" : "comments[0].comment",
+			"position" : 500,
+			"order" : false,
+			"edit" : false,
+			"editTemplate":"<textarea class='form-control' #ng-model rows='3'></textarea>",
+			"hide" : true,
+			"type" : "text"
+		});
+		return columns;
+	};
+
+	var	getDatatableConfig = function(service){
+		var datatableConfig = {
+				 columns: [],
+		         pagination:{
+		        	 active:false
+		         },		
+		         search:{
+		        	 active:false
+		         },
+		         order:{
+		        	 mode:'local',
+		        	 active:true
+		         },
+		         edit:{  		
+		        	 active:true,
+		        	 columnMode:false,
+		        	 byDefault : true,
+		        	 showButton:false
+		         },
+		         save:{
+		        	 active: true,
+		        	 withoutEdit:true,
+		        	 showButton : true,
+		        	 mode:"local",
+		        	 changeClass : false,
+		        	 callback : function(datatable){
+		        		 service.udtSaveCallback(datatable);
+		        	 }
+		         },
+		         remove:{
+		        	 active:true,
+		        	 mode:'local',
+		        	 withEdit:true,
+		        	 callback : function(datatable){
+		        		 service.udtRemoveCallback(datatable);
+		        	 }
+		         },
+		         lines:{
+		        	trClass:function(data,line){
+		        		return service.udtTrClass(data,line);
+		        	}
+		         },
+		         messages:{
+		        	 active:false,
+		        	 transformKey: function(key, args) {
+			             return Messages(key, args);
+		        	 }
+		         },
+		         cancel:{
+		        	 active:false
+		         }
+		};
+		return datatableConfig;
+	}
+	
+	
+	var assignService = {
+			getDatatableConfig:getDatatableConfig,
+			getDefaultColumns:getDefaultColumns,
+			form :{},
+			lists:lists,
+			messages:messages(),
+			additionalProcessFilters : undefined,
+			additionalProcessColumns : undefined,
+			processType : undefined,
+			isProcessFiltered : false,
+			selectedSampleCodes : [],
+			containerData : {},
+			
+			//containerSampleCodes : {},
+			//containerProcesses : {},
+			
+			udtSaveCallback : function(datatable){
+				this.messages.clear();
+				var data = datatable.getData();
+				var allProcesses = [];
+				data.forEach(function(container, index){
+					var selectedProcess = $filter('filter')(this.containerData[container.code].processes, {code:container.processCode},true)[0];
+					selectedProcess.inputContainerCode = container.code;
+					selectedProcess.inputContainerSupportCode = container.support.code;
+					allProcesses.push({data:selectedProcess, index:index});				
+				},this);
+				
+				var nbElementByBatch = Math.ceil(allProcesses.length / 6);
+				var queries = [];
+		        for (var i = 0; i < 6 && allProcesses.length > 0; i++) {
+		        	var subsetOfProcesses = allProcesses.splice(0, nbElementByBatch);
+		        	queries.push($http.put(jsRoutes.controllers.processes.api.Processes.updateBatch().url, subsetOfProcesses,{subsetOfProcesses:subsetOfProcesses}));
+		        }
+				var $that = this;
+				$q.all(queries).then(function(results) {
+					
+					results.forEach(function(result){
+						if (result.status !== 200) {
+							console.log("Batch in error");					
+			            } else {
+			            	result.data.forEach(function(data){
+			            		
+			            		if (data.status === 200) {
+			            			$that.containerData[data.data.inputContainerCode].trClass = "success";			            			
+			            		}else{
+			            			var process = $filter('filter')(result.config.subsetOfProcesses,{index:data.index}, true)[0];
+			            			$that.containerData[process.data.inputContainerCode].trClass = "danger";
+			            			$that.containerData[process.data.inputContainerCode].onError = true;
+			            			$that.containerData[process.data.inputContainerCode].errors = {};
+			            			$that.containerData[process.data.inputContainerCode].errors[process.data.inputContainerCode] = data.data;
+			            			atLeastOneError = true;
+			            		}	 
+			            		           		
+			            	});	            	
+			            }
+					});
+					
+				},function(result){
+					$that.messages.setError("save");				
+				});
+				
+			},
+			udtRemoveCallback : function(datatable){
+				mainService.getBasket().reset();
+				datatable.getData().forEach(function(elt){
+					mainService.getBasket().add(elt.code);
+				});
+				this.computeData();	        		 
+			},
+			udtTrClass:function(data, line){
+        		if(this.containerData[data.code]){	        			
+        			return this.containerData[data.code].trClass	        			
+        		}else{
+        			return '';
+        		}	        		
+        	}, 
+			initProcessType : function(processTypeCode) {
+				var promise = $q.when(this);
+				if(processTypeCode){
+					promise = $http.get(jsRoutes.controllers.processes.api.ProcessTypes.get(processTypeCode).url,{service:this})
+						.then(function(result){
+							var service = result.config.service;
+							service.processType = result.data;
+							service.initProcessAttributes(service.processType.propertiesDefinitions);
+							return service;
+					});				
+				}		
+				return promise;
+			},
+			
+			initProcessAttributes : function(propertiesDefinitions) {
+				this.additionalProcessFilters = [];
+				this.additionalProcessColumns = [];
+				var formFilters = [];
+				var allFilters = undefined;
+				var nbElementByColumn = undefined;
+				this.isProcessFiltered = false;	
+				//filters
+				if(angular.isArray(propertiesDefinitions) && propertiesDefinitions.length > 0){
+					allFilters = propertiesDefinitions.map(function(pDef){
+						return propertyDefHelpers.getHtmlFilter(pDef,"assignService");
+					});				
+				 
+					if (angular.isDefined(allFilters)) {
+						nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
+						for (var i = 0; i < 5 && allFilters.length > 0; i++) {
+							formFilters.push(allFilters.splice(0, nbElementByColumn));
+						}
+						//complete to 5 five element to have a great design 
+						while (formFilters.length < 5) {
+							formFilters.push([]);
+						}
+						this.isProcessFiltered = true;					
+					}
+					this.additionalProcessFilters = formFilters;
+					
+					
+					this.additionalProcessColumns =  propertiesDefinitions.map(function(pDef){
+						var column = propertyDefHelpers.getProcessUDTColumn(pDef);
+						column.edit = false;
+						return column;
+					});
+						
+				}
+				
+			},	
+			getAddProcessFiltersToForm : function() {
+				return this.additionalProcessFilters;
+			},
+			computeData : function(){
+				this.containerData = {};
+				
+				var containerCodes = [];
+				containerCodes = containerCodes.concat(mainService.getBasket().get());
+
+				if(containerCodes.length > 0){
+					var nbElementByBatch = Math.ceil(containerCodes.length / 6); //6 because 6 request max in parrallel with firefox and chrome
+					var queries = [];
+					for (var i = 0; i < 6 && containerCodes.length > 0; i++) {
+						var subContainerCodes = containerCodes.splice(0, nbElementByBatch);
+						queries.push( $http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{codes:subContainerCodes}}) );
+					}
+					var insideService = this;
+					return $q.all(queries).then(function(results) {
+						var allData = [];
+						results.forEach(function(result){
+							allData = allData.concat(result.data);
+						});
+						
+						insideService.setSelectedSampleCodes(allData);
+						insideService.searchProcesses();
+						
+						return allData;
+					});		
+				}
+			},
+			reset : function(){
+				this.form = {};
+			},
+			/**
+			 * Search processes and assign it to each container.
+			 * The assignation is based on the sampleCode of the processes
+			 */
+			searchProcesses : function(){
+				this.form.stateCode = 'IW-C';
+				this.form.sampleCodes = this.selectedSampleCodes;
+				
+				//clean old process search
+				for(var key in this.containerData){
+					this.containerData[key].processes = [];
+				}
+				
+				$http.get(jsRoutes.controllers.processes.api.Processes.list().url,{params:this.form,service:this})
+					.then(function(result){
+						var service = result.config.service;
+						result.data.forEach(function(process){
+							process.sampleCodes.forEach(function(sampleCode){
+								Object.keys(this.containerData)
+									.forEach(function(containerCode){
+										//if(!this.containerData[containerCode].processes)this.containerData[containerCode].processes = [];
+										if(this.containerData[containerCode].sampleCodes.indexOf(sampleCode) > -1)
+											this.containerData[containerCode].processes.push(process);
+								}, this);								
+							},this);
+						}, service);
+						
+					});
+			},
+			setSelectedSampleCodes : function(selectedContainers){
+				var allSampleCodes = [];
+				this.selectedSampleCodes = [];
+				 
+				selectedContainers.forEach(function(container){
+					var containerSampleCodes = container.sampleCodes;
+					if(container.treeOfLife)containerSampleCodes = containerSampleCodes.concat(container.treeOfLife.paths[0].split(','));		
+					allSampleCodes = allSampleCodes.concat(containerSampleCodes);
+					if(!this.containerData[container.code])this.containerData[container.code] = {};
+					this.containerData[container.code].sampleCodes = containerSampleCodes;					 
+				},this);
+				allSampleCodes = Array.from(new Set(allSampleCodes));
+				this.selectedSampleCodes = allSampleCodes;
+			},
+			getProcesses : function(container){
+				if(container)return this.containerData[container.code].processes;
+				return null;
+			},
+			selectProcess : function(container){
+				var selectedProcess = $filter('filter')(this.containerData[container.code].processes, {code:container.processCode},true)[0];
+				if(selectedProcess)
+					container.properties = selectedProcess.properties;
+				else
+					container.properties = null;
+				
+			},
+			/**
+			 * initialise the service
+			 */
+			init : function(processTypeCode) {
+				this.initProcessType(processTypeCode).then(function(service){
+					if(service.processType){
+						service.computeData().then(function(selectedContainers){
+							
+							service.datatable = datatable(service.getDatatableConfig(service));
+							service.datatable.setColumnsConfig(service.getDefaultColumns().concat(service.additionalProcessColumns));		
+							service.datatable.setData(selectedContainers);
+						});
+					}
+				});
+			}
+	}
+
+	
+	return assignService;
+
+}]).factory('processGraphService', [ '$q', '$http', '$parse', '$filter',  'messages', 'lists', 
+    function($q, $http, $parse, $filter, messages, lists) {
+	
+	var newNode = function(experimentNode){
+		return  {experimentType:experimentNode.experimentType, parentNodes:(experimentNode.previousExperimentTypes)?experimentNode.previousExperimentTypes:[], childNodes:[]};
+	};
+	
+	var graphNodes = {};
+	var service = {
+			experimentTypes : undefined,
+			document : undefined,
+			
+			changeProcessType : function(processTypeCode){
+				
+				$http.get(jsRoutes.controllers.processes.api.ProcessTypes.get(processTypeCode).url,{service:this}).then(function(result){
+					var nodeQueries = [];	
+					var processExperimentTypes = new Map();
+					var $this = result.config.service;
+					result.data.experimentTypes.forEach(function(experimentType){
+						if(this.get(experimentType.experimentTypeCode) === undefined){
+							this.set(experimentType.experimentTypeCode, [experimentType.positionInProcess]);
+						}else{
+							this.get(experimentType.experimentTypeCode).push(experimentType.positionInProcess);
+						}
+						nodeQueries.push($http.get(jsRoutes.controllers.experiments.api.ExperimentTypeNodes.get(experimentType.experimentTypeCode).url)
+								.then(function(result){
+									if(!graphNodes[result.data.experimentType.code])
+										graphNodes[result.data.experimentType.code] = newNode(result.data);
+									return result.data;
+								})								
+						);
+							
+						
+						
+					},processExperimentTypes);
+					$q.all(nodeQueries).then(function(expNodes){
+						expNodes.forEach(function(experimentNode){
+							graphNodes[experimentNode.experimentType.code].parentNodes.forEach(function(parent){
+								if(graphNodes[parent.code] && $filter('filter')(graphNodes[parent.code].childNodes,{code:this.code}).length === 0)
+									graphNodes[parent.code].childNodes.push(this);
+							}, experimentNode.experimentType) 
+						});
+						var graphElements  = $this.computeGraphElements(processExperimentTypes);
+						$this.initCytoscape(graphElements);
+					});
+					
+					
+					
+				})
+			
+			},
+			computeGraphElements : function(processExperimentTypes){
+				//nodes
+				var graphElements = [];
+				
+				var getFaveColor = function(processExperimentTypes, key){
+					if(processExperimentTypes.get(key)[0] > -1 )return '#6FB1FC';
+					else return '#BDBDBD';
+				}
+				
+				var getFaveWith = function(processExperimentTypes, key){
+					if(processExperimentTypes.get(key)[0] > -1 )return '150';
+					else return '100';
+				}
+				
+				var getFaveFontSize = function(processExperimentTypes, key){
+					if(processExperimentTypes.get(key)[0] > -1 )return '11';
+					else return '9';
+				}
+				
+				for(var [key, value] of processExperimentTypes.entries()){
+					var currentNode = graphNodes[key];
+					var currentExperimentType = graphNodes[key].experimentType;
+					if(currentExperimentType.category.code === 'transformation'){
+						currentExperimentType.id = currentExperimentType.code;
+						currentExperimentType.label = currentExperimentType.name;
+						currentExperimentType.faveColor = getFaveColor(processExperimentTypes, key);
+						currentExperimentType.faveShape="ellipse";
+						currentExperimentType.faveWith = getFaveWith(processExperimentTypes, key);
+						currentExperimentType.faveFontSize = getFaveFontSize(processExperimentTypes, key);
+						graphElements.push({"data":currentExperimentType,"group":"nodes"});
+					}else if(currentExperimentType.category.code === 'voidprocess'){
+						currentExperimentType.id = currentExperimentType.code;
+						currentExperimentType.label = 'None';
+						currentExperimentType.faveColor = getFaveColor(processExperimentTypes, key);
+						currentExperimentType.faveShape="ellipse";
+						currentExperimentType.faveWith = getFaveWith(processExperimentTypes, key);
+						currentExperimentType.faveFontSize = getFaveFontSize(processExperimentTypes, key);
+						graphElements.push({"data":currentExperimentType,"group":"nodes"});
+					}
+					
+				}
+				//edges
+				
+				var isDiffPositionIsOne = function(processExperimentTypes, keyParent, keyChild){
+					return processExperimentTypes.get(keyParent).some(function(parentPos){
+						return processExperimentTypes.get(keyChild).some(function(childPos){
+								return (childPos - parentPos === 1);
+						});
+					});
+					//return (processExperimentTypes.get(keyChild) - processExperimentTypes.get(keyParent) === 1);			
+				}
+				
+				for(var [key, value] of processExperimentTypes.entries()){
+					var currentNode = graphNodes[key];
+					var currentExperimentType = graphNodes[key].experimentType;
+					if(currentExperimentType.category.code === 'transformation'
+						|| currentExperimentType.category.code === 'voidprocess'){
+						angular.forEach(currentNode.childNodes, function(childNode){
+							var childExperimentType = childNode;
+							if(childExperimentType.category.code === 'transformation' 
+								&& (processExperimentTypes.get(childExperimentType.code) !== undefined && isDiffPositionIsOne(processExperimentTypes, key, childExperimentType.code))){
+								var currentExperimentType = this;
+								var edge = {
+										"id":currentExperimentType.code+"-"+childExperimentType.code,
+										"source":currentExperimentType.code,
+										"target":childExperimentType.code
+										
+								}
+								var faveColor = getFaveColor(processExperimentTypes, key);
+								edge.faveColor=faveColor;
+								graphElements.push({"data":edge,"group":"edges"})	
+							}
+						},currentExperimentType)
+					}
+					
+				}
+				
+				return graphElements;
+			},			
+			initCytoscape : function(graphElements){
+				
+				var asynchGraph = function(document) {
+					 return $q(function(resolve, reject) {
+						 setTimeout(function() {
+						 	 var cy = 
+								cytoscape({
+							          container: document.getElementById('graph'),
+							          boxSelectionEnabled: false,
+							          autounselectify: true,
+							          
+							          layout: {
+							            name: 'breadthfirst',
+							            directed:true,
+							            padding:5,
+							            spacingFactor:0.6,					           
+							          },
+							          style: cytoscape.stylesheet()
+								          .selector('node')
+								            .css({
+								              'shape': 'data(faveShape)',
+								              'width': 'data(faveWith)',
+								              'label': 'data(label)',
+								              'text-valign': 'center',
+								              //'text-outline-width': 2,
+								              //'text-outline-color': 'data(faveColor)',
+								              'background-color': 'data(faveColor)',
+								              'color': '#fff',
+								              'font-size':'data(faveFontSize)'  
+								            })
+								          .selector(':selected')
+								            .css({
+								              'border-width': 3,
+								              'border-color': '#333'
+								            })
+								          .selector('edge')
+								            .css({
+								              'curve-style': "bezier", 
+								              'opacity': 0.666,
+								              'width': '3',
+								              'label': 'data(label)',
+								              'color': '#000',
+								              'font-size':11,
+								              'font-weight': 'bold',
+								              'target-arrow-shape': 'triangle',
+								              'source-arrow-shape': 'circle',
+								              'line-color': 'data(faveColor)',
+								              'source-arrow-color': 'data(faveColor)',
+								              'target-arrow-color': 'data(faveColor)'								              
+								            })
+								            /*
+								          .selector('edge.questionable')
+								            .css({
+								              'line-style': 'dotted',
+								              'target-arrow-shape': 'diamond'
+								            })
+								            */
+								          .selector('.faded')
+								            .css({
+								              'opacity': 0.25,
+								              'text-opacity': 0
+								            })
+								            ,
+								           
+							        
+							          elements : graphElements
+							      
+							        });				 	
+						});	
+					 }, 1);
+				};
+				asynchGraph(this.document);
+			},
+			init : function(document){
+				this.document = document;
+				$http.get(jsRoutes.controllers.experiments.api.ExperimentTypes.list().url,{service:this}).then(function(result){
+					var experimentTypes = {};
+					result.data.forEach(function(expType){
+						experimentTypes[expType.code] = expType;
+					})
+					result.config.service.experimentTypes = experimentTypes;
+				})				
+			}
+			
+	};
+	
+	return service;
+		
+}]);

@@ -39,10 +39,12 @@ public class ImportServiceCNG extends AbstractImportService {
 		l.add(newImportType("Import aliquots tubes", "tube-from-bank-reception", ImportCategory.find.findByCode("sample-import"), getBankReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
 		l.add(newImportType("Import aliquots plaques", "plate-from-bank-reception", ImportCategory.find.findByCode("sample-import"), getBankReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
 		// FDS 20/06/2017 NGL-1472
-		l.add(newImportType("Import librairies indexées (non poolées)", "library-idx-reception",ImportCategory.find.findByCode("sample-import"), getLibraryReceptionPropertyDefinitions(true,false), getInstitutes(Constants.CODE.CNG)));
+		l.add(newImportType("Import librairies indexées (non poolées)", "library-idx-reception",ImportCategory.find.findByCode("sample-import"), getLibraryReceptionPropertyDefinitions(true), getInstitutes(Constants.CODE.CNG)));
 		// FDS 22/11/2017 NGL-1703
-		l.add(newImportType("Import librairies indexées (poolées)", "library-idx-pool-reception",ImportCategory.find.findByCode("sample-import"), getLibraryReceptionPropertyDefinitions(true,true), getInstitutes(Constants.CODE.CNG)));
-		// A PREVOIR ??? l.add(newImportType("Import librairies non indexées",     "library-reception",     ImportCategory.find.findByCode("sample-import"), getLibraryReceptionPropertyDefinitions(false,false), getInstitutes(Constants.CODE.CNG)));
+		l.add(newImportType("Import librairies indexées (poolées)", "library-idx-pool-reception",ImportCategory.find.findByCode("sample-import"), getLibraryReceptionPropertyDefinitions(true), getInstitutes(Constants.CODE.CNG)));
+		// FDS 05/03/2018 NGL-1907 ( garder le label "PALEODNA" pour l'instant
+		l.add(newImportType("Import librairies PALEODNA", "library-idx-pool-nodemultiplexing-reception",ImportCategory.find.findByCode("sample-import"), getLibraryNodemultiplexReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
+		
 		// GA/FDS 14/06/2017 CONTOURNEMENT de la creation des libProcessTypecodes dans NGLBI ce qui pose des problemes dans le cas ISOPROD
 		// creer un ImportType bidon pour declarer la propriété libProcessTypecodes et sa liste de valeurs...
 		l.add(newImportType("Import bidon", "import-bidon", ImportCategory.find.findByCode("sample-import"), getLibProcessTypecodePropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
@@ -63,38 +65,56 @@ public class ImportServiceCNG extends AbstractImportService {
 		return propertyDefinitions;
 	}
 	
-	// FDS 20/06/2017 NGL-1472
-	private List<PropertyDefinition> getLibraryReceptionPropertyDefinitions ( boolean isIndexed, boolean isPooled) {
+	// FDS 20/06/2017 NGL-1472; 06/03/2018 suppression du boolen isPooled car c'est géré directement dans la configuration de reception stockée dans Mongo
+	private static List<PropertyDefinition> getLibraryReceptionPropertyDefinitions (boolean isIndexed) throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
-		// propriétés communes 
+		// propriétés communes Librairies
 		propertyDefinitions.add(newPropertiesDefinition("Gender", "gender", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
-				Arrays.asList(newValue("0","unknown"),newValue("1","male"),newValue("2","female")), null,null,null,"single", 17, false, null,null));
+				Arrays.asList(newValue("0","unknown"),newValue("1","male"),newValue("2","female")), null,null,null,"single", 1, false, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, false, null, 
-				null, "single", 1, false, null, null));	
-		// essai ajout getExtLibProcessTypecodes
-		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Content), String.class, true, null, getExtLibProcessTypecodesValues(), 
-				null,null,null,"single", 5, false, null, null));
+				null, "single", 2, false, null, null));	
+		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
+				getExtLibProcessTypecodesValues(), null, null, null,"single", 3, false, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Nom scientifique collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
-				null, null,null,null,"single", 17, false, null,null));		
+				null, null,null,null,"single", 4, false, null,null));		
 			
-		// librairies indexees
+		// propriétés pour librairies indexees
 		if (isIndexed) {
 			propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
-					null, null,null,null,"single", 3, false, null,null));
+					null, null,null,null,"single", 5, false, null,null));
 			propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
-					getTagCategories(), null,null,null,"single", 4, false, null,null));	
-		
-		    /* inutile si pas d'autres proprietes que "% au sein du pool" (deja géré de base par NGL)
-			if (isPooled) {
-	           // propiété "% au sein du pool" 
-			}
-			 */
+					getTagCategories(), null,null,null,"single", 6, false, null,null));	
 		}
-		// pas de else: normalement les librairies non indexees et poolees n'existent pas...
 		
 		return propertyDefinitions;
 	}
+	
+	//FDS 05/03/2018 NGL-1907 cas du projet PALEO: librairie indexees et poolees mais on l'Equipe Joe ne doit pas faire le demultiplexage.
+	private static List<PropertyDefinition> getLibraryNodemultiplexReceptionPropertyDefinitions() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		// propriétés communes Librairies (sauf index)
+		propertyDefinitions.addAll(getLibraryReceptionPropertyDefinitions(false));
+
+		// propriétés spécifiques projet PALEO
+		/* possible avec une propriete de type liste ?????
+		propertyDefinitions.add(newPropertiesDefinition("Séquence index attendus", "expectedIndexesSequences", LevelService.getLevels(Level.CODE.Content), String.class, true, null, null, 
+				null,null,null,"list", 10, false, null, null));
+		*/
+
+		propertyDefinitions.add(newPropertiesDefinition("Séquence index attendu 1", "expectedSequence1", LevelService.getLevels(Level.CODE.Content), String.class, true, null, null, 
+				null,null,null,"single", 10, false, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Séquence index attendu 2", "expectedSequence2", LevelService.getLevels(Level.CODE.Content), String.class, true, null, null, 
+				null,null,null,"single", 11, false, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Séquence index attendu 3", "expectedSequence3", LevelService.getLevels(Level.CODE.Content), String.class, true, null, null, 
+				null,null,null,"single", 12, false, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Séquence index attendu 4", "expectedSequence4", LevelService.getLevels(Level.CODE.Content), String.class, true, null, null, 
+				null,null,null,"single", 13, false, null, null));
+		
+		return propertyDefinitions;
+	}
+	
 	
 	// FDS 20/06/2017 ajouté pour NGL-1472
 	private static List<Value> getTagCategories(){
@@ -147,8 +167,8 @@ public class ImportServiceCNG extends AbstractImportService {
          values.add(DescriptionFactory.newValue("CAA","CAA - Agilent : V6+UTR (DefCap023)")); // !! aussi dans ProcessServiceCNG / getCaptureLibProcessTypeCodeValues
          values.add(DescriptionFactory.newValue("CAB","CAB - DefCap024"));
          values.add(DescriptionFactory.newValue("CAC","CAC - Agilent : V6+Cosmic (DefCap025)")); // !! aussi dans ProcessServiceCNG / getCaptureLibProcessTypeCodeValues
-         values.add(DescriptionFactory.newValue("CAD","CAD - Nimblegen : MedExome (DefCap026)"));
-         values.add(DescriptionFactory.newValue("CAE","CAE - Nimblegen : MedExome+Mitome (DefCap027)"));
+         values.add(DescriptionFactory.newValue("CAD","CAD - Roche-Nimblegen : MedExome (DefCap026)"));// !! aussi dans ProcessServiceCNG / getCaptureLibProcessTypeCodeValues
+         values.add(DescriptionFactory.newValue("CAE","CAE - Roche-Nimblegen : MedExome+Mitome (DefCap027)"));
          values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028)")); // NGL-1584 ajout
          
          // codes for DNA sequencing
@@ -210,7 +230,8 @@ public class ImportServiceCNG extends AbstractImportService {
         values.add(DescriptionFactory.newValue("DF","DF - Ancient DNASeq"));  // ajout 22/11/2017 NGL-1712
         
         // 04/10/2017 ajout des codes pour import Capture
-        values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028")); // NGL-1584 ajout
+        values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028)"));// NGL-1584 ajout
+        values.add(DescriptionFactory.newValue("CAD","CAD - Roche-NimbleGen : MedExome (DefCap026)"));// ajout 28/02/2018
 
         return values;
 	}

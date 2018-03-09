@@ -64,6 +64,10 @@ public class Input extends AbstractInput {
 					codePropertiesConcDil="concentrationDilHS2";
 					codePropertiesConcFinal="concentrationHS2";
 					codePropertiesDilFactor="dilutionFactorHS2";
+				}else if(typeQC.equals("HS3")){
+					codePropertiesConcDil="concentrationDilHS3";
+					codePropertiesConcFinal="concentrationHS3";
+					codePropertiesDilFactor="dilutionFactorHS3";
 				}else{
 					contextValidation.addErrors("Erreur gamme", "Code gamme non géré : "+typeQC);	
 				}
@@ -119,7 +123,8 @@ public class Input extends AbstractInput {
 			if(null != dilFactor){
 				PropertySingleValue finalConcentration = getPSV(icu,codePropertiesConcFinal);
 				finalConcentration.unit = concentrationDil.unit;
-				finalConcentration.value = new BigDecimal(dilFactor * (Double)concentrationDil.value).setScale(2, RoundingMode.HALF_UP);	
+				//finalConcentration.value = new BigDecimal(dilFactor * (Double)concentrationDil.value).setScale(2, RoundingMode.HALF_UP);	
+				finalConcentration.value = new BigDecimal((dilFactor * (Double)concentrationDil.value));	
 			}else{
 				Logger.warn("dilfactor is null after convertion"+dilutionFactor.value);
 			}

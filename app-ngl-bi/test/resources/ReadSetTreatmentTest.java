@@ -62,7 +62,7 @@ public class ReadSetTreatmentTest extends AbstractBIServerTest{
 	public void test1list()
 	{
 		Logger.debug("list ReadSetTreatment");
-		WSResponse response = WSHelper.get(ws, "/api/readsets/"+readSet.code+"/treatments", 200);
+		WSResponse response = WSHelper.getAsBot(ws, "/api/readsets/"+readSet.code+"/treatments", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 	
@@ -70,7 +70,7 @@ public class ReadSetTreatmentTest extends AbstractBIServerTest{
 	public void test2get()
 	{
 		Logger.debug("get ReadSetTreatment");
-		WSResponse response = WSHelper.get(ws, "/api/readsets/"+readSet.code+"/treatments/ngsrg", 200);
+		WSResponse response = WSHelper.getAsBot(ws, "/api/readsets/"+readSet.code+"/treatments/ngsrg", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 	
@@ -78,7 +78,7 @@ public class ReadSetTreatmentTest extends AbstractBIServerTest{
 	public void test3head()
 	{
 		Logger.debug("head ReadSetTreatment");
-		WSResponse response = WSHelper.head(ws, "/api/readsets/"+readSet.code+"/treatments/ngsrg", 200);
+		WSResponse response = WSHelper.headAsBot(ws, "/api/readsets/"+readSet.code+"/treatments/ngsrg", 200);
 		assertThat(response).isNotNull();
 	}
 	
@@ -86,7 +86,7 @@ public class ReadSetTreatmentTest extends AbstractBIServerTest{
 	public void test4save()
 	{
 		Logger.debug("save ReadSetTreatment");
-		WSHelper.post(ws, "/api/readsets/"+readSet.code+"/treatments", jsonTaxonomy, 200);
+		WSHelper.postAsBot(ws, "/api/readsets/"+readSet.code+"/treatments", jsonTaxonomy, 200);
 		readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 		Logger.debug("ReadSet "+readSet.code);
 		assertThat(readSet.treatments.get("taxonomy")).isNotNull();
@@ -99,7 +99,7 @@ public class ReadSetTreatmentTest extends AbstractBIServerTest{
 		//Get Treatment ngsrg
 		Treatment taxonomy = readSet.treatments.get("taxonomy");
 		taxonomy.results.get("read1").put("software", new PropertySingleValue("kraken"));
-		WSHelper.putObject(ws, "/api/readsets/"+readSet.code+"/treatments/taxonomy", taxonomy, 200);
+		WSHelper.putObjectAsBot(ws, "/api/readsets/"+readSet.code+"/treatments/taxonomy", taxonomy, 200);
 		readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 		assertThat(readSet.treatments.get("taxonomy").results.get("read1").get("software").getValue()).isEqualTo("kraken");
 	}
@@ -108,7 +108,7 @@ public class ReadSetTreatmentTest extends AbstractBIServerTest{
 	public void test6delete()
 	{
 		Logger.debug("delete ReadSetTreatment");
-		WSHelper.delete(ws,"/api/readsets/"+readSet.code+"/treatments/taxonomy",200);
+		WSHelper.deleteAsBot(ws,"/api/readsets/"+readSet.code+"/treatments/taxonomy",200);
 		readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 		assertThat(readSet.treatments.get("taxonomy")).isNull();
 	}
