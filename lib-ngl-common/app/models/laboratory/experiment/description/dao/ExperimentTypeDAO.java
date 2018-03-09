@@ -21,6 +21,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
+import fr.cea.ig.mongo.MongoDeprecation;
 import play.Logger;
 //import play.Logger;
 import play.api.modules.spring.Spring;
@@ -74,7 +75,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		if (deleteBefore) {
 			removeSampleTypes(id);
 		}
-		if (sampleTypes!=null && sampleTypes.size() > 0) {
+		if (sampleTypes != null && sampleTypes.size() > 0) {
 			String sql = "INSERT INTO experiment_type_sample_type (fk_experiment_type, fk_sample_type) VALUES(?,?)";
 			for(SampleType sampleType:sampleTypes){
 				if(sampleType == null || sampleType.id == null ){
@@ -158,8 +159,8 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 				
 				+" where cpt.code = ? and pet.position_in_process > -1";
 		
-		int result = jdbcTemplate.queryForInt(sql, processTypeCode);
-		
+//		int result = jdbcTemplate.queryForInt(sql, processTypeCode);
+		int result = MongoDeprecation.queryForInt(jdbcTemplate, sql, processTypeCode);		
 		return Integer.valueOf(result);
 		
 	}

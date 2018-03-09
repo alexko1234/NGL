@@ -22,6 +22,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
+import fr.cea.ig.mongo.MongoDeprecation;
+
 // import fr.cea.ig.play.NGLContext;
 
 // import play.Logger;
@@ -102,7 +104,7 @@ public abstract class AbstractDAO<T> {
 			try {
 				String sql = "select id from " + tableName + " WHERE code=?";
 //				long id = jdbcTemplate.queryForLong(sql, code);
-				long id = queryForLong(jdbcTemplate, sql, code);				
+				long id = MongoDeprecation.queryForLong(jdbcTemplate, sql, code);				
 				/*if (id > 0) {
 					return Boolean.TRUE;
 				} else {
@@ -180,11 +182,6 @@ public abstract class AbstractDAO<T> {
 //			cache().remove(entityClass.toString() + "." + ((Model)o).code);
 			cache().remove(key(((Model<?>)o).code));
 		});
-	}
-
-	public static long queryForLong(JdbcTemplate t, String sql, Object... args) {
-		Long l = t.queryForObject(sql, Long.class, args);
-		return l == null ? 0 : l.longValue();
 	}
 	
 //	public static long queryForLong(SimpleJdbcTemplate t, String sql, Object... args) {

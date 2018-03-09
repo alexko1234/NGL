@@ -18,7 +18,7 @@ import play.api.modules.spring.Spring;
 // TODO: fix serialization uid but not serializable
 // TODO: fix @JsonIgnore, seems overkill
 
-// Lighter version, requires the class.
+// Lighter version, only requires the DAO class.
 interface IDAOCSupplier<T,U extends AbstractDAO<T>> {
 	default U getDAO() { return Spring.getBeanOfType(daoClass()); }
 	Class<U> daoClass();
@@ -55,6 +55,9 @@ public abstract class Model<T> {
 		this.classNameDAO = classNameDAO;
 	}
 
+	// This is a covariance warning that cannot be suppressed even using
+	// Model<T extends Model<T>>. Could require that subclasses provide the
+	// proper definition.
 	public T self() { return (T)this; }
 	
 	@JsonIgnore

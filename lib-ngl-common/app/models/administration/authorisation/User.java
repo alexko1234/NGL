@@ -42,6 +42,9 @@ public class User extends Model<User> {
 	public List<Application> applications;
 	public Boolean active;
 
+//	@Override
+//	public User self() { return this; }
+	
 	public User() {
 		super(UserDAO.class.getName());
 	}

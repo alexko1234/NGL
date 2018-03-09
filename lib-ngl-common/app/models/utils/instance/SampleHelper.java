@@ -22,7 +22,7 @@ import models.utils.InstanceConstants;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
-import play.Logger;
+//import play.Logger;
 // import play.Play;
 import rules.services.RulesServices6;
 import validation.ContextValidation;
@@ -30,6 +30,8 @@ import validation.utils.ValidationConstants;
 import fr.cea.ig.MongoDBDAO;
 
 public class SampleHelper {
+	
+	private static play.Logger.ALogger logger = play.Logger.of(SampleHelper.class);
 	
 	/* 10/11/2016 GA DO NOT USED ANYMORE
 	public static void updateSampleProperties(String sampleCode, Map<String,PropertyValue>  properties,ContextValidation contextValidation){
@@ -70,18 +72,18 @@ public class SampleHelper {
 		ContextValidation ctx = new ContextValidation(contextValidation.getUser());
 //		List<String> sampleCodes=new ArrayList<String>();
 		if (MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("sampleOnContainer.sampleCode",sampleCode))) {
-			Logger.debug("Sample "+sampleCode+" dans ReadSet");
+			logger.debug("Sample "+sampleCode+" dans ReadSet");
 			ctx.addErrors("readSet.sampleOnContainer.sampleCode","Code {0} existe dans ReadSet" , sampleCode);
 		}		
 		if (MongoDBDAO.checkObjectExist(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.notEquals("categoryCode","tube").in("sampleCodes", sampleCode))){
-			Logger.debug("Sample "+sampleCode+" dans Container");
+			logger.debug("Sample "+sampleCode+" dans Container");
 			ctx.addErrors("container.sampleOnContainer.sampleCode","Code {0} existe dans ReadSet" , sampleCode);
 		}
 		if (!ctx.hasErrors()) {
 			MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.in("sampleCodes", sampleCode).notExists("fromTransformationTypeCodes"));
-			Logger.info("Delete container for sampleCode "+sampleCode);
+			logger.info("Delete container for sampleCode "+sampleCode);
 			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME,Sample.class,DBQuery.is("code", sampleCode));
-			Logger.info("Delete sample for sampleCode "+sampleCode);
+			logger.info("Delete sample for sampleCode "+sampleCode);
 		} else {
 			return false;
 		}
