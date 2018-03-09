@@ -27,9 +27,9 @@ import play.data.validation.ValidationError;
 import utils.AbstractTests;
 
 @Singleton  
-public class ProjectAPITest extends AbstractTests {
+public class ProjectsAPITest extends AbstractTests {
 
-	private static final play.Logger.ALogger logger = play.Logger.of(ProjectAPITest.class);
+	private static final play.Logger.ALogger logger = play.Logger.of(ProjectsAPITest.class);
 
 	private static ProjectsAPI api;
 

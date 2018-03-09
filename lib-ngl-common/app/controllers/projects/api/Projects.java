@@ -165,18 +165,6 @@ public class Projects extends NGLController implements APINGLController, NGLForm
 		}
 	}
 	
-	private Map<String, List<ValidationError>> mapErrors(List<ValidationError> formErrors) {
-		Map<String, List<ValidationError>> map = new TreeMap<String, List<ValidationError>>(); 
-		formErrors.forEach(ve -> {
-			if(map.containsKey(ve.key())) {
-				map.get(ve.key()).add(ve);
-			} else {
-				map.put(ve.key(), Arrays.asList(ve));
-			}
-		});
-		return map;
-	}
-	
 	// TODO factoriser avec class fr.cea.ig.mongo.QueryBuilder
 	private Query getQuery(ProjectsSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
