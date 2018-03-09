@@ -90,10 +90,10 @@ public class ReleaseServices  {
 //		System.out.println("submissionCode=" + submissionCode);
 		logger.debug("submissionCode = {}", submissionCode);
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
-		Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, submission.studyCode);
 
 		if (submission == null) 
 			throw new SraException("soumission " + submissionCode + " impossible à recuperer dans base");
+		Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, submission.studyCode);
 		if (! retourEbiRelease.exists())
 			throw new SraException("Fichier resultat de l'ebi pour la release absent des disques : " + retourEbiRelease.getAbsolutePath());
 		if (!submission.release)

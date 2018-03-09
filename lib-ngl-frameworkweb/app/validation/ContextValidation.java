@@ -108,10 +108,13 @@ public class ContextValidation {
 	 * @param <T> expected object type
 	 * @return    typed object
 	 */
-	@SuppressWarnings("unchecked")
+//	@SuppressWarnings("unchecked")
 	public <T> T getTypedObject(String key){
 		if (contextObjects.containsKey(key)) {
-			return (T)contextObjects.get(key);
+//			return (T)contextObjects.get(key);
+			@SuppressWarnings("unchecked") // No way to type from context objects
+			T t = (T)contextObjects.get(key);
+			return t;
 		} else {
 			return null;
 		}

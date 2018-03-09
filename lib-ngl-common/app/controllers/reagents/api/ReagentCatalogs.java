@@ -56,7 +56,8 @@ public class ReagentCatalogs extends DocumentController<ReagentCatalog> {
 		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), ReagentCatalogFilledForm);
 		contextValidation.setCreationMode();
 		
-		reagentCatalog = (ReagentCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, reagentCatalog, contextValidation);
+//		reagentCatalog = (ReagentCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, reagentCatalog, contextValidation);
+		reagentCatalog = InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, reagentCatalog, contextValidation);
 		if (contextValidation.hasErrors())
 			return badRequest(errorsAsJson(contextValidation.getErrors()));
 		return ok(Json.toJson(reagentCatalog));
@@ -71,7 +72,8 @@ public class ReagentCatalogs extends DocumentController<ReagentCatalog> {
 		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), reagentCatalogFilledForm);
 		contextValidation.setUpdateMode();
 
-		reagentCatalog = (ReagentCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, reagentCatalog, contextValidation);
+//		reagentCatalog = (ReagentCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, reagentCatalog, contextValidation);
+		reagentCatalog = InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, reagentCatalog, contextValidation);
 		if (contextValidation.hasErrors())
 			return badRequest(errorsAsJson(contextValidation.getErrors()));
 		return ok(Json.toJson(reagentCatalog));

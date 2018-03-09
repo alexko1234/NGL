@@ -76,7 +76,8 @@ public class Reagents extends DocumentController<Reagent> {
 		/*if(ValidationHelper.required(contextValidation, reagent.name, "name")){
 			reagentCatalog.code = CodeHelper.getInstance().generateReagentCatalogCode(reagentCatalog.name);
 		}*/
-		reagent = (Reagent)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, reagent, contextValidation);
+//		reagent = (Reagent)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, reagent, contextValidation);
+		reagent = InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, reagent, contextValidation);
 		if (contextValidation.hasErrors())
 			return badRequest(errorsAsJson(contextValidation.getErrors()));
 		return ok(Json.toJson(reagent));
@@ -94,7 +95,8 @@ public class Reagents extends DocumentController<Reagent> {
 		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), reagentFilledForm);
 		contextValidation.setUpdateMode();
 
-		reagent = (Reagent)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, reagent, contextValidation);
+//		reagent = (Reagent)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, reagent, contextValidation);
+		reagent = InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, reagent, contextValidation);
 		if (contextValidation.hasErrors())
 			return badRequest(errorsAsJson(contextValidation.getErrors()));
 		return ok(Json.toJson(reagent));

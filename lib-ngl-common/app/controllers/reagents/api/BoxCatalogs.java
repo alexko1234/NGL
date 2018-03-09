@@ -61,7 +61,8 @@ public class BoxCatalogs extends DocumentController<BoxCatalog> {
 			} else {
 				contextValidation.setUpdateMode();
 			}
-			boxCatalog = (BoxCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, boxCatalog, contextValidation);
+//			boxCatalog = (BoxCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, boxCatalog, contextValidation);
+			boxCatalog = InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, boxCatalog, contextValidation);
 		}
 		if (contextValidation.hasErrors())
 			return badRequest(errorsAsJson(contextValidation.getErrors()));
@@ -76,7 +77,8 @@ public class BoxCatalogs extends DocumentController<BoxCatalog> {
 		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), boxCatalogFilledForm);
 		contextValidation.setUpdateMode();
 		
-		boxCatalog = (BoxCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, boxCatalog, contextValidation);
+//		boxCatalog = (BoxCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, boxCatalog, contextValidation);
+		boxCatalog = InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, boxCatalog, contextValidation);
 		if (contextValidation.hasErrors())
 			return badRequest(errorsAsJson(contextValidation.getErrors()));
 		return ok(Json.toJson(boxCatalog));

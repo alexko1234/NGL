@@ -84,7 +84,8 @@ public class Boxes extends DocumentController<Box> {
 			box.kitCode = box.code;
 		}
 		
-		box = (Box)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, box, contextValidation);
+//		box = (Box)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, box, contextValidation);
+		box = InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, box, contextValidation);
 		if (!contextValidation.hasErrors()) {
 			return ok(Json.toJson(box));
 		} else {
@@ -104,7 +105,8 @@ public class Boxes extends DocumentController<Box> {
 		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), boxFilledForm);
 		contextValidation.setUpdateMode();
 
-		box = (Box)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, box, contextValidation);
+//		box = (Box)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, box, contextValidation);
+		box = InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, box, contextValidation);
 		if (!contextValidation.hasErrors()) { 
 			return ok(Json.toJson(box));
 		} else {

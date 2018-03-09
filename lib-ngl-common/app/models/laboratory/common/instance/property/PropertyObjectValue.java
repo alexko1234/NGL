@@ -64,17 +64,16 @@ public class PropertyObjectValue extends PropertyValue {
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		super.validate(contextValidation);
-		@SuppressWarnings("unchecked") // Uncheckable access to validation context object
-		Iterator<PropertyDefinition> propertyDefinitions = ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).iterator();
-		while (propertyDefinitions.hasNext()) {
-			PropertyDefinition propertyDefinition = propertyDefinitions.next();
-			if (ValidationHelper.checkIfActive(contextValidation, propertyDefinition)) {
-				if (ValidationHelper.required(contextValidation, this, propertyDefinition)) {				
-					if (ValidationHelper.convertPropertyValue(contextValidation, this, propertyDefinition)) {
-						ValidationHelper.checkIfExistInTheList(contextValidation, this, propertyDefinition);
-						// TODO: FORMAT AND UNIT
-					}
-				}
+//		@SuppressWarnings("unchecked") // Uncheckable access to validation context object
+//		Iterator<PropertyDefinition> propertyDefinitions = ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).iterator();
+//		while (propertyDefinitions.hasNext()) {
+//			PropertyDefinition propertyDefinition = propertyDefinitions.next();
+		for (PropertyDefinition propertyDefinition : contextValidation.<Collection<PropertyDefinition>>getTypedObject("propertyDefinitions")) {
+			if (ValidationHelper.checkIfActive(contextValidation, propertyDefinition) 
+						&& ValidationHelper.required(contextValidation, this, propertyDefinition)
+						&& ValidationHelper.convertPropertyValue(contextValidation, this, propertyDefinition)) {
+				ValidationHelper.checkIfExistInTheList(contextValidation, this, propertyDefinition);
+				// TODO: FORMAT AND UNIT
 			}
 		}
 	}

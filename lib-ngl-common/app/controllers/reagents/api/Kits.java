@@ -76,7 +76,8 @@ public class Kits extends DocumentController<Kit>{
 		/*if(ValidationHelper.required(contextValidation, kit.name, "name")){
 				kitCatalog.code = CodeHelper.getInstance().generateKitCatalogCode(kitCatalog.name);
 			}*/
-		kit = (Kit)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, kit, contextValidation);
+//		kit = (Kit)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, kit, contextValidation);
+		kit = InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, kit, contextValidation);
 		if (contextValidation.hasErrors())
 			return badRequest(errorsAsJson(contextValidation.getErrors()));
 		return ok(Json.toJson(kit));
@@ -95,7 +96,8 @@ public class Kits extends DocumentController<Kit>{
 		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), kitFilledForm);
 		contextValidation.setUpdateMode();
 
-		kit = (Kit)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, kit, contextValidation);
+//		kit = (Kit)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, kit, contextValidation);
+		kit = InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, kit, contextValidation);
 		if (contextValidation.hasErrors())
 			return badRequest(errorsAsJson(contextValidation.getErrors()));
 		return ok(Json.toJson(kit));

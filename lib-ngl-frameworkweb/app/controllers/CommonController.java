@@ -137,11 +137,13 @@ public abstract class CommonController extends Controller {
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
 	 */
-	@SuppressWarnings("unchecked")
+//	@SuppressWarnings("unchecked")
 	protected static <T> T filledFormQueryString(Class<T> clazz) {		
 		try {
 			Map<String, String[]> queryString = request().queryString();
-			BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(clazz.newInstance());
+//			BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(clazz.newInstance());
+			T wrapped = clazz.newInstance();
+			BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(wrapped);
 			wrapper.setAutoGrowNestedPaths(true);
 			for (String key : queryString.keySet()) {
 				try {
@@ -163,7 +165,8 @@ public abstract class CommonController extends Controller {
 				} 
 	
 			}
-			return (T)wrapper.getWrappedInstance();
+//			return (T)wrapper.getWrappedInstance();
+			return wrapped;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} 

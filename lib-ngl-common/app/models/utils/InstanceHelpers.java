@@ -171,7 +171,28 @@ public class InstanceHelpers {
 			.collect(Collectors.toSet());			
 	}
 	
-	public static DBObject save(String collectionName, IValidation obj, ContextValidation contextError, Boolean keepRootKeyName) {
+//	public static DBObject save(String collectionName, IValidation obj, ContextValidation contextError, Boolean keepRootKeyName) {
+//		ContextValidation localContextError = new ContextValidation(contextError.getUser());
+//		localContextError.setMode(contextError.getMode());
+//		if (keepRootKeyName) {
+//			localContextError.addKeyToRootKeyName(contextError.getRootKeyName());
+//		}
+//		localContextError.setContextObjects(contextError.getContextObjects());
+//		if (obj != null) {
+//			obj.validate(localContextError);
+//		} else {
+//			throw new IllegalArgumentException("missing object to validate");
+//		}
+//
+//		if (localContextError.errors.size() == 0) {
+//			return MongoDBDAO.save(collectionName, (DBObject) obj);
+//		} else {
+//			contextError.errors.putAll(localContextError.errors);
+//			logger.info("error(s) on output :: " + contextError.errors.toString());
+//			return null;
+//		}
+//	}
+	public static <T extends DBObject & IValidation> T save(String collectionName, T obj, ContextValidation contextError, Boolean keepRootKeyName) {
 		ContextValidation localContextError = new ContextValidation(contextError.getUser());
 		localContextError.setMode(contextError.getMode());
 		if (keepRootKeyName) {
@@ -185,7 +206,8 @@ public class InstanceHelpers {
 		}
 
 		if (localContextError.errors.size() == 0) {
-			return MongoDBDAO.save(collectionName, (DBObject) obj);
+//			return MongoDBDAO.save(collectionName, (DBObject) obj);
+			return MongoDBDAO.save(collectionName, obj);
 		} else {
 			contextError.errors.putAll(localContextError.errors);
 			logger.info("error(s) on output :: " + contextError.errors.toString());
@@ -193,31 +215,37 @@ public class InstanceHelpers {
 		}
 	}
 
-	public static DBObject save(String collectionName, IValidation obj, ContextValidation contextError) {
+//	public static DBObject save(String collectionName, IValidation obj, ContextValidation contextError) {
+//		return save(collectionName, obj, contextError, false);
+//	}
+	public static <T extends DBObject & IValidation> T save(String collectionName, T obj, ContextValidation contextError) {
 		return save(collectionName, obj, contextError, false);
 	}
 
-	public static <T extends DBObject> List<T> save(String collectionName, List<T> objects,	ContextValidation contextErrors) {
+	public static <T extends DBObject & IValidation> List<T> save(String collectionName, List<T> objects, ContextValidation contextErrors) {
 		List<T> dbObjects = new ArrayList<T>();
-		for (DBObject object : objects) {
-			@SuppressWarnings("unchecked")
-			T result = (T) InstanceHelpers.save(collectionName, (IValidation) object, contextErrors);
-			if (result != null) {
+//		for (DBObject object : objects) {
+		for (T object : objects) {
+//			@SuppressWarnings("unchecked")
+//			T result = (T) InstanceHelpers.save(collectionName, (IValidation) object, contextErrors);
+//			T result = (T) InstanceHelpers.save(collectionName, (IValidation)object, contextErrors);
+			T result = save(collectionName, object, contextErrors);
+			if (result != null)
 				dbObjects.add(result);
-			}
 		}
 //		return (List<T>) dbObjects;
 		return dbObjects;
 	}
 
-	public static <T extends DBObject> List<T> save(String collectionName, List<T> objects,	ContextValidation contextErrors, Boolean keepRootKeyName) {
+	public static <T extends DBObject& IValidation> List<T> save(String collectionName, List<T> objects,	ContextValidation contextErrors, Boolean keepRootKeyName) {
 		List<T> dbObjects = new ArrayList<T>();
-		for (DBObject object : objects) {
-			@SuppressWarnings("unchecked")
-			T result = (T) InstanceHelpers.save(collectionName, (IValidation) object, contextErrors, keepRootKeyName);
-			if (result != null) {
+//		for (DBObject object : objects) {
+		for (T object : objects) {
+//			@SuppressWarnings("unchecked")
+//			T result = (T) InstanceHelpers.save(collectionName, (IValidation) object, contextErrors, keepRootKeyName);
+			T result = save(collectionName, object, contextErrors, keepRootKeyName);
+			if (result != null) 
 				dbObjects.add(result);
-			}
 		}
 //		return (List<T>) dbObjects;
 		return dbObjects;

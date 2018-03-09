@@ -59,7 +59,7 @@ public abstract class Model<T> {
 	// Model<T extends Model<T>>. Could require that subclasses provide the
 	// proper definition so the subclasses can "prove" that they are indeed a T.
 	@SuppressWarnings("unchecked") // solution is to abstract this method and define in subclasses
-	public T self() { return (T)this; }
+	private T self() { return (T)this; }
 	
 	@JsonIgnore
 //	@SuppressWarnings("unchecked")
@@ -82,11 +82,17 @@ public abstract class Model<T> {
 		getInstance().remove(self());
 	}
 
-	// Get a copy of this object from the DB
+	// Get a copy of this object from the DB, existsIbDB is 
+	// better as it does not imply any type. Note that if t does
+	// not exist in db, update should just fail.
 	public Model<T> fromDB() throws DAOException {
 		@SuppressWarnings("unchecked") // Can possibly be avoided using Model<T extends Model<T>> or not
 		Model<T> m  = (Model<T>)getInstance().findByCode(code);
 		return m;
+	}
+	
+	public boolean existsInDB() throws DAOException {
+		return getInstance().isCodeExist(code);
 	}
 	
 	@JsonIgnore
@@ -107,6 +113,7 @@ public abstract class Model<T> {
 		}
 	}
 	
+	// Would replace 
 	protected abstract Class<? extends AbstractDAO<T>> daoClass();
 	
 //	public AbstractDAO<T> getInstance() throws DAOException { return Spring.getBeanOfType(getDAOClass()); }

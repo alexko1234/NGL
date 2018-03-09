@@ -70,7 +70,8 @@ public class KitCatalogs extends DocumentController<KitCatalog> {
 		contextValidation.setCreationMode();
 		if (ValidationHelper.required(contextValidation, kitCatalog.name, "name")) {
 			kitCatalog.code = ReagentCodeHelper.getInstance().generateKitCatalogCode();
-			kitCatalog = (KitCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, kitCatalog, contextValidation);
+//			kitCatalog = (KitCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, kitCatalog, contextValidation);
+			kitCatalog = InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, kitCatalog, contextValidation);
 		}
 		if (contextValidation.hasErrors())
 			return badRequest(errorsAsJson(contextValidation.getErrors()));
@@ -86,7 +87,8 @@ public class KitCatalogs extends DocumentController<KitCatalog> {
 		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), kitCatalogFilledForm);
 		contextValidation.setUpdateMode();
 		
-		kitCatalog = (KitCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, kitCatalog, contextValidation);
+//		kitCatalog = (KitCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, kitCatalog, contextValidation);
+		kitCatalog = InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, kitCatalog, contextValidation);
 		if (contextValidation.hasErrors())
 			return badRequest(errorsAsJson(contextValidation.getErrors()));
 		return ok(Json.toJson(kitCatalog));

@@ -2,6 +2,7 @@ package models.laboratory.common.instance.property;
 
 import java.util.Collection;
 
+import static fr.cea.ig.lfw.utils.Iterables.first;
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;
 import models.laboratory.common.description.PropertyDefinition;
@@ -41,8 +42,9 @@ public class PropertyByteValue extends PropertyValue {
 	@Override
 	public void validate(ContextValidation contextValidation) { 
 		super.validate(contextValidation);
-		@SuppressWarnings("unchecked") // uncheckable access to validation context object 
-		PropertyDefinition propertyDefinition = (PropertyDefinition) ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).toArray()[0];
+//		@SuppressWarnings("unchecked") // uncheckable access to validation context object 
+//		PropertyDefinition propertyDefinition = (PropertyDefinition) ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).toArray()[0];
+		PropertyDefinition propertyDefinition = first(contextValidation.<Collection<PropertyDefinition>>getTypedObject("propertyDefinitions")).orElse(null);
 		if (ValidationHelper.checkIfActive(contextValidation, propertyDefinition)) {
 			ValidationHelper.required(contextValidation, this, propertyDefinition); 
 		}		

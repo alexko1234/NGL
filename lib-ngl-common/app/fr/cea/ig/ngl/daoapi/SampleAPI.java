@@ -185,7 +185,7 @@ public class SampleAPI extends CRUDAPI<Sample> {
 			// Fetch the current version of the sample
 			Sample past = dao.getByCode(code.getCode()); // more present than past
 			// Create current version by cloning and updating.
-			Sample future = deepClone(past);
+			Sample future = deepClone(Sample.class,past);
 			// Apply field modification.
 			// for (Function<Sample,Sample> f : new ArrayList<Function<Sample,Sample>>())
 			// 	future = f.apply(future);
@@ -257,9 +257,10 @@ public class SampleAPI extends CRUDAPI<Sample> {
 	}
 	
 	// Moved to the DeepClonable interface
-	@SuppressWarnings("unchecked")
-	public static <T> T deepClone(T t) {
-		return Json.fromJson(Json.toJson(t),(Class<T>)t.getClass());
+	// @SuppressWarnings("unchecked")
+	public static <T> T deepClone(Class<T> c, T t) {
+//		return Json.fromJson(Json.toJson(t),(Class<? extends T>)t.getClass());
+		return Json.fromJson(Json.toJson(t),c);
 	}
 	
 	// Delete is done by code so a single delete method is ok.

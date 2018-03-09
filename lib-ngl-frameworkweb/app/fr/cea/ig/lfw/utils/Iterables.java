@@ -41,6 +41,8 @@ public class Iterables {
 	}
 	
 	public static <A> Optional<A> first(Iterable<A> i) {
+		if (i == null)
+			return Optional.empty();			
 		for (A a : i)
 			return Optional.of(a);
 		return Optional.empty();
@@ -48,8 +50,9 @@ public class Iterables {
 	
 	public static <A> List<A> toList(Iterable<A> i) {
 		List<A> l = new ArrayList<>();
-		for (A a : i)
-			l.add(a);
+		if (i != null)
+			for (A a : i)
+				l.add(a);
 		return l;
 	}
 	
@@ -58,8 +61,9 @@ public class Iterables {
 	}
 	
 	public static <A,B> B foldr(Iterable<A> i, B b, BiFunction<B,A,B> f) {
-		for (A a : i)
-			b = f.apply(b, a);
+		if (i != null)
+			for (A a : i)
+				b = f.apply(b, a);
 		return b;
 	}
 	

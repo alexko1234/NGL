@@ -57,7 +57,7 @@ public class PropertiesFieldConfiguration extends AbstractFieldConfiguration {
 		populateField(field, dbObject, properties);		
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // untypable recursive reflection
 	private Map<String, PropertyValue> getProperties(Field field, Object dbObject, Action action) throws IllegalAccessException {
 		Map<String,PropertyValue> properties = null;
 		if (Action.update.equals(action))

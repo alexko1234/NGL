@@ -53,27 +53,26 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		Sample newSample =null;
 		String rootKeyName=null;
 	
-		List<Container> containersList=new ArrayList<Container>(containers);
-		for(Container container :containersList){
-
+		List<Container> containersList = new ArrayList<Container>(containers);
+		for (Container container : containersList) {
 			List<Content> contents;
-			if(sqlContent!=null){	
-						contents=new ArrayList<Content>(limsServices.findContentsFromContainer(sqlContent,container.code));
-			}else{
-						contents=new ArrayList<Content>(container.contents);
+			if (sqlContent != null) {	
+				contents = new ArrayList<>(limsServices.findContentsFromContainer(sqlContent,container.code));
+			} else {
+				contents = new ArrayList<>(container.contents);
 			}
-	
 
-			for(Content content : contents){
+			for (Content content : contents) {
 				/* Sample content not in MongoDB */
-				if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, content.sampleCode)){
+				if (!MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, content.sampleCode)) {
 					rootKeyName="sample["+content.sampleCode+"]";
 					contextError.addKeyToRootKeyName(rootKeyName);
 					
 					sample = limsServices.findSampleToCreate(contextError,content.sampleCode);
 	
-					if(sample!=null){
-						newSample =(Sample) InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,contextError,true);
+					if (sample != null) {
+//						newSample =(Sample) InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,contextError,true);
+						newSample = InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,contextError,true);
 						content.referenceCollab=newSample.referenceCollab;
 						content.taxonCode = newSample.taxonCode;
 						content.ncbiScientificName = newSample.ncbiScientificName;
@@ -81,27 +80,23 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 							limsServices.updateMaterielLims(newSample, contextError);
 						}
 					}
-					
 					contextError.removeKeyFromRootKeyName(rootKeyName);
-	
-				}else {	
+				} else {	
 					/* Find sample in Mongodb */
 					newSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, content.sampleCode);
 					content.referenceCollab=newSample.referenceCollab;
 					content.taxonCode = newSample.taxonCode;
 					content.ncbiScientificName = newSample.ncbiScientificName;
-					
 				}			
 	
 				rootKeyName="container["+container.code+"]";
 				contextError.addKeyToRootKeyName(rootKeyName);
 	
 				/* Error : No sample, remove container from list to create */
-				if(newSample==null){
+				if (newSample == null) {
 					containers.remove(container);
 					contextError.addErrors("sample","error.codeNotExist", content.sampleCode);
-				}
-				else{
+				} else{
 					/* From sample, add content in container */
 					container.contents.remove(content);
 					ContainerHelper.addContent(container, newSample, content);
@@ -150,7 +145,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		}
 
 		//List of other containers also in NGL associed to support to create 
-		List<Container> containersSupportContainers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code", supportContainers)).toList();
+		List<Container> containersSupportContainers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code", supportContainers)).toList();
 		logger.debug("Nb container  support"+containersSupportContainers.size());
 		containersSupportContainers.addAll(containers);
 		
@@ -163,10 +158,10 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 			//Logger.debug("Container :"+container.code+ "nb sample code"+container.sampleCodes.size());
 			rootKeyName = "container[" + container.code + "]";
 			contextError.addKeyToRootKeyName(rootKeyName);
-			Container result=(Container) InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME,container, contextError,true);
-			if (result != null) {
+//			Container result=(Container) InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME,container, contextError,true);
+			Container result = InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME,container, contextError,true);
+			if (result != null)
 				newContainers.add(result);
-			}
 			contextError.removeKeyFromRootKeyName(rootKeyName);
 		}
 		

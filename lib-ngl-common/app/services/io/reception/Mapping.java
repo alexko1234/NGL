@@ -74,7 +74,8 @@ public abstract class Mapping<T extends DBObject> {
 			if (objectInDB != null) {
 				contextValidation.addErrors("Error", "error.objectexist", type.getSimpleName(), objectInDB.code);
 			} else if (object.code != null) {
-				// TODO: use properly typed separate object collections so the cast is not needed
+				// TODO: probably use properly typed separate object collections so the cast is not needed
+				@SuppressWarnings("unchecked")
 				T objectInObjects = (T)objects.get(key.toString()).get(object.code);
 				if (objectInObjects != null) {
 					object = objectInObjects;

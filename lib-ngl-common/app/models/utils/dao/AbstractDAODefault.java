@@ -49,7 +49,7 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 		this.usedInstitute = usedInstitute;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // untypeable DB metadata access 
 	private List<String> getColumns() throws MetaDataAccessException {
 		return (List<String>)JdbcUtils.extractDatabaseMetaData(dataSource, new ColumnMetaDataCallback(tableName));
 	}

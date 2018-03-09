@@ -3,6 +3,7 @@ package models.laboratory.common.instance.property;
 import static fr.cea.ig.lfw.utils.Hashing.hash;
 import static fr.cea.ig.lfw.utils.Equality.objectEquals;
 import static fr.cea.ig.lfw.utils.Equality.typedEquals;
+import static fr.cea.ig.lfw.utils.Iterables.first;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -44,8 +45,9 @@ public class PropertyFileValue extends PropertyByteValue {
 		
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		@SuppressWarnings("unchecked") // Uncheckable access to validation context object 
-		PropertyDefinition propertyDefinition = (PropertyDefinition) ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).toArray()[0];
+//		@SuppressWarnings("unchecked") // Uncheckable access to validation context object 
+//		PropertyDefinition propertyDefinition = (PropertyDefinition) ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).toArray()[0];
+		PropertyDefinition propertyDefinition = first(contextValidation.<Collection<PropertyDefinition>>getTypedObject("propertyDefinitions")).orElse(null);
 		super.validate(contextValidation);
 		ValidationHelper.required(contextValidation, this.fullname, propertyDefinition.code + ".fullname");
 		ValidationHelper.required(contextValidation, this.extension, propertyDefinition.code + ".extension");

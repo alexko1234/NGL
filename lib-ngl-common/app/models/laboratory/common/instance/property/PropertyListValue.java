@@ -3,6 +3,7 @@ package models.laboratory.common.instance.property;
 import static fr.cea.ig.lfw.utils.Hashing.hash;
 import static fr.cea.ig.lfw.utils.Equality.objectEquals;
 import static fr.cea.ig.lfw.utils.Equality.typedEquals;
+import static fr.cea.ig.lfw.utils.Iterables.first;
 
 import java.util.Collection;
 import java.util.List;
@@ -43,17 +44,15 @@ public class PropertyListValue extends PropertyValue {
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		super.validate(contextValidation);
-		@SuppressWarnings("unchecked") // cannot access validation context object without a cast
-		PropertyDefinition propertyDefinition = (PropertyDefinition) ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).toArray()[0];
-		if(ValidationHelper.checkIfActive(contextValidation, propertyDefinition)){
-			if(ValidationHelper.required(contextValidation, this, propertyDefinition)){				
-				if(ValidationHelper.convertPropertyValue(contextValidation, this, propertyDefinition)){
-					ValidationHelper.checkIfExistInTheList(contextValidation, this, propertyDefinition);
-					//TODO FORMAT AND UNIT
-				}
-			}
-		}
-		
+//		@SuppressWarnings("unchecked") // cannot access validation context object without a cast
+//		PropertyDefinition propertyDefinition = (PropertyDefinition) ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).toArray()[0];
+		PropertyDefinition propertyDefinition = first(contextValidation.<Collection<PropertyDefinition>>getTypedObject("propertyDefinitions")).orElse(null);
+		if (ValidationHelper.checkIfActive(contextValidation, propertyDefinition)
+					&& ValidationHelper.required(contextValidation, this, propertyDefinition)				
+					&& ValidationHelper.convertPropertyValue(contextValidation, this, propertyDefinition)) {
+			ValidationHelper.checkIfExistInTheList(contextValidation, this, propertyDefinition);
+			//TODO FORMAT AND UNIT
+		}		
 	}
 	
 	@SuppressWarnings("unchecked") // value cannot be properly typed unless value is moved out of PropertyValue 
