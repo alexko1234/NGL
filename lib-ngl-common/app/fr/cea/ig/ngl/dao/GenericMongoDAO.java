@@ -2,20 +2,22 @@ package fr.cea.ig.ngl.dao;
 
 import java.util.List;
 
-import org.mongojack.DBQuery;
+import org.jongo.MongoCollection;
+import org.jongo.MongoCursor;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate.Builder;
 
 import com.mongodb.BasicDBObject;
 
-import controllers.ListForm;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
 import models.utils.dao.DAOException;
+import play.modules.jongo.MongoDBPlugin;
 
-public class GenericMongoDAO<T extends DBObject> {
+// TODO transformer cette classe en classe abstraite si on décide d'utiliser l'héritage au lieu d'une association d'objet pour les DAO "concrêtes"
+public /*abstract*/ class GenericMongoDAO<T extends DBObject> {
 	
 	private final String   collectionName;
 	private final Class<T> elementClass;
@@ -25,7 +27,12 @@ public class GenericMongoDAO<T extends DBObject> {
 		this.elementClass   = elementClass;
 	}
 	
-	// Fails hard if no instance is found
+	/**
+	 * Throw exception if no instance is found
+	 * @param q
+	 * @return
+	 * @throws DAOException
+	 */
 	public T findOne(Query q) throws DAOException {
 		T t = MongoDBDAO.findOne(collectionName, elementClass, q);
 		if (t == null)
@@ -174,6 +181,52 @@ public class GenericMongoDAO<T extends DBObject> {
 	public MongoDBResult<T> mongoDBFinderWithPagination(Query query, String orderBy, Sort orderSense, 
 														Integer pageNumber, Integer numberRecordsPerPage, BasicDBObject keys) throws DAOException {
 		return mongoDBFinder(query, orderBy, orderSense, keys).page(pageNumber, numberRecordsPerPage);
+	}
+
+	
+	public MongoCursor<T> nativeMongoDBQuery(String query){
+		MongoCollection collection = MongoDBPlugin.getCollection(this.getCollectionName());
+		return (MongoCursor<T>) collection.find(query).as(elementClass);
+	}
+	
+	/**
+	 * Construct a builder from some fields
+	 * Use to update a mongodb document
+	 * @param value
+	 * @param fields
+	 * @param clazz
+	 * @return
+	 */
+	public Builder getBuilder(T value, List<String> fields) {
+		return getBuilder(value, fields, null);
+	}
+	
+
+	/**
+	 * Construct a builder from some fields
+	 * Use to update a mongodb document
+	 * @param value
+	 * @param fields
+	 * @param prefix
+	 * @return
+	 */
+	public Builder getBuilder(T value, List<String> fields, String prefix) {
+		Builder builder = new Builder();
+		try {
+			for (String field: fields) {
+				String fieldName = (null != prefix) ? prefix + "." + field : field;
+				builder.set(fieldName, elementClass.getField(field).get(value));
+			}
+		} catch(Exception e) {
+			throw new RuntimeException(e);
+		}
+		return builder;
+	}
+	
+	/**************************************************/
+	
+	public String getCollectionName() {
+		return collectionName;
 	}
 }
 
