@@ -88,7 +88,18 @@ angular.module('home').controller('OneToVoidUvSpectrophotometryCNSCtrl',['$scope
 		}
 
 	});
-	
+	columns.push({
+		"header" : Messages("containers.table.volume") + " (µL)",
+		"property" : "inputContainerUsed.volume.value",
+		"order" : true,
+		"edit" : false,
+		"hide" : true,
+		"type" : "number",
+		"position" : 10.6,
+		"extraHeaders" : {
+			0 : Messages("experiments.inputs")
+		}
+	});
 	
 	$scope.atmService.data.setColumnsConfig(columns);
 

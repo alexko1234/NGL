@@ -236,16 +236,16 @@ public class MetaTProcess extends AbstractDeclaration {
 	
 	private static List<PropertyDefinition> getPropertyDefinitionFragmentation() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Volume à prélever", "requiredVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
+		propertyDefinitions.add(newPropertiesDefinition("Volume à prélever", "requiredVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",11, false,null, "1"));
 
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, false, null,"1"));
 
-		propertyDefinitions.add(newPropertiesDefinition("Quantité à engager","requiredQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null,
+		propertyDefinitions.add(newPropertiesDefinition("Quantité à engager","requiredQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, false, null,
 				null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",13, true,null,"1"));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Qté réelle engagée ds FRG","frgInputQuantity", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content),Double.class, true, null,
+		propertyDefinitions.add(newPropertiesDefinition("Qté réelle engagée ds FRG","frgInputQuantity", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content),Double.class, false, null,
 				null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",14, false,null,"1"));
 
 

@@ -527,6 +527,7 @@ experiments.input.error.must-be-same-out = Les categories de container en entré
 experiments.output.error.must-have-inputConc = Impossible de noter une concentration en sortie si la concentration en entrée est nulle!
 experiments.input.error.maxContainers=Maximum {0} container(s) en entrée
 experiments.input.error.maxSupports=Maximum {0} support(s) en entrée
+experiments.input.warn.unquantifiableSample= Présence d'échantillons avec conc nulle en entrée. Présence d'echantillon(s) non quantifiable(s) ou oubli quantif?
 
 experiments.output.error.maxSupports=Maximum {0} support(s) en sortie
 experiments.output.error.minSupports=Minimum {0} support(s) en sortie

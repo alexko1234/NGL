@@ -254,21 +254,47 @@ angular.module('home').controller('FragmentationCtrl',['$scope','$http', '$parse
 	$scope.updatePropertyFromUDT = function(value, col){
 		console.log("update from property : "+col.property);
 		
-		if(col.property === 'outputContainerUsed.volume.value'){
+		if(col.property === 'outputContainerUsed.volume.value' || col.property === 'inputContainerUsed.experimentProperties.requiredQuantity.value'){
 			computeRequiredVolume(value.data);
 			computeInputVolume(value.data);
 			computeInputQuantity(value.data);
 			computeBufferVolume(value.data);
-		}else if(col.property === 'inputContainerUsed.experimentProperties.requiredQuantity.value'){
+			updateVolUnquantifiableSamples(value.data);
+		}/*else if(col.property === 'inputContainerUsed.experimentProperties.requiredQuantity.value'){
 			computeRequiredVolume(value.data);
 			computeInputVolume(value.data);
 			computeInputQuantity(value.data);
 			computeBufferVolume(value.data);
-		}
+		}*/
 		
 	}
 	
-	// requiredQunatity * concentrationIn
+	var updateVolUnquantifiableSamples = function (udtData){
+		var outputVol = $parse("outputContainerUsed.volume.value")(udtData);
+		var vol = $parse("inputContainerUsed.volume.value")(udtData);
+		var conc = $parse("inputContainerUsed.concentration.value")(udtData);
+
+		var getter = $parse("inputContainerUsed.experimentProperties.bufferVolume.value");
+		var bufferVol = getter(udtData);
+		
+		var getter2 = $parse("inputContainerUsed.experimentProperties.inputVolume.value");
+		var inputVol = getter2(udtData);
+		
+		if (conc == null){
+			$scope.messages.setError(Messages('experiments.input.warn.unquantifiableSample'));		
+			console.log("UnquantifiableSample conc null");
+			if (outputVol <= vol){
+				inputVol = outputVol;	
+			}else if(outputVol > vol){
+				inputVol = vol;
+			}
+			bufferVol = outputVol - inputVol;
+			getter.assign(udtData,bufferVol);
+			getter2.assign(udtData,inputVol);
+		}
+	}
+	
+	// requiredQuantity * concentrationIn
 	var computeRequiredVolume = function(udtData){
 		var getter = $parse("inputContainerUsed.experimentProperties.requiredVolume.value");
 		var requiredVolume = getter(udtData);
@@ -292,8 +318,7 @@ angular.module('home').controller('FragmentationCtrl',['$scope','$http', '$parse
 			getter.assign(udtData, requiredVolume);
 		}else{
 			console.log("not ready to computerequiredVolume");
-		}
-		
+		}		
 	}
 	
 	
