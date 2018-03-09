@@ -36,6 +36,7 @@ import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.IGGlobals;
 
 public class CommonValidationHelper {
 	
@@ -554,7 +555,7 @@ public class CommonValidationHelper {
 		facts.addAll(objects);
 		ContextValidation validationRules = new ContextValidation(contextValidation.getUser());
 		facts.add(validationRules);
-		List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), nameRules, facts);
+		List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(IGGlobals.configuration().getString("rules.key"), nameRules, facts);
 		for (Object obj : factsAfterRules) {
 			if (ContextValidation.class.isInstance(obj)) {
 				// logger.debug("validateRules/errors " + (((ContextValidation) obj).errors.size()));

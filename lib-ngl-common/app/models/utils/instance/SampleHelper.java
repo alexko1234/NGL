@@ -26,6 +26,7 @@ import rules.services.RulesServices6;
 import validation.ContextValidation;
 import validation.utils.ValidationConstants;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.IGGlobals;
 
 public class SampleHelper {
 	
@@ -117,8 +118,7 @@ public class SampleHelper {
 	public static void executeRules(Sample sample,String rulesName){
 		ArrayList<Object> facts = new ArrayList<Object>();
 		facts.add(sample);
-		
-		List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), rulesName, facts);				
+		List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(IGGlobals.configuration().getString("rules.key"), rulesName, facts);				
 	}
 
 	public static Set<String> getSampleParent(String sampleCode) {
