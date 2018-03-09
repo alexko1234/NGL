@@ -82,7 +82,7 @@ angular.module('home').controller('OneToVoidUvSpectrophotometryCNSCtrl',['$scope
 		"order" : false,
 		"hide" : true,
 		"type" : "text",
-		"position" : 7,
+		"position" : 7.1,
 		"extraHeaders" : {
 			0 : Messages("experiments.inputs")
 		}
@@ -95,7 +95,7 @@ angular.module('home').controller('OneToVoidUvSpectrophotometryCNSCtrl',['$scope
 		"edit" : false,
 		"hide" : true,
 		"type" : "number",
-		"position" : 10.6,
+		"position" : 7.05,
 		"extraHeaders" : {
 			0 : Messages("experiments.inputs")
 		}
