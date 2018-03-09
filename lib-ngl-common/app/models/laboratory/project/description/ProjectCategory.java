@@ -5,6 +5,7 @@ import models.laboratory.common.description.AbstractCategory;
 import models.laboratory.project.description.dao.ProjectCategoryDAO;
 //TODO: fix doc generation that produces an error with the unqualified name
 import models.utils.Model.Finder;
+import models.utils.dao.AbstractDAO;
 
 public class ProjectCategory extends AbstractCategory<ProjectCategory>{
 
@@ -13,6 +14,11 @@ public class ProjectCategory extends AbstractCategory<ProjectCategory>{
 	
 	public ProjectCategory() {
 		super(ProjectCategoryDAO.class.getName());
+	}
+
+	@Override
+	protected Class<? extends AbstractDAO<ProjectCategory>> daoClass() {
+		return ProjectCategoryDAO.class;
 	}
 
 }

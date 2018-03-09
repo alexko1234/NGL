@@ -8,6 +8,7 @@ import models.laboratory.common.description.dao.PropertyDefinitionDAO;
 import models.utils.Model;
 //TODO: fix doc generation that produces an error with the unqualified name
 import models.utils.Model.Finder;
+import models.utils.dao.AbstractDAO;
 import models.utils.dao.DAOException;
 
 /**
@@ -55,6 +56,11 @@ public class PropertyDefinition extends Model<PropertyDefinition> {
 		super(PropertyDefinitionDAO.class.getName());
 	}
 
+	@Override
+	protected Class<? extends AbstractDAO<PropertyDefinition>> daoClass() {
+		return PropertyDefinitionDAO.class;
+	}
+	
 	public static class PropertyDefinitionFinder extends Finder<PropertyDefinition,PropertyDefinitionDAO> {
 
 //		public PropertyDefinitionFinder() {
@@ -78,5 +84,5 @@ public class PropertyDefinition extends Model<PropertyDefinition> {
 		}
 		
 	}
-	
+
 }

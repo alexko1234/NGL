@@ -8,6 +8,7 @@ import models.laboratory.run.description.dao.TreatmentContextDAO;
 import models.utils.Model;
 //TODO: fix doc generation that produces an error with the unqualified name
 import models.utils.Model.Finder;
+import models.utils.dao.AbstractDAO;
 
 public class TreatmentContext extends Model<TreatmentContext> {
 	
@@ -33,7 +34,11 @@ public class TreatmentContext extends Model<TreatmentContext> {
 		this.code = code;
 	}
 	
-
+	@Override
+	protected Class<? extends AbstractDAO<TreatmentContext>> daoClass() {
+		return TreatmentContextDAO.class;
+	}
+	
 	@Override
 	public int hashCode() {
 //		final int prime = 31;
@@ -61,5 +66,5 @@ public class TreatmentContext extends Model<TreatmentContext> {
 		return typedEquals(TreatmentContext.class, this, obj,
 				           (a,b) -> super.equals(obj) && objectEquals(a.name,b.name));
 	}
-	
+
 }

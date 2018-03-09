@@ -9,6 +9,7 @@ import models.laboratory.container.description.dao.ContainerCategoryDAO;
 // import models.utils.Model.Finder;
 // import models.utils.dao.DAOException;
 // import play.api.modules.spring.Spring;
+import models.utils.dao.AbstractDAO;
 
 // This link : {@link models.laboratory.container.description.ContainerCategory}
 
@@ -20,6 +21,11 @@ public class ContainerCategory extends AbstractCategory<ContainerCategory> {
 		super(ContainerCategoryDAO.class.getName());
 	}
 
+	@Override
+	protected Class<? extends AbstractDAO<ContainerCategory>> daoClass() {
+		return ContainerCategoryDAO.class;
+	}
+	
 	public static class ContainerCategoryFinder extends Finder<ContainerCategory,ContainerCategoryDAO> {
 		
 //		public ContainerCategoryFinder() {
@@ -34,5 +40,5 @@ public class ContainerCategory extends AbstractCategory<ContainerCategory> {
 		}
 		
 	}
-	
+
 }

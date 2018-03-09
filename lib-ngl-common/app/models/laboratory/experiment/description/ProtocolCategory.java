@@ -4,6 +4,7 @@ import models.laboratory.common.description.AbstractCategory;
 import models.laboratory.experiment.description.dao.ProtocolCategoryDAO;
 //TODO: fix doc generation that produces an error with the unqualified name
 import models.utils.Model.Finder;
+import models.utils.dao.AbstractDAO;
 
 public class ProtocolCategory extends AbstractCategory<ProtocolCategory> {
 
@@ -12,6 +13,11 @@ public class ProtocolCategory extends AbstractCategory<ProtocolCategory> {
 	
 	public ProtocolCategory() {
 		super(ProtocolCategoryDAO.class.getName());
+	}
+
+	@Override
+	protected Class<? extends AbstractDAO<ProtocolCategory>> daoClass() {
+		return ProtocolCategoryDAO.class;
 	}
 	
 }

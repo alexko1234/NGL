@@ -2,6 +2,7 @@ package models.laboratory.common.description;
 
 import models.laboratory.common.description.dao.InstituteDAO;
 import models.utils.Model;
+import models.utils.dao.AbstractDAO;
 
 /**
  * Value of institute (only 2 possible values : CNG {@literal &} CNS)
@@ -18,6 +19,11 @@ public class Institute extends Model<Institute> {
 	
 	public Institute() {
 		super(InstituteDAO.class.getName());
+	}
+
+	@Override
+	protected Class<? extends AbstractDAO<Institute>> daoClass() {
+		return InstituteDAO.class;
 	}
 	
 }

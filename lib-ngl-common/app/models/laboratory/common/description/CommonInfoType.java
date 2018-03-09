@@ -13,6 +13,7 @@ import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 // import models.laboratory.common.description.dao.StateDAO;
 import models.utils.ListObject;
 import models.utils.Model;
+import models.utils.dao.AbstractDAO;
 // import models.utils.Model.Finder;
 import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.DAOException;
@@ -53,6 +54,12 @@ public class CommonInfoType extends Model<CommonInfoType> {
 	protected CommonInfoType(String classNameDAO){
 		super(classNameDAO);
 	}
+	
+	@Override
+	protected Class<? extends AbstractDAO<CommonInfoType>> daoClass() {
+		throw new RuntimeException("CommmonInfoType typing limit");
+	}
+
 
 	@JsonIgnore
 	public Map<String, PropertyDefinition> getMapPropertyDefinition() {

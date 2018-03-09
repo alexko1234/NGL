@@ -4,6 +4,7 @@ import java.util.List;
 
 import models.laboratory.common.description.AbstractCategory;
 import models.laboratory.experiment.description.dao.ExperimentCategoryDAO;
+import models.utils.dao.AbstractDAO;
 import models.utils.dao.DAOException;
 //TODO: fix doc generation that produces an error with the unqualified name
 import models.utils.Model.Finder;
@@ -24,6 +25,11 @@ public class ExperimentCategory extends AbstractCategory<ExperimentCategory>{
 		super(ExperimentCategoryDAO.class.getName());
 	}
 
+	@Override
+	protected Class<? extends AbstractDAO<ExperimentCategory>> daoClass() {
+		return ExperimentCategoryDAO.class;
+	}
+	
 	public static class ExperimentCategoryFinder extends Finder<ExperimentCategory,ExperimentCategoryDAO> {
 
 //		public ExperimentCategoryFinder() {
@@ -37,5 +43,5 @@ public class ExperimentCategory extends AbstractCategory<ExperimentCategory>{
 		}
 		
 	}
-	
+
 }

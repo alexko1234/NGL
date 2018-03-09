@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import models.administration.authorisation.description.dao.UserDAO;
 import models.utils.Model;
+import models.utils.dao.AbstractDAO;
 import models.utils.dao.DAOException;
 //import play.Logger;
 import play.data.validation.ValidationError;
@@ -49,6 +50,11 @@ public class User extends Model<User> {
 		super(UserDAO.class.getName());
 	}
 
+	@Override
+	protected Class<? extends AbstractDAO<User>> daoClass() {
+		return UserDAO.class;
+	}
+	
 	@JsonIgnore
 	public  Map<String,List<ValidationError>> validate() {
 		if (!password.equals(confirmpassword)) {
@@ -93,5 +99,5 @@ public class User extends Model<User> {
 		}
 		
 	}
-	
+
 }

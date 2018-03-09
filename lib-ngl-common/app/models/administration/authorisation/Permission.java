@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import models.administration.authorisation.description.dao.PermissionDAO;
 import models.utils.Model;
+import models.utils.dao.AbstractDAO;
 import models.utils.dao.DAOException;
 // import play.Logger;
 
@@ -24,6 +25,11 @@ public class Permission extends Model<Permission> {
 	public String label;
 	public String code;
 
+	@Override
+	protected Class<? extends AbstractDAO<Permission>> daoClass() {
+		return PermissionDAO.class;
+	}
+	
 	// Doc generation produces an error with the parent unqualified name.
 	// public static class PermissionFinder extends Finder<Permission> {
 	public static class PermissionFinder extends Finder<Permission,PermissionDAO> {
@@ -39,5 +45,5 @@ public class Permission extends Model<Permission> {
 		}
 		
 	}
-	
+
 }

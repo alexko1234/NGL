@@ -4,6 +4,7 @@ import models.laboratory.common.description.AbstractCategory;
 import models.laboratory.sample.description.dao.ImportCategoryDAO;
 //TODO: fix doc generation that produces an error with the unqualified name
 import models.utils.Model.Finder;
+import models.utils.dao.AbstractDAO;
 
 /**
  * Category of collaborator informations
@@ -18,6 +19,11 @@ public class ImportCategory extends AbstractCategory<ImportCategory> {
 	
 	public ImportCategory() {
 		super(ImportCategoryDAO.class.getName());
+	}
+
+	@Override
+	protected Class<? extends AbstractDAO<ImportCategory>> daoClass() {
+		return ImportCategoryDAO.class;
 	}
 
 }

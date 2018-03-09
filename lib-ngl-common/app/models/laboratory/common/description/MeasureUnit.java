@@ -4,6 +4,7 @@ import models.laboratory.common.description.dao.MeasureUnitDAO;
 import models.utils.Model;
 //TODO: fix doc generation that produces an error with the unqualified name
 import models.utils.Model.Finder;
+import models.utils.dao.AbstractDAO;
 import models.utils.dao.DAOException;
 
 public class MeasureUnit extends Model<MeasureUnit> {
@@ -19,6 +20,11 @@ public class MeasureUnit extends Model<MeasureUnit> {
 		super(MeasureUnitDAO.class.getName());
 	}
 	
+	@Override
+	protected Class<? extends AbstractDAO<MeasureUnit>> daoClass() {
+		return MeasureUnitDAO.class;
+	}
+
 	public static class MeasureUnitFinder extends Finder<MeasureUnit,MeasureUnitDAO> {
 
 //		public MeasureUnitFinder() {

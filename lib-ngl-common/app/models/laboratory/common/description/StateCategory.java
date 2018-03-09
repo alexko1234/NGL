@@ -2,6 +2,7 @@ package models.laboratory.common.description;
 
 //TODO: fix doc generation that produces an error with the unqualified name
 import models.utils.Model.Finder;
+import models.utils.dao.AbstractDAO;
 import models.laboratory.common.description.dao.StateCategoryDAO;
 
 public class StateCategory extends AbstractCategory<StateCategory> {
@@ -18,6 +19,11 @@ public class StateCategory extends AbstractCategory<StateCategory> {
 	
 	public StateCategory() {
 		super(StateCategoryDAO.class.getName());
+	}
+
+	@Override
+	protected Class<? extends AbstractDAO<StateCategory>> daoClass() {
+		return StateCategoryDAO.class;
 	}
 
 }

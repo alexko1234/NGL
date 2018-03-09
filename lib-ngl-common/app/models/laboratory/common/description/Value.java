@@ -8,6 +8,7 @@ import models.laboratory.common.description.dao.ValueDAO;
 import models.utils.ListObject;
 import models.utils.Model;
 import models.utils.Model.Finder;
+import models.utils.dao.AbstractDAO;
 import models.utils.dao.DAOException;
 
 /**
@@ -29,6 +30,11 @@ public class Value extends Model<Value> {
 		super(ValueDAO.class.getName());
 	}
 
+	@Override
+	protected Class<? extends AbstractDAO<Value>> daoClass() {
+		return ValueDAO.class;
+	}
+	
 	public static class ValueFinder extends Finder<Value,ValueDAO> {
 
 //			public ValueFinder() {
@@ -42,5 +48,5 @@ public class Value extends Model<Value> {
 		}
 		
 	}
-	
+
 }

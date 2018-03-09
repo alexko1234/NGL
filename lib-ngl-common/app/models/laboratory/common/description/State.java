@@ -8,6 +8,7 @@ import models.utils.ListObject;
 import models.utils.Model;
 //TODO: fix doc generation that produces an error with the unqualified name
 import models.utils.Model.Finder;
+import models.utils.dao.AbstractDAO;
 import models.utils.dao.DAOException;
 
 // This link : {@link models.laboratory.common.description.State}
@@ -35,7 +36,12 @@ public class State extends Model<State> {
     public State() {
     	super(StateDAO.class.getName());
     }
-
+    
+	@Override
+	protected Class<? extends AbstractDAO<State>> daoClass() {
+		return StateDAO.class;
+	}
+    
     public static class StateFinder extends Finder<State,StateDAO> {
 
 //		public StateFinder() {
@@ -78,5 +84,5 @@ public class State extends Model<State> {
 		}
 		
     }
-    
+
 }

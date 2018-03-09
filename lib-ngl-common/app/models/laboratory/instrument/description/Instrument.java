@@ -10,6 +10,7 @@ import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.utils.Model;
 //TODO: fix doc generation that produces an error with the unqualified name
 import models.utils.Model.Finder;
+import models.utils.dao.AbstractDAO;
 import models.utils.dao.DAOException;
 
 public class Instrument extends Model<Instrument> {
@@ -35,6 +36,11 @@ public class Instrument extends Model<Instrument> {
 		super(InstrumentDAO.class.getName());
 	}
 		
+	@Override
+	protected Class<? extends AbstractDAO<Instrument>> daoClass() {
+		return InstrumentDAO.class;
+	}
+	
 	public static class InstrumentFinder extends Finder<Instrument,InstrumentDAO> {
 
 //		public InstrumentFinder() {
@@ -58,5 +64,5 @@ public class Instrument extends Model<Instrument> {
 		}
 		
 	}
-	
+
 }

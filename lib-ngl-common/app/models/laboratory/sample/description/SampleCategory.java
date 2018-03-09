@@ -4,6 +4,7 @@ import models.laboratory.common.description.AbstractCategory;
 import models.laboratory.sample.description.dao.SampleCategoryDAO;
 //TODO: fix doc generation that produces an error with the unqualified name
 // import models.utils.Model.Finder;
+import models.utils.dao.AbstractDAO;
 
 public class SampleCategory extends AbstractCategory<SampleCategory> {
 
@@ -12,6 +13,11 @@ public class SampleCategory extends AbstractCategory<SampleCategory> {
 	
 	public SampleCategory() {
 		super(SampleCategoryDAO.class.getName());
+	}
+
+	@Override
+	protected Class<? extends AbstractDAO<SampleCategory>> daoClass() {
+		return SampleCategoryDAO.class;
 	}
 
 }

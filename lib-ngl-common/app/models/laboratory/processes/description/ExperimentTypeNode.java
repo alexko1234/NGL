@@ -11,7 +11,7 @@ import models.utils.Model.Finder;
 import models.utils.dao.AbstractDAO;
 import play.api.modules.spring.Spring;
 
-public class ExperimentTypeNode extends Model<ExperimentTypeNode>{
+public class ExperimentTypeNode extends Model<ExperimentTypeNode> {
 
 //	public static final Finder<ExperimentTypeNode> find = new Finder<ExperimentTypeNode>(ExperimentTypeNodeDAO.class.getName());
 	public static final Finder<ExperimentTypeNode,ExperimentTypeNodeDAO> find = new Finder<>(ExperimentTypeNodeDAO.class);
@@ -35,9 +35,13 @@ public class ExperimentTypeNode extends Model<ExperimentTypeNode>{
 	public List<ExperimentType> possiblePurificationTypes=new ArrayList<ExperimentType>();
 	public List<ExperimentType> possibleTransferts=new ArrayList<ExperimentType>();
 	
-	
 	public ExperimentTypeNode() {
 		super(ExperimentTypeNodeDAO.class.getName());
+	}
+
+	@Override
+	protected Class<? extends AbstractDAO<ExperimentTypeNode>> daoClass() {
+		return ExperimentTypeNodeDAO.class;
 	}
 
 }

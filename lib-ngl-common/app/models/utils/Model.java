@@ -105,7 +105,7 @@ public abstract class Model<T> {
 		}
 	}
 	
-//	protected abstract Class<? extends AbstractDAO<T>> daoClass();
+	protected abstract Class<? extends AbstractDAO<T>> daoClass();
 	
 //	public AbstractDAO<T> getInstance() throws DAOException { return Spring.getBeanOfType(getDAOClass()); }
 //	public abstract Class<? extends AbstractDAO<T>> getDAOClass();

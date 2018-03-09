@@ -6,6 +6,7 @@ import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.run.description.dao.AnalysisTypeDAO;
+import models.utils.dao.AbstractDAO;
 import models.utils.dao.AbstractDAOCommonInfoType;
 
 public class AnalysisType extends CommonInfoType {
@@ -19,9 +20,9 @@ public class AnalysisType extends CommonInfoType {
 	public AnalysisType() {
 		super(AnalysisTypeDAO.class.getName());
 	}
-	
+		
 	public List<PropertyDefinition> getPropertiesDefinitionDefaultLevel(){
 		return getPropertyDefinitionByLevel(Level.CODE.Analysis);
 	}
-	
+
 }

@@ -1,7 +1,12 @@
 package models.laboratory.common.description;
 
+import static fr.cea.ig.lfw.utils.Hashing.hash;
+import static fr.cea.ig.lfw.utils.Equality.objectEquals;
+import static fr.cea.ig.lfw.utils.Equality.typedEquals;
+
 import models.laboratory.common.description.dao.LevelDAO;
 import models.utils.Model;
+import models.utils.dao.AbstractDAO;
 
 public class Level extends Model<Level> {
 	
@@ -30,8 +35,10 @@ public class Level extends Model<Level> {
 		Pairs, 
 		Default, 
 		Analysis
-	};
-		
+	}
+			
+	public String name;
+	
 	public Level() {
 		super(LevelDAO.class.getName());
 	}
@@ -43,33 +50,37 @@ public class Level extends Model<Level> {
 		this.name = code.name();	
 	}
 
-	public String name;
+	@Override
+	protected Class<? extends AbstractDAO<Level>> daoClass() {
+		return LevelDAO.class;
+	}	
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
+//		final int prime = 31;
+//		int result = super.hashCode();
+//		result = prime * result + ((name == null) ? 0 : name.hashCode());
+//		return result;
+		return hash(super.hashCode(),name);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Level other = (Level) obj;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
-	}	
-	
-	
+//		if (this == obj)
+//			return true;
+//		if (!super.equals(obj))
+//			return false;
+//		if (getClass() != obj.getClass())
+//			return false;
+//		Level other = (Level) obj;
+//		if (name == null) {
+//			if (other.name != null)
+//				return false;
+//		} else if (!name.equals(other.name))
+//			return false;
+//		return true;
+		return typedEquals(Level.class, this, obj,
+				           (a,b) -> super.equals(obj) && objectEquals(a.name,b.name));
+	}
 	
 }
