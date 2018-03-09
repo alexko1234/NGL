@@ -42,8 +42,8 @@ public class ImportServiceCNG extends AbstractImportService {
 		l.add(newImportType("Import librairies indexées (non poolées)", "library-idx-reception",ImportCategory.find.findByCode("sample-import"), getLibraryReceptionPropertyDefinitions(true), getInstitutes(Constants.CODE.CNG)));
 		// FDS 22/11/2017 NGL-1703
 		l.add(newImportType("Import librairies indexées (poolées)", "library-idx-pool-reception",ImportCategory.find.findByCode("sample-import"), getLibraryReceptionPropertyDefinitions(true), getInstitutes(Constants.CODE.CNG)));
-		// FDS 05/03/2018 NGL-1907 ( garder le label "PALEODNA" pour l'instant
-		l.add(newImportType("Import librairies PALEODNA", "library-idx-pool-nodemultiplexing-reception",ImportCategory.find.findByCode("sample-import"), getLibraryNodemultiplexReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
+		// FDS 05/03/2018 NGL-1907 
+		l.add(newImportType("Import librairies (poolées) SANS démultiplexage", "library-idx-pool-nodemultiplexing-reception",ImportCategory.find.findByCode("sample-import"), getLibraryNodemultiplexReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
 		
 		// GA/FDS 14/06/2017 CONTOURNEMENT de la creation des libProcessTypecodes dans NGLBI ce qui pose des problemes dans le cas ISOPROD
 		// creer un ImportType bidon pour declarer la propriété libProcessTypecodes et sa liste de valeurs...
