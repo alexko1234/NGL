@@ -6,15 +6,16 @@ angular.module('home').controller('OneToVoidLabChipMigrationProfileCNGCtrl',['$s
 	config.name = $scope.experiment.typeCode.toUpperCase();
 	$scope.atmService.data.setConfig(config);
 
+	//FDS 30/08/2016 concentration et size de l'expérience doivent etres copiées dans le container
 	$scope.$parent.copyPropertiesToInputContainer = function(experiment){
 		
-		//FDS  30/08/2016 concentration et size de l'expérience doivent etres copiées dans le container
 		experiment.atomicTransfertMethods.forEach(function(atm){
 			var inputContainerUsed =$parse("inputContainerUseds[0]")(atm);
 			if(inputContainerUsed){
-					
+				
 				var concentration1 = $parse("experimentProperties.concentration1")(inputContainerUsed);
-				if(concentration1){
+				//	07/03/2018: NGL-1859 la copie de la concentration ne doit etre faite que si l'utilisateur le demande explicitement !!!
+				if(concentration1  &&  $scope.experiment.experimentProperties.copyConcentration.value){
 					inputContainerUsed.newConcentration = concentration1;
 				}
 				

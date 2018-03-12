@@ -357,7 +357,7 @@ public class QualityControl extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,null));		
 		
-		propertyDefinitions.add(newPropertiesDefinition("Facteur de dilution BR (1/X)","dilutionFactorBR1", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, null,"single", 13, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Dilution BR (1/X)","dilutionFactorBR1", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, null,"single", 13, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé ds dosage BR", "inputVolumeBR1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 14, true, null,null));		
 		propertyDefinitions.add(newPropertiesDefinition("Dosage BR (sur dilution)", "concentrationDilBR1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
@@ -365,7 +365,7 @@ public class QualityControl extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Dosage BR (réel)", "concentrationBR1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 16, false, null,null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Facteur de dilution HS1 (1/X)","dilutionFactorHS1", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, null,"single", 17, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Dilution HS1 (1/X)","dilutionFactorHS1", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, null,"single", 17, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé ds dosage HS1", "inputVolumeHS1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 18, true, null,null));	
 		propertyDefinitions.add(newPropertiesDefinition("Dosage HS 1 (sur dilution)", "concentrationDilHS1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
@@ -373,7 +373,7 @@ public class QualityControl extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Dosage HS 1 (réel)", "concentrationHS1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 20, false, null,"3"));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Facteur de dilution HS2 (1/X)","dilutionFactorHS2", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, null,"single", 21, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Dilution HS2 (1/X)","dilutionFactorHS2", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, null,"single", 21, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé ds dosage HS2", "inputVolumeHS2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 22, true, null,null));	
 		propertyDefinitions.add(newPropertiesDefinition("Dosage HS 2 (sur dilution)", "concentrationDilHS2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
@@ -381,7 +381,7 @@ public class QualityControl extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Dosage HS 2 (réel)", "concentrationHS2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 24, false, null,"3"));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Facteur de dilution HS3 (1/X)","dilutionFactorHS3", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, null,"single", 25, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Dilution HS3 (1/X)","dilutionFactorHS3", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, null,"single", 25, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé ds dosage HS3", "inputVolumeHS3", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 26, true, null,null));	
 		propertyDefinitions.add(newPropertiesDefinition("Dosage HS 3 (sur dilution)", "concentrationDilHS3", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
@@ -391,7 +391,7 @@ public class QualityControl extends AbstractDeclaration {
 		
 		
 		propertyDefinitions.add(newPropertiesDefinition("Méthode de calcul de la concentration finale", "calculationMethod", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, "F", 
-				DescriptionFactory.newValues("Moyenne HS1 HS2","Moyenne HS2 HS3","Moyenne HS1 HS2 HS3","BR si > 25 et HS1 si BR <= 25","BR 1 seul","HS 1 seul","HS 2 seul","HS 3 seul","Non quantifiable"),null,null,null,"single", 29, true, null, null));
+				DescriptionFactory.newValues("Moyenne HS1 HS2","Moyenne HS2 HS3","Moyenne HS1 HS3","Moyenne HS1 HS2 HS3","BR si > 25 et HS1 si BR <= 25","BR 1 seul","HS 1 seul","HS 2 seul","HS 3 seul","Non quantifiable"),null,null,null,"single", 29, true, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Concentration finale", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 30, false, null,"3"));
@@ -593,6 +593,10 @@ public class QualityControl extends AbstractDeclaration {
 
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
+		propertyDefinitions.add(newPropertiesDefinition("Volume mesuré", "preQuantificationVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 11, true, null,null));
+		
+		
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 13, true, null,null));
 		
