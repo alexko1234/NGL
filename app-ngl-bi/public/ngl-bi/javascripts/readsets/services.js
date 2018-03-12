@@ -290,12 +290,12 @@
 				},
 				
 				updateForm : function(){
-					if (mainService.isHomePage('valuation')) {
+					/*if (mainService.isHomePage('valuation')) {
 						if(!this.isRouteParam && (this.form.stateCodes === undefined || this.form.stateCodes.length === 0)) {
 							//No stateCodes selected, the filter by default (on the only two possible states for the valuation) is applied
 							this.form.stateCodes = ["IW-VQC", "IP-VQC", "IW-VBA"];
 						}		
-					}
+					}*/
 					this.form.includes = [];
 					if(this.reportingConfiguration){
 						for(var i = 0 ; i < this.reportingConfiguration.columns.length ; i++){
@@ -328,7 +328,13 @@
 				},
 				
 				resetForm : function(){
-					this.form = {};									
+					this.form = {};		
+					if (mainService.isHomePage('valuation')) {
+						if(!this.isRouteParam && (this.form.stateCodes === undefined || this.form.stateCodes.length === 0)) {
+							//No stateCodes selected, the filter by default (on the only two possible states for the valuation) is applied
+							this.form.stateCodes = ["IW-VQC", "IP-VQC", "IW-VBA"];
+						}		
+					}
 				},
 				
 				resetSampleCodes : function(){
