@@ -38,16 +38,30 @@ public class Output extends AbstractOutput {
 		if("96-well-plate".equals(experiment.instrument.outContainerSupportCategoryCode)){
 			if ("normalisation".equals(type) ){
 				List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
-				pssl = checkPlateSampleSheetLines(pssl, isPlaque);
+				pssl = checkSampleSheetLines(pssl, isPlaque);
 
 				adnContent = OutputHelper.format(normalisation_x_to_plate.render(pssl).body());
 				file = new File(getFileName(experiment)+"_ADN.csv", adnContent);
 
 			}else if("normalisation-buffer".equals(type)){
 				List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
-				pssl = checkPlateSampleSheetLines(pssl, isPlaque);
+				pssl = checkSampleSheetLines(pssl, isPlaque);
 
 				bufferContent = OutputHelper.format(normalisation_x_to_plate_buffer.render(pssl).body());
+				file = new File(getFileName(experiment)+"_Buffer.csv", bufferContent);
+
+			}if ("normalisation-highVol".equals(type) ){
+				List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
+				pssl = checkSampleSheetLines(pssl, isPlaque);
+
+				adnContent = OutputHelper.format(normalisation_x_to_plate_highVol.render(pssl).body());
+				file = new File(getFileName(experiment)+"_ADN.csv", adnContent);
+
+			}else if("normalisation-buffer-highVol".equals(type)){
+				List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
+				pssl = checkSampleSheetLines(pssl, isPlaque);
+
+				bufferContent = OutputHelper.format(normalisation_x_to_plate_buffer_highVol.render(pssl).body());
 				file = new File(getFileName(experiment)+"_Buffer.csv", bufferContent);
 
 			}else{
@@ -100,18 +114,21 @@ public class Output extends AbstractOutput {
 
 		return pssl;
 	}
-	private List<PlateSampleSheetLine> checkPlateSampleSheetLines (List<PlateSampleSheetLine> psslList, Boolean isPlaque){
+	private List<PlateSampleSheetLine> checkSampleSheetLines (List<PlateSampleSheetLine> psslList, Boolean isPlate){
 
 		PlateSampleSheetLine psslTemplate = new PlateSampleSheetLine();
 		List<PlateSampleSheetLine> psslListNew = new LinkedList<PlateSampleSheetLine>();
 		List<String> plateLines ;
 		int colNum;	
-		if (isPlaque){
+		if (isPlate){
 			plateLines = Arrays.asList("A","B","C","D","E","F","G","H"); 	
 			colNum=12;
 		}else{
-			plateLines = Arrays.asList("A","B","C","D");
-			colNum=6;
+			/* on gere finalement les tubes par 4 racks donc iso tubes
+			 * plateLines = Arrays.asList("A","B","C","D");
+			*colNum=6;*/
+			plateLines = Arrays.asList("A","B","C","D","E","F","G","H"); 	
+			colNum=12;
 		}
 		boolean found =false;	
 		int sampleNum=0;
