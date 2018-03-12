@@ -348,11 +348,11 @@
 				},
 				valuationStates : [{code:"IW-VQC",name:Codes("state.IW-VQC")},{code:"IP-VQC",name:Codes("state.IP-VQC")},{code:"IW-VBA",name:Codes("state.IW-VBA")}],
 				states : function(){
-					if (mainService.isHomePage('valuation')) {
-						return this.valuationStates;
-					}else{
+					//if (mainService.isHomePage('valuation')) {
+					//	return this.valuationStates;
+					//}else{
 						return this.lists.get('statetrue');
-					}
+					//}
 				},
 				/**
 				 * Update column when change reportingConfiguration
