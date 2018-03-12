@@ -230,16 +230,17 @@ public class ValidationHelper {
 	 * @param className
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	private static <T> Class<T> getClass(String className) {
-		Class<T> clazz;
+//		Class<T> clazz;
 		try {
-			clazz = (Class<T>) Class.forName(className);
+			@SuppressWarnings("unchecked") // Reflection uncheckable
+			Class<T> clazz = (Class<T>) Class.forName(className);
+			return clazz;
 		} catch (ClassNotFoundException e) {
 			//ne doit pas arriver sauf si objet complexe
 			throw new RuntimeException(e);
 		}
-		return clazz;
+//		return clazz;
 	}	
 	
 	/*

@@ -255,9 +255,9 @@ public class InstanceHelpers {
 		// 1 retrieve containerSupportCode from Run
 		String containerSupportCode = getContainerSupportCode(readSet);
 		Container container = getContainer(readSet, containerSupportCode);
-		if (null != container) {
+		if (container != null) {
 			Content content = getContent(container, readSet);
-			if (null != content) {
+			if (content != null) {
 				SampleOnContainer sampleContainer = convertToSampleOnContainer(readSet, containerSupportCode,
 						container, content);
 				return sampleContainer;

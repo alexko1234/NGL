@@ -56,7 +56,7 @@ import utils.Constants;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 
-public class InstanceTest extends AbstractTests{
+public class InstanceTest extends AbstractTests {
 
 	@SuppressWarnings("unchecked")
 	static final Class<DBObject>[] classTest = new Class[]
@@ -69,14 +69,14 @@ public class InstanceTest extends AbstractTests{
 
 	// private static final Map<String, List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
 
-	static String id;
-	static ProjectType sProjectType;
-	static SampleType sSampleType;
-	static ExperimentType sexpExperimentType;
+	static String             id;
+	static ProjectType        sProjectType;
+	static SampleType         sSampleType;
+	static ExperimentType     sexpExperimentType;
 	static InstrumentUsedType sIntrumentUsedType;
-	static ContainerCategory sContainerCategory;
+	static ContainerCategory  sContainerCategory;
 	static models.laboratory.common.description.State sState;
-	static Resolution sResolution;
+	static Resolution         sResolution;
 
 	@AfterClass
 	public static  void deleteData() {
@@ -85,7 +85,7 @@ public class InstanceTest extends AbstractTests{
 	@BeforeClass
 	public static  void initData() throws DAOException {
 		//ExperimentType
-		sexpExperimentType=ExperimentType.find.findAll().get(0);
+		sexpExperimentType = ExperimentType.find.findAll().get(0);
 	}	
 
 	//@Test 

@@ -499,43 +499,50 @@ public class CommonValidationHelper {
 		}		
 	}
 	
-	@SuppressWarnings("unchecked")
+////	@SuppressWarnings("unchecked")
+//	protected static <T> T getObjectFromContext(String key, Class<T> clazz, ContextValidation contextValidation) {
+////		@SuppressWarnings("unchecked") 
+////		T o = (T) contextValidation.getObject(key);
+//		if (o == null)
+//			throw new IllegalArgumentException(key + " from contextValidation is null");
+//		return o;
+//	}
+
 	protected static <T> T getObjectFromContext(String key, Class<T> clazz, ContextValidation contextValidation) {
-		T o = (T) contextValidation.getObject(key);
-		if(null == o){
-			throw new IllegalArgumentException(key+" from contextValidation is null");
-		}
-		return o;
+		Object o = contextValidation.getObject(key);
+		if (o == null)
+			throw new IllegalArgumentException(key + " from contextValidation is null");
+		T t = clazz.cast(o);
+		if (t == null)
+			throw new IllegalArgumentException(key + " from contextValidation is not of type " + clazz.getName());
+		return t;
 	}
 
-
-	public static void validateProjectCodes(List<String> projectCodes,ContextValidation contextValidation){
+	public static void validateProjectCodes(List<String> projectCodes, ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredInstanceCodes(contextValidation, projectCodes, "projectCodes",Project.class,InstanceConstants.PROJECT_COLL_NAME,false);
 	}
 	
 	public static void validateProjectCodes(Set<String> projectCodes,ContextValidation contextValidation){
 		List<String> listProject=null;
-		if(CollectionUtils.isNotEmpty(projectCodes)){
+		if (CollectionUtils.isNotEmpty(projectCodes)) {
 			listProject=new ArrayList<String>();
 			listProject.addAll(projectCodes);
 		}
 		validateProjectCodes(listProject,contextValidation);
 	}
 	
-	public static void validateProjectCode(String projectCode,
-			ContextValidation contextValidation) {
+	public static void validateProjectCode(String projectCode, ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, projectCode,"projectCode",Project.class,InstanceConstants.PROJECT_COLL_NAME,false);
 	}
 
-
-	public static void validateSampleCodes(List<String> sampleCodes,ContextValidation contextValidation){
+	public static void validateSampleCodes(List<String> sampleCodes, ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredInstanceCodes(contextValidation, sampleCodes,"sampleCodes",Sample.class,InstanceConstants.SAMPLE_COLL_NAME,false);
 	}
 	
 	public static void validateSampleCodes(Set<String> sampleCodes,ContextValidation contextValidation){
-		List<String> listSample=null;
-		if(CollectionUtils.isNotEmpty(sampleCodes)){
-			listSample=new ArrayList<String>();
+		List<String> listSample = null;
+		if (CollectionUtils.isNotEmpty(sampleCodes)) {
+			listSample = new ArrayList<String>();
 			listSample.addAll(sampleCodes);
 		}
 		validateSampleCodes(listSample,contextValidation);

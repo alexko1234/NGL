@@ -151,16 +151,16 @@ public abstract class AbstractDAO<T> {
 //	@SuppressWarnings("unchecked")
 	protected T getObjectInCache(String code) {
 		if (code != null) {
-			try {
+//			try {
 //				String key = entityClass.toString() + "." + code;
 				// return (T) Cache.get(key);
-				@SuppressWarnings("unchecked") // Uncheckable cache access
+//				@SuppressWarnings("unchecked") // Uncheckable cache access
 //				T t = (T)cache().get(key);
-				T t = (T)cache().get(key(code));
+				T t = cache().<T>get(key(code));
 				return t;
-			} catch (DAOException e) {
-				throw new RuntimeException(e);
-			}
+//			} catch (DAOException e) {
+//				throw new RuntimeException(e);
+//			}
 		} else {
 			return null;
 		}		

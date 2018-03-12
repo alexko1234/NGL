@@ -51,7 +51,7 @@ public class IO extends TPLCommonController {
 				&& ValidationHelper.required(contextValidation, experiment.instrument.typeCode, "instrument.code")) {
 			String className = getClassName(experiment, "Output");
 			try {
-				@SuppressWarnings("unchecked")
+				@SuppressWarnings("unchecked") // Uncheckable reflection 
 				Class<? extends AbstractOutput> clazz = (Class<? extends AbstractOutput>) Class.forName(className);
 //				Constructor<?> constructor = clazz.getConstructor();
 //				AbstractOutput instance = (AbstractOutput) constructor.newInstance();
@@ -80,7 +80,7 @@ public class IO extends TPLCommonController {
 				className ="controllers.instruments.io." + institute + "." + extraInstrument + ".Input";
 			}
 			try {
-				@SuppressWarnings("unchecked")
+				@SuppressWarnings("unchecked") // Uncheckable reflection
 				Class<? extends AbstractInput> clazz = (Class<? extends AbstractInput>) Class.forName(className);
 //				Constructor<?> constructor = clazz.getConstructor();
 //				AbstractInput instance = (AbstractInput) constructor.newInstance();

@@ -101,7 +101,7 @@ public abstract class Model<T> {
 	private AbstractDAO<T> getInstance() throws DAOException {
 		try {
 //			return (AbstractDAO<T>) Spring.getBeanOfType(Class.forName(classNameDAO));
-			@SuppressWarnings("unchecked") // To much changes need to avoid this.
+			@SuppressWarnings("unchecked") // To much changes need to avoid this, close call with the daoClass method
 			AbstractDAO<T> dao = (AbstractDAO<T>) Spring.getBeanOfType(Class.forName(classNameDAO));
 			return dao;
 		} catch (ClassNotFoundException e) {

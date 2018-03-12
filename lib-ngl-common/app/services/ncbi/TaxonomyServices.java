@@ -93,16 +93,22 @@ public class TaxonomyServices {
 		return CompletableFuture.completedFuture(new NCBITaxon());
 	}
 	
+	private static String key(String code) {
+		return NCBITaxon.class.toString() + "." + code;
+	}
+	
 //	@SuppressWarnings("unchecked")
-	private /*static*/ NCBITaxon getObjectInCache(String code){
+	private /*static*/ NCBITaxon getObjectInCache(String code) {
 		if (code != null) {
-			try {
-				String key = NCBITaxon.class.toString() + "." + code;
+//			try {
+//				String key = NCBITaxon.class.toString() + "." + code;
 				// return (NCBITaxon) Cache.get(key);
-				return (NCBITaxon) ctx.cache().get(key);
-			} catch (DAOException e) {
-				throw new RuntimeException(e);
-			}
+//				return (NCBITaxon) ctx.cache().get(key);
+//				return ctx.cache().<NCBITaxon>get(key);
+				return ctx.cache().<NCBITaxon>get(key(code));
+//			} catch (DAOException e) {
+//				throw new RuntimeException(e);
+//			}
 		} else {
 			return null;
 		}		
@@ -111,7 +117,8 @@ public class TaxonomyServices {
 	private /*static*/ void setObjectInCache(NCBITaxon o, String code) {
 		if (o != null && code != null) {
 			// Cache.set(NCBITaxon.class.toString()+"."+code, o, 60 * 60 * 24);
-			ctx.cache().set(NCBITaxon.class.toString()+"."+code, o, 60 * 60 * 24);
+//			ctx.cache().set(NCBITaxon.class.toString()+"."+code, o, 60 * 60 * 24);
+			ctx.cache().set(key(code), o, 60 * 60 * 24);
 		}		
 	}
 	
@@ -172,11 +179,11 @@ public class TaxonomyServices {
 	public static String getValue(CompletionStage<Document> xml, String expression) throws XPathExpressionException, RuntimeException, TimeoutException	{
 		// TODO: possibly fix time unit original is get(10000), assumed to be milliseconds.
 		try {
-		Document doc = xml.toCompletableFuture().get(10000,TimeUnit.MILLISECONDS);
-		XPath xPath =  XPathFactory.newInstance().newXPath();
-		//String expression = "/TaxaSet/Taxon/ScientificName";
-		//read a string value
-		return xPath.compile(expression).evaluate(doc);
+			Document doc = xml.toCompletableFuture().get(10000,TimeUnit.MILLISECONDS);
+			XPath xPath =  XPathFactory.newInstance().newXPath();
+			//String expression = "/TaxaSet/Taxon/ScientificName";
+			//read a string value
+			return xPath.compile(expression).evaluate(doc);
 		} catch (ExecutionException e) {
 			throw new RuntimeException("wrapped exception",e);
 		} catch (InterruptedException e) {
