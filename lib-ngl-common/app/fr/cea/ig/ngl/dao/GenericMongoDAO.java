@@ -184,7 +184,12 @@ public /*abstract*/ class GenericMongoDAO<T extends DBObject> {
 	}
 
 	
-	public MongoCursor<T> nativeMongoDBQuery(String query){
+	/**
+	 * use to replace controllers.MongoCommonController.nativeMongoDBQuery(ListForm form)
+	 * @param query
+	 * @return
+	 */
+	public MongoCursor<T> findByQuery(String query){
 		MongoCollection collection = MongoDBPlugin.getCollection(this.getCollectionName());
 		return (MongoCursor<T>) collection.find(query).as(elementClass);
 	}

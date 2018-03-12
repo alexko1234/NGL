@@ -65,8 +65,16 @@ public class SamplesAPI {
 		}
 	} 
 	
+	public boolean isObjectExist(String code) {
+		return dao.isObjectExist(code);
+	}
+	
 	public Sample getObject(String code, BasicDBObject keys) {
 		return dao.getObject(code, keys);
+	}
+	
+	public List<Sample> list(Query query, String orderBy, Sort orderSense) {
+		return dao.mongoDBFinder(query, orderBy, orderSense).toList();
 	}
 	
 	public Source<ByteString, ?> stream(Query query, String orderBy, Sort orderSense, BasicDBObject keys, 
@@ -84,7 +92,7 @@ public class SamplesAPI {
 	}
 	
 	public MongoCursor<Sample> reportingData(String reportingQuery) {
-		return dao.nativeMongoDBQuery(reportingQuery);
+		return dao.findByQuery(reportingQuery);
 	}
 	
 	public Sample create(Sample input, String currentUser) throws APIValidationException {
@@ -178,10 +186,6 @@ public class SamplesAPI {
 	
 	public void delete(String code) {
 		this.dao.deleteObject(code);
-	}
-
-	public List<Sample> list(Query query, String orderBy, Sort orderSense) {
-		return dao.mongoDBFinder(query, orderBy, orderSense).toList();
 	}
 	
 }

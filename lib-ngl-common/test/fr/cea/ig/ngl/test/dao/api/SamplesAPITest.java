@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.inject.Singleton;
+import javax.validation.constraints.AssertTrue;
 
 import org.drools.compiler.lang.dsl.DSLMapParser.statement_return;
 import org.drools.core.command.assertion.AssertEquals;
@@ -200,6 +201,8 @@ public class SamplesAPITest extends AbstractTests implements AbstractAPITests {
 			Query query = DBQuery.is("code", refSample.code);
 			List<Sample> samples = api.list(query, "code", Sort.valueOf(0));
 			Assert.assertEquals(1, samples.size());
+			Assert.assertEquals(refSample.code, samples.get(0).code);
+			Assert.assertEquals(refSample.categoryCode, samples.get(0).categoryCode);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			exit(e.getMessage());
@@ -207,7 +210,17 @@ public class SamplesAPITest extends AbstractTests implements AbstractAPITests {
 		deleteData();
 	}
 	
-	// TODO add other tests on listing methods
+	@Test
+	public void isObjectExistsTest() {
+		setUpData();
+		Assert.assertTrue(api.isObjectExist(refSample.code));
+		deleteData();
+	}
+	
+	@Test
+	public void isObjectNotExistsTest() {
+		Assert.assertFalse(api.isObjectExist(refSample.code));
+	}
 
 	@Test
 	public void updateTest() {
