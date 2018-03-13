@@ -168,7 +168,8 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("annexe-dosagearn-qubit-v1","Annexe_DosageARN-Qubit_v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("fluo-quantification","reception-fluo-quantification")));
 		
 		lp.add(newProtocol("annexe-dosage-fluoroskan-v1","Annexe_DosageFluoroskan_v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("fluo-quantification","reception-fluo-quantification"),false));
-		lp.add(newProtocol("annexe-dosage-fluoroskan-v2","Annexe_DosageFluoroskan_v2","path2","1","production",InstanceFactory.setExperimentTypeCodes("fluo-quantification","reception-fluo-quantification")));
+		lp.add(newProtocol("annexe-dosage-fluoroskan-v2","Annexe_DosageFluoroskan_v2","path2","1","production",InstanceFactory.setExperimentTypeCodes("fluo-quantification","reception-fluo-quantification"),false));
+		lp.add(newProtocol("annexe-dosage-fluoroskan-v3","Annexe_DosageFluoroskan_v3","path2","1","production",InstanceFactory.setExperimentTypeCodes("fluo-quantification","reception-fluo-quantification")));
 		
 		lp.add(newProtocol("annexe-dosage-qubit-v1","Annexe_DosageQubit_v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("fluo-quantification","reception-fluo-quantification"),false));
 		lp.add(newProtocol("annexe-dosage-qubit-v2","Annexe_DosageQubit_v2","path2","1","production",InstanceFactory.setExperimentTypeCodes("fluo-quantification","reception-fluo-quantification")));
@@ -177,6 +178,10 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("ptr-ctl-123-4","PTR_CTL123_4","path2","1","production",InstanceFactory.setExperimentTypeCodes("gel-migration"),false));		
 		lp.add(newProtocol("prod-ill-evaladn-en-tubes-123-v5","Prod_ILL_EvalADN_EnTubes_123_v5","path2","1","production",InstanceFactory.setExperimentTypeCodes("gel-migration","reception-fluo-quantification","normalisation")));		
 		lp.add(newProtocol("prod-ill-evaladn-en-plaques-161-v1","Prod_ILL_EvalADN_EnPlaques_161_v1_en attente","path2","1","production",InstanceFactory.setExperimentTypeCodes("gel-migration","reception-fluo-quantification","dilution")));		
+		
+		
+		lp.add(newProtocol("proto-eval-hpm_en-attente","proto Eval HPM_en attente","path2","1","production",InstanceFactory.setExperimentTypeCodes("reception-fluo-quantification","gel-migration","chip-migration","pulsed-field-electrophoresis","uv-spectrophotometry","qcard")));		
+		
 		
 		lp.add(newProtocol("proto_qc_v1","Proto_QC_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("qpcr-quantification"), false));
 		
@@ -342,6 +347,7 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("nanopore-sizing-ptr","sizing nanopore","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-sizing")));
 	
 		lp.add(newProtocol("nanodrop","Nanodrop","path7","1","production", InstanceFactory.setExperimentTypeCodes("uv-spectrophotometry")));	
+		lp.add(newProtocol("annexe-dosage-nanodrop-v1","Annexe_DosageNanoDrop_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("uv-spectrophotometry")));	
 		
 		lp.add(newProtocol("qcard-qc","QC_qcard","path7","1","production", InstanceFactory.setExperimentTypeCodes("qcard")));	
 

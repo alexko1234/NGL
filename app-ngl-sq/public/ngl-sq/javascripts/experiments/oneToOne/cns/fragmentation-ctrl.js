@@ -318,6 +318,7 @@ angular.module('home').controller('FragmentationCtrl',['$scope','$http', '$parse
 			getter.assign(udtData, requiredVolume);
 		}else{
 			console.log("not ready to computerequiredVolume");
+			getter.assign(udtData, undefined);
 		}		
 	}
 	
@@ -330,9 +331,8 @@ angular.module('home').controller('FragmentationCtrl',['$scope','$http', '$parse
 		var compute = {
 				requiredVol : $parse("inputContainerUsed.experimentProperties.requiredVolume.value")(udtData),
 				outputVol : $parse("outputContainerUsed.volume.value")(udtData),
-				inputVol : $parse("inputContainerUsed.volume.value")(udtData),			
 				isReady:function(){
-					return (this.requiredVol && this.outputVol && this.inputVol);
+					return (this.requiredVol && this.outputVol);
 				}
 			};
 		
@@ -354,6 +354,7 @@ angular.module('home').controller('FragmentationCtrl',['$scope','$http', '$parse
 			getter.assign(udtData, inputVolume);
 		}else{
 			console.log("not ready to computeInputVolume");
+			getter.assign(udtData, undefined);
 		}
 		
 	}
@@ -382,7 +383,8 @@ angular.module('home').controller('FragmentationCtrl',['$scope','$http', '$parse
 			}	
 			getter.assign(udtData, frgInputQuantity);
 		}else{
-			console.log("not ready to computeFrgInputQuantity");
+			console.log("not ready to computeInputQuantity");
+			getter.assign(udtData, undefined);
 		}
 		
 	}
@@ -412,6 +414,7 @@ angular.module('home').controller('FragmentationCtrl',['$scope','$http', '$parse
 			getter.assign(udtData, bufferVolume);
 		}else{
 			console.log("not ready to computeBufferVolume");
+			getter.assign(udtData, undefined);
 		}
 	}
 	

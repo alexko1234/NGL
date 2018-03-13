@@ -93,7 +93,8 @@ public class MetaGenomique extends AbstractDeclaration {
              l.add(DescriptionFactory.newProcessType("(Meta)Génomique ou reprise à partir cDNA", "metagenomic-process", ProcessCategory.find.findByCode("library"), 31,
                              getPropertiesMetaGenomique(),
                              Arrays.asList(getPET("ext-to-metagenomic-process",-1)
-                            		 		 , getPET("cdna-synthesis",-1)
+                            		 		 , getPET("wga-amplification",-1)
+                            	        	 , getPET("cdna-synthesis",-1)
                                              , getPET("dna-rna-extraction",-1)
                                              , getPET("fragmentation",0)
                                              , getPET("dna-illumina-indexed-library",1)
@@ -108,7 +109,8 @@ public class MetaGenomique extends AbstractDeclaration {
              l.add(DescriptionFactory.newProcessType("(Meta)Génomique (spri select)", "metagenomic-process-with-spri-select", ProcessCategory.find.findByCode("library"), 32,
                              getPropertiesMetaGenomiqueWithSpriSelect(),
                              Arrays.asList(getPET("ext-to-metagenomic-process-with-spri-select",-1)
-                                             ,getPET("dna-rna-extraction",-1)
+                            		 		 ,getPET("wga-amplification",-1)
+                            	             ,getPET("dna-rna-extraction",-1)
                                              , getPET("fragmentation",0)
                                              , getPET("dna-illumina-indexed-library",1)
                                              , getPET("pcr-amplification-and-purification",2)
@@ -124,7 +126,8 @@ public class MetaGenomique extends AbstractDeclaration {
              l.add(DescriptionFactory.newProcessType("(Meta)Génomique avec sizing (gel)", "metagenomic-process-with-sizing", ProcessCategory.find.findByCode("library"), 33,
                              getPropertiesMetaGenomiqueWithSizingDEV(),
                              Arrays.asList(getPET("ext-to-metagenomic-process-with-sizing",-1)
-                                             ,getPET("dna-rna-extraction",-1)
+                            		 		 ,getPET("wga-amplification",-1)
+                            	             ,getPET("dna-rna-extraction",-1)
                                              , getPET("fragmentation",0)
                                              , getPET("dna-illumina-indexed-library",1)
                                              , getPET("pcr-amplification-and-purification",2)
