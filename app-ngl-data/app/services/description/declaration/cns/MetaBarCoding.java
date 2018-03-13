@@ -123,6 +123,7 @@ public class MetaBarCoding extends AbstractDeclaration {
             l.add(DescriptionFactory.newProcessType("MetaBarcoding avec sizing (gel)", "tag-pcr-and-dna-library-with-sizing", ProcessCategory.find.findByCode("library"), 11,
                             getPropertyMetaBarCodingSizing(),
                             Arrays.asList(getPET("ext-to-tag-pcr-and-dna-library-with-sizing",-1)
+                            				,getPET("wga-amplification",-1)
                                             ,getPET("dna-rna-extraction",-1)
                                             ,getPET("cdna-synthesis",-1)
                                             ,getPET("tag-pcr",0)
@@ -139,7 +140,8 @@ public class MetaBarCoding extends AbstractDeclaration {
             l.add(DescriptionFactory.newProcessType("MetaBarcoding (sans sizing)", "tag-pcr-and-dna-library", ProcessCategory.find.findByCode("library"), 12,
                             getPropertyMetaBarCodingWithoutSizing(),
                             Arrays.asList(getPET("ext-to-tag-pcr-and-dna-library",-1)
-                                            ,getPET("dna-rna-extraction",-1)
+                            				,getPET("wga-amplification",-1)
+                                    		,getPET("dna-rna-extraction",-1)
                                             ,getPET("cdna-synthesis",-1)
                                             ,getPET("tag-pcr",0)
                                             ,getPET("dna-illumina-indexed-library",1)
@@ -154,6 +156,7 @@ public class MetaBarCoding extends AbstractDeclaration {
             l.add(DescriptionFactory.newProcessType("MetaBarcoding double PCR (nested)", "double-tag-pcr-and-dna-library", ProcessCategory.find.findByCode("library"), 13,
                     getPropertyMetaBarCodingDouble(),
                     Arrays.asList(getPET("ext-to-double-tag-pcr-and-dna-library",-1)
+                    				,getPET("wga-amplification",-1)
                                     ,getPET("dna-rna-extraction",-1)
                                     ,getPET("cdna-synthesis",-1)
                                     ,getPET("tag-pcr",0)
@@ -197,7 +200,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 		newExperimentTypeNode("ext-to-double-tag-pcr-and-dna-library", getExperimentTypes("ext-to-double-tag-pcr-and-dna-library").get(0), false, false, false, null, null, null, null).save();
 		
 		newExperimentTypeNode("ext-to-tag-pcr-and-dna-library-with-sizing", getExperimentTypes("ext-to-tag-pcr-and-dna-library-with-sizing").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("tag-pcr",getExperimentTypes("tag-pcr").get(0),true, true,false,getExperimentTypeNodes("dna-rna-extraction", "cdna-synthesis", "ext-to-tag-pcr-and-dna-library","ext-to-tag-pcr-and-dna-library-with-sizing","ext-to-double-tag-pcr-and-dna-library")
+		newExperimentTypeNode("tag-pcr",getExperimentTypes("tag-pcr").get(0),true, true,false,getExperimentTypeNodes("wga-amplification", "dna-rna-extraction", "cdna-synthesis", "ext-to-tag-pcr-and-dna-library","ext-to-tag-pcr-and-dna-library-with-sizing","ext-to-double-tag-pcr-and-dna-library")
 				,null,getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 		
 		newExperimentTypeNode("tag-pcr-nested",getExperimentTypes("tag-pcr").get(0),true, true,false,getExperimentTypeNodes("tag-pcr")
