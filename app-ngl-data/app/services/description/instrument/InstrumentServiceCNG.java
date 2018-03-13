@@ -1035,6 +1035,9 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		
 		instruments.add(createInstrument("FALBALA", "FALBALA", "H4", true, "/env/ig/atelier/illumina/cng/FALBALA/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );		
+		instruments.add(createInstrument("TORNADE", "TORNADE", "H5", false, "/env/ig/atelier/illumina/cns/TORNADE", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
+		instruments.add(createInstrument("RAFALE", "RAFALE", "H9", false, "/env/ig/atelier/illumina/cns/RAFALE", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
+		
 		return instruments;
 	}
 	
