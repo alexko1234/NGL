@@ -109,8 +109,8 @@ public class ImportServiceCNG extends AbstractImportService {
 		*/
 		
 		// 2eme spec 1 seule propriété dans laquelle seront concatenee les valeurs...   
-		propertyDefinitions.add(newPropertiesDefinition("Séquence index attendus", "expectedIndexSequences", LevelService.getLevels(Level.CODE.Content), String.class, true, null, null, 
-				null,null,null,"list", 10, false, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Séquence index attendus", "expectedSequences", LevelService.getLevels(Level.CODE.Content), String.class, true, null, null, 
+				null,null,null,"single", 10, false, null, null));
 		
 		return propertyDefinitions;
 	}
