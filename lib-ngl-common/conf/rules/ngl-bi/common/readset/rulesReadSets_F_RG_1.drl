@@ -16,7 +16,6 @@ rule "Set Lane index properties to ReadSet"
 		keys.put("lanes", 1);
 		Run run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code", $readset.runCode), keys);
 		if(null != run){
-			//Logger.debug("Load RUN "+run.code);
 			Treatment laneNGSRG = run.getLane($readset.laneNumber).treatments.get("ngsrg");
 			Treatment readSetNGSRG = $readset.treatments.get("ngsrg");
 			if(laneNGSRG!=null && readSetNGSRG!=null){
@@ -37,7 +36,6 @@ rule "Set Lane index properties to ReadSet"
 					readSetNGSRG.results.get("default").put("nbUsefulCycleReadIndex1", laneNGSRG.results.get("default").get("nbUsefulCycleReadIndex1"));
 				isUpdate = true;
 				}
-				
 				if(isUpdate){
 					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", $readset.code),  DBUpdate.set("treatments.ngsrg", readSetNGSRG));
 				}

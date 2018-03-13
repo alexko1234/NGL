@@ -69,7 +69,7 @@ public class MigrationTransfertCCRT extends CommonController{
 						MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class,DBQuery.is("code", project.code),
 											DBUpdate.set("bioinformaticParameters.fgGroup",codeFG).set("bioinformaticParameters.fgPriority", 0).set("bioinformaticParameters.localDataDelete", localDataDeleted));
 						
-						//Get ReadSet to update isSentCCRT=true et codeProject=
+						/*//Get ReadSet to update isSentCCRT=true et codeProject=
 						List<ReadSet> readSetsToUpdate = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 								DBQuery.is("properties.isSentCCRT.value", true).is("projectCode", project.code),keys).toList();
 						for(ReadSet readSet : readSetsToUpdate){
@@ -82,7 +82,7 @@ public class MigrationTransfertCCRT extends CommonController{
 								MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", readSet.code),
 										DBUpdate.set("properties.localDataDeleted", propLocalDataDeleted));
 							}
-						}
+						}*/
 						
 					}else
 						errorMessage+="No code project in DB "+codeProject+"\n";
