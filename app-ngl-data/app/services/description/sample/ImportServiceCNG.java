@@ -97,12 +97,7 @@ public class ImportServiceCNG extends AbstractImportService {
 		// propriétés communes Librairies (sauf index)
 		propertyDefinitions.addAll(getLibraryReceptionPropertyDefinitions(false));
 
-		// propriétés spécifiques projet PALEO
-		/* possible avec une propriete de type liste ?????
-		propertyDefinitions.add(newPropertiesDefinition("Séquence index attendus", "expectedIndexesSequences", LevelService.getLevels(Level.CODE.Content), String.class, true, null, null, 
-				null,null,null,"list", 10, false, null, null));
-		*/
-
+		/* 1er specs: 4 propriétés ( pas de propriete de type liste en 03/2018;
 		propertyDefinitions.add(newPropertiesDefinition("Séquence index attendu 1", "expectedSequence1", LevelService.getLevels(Level.CODE.Content), String.class, true, null, null, 
 				null,null,null,"single", 10, false, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Séquence index attendu 2", "expectedSequence2", LevelService.getLevels(Level.CODE.Content), String.class, true, null, null, 
@@ -111,6 +106,11 @@ public class ImportServiceCNG extends AbstractImportService {
 				null,null,null,"single", 12, false, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Séquence index attendu 4", "expectedSequence4", LevelService.getLevels(Level.CODE.Content), String.class, true, null, null, 
 				null,null,null,"single", 13, false, null, null));
+		*/
+		
+		// 2eme spec 1 seule propriété dans laquelle seront concatenee les valeurs...   
+		propertyDefinitions.add(newPropertiesDefinition("Séquence index attendus", "expectedIndexSequences", LevelService.getLevels(Level.CODE.Content), String.class, true, null, null, 
+				null,null,null,"list", 10, false, null, null));
 		
 		return propertyDefinitions;
 	}
