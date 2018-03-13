@@ -15,8 +15,11 @@ angular.module('home').controller('OneToVoidLabChipMigrationProfileCNGCtrl',['$s
 				
 				var concentration1 = $parse("experimentProperties.concentration1")(inputContainerUsed);
 				//	07/03/2018: NGL-1859 la copie de la concentration ne doit etre faite que si l'utilisateur le demande explicitement !!!
-				if(concentration1  &&  $scope.experiment.experimentProperties.copyConcentration.value){
+				// test ajout else
+				if (concentration1  &&  $scope.experiment.experimentProperties.copyConcentration.value){
 					inputContainerUsed.newConcentration = concentration1;
+				} else {
+					inputContainerUsed.newConcentration = null;
 				}
 				
 				var size1 = $parse("experimentProperties.size1")(inputContainerUsed);

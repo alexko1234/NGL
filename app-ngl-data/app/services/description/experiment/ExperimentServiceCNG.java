@@ -1127,6 +1127,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				"img", 14, false, null, null));
 		
 		// 07/03/2018 NGL-1859: propriété pour demander a l'utilisateur s'il faut copier concentration/quantité
+		// 12/03/2018 si on met required=true on ne pas utiliser la valeur false du booleen !!!!
 		propertyDefinitions.add(newPropertiesDefinition("Copier concentration dans concentration finale du container ?", "copyConcentration", LevelService.getLevels(Level.CODE.Experiment), Boolean.class, true, null,
 				null, "single",15, true,"true", null));
 		
