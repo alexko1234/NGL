@@ -290,12 +290,12 @@
 				},
 				
 				updateForm : function(){
-					if (mainService.isHomePage('valuation')) {
+					/*if (mainService.isHomePage('valuation')) {
 						if(!this.isRouteParam && (this.form.stateCodes === undefined || this.form.stateCodes.length === 0)) {
 							//No stateCodes selected, the filter by default (on the only two possible states for the valuation) is applied
 							this.form.stateCodes = ["IW-VQC", "IP-VQC", "IW-VBA"];
 						}		
-					}
+					}*/
 					this.form.includes = [];
 					if(this.reportingConfiguration){
 						for(var i = 0 ; i < this.reportingConfiguration.columns.length ; i++){
@@ -328,7 +328,13 @@
 				},
 				
 				resetForm : function(){
-					this.form = {};									
+					this.form = {};		
+					if (mainService.isHomePage('valuation')) {
+						if(!this.isRouteParam && (this.form.stateCodes === undefined || this.form.stateCodes.length === 0)) {
+							//No stateCodes selected, the filter by default (on the only two possible states for the valuation) is applied
+							this.form.stateCodes = ["IW-VQC", "IP-VQC", "IW-VBA"];
+						}		
+					}
 				},
 				
 				resetSampleCodes : function(){
@@ -348,11 +354,11 @@
 				},
 				valuationStates : [{code:"IW-VQC",name:Codes("state.IW-VQC")},{code:"IP-VQC",name:Codes("state.IP-VQC")},{code:"IW-VBA",name:Codes("state.IW-VBA")}],
 				states : function(){
-					if (mainService.isHomePage('valuation')) {
-						return this.valuationStates;
-					}else{
+					//if (mainService.isHomePage('valuation')) {
+					//	return this.valuationStates;
+					//}else{
 						return this.lists.get('statetrue');
-					}
+					//}
 				},
 				/**
 				 * Update column when change reportingConfiguration

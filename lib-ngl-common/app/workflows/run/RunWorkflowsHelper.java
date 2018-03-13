@@ -77,7 +77,7 @@ public class RunWorkflowsHelper {
 		if (null != run.lanes) {
 			for(Lane lane : run.lanes){
 				List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-						DBQuery.and(DBQuery.is("runCode", run.code), DBQuery.is("laneNumber", lane.number)),getReadSetKeys()).toList();
+						DBQuery.and(DBQuery.is("runCode", run.code), DBQuery.is("laneNumber", lane.number))).toList();
 				if(readSets.size() != lane.readSetCodes.size())Logger.error("Problem with number of readsets for run = "+run.code+" and lane = "+lane.number+". Nb RS in lane = "+lane.readSetCodes.size()+", nb RS by query = "+readSets.size());
 				for(ReadSet readSet : readSets){
 					if(lane.valuation.valid.equals(TBoolean.FALSE)){
