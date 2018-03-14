@@ -1,10 +1,7 @@
 package controllers.projects.api;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import javax.inject.Inject;
 
@@ -22,7 +19,6 @@ import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.mongo.DBObjectConvertor;
-import fr.cea.ig.mongo.DBObjectRestrictor;
 import fr.cea.ig.ngl.APINGLController;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
@@ -33,7 +29,6 @@ import fr.cea.ig.ngl.support.api.ProjectAPIHolder;
 import fr.cea.ig.util.Streamer;
 import models.laboratory.project.instance.Project;
 import play.data.Form;
-import play.data.validation.ValidationError;
 import play.libs.Json;
 import play.mvc.Result;
 /**
@@ -41,7 +36,7 @@ import play.mvc.Result;
  *
  */
 @Historized
-public class Projects extends NGLController implements APINGLController, NGLForms, ProjectAPIHolder, DBObjectRestrictor, DBObjectConvertor {
+public class Projects extends NGLController implements APINGLController, NGLForms, ProjectAPIHolder, DBObjectConvertor {
 
 	private final Form<ProjectsSearchForm> searchForm;
 	private final Form<Project> projectForm;

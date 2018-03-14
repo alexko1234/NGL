@@ -34,9 +34,9 @@ public class SamplesAPI {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(SamplesAPI.class);
 	
-	private static final List<String> AUTHORIZED_UPDATE_FIELDS = Arrays.asList("comments");
+	public static final List<String> AUTHORIZED_UPDATE_FIELDS = Arrays.asList("comments");
 	
-	private static final List<String> DEFAULT_KEYS = Arrays.asList("code",
+	public static final List<String> DEFAULT_KEYS = Arrays.asList("code",
 															     "typeCode",
 															     "categoryCode",
 															     "projectCodes",
@@ -77,9 +77,17 @@ public class SamplesAPI {
 		return dao.mongoDBFinder(query, orderBy, orderSense).toList();
 	}
 	
+	public List<Sample> list(Query query, String orderBy, Sort orderSense, BasicDBObject keys, Integer limit) {
+		return dao.mongoDBFinder(query, orderBy, orderSense, limit, keys).toList();
+	}
+	
 	public Source<ByteString, ?> stream(Query query, String orderBy, Sort orderSense, BasicDBObject keys, 
 			Integer pageNumber, Integer numberRecordsPerPage) {
 		return MongoStreamer.streamUDT(dao.mongoDBFinderWithPagination(query, orderBy, orderSense, pageNumber, numberRecordsPerPage, keys));
+	}
+	
+	public Source<ByteString, ?> stream(Query query, String orderBy, Sort orderSense, BasicDBObject keys, Integer limit) {
+		return MongoStreamer.streamUDT(dao.mongoDBFinder(query, orderBy, orderSense, limit, keys));
 	}
 	
 	
@@ -95,8 +103,14 @@ public class SamplesAPI {
 		return dao.findByQuery(reportingQuery);
 	}
 	
-	public Sample create(Sample input, String currentUser) throws APIValidationException {
+	public Sample create(Sample input, String currentUser) throws APIValidationException, APIException {
 		ContextValidation ctxVal = new ContextValidation(currentUser);
+		if (input._id == null) { 
+			input.traceInformation = new TraceInformation();
+			input.traceInformation.creationStamp(ctxVal, currentUser);
+		} else {
+			throw new APIException("create method does not update existing objects"); 
+		}
 		ctxVal.setCreationMode();
 		SampleHelper.executeRules(input, "sampleCreation");
 		input.validate(ctxVal);
@@ -107,7 +121,16 @@ public class SamplesAPI {
 		}
 	}
 	
-	public Sample update(String code, Sample input, String currentUser, List<String> fields) throws APIException {
+	/**
+	 * @param code
+	 * @param input
+	 * @param currentUser
+	 * @param fields
+	 * @return
+	 * @throws APIException if the code doesn't correspond to a sample 
+	 * @throws APIValidationException
+	 */
+	public Sample update(String code, Sample input, String currentUser, List<String> fields) throws APIException, APIValidationException {
 		// throw an exception if no object is found
 		Sample sampleInDb = get(code);
 		ContextValidation ctxVal = new ContextValidation(currentUser);
@@ -140,17 +163,26 @@ public class SamplesAPI {
 		// throw an exception if no object is found
 		get(code);
 		ContextValidation ctxVal = new ContextValidation(currentUser);
-		ctxVal.setUpdateMode();
-		input.comments = InstanceHelpers.updateComments(input.comments, ctxVal);
-		input.validate(ctxVal);
-		if (!ctxVal.hasErrors()) {
-			dao.updateObject(input);
-			return input;
+		if (code.equals(input.code)) {
+			if(input.traceInformation != null){
+				input.traceInformation.modificationStamp(ctxVal, currentUser);
+			}else{
+				logger.error("traceInformation is null !!");
+			}
+			ctxVal.setUpdateMode();
+			input.comments = InstanceHelpers.updateComments(input.comments, ctxVal);
+			input.validate(ctxVal);
+			if (!ctxVal.hasErrors()) {
+				dao.updateObject(input);
+				return input;
+			} else {
+				throw new APIValidationException("Invalid Sample object", ctxVal.getErrors());
+			}
 		} else {
-			throw new APIValidationException("Invalid Sample object", ctxVal.getErrors());
+			throw new APIException("Sample codes are not the same");
 		}
 	}
-	
+
 	/**
 	 * Validate authorized field for specific update field
 	 * @param ctxVal
