@@ -41,7 +41,12 @@ public class MigrationUpdateSampleOnContainer extends DocumentController<ReadSet
 		keys.put("treatments", 0);
 		
 		Logger.info("Migration sample on container start");
-		backupReadSet(code, onlyNull);
+		try {
+			backupReadSet(code, onlyNull);
+		} catch (Exception e) {
+			// e.printStackTrace();
+			return forbidden(e.getMessage());
+		}
 		List<ReadSet> readSets = null;
 		if(!"all".equals(code)) {
 			readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code",code), keys).toList();						
@@ -74,7 +79,7 @@ public class MigrationUpdateSampleOnContainer extends DocumentController<ReadSet
 		}
 	}
 	
-	private /*static*/ void backupReadSet(String code, Boolean onlyNull) {
+	private /*static*/ void backupReadSet(String code, Boolean onlyNull) throws Exception {
 		BasicDBObject keys = new BasicDBObject();
 		keys.put("treatments", 0);
 		String backupName = InstanceConstants.READSET_ILLUMINA_COLL_NAME+"_BCK_SOC_"+sdf.format(new java.util.Date());
@@ -87,8 +92,9 @@ public class MigrationUpdateSampleOnContainer extends DocumentController<ReadSet
 		} else {
 			// DO NOT BACKUP the entire collection!
 			// readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.exists("code"), keys).toList();
-			Logger.error("code: " + code + " is not authorized");
+			//Logger.error("code: " + code + " is not authorized");
 			Logger.warn("backup of complete " + InstanceConstants.READSET_ILLUMINA_COLL_NAME + " is forbidden!");
+			throw new Exception("backup of complete " + InstanceConstants.READSET_ILLUMINA_COLL_NAME + " is forbidden!");
 			
 		}
 		if(readSets != null) {
