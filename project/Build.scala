@@ -103,8 +103,8 @@ object ApplicationBuild extends Build {
 	
 	// val dataVersion            = "2.0.0"  + distSuffix
 	val nglAssetsVersion       = "2.0.0"  + distSuffix
-	val nglDataVersion         = "2.0.1"  + distSuffix
-	val nglPlatesVersion       = "2.0.0"  + distSuffix
+	val nglDataVersion         = "2.1.0"  + distSuffix
+	val nglPlatesVersion       = "2.1.0"  + distSuffix
 	val nglDevGuideVersion     = "2.0.0"  + distSuffix
 	
 	val libDatatableVersion    = "2.0.0"  + distSuffix
