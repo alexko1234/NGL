@@ -35,10 +35,11 @@ public class Study extends AbstractStudy {
     public String centerProjectName;      // required pour nos stats valeur fixée à projectCode
  	public List <String> projectCodes = new ArrayList<String>();    // required pour nos stats  
     // et heritage de state et traceInformation.
+	public static final String initialStateCode = "NONE";
 
-	
 	@Override
 	public void validate(ContextValidation contextValidation) {
+
 		contextValidation.addKeyToRootKeyName("study");
 		System.out.println("dans validate");
 		
@@ -53,8 +54,9 @@ public class Study extends AbstractStudy {
 		SraValidationHelper.validateId(this, contextValidation);
 		SraValidationHelper.validateCode(this, InstanceConstants.SRA_STUDY_COLL_NAME, contextValidation);
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
-		SraValidationHelper.validateState(ObjectType.CODE.SRASubmission, this.state, contextValidation);
-		
+		if ( this.state != null && StringUtils.isNotBlank(this.state.code) && !initialStateCode.equals(this.state.code)) {
+			SraValidationHelper.validateState(ObjectType.CODE.SRASubmission, this.state, contextValidation);
+		}
 		SraValidationHelper.validateFreeText(contextValidation, "title", this.title);
 		SraValidationHelper.validateFreeText(contextValidation, "studyAbstract", this.studyAbstract);
 		SraValidationHelper.validateFreeText(contextValidation,"description", this.description);

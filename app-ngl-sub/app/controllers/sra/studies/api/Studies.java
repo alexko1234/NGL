@@ -39,7 +39,7 @@ import play.mvc.Result;
 import services.SubmissionServices;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
-import workflows.sra.study.StudyWorkflows;
+//import workflows.sra.study.StudyWorkflows;
 
 
 public class Studies extends DocumentController<AbstractStudy> {
@@ -55,19 +55,19 @@ public class Studies extends DocumentController<AbstractStudy> {
 	private final Form<AbstractStudy>     studyForm;
 	private final Form<StudiesSearchForm> studiesSearchForm;
 	private final Form<State>             stateForm;
-	private final StudyWorkflows          studyWorkflows;
+//	private final StudyWorkflows          studyWorkflows;
 	private final SubmissionServices      submissionServices;
 
+	
 	@Inject
-	public Studies(NGLContext ctx, StudyWorkflows studyWorkflows, SubmissionServices submissionServices) {
+	public Studies(NGLContext ctx, SubmissionServices submissionServices) {
 		super(ctx,InstanceConstants.SRA_STUDY_COLL_NAME, AbstractStudy.class);
 		studyForm               = ctx.form(AbstractStudy.class);
 		studiesSearchForm       = ctx.form(StudiesSearchForm.class);
 		stateForm               = ctx.form(State.class);		
-		this.studyWorkflows     = studyWorkflows;
+//		this.studyWorkflows     = studyWorkflows;
 		this.submissionServices = submissionServices;
 	}
-
 	public Result release(String studyCode) throws SraException {
 		String user = this.getCurrentUser();
 		System.out.println("Dans Studies.java.release ");
@@ -100,7 +100,7 @@ public class Studies extends DocumentController<AbstractStudy> {
 		if (userStudy._id == null) {
 			userStudy.traceInformation = new TraceInformation(); 
 			userStudy.traceInformation.setTraceInformation(getCurrentUser());
-			userStudy.state = new State("N", getCurrentUser());
+			userStudy.state = new State("NONE", getCurrentUser());
 			if (userStudy instanceof Study) {
 				((Study)userStudy).centerName=VariableSRA.centerName;
 				((Study)userStudy).centerProjectName = "";
@@ -256,29 +256,30 @@ public class Studies extends DocumentController<AbstractStudy> {
 
 	}
 
-	public Result updateState(String code) {
-		//Get Submission from DB 
-		Study study = getStudy(code); 
-		Form<State> filledForm = getFilledForm(stateForm, State.class);
-		State state = filledForm.get();
-		state.date = new Date();
-		state.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
-		if (study == null) {
-			//return badRequest("Submission with code "+code+" not exist");
-			ctxVal.addErrors("study " + code,  " not exist in database");	
-			// return badRequest(filledForm.errors-AsJson());
-			return badRequest(errorsAsJson(ctxVal.getErrors()));
-		}
-		logger.debug("Controller studies set state for "+study.code);
-		studyWorkflows.setState(ctxVal, study, state);
-		if (!ctxVal.hasErrors()) {
-			return ok(Json.toJson(getObject(code)));
-		} else {
-			//return badRequest(filledForm.errors-AsJson());
-			return badRequest(errorsAsJson(ctxVal.getErrors()));
-		}
-	}
+
+//	public Result updateState(String code) {
+//		//Get Submission from DB 
+//		Study study = getStudy(code); 
+//		Form<State> filledForm = getFilledForm(stateForm, State.class);
+//		State state = filledForm.get();
+//		state.date = new Date();
+//		state.user = getCurrentUser();
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		if (study == null) {
+//			//return badRequest("Submission with code "+code+" not exist");
+//			ctxVal.addErrors("study " + code,  " not exist in database");	
+//			// return badRequest(filledForm.errors-AsJson());
+//			return badRequest(errorsAsJson(ctxVal.getErrors()));
+//		}
+//		logger.debug("Controller studies set state for "+study.code);
+//		studyWorkflows.setState(ctxVal, study, state);
+//		if (!ctxVal.hasErrors()) {
+//			return ok(Json.toJson(getObject(code)));
+//		} else {
+//			//return badRequest(filledForm.errors-AsJson());
+//			return badRequest(errorsAsJson(ctxVal.getErrors()));
+//		}
+//	}
 
 	private Study getStudy(String code)	{
 		Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, code);

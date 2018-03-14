@@ -6,7 +6,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -17,6 +22,7 @@ import fr.genoscope.lis.devsi.birds.api.exception.BirdsException;
 import fr.genoscope.lis.devsi.birds.api.exception.FatalException;
 import fr.genoscope.lis.devsi.birds.api.exception.JSONDeviceException;
 import fr.genoscope.lis.devsi.birds.impl.properties.ProjectProperties;
+import fr.cea.ig.auto.submission.Tools;
 
 public class XMLServices implements IXMLServices{
 
@@ -76,7 +82,6 @@ public class XMLServices implements IXMLServices{
 	@Override
 	public void writeSampleXml(File outputFile, String codes) throws IOException, JSONDeviceException, FatalException
 	{
-
 		String[] sampleCodes = codes.split(",");
 		// ouvrir fichier en ecriture
 		log.debug("Creation du fichier " + outputFile);
@@ -97,6 +102,7 @@ public class XMLServices implements IXMLServices{
 				String commonName = rpsSample.get("commonName");
 				String anonymizedName = rpsSample.get("anonymizedName");
 				String description = rpsSample.get("description");
+				String clone = rpsSample.get("clone");
 				// Recuperer objet sample dans la base :
 				chaine = chaine + "  <SAMPLE alias=\""+ sampleCode + "\"";
 
@@ -122,9 +128,17 @@ public class XMLServices implements IXMLServices{
 				if (SRAFilesUtil.isNotNullValue(description)) {
 					chaine = chaine + "      <DESCRIPTION>" + description + "</DESCRIPTION>\n";
 				}
+				if (SRAFilesUtil.isNotNullValue(clone)) {
+					chaine = chaine + "      <SAMPLE_ATTRIBUTES>\n";
+					chaine = chaine + "      	<SAMPLE_ATTRIBUTE>\n";
+					chaine = chaine + "      		<TAG>Clone</TAG>\n";
+					chaine = chaine + "      		<VALUE>" + clone + "</VALUE>\n";
+					chaine = chaine + "      	</SAMPLE_ATTRIBUTE>\n";
+					chaine = chaine + "      </SAMPLE_ATTRIBUTES>\n";
+				}
 				chaine = chaine + "  </SAMPLE>\n";
-			}
-		}
+			}// end if sampleCode
+		}// end for sample
 		chaine = chaine + "</SAMPLE_SET>\n";
 		output_buffer.write(chaine);
 		output_buffer.close();
@@ -227,10 +241,15 @@ public class XMLServices implements IXMLServices{
 					chaine = chaine + "          <SPOT_DESCRIPTOR>\n";
 					chaine = chaine + "            <SPOT_DECODE_SPEC>\n";
 					chaine = chaine + "              <SPOT_LENGTH>"+rpsExp.get("spotLength")+"</SPOT_LENGTH>\n";
-					//Get readSpec
-					Set<ResourceProperties> rpsReadSpecs = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/readSpecs?code="+experimentCode,"bot");
-
-					for (ResourceProperties rp: rpsReadSpecs) {
+					//Get readSpec					
+					Set<ResourceProperties> rpsReadSpecs = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/readSpecs?code="+experimentCode,"bot");					
+					List <ResourceProperties> list = new ArrayList<ResourceProperties> (rpsReadSpecs);
+					Collections.sort(list, new Comparator <ResourceProperties>() {
+						@Override
+						public int compare(ResourceProperties o1, ResourceProperties o2) {
+							return new Integer(o1.get("readIndex")).compareTo(new Integer(o2.get("readIndex")));
+						}});					
+					for (ResourceProperties rp : list) {
 						chaine = chaine + "              <READ_SPEC>\n";
 						chaine = chaine + "                <READ_INDEX>"+rp.get("readIndex")+"</READ_INDEX>\n";
 						chaine = chaine + "                <READ_LABEL>"+rp.get("readLabel")+"</READ_LABEL>\n";

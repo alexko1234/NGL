@@ -6,7 +6,7 @@ package models.sra.submit.common.instance;
 // import play.api.modules.spring.Spring;
 import validation.ContextValidation;
 import validation.sra.SraValidationHelper;
-import workflows.sra.submission.SubmissionWorkflows;
+//import workflows.sra.submission.SubmissionWorkflows;
 // import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import fr.cea.ig.play.IGGlobals;
@@ -16,7 +16,7 @@ import models.laboratory.common.instance.State;
 
 public class ExternalStudy extends AbstractStudy {
 	
-	final SubmissionWorkflows subWorkflows = IGGlobals.instanceOf(SubmissionWorkflows.class); //Spring.get BeanOfType(SubmissionWorkflows.class);
+	//final SubmissionWorkflows subWorkflows = IGGlobals.instanceOf(SubmissionWorkflows.class); //Spring.get BeanOfType(SubmissionWorkflows.class);
 
 	public ExternalStudy() {
 		//super();

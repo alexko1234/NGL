@@ -62,7 +62,7 @@
 				refreshSraStudies : function(){
 					if(this.form.projCodes && this.form.projCodes.length > 0){
 						// appel de refresh.sraStudies dans lists de common.js
-						this.lists.refresh.sraStudies({projCodes:this.form.projCodes, stateCodes:["N", "F-SUB"]});
+						this.lists.refresh.sraStudies({projCodes:this.form.projCodes, stateCodes:["NONE", "F-SUB"]});
 					}
 				},
 				

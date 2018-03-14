@@ -3,6 +3,8 @@
 
 @import views.html.tools._
 
+@user            = @{ fr.cea.ig.authentication.Authentication.getUser() }
+
 @column()(value: Html) = {
 	<div class="col-md-4 col-lg-4">
 		@value
@@ -34,7 +36,7 @@
 
 @standard_header("study", "TRUE"){ 
   <!-- affichage uniquement si donnee releasable : study avec state.code=F-SUB et date relase > date du jour : voir details.ctrl.js.$scope.isReleasable--> 
-  <button class="btn btn-default"  ng-if="isReleasable"  ng-click="userRelease()" data-toggle="tooltip" title="@Messages("button.release")" ><i class="fa fa-save"></i> @Messages("button.release")</button>
+  <button class="btn btn-default"  ng-if="isReleasable('@user')"  ng-click="userRelease()" data-toggle="tooltip" title="@Messages("button.release")" ><i class="fa fa-save"></i> @Messages("button.release")</button>
   @*<button class="btn btn-default"   ng-click="userRelease()" data-toggle="tooltip" title="@Messages("button.release")" ><i class="fa fa-save"></i> @Messages("button.release")</button>*@
 }
 
@@ -48,6 +50,8 @@
   		<div ng-if="!isReleasable"> @simpleLine(Messages("study.status"),Messages("study.public"))</div>
 	    @* Ecriture des autres lignes code, state, title, abstract et description :*@
 		@line("study.code")
+		@line("study.accession")
+		@line("study.externalId")
 		@labelLine("study.state")
 		@line("study.title")
 		@line("study.abstract", "study.studyAbstract") @* nom du champs different de nom de label *@

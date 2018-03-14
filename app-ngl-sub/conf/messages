@@ -32,6 +32,7 @@ study.title=Titre
 study.studyAbstract=StudyAbstract
 study.description=Description
 study.bioProjectId=BioProjectId
+study.externalId=BioProjectId
 study.existingStudyType=ExistingStudyType
 studies.tabs.sample=Sample
 studies.tabs.experiment=Experiment
