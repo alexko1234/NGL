@@ -22,6 +22,7 @@ import com.mongodb.BasicDBObject;
 // import akka.actor.Props;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 // import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
@@ -30,6 +31,7 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import play.Logger;
+import rules.services.LazyRules6Actor;
 // import play.Play;
 // import play.libs.Akka;
 // import rules.services.RulesActor6;
@@ -54,14 +56,13 @@ public class RunWorkflowsHelper {
 		this.wc = wc;
 	}*/
 	
-	// private final ActorRef rulesActor;
+	private final LazyRules6Actor  rulesActor;
 	// private final String rulesKey;
 	private final ReadSetWorkflows readSetWorkflows;
 	
 	@Inject
-	public RunWorkflowsHelper(/*NGLContext ctx,*/ ReadSetWorkflows readSetWorkflows) {
-		// rulesActor = ctx.rules6Actor();
-		// rulesKey   = ctx.getRulesKey();
+	public RunWorkflowsHelper(NGLContext ctx, ReadSetWorkflows readSetWorkflows) {
+		 rulesActor = ctx.rules6Actor();
 		this.readSetWorkflows = readSetWorkflows;
 	}
 
@@ -143,7 +144,7 @@ public class RunWorkflowsHelper {
 		State nextState = cloneState(readSet.state, contextValidation.getUser());
 		nextState.code = "F-VQC";
 		readSetWorkflows.setState(contextValidation, readSet, nextState);
-		// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), rules, readSet),null);
+		rulesActor.tellMessage(rules, readSet);
 		// wc.rulesActor().tell(new RulesMessage(wc.rulesKey(), rules, readSet),null);
 	}
 
