@@ -6,6 +6,9 @@ import static org.fest.assertions.Assertions.assertThat;
 //import static play.mvc.Http.Status.OK;
 //import static play.test.Helpers.fakeRequest;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -54,10 +57,12 @@ public class ReadSetWorkflowTest extends AbstractTests {
 		MongoDBDAO.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run);
 
 		String containerSupportCode = run.containerSupportCode;
+		List<String> qCodes = new ArrayList<>();
+		qCodes.add(readSet.sampleCode);
 		container = MongoDBDAO.findOne("ngl_sq.Container_dataWF",Container.class,
 				DBQuery.and(DBQuery.is("support.code", containerSupportCode),
-						DBQuery.is("support.line", readSet.laneNumber.toString()),
-						DBQuery.in("sampleCodes", readSet.sampleCode)));
+						    DBQuery.is("support.line", readSet.laneNumber.toString()),
+						    DBQuery.in("sampleCodes", readSet.sampleCode)));
 		MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, container);
 
 		for(Content content : container.contents){

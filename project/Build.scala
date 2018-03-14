@@ -96,6 +96,14 @@ object ApplicationBuild extends Build {
   val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.0.9"
   val ceaSpring   = "fr.cea.ig"           %% "play-spring-module" % "2.0.2"
 	val ceaMongo    = "fr.cea.ig"           %% "mongodbplugin"      % "2.0.5"
+	// The fix concerns the Query "in" constructs for collection properties
+	// that should be converted roughly like :
+	// Query.in(a,b)     -> Query.in(a,Arrays.asList(b))
+	// Query.in(a,b,c,d) -> Query.in(a,Arrays.asList(b,c,d))
+  val mongoJack   = "org.mongojack"        % "mongojack"          % "2.6.1.IG"
+//      "org.mongojack" % "mongojack" % "2.6.1",
+//      "org.mongojack" % "mongojack" % "2.7.0",
+
   // External libraries versions
 	val postgresql  = "org.postgresql"       % "postgresql"         % "9.4-1206-jdbc41"  
   val commonsLang = "commons-lang"         % "commons-lang"       % "2.4"
@@ -159,12 +167,22 @@ object ApplicationBuild extends Build {
 			// TODO: use dynamic route generator
 			//routesGenerator     := StaticRoutesGenerator,
 			routesGenerator      := InjectedRoutesGenerator,
-			// jackson 2.8 series is problematic so we fall back on 2.7
+			
+			// -- jackson 2.8 series is problematic so we fall back on 2.7
+			// Jackson 2.8 refuses to uses a default implementation that is not 
+			// a superclass of all the other serialized types as it is impossible
+			// to build a Collection<B extends A> with a default implementation
+			// C extends A as we cannot put a C in a collection of B. This is a proper
+			// behavior but this means that all the current default implementation
+			// definitions violates the constraint. The expected fix is to change the
+			// deserialization behavior to throw an exception when the type field
+			// is not set.
 			dependencyOverrides  += "com.fasterxml.jackson.core"     % "jackson-core"            % "2.7.3",
 			dependencyOverrides  += "com.fasterxml.jackson.core"     % "jackson-databind"        % "2.7.3",
 			dependencyOverrides  += "com.fasterxml.jackson.core"     % "jackson-annotations"     % "2.7.3",
 			dependencyOverrides  += "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8"   % "2.7.3",
 			dependencyOverrides  += "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % "2.7.3",
+			
 			javaOptions in Test ++= testJavaOptions,
 			fork                 := true,
 			// --- javadoc configuration
@@ -334,7 +352,7 @@ object ApplicationBuild extends Build {
     )
 
     val mongoPluginDependencies = Seq (
-      "org.mongojack" % "mongojack" % "2.6.1.IG",
+      mongoJack,
       "org.jongo"     % "jongo"     % "1.3.0"
     )
 

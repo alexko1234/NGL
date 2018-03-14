@@ -19,7 +19,7 @@ import validation.run.instance.ReadSetValidationHelper;
 import validation.run.instance.TreatmentValidationHelper;
 import validation.utils.ValidationHelper;
 
-public class ReadSet extends DBObject implements IValidation{
+public class ReadSet extends DBObject implements IValidation {
 
 	public String typeCode;
 	
