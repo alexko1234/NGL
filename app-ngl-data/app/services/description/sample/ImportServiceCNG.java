@@ -55,7 +55,17 @@ public class ImportServiceCNG extends AbstractImportService {
 	private static List<PropertyDefinition> getBankReceptionPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(newPropertiesDefinition("Gender", "gender", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
-				Arrays.asList(newValue("0","unknown"),newValue("1","male"),newValue("2","female")), null,null,null,"single", 17, false, null,null));		
+				Arrays.asList(newValue("0","unknown"),newValue("1","male"),newValue("2","female")), null,null,null,"single", 17, false, null,null));	
+		
+		// NGL-1776 ajout bankIntegrityNumber pas necessaire de mettre (Level.CODE.Container)=> voir GA...
+		propertyDefinitions.add(newPropertiesDefinition("Bank Integrity Number", "bankIntegrityNumber", LevelService.getLevels(Level.CODE.Content), Double.class, false, null, 
+				null, null, null, null,"single", 18, false, null,null));	
+	
+		
+		// NGL-1903 prise en compte du la colonne "Organisme" du fichier importé ( copie depuis getLibraryReceptionPropertyDefinitions...)
+		propertyDefinitions.add(newPropertiesDefinition("Nom scientifique collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				null, null,null,null,"single", 19, false, null,null));
+		
 		return propertyDefinitions;
 	}
 	

@@ -1450,6 +1450,10 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				MeasureUnit.find.findByCode("ng/µL"),
 				"single", 13, true, null,null));
 		
+		// FDS: NGL-1776   Level.CODE.ContainerIn (voir aussi ImportService) ....Essai: ici uniquement Level.CODE.ContainerIn
+		propertyDefinitions.add(newPropertiesDefinition("Bank Integrity Number", "bankIntegrityNumber", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null,
+				"single", 15, true, null,null));
+		
 		return propertyDefinitions;
 	}
 
