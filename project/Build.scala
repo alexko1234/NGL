@@ -111,30 +111,18 @@ object ApplicationBuild extends Build {
   val fest        = "org.easytesting"      % "fest-assert"        % "1.4" % "test"
   val jtds        = "net.sourceforge.jtds" % "jtds"               % "1.3.1"
 
-  // This does not work
-  val eclipseLinkingSettings =
-    /*if (eclipseLinking) 
-      Seq(EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.ManagedClasses, EclipseCreateSrc.ManagedResources),	
-          EclipseKeys.preTasks  := Seq(compile in Compile),
-          EclipseKeys.skipParents in ThisBuild := false) 
-    else*/ 
-      Seq()
-          
-  EclipseKeys.skipParents in ThisBuild := true
-          
-	override def settings = super.settings ++ Seq(
-		//  EclipseKeys.skipParents in ThisBuild := false,
-    // com.typesafe.sbteclipse.core.EclipsePlugin.EclipseKeys.skipParents in ThisBuild := false,
-    // Compile the project before generating Eclipse files,
-    // so that generated .scala or .class files for views and routes are present
-    // EclipseKeys.preTasks := Seq(compile in Compile),
-    // Java project. Don't expect Scala IDE
-    EclipseKeys.projectFlavor := com.typesafe.sbteclipse.plugin.EclipsePlugin.EclipseProjectFlavor.Java,
-    // com.typesafe.sbteclipse.core.EclipsePlugin.EclipseKeys.projectFlavor := EclipseProjectFlavor.Java,
-    // Use .class files instead of generated .scala files for views and routes
-    EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.ManagedClasses, EclipseCreateSrc.ManagedResources)	
-    // EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.ManagedClasses, EclipseCreateSrc.ManagedResources)  // Use .class files instead of generated .scala files for views and routes
-  ) ++ eclipseLinkingSettings
+//	override def settings = super.settings ++ Seq(
+//		EclipseKeys.skipParents in ThisBuild := false,
+//    // Compile the project before generating Eclipse files,
+//    // so that generated class files for views and routes are present
+//    EclipseKeys.preTasks := Seq(compile in Compile),
+//    // Java project. Don't expect Scala IDE
+//    EclipseKeys.projectFlavor := com.typesafe.sbteclipse.plugin.EclipsePlugin.EclipseProjectFlavor.Java,
+//    // - Avoid errors for views and routes
+//    // Use .class files instead of generated .scala files for views and routes,
+//    // This requires that the project is compiled using sbt to avoid unresolved symbols.
+//    EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.ManagedClasses, EclipseCreateSrc.ManagedResources)	
+//  )
 
 	object BuildSettings {
 	  
@@ -152,6 +140,7 @@ object ApplicationBuild extends Build {
 	        Seq()
 	  
 	  val globSettings = Seq(
+    EclipseKeys.preTasks := Seq(compile in Compile),
 	    // -- Scala compilation options are not defined as there are no scala sources
       // scalacOptions += "-deprecation",
 	    // -- Java compilation options are not defined as there are too many warnings
@@ -571,11 +560,23 @@ object ApplicationBuild extends Build {
     publishTo                  := Some(nexusigpublish)
   ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
 
-  val main = Project(appName, file("."),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
+  val main = Project(appName, file("."), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
 		version                    := nglVersion,			  
     resolvers                  := nexus,
     publishArtifact in makePom := false,
-    publishTo                  := Some(nexusigpublish)
+    publishTo                  := Some(nexusigpublish),
+    // -- eclipse task configuration
+    // Generate all project eclipse configs
+    EclipseKeys.skipParents in ThisBuild := false,
+    // Java project(s). Don't expect Scala IDE
+    EclipseKeys.projectFlavor := com.typesafe.sbteclipse.plugin.EclipsePlugin.EclipseProjectFlavor.Java,
+    // Compile the project before generating Eclipse files,
+    // so that generated class files for views and routes are present
+    EclipseKeys.preTasks := Seq(compile in Compile),
+    // - Avoid errors for views and routes
+    // Use .class files instead of generated .scala files for views and routes,
+    // This requires that the project is compiled using sbt to avoid unresolved symbols.
+    EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.ManagedClasses, EclipseCreateSrc.ManagedResources)	
   ).aggregate(
     // libs
    	nglcommon,
