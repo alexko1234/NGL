@@ -62,6 +62,10 @@ import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.instance.ContainerHelper;
 import models.utils.instance.ExperimentHelper;
+import play.Play;
+import rules.services.LazyRules6Actor;
+import rules.services.RulesActor6;
+import rules.services.RulesServices6;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -72,6 +76,8 @@ import org.mongojack.DBUpdate;
 // import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.stereotype.Service;
 
+import akka.actor.ActorRef;
+import akka.actor.Props;
 // import play.Logger;
 // import play.Logger.ALogger;
 // import play.Play;
@@ -94,13 +100,13 @@ import workflows.process.ProcWorkflows;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
+import fr.cea.ig.play.NGLContext;
 
 // @Service
 @Singleton
 public class ExpWorkflowsHelper {
-	
-	/* 
-		// private ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	/*
+	//private ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 	private ActorRef _rulesActor;
 	private ActorRef rulesActor() {
 		if (_rulesActor == null)
@@ -108,7 +114,7 @@ public class ExpWorkflowsHelper {
 			_rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
 		return _rulesActor;
 	}
-
+	
 	@Autowired
 	private ContWorkflows containerWorkflows;
 	@Autowired
@@ -132,13 +138,15 @@ public class ExpWorkflowsHelper {
 	private final ContWorkflows containerWorkflows;
 	private final ContSupportWorkflows containerSupportWorkflows;
 	private final ProcWorkflows processWorkflows;
+	private final LazyRules6Actor      rulesActor;
 	// private final ContentHelper contentHelper;
 	
 	@Inject
-	public ExpWorkflowsHelper(ContWorkflows containerWorkflows, ContSupportWorkflows containerSupportWorkflows, ProcWorkflows processWorkflows/*, ContentHelper contentHelper*/) {
+	public ExpWorkflowsHelper(NGLContext ctx, ContWorkflows containerWorkflows, ContSupportWorkflows containerSupportWorkflows, ProcWorkflows processWorkflows/*, ContentHelper contentHelper*/) {
 		this.containerWorkflows        = containerWorkflows;
 		this.containerSupportWorkflows = containerSupportWorkflows;
 		this.processWorkflows          = processWorkflows;
+		this.rulesActor              = ctx.rules6Actor();
 		// this.contentHelper             = contentHelper;
 	}
 	
@@ -1226,7 +1234,7 @@ public class ExpWorkflowsHelper {
 			facts.add(atomic);
 		}
 		// rulesActor().tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", facts),null);
-		
+		rulesActor.tellMessage("workflow", facts);
 	}
 
 	/*
