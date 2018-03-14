@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +31,9 @@ import fr.cea.ig.MongoDBDAO;
 import org.apache.commons.lang3.StringUtils;
 
 //import play.Logger;
+//class ReadSpec_2 extends ReadSpec {
+//	
+//}
 
 public class XmlServices {
 
@@ -301,6 +307,31 @@ public class XmlServices {
 				chaine = chaine + "          <SPOT_DESCRIPTOR>\n";
 				chaine = chaine + "            <SPOT_DECODE_SPEC>\n";
 				chaine = chaine + "              <SPOT_LENGTH>"+experiment.spotLength+"</SPOT_LENGTH>\n";
+				//for (ReadSpec readSpec: experiment.readSpecs) {
+
+//				Exemple sans passer par des lambda:
+				Comparator< ? extends ReadSpec> x; // n'importe quel type qui etend ReadSpec 
+				Comparator< ? super ReadSpec> y;// n'importe quel type qui est une super class de ReadSpec 
+				List <ReadSpec> list = new ArrayList<ReadSpec> (experiment.readSpecs);
+				Collections.sort(list, new Comparator <ReadSpec>() {
+					@Override
+					public int compare(ReadSpec o1, ReadSpec o2) {
+						return new Integer(o1.readIndex).compareTo(new Integer(o2.readIndex));
+					}});	
+//				List <ReadSpec_2> list_2 = new ArrayList<> ();
+//				Collections.sort(list_2, new Comparator <ReadSpec_2>() {
+//					@Override
+//					public int compare(ReadSpec_2 o1, ReadSpec_2 o2) {
+//						return new Integer(o1.readIndex).compareTo(new Integer(o2.readIndex));
+//					}});	
+//				Collections.sort(list_2, new Comparator <ReadSpec>() {
+//					@Override
+//					public int compare(ReadSpec o1, ReadSpec o2) {
+//						return new Integer(o1.readIndex).compareTo(new Integer(o2.readIndex));
+//					}});	
+//				
+//              Exemple avec lambda (demande d'avoir une seule methode compare
+				experiment.readSpecs.sort((a,b)->Integer.compare(a.readIndex, b.readIndex)); // Trie la liste par readIndex.
 				for (ReadSpec readSpec: experiment.readSpecs) {
 					chaine = chaine + "              <READ_SPEC>\n";
 					chaine = chaine + "                <READ_INDEX>"+readSpec.readIndex+"</READ_INDEX>\n";

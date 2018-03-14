@@ -1285,7 +1285,6 @@ public class SubmissionServices {
 						//System.out.print(propertyValue.toString());
 						//System.out.println(", MA value  => "+propertyValue.value);
 					} 
-
 					if (sampleOnContainerProperties.containsKey("libLayoutNominalLength")) {	
 						//System.out.println("recherche valeur theorique possible");
 						PropertyValue nominalLengthTypeCode = sampleOnContainerProperties.get("libLayoutNominalLength");
