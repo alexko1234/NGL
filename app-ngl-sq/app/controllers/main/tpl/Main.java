@@ -37,6 +37,7 @@ import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.lfw.utils.JavascriptGeneration.Codes;
 import fr.cea.ig.lfw.utils.JavascriptGeneration.Permissions;
+import fr.cea.ig.ngl.support.Executor;
 import fr.cea.ig.ngl.support.NGLJavascript;
 import fr.cea.ig.ngl.support.api.CodeLabelAPIHolder;
 import fr.cea.ig.ngl.support.api.PermissionAPIHolder;
@@ -66,7 +67,8 @@ public class Main extends NGLController
 		           ReagentCatalogAPIHolder,
 		           ResolutionConfigurationAPIHolder,
 		           ValuationCriteriaAPIHolder,
-		           NGLJavascript {
+		           NGLJavascript,
+		           Executor{
 
 	private final home home;
 

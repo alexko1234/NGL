@@ -201,7 +201,7 @@ public class SamplePrep extends AbstractDeclaration{
 		
 		newExperimentTypeNode("ext-to-wga-or-wta-process", getExperimentTypes("ext-to-wga-or-wta-process").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("wga-amplification", getExperimentTypes("wga-amplification").get(0), false, false, false, getExperimentTypeNodes("ext-to-wga-or-wta-process","dna-rna-extraction"), 
-				getExperimentTypes("dnase-treatment"),getExperimentTypes("fluo-quantification","chip-migration"), null).save();
+				getExperimentTypes("dnase-treatment"),getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("aliquoting")).save();
 		
 	}
 

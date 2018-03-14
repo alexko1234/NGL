@@ -11,7 +11,7 @@ import fr.cea.ig.ngl.NGLConfig;
 import fr.cea.ig.ngl.support.api.PermissionAPIHolder;
 import play.mvc.Result;
 
-public interface NGLJavascript extends LFWJavascript, NGLApplicationHolder, Executor, PermissionAPIHolder {
+public interface NGLJavascript extends LFWJavascript, NGLApplicationHolder {
 
 	default Result jsAppURL() {
 		NGLConfig config = nglConfig();
