@@ -743,6 +743,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		l.addAll(getScicloneNGSXProperties());
 		
+		// optionnel
 		l.add(newPropertiesDefinition("Nom du Run","robotRunCode", LevelService.getLevels(Level.CODE.Instrument),  String.class, false, null,
 										null, null, null, null, "single", null, true ,null, null));
 		return l;
@@ -910,6 +911,10 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		l.add(newPropertiesDefinition("Programme Bravo WS","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),String.class, false, null,
 										null, null, null , null, "single", null, true ,null, null));
 		
+		// optionnel: ajout 15/03/2018 : NGL-1906
+		l.add(newPropertiesDefinition("Nom du Run","robotRunCode", LevelService.getLevels(Level.CODE.Instrument),  String.class, false, null,
+										null, null, null, null, "single", null, true ,null, null));
+		
 		return l;
 	}
 	
@@ -928,6 +933,10 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		// FDS 09/11/2017 NGL-1691: ajout propriété "Programme Bravo WS" en saisie libre non obligatoire
 		l.add(newPropertiesDefinition("Programme Bravo WS","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),String.class, false, null,
 										null, null, null , null, "single", null, true ,null, null));
+		
+		// optionnel: ajout 15/03/2018 : NGL-1906
+		l.add(newPropertiesDefinition("Nom du Run","robotRunCode", LevelService.getLevels(Level.CODE.Instrument),  String.class, false, null,
+										null, null, null, null, "single", null, true ,null, null));
 		return l;
 	}
 	
@@ -938,6 +947,10 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		// propriété "Programme Bravo WS" en saisie libre, non obligatoire
 		l.add(newPropertiesDefinition("Programme Bravo WS","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),String.class, false, null,
 										null, null, null , null, "single", null, true ,null, null));
+		
+		// optionnel: ajout 15/03/2018 : NGL-1906
+				l.add(newPropertiesDefinition("Nom du Run","robotRunCode", LevelService.getLevels(Level.CODE.Instrument),  String.class, false, null,
+												null, null, null, null, "single", null, true ,null, null));
 		
 		return l;
 	}
