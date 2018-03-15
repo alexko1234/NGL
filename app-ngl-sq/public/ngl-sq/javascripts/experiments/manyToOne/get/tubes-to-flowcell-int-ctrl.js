@@ -310,25 +310,27 @@ angular.module('home').controller('GETTubesToFlowcellIntCtrl',['$scope', '$parse
 			var concentration = undefined;
 			for(var i=0;i < atm.inputContainerUseds.length;i++){
 				var inputContainerUsed = atm.inputContainerUseds[i];
-
-				console.log("updateConcentration experimentProperties - " + inputContainerUsed.code + " : " + JSON.stringify(inputContainerUsed.experimentProperties.finalConcentration.value));
-				
-				if(inputContainerUsed.experimentProperties && inputContainerUsed.experimentProperties.volumeFinalPhiX){
-					console.log("updateConcentration inputContainerUsed.experimentProperties.finalConcentration.value - " + inputContainerUsed.experimentProperties.finalConcentration.value);
-					concentration = inputContainerUsed.experimentProperties.finalConcentration.value*1000;
-					console.log("Concentration = " + inputContainerUsed.experimentProperties.finalConcentration.value*1000);
-//					console.log(JSON.stringify(inputContainerUsed.experimentProperties));
-					if (!atm.outputContainerUseds[0].concentration){
-						var setter = $parse("atm.outputContainerUseds[0].concentration.value").assign;
-						setter(atm, concentration);
-					}
-					atm.outputContainerUseds[0].concentration.value = Math.round(concentration);
-					atm.outputContainerUseds[0].concentration.unit = "pM";
-//					atm.outputContainerUseds[0].concentration.value = concentration;
+				if(inputContainerUsed.experimentProperties.finalConcentration!=undefined && inputContainerUsed.experimentProperties.finalConcentration!=null){
+					console.log("updateConcentration experimentProperties - " + inputContainerUsed.code + " : " + JSON.stringify(inputContainerUsed.experimentProperties.finalConcentration.value));
+					
+					if(inputContainerUsed.experimentProperties && inputContainerUsed.experimentProperties.volumeFinalPhiX){
+						console.log("updateConcentration inputContainerUsed.experimentProperties.finalConcentration.value - " + inputContainerUsed.experimentProperties.finalConcentration.value);
+						concentration = inputContainerUsed.experimentProperties.finalConcentration.value;
+						console.log("Concentration = " + inputContainerUsed.experimentProperties.finalConcentration.value);
+	//					console.log(JSON.stringify(inputContainerUsed.experimentProperties));
+						if (!atm.outputContainerUseds[0].concentration){
+							var setter = $parse("atm.outputContainerUseds[0].concentration.value").assign;
+							setter(atm, concentration);
+						}
+						atm.outputContainerUseds[0].concentration.value = Math.round(concentration);
+						atm.outputContainerUseds[0].concentration.unit = "pM";
+	//					atm.outputContainerUseds[0].concentration.value = concentration;
+						
+					}//if
 					
 				}
-			}
-		}
+			}//for
+		}//for
 	};
 	
 	

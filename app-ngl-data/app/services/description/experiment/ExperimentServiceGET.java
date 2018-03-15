@@ -625,11 +625,12 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 		/*info de depart*/
 		propertyDefinitions.add(newPropertiesDefinition("Conc. Phix", "phixConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "10",
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "nM"),MeasureUnit.find.findByCode( "nM"),"single",11));
-		propertyDefinitions.add(newPropertiesDefinition("% PhiX à ajouter", "phixPercent", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null, null, null, "single",12,true,"30", null));
+//		propertyDefinitions.add(newPropertiesDefinition("% PhiX à ajouter", "phixPercent", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null, null, null, "single",12,true,"30", null));
+		propertyDefinitions.add(newPropertiesDefinition("% PhiX à ajouter", "phixPercent", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null, null, null, "single",12,true,null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Volume final PhiX", "volumeFinalPhiX", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",13));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Concentration dilution souhaitée", "finalConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "15",
+		propertyDefinitions.add(newPropertiesDefinition("Concentration dilution souhaitée", "finalConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "pM"),MeasureUnit.find.findByCode( "pM"),"single",14));
 		propertyDefinitions.add(newPropertiesDefinition("Volume final", "volumeFinal", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "1000",
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",15));

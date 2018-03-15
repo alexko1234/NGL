@@ -16,7 +16,31 @@ rule "prepa-flowcell"
     then
     	Logger.debug("Experiment prepa-flowcell calculations");
     end
-    
+
+  /////////////////////////////// 0
+
+rule "prepa-fc from process"
+	@nglSQ( calculations )
+	dialect "java"
+	salience 1000
+	no-loop
+	lock-on-active true
+    when
+    	 $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-flowcell", $stateCode : state.code, $stateCode =="N")
+    	 $atomicTransfert: ManyToOneContainer( )
+    	 InputContainerUsed( $processProperties : contents.get(0).processProperties, $experimentProperties : experimentProperties,$experimentProperties!=null) from $atomicTransfert.inputContainerUseds
+		 $finalConcentration1 : PropertyValue() from $processProperties.get("finalConcentration1")
+		 $phixPercent : PropertyValue() from $processProperties.get("phixPercent")
+    	 eval($finalConcentration1.value != null && Number.class.isInstance($finalConcentration1.value) && (null == $experimentProperties.get("finalConcentration") || null == $experimentProperties.get("phixPercent")))
+   	then
+   		Logger.debug("prepa-fc concentration final");
+		PropertySingleValue finalConcentration = new PropertySingleValue((convertPVToDouble($finalConcentration1)*1000), "pM");
+		$experimentProperties.put("finalConcentration",finalConcentration);		
+		PropertySingleValue phixPercent = new PropertySingleValue($phixPercent.value);
+		$experimentProperties.put("phixPercent",phixPercent);	
+   	end
+
+ 
  /////////////////////////////// 1 
   
 rule "volume stock engaged"

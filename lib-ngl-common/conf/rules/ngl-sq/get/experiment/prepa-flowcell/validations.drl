@@ -49,3 +49,19 @@ rule "Prepaflowcell validate piste controle"
     	$contextValidation.addErrors("instrument",	"error.validationexp.badcontrolprepaflowcell", $value,$outputContainerSupport);
     end    
 
+rule "type sequencage catch"
+    @nglSQ( validations )
+	dialect "java"
+	salience 900
+	no-loop
+    when
+	    $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-flowcell", $stateCode : state.code, $stateCode == "N", $instrument:instrument.typeCode, $instrumentProperties:instrumentProperties)
+	    $atomicTransfert: ManyToOneContainer( )
+    	InputContainerUsed($processProperties : contents.get(0).processProperties, $code:code) from $atomicTransfert.inputContainerUseds
+		$sequencingType : PropertyValue($value:value,$value != "Miseq") from $processProperties.get("sequencingType")
+	    $contextValidation:ContextValidation()
+    then
+	    Logger.debug("Type sequencage incorrect");
+	    $contextValidation.addErrors("container",	"error.validationexp.typesequensage", $value,$code);
+end
+
