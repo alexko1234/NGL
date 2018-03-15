@@ -28,7 +28,6 @@ public class NGLDataStarterModule extends NGLCommonStarterModule {
 	public List<Binding<?>> nglCustomBindings(Environment environment, Configuration configuration) {
 		List<Binding<?>> l = super.nglCustomBindings(environment,configuration);
 		l.add(bind(rules.services.Rules6Component.class             ).toSelf().eagerly());
-		l.add(bind(GlobalStarterComponent.class                     ).toSelf().eagerly());
 		return l;
 	}
 
@@ -38,6 +37,8 @@ public class NGLDataStarterModule extends NGLCommonStarterModule {
 	@Override
 	public List<Binding<?>> nglBindings(Environment environment, Configuration configuration) {
 		List<Binding<?>> l = super.nglBindings(environment, configuration);
+		l.add(bind(GlobalStarterComponent.class                     ).toSelf().eagerly());
+		
 		return l;
 	}
 	
