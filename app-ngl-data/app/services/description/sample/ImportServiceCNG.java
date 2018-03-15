@@ -55,7 +55,16 @@ public class ImportServiceCNG extends AbstractImportService {
 	private static List<PropertyDefinition> getBankReceptionPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(newPropertiesDefinition("Gender", "gender", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
-				Arrays.asList(newValue("0","unknown"),newValue("1","male"),newValue("2","female")), null,null,null,"single", 17, false, null,null));		
+				Arrays.asList(newValue("0","unknown"),newValue("1","male"),newValue("2","female")), null,null,null,"single", 17, false, null,null));	
+		
+		// FDS 14/03/2017 NGL-1776 ajout propriété bankIntegrityNumber venant du LIMS Modulbio . pas necessaire de mettre (Level.CODE.Container)=> voir GA...
+		propertyDefinitions.add(newPropertiesDefinition("Bank Integrity Number", "bankIntegrityNumber", LevelService.getLevels(Level.CODE.Content), Double.class, false, null, 
+				null, null, null, null,"single", 18, false, null,null));	
+	
+		// FDS 14/03/2017 NGL-1903 prise en compte du la colonne "Organisme" du fichier importé (copie depuis getLibraryReceptionPropertyDefinitions...)
+		propertyDefinitions.add(newPropertiesDefinition("Nom scientifique collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				null, null,null,null,"single", 19, false, null,null));
+		
 		return propertyDefinitions;
 	}
 	
@@ -96,19 +105,8 @@ public class ImportServiceCNG extends AbstractImportService {
 		
 		// propriétés communes Librairies (sauf index)
 		propertyDefinitions.addAll(getLibraryReceptionPropertyDefinitions(false));
-
-		/* 1er specs: 4 propriétés ( pas de propriete de type liste en 03/2018;
-		propertyDefinitions.add(newPropertiesDefinition("Séquence index attendu 1", "expectedSequence1", LevelService.getLevels(Level.CODE.Content), String.class, true, null, null, 
-				null,null,null,"single", 10, false, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Séquence index attendu 2", "expectedSequence2", LevelService.getLevels(Level.CODE.Content), String.class, true, null, null, 
-				null,null,null,"single", 11, false, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Séquence index attendu 3", "expectedSequence3", LevelService.getLevels(Level.CODE.Content), String.class, true, null, null, 
-				null,null,null,"single", 12, false, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Séquence index attendu 4", "expectedSequence4", LevelService.getLevels(Level.CODE.Content), String.class, true, null, null, 
-				null,null,null,"single", 13, false, null, null));
-		*/
 		
-		// 2eme spec 1 seule propriété dans laquelle seront concatenee les valeurs...   
+		// 2eme spec 1 seule propriété dans laquelle seront concatenees les valeurs...   
 		propertyDefinitions.add(newPropertiesDefinition("Séquence index attendus", "expectedSequences", LevelService.getLevels(Level.CODE.Content), String.class, true, null, null, 
 				null,null,null,"single", 10, false, null, null));
 		

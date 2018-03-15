@@ -1434,7 +1434,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	}
 	
 	
-	// GA
+	// GA : stocker dans un pseudo QC les valeurs initales du fichier importé
 	private List<PropertyDefinition> getPropertyDefinitionsBankQC() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
@@ -1449,6 +1449,10 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				MeasureUnit.find.findByCode("ng/µL"),
 				MeasureUnit.find.findByCode("ng/µL"),
 				"single", 13, true, null,null));
+		
+		// FDS 14/03/2017 NGL-1776 ajout propriété venant du LIMS Modulbio (voir aussi ImportService) 
+		propertyDefinitions.add(newPropertiesDefinition("Bank Integrity Number", "bankIntegrityNumber", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null,
+				"single", 15, true, null,null));
 		
 		return propertyDefinitions;
 	}
