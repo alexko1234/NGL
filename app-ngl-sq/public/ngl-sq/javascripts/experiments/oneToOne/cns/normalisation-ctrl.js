@@ -791,11 +791,18 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 	var generateSampleSheetNormalisation = function(){
 		$scope.fileUtils.generateSampleSheet({"type":"normalisation"});
 	};
-	var generateSampleSheetNormalisationPostPCR = function(){
-		$scope.fileUtils.generateSampleSheet({"type":"normalisation-post-pcr"});
+	var generateSampleSheetNormalisationHighVol = function(){
+		$scope.fileUtils.generateSampleSheet({"type":"normalisation-highVol"});
 	};
 	var generateSampleSheetNormalisationBuffer = function(){
 		$scope.fileUtils.generateSampleSheet({"type":"normalisation-buffer"});
+	};
+	var generateSampleSheetNormalisationBufferHighVol = function(){
+		$scope.fileUtils.generateSampleSheet({"type":"normalisation-buffer-highVol"});
+	};
+	
+	var generateSampleSheetNormalisationPostPCR = function(){
+		$scope.fileUtils.generateSampleSheet({"type":"normalisation-post-pcr"});
 	};
 	
 	if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube" 
@@ -812,7 +819,17 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 				isShow:function(){return !$scope.isNewState();},
 				click:generateSampleSheetNormalisationBuffer,
 				label:Messages("experiments.sampleSheet")+" normalisation Tampon"
-			}]);	
+			},{
+                isDisabled : function(){return $scope.isNewState();} ,
+                isShow:function(){return !$scope.isNewState();},
+                click:generateSampleSheetNormalisationHighVol,
+                label:Messages("experiments.sampleSheet")+" normalisation ADN >=20"
+            },{
+                isDisabled : function(){return $scope.isNewState();} ,
+                isShow:function(){return !$scope.isNewState();},
+                click:generateSampleSheetNormalisationBufferHighVol,
+                label:Messages("experiments.sampleSheet")+" normalisation Tampon >=20"
+            }]);	
 		}else if ($scope.experiment.instrument.typeCode === "hand"){
 
 
