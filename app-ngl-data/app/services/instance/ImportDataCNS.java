@@ -62,7 +62,7 @@ public class ImportDataCNS{
 		new UpdateSamplePropertiesCNS(ImportDataUtil.getDurationForNextHour(30),Duration.create(6,TimeUnit.HOURS), ctx);
 		new UpdateSampleNCBITaxonCNS(ImportDataUtil.getDurationForNextHour(45),Duration.create(6,TimeUnit.HOURS), ctx, new TaxonomyServices(ctx));
 		
-		new RunExtImportCNS(ImportDataUtil.getDurationInMillinsBefore(12, 30),Duration.create(12,TimeUnit.HOURS), ctx);
+		//new RunExtImportCNS(ImportDataUtil.getDurationInMillinsBefore(12, 30),Duration.create(12,TimeUnit.HOURS), ctx);
 		
 		new UpdateReportingData(ImportDataUtil.getDurationInMillinsBefore(20, 0),Duration.create(1,TimeUnit.DAYS), ctx);
 		new UpdateTaraPropertiesCNS(ImportDataUtil.getDurationInMillinsBefore(4, 0),Duration.create(1,TimeUnit.DAYS), ctx);
