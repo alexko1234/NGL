@@ -26,6 +26,9 @@ import java.util.zip.*;
 public class Output extends AbstractOutput {
 //vol seuil pour petit vol
 	private int treshold= 20;
+	private String name1="pipette_P50";
+	private String name2="pipette_P200";
+	
 	@Override
 	public File generateFile(Experiment experiment,ContextValidation contextValidation) throws Exception {
 		String type = (String)contextValidation.getObject("type");
@@ -42,28 +45,28 @@ public class Output extends AbstractOutput {
 				pssl = checkSampleSheetLines(pssl, isPlaque);
 
 				adnContent = OutputHelper.format(normalisation_x_to_plate.render(pssl).body());
-				file = new File(getFileName(experiment)+"_ADN_pipette_P50.csv", adnContent);
+				file = new File(getFileName(experiment)+"_ADN_"+name1+".csv", adnContent);
 
 			}else if("normalisation-buffer".equals(type)){
 				List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
 				pssl = checkSampleSheetLines(pssl, isPlaque);
 
 				bufferContent = OutputHelper.format(normalisation_x_to_plate_buffer.render(pssl).body());
-				file = new File(getFileName(experiment)+"_Buffer_pipette_P50.csv", bufferContent);
+				file = new File(getFileName(experiment)+"_Buffer_"+name1+".csv", bufferContent);
 
 			}else if ("normalisation-highVol".equals(type) ){
 				List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
 				pssl = checkSampleSheetLines(pssl, isPlaque);
 
 				adnContent = OutputHelper.format(normalisation_x_to_plate_highVol.render(pssl).body());
-				file = new File(getFileName(experiment)+"_ADN_pipette_P200.csv", adnContent);
+				file = new File(getFileName(experiment)+"_ADN_"+name2+".csv", adnContent);
 
 			}else if("normalisation-buffer-highVol".equals(type)){
 				List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
 				pssl = checkSampleSheetLines(pssl, isPlaque);
 
 				bufferContent = OutputHelper.format(normalisation_x_to_plate_buffer_highVol.render(pssl).body());
-				file = new File(getFileName(experiment)+"_Buffer_pipette_P200.csv", bufferContent);
+				file = new File(getFileName(experiment)+"_Buffer_"+name2+".csv", bufferContent);
 
 			}else{
 				throw new RuntimeException("brandlhs sampleSheet io not managed : "+type);
