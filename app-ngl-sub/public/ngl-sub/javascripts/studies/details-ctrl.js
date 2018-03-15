@@ -424,7 +424,8 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 		$scope.messages.clear();
 		console.log("je suis dans le bouton studies.details-ctrl.js.userRelease");
 		
-		/*var state = angular.copy($scope.study.state);
+		/*Partie faites maintenant en passant par createFromStudy
+		var state = angular.copy($scope.study.state);
 		state.code = "IW-SUB-R";
 		$http.put(jsRoutes.controllers.sra.studies.api.Studies.updateState($scope.study.code).url, state)
 			.success(function(data){

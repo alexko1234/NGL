@@ -481,7 +481,7 @@ public class Submissions extends DocumentController<Submission>{
 	 * @return ok(Json.toJson(submission))
 	 */           
 	public Result createFromStudy(String studyCode) {
-		//logger.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+		logger.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 		Submission submission = null;
 		Date courantDate = new java.util.Date();
 		String user = getCurrentUser();
@@ -500,15 +500,15 @@ public class Submissions extends DocumentController<Submission>{
 			if (user == null) {
 				return unauthorized("l'utilisateur n'est pas authentifié" );
 			}
-			if (study.traceInformation.createUser.equals(user)) {
+			if (!study.traceInformation.createUser.equals(user)) {
 				//lcontextValidation.addErrors("createfromStudy appele avec le codeStudy" + studyCode , " qui n'existe pas dans base"); // si solution avec ctxVal
-				return unauthorized(user + "n'est pas autorisé à rendre publique le study " + study.code + " crée par " + study.traceInformation.createUser);
+				return unauthorized(user + " n'est pas autorisé à rendre publique le study " + study.code + " crée par " + study.traceInformation.createUser);
 			}
 			submission = new Submission(user, study.projectCodes);
 			submission.code = SraCodeHelper.getInstance().generateSubmissionCode(study.projectCodes);
 			
 			submission.creationDate = courantDate;
-			logger.debug("submissionCode="+ submission.code);
+			logger.debug("************************submissionCode="+ submission.code);
 			// mettre à jour l'objet submission pour le cas d'une release de study :
 			submission.release = true;
 			submission.refStudyCodes.add(study.code);
