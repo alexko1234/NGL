@@ -37,43 +37,43 @@ public class Output extends AbstractOutput {
 		String bufferContent=null;
 		File file;
 		Boolean isPlaque = "96-well-plate".equals(experiment.instrument.inContainerSupportCategoryCode);	
-		
+
 		//tube / 96-well-plate
-		if("96-well-plate".equals(experiment.instrument.outContainerSupportCategoryCode)){
-			if ("normalisation".equals(type) ){
-				List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
-				pssl = checkSampleSheetLines(pssl, isPlaque);
+		//if("96-well-plate".equals(experiment.instrument.outContainerSupportCategoryCode)){
+		if ("normalisation".equals(type) ){
+			List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
+			pssl = checkSampleSheetLines(pssl, isPlaque);
 
-				adnContent = OutputHelper.format(normalisation_x_to_plate.render(pssl).body());
-				file = new File(getFileName(experiment)+"_ADN_"+name1+".csv", adnContent);
+			adnContent = OutputHelper.format(normalisation_x_to_plate.render(pssl).body());
+			file = new File(getFileName(experiment)+"_ADN_"+name1+".csv", adnContent);
 
-			}else if("normalisation-buffer".equals(type)){
-				List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
-				pssl = checkSampleSheetLines(pssl, isPlaque);
+		}else if("normalisation-buffer".equals(type)){
+			List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
+			pssl = checkSampleSheetLines(pssl, isPlaque);
 
-				bufferContent = OutputHelper.format(normalisation_x_to_plate_buffer.render(pssl).body());
-				file = new File(getFileName(experiment)+"_Buffer_"+name1+".csv", bufferContent);
+			bufferContent = OutputHelper.format(normalisation_x_to_plate_buffer.render(pssl).body());
+			file = new File(getFileName(experiment)+"_Buffer_"+name1+".csv", bufferContent);
 
-			}else if ("normalisation-highVol".equals(type) ){
-				List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
-				pssl = checkSampleSheetLines(pssl, isPlaque);
+		}else if ("normalisation-highVol".equals(type) ){
+			List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
+			pssl = checkSampleSheetLines(pssl, isPlaque);
 
-				adnContent = OutputHelper.format(normalisation_x_to_plate_highVol.render(pssl).body());
-				file = new File(getFileName(experiment)+"_ADN_"+name2+".csv", adnContent);
+			adnContent = OutputHelper.format(normalisation_x_to_plate_highVol.render(pssl).body());
+			file = new File(getFileName(experiment)+"_ADN_"+name2+".csv", adnContent);
 
-			}else if("normalisation-buffer-highVol".equals(type)){
-				List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
-				pssl = checkSampleSheetLines(pssl, isPlaque);
+		}else if("normalisation-buffer-highVol".equals(type)){
+			List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
+			pssl = checkSampleSheetLines(pssl, isPlaque);
 
-				bufferContent = OutputHelper.format(normalisation_x_to_plate_buffer_highVol.render(pssl).body());
-				file = new File(getFileName(experiment)+"_Buffer_"+name2+".csv", bufferContent);
+			bufferContent = OutputHelper.format(normalisation_x_to_plate_buffer_highVol.render(pssl).body());
+			file = new File(getFileName(experiment)+"_Buffer_"+name2+".csv", bufferContent);
 
-			}else{
-				throw new RuntimeException("brandlhs sampleSheet io not managed : "+type);
-			}
-		}else {
-			throw new RuntimeException("brandlhs sampleSheet io combination not managed : "+experiment.instrument.inContainerSupportCategoryCode+" / "+experiment.instrument.outContainerSupportCategoryCode+" / "+type);
+		}else{
+			throw new RuntimeException("brandlhs sampleSheet io not managed : "+type);
 		}
+		//	}else {
+		//		throw new RuntimeException("brandlhs sampleSheet io combination not managed : "+experiment.instrument.inContainerSupportCategoryCode+" / "+experiment.instrument.outContainerSupportCategoryCode+" / "+type);
+		//}
 
 
 		return file;
