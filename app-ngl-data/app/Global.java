@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 
+import fr.cea.ig.play.IGGlobals;
 import fr.cea.ig.play.NGLContext;
 // import play.Application;
 //import play.GlobalSettings;
@@ -75,7 +76,8 @@ public class Global { // extends GlobalSettings {
 			try {
 
 				// String institute=play.Play.application().configuration().getString("import.institute");
-				String institute = ctx.config().getString("import.institute");
+				//String institute = ctx.config().getString("import.institute");
+				String institute =  IGGlobals.configuration().getString("import.institute");
 				Logger.info("Import institute "+ institute);
 
 				if("CNG".equals(institute)){
