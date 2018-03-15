@@ -4,13 +4,12 @@ import javax.inject.Singleton;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
-// import org.springframework.stereotype.Service;
 
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.utils.InstanceConstants;
 
-// @Service
+
 @Singleton
 public class ContentHelper {
 	

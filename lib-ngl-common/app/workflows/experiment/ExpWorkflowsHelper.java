@@ -2,8 +2,6 @@ package workflows.experiment;
 
 import static validation.common.instance.CommonValidationHelper.*;
 
-// import static fr.cea.ig.play.IGGlobals.akkaSystem;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,11 +10,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-// import java.util.Map.Entry;
+
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
-// import java.util.stream.Collector;
+
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -51,9 +49,9 @@ import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
-// import models.laboratory.project.instance.Project;
+
 import models.laboratory.protocol.instance.Protocol;
-// import models.laboratory.run.instance.ReadSet;
+
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.laboratory.sample.instance.tree.SampleLife;
@@ -62,92 +60,52 @@ import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.instance.ContainerHelper;
 import models.utils.instance.ExperimentHelper;
-import play.Play;
+
 import rules.services.LazyRules6Actor;
-import rules.services.RulesActor6;
-import rules.services.RulesServices6;
+
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.mongojack.DBQuery;
-// import org.mongojack.DBQuery.Query;
-import org.mongojack.DBUpdate;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.stereotype.Service;
 
-import akka.actor.ActorRef;
-import akka.actor.Props;
-// import play.Logger;
-// import play.Logger.ALogger;
-// import play.Play;
-// import play.libs.Akka;
-// import rules.services.RulesActor6;
-// import rules.services.RulesMessage;
+import org.mongojack.DBUpdate;
+
+
+
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import workflows.container.ContSupportWorkflows;
 import workflows.container.ContWorkflows;
-import workflows.container.ContentHelper;
+
 import workflows.process.ProcWorkflows;
-// import workflows.container.ContSupportWorkflows;
-// import workflows.container.ContWorkflows;
-// import workflows.container.ContentHelper;
-// import workflows.process.ProcWorkflowHelper;
-// import workflows.process.ProcWorkflows;
-// import akka.actor.ActorRef;
-// import akka.actor.Props;
+
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
 import fr.cea.ig.play.NGLContext;
 
-// @Service
 @Singleton
 public class ExpWorkflowsHelper {
-	/*
-	//private ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-	private ActorRef _rulesActor;
-	private ActorRef rulesActor() {
-		if (_rulesActor == null)
-			// _rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-			_rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
-		return _rulesActor;
-	}
-	
-	@Autowired
-	private ContWorkflows containerWorkflows;
-	@Autowired
-	private ContSupportWorkflows containerSupportWorkflows;
-	@Autowired
-	private ProcWorkflows processWorkflows;
-	@Autowired
-	ContentHelper contentHelper;*/
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(ExpWorkflowsHelper.class);
 
 	private final String NEW_PROCESS_CODES = "NEW_PROCESS_CODES";
 	private final String NEW_SAMPLE_CODES  = "NEW_SAMPLE_CODES";
 	
-	/*private final WorkflowsCatalog wc;
 	
-	// Not an injection constructor on purpose
-	public ExpWorkflowsHelper(WorkflowsCatalog wc) {
-		this.wc = wc;
-	}*/
 	private final ContWorkflows containerWorkflows;
 	private final ContSupportWorkflows containerSupportWorkflows;
 	private final ProcWorkflows processWorkflows;
 	private final LazyRules6Actor      rulesActor;
-	// private final ContentHelper contentHelper;
-	
+
 	@Inject
 	public ExpWorkflowsHelper(NGLContext ctx, ContWorkflows containerWorkflows, ContSupportWorkflows containerSupportWorkflows, ProcWorkflows processWorkflows/*, ContentHelper contentHelper*/) {
 		this.containerWorkflows        = containerWorkflows;
 		this.containerSupportWorkflows = containerSupportWorkflows;
 		this.processWorkflows          = processWorkflows;
 		this.rulesActor              = ctx.rules6Actor();
-		// this.contentHelper             = contentHelper;
+		
 	}
 	
 	public void updateXCodes(Experiment exp) {
@@ -310,7 +268,7 @@ public class ExpWorkflowsHelper {
 
 		MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.in("code", removeContainerSupportCodes)).cursor
 		.forEach(c -> {
-			containerSupportWorkflows // containerSupportWorkflows
+			containerSupportWorkflows
 			.setStateFromContainers(ctxVal, c);
 		});
 
@@ -1233,7 +1191,6 @@ public class ExpWorkflowsHelper {
 			if(atomic.viewIndex == null)atomic.viewIndex = i+1; //used to have the position in the list
 			facts.add(atomic);
 		}
-		// rulesActor().tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", facts),null);
 		rulesActor.tellMessage("workflow", facts);
 	}
 

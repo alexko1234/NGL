@@ -346,7 +346,7 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("ffpe-reparation","réparation FFPE","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-dna-reparation")));	
 		lp.add(newProtocol("nanopore-sizing-ptr","sizing nanopore","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-sizing")));
 	
-		lp.add(newProtocol("nanodrop","Nanodrop","path7","1","production", InstanceFactory.setExperimentTypeCodes("uv-spectrophotometry")));	
+		lp.add(newProtocol("nanodrop","Nanodrop","path7","1","production", InstanceFactory.setExperimentTypeCodes("uv-spectrophotometry"),false));	
 		lp.add(newProtocol("annexe-dosage-nanodrop-v1","Annexe_DosageNanoDrop_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("uv-spectrophotometry")));	
 		
 		lp.add(newProtocol("qcard-qc","QC_qcard","path7","1","production", InstanceFactory.setExperimentTypeCodes("qcard")));	

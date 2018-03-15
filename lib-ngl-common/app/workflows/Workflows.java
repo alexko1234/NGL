@@ -3,34 +3,12 @@ package workflows;
 import java.util.Date;
 import java.util.HashSet;
 
-// import akka.actor.ActorRef;
-// import fr.cea.ig.play.NGLContext;
-
-// import javax.inject.Inject;
-
-// import org.springframework.beans.factory.annotation.Autowired;
-
-// import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.TransientState;
 import validation.ContextValidation;
 
-// instanciation search : getBeanOfType(*Workflow*.class)
-
-// TODO: probably not a plural
 public abstract class Workflows<T> {
-	
-	// private NGLContext ctx;
-	
-//	public Workflows(NGLContext ctx) {
-//		this.ctx = ctx;
-//	}
-	
-	// @Autowired
-	// public NGLContext getNGLContext() {
-	//	return this.ctx;
-	//}
 	
 	public abstract void applyPreStateRules(ContextValidation validation, T exp, State nextState);
 	

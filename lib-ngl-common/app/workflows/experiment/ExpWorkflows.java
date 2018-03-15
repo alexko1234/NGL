@@ -3,7 +3,6 @@ package workflows.experiment;
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
 import static validation.common.instance.CommonValidationHelper.OBJECT_IN_DB;
 
-// import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -12,44 +11,27 @@ import javax.inject.Singleton;
 import models.laboratory.common.instance.State;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.instance.Experiment;
-// import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.stereotype.Service;
 
 import controllers.authorisation.PermissionHelper;
-// import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.ValidationConstants;
 import workflows.Workflows;
-// import workflows.Workflows;
 import workflows.container.ContWorkflows;
 import fr.cea.ig.MongoDBDAO;
 
-// @Service
+
 @Singleton
 public class ExpWorkflows extends Workflows<Experiment> {
 	
-	/*@Autowired
-	ExpWorkflowsHelper expWorkflowsHelper;
-	
-	@Autowired
-	ContWorkflows contWorkflows;*/
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(ExpWorkflows.class);
 	
-	/*// private WorkflowsCatalog wc;
 	
-	// Not an injection constructor on purpose
-	public ExpWorkflows(WorkflowsCatalog wc) {
-		// super(wc.getNGLContext());
-		// this.wc = wc;
-		super(wc);
-	}*/
 	private final ExpWorkflowsHelper expWorkflowsHelper;
 	private final ContWorkflows      contWorkflows;
 	
@@ -61,7 +43,6 @@ public class ExpWorkflows extends Workflows<Experiment> {
 	
 	@Override
 	public void applyPreValidateCurrentStateRules(ContextValidation validation, Experiment exp) {
-		//ExpWorkflowsHelper expWorkflowsHelper = wc.expWorkflowsHelper();
 		if ("N".equals(exp.state.code)) {
 			expWorkflowsHelper.updateXCodes(exp);
 			if(validation.isUpdateMode()){
@@ -88,7 +69,6 @@ public class ExpWorkflows extends Workflows<Experiment> {
 
 	@Override
 	public void applyPostValidateCurrentStateRules(ContextValidation validation, Experiment exp) {
-		// ExpWorkflowsHelper expWorkflowsHelper = wc.expWorkflowsHelper();
 		if ("F".equals(exp.state.code)) {
 			if(ExperimentCategory.CODE.qualitycontrol.toString().equals(exp.categoryCode)){
 				expWorkflowsHelper.updateQCResultInInputContainers(validation, exp);
@@ -100,7 +80,6 @@ public class ExpWorkflows extends Workflows<Experiment> {
 	}
 	
 	public void applyPreStateRules(ContextValidation validation, Experiment exp, State nextState) {		
-		// ExpWorkflowsHelper expWorkflowsHelper = wc.expWorkflowsHelper();
 		exp.traceInformation = updateTraceInformation(exp.traceInformation, nextState); 			
 		expWorkflowsHelper.updateStatus(exp, validation);
 		if("N".equals(nextState.code)){
@@ -130,7 +109,6 @@ public class ExpWorkflows extends Workflows<Experiment> {
 	}
 	
 	public void applySuccessPostStateRules(ContextValidation validation, Experiment exp) {
-		// ExpWorkflowsHelper expWorkflowsHelper = wc.expWorkflowsHelper();
 		expWorkflowsHelper.linkExperimentWithProcesses(exp, validation);
 		if ("N".equals(exp.state.code)) {
 			expWorkflowsHelper.updateStateOfInputContainers(exp, getNewState("IW-E", validation.getUser()), validation);
@@ -155,7 +133,6 @@ public class ExpWorkflows extends Workflows<Experiment> {
 	}
 	
 	public void applyErrorPostStateRules(ContextValidation validation, Experiment exp, State nextState){
-		//ExpWorkflowsHelper expWorkflowsHelper = wc.expWorkflowsHelper();
 		ContextValidation errorValidation = new ContextValidation(validation.getUser());
 		errorValidation.setContextObjects(validation.getContextObjects());
 		
@@ -206,8 +183,6 @@ public class ExpWorkflows extends Workflows<Experiment> {
 	}
 
 	public void delete(ContextValidation contextValidation,	Experiment exp) {
-		//ExpWorkflowsHelper expWorkflowsHelper = wc.expWorkflowsHelper();
-		//ContWorkflows      contWorkflows      = wc.contWorkflows();
 		if("N".equals(exp.state.code) || "IP".equals(exp.state.code)){
 			Set<String> containerCodes = exp.inputContainerCodes;
 			expWorkflowsHelper.rollbackOnContainers(contextValidation, getNewState(contWorkflows.getContainerStateFromExperimentCategory(exp.categoryCode), contextValidation.getUser()), exp.code, containerCodes);

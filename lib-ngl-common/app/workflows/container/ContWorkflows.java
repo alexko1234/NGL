@@ -1,14 +1,9 @@
 package workflows.container;
 
-// import static fr.cea.ig.play.IGGlobals.akkaSystem;
-// import static fr.cea.ig.play.IGGlobals.configuration;
-
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-// import javax.inject.Inject;
 
 import static validation.common.instance.CommonValidationHelper.*;
 import models.laboratory.common.instance.State;
@@ -19,50 +14,27 @@ import models.utils.InstanceConstants;
 import models.laboratory.processes.instance.Process;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.stereotype.Service;
 
 import com.google.inject.Provider;
 
 import akka.actor.ActorRef;
 import rules.services.LazyRules6Actor;
-// import play.Logger;
-// import play.Play;
-// import play.libs.Akka;
-// import rules.services.RulesActor6;
-import rules.services.RulesMessage;
+
 import validation.ContextValidation;
 import validation.container.instance.ContainerValidationHelper;
 import workflows.Workflows;
-// import workflows.Workflows;
+
 import workflows.process.ProcWorkflows;
-// import akka.actor.ActorRef;
-// import akka.actor.Props;
+
 import fr.cea.ig.MongoDBDAO;
-// import fr.cea.ig.play.NGLContext;
+
 import fr.cea.ig.play.NGLContext;
 
-// @Service
+
 @Singleton
 public class ContWorkflows extends Workflows<Container> {
 
-	// @Autowired
-	// ContSupportWorkflows contSupportWorkflows;
-	// @Autowired
-	// ProcWorkflows procSupportWorkflows;
-	// Same actor as in ContSupportWorkflow
-	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-	// Try lazy init
-	// private static ActorRef _rulesActor;
-	/*static ActorRef rulesActor() {
-		if (_rulesActor == null)
-			// _rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-			_rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
-		return _rulesActor;
-	}*/
-
-	// private final ActorRef             rulesActor;
-	// private final String               rulesKey;
+	
 	private final LazyRules6Actor rulesActor;
 	private final Provider<ContSupportWorkflows> contSupportWorkflows;
 	private final ProcWorkflows        procSupportWorkflows;
@@ -70,22 +42,12 @@ public class ContWorkflows extends Workflows<Container> {
 	@Inject
 	public ContWorkflows(NGLContext ctx, Provider<ContSupportWorkflows> contSupportWorkflows, ProcWorkflows procSupportWorkflows) {
 		rulesActor                = ctx.rules6Actor();
-		// rulesKey                  = ctx.getRulesKey();
 		this.contSupportWorkflows = contSupportWorkflows;
 		this.procSupportWorkflows = procSupportWorkflows;
 	}
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(ContWorkflows.class);
 	
-	// private final WorkflowsCatalog wc;
-	
-	// Not an injection constructor on purpose
-	/*public ContWorkflows(WorkflowsCatalog wc) {
-		// super(wc.getNGLContext());
-		// this.wc = wc;
-		super(wc);
-	}*/
-
 	@Override
 	public void applyPreStateRules(ContextValidation validation, Container exp, State nextState) {
 	}
@@ -100,8 +62,6 @@ public class ContWorkflows extends Workflows<Container> {
 	
 	@Override
 	public void applySuccessPostStateRules(ContextValidation validation, Container container) {
-		// ProcWorkflows procSupportWorkflows = wc.procWorkflows();
-		// ContSupportWorkflows contSupportWorkflows = wc.contSupportWorkflows();
 		// purg when pass to IS, UA or IW-P
 		if ("IS".equals(container.state.code) || "UA".equals(container.state.code) || "IW-P".equals(container.state.code)) {
 			
@@ -160,13 +120,8 @@ public class ContWorkflows extends Workflows<Container> {
 		}
 	}
 	
-	/*public static void callWorkflowRules(ContextValidation validation, Container container) {
-		// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", container, validation),null);
-		rulesActor().tell(new RulesMessage(configuration().getString("rules.key"), "workflow", container, validation),null);
-	}*/
-	
+
 	public void callWorkflowRules(ContextValidation validation, Container container) {
-		// rulesActor.tell(new RulesMessage(rulesKey, "workflow", container, validation),null);
 		rulesActor.tellMessage("workflow", container, validation);
 	}
 	
