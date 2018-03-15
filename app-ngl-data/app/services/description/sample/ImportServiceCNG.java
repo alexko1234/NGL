@@ -62,7 +62,7 @@ public class ImportServiceCNG extends AbstractImportService {
 				null, null, null, null,"single", 18, false, null,null));	
 	
 		// FDS 14/03/2017 NGL-1903 prise en compte du la colonne "Organisme" du fichier importé (copie depuis getLibraryReceptionPropertyDefinitions...)
-		propertyDefinitions.add(newPropertiesDefinition("Nom scientifique collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Nom organisme / collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				null, null,null,null,"single", 19, false, null,null));
 		
 		return propertyDefinitions;
@@ -74,7 +74,7 @@ public class ImportServiceCNG extends AbstractImportService {
 		return propertyDefinitions;
 	}
 	
-	// FDS 20/06/2017 NGL-1472; 06/03/2018 suppression du boolen isPooled car c'est géré directement dans la configuration de reception stockée dans Mongo
+	// FDS 20/06/2017 NGL-1472
 	private static List<PropertyDefinition> getLibraryReceptionPropertyDefinitions (boolean isIndexed) throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
@@ -85,7 +85,7 @@ public class ImportServiceCNG extends AbstractImportService {
 				null, "single", 2, false, null, null));	
 		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
 				getExtLibProcessTypecodesValues(), null, null, null,"single", 3, false, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Nom scientifique collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Nom organisme / collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				null, null,null,null,"single", 4, false, null,null));		
 			
 		// propriétés pour librairies indexees
