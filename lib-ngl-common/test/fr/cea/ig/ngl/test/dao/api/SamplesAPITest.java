@@ -1,6 +1,7 @@
 package fr.cea.ig.ngl.test.dao.api;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
@@ -166,14 +167,14 @@ public class SamplesAPITest extends AbstractTests implements AbstractAPITests {
 	public void deleteTest() throws APIException {
 		logger.debug("Delete test");
 		setUpData();
-		
+
 		//Assert the exception thrown confirms the deletion of sample
-		exceptions.expect(APIException.class);
-		exceptions.expectMessage("Sample with code " + refSample.code + " does not exist");
-		
+		exceptions.expect(DAOException.class);
+		exceptions.expectMessage("no instance found");
+
 		api.delete(refSample.code);
 		api.get(refSample.getCode()); // if sample not exists then an APIException is thrown
-		
+
 		// We can't delete dep objects here (due to Exception) so it will delete into tearDown() (@After method)
 	}
 
@@ -232,7 +233,7 @@ public class SamplesAPITest extends AbstractTests implements AbstractAPITests {
 			sampleToUpdate.name = newName;
 			sampleToUpdate.traceInformation.modifyUser = USER;
 			sampleToUpdate.traceInformation.modifyDate = new Date();
-			api.update(data.code, sampleToUpdate, USER);
+			api.update(sampleToUpdate, USER);
 			Sample sample = api.get(refSample.code);
 			Assert.assertEquals(refSample.categoryCode, sample.categoryCode);
 			Assert.assertNotEquals(refSample.name, sample.name);

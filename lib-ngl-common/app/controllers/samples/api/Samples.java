@@ -23,6 +23,7 @@ import akka.stream.javadsl.Source;
 import akka.util.ByteString;
 
 import controllers.DocumentController;
+import controllers.NGLAPIController;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
@@ -39,6 +40,7 @@ import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.dao.api.APIException;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.samples.SamplesAPI;
+import fr.cea.ig.ngl.dao.samples.SamplesDAO;
 import fr.cea.ig.ngl.support.NGLForms;
 import fr.cea.ig.play.IGBodyParsers;
 import fr.cea.ig.play.NGLContext;
@@ -59,39 +61,24 @@ import validation.ContextValidation;
 import views.components.datatable.DatatableForm;
 
 @Historized
-public class Samples extends NGLController implements APINGLController, NGLForms, DBObjectConvertor {
-
-	private static final play.Logger.ALogger logger = play.Logger.of(Samples.class);
+public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> implements NGLForms, DBObjectConvertor {
 	
 	private final Form<QueryFieldsForm> updateForm;
 	private final Form<Sample> sampleForm;
 	private Form<SamplesSearchForm> sampleSearchForm;
 	
 	// instead of using APIHolder
-	private final SamplesAPI api;
-	public SamplesAPI getSamplesApi() {
-		return api;
-	}
+//	private final SamplesAPI api;
+//	public SamplesAPI api() {
+//		return api;
+//	}
 
 	@Inject
 	public Samples(NGLApplication app, SamplesAPI api) {
-		super(app);
-		this.api = api;
+		super(app, api);
 		this.sampleForm = app.formFactory().form(Sample.class);
 		this.sampleSearchForm = app.formFactory().form(SamplesSearchForm.class);
 		this.updateForm = app.formFactory().form(QueryFieldsForm.class);
-	}
-
-
-	@Override
-	@Authenticated
-	@Authorized.Read
-	public Result head(String code) {
-		if(! getSamplesApi().isObjectExist(code)) {
-			return notFound();
-		} else {
-			return ok();
-		}
 	}
 
 	@Override
@@ -100,16 +87,16 @@ public class Samples extends NGLController implements APINGLController, NGLForms
 	public Result list() {
 		SamplesSearchForm samplesSearch = objectFromRequestQueryString(SamplesSearchForm.class);
 		if (samplesSearch.reporting) {
-			MongoCursor<Sample> data = getSamplesApi().reportingData(samplesSearch.reportingQuery);
+			MongoCursor<Sample> data = api().findByQuery(samplesSearch.reportingQuery);
 			if (samplesSearch.datatable) {
 				return MongoStreamer.okStreamUDT(data);
 			} else if(samplesSearch.list) {
 				return MongoStreamer.okStream(data);
 			} else if(samplesSearch.count) {
-				int count = getSamplesApi().countForReporting(samplesSearch.reportingQuery);
-				Map<String, Integer> m = new HashMap<String, Integer>(1);
-				m.put("result", count);
-				return ok(Json.toJson(m));
+				int count = api().count(samplesSearch.reportingQuery);
+				Map<String, Integer> map = new HashMap<String, Integer>(1);
+				map.put("result", count);
+				return ok(Json.toJson(map));
 			} else {
 				return badRequest();
 			}
@@ -120,9 +107,9 @@ public class Samples extends NGLController implements APINGLController, NGLForms
 			if (samplesSearch.datatable) {
 				Source<ByteString, ?> resultsAsStream = null; 
 				if(samplesSearch.isServerPagination()){
-					resultsAsStream = getSamplesApi().stream(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.pageNumber, samplesSearch.numberRecordsPerPage);
+					resultsAsStream = api().stream(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.pageNumber, samplesSearch.numberRecordsPerPage);
 				} else {
-					resultsAsStream = getSamplesApi().stream(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.limit);
+					resultsAsStream = api().stream(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.limit);
 				}
 				return Streamer.okStream(resultsAsStream);
 			} else  {
@@ -133,48 +120,17 @@ public class Samples extends NGLController implements APINGLController, NGLForms
 					keys = new BasicDBObject();
 					keys.put("_id", 0);//Don't need the _id field
 					keys.put("code", 1);
-					results = getSamplesApi().list(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.limit);	
+					results = api().list(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.limit);	
 					return Streamer.okStream(MongoStreamer.stream(convertToListObject(results, x -> x.code, x -> x.code))); // in place of getLOChunk(MongoDBResult<T> all)
 				} else if(samplesSearch.count) {
-					int count = getSamplesApi().countForReporting(samplesSearch.reportingQuery);
+					int count = api().count(samplesSearch.reportingQuery);
 					Map<String, Integer> m = new HashMap<String, Integer>(1);
 					m.put("result", count);
 					return ok(Json.toJson(m));
 				} else {
-					return Streamer.okStream(getSamplesApi().stream(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.limit));
+					return Streamer.okStream(api().stream(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.limit));
 				}
 			}
-			/*
-			 * BasicDBObject keys = getKeys(updateForm(searchForm));
-		if (searchForm.datatable) {
-			MongoDBResult<T> results =  mongoDBFinder(searchForm, query,keys);
-			// return ok(getUDTChunk(results)).as("application/json");
-			return MongoStreamer.okStreamUDT(results);
-		} else if (searchForm.list) {
-			keys = new BasicDBObject();
-			keys.put("_id", 0);//Don't need the _id field
-			keys.put("code", 1);
-			if(null == searchForm.orderBy)searchForm.orderBy = "code";
-			if(null == searchForm.orderSense)searchForm.orderSense = 0;				
-
-			MongoDBResult<T> results = mongoDBFinder(searchForm, query, keys);
-			// return ok(getLOChunk(results)).as("application/json");
-			return getLOChunk(results);
-		} else if(searchForm.count) {
-			keys = new BasicDBObject();
-			keys.put("_id", 1);//Don't need the _id field
-			MongoDBResult<T> results =  mongoDBFinder(searchForm, query);
-			Map<String, Integer> m = new HashMap<String, Integer>(1);
-			m.put("result", results.count());
-			return ok(Json.toJson(m));
-		} else {
-			if (null == searchForm.orderBy) searchForm.orderBy = "code";
-			if (null == searchForm.orderSense) searchForm.orderSense = 0;
-			MongoDBResult<T> results = mongoDBFinder(searchForm, query,keys);
-			// return ok(getChunk(results)).as("application/json");
-			return MongoStreamer.okStream(results);
-		}
-			 * */
 		}
 	}
 
@@ -183,7 +139,7 @@ public class Samples extends NGLController implements APINGLController, NGLForms
 	@Authorized.Read
 	public Result get(String code) {
 		DatatableForm form = objectFromRequestQueryString(DatatableForm.class);
-		Sample sample = getSamplesApi().getObject(code, getKeys(form));
+		Sample sample = api().getObject(code, getKeys(form));
 		if (sample == null) {
 			return notFound();
 		} 
@@ -198,7 +154,7 @@ public class Samples extends NGLController implements APINGLController, NGLForms
 		if(! filledForm.hasErrors()) {
 			Sample input = filledForm.get();
 			try {
-				Sample s = getSamplesApi().create(input, getCurrentUser());
+				Sample s = api().create(input, getCurrentUser());
 				return ok(Json.toJson(s));
 			} catch (APIValidationException e) {
 				getLogger().error(e.getMessage());
@@ -221,28 +177,35 @@ public class Samples extends NGLController implements APINGLController, NGLForms
 	@Authenticated
 	@Authorized.Write
 	public Result update(String code) {
-		logger.debug("Sample with code "+code);
-		try {
-			Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
-			QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
-			Form<Sample> filledForm = getFilledForm(sampleForm, Sample.class);
-			Sample sampleInForm = filledForm.get();
-			Sample s = null;
-			if(queryFieldsForm.fields == null) { 
-				s = getSamplesApi().update(code, sampleInForm, getCurrentUser());
-			} else {// TODO à vérifier!
-				s = getSamplesApi().update(code, sampleInForm, getCurrentUser(), queryFieldsForm.fields);
-			}
-			return ok(Json.toJson(s));
-		} catch (APIValidationException e) {
-			getLogger().error(e.getMessage());
-			if(e.getErrors() != null) {
-				return badRequest(errorsAsJson(e.getErrors()));
+		getLogger().debug("update Sample with code "+code);
+		Form<Sample> filledForm = getFilledForm(sampleForm, Sample.class);
+		Sample sampleInForm = filledForm.get();
+		if(code.equals(sampleInForm.code)) { 
+			if(! filledForm.hasErrors()) {
+				QueryFieldsForm queryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class).get();
+				Sample s = null;
+				try {
+					if(queryFieldsForm.fields == null) { 
+						s = api().update(sampleInForm, getCurrentUser());
+					} else {
+						s = api().update(sampleInForm, getCurrentUser(), queryFieldsForm.fields);
+					}
+					return ok(Json.toJson(s));
+				} catch (APIValidationException e) {
+					getLogger().error(e.getMessage());
+					if(e.getErrors() != null) {
+						return badRequest(errorsAsJson(e.getErrors()));
+					} else {
+						return badRequest(e.getMessage());
+					}
+				} catch (APIException e) {
+					return badRequest(e.getMessage());
+				}
 			} else {
-				return badRequest(e.getMessage());
+				return badRequest(errorsAsJson(mapErrors(filledForm.allErrors())));
 			}
-		} catch (APIException e) {
-			return badRequest(e.getMessage());
+		} else {
+			return badRequest("Sample codes are not the same");
 		}
 	}
 
@@ -323,7 +286,7 @@ public class Samples extends NGLController implements APINGLController, NGLForms
 	 * @param samplesSearch
 	 * @return
 	 */
-	public static DBQuery.Query getQuery(SamplesSearchForm samplesSearch) {
+	public DBQuery.Query getQuery(SamplesSearchForm samplesSearch) {
 		// TODO: simply build return value at method end
 		Query query = DBQuery.empty();
 

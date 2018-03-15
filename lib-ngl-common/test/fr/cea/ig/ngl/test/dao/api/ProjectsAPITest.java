@@ -154,7 +154,7 @@ public class ProjectsAPITest extends AbstractTests implements AbstractAPITests {
 			updatedProj.traceInformation.modifyUser = USER;
 			updatedProj.traceInformation.modifyDate = new Date();
 
-			api.update(refProject.code, updatedProj, USER);
+			api.update(updatedProj, USER);
 			Project proj = api.get(TestProjectFactory.projectArchived(USER).code);
 			assertNotEquals(refProject.archive, proj.archive);
 			assertEquals(TestProjectFactory.projectArchived(USER).archive, proj.archive);

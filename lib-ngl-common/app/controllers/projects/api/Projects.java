@@ -14,18 +14,18 @@ import com.mongodb.BasicDBObject;
 
 import akka.stream.javadsl.Source;
 import akka.util.ByteString;
+import controllers.NGLAPIController;
 import fr.cea.ig.MongoDBResult.Sort;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.mongo.DBObjectConvertor;
-import fr.cea.ig.ngl.APINGLController;
 import fr.cea.ig.ngl.NGLApplication;
-import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.dao.api.APIException;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
+import fr.cea.ig.ngl.dao.projects.ProjectsAPI;
+import fr.cea.ig.ngl.dao.projects.ProjectsDAO;
 import fr.cea.ig.ngl.support.NGLForms;
-import fr.cea.ig.ngl.support.api.ProjectAPIHolder;
 import fr.cea.ig.util.Streamer;
 import models.laboratory.project.instance.Project;
 import play.data.Form;
@@ -36,14 +36,14 @@ import play.mvc.Result;
  *
  */
 @Historized
-public class Projects extends NGLController implements APINGLController, NGLForms, ProjectAPIHolder, DBObjectConvertor {
+public class Projects extends NGLAPIController<ProjectsAPI, ProjectsDAO, Project> implements NGLForms, DBObjectConvertor {
 
 	private final Form<ProjectsSearchForm> searchForm;
 	private final Form<Project> projectForm;
 	
 	@Inject
-	public Projects(NGLApplication app) {
-		super(app);
+	public Projects(NGLApplication app, ProjectsAPI api) {
+		super(app, api);
 		this.searchForm  = app.formFactory().form(ProjectsSearchForm.class);
 		this.projectForm = app.formFactory().form(Project.class);
 	}
@@ -52,7 +52,7 @@ public class Projects extends NGLController implements APINGLController, NGLForm
 	@Authenticated
 	@Authorized.Read
 	public Result head(String code) {
-		if(! getProjectAPI().isObjectExist(code)){			
+		if(! api().isObjectExist(code)){			
 			return notFound();					
 		}
 		return ok();
@@ -69,9 +69,9 @@ public class Projects extends NGLController implements APINGLController, NGLForm
 		Source<ByteString, ?> resultsAsStream = null; 
 		if (form.datatable) {
 			if(form.isServerPagination()){
-				resultsAsStream = getProjectAPI().stream(q, form.orderBy, Sort.valueOf(form.orderSense), keys, form.pageNumber, form.numberRecordsPerPage);
+				resultsAsStream = api().stream(q, form.orderBy, Sort.valueOf(form.orderSense), keys, form.pageNumber, form.numberRecordsPerPage);
 			} else {
-				resultsAsStream = getProjectAPI().stream(q, form.orderBy, Sort.valueOf(form.orderSense), keys);
+				resultsAsStream = api().stream(q, form.orderBy, Sort.valueOf(form.orderSense), keys);
 			}
 			return Streamer.okStream(resultsAsStream);
 		} else {
@@ -87,10 +87,10 @@ public class Projects extends NGLController implements APINGLController, NGLForm
 				keys.put("_id", 0);//Don't need the _id field
 				keys.put("name", 1);
 				keys.put("code", 1);
-				results = getProjectAPI().list(q, form.orderBy, Sort.valueOf(form.orderSense), keys, form.limit);	
+				results = api().list(q, form.orderBy, Sort.valueOf(form.orderSense), keys, form.limit);	
 				return ok(Json.toJson(convertToListObject(results, x -> x.getCode(), x -> x.name)));
 			} else {
-				results = getProjectAPI().list(q, form.orderBy, Sort.valueOf(form.orderSense), keys);
+				results = api().list(q, form.orderBy, Sort.valueOf(form.orderSense), keys);
 				return ok(Json.toJson(results));
 			}
 		}
@@ -100,7 +100,7 @@ public class Projects extends NGLController implements APINGLController, NGLForm
 	@Authenticated
 	@Authorized.Read
 	public Result get(String code) {
-		return ok(Json.toJson(getProjectAPI().get(code)));
+		return ok(Json.toJson(api().get(code)));
 	}
 
 	@Override
@@ -111,7 +111,7 @@ public class Projects extends NGLController implements APINGLController, NGLForm
 		Project projectInput = filledForm.get();
 		if(! filledForm.hasErrors()) {
 			try {
-				Project p = getProjectAPI().create(projectInput, getCurrentUser());
+				Project p = api().create(projectInput, getCurrentUser());
 				return ok(Json.toJson(p));
 			} catch (APIValidationException e) {
 				getLogger().error(e.getMessage());
@@ -133,7 +133,7 @@ public class Projects extends NGLController implements APINGLController, NGLForm
 	@Authenticated
 	@Authorized.Write
 	public Result update(String code) {
-		Project project = getProjectAPI().get(code);
+		Project project = api().get(code);
 		if (project == null) {
 			return badRequest("Project with code "+ code + " not exist");
 		}
@@ -141,7 +141,7 @@ public class Projects extends NGLController implements APINGLController, NGLForm
 		Project projectInput = filledForm.get();
 		if(! filledForm.hasErrors()) {
 			try {
-				getProjectAPI().update(code, projectInput, getCurrentUser());
+				api().update(projectInput, getCurrentUser());
 			} catch (APIValidationException e) {
 				getLogger().error(e.getMessage());
 				if(e.getErrors() != null) {
