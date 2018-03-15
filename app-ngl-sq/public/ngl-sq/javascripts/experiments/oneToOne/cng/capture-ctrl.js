@@ -369,13 +369,12 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 		$scope.outputContainerSupport.storageCode=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.storageCode;
 		//console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
 	}
-	
-	
-	
-	// FDS 15/11/2017 ajout 'bravows-mastercycler-epg'
+		
 	$scope.setAdditionnalButtons([{
 		isDisabled : function(){return $scope.isCreationMode();},
-		isShow:function(){return (($scope.experiment.instrument.typeCode === 'bravo-workstation')||($scope.experiment.instrument.typeCode=== 'bravows-and-mastercycler-epg'))}, 
+		// FDS 15/03/2018 SUPSQCNG-547: inutile de tester les instruments=> FDR pour tous !!!
+		//isShow:function(){return (($scope.experiment.instrument.typeCode === 'bravo-workstation')||($scope.experiment.instrument.typeCode=== 'bravows-and-mastercycler-epg'))}, 
+		isShow:function(){return true;},
 		click: $scope.fileUtils.generateSampleSheet,
 		label:Messages("experiments.sampleSheet") 
 	}]);
