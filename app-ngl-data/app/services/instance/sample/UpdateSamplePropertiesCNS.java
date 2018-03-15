@@ -51,7 +51,7 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 			FiniteDuration durationFromNextIteration, 
 			NGLContext ctx) {
 		super("UpdatePropertiesSampleCNS", durationFromStart, durationFromNextIteration, ctx);
-		contentHelper = Spring.getBeanOfType(ContentHelper.class);
+		contentHelper = ctx.injector().instanceOf(ContentHelper.class);
 		
 	}
 
@@ -59,7 +59,7 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 	public UpdateSamplePropertiesCNS(String string, FiniteDuration durationFromStart,
 			FiniteDuration durationFromNextIteration, NGLContext ctx) {
 		super(string, durationFromStart, durationFromNextIteration, ctx);
-		contentHelper = Spring.getBeanOfType(ContentHelper.class);
+		contentHelper = ctx.injector().instanceOf(ContentHelper.class);
 		
 	}
 
