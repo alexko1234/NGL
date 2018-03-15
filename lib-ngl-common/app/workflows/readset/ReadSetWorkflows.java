@@ -1,6 +1,5 @@
 package workflows.readset;
 
-// import static fr.cea.ig.play.IGGlobals.akkaSystem;
 
 import java.util.ArrayList;
 
@@ -9,46 +8,26 @@ import javax.inject.Singleton;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-// import org.mongojack.WriteResult;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.stereotype.Service;
 
 import akka.actor.ActorRef;
-// import akka.actor.Props;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.project.instance.Project;
-// import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
-// import models.laboratory.run.instance.SampleOnContainer;
-// import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import rules.services.LazyRules6Actor;
-// import models.utils.InstanceHelpers;
-// import play.Logger;
-// import play.Logger;
-// import play.Play;
-// import play.libs.Akka;
-// import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import rules.services.RulesServices6;
 import validation.ContextValidation;
 import validation.run.instance.RunValidationHelper;
 import workflows.Workflows;
 
-// @Service
 @Singleton
 public class ReadSetWorkflows extends Workflows<ReadSet> {
 
-	// @Autowired
-	// ReadSetWorkflowsHelper readSetWorkflowsHelper;
-	
-	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-	// private static ActorRef rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
-	
 	private static final play.Logger.ALogger logger = play.Logger.of(ReadSetWorkflows.class);
 	
 	private static final String ruleFQC  = "F_QC_1";
@@ -64,16 +43,12 @@ public class ReadSetWorkflows extends Workflows<ReadSet> {
 	private static final String ruleN    = "N_1";
 	
 	private final ReadSetWorkflowsHelper readSetWorkflowsHelper;
-	// private final ActorRef               rulesActor;
-	// private final String                 rulesKey;
 	private final LazyRules6Actor rulesActor;
 	private final NGLContext ctx;
 	@Inject
 	public ReadSetWorkflows(NGLContext ctx, ReadSetWorkflowsHelper readSetWorkflowsHelper) {
 		this.ctx                    = ctx;
 		this.readSetWorkflowsHelper = readSetWorkflowsHelper;
-		// rulesActor                  = ctx.rules6Actor();
-		// rulesKey                    = ctx.getRulesKey();
 		rulesActor                  = ctx.rules6Actor();
 	}
 	
@@ -98,27 +73,19 @@ public class ReadSetWorkflows extends Workflows<ReadSet> {
 			readSetWorkflowsHelper.updateContainer(readSet);		
 		} else if("F-RG".equals(readSet.state.code)) {
 			readSetWorkflowsHelper.updateDispatch(readSet);
-			// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleFRG, readSet),null);
-			// rulesActor.tell(new RulesMessage(rulesKey,ruleFRG, readSet),null);
 			rulesActor.tellMessage(ruleFRG, readSet);
 		} else if("F-QC".equals(readSet.state.code)) {			
-			// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleFQC, readSet),null);
-			// rulesActor.tell(new RulesMessage(rulesKey,ruleFQC, readSet),null);
 			rulesActor.tellMessage(ruleFQC, readSet);
 		} else if("F-VQC".equals(readSet.state.code)) {
 			if (TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)) {
 				readSetWorkflowsHelper.updateBioinformaticValuation(readSet, readSet.productionValuation.valid, readSet.productionValuation.user, readSet.productionValuation.date);
 			}
-			// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), ruleFVQC, readSet),null);
-			// rulesActor.tell(new RulesMessage(rulesKey, ruleFVQC, readSet),null);
 			rulesActor.tellMessage(ruleFVQC, readSet);
 		} else if("IW-BA".equals(readSet.state.code)) {
 			readSetWorkflowsHelper.updateBioinformaticValuation(readSet, TBoolean.UNSET, null, null);
 		} else if("A".equals(readSet.state.code) || "UA".equals(readSet.state.code)) {
 			readSetWorkflowsHelper.updateFiles(readSet, validation);
 			//if change valuation when final step
-			// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), ruleAUA, readSet),null);
-			// rulesActor.tell(new RulesMessage(rulesKey, ruleAUA, readSet),null);
 			rulesActor.tellMessage(ruleAUA, readSet);
 		}
 	}
@@ -178,8 +145,6 @@ public class ReadSetWorkflows extends Workflows<ReadSet> {
 			facts.add(nextStep);
 			facts.add(project);
 			facts.add(readSet);
-			// RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), ruleIWBA, facts);
-			// RulesServices6.getInstance().callRulesWithGettingFacts(rulesKey, ruleIWBA, facts);
 			ctx.callRulesWithGettingFacts(ruleIWBA, facts);
 		} else if("F-BA".equals(readSet.state.code)) {
 			nextStep.code = "IW-VBA";
@@ -203,8 +168,6 @@ public class ReadSetWorkflows extends Workflows<ReadSet> {
 				facts.add(nextStep);
 				facts.add(project);
 				facts.add(readSet);
-				// RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), ruleA, facts);
-				// RulesServices6.getInstance().callRulesWithGettingFacts(rulesKey, ruleA, facts);
 				ctx.callRulesWithGettingFacts(ruleA, facts);
 			} else { //FALSE or UNSET
 				nextStep.code = "UA";
@@ -214,8 +177,6 @@ public class ReadSetWorkflows extends Workflows<ReadSet> {
 			ArrayList<Object> facts = new ArrayList<Object>();
 			facts.add(nextStep);
 			facts.add(project);
-			// RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), ruleFTF, facts);
-			// RulesServices6.getInstance().callRulesWithGettingFacts(rulesKey, ruleFTF, facts);
 			ctx.callRulesWithGettingFacts(ruleFTF, facts);
 		}
 		setState(contextValidation, readSet, nextStep);

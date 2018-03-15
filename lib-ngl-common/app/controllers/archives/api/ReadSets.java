@@ -38,7 +38,7 @@ public class ReadSets extends CommonController {
 	 */
 	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 	@Permission(value={"reading"})
-	public /*static*/ Result list(){
+	public Result list(){
 
 		BasicDBObject keys = new BasicDBObject();
 		keys.put("treatments", 0);
@@ -46,12 +46,10 @@ public class ReadSets extends CommonController {
 		Integer archive = getArchiveValue();
 		List<Archive> archives = new ArrayList<Archive>();
 		MongoDBResult<ReadSet> results =  MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, getQuery(archive), keys);		
-		// return ok(new MongoDBDatatableResponseChunks<ReadSet>(results, r -> convertToArchive(archive, r))).as("application/json");
-		// return ok(MongoStreamer.streamUDT(results, r -> convertToArchive(archive, r))).as("application/json");
 		return MongoStreamer.okStreamUDT(results, r -> { return convertToArchive(archive, r); });
 	}
 
-	private /*static*/ Archive convertToArchive(Integer archive, ReadSet readSet) {
+	private Archive convertToArchive(Integer archive, ReadSet readSet) {
 		if (readSet != null) {
 			if ( (archive.intValue() == 0) 
 					|| (archive.intValue() == 1 && readSet.archiveId != null) 
@@ -62,7 +60,7 @@ public class ReadSets extends CommonController {
 		return null;
 	}
 
-	private /*static*/ Integer getArchiveValue() {
+	private Integer getArchiveValue() {
 		try {
 			return Integer.valueOf(request().queryString().get("archive")[0]);
 
@@ -72,7 +70,7 @@ public class ReadSets extends CommonController {
 		}
 	}
 
-	private /*static*/ Query getQuery(Integer archive) {
+	private Query getQuery(Integer archive) {
 		Query query = null;
 		if (archive.intValue() == 0) { //all
 			query = DBQuery.is("dispatch", true);
@@ -84,7 +82,7 @@ public class ReadSets extends CommonController {
 		return query;
 	}
 
-	private /*static*/ Archive createArchive(ReadSet readset) {
+	private Archive createArchive(ReadSet readset) {
 		Archive archive =  new Archive();
 		archive.runCode=readset.runCode;
 		archive.projectCode=readset.projectCode;
@@ -97,8 +95,8 @@ public class ReadSets extends CommonController {
 	}
 
 	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
-	@Permission(value={"writing"})	//@Permission(value={"archiving"})
-	public /*static*/ Result save(String readSetCode) {
+	@Permission(value={"writing"})	
+	public Result save(String readSetCode) {
 		JsonNode json = request().body().asJson();
 		String archiveId = json.get("archiveId").asText();		
 		if (archiveId != null) {
@@ -124,7 +122,7 @@ public class ReadSets extends CommonController {
 	
 	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 	@Permission(value={"writing"})
-	public /*static*/ Result delete(Integer i){
+	public Result delete(Integer i){
 		
 		if(i % 2 == 0){
 			return notFound();

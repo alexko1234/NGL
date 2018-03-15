@@ -1,7 +1,5 @@
 package controllers.readsets.api;
 
-//import static play.data.Form.form;
-//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,8 +28,8 @@ import validation.run.instance.FileValidationHelper;
 
 public class Files extends ReadSetsController {
 
-	private final /*static*/ Form<File> fileForm; // = form(File.class);
-	private final /*static*/ Form<QueryFieldsForm> updateForm; // = form(QueryFieldsForm.class);
+	private final Form<File> fileForm; 
+	private final Form<QueryFieldsForm> updateForm; 
 	final static List<String> authorizedUpdateFields = Arrays.asList("fullname");
 	
 	@Inject
@@ -41,10 +39,7 @@ public class Files extends ReadSetsController {
 	}
 	
 	@Permission(value={"reading"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Read
-	public /*static*/ Result list(String readsetCode) {
+	public Result list(String readsetCode) {
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", readsetCode));
 		if (null == readSet) {
 			return badRequest();
@@ -53,10 +48,7 @@ public class Files extends ReadSetsController {
 	}
 
 	@Permission(value={"reading"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Read
-	public /*static*/ Result get(String readsetCode, String fullname) {
+	public Result get(String readsetCode, String fullname) {
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("code", readsetCode), DBQuery.is("files.fullname", fullname)));
 		if (null == readSet) {
 			return badRequest();
@@ -70,10 +62,7 @@ public class Files extends ReadSetsController {
 	}
 	
 	@Permission(value={"reading"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Read
-	public /*static*/ Result head(String readsetCode, String fullname) {
+	public Result head(String readsetCode, String fullname) {
 		if(MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("code", readsetCode), DBQuery.is("files.fullname", fullname)))){			
 			return ok();					
 		}else{
@@ -82,10 +71,7 @@ public class Files extends ReadSetsController {
 	}
 	
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	public /*static*/ Result save(String readsetCode) {
+	public Result save(String readsetCode) {
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", readsetCode));
 		if (null == readSet) {
 			return badRequest();
@@ -106,16 +92,12 @@ public class Files extends ReadSetsController {
 					DBUpdate.push("files", file).set("traceInformation", getUpdateTraceInformation(readSet))); 
 			return ok(Json.toJson(file));
 		} else {
-			//return badRequest(filledForm.errors-AsJson());
 			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 	
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	public /*static*/ Result update(String readSetCode, String fullname) {
+	public Result update(String readSetCode, String fullname) {
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.is("files.fullname", fullname)));
 		if (null == readSet) {
 			return badRequest();
@@ -140,7 +122,6 @@ public class Files extends ReadSetsController {
 					
 					return get(readSetCode, fullname);
 				} else {
-					// return badRequest(filledForm.errors-AsJson());
 					return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 				}
 			} else {
@@ -168,17 +149,13 @@ public class Files extends ReadSetsController {
 				}
 				return get(readSetCode, fullname);
 			} else {
-				// return badRequest(filledForm.errors-AsJson());
 				return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 			}			
 		}
 	}
 
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	public /*static*/ Result delete(String readsetCode, String fullname) {
+	public Result delete(String readsetCode, String fullname) {
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("code", readsetCode), DBQuery.is("files.fullname", fullname)));
 		if (null == readSet) {
 			return badRequest();
@@ -192,10 +169,7 @@ public class Files extends ReadSetsController {
 	}
 
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	public /*static*/ Result deleteByReadSetCode(String readsetCode) { 
+	public Result deleteByReadSetCode(String readsetCode) { 
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", readsetCode));
 		if (null == readSet) {
 			return badRequest();
@@ -206,10 +180,7 @@ public class Files extends ReadSetsController {
 	}
 	
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	public /*static*/ Result deleteByRunCode(String runCode) { 
+	public Result deleteByRunCode(String runCode) { 
 		Run run  = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runCode);
 		if (run==null) {
 			return notFound();

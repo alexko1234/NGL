@@ -1,7 +1,5 @@
 package controllers.runs.api;
 
-// import static play.data.Form.form;
-//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +20,6 @@ import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.TransientState;
 import models.laboratory.run.instance.Run;
-// import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -32,10 +29,9 @@ import workflows.run.RunWorkflows;
 
 public class State extends RunsController {
 	
-    private final Form<models.laboratory.common.instance.State> stateForm;        // = form(models.laboratory.common.instance.State.class);
-    private final Form<HistoricalStateSearchForm>               historicalForm;   // = form(HistoricalStateSearchForm.class);
-    private final Form<RunBatchElement>                         batchElementForm; // = form(RunBatchElement.class);
-    // final static RunWorkflows workflows = IGGlobals.instanceOf(RunWorkflows.class); // Spring.get BeanOfType(RunWorkflows.class);
+    private final Form<models.laboratory.common.instance.State> stateForm;        
+    private final Form<HistoricalStateSearchForm>               historicalForm;  
+    private final Form<RunBatchElement>                         batchElementForm; 
     private final RunWorkflows workflows;
 	
     @Inject
@@ -47,9 +43,6 @@ public class State extends RunsController {
 	}
     
     @Permission(value={"reading"})
-//    @Authenticated
-//    @Historized
-//    @Authorized.Read
     public Result get(String code) {
     	Run runValue = getRun(code, "state");
     	if (runValue != null) {
@@ -60,10 +53,6 @@ public class State extends RunsController {
     }
 
     @Permission(value={"writing"})
-//    @Authenticated
-//    @Historized
-//    @Authorized.Write
-    // @Permission(value={"workflow_run_lane"})
     public Result update(String code) {
 		Run run = getRun(code);
 		if (run == null) {
@@ -79,15 +68,11 @@ public class State extends RunsController {
 		if (!ctxVal.hasErrors()) {
 		    return ok(Json.toJson(getRun(code)));
 		} else {
-		    // return badRequest(filledForm.errors-AsJson());
 			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
     }
     
     @Permission(value={"writing"})
-//    @Authenticated
-//    @Historized
-//    @Authorized.Write
     public Result updateBatch() {
     	List<Form<RunBatchElement>> filledForms =  getFilledFormList(batchElementForm, RunBatchElement.class);
 		
@@ -104,7 +89,6 @@ public class State extends RunsController {
 				if (!ctxVal.hasErrors()) {
 					response.add(new DatatableBatchResponseElement(OK, getRun(run.code), element.index));
 				} else {
-					// response.add(new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errors-AsJson(), element.index));
 					response.add(new DatatableBatchResponseElement(BAD_REQUEST, NGLContext._errorsAsJson(ctxVal.getErrors()), element.index));
 				}
 			} else {
@@ -116,9 +100,6 @@ public class State extends RunsController {
     }
     
     @Permission(value={"reading"})
-//    @Authenticated
-//    @Historized
-//    @Authorized.Read
     public Result historical(String code) {
 		Run runValue = getRun(code, "state");
 		if (runValue != null) {
@@ -143,15 +124,6 @@ public class State extends RunsController {
 				    if(form.last)break;
 				}				
 			}
-			/*
-		    for (int i = historical.size() - 1; i >= 0; i--) {
-			TransientState ts = historical.get(i);
-			if(form.stateCode.equals(ts.code)){
-			    values.add(ts);
-			    if(form.last)break;
-			}
-		    } 
-		    */
 		    Collections.reverse(values);
 		    
 		    return new HashSet<>(values);

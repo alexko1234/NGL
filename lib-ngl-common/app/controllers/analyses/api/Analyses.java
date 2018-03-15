@@ -52,7 +52,6 @@ public class Analyses extends DocumentController<Analysis> {
 
 	private final static List<String> authorizedUpdateFields = Arrays.asList("code","masterReadSetCodes","readSetCodes");
 
-	// final static AnalysisWorkflows workflows = Spring.get BeanOfType(AnalysisWorkflows.class);
 	
 	private final Form<Valuation>            valuationForm; 
 	private final Form<State>                stateForm; 
@@ -68,17 +67,12 @@ public class Analyses extends DocumentController<Analysis> {
 		this.stateForm        = getNGLContext().form(State.class);
 		this.batchElementForm = getNGLContext().form(AnalysesBatchElement.class);
 		this.updateForm       = getNGLContext().form(QueryFieldsForm.class);
-		this.rulesActor       = getNGLContext().rules6Actor(); // ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
+		this.rulesActor       = getNGLContext().rules6Actor(); 
 		this.workflows        = workflows;
 	}
 	
 	@Permission(value={"reading"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Read
 	public Result list() {
-		//Form<AnalysesSearchForm> filledForm = filledFormQueryString(searchForm, AnalysesSearchForm.class);
-		//AnalysesSearchForm form = filledForm.get();
 		AnalysesSearchForm form = filledFormQueryString( AnalysesSearchForm.class);
 		Query q = getQuery(form);
 		BasicDBObject keys = getKeys(form);
@@ -157,9 +151,6 @@ public class Analyses extends DocumentController<Analysis> {
 	}
 	
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
 	public Result save() {
 		
 		Form<Analysis> filledForm = getMainFilledForm();
@@ -207,9 +198,6 @@ public class Analyses extends DocumentController<Analysis> {
 	}
 
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
 	public Result update(String code){
 		Analysis objectInDB =  getObject(code);
 		if(objectInDB == null) {
@@ -239,7 +227,6 @@ public class Analyses extends DocumentController<Analysis> {
 					//TODO Update READSET
 					return ok(Json.toJson(input));
 				} else {
-					// return badRequest(filledForm.errors-AsJson());
 					return badRequest(errorsAsJson(ctxVal.getErrors()));
 				}
 			} else {
@@ -265,7 +252,6 @@ public class Analyses extends DocumentController<Analysis> {
 				}
 				return ok(Json.toJson(getObject(code)));
 			} else {
-				// return badRequest(filledForm.errors-AsJson());
 				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}			
 		}
@@ -273,9 +259,6 @@ public class Analyses extends DocumentController<Analysis> {
 	
 	
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
 	public Result state(String code){
 		Analysis objectInDB = getObject(code);
 		if(objectInDB == null) {
@@ -290,15 +273,11 @@ public class Analyses extends DocumentController<Analysis> {
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getObject(code)));
 		} else {
-			// return badRequest(filledForm.errors-AsJson());
 			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 	
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
 	public Result stateBatch(){
 		List<Form<AnalysesBatchElement>> filledForms =  getFilledFormList(batchElementForm, AnalysesBatchElement.class);
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
@@ -315,7 +294,6 @@ public class Analyses extends DocumentController<Analysis> {
 				if (!ctxVal.hasErrors()) {
 					response.add(new DatatableBatchResponseElement(OK, getObject(objectInDB.code), element.index));
 				} else {
-					//response.add(new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errors-AsJson(), element.index));
 					response.add(new DatatableBatchResponseElement(BAD_REQUEST,errorsAsJson(ctxVal.getErrors()), element.index));
 				}
 			}else {
@@ -327,9 +305,6 @@ public class Analyses extends DocumentController<Analysis> {
 	}
 	
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
 	public Result valuation(String code){
 		Analysis objectInDB = getObject(code);
 		if(objectInDB == null) {
@@ -351,15 +326,11 @@ public class Analyses extends DocumentController<Analysis> {
 			workflows.nextState(ctxVal, objectInDB);
 			return ok(Json.toJson(objectInDB));
 		} else {
-			// return badRequest(filledForm.errors-AsJson());
 			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
 	public Result valuationBatch(){
 		List<Form<AnalysesBatchElement>> filledForms =  getFilledFormList(batchElementForm, AnalysesBatchElement.class);
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
@@ -381,7 +352,6 @@ public class Analyses extends DocumentController<Analysis> {
 					workflows.nextState(ctxVal, objectInDB);
 					response.add(new DatatableBatchResponseElement(OK, objectInDB, element.index));
 				} else {
-					// response.add(new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errors-AsJson(), element.index));
 					response.add(new DatatableBatchResponseElement(BAD_REQUEST,errorsAsJson(ctxVal.getErrors()), element.index));
 				}
 			} else {
@@ -393,9 +363,6 @@ public class Analyses extends DocumentController<Analysis> {
 	}
 	
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
 	public Result properties(String code){
 		Analysis objectInDB = getObject(code);
 		if(objectInDB == null) {
@@ -415,15 +382,11 @@ public class Analyses extends DocumentController<Analysis> {
 			objectInDB = getObject(objectInDB.code);
 			return ok(Json.toJson(objectInDB));		
 		} else {
-			// return badRequest(filledForm.errors-AsJson());
 			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}		
 	}
 	
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
 	public Result propertiesBatch() {
 		List<Form<AnalysesBatchElement>> filledForms =  getFilledFormList(batchElementForm, AnalysesBatchElement.class);
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
@@ -441,7 +404,6 @@ public class Analyses extends DocumentController<Analysis> {
 							.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));				   							
 				    response.add(new DatatableBatchResponseElement(OK, getObject(element.data.code), element.index));
 				} else {
-					// response.add(new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errors-AsJson(), element.index));
 					response.add(new DatatableBatchResponseElement(BAD_REQUEST, errorsAsJson(ctxVal.getErrors()), element.index));
 				}
 			} else {
@@ -453,17 +415,12 @@ public class Analyses extends DocumentController<Analysis> {
 	}
 	
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
 	public Result applyRules(String code, String rulesCode)	{
 		Analysis objectInDB = getObject(code);
 		if(objectInDB == null) {
 			return notFound();
 		}		
 		// Outside of an actor and if no reply is needed the second argument can be null
-		// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),rulesCode,objectInDB),null);
-		// rulesActor.tell(new RulesMessage(getNGLContext().config().getRulesKey(),rulesCode,objectInDB),null);
 		rulesActor.tellMessage(rulesCode,objectInDB);
 		return ok();
 	}

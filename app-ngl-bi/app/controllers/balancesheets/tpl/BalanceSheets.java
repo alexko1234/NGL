@@ -1,7 +1,5 @@
 package controllers.balancesheets.tpl;
 
-// import play.Routes;
-//import play.routing.JavaScriptReverseRouter;
 import play.mvc.Result;
 import views.html.balancesheets.*;
 
@@ -16,8 +14,6 @@ import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.support.NGLJavascript;
 
-// import controllers.CommonController;
-// public class BalanceSheets extends CommonController {
 public class BalanceSheets extends NGLController 
                           implements NGLJavascript {
 	
@@ -58,20 +54,5 @@ public class BalanceSheets extends NGLController
 						controllers.commons.api.routes.javascript.CommonInfoTypes.list());
 	}
 	
-	/*
-	public Result javascriptRoutes() {
-		response().setContentType("text/javascript");
-		return ok(// Routes.javascriptRouter("jsRoutes",
-				JavaScriptReverseRouter.create("jsRoutes",
-				controllers.balancesheets.tpl.routes.javascript.BalanceSheets.home(),
-				controllers.balancesheets.tpl.routes.javascript.BalanceSheets.year(),
-				controllers.balancesheets.tpl.routes.javascript.BalanceSheets.general(),
-				controllers.readsets.api.routes.javascript.ReadSets.list(),
-				controllers.runs.api.routes.javascript.Runs.list(),
-				controllers.projects.api.routes.javascript.Projects.list(),
-				controllers.commons.api.routes.javascript.CommonInfoTypes.list()
-		));
-		
-	}
-	*/
+	
 }

@@ -1,7 +1,5 @@
 package controllers.runs.api;
 
-// import static play.data.Form.form;
-//import static fr.cea.ig.play.IGGlobals.form;
 
 import javax.inject.Inject;
 
@@ -30,7 +28,7 @@ import validation.ContextValidation;
 
 public class LaneTreatments extends RunsController{
 
-	private final /*static*/ Form<Treatment> treatmentForm;// = form(Treatment.class);
+	private final Form<Treatment> treatmentForm;
 
 	@Inject
 	public LaneTreatments(NGLContext ctx) {
@@ -38,10 +36,7 @@ public class LaneTreatments extends RunsController{
 	}
 	
 	@Permission(value={"reading"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Read
-	public /*static*/ Result list(String runCode, Integer laneNumber){
+	public Result list(String runCode, Integer laneNumber){
 		Run run  = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), 
 						DBQuery.elemMatch("lanes",DBQuery.is("number", laneNumber))));
@@ -53,10 +48,7 @@ public class LaneTreatments extends RunsController{
 	}
 	
 	@Permission(value={"reading"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Read
-	public /*static*/ Result get(String runCode, Integer laneNumber, String treatmentCode){
+	public Result get(String runCode, Integer laneNumber, String treatmentCode){
 		Run run  = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), 
 						DBQuery.elemMatch("lanes", 
@@ -71,10 +63,7 @@ public class LaneTreatments extends RunsController{
 	}
 	
 	@Permission(value={"reading"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Read
-	public /*static*/ Result head(String runCode, Integer laneNumber, String treatmentCode){
+	public Result head(String runCode, Integer laneNumber, String treatmentCode){
 		if(MongoDBDAO.checkObjectExist(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), 
 						DBQuery.elemMatch("lanes", 
@@ -88,13 +77,8 @@ public class LaneTreatments extends RunsController{
 	}
 
 	@Permission(value={"writing"})	
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	//@Permission(value={"creation_update_treatments"})
-	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
-	public /*static*/ Result save(String runCode, Integer laneNumber){
+	public Result save(String runCode, Integer laneNumber){
 		Run run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), DBQuery.is("lanes.number", laneNumber)));
 		if(run == null){
@@ -119,20 +103,14 @@ public class LaneTreatments extends RunsController{
 			
 			return ok(Json.toJson(treatment));
 		} else {
-			// return badRequest(filledForm.errors-AsJson());
 			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 			
 	}
 	
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	//@Permission(value={"creation_update_treatments"})
-	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
-	public /*static*/ Result update(String runCode, Integer laneNumber, String treatmentCode){
+	public Result update(String runCode, Integer laneNumber, String treatmentCode){
 		Run run  = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), 
 						DBQuery.elemMatch("lanes", 
@@ -167,11 +145,7 @@ public class LaneTreatments extends RunsController{
 	}
 	
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	//@Permission(value={"delete_treatments"})
-	public /*static*/ Result delete(String runCode,  Integer laneNumber, String treatmentCode){
+	public Result delete(String runCode,  Integer laneNumber, String treatmentCode){
 		Run run  = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), 
 						DBQuery.elemMatch("lanes", 
@@ -188,7 +162,7 @@ public class LaneTreatments extends RunsController{
 	}	
 	
 	
-	private /*static*/ Lane getLane(Run run, Integer laneNumber) {
+	private Lane getLane(Run run, Integer laneNumber) {
 		if(null != run.lanes){
 			for (Lane lane : run.lanes) {
 				if (lane.number.equals(laneNumber)) {

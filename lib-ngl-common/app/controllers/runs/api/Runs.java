@@ -19,17 +19,11 @@ import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
-// import fr.cea.ig.MongoDBDatatableResponseChunks;
-// import fr.cea.ig.MongoDBResponseChunks;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
-// import static play.data.Form.form;
-//import static fr.cea.ig.play.IGGlobals.form;
-//import static fr.cea.ig.play.IGGlobals.akkaSystem;
 import fr.cea.ig.mongo.MongoStreamer;
-// import fr.cea.ig.play.IGGlobals;
 import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
@@ -42,11 +36,7 @@ import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
-// import play.Logger;
-// import play.Play;
-// import play.api.modules.spring.Spring;
 import play.data.Form;
-// import play.libs.Akka;
 import play.libs.Json;
 import play.mvc.Result;
 import rules.services.LazyRules6Actor;
@@ -67,45 +57,30 @@ public class Runs extends RunsController {
 	final static List<String> authorizedUpdateFields = Arrays.asList("keep","deleted");
 	final static List<String> defaultKeys =  Arrays.asList("code", "typeCode", "sequencingStartDate", "state", "valuation");
 	
-	//final static Form<RunsSearchForm> searchForm = form(RunsSearchForm.class); 
-	private final Form<Run>             runForm;       // = form(Run.class);
-	private final Form<QueryFieldsForm> updateForm;    // = form(QueryFieldsForm.class);
-	private final Form<Valuation>       valuationForm; // = form(Valuation.class);
-	// private final ActorRef              rulesActor;
-	// private final String                rulesKey;
+	private final Form<Run>             runForm;       
+	private final Form<QueryFieldsForm> updateForm;    
+	private final Form<Valuation>       valuationForm; 
 	private final RunWorkflows          workflows;
 	private final LazyRules6Actor       rulesActor;
 	
-	// final static RunWorkflows workflows = IGGlobals.instanceOf(RunWorkflows.class); // Spring.get BeanOfType(RunWorkflows.class);
-	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-	// private /*static*/ ActorRef rulesActor;// = akkaSystem().actorOf(Props.create(RulesActor6.class));
 	
 	@Inject
 	public Runs(NGLContext ctx, RunWorkflows workflows) {
 		runForm        = ctx.form(Run.class);
 		updateForm     = ctx.form(QueryFieldsForm.class);
 		valuationForm  = ctx.form(Valuation.class);
-		// rulesActor     = ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
-		// rulesKey       = ctx.config().getRulesKey();
 		rulesActor     = ctx.rules6Actor();
 		this.workflows = workflows;
 	}
 	
 	@Permission(value={"reading"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Read
 	public Result list(){
 
-		//Form<RunsSearchForm> filledForm = filledFormQueryString(searchForm, RunsSearchForm.class);
-		//RunsSearchForm form = filledForm.get();
 		RunsSearchForm form = filledFormQueryString(RunsSearchForm.class);
 		BasicDBObject keys = getKeys(updateForm(form));
 		
 		if(form.datatable){			
 			MongoDBResult<Run> results = mongoDBFinder(InstanceConstants.RUN_ILLUMINA_COLL_NAME, form, Run.class, getQuery(form), keys);			
-			// return ok(new MongoDBDatatableResponseChunks<Run>(results)).as("application/json");
-			// return ok(MongoStreamer.streamUDT(results)).as("application/json");
 			return MongoStreamer.okStreamUDT(results);
 		}else if(form.list){
 			keys = new BasicDBObject();
@@ -120,13 +95,11 @@ public class Runs extends RunsController {
 			if(null == form.orderBy)form.orderBy = "code";
 			if(null == form.orderSense)form.orderSense = 0;
 			MongoDBResult<Run> results = mongoDBFinder(InstanceConstants.RUN_ILLUMINA_COLL_NAME, form, Run.class, getQuery(form), keys);	
-			// return ok(new MongoDBResponseChunks<Run>(results)).as("application/json");
-			// return ok(MongoStreamer.stream(results)).as("application/json");
 			return MongoStreamer.okStream(results);
 		}
 	}
 
-	private /*static*/ DatatableForm updateForm(RunsSearchForm form) {
+	private DatatableForm updateForm(RunsSearchForm form) {
 		if(form.includes.contains("default")){
 			form.includes.remove("default");
 			form.includes.addAll(defaultKeys);
@@ -134,7 +107,7 @@ public class Runs extends RunsController {
 		return form;
 	}
 	
-	private /*static*/ List<ListObject> toListObjects(List<Run> runs){
+	private List<ListObject> toListObjects(List<Run> runs){
 		List<ListObject> jo = new ArrayList<ListObject>();
 		for(Run r: runs){
 			jo.add(new ListObject(r.code, r.code));
@@ -142,7 +115,7 @@ public class Runs extends RunsController {
 		return jo;
 	}
 	
-	private /*static*/ Query getQuery(RunsSearchForm form) {
+	private Query getQuery(RunsSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
 		
@@ -268,10 +241,7 @@ public class Runs extends RunsController {
 
 	
 	@Permission(value={"reading"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Read
-	public /*static*/ Result get(String code) {
+	public Result get(String code) {
 		
 		DatatableForm form = filledFormQueryString(DatatableForm.class);
 		
@@ -284,10 +254,7 @@ public class Runs extends RunsController {
 	}
 
 	@Permission(value={"reading"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Read
-	public /*static*/ Result head(String code){
+	public Result head(String code){
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code)){			
 			return ok();					
 		}else{
@@ -297,11 +264,7 @@ public class Runs extends RunsController {
 
 	
 	@Permission(value={"writing"})	
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	//@Permission(value={"creation_update_run_lane"})
-	public /*static*/ Result save() throws DAOException {
+	public Result save() throws DAOException {
 		Form<Run> filledForm = getFilledForm(runForm, Run.class);
 		Run runInput = filledForm.get();
 
@@ -339,17 +302,12 @@ public class Runs extends RunsController {
 			runInput = MongoDBDAO.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, runInput);
 			return ok(Json.toJson(runInput));
 		} else {
-			// return badRequest(filledForm.errors-AsJson());
 			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	//@Permission(value={"creation_update_run_lane"})
-	public /*static*/ Result update(String code) {
+	public Result update(String code) {
 		Run run = getRun(code);
 		if (run == null) {
 			return badRequest("Run with code "+code+" not exist");
@@ -378,7 +336,6 @@ public class Runs extends RunsController {
 					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, runInput);
 					return ok(Json.toJson(runInput));
 				} else {
-					//return badRequest(filledForm.errors-AsJson());
 					return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 				}
 				
@@ -391,22 +348,14 @@ public class Runs extends RunsController {
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
-			// if(!filledForm.hasErrors()){
 			if (!ctxVal.hasErrors()) {
 				TraceInformation ti = run.traceInformation;
 				ti.setTraceInformation(getCurrentUser());
 				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 						DBQuery.and(DBQuery.is("code", code)), getBuilder(runInput, queryFieldsForm.fields, Run.class).set("traceInformation", ti));
-				/*
-				if(queryFieldsForm.fields.contains("code") && null != runInput.code){
-					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-							DBQuery.is("runCode", code), 
-							DBUpdate.set("runCode", runInput.code));
-				}
-				*/
+				
 				return ok(Json.toJson(getRun(code)));
 			} else {
-				// return badRequest(filledForm.errors-AsJson());
 				return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 			}			
 		}
@@ -414,10 +363,7 @@ public class Runs extends RunsController {
 
 
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	public /*static*/ Result delete(String code) {
+	public Result delete(String code) {
 		Run run = getRun(code);
 		if (run == null) {
 			return badRequest();
@@ -431,11 +377,7 @@ public class Runs extends RunsController {
 	
 	
 	@Permission(value={"writing"})	
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	//@Permission(value={"valuation_run_lane"})
-	public /*static*/ Result valuation(String code){
+	public Result valuation(String code){
 		Run run = getRun(code);
 		if(run == null){
 			return badRequest();
@@ -458,22 +400,15 @@ public class Runs extends RunsController {
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(run));
 		} else {
-			// return badRequest(filledForm.errors-AsJson());
 			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 	
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	public /*static*/ Result applyRules(String code, String rulesCode){
+	public Result applyRules(String code, String rulesCode){
 		Run run = getRun(code);
 		if (run != null) {
 			//Send run fact			
-			// Outside of an actor and if no reply is needed the second argument can be null
-			// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),rulesCode, run),null);
-			// rulesActor.tell(new RulesMessage(rulesKey,rulesCode, run),null);
 			rulesActor.tellMessage(rulesCode, run);
 		} else
 			return badRequest();

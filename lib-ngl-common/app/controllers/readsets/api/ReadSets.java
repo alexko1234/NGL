@@ -1,8 +1,5 @@
 package controllers.readsets.api;
 
-// import static play.data.Form.form;
-//import static fr.cea.ig.play.IGGlobals.form;
-//import static fr.cea.ig.play.IGGlobals.akkaSystem;
 import fr.cea.ig.mongo.MongoStreamer;
 
 import java.util.ArrayList;
@@ -27,14 +24,11 @@ import com.google.inject.Provider;
 import com.mongodb.BasicDBObject;
 
 import akka.actor.ActorRef;
-// import akka.actor.Props;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import controllers.history.UserHistory;
 import fr.cea.ig.MongoDBDAO;
-// import fr.cea.ig.MongoDBDatatableResponseChunks;
-// import fr.cea.ig.MongoDBResponseChunks;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.lfw.Historized;
@@ -50,26 +44,20 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
-// import play.Logger;
-// import play.Play;
-// import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.i18n.Lang;
-// import play.libs.Akka;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.With;
 import rules.services.LazyRules6Actor;
-// import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.run.instance.ReadSetValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableForm;
 import workflows.readset.ReadSetWorkflows;
-//import workflows.run.Workflows;
 import fr.cea.ig.play.IGBodyParsers;
 import fr.cea.ig.play.NGLContext;
 
@@ -83,49 +71,32 @@ public class ReadSets extends ReadSetsController {
 	final static List<String> defaultKeys            = Arrays.asList("code", "typeCode", "runCode", "runTypeCode", "laneNumber", "projectCode", "sampleCode", "runSequencingStartDate", "state", "productionValuation", "bioinformaticValuation", "properties","location");
 
 	private final Form<ReadSet>              readSetForm;      // = form(ReadSet.class);
-	//final static Form<ReadSetsSearchForm> searchForm = form(ReadSetsSearchForm.class);
 	private final Form<ReadSetValuation>     valuationForm;    // = form(ReadSetValuation.class);
 	private final Form<State>                stateForm;        // = form(State.class);
 	private final Form<ReadSetBatchElement>  batchElementForm; // = form(ReadSetBatchElement.class);
 	private final Form<QueryFieldsForm>      updateForm;       // = form(QueryFieldsForm.class);
-	// final static ReadSetWorkflows workflows = Spring.get BeanOfType(ReadSetWorkflows.class);
 	private final Provider<ReadSetWorkflows> workflows;
-	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-	// private final ActorRef                   rulesActor;       // = akkaSystem().actorOf(Props.create(RulesActor6.class));
-	// private final String                     rulesKey;
 	private final LazyRules6Actor rulesActor;
 	
 	@Inject
 	public ReadSets(NGLContext ctx, Provider<ReadSetWorkflows> workflows) {
-		// super(ctx);
 		readSetForm      = ctx.form(ReadSet.class);
 		valuationForm    = ctx.form(ReadSetValuation.class);
 		stateForm        = ctx.form(State.class);
 		batchElementForm = ctx.form(ReadSetBatchElement.class);
 		updateForm       = ctx.form(QueryFieldsForm.class);
-		rulesActor       = ctx.rules6Actor(); // ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
-		// rulesKey         = ctx.config().getRulesKey();
+		rulesActor       = ctx.rules6Actor(); 
 		this.workflows   = workflows;
-		// this.rulesActor  = ctx.rule
 	}
 	
-//	@With({fr.cea.ig.authentication.Authenticate.class})
 	@Permission(value={"reading"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Read
 	public Result list() {
-		// Form<ReadSetsSearchForm> filledForm = filledFormQueryString(searchForm, ReadSetsSearchForm.class);
-		// ReadSetsSearchForm form = filledForm.get();
 		ReadSetsSearchForm form = filledFormQueryString(ReadSetsSearchForm.class);
-		// Logger.debug("form = "+form);
 		Query q = getQuery(form);		
 		BasicDBObject keys = getKeys(updateForm(form));
 
 		if (form.datatable) {			
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);				
-			// return ok(new MongoDBDatatableResponseChunks<ReadSet>(results)).as("application/json");
-			// return ok(MongoStreamer.streamUDT(results)).as("application/json");
 			return MongoStreamer.okStreamUDT(results);
 		} else if(form.count) {
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);							
@@ -143,8 +114,6 @@ public class ReadSets extends ReadSetsController {
 			return ok(Json.toJson(toListObjects(results.toList())));
 		}else {
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);	
-			// return ok(new MongoDBResponseChunks<ReadSet>(results)).as("application/json");
-			// return ok(MongoStreamer.stream(results)).as("application/json");
 			return MongoStreamer.okStream(results);
 		}
 	}
@@ -337,11 +306,7 @@ public class ReadSets extends ReadSetsController {
 		return query;
 	}
 
-//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 	@Permission(value={"reading"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Read
 	public Result get(String readSetCode) {
 		DatatableForm form = filledFormQueryString(DatatableForm.class);
 		ReadSet readSet =  getReadSet(readSetCode, form.includes.toArray(new String[0]));		
@@ -353,11 +318,7 @@ public class ReadSets extends ReadSetsController {
 		}		
 	}
 
-//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 	@Permission(value={"reading"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Read
 	public Result head(String readSetCode) {
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode)){			
 			return ok();					
@@ -366,11 +327,7 @@ public class ReadSets extends ReadSetsController {
 		}	
 	}
 
-//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
 	public Result save(){
 
 		Form<ReadSet> filledForm = getFilledForm(readSetForm, ReadSet.class);
@@ -435,12 +392,11 @@ public class ReadSets extends ReadSetsController {
 
 			return ok(Json.toJson(readSetInput));
 		} else {
-			// return badRequest(filledForm.errors-AsJson());
 			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
-	private /*static*/ void updateReadSet(ReadSet readSetInput) {
+	private void updateReadSet(ReadSet readSetInput) {
 		BasicDBObject keys = new BasicDBObject();
 		keys.put("_id", 0);//Don't need the _id field
 		keys.put("sequencingStartDate", 1);
@@ -451,12 +407,7 @@ public class ReadSets extends ReadSetsController {
 	}
 
 
-//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public Result update(String readSetCode){
 		ReadSet readSet =  getReadSet(readSetCode);
@@ -498,7 +449,6 @@ public class ReadSets extends ReadSetsController {
 
 					return ok(Json.toJson(readSetInput));
 				} else {
-					// return badRequest(filledForm.errors-AsJson());
 					return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 				}
 			}else{
@@ -515,7 +465,6 @@ public class ReadSets extends ReadSetsController {
 				ReadSetValidationHelper.validateCode(readSetInput, InstanceConstants.READSET_ILLUMINA_COLL_NAME, ctxVal);
 			}
 
-			// if(!filledForm.hasErrors()){
 			if (!ctxVal.hasErrors()) {
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 						DBQuery.and(DBQuery.is("code", readSetCode)), 
@@ -534,17 +483,12 @@ public class ReadSets extends ReadSetsController {
 				}
 				return ok(Json.toJson(getReadSet(readSetCode)));
 			} else {
-				//return badRequest(filledForm.errors-AsJson());
 				return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 			}			
 		}
 	}
 
-//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 	@Permission(value={"writing"}) 
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
 	public Result delete(String readSetCode) { 
 		ReadSet readSet = getReadSet(readSetCode);
 		if (readSet == null) {
@@ -576,11 +520,7 @@ public class ReadSets extends ReadSetsController {
 	}
 
 
-//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
 	public Result deleteByRunCode(String runCode) {
 		Run run  = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runCode);
 		if (run==null) {
@@ -602,11 +542,7 @@ public class ReadSets extends ReadSetsController {
 		return ok();
 	}
 
-//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
 	public Result state(String code){
 		ReadSet readSet = getReadSet(code);
 		if(readSet == null){
@@ -621,16 +557,11 @@ public class ReadSets extends ReadSetsController {
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getReadSet(code)));
 		} else {
-			// return badRequest(filledForm.errors-AsJson());
 			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
-//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
 	public Result stateBatch(){
 		List<Form<ReadSetBatchElement>> filledForms =  getFilledFormList(batchElementForm, ReadSetBatchElement.class);
 
@@ -661,11 +592,7 @@ public class ReadSets extends ReadSetsController {
 		return ok(Json.toJson(response));
 	}
 
-//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
 	public Result valuation(String code){
 		ReadSet readSet = getReadSet(code);
 		if(readSet == null){
@@ -686,16 +613,11 @@ public class ReadSets extends ReadSetsController {
 			workflows.get().nextState(ctxVal, readSet);
 			return ok(Json.toJson(readSet));
 		} else {
-			// return badRequest(filledForm.errors-AsJson());
 			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
-//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
 	public Result valuationBatch(){
 		List<Form<ReadSetBatchElement>> filledForms =  getFilledFormList(batchElementForm, ReadSetBatchElement.class);
 
@@ -731,11 +653,7 @@ public class ReadSets extends ReadSetsController {
 		return ok(Json.toJson(response));
 	}
 
-//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
 	public Result properties(String code){
 		ReadSet readSet = getReadSet(code);
 		if(readSet == null){
@@ -749,18 +667,7 @@ public class ReadSets extends ReadSetsController {
 		ctxVal.setUpdateMode();
 		ReadSetValidationHelper.validateReadSetType(readSet.typeCode, properties, ctxVal);
 
-		/*if(!ctxVal.hasErrors()){
-			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-					DBQuery.and(DBQuery.is("code", code)),
-					DBUpdate.set("properties", properties)
-					.set("traceInformation", getUpdateTraceInformation(readSet)));								
-
-		}
-		if (!filledForm.hasErrors()) {
-			return ok(Json.toJson(getReadSet(code)));		
-		} else {
-			return badRequest(filledForm.errors-AsJson());			
-		}*/
+		
 		if (!ctxVal.hasErrors()) {
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 					DBQuery.and(DBQuery.is("code", code)),
@@ -768,16 +675,11 @@ public class ReadSets extends ReadSetsController {
 					.set("traceInformation", getUpdateTraceInformation(readSet)));								
 			return ok(Json.toJson(getReadSet(code)));		
 		} else {
-			// return badRequest(filledForm.errors-AsJson());
 			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
-//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
 	public Result propertiesBatch() {
 		List<Form<ReadSetBatchElement>> filledForms =  getFilledFormList(batchElementForm, ReadSetBatchElement.class);
 
@@ -835,18 +737,10 @@ public class ReadSets extends ReadSetsController {
 		return regex;
 	}
 
-//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
 	public Result applyRules(String code, String rulesCode){
 		ReadSet readSet = getReadSet(code);
 		if (readSet != null) {
-			//Send run fact			
-			// Outside of an actor and if no reply is needed the second argument can be null
-			// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),rulesCode, readSet),null);
-			// rulesActor.tell(new RulesMessage(rulesKey, rulesCode, readSet),null);
 			rulesActor.tellMessage(rulesCode, readSet);
 		} else
 			return badRequest();

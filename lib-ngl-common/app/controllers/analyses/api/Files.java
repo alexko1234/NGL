@@ -1,7 +1,5 @@
  package controllers.analyses.api;
 
-// import static play.data.Form.form;
-//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,11 +25,10 @@ import play.mvc.Result;
 import validation.ContextValidation;
 import validation.run.instance.FileValidationHelper;
 
-// @Controller
 public class Files extends SubDocumentController<Analysis, File> {
 
 	private final static List<String> authorizedUpdateFields = Arrays.asList("fullname");
-	private final /*static*/ Form<QueryFieldsForm> updateForm; // = form(QueryFieldsForm.class);
+	private final Form<QueryFieldsForm> updateForm; 
 	
 	@Inject
 	public Files(NGLContext ctx) {
@@ -59,10 +56,6 @@ public class Files extends SubDocumentController<Analysis, File> {
 	}
 	
 	@Permission(value={"writing"})	
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	//@Permission(value={"creation_update_files"})
 	public Result save(String parentCode) {
 		Analysis objectInDB = getObject(parentCode);
 		if (objectInDB == null) {
@@ -84,16 +77,11 @@ public class Files extends SubDocumentController<Analysis, File> {
 					.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 			return get(parentCode, inputFile.fullname);
 		} else {
-			// return badRequest(filledForm.errors-AsJson());
 			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 	
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	//@Permission(value={"creation_update_files"})
 	public Result update(String parentCode, String fullname) {
 		Analysis objectInDB = getObject(getSubObjectQuery(parentCode, fullname));
 		if (objectInDB == null) {
@@ -119,7 +107,6 @@ public class Files extends SubDocumentController<Analysis, File> {
 							.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 					return get(parentCode, fullname);
 				} else {
-					// return badRequest(filledForm.errors-AsJson());
 					return badRequest(errorsAsJson(ctxVal.getErrors()));
 				}
 			} else {
@@ -146,17 +133,12 @@ public class Files extends SubDocumentController<Analysis, File> {
 				}
 				return get(parentCode, fullname);
 			} else {
-				// return badRequest(filledForm.errors-AsJson());
 				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}			
 		}
 	}
 
 	@Permission(value={"writing"})	
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	//@Permission(value={"delete_files"})
 	public Result delete(String parentCode, String fullname) {
 		Analysis objectInDB = getObject(getSubObjectQuery(parentCode, fullname));
 		if (objectInDB == null) {
@@ -169,9 +151,6 @@ public class Files extends SubDocumentController<Analysis, File> {
 	}
 	
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
 	public Result deleteByParentCode(String parentCode) {
 		Analysis objectInDB = getObject(parentCode);
 		if (objectInDB == null) {

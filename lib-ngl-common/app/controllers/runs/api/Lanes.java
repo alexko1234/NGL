@@ -8,7 +8,6 @@ import javax.inject.Inject;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
-//import controllers.CommonController;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.authentication.Authenticated;
@@ -24,8 +23,6 @@ import models.utils.InstanceConstants;
 import play.Logger;
 import play.data.Form;
 
-// import static play.data.Form.form;
-//import static fr.cea.ig.play.IGGlobals.form;
 
 import play.libs.Json;
 import play.mvc.Result;
@@ -34,9 +31,9 @@ import validation.run.instance.RunValidationHelper;
 
 public class Lanes extends RunsController{
 	
-	private final /*static*/ Form<Lane> laneForm ;//= form(Lane.class);
-	private final /*static*/ Form<Treatment> treatmentForm;// = form(Treatment.class);
-	private final /*static*/ Form<Valuation> valuationForm ;//= form(Valuation.class);
+	private final Form<Lane> laneForm ;
+	private final Form<Treatment> treatmentForm;
+	private final Form<Valuation> valuationForm ;
 	
 	@Inject
 	public Lanes(NGLContext ctx) {
@@ -46,10 +43,7 @@ public class Lanes extends RunsController{
 	}
 	
 	@Permission(value={"reading"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Read
-	public /*static*/ Result list(String code) {
+	public Result list(String code) {
 		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
 		if(run == null || run.lanes == null){
 			return badRequest();
@@ -58,10 +52,7 @@ public class Lanes extends RunsController{
 	}
 	
 	@Permission(value={"reading"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Read
-	public /*static*/ Result get(String code, Integer laneNumber) {
+	public Result get(String code, Integer laneNumber) {
 		Run run = getRun(code, laneNumber);
 		if(run == null){
 			return badRequest();
@@ -77,10 +68,7 @@ public class Lanes extends RunsController{
 	}
 
 	@Permission(value={"reading"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Read
-	public /*static*/ Result head(String code, Integer laneNumber){
+	public Result head(String code, Integer laneNumber){
 		if(MongoDBDAO.checkObjectExist(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", code), DBQuery.is("lanes.number", laneNumber)))){			
 			return ok();					
@@ -90,11 +78,7 @@ public class Lanes extends RunsController{
 	}
 	
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	//@Permission(value={"creation_update_run_lane"})
-	public /*static*/ Result save(String code) {
+	public Result save(String code) {
 		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
 		if(run == null){
 			return badRequest();
@@ -114,19 +98,13 @@ public class Lanes extends RunsController{
 					DBUpdate.push("lanes", laneValue).set("traceInformation", getUpdateTraceInformation(run)));
 			return ok(Json.toJson(laneValue));	
 		} else {
-			// Logger.error(filledForm.errors-AsJson().toString());
 			Logger.error(NGLContext._errorsAsJson(ctxVal.getErrors()).toString());
-			// return badRequest(filledForm.errors-AsJson());
 			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}		
 	}
 
 	@Permission(value={"writing"})	
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	//@Permission(value={"creation_update_run_lane"})
-	public /*static*/ Result update(String code, Integer laneNumber){
+	public Result update(String code, Integer laneNumber){
 		Run run = getRun(code, laneNumber);
 		if(run == null){
 			return badRequest();
@@ -145,7 +123,6 @@ public class Lanes extends RunsController{
 						DBUpdate.set("lanes.$", laneValue).set("traceInformation", getUpdateTraceInformation(run))); 
 				return ok(Json.toJson(laneValue));
 			} else {
-				// return badRequest(filledForm.errors-AsJson());
 				return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 			}
 		}else{
@@ -154,10 +131,7 @@ public class Lanes extends RunsController{
 	}
 	
 	@Permission(value={"writing"})	
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	public /*static*/ Result delete(String code, Integer laneNumber) { 
+	public Result delete(String code, Integer laneNumber) { 
 		Run run = getRun(code, laneNumber);
 		if(run == null){
 			return badRequest();
@@ -171,10 +145,7 @@ public class Lanes extends RunsController{
 	}
 	
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	public /*static*/ Result deleteByRunCode(String code) {
+	public Result deleteByRunCode(String code) {
 		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
 		if (run==null) {
 			return badRequest();
@@ -185,11 +156,7 @@ public class Lanes extends RunsController{
 	}
 	
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	//@Permission(value={"valuation_run_lane"})
-	public /*static*/ Result valuation(String code, Integer laneNumber){
+	public Result valuation(String code, Integer laneNumber){
 		Run run = getRun(code, laneNumber);
 		if(run == null){
 			return badRequest();

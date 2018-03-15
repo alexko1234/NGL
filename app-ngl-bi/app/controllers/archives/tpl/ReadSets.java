@@ -1,7 +1,5 @@
 package controllers.archives.tpl;
 
-// import play.Routes;
-//import play.routing.JavaScriptReverseRouter;
 import play.mvc.Result;
 
 import views.html.archives.home;
@@ -22,8 +20,6 @@ import fr.cea.ig.play.NGLContext;
  * @author galbini
  *
  */
-// import controllers.CommonController;
-// public class ReadSets extends CommonController {
 public class ReadSets extends NGLController
                      implements NGLJavascript {
 
@@ -58,18 +54,5 @@ public class ReadSets extends NGLController
 						controllers.archives.api.routes.javascript.ReadSets.list());	  	      
 	}
 	
-	/*
-	public Result javascriptRoutes() {
-		response().setContentType("text/javascript");
-		return ok(  	    		
-				//Routes.javascriptRouter("jsRoutes",
-				JavaScriptReverseRouter.create("jsRoutes",
-						// Routes
-						controllers.archives.tpl.routes.javascript.ReadSets.home(),  
-						controllers.archives.tpl.routes.javascript.ReadSets.get(),  
-						controllers.archives.api.routes.javascript.ReadSets.list()  	    		
-						)	  	      
-				);
-	}
-*/
+	
 }

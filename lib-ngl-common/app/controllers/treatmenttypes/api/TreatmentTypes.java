@@ -1,7 +1,5 @@
  package controllers.treatmenttypes.api;
 
-//import static play.data.Form.form;
-//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.List;
 
@@ -21,20 +19,19 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import views.components.datatable.DatatableResponse;
-//import controllers.CommonController;
 
 
 
-public class TreatmentTypes extends APICommonController<TreatmentTypesSearchForm> {//CommonController {
+public class TreatmentTypes extends APICommonController<TreatmentTypesSearchForm> {
 	@Inject
 	public TreatmentTypes(NGLContext ctx) {
 		super(ctx, TreatmentTypesSearchForm.class);
 		treatmentTypesForm = ctx.form(TreatmentTypesSearchForm.class);
 	}
 
-	private final /*static*/ Form<TreatmentTypesSearchForm> treatmentTypesForm;// = form(TreatmentTypesSearchForm.class);
+	private final /*static*/ Form<TreatmentTypesSearchForm> treatmentTypesForm;
 
-	public /*static*/ Result list() {
+	public Result list() {
 		Form<TreatmentTypesSearchForm> treatmentTypesFilledForm = filledFormQueryString(treatmentTypesForm,TreatmentTypesSearchForm.class);
 		TreatmentTypesSearchForm searchForm = treatmentTypesFilledForm.get();
 
@@ -58,8 +55,7 @@ public class TreatmentTypes extends APICommonController<TreatmentTypesSearchForm
 	}
 	
 	
-	//@Permission(value={"reading"})
-	public /*static*/ Result get(String code) {
+	public Result get(String code) {
 		TreatmentType treatmentType =  getTreatmentType(code);		
 		if(treatmentType != null) {
 			return ok(Json.toJson(treatmentType));	

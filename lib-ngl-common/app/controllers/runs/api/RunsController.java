@@ -1,6 +1,5 @@
 package controllers.runs.api;
 
-//import com.mongodb.BasicDBObject;
 
 import org.mongojack.DBQuery;
 
@@ -8,9 +7,7 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import controllers.CommonController;
-// import controllers.NGLControllerHelper;
 import fr.cea.ig.MongoDBDAO;
-// import fr.cea.ig.MongoDBResult;
 
 public class RunsController extends CommonController {
 

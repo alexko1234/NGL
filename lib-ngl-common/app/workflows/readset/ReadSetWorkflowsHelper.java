@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.mongojack.WriteResult;
-// import org.springframework.stereotype.Service;
 
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.NGLContext;
@@ -23,33 +22,22 @@ import models.laboratory.run.instance.SampleOnContainer;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
-// import play.Logger;
-// import play.Play;
 import rules.services.RulesServices6;
 import validation.ContextValidation;
-//import workflows.WorkflowsCatalog;
 
-// @Service
 @Singleton
 public class ReadSetWorkflowsHelper {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(ReadSetWorkflowsHelper.class);
 	
-	// private final String rulesKey;
 	private final NGLContext ctx;
 	
 	@Inject
 	public ReadSetWorkflowsHelper(NGLContext ctx) {
 		this.ctx = ctx;
-		// rulesKey = ctx.getRulesKey();
 	}
 	
-	/*private final String rulesKey;
 	
-	// Not an injection constructor on purpose
-	public ReadSetWorkflowsHelper(WorkflowsCatalog wc) {
-		rulesKey = wc.getNGLContext().getRulesKey();
-	}*/
 	
 	public void updateContainer(ReadSet readSet) {
 		//insert sample container properties at the end of the ngsrg
@@ -58,7 +46,6 @@ public class ReadSetWorkflowsHelper {
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
 					DBQuery.is("code", readSet.code), DBUpdate.set("sampleOnContainer", sampleOnContainer));
 		} else {
-			// Logger.error("sampleOnContainer null for "+readSet.code);
 			logger.error("sampleOnContainer null for {}", readSet.code);
 		}			
 	}
@@ -88,7 +75,6 @@ public class ReadSetWorkflowsHelper {
 						DBUpdate.set("files.$.state", state));					
 			}
 		} else {
-			// Logger.error("No files for "+readSet.code);
 			logger.error("No files for {}", readSet.code);
 		}
 	}
@@ -101,8 +87,6 @@ public class ReadSetWorkflowsHelper {
 			ArrayList<Object> facts = new ArrayList<Object>();
 			facts.add(readSet);
 			facts.add(contextValidation);
-			// RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), rules, facts);
-			// RulesServices6.getInstance().callRulesWithGettingFacts(rulesKey, rules, facts);
 			ctx.callRulesWithGettingFacts(rules, facts);
 		}
 	}

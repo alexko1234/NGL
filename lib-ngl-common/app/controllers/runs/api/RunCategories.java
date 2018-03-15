@@ -1,7 +1,5 @@
 package controllers.runs.api;
 
-// import static play.data.Form.form;
-//import static fr.cea.ig.play.IGGlobals.form;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,9 +21,9 @@ import play.mvc.Result;
 import play.mvc.Results;
 import views.components.datatable.DatatableResponse;
 
-public class RunCategories extends APICommonController<RunCategoriesSearchForm> { //CommonController {
+public class RunCategories extends APICommonController<RunCategoriesSearchForm> {
 
-	private final /*static*/ Form<RunCategoriesSearchForm> runCategoriesForm;// = form(RunCategoriesSearchForm.class);
+	private final Form<RunCategoriesSearchForm> runCategoriesForm;
 	
 	@Inject
 	public RunCategories(NGLContext ctx) {
@@ -34,10 +32,7 @@ public class RunCategories extends APICommonController<RunCategoriesSearchForm> 
 	}
 	
 	@Permission(value={"reading"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Read
-	public /*static*/ Result list(){
+	public Result list(){
 		Form<RunCategoriesSearchForm> runCategoryFilledForm = filledFormQueryString(runCategoriesForm,RunCategoriesSearchForm.class);
 		RunCategoriesSearchForm runCategoriesSearch = runCategoryFilledForm.get();
 		

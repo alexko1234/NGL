@@ -29,7 +29,6 @@ import validation.ContextValidation;
 
 // TODO: cleanup
 
-//@Controller
 public class AnalysisTreatments extends SubDocumentController<Analysis, Treatment> {
 
 	@Inject
@@ -51,11 +50,6 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 	
 	
 	@Permission(value={"writing"})	
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	//@Permission(value={"creation_update_treatments"})
-	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public Result save(String parentCode){
 		Analysis objectInDB = getObject(parentCode);
@@ -81,17 +75,11 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 					.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 			return get(parentCode, inputTreatment.code);
 		} else {
-			// return badRequest(filledForm.errors-AsJson());
 			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}		
 	}
 
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	//@Permission(value={"creation_update_treatments"})
-	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public Result update(String parentCode, String code){
 		Analysis objectInDB = getObject(getSubObjectQuery(parentCode, code));
@@ -114,7 +102,6 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 						.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 				return get(parentCode, code);
 			} else {
-				// return badRequest(filledForm.errors-AsJson());
 				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}
 		} else{
@@ -123,10 +110,6 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 	}
 	
 	@Permission(value={"writing"})	
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	//@Permission(value={"delete_treatments"})
 	public Result delete(String parentCode, String code){
 		Analysis objectInDB = getObject(getSubObjectQuery(parentCode, code));
 		if (objectInDB == null) {
@@ -139,9 +122,6 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 	}
 	
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
 	public  Result deleteAll(String parentCode){
 		Analysis objectInDB = getObject(parentCode);
 		if (objectInDB == null) {

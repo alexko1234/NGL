@@ -2,9 +2,6 @@ package controllers.authorisation.tpl;
 
 import javax.inject.Inject;
 
-//import controllers.NGLBaseController;
-//import play.Routes;
-//import play.routing.JavaScriptReverseRouter;
 import play.mvc.Result;
 import views.html.authorisation.users.*;
 import fr.cea.ig.authentication.Authenticated;
@@ -13,7 +10,6 @@ import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.support.NGLJavascript;
-//import fr.cea.ig.play.NGLContext;
 
 /**
  * 
@@ -21,7 +17,7 @@ import fr.cea.ig.ngl.support.NGLJavascript;
  *
  */
 public class Users extends NGLController 
-                  implements NGLJavascript { // NGLBaseController {
+                  implements NGLJavascript { 
 	
 	private final home home;
 	private final search search;
@@ -51,18 +47,5 @@ public class Users extends NGLController
 						controllers.commons.api.routes.javascript.Users.update());
 	}
 
-	/*
-	public Result javascriptRoutes() {
-		response().setContentType("text/javascript");
-		return ok(//Routes.javascriptRouter("jsRoutes",
-				JavaScriptReverseRouter.create("jsRoutes",
-						//Routes
-						controllers.authorisation.tpl.routes.javascript.Users.home(),
-						controllers.commons.api.routes.javascript.Users.list(),
-						controllers.commons.api.routes.javascript.Roles.list(),
-						controllers.commons.api.routes.javascript.Users.update()
-						)
-				);
-	}
-	*/
+	
 }

@@ -2,8 +2,6 @@ package controllers.readsets.api;
 
 import javax.inject.Inject;
 
-// import static play.data.Form.form;
-//import static fr.cea.ig.play.IGGlobals.form;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
@@ -32,7 +30,7 @@ import fr.cea.ig.play.NGLContext;
 
 public class ReadSetTreatments extends ReadSetsController {
 
-	private final /*static*/ Form<Treatment> treatmentForm; // = form(Treatment.class);
+	private final Form<Treatment> treatmentForm; 
 	
 	@Inject
 	public ReadSetTreatments(NGLContext ctx) {
@@ -40,10 +38,7 @@ public class ReadSetTreatments extends ReadSetsController {
 	}
 	
 	@Permission(value={"reading"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Read
-	public /*static*/ Result list(String readSetCode){
+	public Result list(String readSetCode){
 		ReadSet readSet = getReadSet(readSetCode);
 		if (readSet != null) {
 			return ok(Json.toJson(readSet.treatments));
@@ -53,10 +48,7 @@ public class ReadSetTreatments extends ReadSetsController {
 	}
 	
 	@Permission(value={"reading"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Read
-	public /*static*/ Result get(String readSetCode, String treatmentCode){
+	public Result get(String readSetCode, String treatmentCode){
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.exists("treatments."+treatmentCode)));
 		if (readSet != null) {
@@ -67,10 +59,7 @@ public class ReadSetTreatments extends ReadSetsController {
 	}
 	
 	@Permission(value={"reading"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Read
-	public /*static*/ Result head(String readSetCode, String treatmentCode){
+	public Result head(String readSetCode, String treatmentCode){
 		if(MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.exists("treatments."+treatmentCode)))){
 			return ok();
@@ -80,13 +69,8 @@ public class ReadSetTreatments extends ReadSetsController {
 	}
 	
 	@Permission(value={"writing"})	
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	//@Permission(value={"creation_update_treatments"})
-	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
-	public /*static*/ Result save(String readSetCode){
+	public Result save(String readSetCode){
 		ReadSet readSet = getReadSet(readSetCode);
 		if (readSet == null) {
 			return badRequest();
@@ -105,36 +89,20 @@ public class ReadSetTreatments extends ReadSetsController {
 		ctxVal.putObject("level", Level.CODE.ReadSet);
 		ctxVal.putObject("readSet", readSet);
 		treatment.validate(ctxVal);
-		/*if(!ctxVal.hasErrors()){
-			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, Run.class, 
-					DBQuery.is("code", readSetCode),
-					DBUpdate.set("treatments."+treatment.code, treatment).set("traceInformation", getUpdateTraceInformation(readSet)));	
-			
-		}
-		if (!filledForm.hasErrors()) {
-			return ok(Json.toJson(treatment));			
-		} else {
-			return badRequest(filledForm.errors-AsJson());			
-		}*/
+		
 		if(!ctxVal.hasErrors()){
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.is("code", readSetCode),
 					DBUpdate.set("treatments."+treatment.code, treatment).set("traceInformation", getUpdateTraceInformation(readSet)));	
 			return ok(Json.toJson(treatment));			
 		} else {
-			// return badRequest(filledForm.errors-AsJson());
 			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	//@Permission(value={"creation_update_treatments"})
-	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
-	public /*static*/ Result update(String readSetCode, String treatmentCode){
+	public Result update(String readSetCode, String treatmentCode){
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.exists("treatments."+treatmentCode)));
 		if (readSet == null) {
@@ -150,16 +118,6 @@ public class ReadSetTreatments extends ReadSetsController {
 			ctxVal.putObject("level", Level.CODE.ReadSet);
 			ctxVal.putObject("readSet", readSet);
 			treatment.validate(ctxVal);
-			/*if(!ctxVal.hasErrors()){
-				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-						DBQuery.is("code", readSetCode),
-						DBUpdate.set("treatments."+treatment.code, treatment).set("traceInformation", getUpdateTraceInformation(readSet)));				
-			}
-			if (!filledForm.hasErrors()) {
-				return ok(Json.toJson(treatment));			
-			} else {
-				return badRequest(filledForm.errors-AsJson());			
-			}*/
 			if (!ctxVal.hasErrors()) {
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 						DBQuery.is("code", readSetCode),
@@ -174,11 +132,8 @@ public class ReadSetTreatments extends ReadSetsController {
 		}
 	}
 	
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	@Permission(value={"writing"})	//@Permission(value={"delete_treatments"})
-	public /*static*/ Result delete(String readSetCode, String treatmentCode){
+	@Permission(value={"writing"})
+	public Result delete(String readSetCode, String treatmentCode){
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.exists("treatments."+treatmentCode)));
 		if (readSet == null) {
@@ -190,10 +145,7 @@ public class ReadSetTreatments extends ReadSetsController {
 	}
 	
 	@Permission(value={"writing"})
-//	@Authenticated
-//	@Historized
-//	@Authorized.Write
-	public /*static*/ Result deleteAll(String readSetCode){
+	public Result deleteAll(String readSetCode){
 		ReadSet readSet = getReadSet(readSetCode);
 		if (readSet == null) {
 			return badRequest();

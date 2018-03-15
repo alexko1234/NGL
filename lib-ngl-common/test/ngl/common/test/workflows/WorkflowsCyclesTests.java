@@ -96,7 +96,7 @@ public class WorkflowsCyclesTests extends AbstractTests {
 	
 	// ---- workflows.sra.sample
 	
-	@Test
+	/*@Test
 	public void sraSampleWorkflows() {
 		instanciate(workflows.sra.sample.SampleWorkflows.class);
 	}
@@ -111,7 +111,7 @@ public class WorkflowsCyclesTests extends AbstractTests {
 	@Test
 	public void sraStudyWorkflowsHelper() {
 		instanciate(workflows.sra.study.StudyWorkflowsHelper.class);
-	}
+	}*/
 	
 	// ---- workflows.sra.submission
 	
