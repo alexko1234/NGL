@@ -24,7 +24,8 @@ import controllers.instruments.io.utils.OutputHelper;
 import java.util.zip.*;
 
 public class Output extends AbstractOutput {
-
+//vol seuil pour petit vol
+	private int treshold= 20;
 	@Override
 	public File generateFile(Experiment experiment,ContextValidation contextValidation) throws Exception {
 		String type = (String)contextValidation.getObject("type");
@@ -41,28 +42,28 @@ public class Output extends AbstractOutput {
 				pssl = checkSampleSheetLines(pssl, isPlaque);
 
 				adnContent = OutputHelper.format(normalisation_x_to_plate.render(pssl).body());
-				file = new File(getFileName(experiment)+"_ADN.csv", adnContent);
+				file = new File(getFileName(experiment)+"_ADN_pipette_P50.csv", adnContent);
 
 			}else if("normalisation-buffer".equals(type)){
 				List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
 				pssl = checkSampleSheetLines(pssl, isPlaque);
 
 				bufferContent = OutputHelper.format(normalisation_x_to_plate_buffer.render(pssl).body());
-				file = new File(getFileName(experiment)+"_Buffer.csv", bufferContent);
+				file = new File(getFileName(experiment)+"_Buffer_pipette_P50.csv", bufferContent);
 
-			}if ("normalisation-highVol".equals(type) ){
+			}else if ("normalisation-highVol".equals(type) ){
 				List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
 				pssl = checkSampleSheetLines(pssl, isPlaque);
 
 				adnContent = OutputHelper.format(normalisation_x_to_plate_highVol.render(pssl).body());
-				file = new File(getFileName(experiment)+"_ADN.csv", adnContent);
+				file = new File(getFileName(experiment)+"_ADN_pipette_P200.csv", adnContent);
 
 			}else if("normalisation-buffer-highVol".equals(type)){
 				List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
 				pssl = checkSampleSheetLines(pssl, isPlaque);
 
 				bufferContent = OutputHelper.format(normalisation_x_to_plate_buffer_highVol.render(pssl).body());
-				file = new File(getFileName(experiment)+"_Buffer.csv", bufferContent);
+				file = new File(getFileName(experiment)+"_Buffer_pipette_P200.csv", bufferContent);
 
 			}else{
 				throw new RuntimeException("brandlhs sampleSheet io not managed : "+type);
@@ -94,7 +95,7 @@ public class Output extends AbstractOutput {
 	private PlateSampleSheetLine getPlateSampleSheetLine(AtomicTransfertMethod atm, String inputContainerCategory,Experiment experiment) {
 		Map<String, String> sourceMapping = getSourceMapping(experiment);
 		Map<String, String> destPositionMapping = getDestMapping(experiment);
-		
+
 		InputContainerUsed icu = atm.inputContainerUseds.get(0);
 		OutputContainerUsed ocu = atm.outputContainerUseds.get(0);
 		PlateSampleSheetLine pssl = new PlateSampleSheetLine();
@@ -102,18 +103,39 @@ public class Output extends AbstractOutput {
 		pssl.inputContainerCode = icu.code;
 		pssl.outputContainerCode = ocu.code;
 
-		if(icu.experimentProperties!=null && icu.experimentProperties.containsKey("inputVolume")){
-			pssl.inputVolume = (Double)icu.experimentProperties.get("inputVolume").value;
-		}else if(ocu.volume!=null && ocu.volume.value!=null){
-			pssl.inputVolume = (Double)ocu.volume.value;
+		Double vol = new Double(0);;
+
+		if(icu.experimentProperties!=null && icu.experimentProperties.containsKey("inputVolume"))
+			vol = (Double)icu.experimentProperties.get("inputVolume").value;
+		else if(ocu.volume!=null && ocu.volume.value!=null)
+			vol = (Double)ocu.volume.value;
+		else
+			Logger.error("Aucun volume renseigné dans l'expérience! ");
+
+
+		if (vol < treshold){
+			pssl.inputVolume = vol;
+			pssl.inputHighVolume = new Double(0);
+		}else{
+			pssl.inputHighVolume = vol;
+			pssl.inputVolume = new Double(0);
 		}
-		if(icu.experimentProperties!=null && icu.experimentProperties.containsKey("bufferVolume")){
-			pssl.bufferVolume = (Double)icu.experimentProperties.get("bufferVolume").value;
+
+		if(icu.experimentProperties!=null && icu.experimentProperties.containsKey("bufferVolume"))
+			vol = (Double)icu.experimentProperties.get("bufferVolume").value;
+
+		if (vol < treshold){
+			pssl.bufferVolume = vol;
+			pssl.bufferHighVolume = new Double(0);
+		}else{
+			pssl.bufferHighVolume = vol;
+			pssl.bufferVolume =new Double(0);
 		}
 		pssl.dwell = ocu.locationOnContainerSupport.line.concat(ocu.locationOnContainerSupport.column);
 
 		return pssl;
 	}
+	
 	private List<PlateSampleSheetLine> checkSampleSheetLines (List<PlateSampleSheetLine> psslList, Boolean isPlate){
 
 		PlateSampleSheetLine psslTemplate = new PlateSampleSheetLine();
@@ -156,6 +178,9 @@ public class Output extends AbstractOutput {
 					psslBlank.sampleName = "Sample "+sampleNum;
 					psslBlank.inputVolume = new Double(0);
 					psslBlank.bufferVolume = new Double(0);
+					psslBlank.inputHighVolume = new Double(0);
+					psslBlank.bufferHighVolume = new Double(0);
+				
 					psslListNew.add(psslBlank);
 				}
 			}

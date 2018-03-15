@@ -791,14 +791,14 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 	var generateSampleSheetNormalisation = function(){
 		$scope.fileUtils.generateSampleSheet({"type":"normalisation"});
 	};
-	var generateSampleSheetNormalisation = function(){
+	var generateSampleSheetNormalisationHighVol = function(){
 		$scope.fileUtils.generateSampleSheet({"type":"normalisation-highVol"});
 	};
 	var generateSampleSheetNormalisationBuffer = function(){
 		$scope.fileUtils.generateSampleSheet({"type":"normalisation-buffer"});
 	};
-	var generateSampleSheetNormalisationBuffer = function(){
-		$scope.fileUtils.generateSampleSheet({"type":"normalisation-buffer-HighVol"});
+	var generateSampleSheetNormalisationBufferHighVol = function(){
+		$scope.fileUtils.generateSampleSheet({"type":"normalisation-buffer-highVol"});
 	};
 	
 	var generateSampleSheetNormalisationPostPCR = function(){
@@ -813,23 +813,23 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 				isDisabled : function(){return $scope.isNewState();} ,
 				isShow:function(){return !$scope.isNewState();},
 				click:generateSampleSheetNormalisation,
-				label:Messages("experiments.sampleSheet")+" normalisation ADN <20"
+				label:Messages("experiments.sampleSheet")+" normalisation ADN"
 			},{
 				isDisabled : function(){return $scope.isNewState();} ,
 				isShow:function(){return !$scope.isNewState();},
 				click:generateSampleSheetNormalisationBuffer,
-				label:Messages("experiments.sampleSheet")+" normalisation Tampon <20"
+				label:Messages("experiments.sampleSheet")+" normalisation Tampon"
 			},{
-				isDisabled : function(){return $scope.isNewState();} ,
-				isShow:function(){return !$scope.isNewState();},
-				click:generateSampleSheetNormalisationBufferHighVol,
-				label:Messages("experiments.sampleSheet")+" normalisation Tampon >=20"
-			},{
-				isDisabled : function(){return $scope.isNewState();} ,
-				isShow:function(){return !$scope.isNewState();},
-				click:generateSampleSheetNormalisationHighVol,
-				label:Messages("experiments.sampleSheet")+" normalisation ADN >=20"
-			}]);	
+                isDisabled : function(){return $scope.isNewState();} ,
+                isShow:function(){return !$scope.isNewState();},
+                click:generateSampleSheetNormalisationHighVol,
+                label:Messages("experiments.sampleSheet")+" normalisation ADN >=20"
+            },{
+                isDisabled : function(){return $scope.isNewState();} ,
+                isShow:function(){return !$scope.isNewState();},
+                click:generateSampleSheetNormalisationBufferHighVol,
+                label:Messages("experiments.sampleSheet")+" normalisation Tampon >=20"
+            }]);	
 		}else if ($scope.experiment.instrument.typeCode === "hand"){
 
 
