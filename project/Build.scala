@@ -97,7 +97,7 @@ object ApplicationBuild extends Build {
 	val reagentsVersion        = "2.2.0"  + distSuffix
 
 
-	val subVersion             = "2.3.0"  + distSuffix
+	val subVersion             = "2.2.1"  + distSuffix
 
 	
 	

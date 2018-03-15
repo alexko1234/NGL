@@ -193,6 +193,7 @@ public class SubmissionWorkflows extends TransitionWorkflows<Submission> {
 	}
 	
 	public void activateSubmissionRelease(ContextValidation contextValidation, Submission submission) {
-		submission.setState(new State(SubmissionWorkflows.IW_SUB_R, contextValidation.getUser()));
+		//submission.setState(new State(SubmissionWorkflows.IW_SUB_R, contextValidation.getUser()));
+		setState(contextValidation, submission, new State(SubmissionWorkflows.IW_SUB_R, contextValidation.getUser()));
 	}
 }
