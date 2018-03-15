@@ -33,11 +33,15 @@ rule "prepa-fc from process"
 		 $phixPercent : PropertyValue() from $processProperties.get("phixPercent")
     	 eval($finalConcentration1.value != null && Number.class.isInstance($finalConcentration1.value) && (null == $experimentProperties.get("finalConcentration") || null == $experimentProperties.get("phixPercent")))
    	then
-   		Logger.debug("prepa-fc concentration final");
-		PropertySingleValue finalConcentration = new PropertySingleValue((convertPVToDouble($finalConcentration1)*1000), "pM");
-		$experimentProperties.put("finalConcentration",finalConcentration);		
-		PropertySingleValue phixPercent = new PropertySingleValue($phixPercent.value);
-		$experimentProperties.put("phixPercent",phixPercent);	
+	   	//Logger.debug("prepa-fc concentration final");
+   		if(null == $experimentProperties.get("finalConcentration")){
+			PropertySingleValue finalConcentration = new PropertySingleValue((convertPVToDouble($finalConcentration1)*1000), "pM");
+			$experimentProperties.put("finalConcentration",finalConcentration);	
+		}
+		if(null == $experimentProperties.get("phixPercent")){	
+			PropertySingleValue phixPercent = new PropertySingleValue($phixPercent.value);
+			$experimentProperties.put("phixPercent",phixPercent);	
+		}
    	end
 
  
