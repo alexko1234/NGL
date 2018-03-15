@@ -37,7 +37,7 @@ public class Output extends AbstractOutput {
 		String bufferContent=null;
 		File file;
 		Boolean isPlaque = "96-well-plate".equals(experiment.instrument.inContainerSupportCategoryCode);	
-		
+
 		//tube / 96-well-plate
 		if("96-well-plate".equals(experiment.instrument.outContainerSupportCategoryCode)){
 			if ("normalisation".equals(type) ){
