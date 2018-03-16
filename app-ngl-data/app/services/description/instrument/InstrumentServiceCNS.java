@@ -148,7 +148,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentUsedType("Brand LHS", "brand-lhs", InstrumentCategory.find.findByCode("liquid-handling-robot"), null, 
 				getInstruments(
 						createInstrument("celeste", "CELESTE", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)) ), 
-						getContainerSupportCategories(new String[]{"96-well-plate","tube"}),getContainerSupportCategories(new String[]{"96-well-plate"), 
+						getContainerSupportCategories(new String[]{"96-well-plate","tube"}),getContainerSupportCategories(new String[]{"96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		
