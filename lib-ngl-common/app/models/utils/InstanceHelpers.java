@@ -418,7 +418,7 @@ public class InstanceHelpers {
 							|| (null != tags  && content.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME) && sampleCodes.contains(content.sampleCode) && projectCodes.contains(content.projectCode) 
 									&&  tags.contains(content.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value))))
 					.forEach(content -> {
-						Query findContentQuery = Spring.getBeanOfType(ContentHelper.class).getContentQuery(container, content);
+						Query findContentQuery = ContentHelper.getContentQuery(container, content);
 						content.properties = InstanceHelpers.updatePropertiesWithOldValueComparison(content.properties, updatedProperties, deletedPropertyCodes);		
 						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, findContentQuery, DBUpdate.set("contents.$", content));
 					});			
@@ -506,7 +506,7 @@ public class InstanceHelpers {
 				container.contents.stream()
 					.filter(content -> sample.code.equals(content.sampleCode) && sample.projectCodes.contains(content.projectCode) )
 					.forEach(content -> {
-						Query findContentQuery = Spring.getBeanOfType(ContentHelper.class).getContentQuery(container, content);
+						Query findContentQuery = ContentHelper.getContentQuery(container, content);
 						content.ncbiScientificName = sample.ncbiScientificName;
 						content.taxonCode = sample.taxonCode;
 						content.referenceCollab = sample.referenceCollab;

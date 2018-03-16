@@ -10,7 +10,6 @@ import models.laboratory.container.instance.Content;
 import models.utils.InstanceConstants;
 
 
-@Singleton
 public class ContentHelper {
 	
 	
@@ -20,7 +19,7 @@ public class ContentHelper {
 	 * @param content
 	 * @return
 	 */
-	public Query getContentQuery(Container container, Content content) {
+	public static Query getContentQuery(Container container, Content content) {
 		Query query = DBQuery.is("code",container.code);
 		
 		Query contentQuery =  DBQuery.is("projectCode", content.projectCode).is("sampleCode", content.sampleCode);
