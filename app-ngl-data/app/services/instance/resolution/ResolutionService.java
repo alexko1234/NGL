@@ -407,6 +407,8 @@ public class ResolutionService {
 		al.add("RMKI");
 		al.add("RMKIB");
 		al.add("RHS4000");
+		al.add("RNVS6000");
+		al.add("RPROMETHION");
 		
 		r.typeCodes = al;
 		
