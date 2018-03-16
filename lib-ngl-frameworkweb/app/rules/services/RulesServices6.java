@@ -31,6 +31,9 @@ public class RulesServices6 {
 	 */
 	private static final play.Logger.ALogger logger = play.Logger.of(RulesServices6.class);
 
+	/**
+	 * Cache of instances indexed by knowledge base names.
+	 */
 	private static final Map<String,RulesServices6> instances = new HashMap<>();
 	
 	/**
@@ -106,8 +109,7 @@ public class RulesServices6 {
 		kSession.dispose();		
 	}
 	
-	public List<Object> callRulesWithGettingFacts(String keyRules,
-			String ruleAnnotationName, List<Object> factsToInsert) {
+	public List<Object> callRulesWithGettingFacts(String keyRules, String ruleAnnotationName, List<Object> factsToInsert) {
 
 		// Create new session
 		KieSession kSession = getKieBase().newKieSession();

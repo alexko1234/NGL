@@ -6,13 +6,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 
+//import com.sun.org.apache.xerces.internal.impl.dv.ValidationContext;
+
 import play.Logger.ALogger;
 import play.data.Form;
 import play.data.validation.ValidationError;
+
 
 // TODO: change name to ValidationContext
 
@@ -48,8 +52,10 @@ public class ContextValidation {
 		
 	//
 	private String rootKeyName = "";
+	
 	//
 	public Map<String,List<ValidationError>> errors;
+	
 	//
 	private Map<String,Object> contextObjects;
 
@@ -73,7 +79,9 @@ public class ContextValidation {
 		contextObjects = new TreeMap<String, Object>();
 		this.user      = user;
 	}
-
+	
+	protected ContextValidation() {}
+	
 	// TODO: provide a proper initialization
 	@SuppressWarnings("deprecation")
 	public ContextValidation(String user, Form<?> form) {

@@ -101,17 +101,14 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 
 	
 	public static void validateReagents(List<ReagentUsed> reagentsUsed,ContextValidation contextValidation) {
-		if(reagentsUsed != null){
-			for(ReagentUsed reagentUsed:reagentsUsed){
+		if (reagentsUsed != null) {
+			for (ReagentUsed reagentUsed:reagentsUsed) {
 				reagentUsed.validate(contextValidation);
 			}
 		}
 	}
 
 	public static void validateAtomicTransfertMethods(String expTypeCode, InstrumentUsed instrument, List<AtomicTransfertMethod> atomicTransfertMethods, ContextValidation contextValidation) {
-		
-		
-		
 		IntStream.range(0, atomicTransfertMethods.size()).parallel().forEach(i -> {
 			ContextValidation cv = new ContextValidation(contextValidation.getUser());
 			cv.setMode(contextValidation.getMode());

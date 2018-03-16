@@ -9,6 +9,7 @@ import java.util.function.Function;
 import fr.cea.ig.lfw.utils.iteration.AppendingIterable;
 import fr.cea.ig.lfw.utils.iteration.FilteringIterable;
 import fr.cea.ig.lfw.utils.iteration.FlatteningIterable;
+import fr.cea.ig.lfw.utils.iteration.IntegerRange;
 import fr.cea.ig.lfw.utils.iteration.IntercalatingIterable;
 import fr.cea.ig.lfw.utils.iteration.MappingIterable;
 import fr.cea.ig.lfw.utils.iteration.PrependingIterable;
@@ -57,10 +58,10 @@ public class Iterables {
 	}
 	
 	public static int sum(List<Integer> l) {
-		return foldr(l, 0, (sum,e) -> sum + e);
+		return foldl(l, 0, (sum,e) -> sum + e);
 	}
 	
-	public static <A,B> B foldr(Iterable<A> i, B b, BiFunction<B,A,B> f) {
+	public static <A,B> B foldl(Iterable<A> i, B b, BiFunction<B,A,B> f) {
 		if (i != null)
 			for (A a : i)
 				b = f.apply(b, a);
@@ -68,7 +69,7 @@ public class Iterables {
 	}
 	
 	public static String concat(Iterable<String> i) {
-		return foldr(i, new StringBuilder(), (b,s) -> b.append(s)).toString();
+		return foldl(i, new StringBuilder(), (b,s) -> b.append(s)).toString();
 	}
 	
 	public static <A> ZenIterable<A> intercalate(Iterable<A> i, A a) {
@@ -89,6 +90,18 @@ public class Iterables {
 	
 	public static <A, B extends Iterable<A>> ZenIterable<A> flatten(Iterable<B> ii) {
 		return new FlatteningIterable<>(ii);
+	}
+	
+	public static ZenIterable<Integer> range(int from, int to) {
+		if (from > to)
+			return range(from, to, 1);
+		if (from < to)
+			return range(from, to, -1);
+		return range(from, to, 0);
+	}
+	
+	public static ZenIterable<Integer> range(int from, int to, int step) {
+		return new IntegerRange(from, to, step);
 	}
 	
 }

@@ -771,6 +771,7 @@ public class ValidationHelper {
 	 * @param key
 	 * @return
 	 */
+	// More like a valueExists or something like taht.
 	public static boolean required(ContextValidation contextValidation, Object object, String property) {
 		boolean isValid = true;
 		if (object == null) {
@@ -778,22 +779,19 @@ public class ValidationHelper {
         }
         if (isValid && object instanceof String) {
         	isValid =  StringUtils.isNotBlank((String)object);
-        }
-        
+        }        
         if (isValid && object instanceof Collection) {
         	isValid =  CollectionUtils.isNotEmpty((Collection<?>)object);        	
-        }
-        
+        }        
         if (isValid && object instanceof Map) {
         	isValid =  MapUtils.isNotEmpty((Map<?,?>)object);        	
-        }
-        
+        }        
         if (isValid && object instanceof byte[]) {
         	byte[] byteArrayObject =  (byte[]) object;
-        	isValid = (byteArrayObject.length==0?false:true);
+        	isValid = (byteArrayObject.length == 0 ? false : true);
         }
         if (!isValid) {
-        	contextValidation.addErrors(property, ERROR_REQUIRED_MSG,object);
+        	contextValidation.addErrors(property, ERROR_REQUIRED_MSG, object);
         }        
         return isValid;		
 	}
@@ -812,7 +810,7 @@ public class ValidationHelper {
         	return true;
         if ((object instanceof byte[]) && (((byte[])object).length > 0))
         	return true;        
-        contextValidation.addErrors(property, ERROR_REQUIRED_MSG,object);        
+        contextValidation.addErrors(property, ERROR_REQUIRED_MSG, object);        
         return false;		
 	}
 	
@@ -913,11 +911,10 @@ public class ValidationHelper {
 	 * @param value
 	 * @return
 	 */
-	public static boolean checkIfExistInTheList(
-			PropertyDefinition propertyDefinition, Object value) {
+	public static boolean checkIfExistInTheList(PropertyDefinition propertyDefinition, Object value) {
 		Class<?> valueClass = getClass(propertyDefinition.valueType);
-		for(Value possibleValue : propertyDefinition.possibleValues){
-			if(value.equals(convertValue(valueClass, possibleValue.code, null))){
+		for (Value possibleValue : propertyDefinition.possibleValues) {
+			if (value.equals(convertValue(valueClass, possibleValue.code, null))) {
 				return true;
 			}			
 		}

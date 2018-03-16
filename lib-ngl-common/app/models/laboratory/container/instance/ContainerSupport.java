@@ -74,11 +74,9 @@ public class ContainerSupport extends DBObject implements IValidation {
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		if(contextValidation.getObject(FIELD_STATE_CODE) == null){
-			contextValidation.putObject(FIELD_STATE_CODE , state.code);
-			
+		if (contextValidation.getObject(FIELD_STATE_CODE) == null) {
+			contextValidation.putObject(FIELD_STATE_CODE , state.code);			
 		}
-		
 		ContainerSupportValidationHelper.validateId(this, contextValidation);
 		ContainerSupportValidationHelper.validateCode(this, InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, contextValidation);
 		CommonValidationHelper.validateState(ObjectType.CODE.Container, state, contextValidation);

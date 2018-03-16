@@ -97,8 +97,7 @@ public class Experiment extends DBObject implements IValidation {
 	public void validate(ContextValidation contextValidation) {
 		//long t0 = System.currentTimeMillis();
 		if (contextValidation.getObject(FIELD_STATE_CODE) == null) {
-			contextValidation.putObject(FIELD_STATE_CODE , state.code);
-			
+			contextValidation.putObject(FIELD_STATE_CODE , state.code);			
 		}
 		contextValidation.putObject(FIELD_EXPERIMENT , this);
 		

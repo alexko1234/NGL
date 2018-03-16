@@ -32,7 +32,7 @@ public class ProcessValidationHelper extends CommonValidationHelper {
 			                               Map<String, PropertyValue> properties,
 			                               ContextValidation contextValidation) {
 		ProcessType processType = BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ProcessType.find,true);
-		if (processType!=null) {
+		if (processType != null) {
 			contextValidation.addKeyToRootKeyName("properties");
 			ValidationHelper.validateProperties(contextValidation, properties, processType.getPropertiesDefinitionDefaultLevel());
 			contextValidation.removeKeyFromRootKeyName("properties");

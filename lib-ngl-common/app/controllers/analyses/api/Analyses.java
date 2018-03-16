@@ -455,13 +455,13 @@ public class Analyses extends DocumentController<Analysis> {
 	@Authorized.Write
 	public Result applyRules(String code, String rulesCode)	{
 		Analysis objectInDB = getObject(code);
-		if(objectInDB == null) {
+		if (objectInDB == null) {
 			return notFound();
 		}		
 		// Outside of an actor and if no reply is needed the second argument can be null
 		// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),rulesCode,objectInDB),null);
 		// rulesActor.tell(new RulesMessage(getNGLContext().config().getRulesKey(),rulesCode,objectInDB),null);
-		rulesActor.tellMessage(rulesCode,objectInDB);
+		rulesActor.tellMessage(rulesCode, objectInDB);
 		return ok();
 	}
 	

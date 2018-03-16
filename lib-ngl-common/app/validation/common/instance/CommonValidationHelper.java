@@ -403,6 +403,14 @@ public class CommonValidationHelper {
 		}		
 	}
 	
+//	public static void validateState_(String typeCode, State state, ContextValidation contextValidation) {
+//		if (ValidationHelper.required(contextValidation, state, "state"))
+//			// Requires the corresponding child context implementation.  
+//			state.validate(contextValidation
+//					       .createChild("state")
+//					       .put(FIELD_TYPE_CODE, typeCode));
+//	}
+	
 	public static void validateState(ObjectType.CODE objectTypeCode, State state, ContextValidation contextValidation) {
 		if (ValidationHelper.required(contextValidation, state, "state")) {
 			contextValidation.putObject(FIELD_OBJECT_TYPE_CODE, objectTypeCode);
