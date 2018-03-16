@@ -813,22 +813,22 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 				isDisabled : function(){return $scope.isNewState();} ,
 				isShow:function(){return !$scope.isNewState();},
 				click:generateSampleSheetNormalisation,
-				label:Messages("experiments.sampleSheet")+" normalisation ADN"
-			},{
-				isDisabled : function(){return $scope.isNewState();} ,
-				isShow:function(){return !$scope.isNewState();},
-				click:generateSampleSheetNormalisationBuffer,
-				label:Messages("experiments.sampleSheet")+" normalisation Tampon"
+				label:Messages("experiments.sampleSheet")+" normalisation ADN_pipette_P50"
 			},{
                 isDisabled : function(){return $scope.isNewState();} ,
                 isShow:function(){return !$scope.isNewState();},
                 click:generateSampleSheetNormalisationHighVol,
-                label:Messages("experiments.sampleSheet")+" normalisation ADN >=20"
+                label:Messages("experiments.sampleSheet")+" normalisation ADN_pipette_P200"
             },{
+				isDisabled : function(){return $scope.isNewState();} ,
+				isShow:function(){return !$scope.isNewState();},
+				click:generateSampleSheetNormalisationBuffer,
+				label:Messages("experiments.sampleSheet")+" normalisation Tampon_pipette_P50"
+			},{
                 isDisabled : function(){return $scope.isNewState();} ,
                 isShow:function(){return !$scope.isNewState();},
                 click:generateSampleSheetNormalisationBufferHighVol,
-                label:Messages("experiments.sampleSheet")+" normalisation Tampon >=20"
+                label:Messages("experiments.sampleSheet")+" normalisation Tampon_pipette_P200"
             }]);	
 		}else if ($scope.experiment.instrument.typeCode === "hand"){
 

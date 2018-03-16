@@ -28,6 +28,7 @@ public class Output extends AbstractOutput {
 	private int treshold= 20;
 	private String name1="pipette_P50";
 	private String name2="pipette_P200";
+	private static int sampleNum;
 	
 	@Override
 	public File generateFile(Experiment experiment,ContextValidation contextValidation) throws Exception {
@@ -141,31 +142,52 @@ public class Output extends AbstractOutput {
 	
 	private List<PlateSampleSheetLine> checkSampleSheetLines (List<PlateSampleSheetLine> psslList, Boolean isPlate){
 
-		PlateSampleSheetLine psslTemplate = new PlateSampleSheetLine();
 		List<PlateSampleSheetLine> psslListNew = new LinkedList<PlateSampleSheetLine>();
-		List<String> plateLines ;
-		int colNum;	
+		
 		if (isPlate){
-			plateLines = Arrays.asList("A","B","C","D","E","F","G","H"); 	
-			colNum=12;
-		}else{
-			/* on gere finalement les tubes par 4 racks donc iso tubes
-			 * plateLines = Arrays.asList("A","B","C","D");
-			*colNum=6;*/
-			plateLines = Arrays.asList("A","B","C","D","E","F","G","H"); 	
-			colNum=12;
-		}
-		boolean found =false;	
-		int sampleNum=0;
-		for(int line = 0; line < plateLines.size(); line++){
+			List<String> plateLines = Arrays.asList("A","B","C","D","E","F","G","H"); 	
+			List<Integer> colNums = Arrays.asList(1,2,3,4,5,6,7,8,9,10,11,12);
+			sampleNum=0;
+			 psslListNew = filledSampleSheetLines(psslList,plateLines,colNums);
 
-			for(int plateCol = 1; plateCol <= colNum ;plateCol++){
+		}else{
+			/* on gere finalement les tubes par 4 racks 
+			*/
+			sampleNum=0;
+			List<String> plateLines = Arrays.asList("A","B","C","D"); 	
+			List<String> plateLines2 = Arrays.asList("E","F","G","H"); 	
+			List<Integer> colNums= Arrays.asList(1,2,3,4,5,6);
+			List<Integer> colNums2 = Arrays.asList(7,8,9,10,11,12);
+			
+			 psslListNew = filledSampleSheetLines(psslList,plateLines,colNums);
+			 psslListNew.addAll(filledSampleSheetLines(psslList,plateLines,colNums2));
+			 psslListNew.addAll(filledSampleSheetLines(psslList,plateLines2,colNums));
+			 psslListNew.addAll(filledSampleSheetLines(psslList,plateLines2,colNums2));
+		}
+
+		return psslListNew;	
+	}
+
+
+	private  List<PlateSampleSheetLine> filledSampleSheetLines (List<PlateSampleSheetLine> psslList, List<String> plateLines, List<Integer> colNums){
+		
+		boolean found = false;
+		List<PlateSampleSheetLine> psslListNew = new LinkedList<PlateSampleSheetLine>();
+
+		ListIterator<String> LinesItr = plateLines.listIterator();	
+		while(LinesItr.hasNext()) {
+			String line =(String) LinesItr.next();		
+
+
+			ListIterator<Integer> colNumsItr = colNums.listIterator();	
+			while(colNumsItr.hasNext()) {
+				Integer col =(Integer) colNumsItr.next();		
 				found = false;
 				sampleNum ++;
 				ListIterator<PlateSampleSheetLine> psslListItr = psslList.listIterator();	
 				while(psslListItr.hasNext()) {
 					PlateSampleSheetLine pssl =(PlateSampleSheetLine) psslListItr.next();					
-					if (pssl.dwell.equals(plateLines.get(line)+plateCol)){
+					if (pssl.dwell.equals(line+col)){
 						found=true;	
 						pssl.dwellNum=sampleNum;
 						pssl.sampleName = "Sample "+sampleNum;
@@ -175,7 +197,7 @@ public class Output extends AbstractOutput {
 
 				if (! found){
 					PlateSampleSheetLine psslBlank = new PlateSampleSheetLine();
-					psslBlank.dwell=plateLines.get(line)+plateCol;
+					psslBlank.dwell=line+col;
 					psslBlank.dwellNum=sampleNum;
 
 					psslBlank.sampleName = "Sample "+sampleNum;
@@ -183,15 +205,14 @@ public class Output extends AbstractOutput {
 					psslBlank.bufferVolume = new Double(0);
 					psslBlank.inputHighVolume = new Double(0);
 					psslBlank.bufferHighVolume = new Double(0);
-				
+					
 					psslListNew.add(psslBlank);
 				}
 			}
 		}
 		return psslListNew;	
 	}
-
-
+	
 	private Map<String, String> getSourceMapping(Experiment experiment) {
 		Map<String, String> sources = new HashMap<String, String>();
 
