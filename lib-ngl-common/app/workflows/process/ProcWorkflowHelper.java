@@ -46,12 +46,10 @@ public class ProcWorkflowHelper {
 
 
 	public final ContWorkflows contWorkflows;
-	public final ContentHelper contentHelper;
 	
 	@Inject
-	public ProcWorkflowHelper(ContWorkflows contWorkflows, ContentHelper contentHelper) {
+	public ProcWorkflowHelper(ContWorkflows contWorkflows) {
 		this.contWorkflows = contWorkflows;
-		this.contentHelper = contentHelper;
 	}
 	
 	public void updateInputContainerToStartProcess(ContextValidation contextValidation, Process process) {
@@ -121,7 +119,7 @@ public class ProcWorkflowHelper {
 					.forEach(content -> {
 						content.processProperties = process.properties;
 						content.processComments = process.comments;	
-						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, contentHelper.getContentQuery(container, content), DBUpdate.set("contents.$", content));
+						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, ContentHelper.getContentQuery(container, content), DBUpdate.set("contents.$", content));
 					});
 					
 			});

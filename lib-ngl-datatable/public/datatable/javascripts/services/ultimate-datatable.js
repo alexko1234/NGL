@@ -3361,6 +3361,7 @@ directive('udtDefaultValue',['$parse', function($parse) {
 											ngModel.$setViewValue(true);
 											ngModel.$render();
 										}else if(_col.defaultValues === "false" || _col.defaultValues === false){
+											ngModel.$setViewValue(true); // hack to insert false value 
 											ngModel.$setViewValue(false);
 											ngModel.$render();
 										}											
