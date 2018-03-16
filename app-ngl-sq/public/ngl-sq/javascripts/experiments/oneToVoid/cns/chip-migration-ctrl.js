@@ -61,7 +61,9 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 					}else{
 						console.log("not copy concentration and quantity");
 						inputContainerUsed.newConcentration = null;
-						inputContainerUsed.newQuantity = null; 
+						inputContainerUsed.newQuantity = $scope.computeQuantity(
+										inputContainerUsed.concentration, 
+										(volume1)?inputContainerUsed.newVolume:inputContainerUsed.volume); 
 					}
 				}else{
 					var quantity1 = $parse("experimentProperties.quantity1")(inputContainerUsed);
