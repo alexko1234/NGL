@@ -107,7 +107,7 @@ public class Output extends AbstractOutput {
 		pssl.inputContainerCode = icu.code;
 		pssl.outputContainerCode = ocu.code;
 
-		Double vol = new Double(0);;
+		Double vol = new Double(0);
 
 		if(icu.experimentProperties!=null && icu.experimentProperties.containsKey("inputVolume"))
 			vol = (Double)icu.experimentProperties.get("inputVolume").value;
@@ -118,22 +118,22 @@ public class Output extends AbstractOutput {
 
 
 		if (vol < treshold){
-			pssl.inputVolume = vol;
-			pssl.inputHighVolume = new Double(0);
+			pssl.inputVolume = vol.toString().replace(".", ",");
+			pssl.inputHighVolume = "0,0";
 		}else{
-			pssl.inputHighVolume = vol;
-			pssl.inputVolume = new Double(0);
+			pssl.inputHighVolume = vol.toString().replace(".", ",");
+			pssl.inputVolume = "0,0";
 		}
 
 		if(icu.experimentProperties!=null && icu.experimentProperties.containsKey("bufferVolume"))
 			vol = (Double)icu.experimentProperties.get("bufferVolume").value;
 
 		if (vol < treshold){
-			pssl.bufferVolume = vol;
-			pssl.bufferHighVolume = new Double(0);
+			pssl.bufferVolume = vol.toString().replace(".", ",");
+			pssl.bufferHighVolume = "0,0";
 		}else{
-			pssl.bufferHighVolume = vol;
-			pssl.bufferVolume =new Double(0);
+			pssl.bufferHighVolume = vol.toString().replace(".", ",");
+			pssl.bufferVolume = "0,0";
 		}
 		pssl.dwell = ocu.locationOnContainerSupport.line.concat(ocu.locationOnContainerSupport.column);
 
@@ -201,10 +201,10 @@ public class Output extends AbstractOutput {
 					psslBlank.dwellNum=sampleNum;
 
 					psslBlank.sampleName = "Sample "+sampleNum;
-					psslBlank.inputVolume = new Double(0);
-					psslBlank.bufferVolume = new Double(0);
-					psslBlank.inputHighVolume = new Double(0);
-					psslBlank.bufferHighVolume = new Double(0);
+					psslBlank.inputVolume = "0,0";
+					psslBlank.bufferVolume = "0,0";
+					psslBlank.inputHighVolume = "0,0";
+					psslBlank.bufferHighVolume = "0,0";
 					
 					psslListNew.add(psslBlank);
 				}
