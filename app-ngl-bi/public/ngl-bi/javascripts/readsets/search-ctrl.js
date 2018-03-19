@@ -55,6 +55,7 @@ angular.module('home').controller('SearchCtrl',[ '$scope', '$routeParams', 'main
 angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParams', '$parse', 'mainService', 'tabService', 'readSetsSearchService', 'valuationService', 
                                                           function($scope, $routeParams, $parse, mainService, tabService, readSetsSearchService, valuationService) {
 	var datatableConfig = {
+			group:{active:true},
 			pagination:{mode:'local'},
 			order:{mode:'local', by:'runSequencingStartDate', reverse : true},
 			search:{
