@@ -318,6 +318,22 @@ angular.module('home').controller('PrepWgNanoCtrl',['$scope', '$parse',  '$filte
 			value.data.inputContainerUsed.experimentProperties.inputVolumeFrag=value.data.inputContainerUsed.volume;	
 		})		
 	};
+	
+	// FDS 16/03/2018 : NGL-1906. rechercher le  ngsRunWorkLabel positionné au niveau processus pour le copier dans robotRunCode (sauf s'il y en plusieurs!!)
+	$scope.$watch("experiment.instrument.code", function(newValue, OldValue){
+		if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {		
+			// exemple dans prepa-fc-ordered: var categoryCodes = $scope.$eval("getBasket().get()|getArray:'support.categoryCode'|unique",mainService);
+			// mais ici mainService n'est pas defini, et pas necessaire...
+			// obliger de passer par contents[0], mais normalement ne doit pas poser de probleme...
+			var ngsRunWorkLabels= $scope.$eval("getBasket().get()|getArray:'contents[0].processProperties.ngsRunWorkLabel.value'|unique");
+			if ( ngsRunWorkLabels.length !== 1 ){
+				$parse("instrumentProperties.robotRunCode.value").assign($scope.experiment, "0 ou >1 RunWorkLabel trouvés !!");
+				console.log('0 ou >1  RunWorkLabel trouvé !!');
+			} else {
+				$parse("instrumentProperties.robotRunCode.value").assign($scope.experiment, ngsRunWorkLabels[0]);
+			}
+		}
+	});
 		
 	//Init
 	
