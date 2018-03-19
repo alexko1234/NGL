@@ -35,8 +35,21 @@ public class ProjectsAPI extends GenericAPI<ProjectsDAO, Project>{
 		super(dao);
 	}
 	
+	@Override
+	protected List<String> authorizedUpdateFields() {
+		//TODO implement
+		return null;
+	}
+
+
+	@Override
+	protected List<String> defaultKeys() {
+		//TODO implement
+		return null;
+	}
+	
 	public Iterable<Project> all() throws APIException {
-		return dao().all();
+		return dao.all();
 	}
 	
 	public Project create(Project project, String currentUser) throws APIException, APIValidationException {
@@ -60,7 +73,7 @@ public class ProjectsAPI extends GenericAPI<ProjectsDAO, Project>{
 		project.validate(ctxVal);
 		
 		if (!ctxVal.hasErrors()) {
-			return dao().saveObject(project);
+			return dao.saveObject(project);
 		} else {
 			throw new APIValidationException("invalid input", ctxVal.getErrors());
 		}
@@ -86,7 +99,7 @@ public class ProjectsAPI extends GenericAPI<ProjectsDAO, Project>{
 			ctxVal.setUpdateMode();
 			input.validate(ctxVal);
 			if (!ctxVal.hasErrors()) {
-				dao().updateObject(input);
+				dao.updateObject(input);
 				return input;
 			} else {
 				throw new APIValidationException("Invalid Project object", ctxVal.getErrors());

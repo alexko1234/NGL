@@ -28,6 +28,11 @@ import play.Logger.ALogger;
 import play.data.validation.ValidationError;
 import utils.AbstractTests;
 
+/**
+ * Test {@link ProjectsAPI} methods
+ * @author ajosso
+ *
+ */
 @Singleton  
 public class ProjectsAPITest extends AbstractTests implements AbstractAPITests {
 

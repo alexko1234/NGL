@@ -23,11 +23,13 @@ import akka.stream.javadsl.Source;
 import akka.util.ByteString;
 
 import controllers.DocumentController;
+import controllers.ListForm;
 import controllers.NGLAPIController;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
@@ -38,6 +40,7 @@ import fr.cea.ig.ngl.APINGLController;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.dao.api.APIException;
+import fr.cea.ig.ngl.dao.api.APISemanticException;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.samples.SamplesAPI;
 import fr.cea.ig.ngl.dao.samples.SamplesDAO;
@@ -65,150 +68,197 @@ public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> im
 	
 	private final Form<QueryFieldsForm> updateForm;
 	private final Form<Sample> sampleForm;
-	private Form<SamplesSearchForm> sampleSearchForm;
-	
-	// instead of using APIHolder
-//	private final SamplesAPI api;
-//	public SamplesAPI api() {
-//		return api;
-//	}
+//	private Form<SamplesSearchForm> sampleSearchForm;
+
 
 	@Inject
 	public Samples(NGLApplication app, SamplesAPI api) {
 		super(app, api);
 		this.sampleForm = app.formFactory().form(Sample.class);
-		this.sampleSearchForm = app.formFactory().form(SamplesSearchForm.class);
+//		this.sampleSearchForm = app.formFactory().form(SamplesSearchForm.class);
 		this.updateForm = app.formFactory().form(QueryFieldsForm.class);
 	}
 
 	@Override
 	@Authenticated
 	@Authorized.Read
-	public Result list() {
-		SamplesSearchForm samplesSearch = objectFromRequestQueryString(SamplesSearchForm.class);
-		if (samplesSearch.reporting) {
-			MongoCursor<Sample> data = api().findByQuery(samplesSearch.reportingQuery);
-			if (samplesSearch.datatable) {
-				return MongoStreamer.okStreamUDT(data);
-			} else if(samplesSearch.list) {
-				return MongoStreamer.okStream(data);
-			} else if(samplesSearch.count) {
-				int count = api().count(samplesSearch.reportingQuery);
-				Map<String, Integer> map = new HashMap<String, Integer>(1);
-				map.put("result", count);
-				return ok(Json.toJson(map));
-			} else {
-				return badRequest();
-			}
-		} else {
-			DBQuery.Query query = getQuery(samplesSearch);
-			BasicDBObject keys = getKeys(updateForm(samplesSearch, SamplesAPI.DEFAULT_KEYS));
-			List<Sample> results = null;
-			if (samplesSearch.datatable) {
-				Source<ByteString, ?> resultsAsStream = null; 
-				if(samplesSearch.isServerPagination()){
-					resultsAsStream = api().stream(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.pageNumber, samplesSearch.numberRecordsPerPage);
-				} else {
-					resultsAsStream = api().stream(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.limit);
-				}
-				return Streamer.okStream(resultsAsStream);
-			} else  {
-				if(samplesSearch.orderBy == null) samplesSearch.orderBy = "code";
-				if(samplesSearch.orderSense == null) samplesSearch.orderSense = 0;
-				
-				if(samplesSearch.list) {
-					keys = new BasicDBObject();
-					keys.put("_id", 0);//Don't need the _id field
-					keys.put("code", 1);
-					results = api().list(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.limit);	
-					return Streamer.okStream(MongoStreamer.stream(convertToListObject(results, x -> x.code, x -> x.code))); // in place of getLOChunk(MongoDBResult<T> all)
+	public Result list() {		
+		try {
+			SamplesSearchForm samplesSearch = objectFromRequestQueryString(SamplesSearchForm.class);
+			if (samplesSearch.reporting) {
+				MongoCursor<Sample> data = api().findByQuery(samplesSearch.reportingQuery);
+				if (samplesSearch.datatable) {
+					return MongoStreamer.okStreamUDT(data);
+				} else if(samplesSearch.list) {
+					return MongoStreamer.okStream(data);
 				} else if(samplesSearch.count) {
 					int count = api().count(samplesSearch.reportingQuery);
-					Map<String, Integer> m = new HashMap<String, Integer>(1);
-					m.put("result", count);
-					return ok(Json.toJson(m));
+					Map<String, Integer> map = new HashMap<String, Integer>(1);
+					map.put("result", count);
+					return ok(Json.toJson(map));
 				} else {
-					return Streamer.okStream(api().stream(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.limit));
+					return badRequest();
+				}
+			} else {
+				DBQuery.Query query = getQuery(samplesSearch);
+				BasicDBObject keys = null;
+				if(! samplesSearch.includes().contains("default")){
+					keys = getKeys(samplesSearch); 
+				}
+				List<Sample> results = null;
+				if (samplesSearch.datatable) {
+					Source<ByteString, ?> resultsAsStream = null; 
+					if(samplesSearch.isServerPagination()){
+						if(keys == null){
+							resultsAsStream = api().streamUDTWithDefaultKeys(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), samplesSearch.pageNumber, samplesSearch.numberRecordsPerPage);
+						} else {
+							resultsAsStream = api().streamUDT(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.pageNumber, samplesSearch.numberRecordsPerPage);
+						}
+					} else {
+						if(keys == null){
+							resultsAsStream = api().streamUDTWithDefaultKeys(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), samplesSearch.limit);
+						} else {
+							resultsAsStream = api().streamUDT(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.limit);
+						}
+					}
+					return Streamer.okStream(resultsAsStream);
+				} else  {
+					if(samplesSearch.orderBy == null) samplesSearch.orderBy = "code";
+					if(samplesSearch.orderSense == null) samplesSearch.orderSense = 0;
+
+					if(samplesSearch.list) {
+						keys = new BasicDBObject();
+						keys.put("_id", 0);//Don't need the _id field
+						keys.put("code", 1);
+						results = api().list(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.limit);	
+						return MongoStreamer.okStream(convertToListObject(results, x -> x.code, x -> x.code)); // in place of getLOChunk(MongoDBResult<T> all)
+					} else if(samplesSearch.count) {
+						getLogger().info("list mode normal count");
+						int count = api().count(samplesSearch.reportingQuery);
+						Map<String, Integer> m = new HashMap<String, Integer>(1);
+						m.put("result", count);
+						return ok(Json.toJson(m));
+					} else {
+						return Streamer.okStream(api().stream(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.limit));
+					}
 				}
 			}
-		}
-	}
-
-	@Override
-	@Authenticated
-	@Authorized.Read
-	public Result get(String code) {
-		DatatableForm form = objectFromRequestQueryString(DatatableForm.class);
-		Sample sample = api().getObject(code, getKeys(form));
-		if (sample == null) {
-			return notFound();
-		} 
-		return ok(Json.toJson(sample));	
-	}	
-
-	@Override
-	@Authenticated
-	@Authorized.Write
-	public Result save() {
-		Form<Sample> filledForm = getFilledForm(sampleForm, Sample.class);
-		if(! filledForm.hasErrors()) {
-			Sample input = filledForm.get();
-			try {
-				Sample s = api().create(input, getCurrentUser());
-				return ok(Json.toJson(s));
-			} catch (APIValidationException e) {
-				getLogger().error(e.getMessage());
-				if(e.getErrors() != null) {
-					return badRequest(errorsAsJson(e.getErrors()));
-				} else {
-					return badRequest(e.getMessage());
-				}
-			} catch (APIException e) {
-				getLogger().error(e.getMessage());
-				return badRequest("use PUT method to update the sample");
-			}
-		} else {
-			return badRequest(errorsAsJson(mapErrors(filledForm.allErrors())));
+		} catch (Exception e) {
+			getLogger().error(e.getMessage());
+			return badRequest(Json.toJson(e.getMessage()));
 		}
 	}
 	
 	@Override
-	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	@Authenticated
-	@Authorized.Write
-	public Result update(String code) {
-		getLogger().debug("update Sample with code "+code);
+	@Authorized.Read
+	public Result get(String code) {
+		try {
+			DatatableForm form = objectFromRequestQueryString(DatatableForm.class);
+			Sample sample = api().getObject(code, getKeys(form));
+			if (sample == null) {
+				return notFound();
+			} 
+			return ok(Json.toJson(sample));
+		} catch (Exception e) {
+			getLogger().error(e.getMessage());
+			return badRequest(Json.toJson(e.getMessage()));
+		}	
+	}	
+
+//	@Override
+//	@Authenticated
+//	@Authorized.Write
+//	public Result save() {
+//		Form<Sample> filledForm = getFilledForm(sampleForm, Sample.class);
+//		if(! filledForm.hasErrors()) {
+//			Sample input = filledForm.get();
+//			try {
+//				Sample s = api().create(input, getCurrentUser());
+//				return ok(Json.toJson(s));
+//			} catch (APIValidationException e) {
+//				getLogger().error(e.getMessage());
+//				if(e.getErrors() != null) {
+//					return badRequest(errorsAsJson(e.getErrors()));
+//				} else {
+//					return badRequest(e.getMessage());
+//				}
+//			} catch (APIException e) {
+//				getLogger().error(e.getMessage());
+//				return badRequest("use PUT method to update the sample");
+//			}
+//		} else {
+//			return badRequest(errorsAsJson(mapErrors(filledForm.allErrors())));
+//		}
+//	}
+	
+	/* (non-Javadoc)
+	 * @see controllers.NGLAPIController#saveImpl()
+	 */
+	public Sample saveImpl() throws APIValidationException, APISemanticException {
+		Sample input = getFilledForm(sampleForm, Sample.class).get();
+		Sample s = api().create(input, getCurrentUser());
+		return s;
+	}
+	
+	
+//	@Override
+//	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
+//	@Authenticated
+//	@Authorized.Write
+//	public Result update(String code) {
+//		getLogger().debug("update Sample with code "+code);
+//		Form<Sample> filledForm = getFilledForm(sampleForm, Sample.class);
+//		Sample sampleInForm = filledForm.get();
+//		if(code.equals(sampleInForm.code)) { 
+//			if(! filledForm.hasErrors()) {
+//				QueryFieldsForm queryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class).get();
+//				Sample s = null;
+//				try {
+//					if(queryFieldsForm.fields == null) { 
+//						s = api().update(sampleInForm, getCurrentUser());
+//					} else {
+//						s = api().update(sampleInForm, getCurrentUser(), queryFieldsForm.fields);
+//					}
+//					return ok(Json.toJson(s));
+//				} catch (APIValidationException e) {
+//					getLogger().error(e.getMessage());
+//					if(e.getErrors() != null) {
+//						return badRequest(errorsAsJson(e.getErrors()));
+//					} else {
+//						return badRequest(e.getMessage());
+//					}
+//				} catch (APIException e) {
+//					return badRequest(e.getMessage());
+//				}
+//			} else {
+//				return badRequest(errorsAsJson(mapErrors(filledForm.allErrors())));
+//			}
+//		} else {
+//			return badRequest("Sample codes are not the same");
+//		}
+//	}
+
+	/* (non-Javadoc)
+	 * @see controllers.NGLAPIController#updateImpl(java.lang.String)
+	 */
+	public Sample updateImpl(String code) throws Exception, APIException, APIValidationException {
+		getLogger().debug("update Sample with code " + code);
 		Form<Sample> filledForm = getFilledForm(sampleForm, Sample.class);
 		Sample sampleInForm = filledForm.get();
 		if(code.equals(sampleInForm.code)) { 
-			if(! filledForm.hasErrors()) {
-				QueryFieldsForm queryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class).get();
-				Sample s = null;
-				try {
-					if(queryFieldsForm.fields == null) { 
-						s = api().update(sampleInForm, getCurrentUser());
-					} else {
-						s = api().update(sampleInForm, getCurrentUser(), queryFieldsForm.fields);
-					}
-					return ok(Json.toJson(s));
-				} catch (APIValidationException e) {
-					getLogger().error(e.getMessage());
-					if(e.getErrors() != null) {
-						return badRequest(errorsAsJson(e.getErrors()));
-					} else {
-						return badRequest(e.getMessage());
-					}
-				} catch (APIException e) {
-					return badRequest(e.getMessage());
+			QueryFieldsForm queryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class).get();
+			Sample s = null;
+				if(queryFieldsForm.fields == null) { 
+					s = api().update(sampleInForm, getCurrentUser());
+				} else {
+					s = api().update(sampleInForm, getCurrentUser(), queryFieldsForm.fields);
 				}
-			} else {
-				return badRequest(errorsAsJson(mapErrors(filledForm.allErrors())));
-			}
+				return s;
 		} else {
-			return badRequest("Sample codes are not the same");
+			throw new Exception("Sample codes are not the same");
 		}
 	}
-
 //	public Result update(String code) throws DAOException {
 //		Sample sampleInDB = findSample(code);
 //		Logger.debug("Sample with code "+code);

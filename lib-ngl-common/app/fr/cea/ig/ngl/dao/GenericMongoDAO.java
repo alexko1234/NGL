@@ -29,9 +29,9 @@ public /*abstract*/ class GenericMongoDAO<T extends DBObject> {
 	
 	/**
 	 * Throw exception if no instance is found
-	 * @param q
-	 * @return
-	 * @throws DAOException
+	 * @param q Query
+	 * @return T the DBObject
+	 * @throws DAOException if no instance is found
 	 */
 	public T findOne(Query q) throws DAOException {
 		T t = MongoDBDAO.findOne(collectionName, elementClass, q);
@@ -94,12 +94,12 @@ public /*abstract*/ class GenericMongoDAO<T extends DBObject> {
 	
 	/**
 	 * A finder for mongoDB
-	 * @param query
-	 * @param orderBy
-	 * @param orderSense
-	 * @param limit
+	 * @param query Query
+	 * @param orderBy String
+	 * @param orderSense how to sort the results
+	 * @param limit if it is set to -1 then results are unlimited  
 	 * @return a MongoDBResult
-	 * @throws DAOException
+	 * @throws DAOException exception
 	 */
 	public MongoDBResult<T> mongoDBFinder(Query query, String orderBy, Sort orderSense, Integer limit) throws DAOException {
 		MongoDBResult<T> results = MongoDBDAO.find(collectionName, elementClass, query).sort(orderBy, orderSense);
@@ -111,13 +111,13 @@ public /*abstract*/ class GenericMongoDAO<T extends DBObject> {
 	
 	/**
 	 * A finder for mongoDB
-	 * @param query
-	 * @param orderBy
-	 * @param orderSense
-	 * @param limit
-	 * @param keys
+	 * @param query Query
+	 * @param orderBy String
+	 * @param orderSense how to sort the results
+	 * @param limit if it is set to -1 then results are unlimited  
+	 * @param keys map to restrict keys of object
 	 * @return a MongoDBResult
-	 * @throws DAOException
+	 * @throws DAOException exception
 	 */
 	public MongoDBResult<T> mongoDBFinder(Query query, String orderBy, Sort orderSense, Integer limit, BasicDBObject keys) throws DAOException {
 		MongoDBResult<T> results = MongoDBDAO.find(collectionName, elementClass, query, keys).sort(orderBy, orderSense);
@@ -129,11 +129,11 @@ public /*abstract*/ class GenericMongoDAO<T extends DBObject> {
 
 	/**
 	 * A finder for mongoDB without size limit of elements
-	 * @param query
-	 * @param orderBy
-	 * @param orderSense
+	 * @param query Query
+	 * @param orderBy String
+	 * @param orderSense how to sort the results
 	 * @return a MongoDBResult
-	 * @throws DAOException
+	 * @throws DAOException exception
 	 */
 	public MongoDBResult<T> mongoDBFinder(Query query, String orderBy, Sort orderSense) throws DAOException {
 		return mongoDBFinder(query, orderBy, orderSense, -1);
@@ -141,12 +141,12 @@ public /*abstract*/ class GenericMongoDAO<T extends DBObject> {
 	
 	/**
 	 * A finder for mongoDB without size limit of elements
-	 * @param query
-	 * @param orderBy
-	 * @param orderSense
-	 * @param keys
+	 * @param query Query
+	 * @param orderBy String
+	 * @param orderSense how to sort the results
+	 * @param keys map to restrict keys of object
 	 * @return a MongoDBResult
-	 * @throws DAOException
+	 * @throws DAOException exception
 	 */
 	public MongoDBResult<T> mongoDBFinder(Query query, String orderBy, Sort orderSense, BasicDBObject keys) throws DAOException {
 		return mongoDBFinder(query, orderBy, orderSense, -1, keys);
@@ -154,13 +154,13 @@ public /*abstract*/ class GenericMongoDAO<T extends DBObject> {
 	
 	/**
 	 * A finder for mongoDB with pagination of results
-	 * @param query
-	 * @param orderBy
-	 * @param orderSense
-	 * @param pageNumber
-	 * @param numberRecordsPerPage
+	 * @param query Query
+	 * @param orderBy String
+	 * @param orderSense how to sort the results
+	 * @param pageNumber Integer
+	 * @param numberRecordsPerPage Integer
 	 * @return a MongoDBResult
-	 * @throws DAOException
+	 * @throws DAOException exception
 	 */
 	public MongoDBResult<T> mongoDBFinderWithPagination(Query query, String orderBy, Sort orderSense, 
 														Integer pageNumber, Integer numberRecordsPerPage) throws DAOException {
@@ -169,14 +169,14 @@ public /*abstract*/ class GenericMongoDAO<T extends DBObject> {
 	
 	/**
 	 * A finder for mongoDB with pagination of results
-	 * @param query
-	 * @param orderBy
-	 * @param orderSense
-	 * @param pageNumber
-	 * @param numberRecordsPerPage
-	 * @param keys
+	 * @param query Query
+	 * @param orderBy String
+	 * @param orderSense how to sort the results
+	 * @param pageNumber Integer
+	 * @param numberRecordsPerPage Integer
+	 * @param keys map to restrict keys of object
 	 * @return a MongoDBResult
-	 * @throws DAOException
+	 * @throws DAOException exception
 	 */
 	public MongoDBResult<T> mongoDBFinderWithPagination(Query query, String orderBy, Sort orderSense, 
 														Integer pageNumber, Integer numberRecordsPerPage, BasicDBObject keys) throws DAOException {
@@ -186,21 +186,20 @@ public /*abstract*/ class GenericMongoDAO<T extends DBObject> {
 	
 	/**
 	 * use to replace controllers.MongoCommonController.nativeMongoDBQuery(ListForm form)
-	 * @param query
+	 * @param query String
 	 * @return
 	 */
 	public MongoCursor<T> findByQuery(String query){
-		MongoCollection collection = MongoDBPlugin.getCollection(this.getCollectionName());
+		MongoCollection collection = MongoDBPlugin.getCollection(this.collectionName);
 		return (MongoCursor<T>) collection.find(query).as(elementClass);
 	}
 	
 	/**
 	 * Construct a builder from some fields
 	 * Use to update a mongodb document
-	 * @param value
-	 * @param fields
-	 * @param clazz
-	 * @return
+	 * @param value DBObject
+	 * @param fields List<String>
+	 * @return Builder
 	 */
 	public Builder getBuilder(T value, List<String> fields) {
 		return getBuilder(value, fields, null);
@@ -210,10 +209,10 @@ public /*abstract*/ class GenericMongoDAO<T extends DBObject> {
 	/**
 	 * Construct a builder from some fields
 	 * Use to update a mongodb document
-	 * @param value
-	 * @param fields
-	 * @param prefix
-	 * @return
+	 * @param value DBObject
+	 * @param fields List<String>
+	 * @param prefix String
+	 * @return Builder
 	 */
 	public Builder getBuilder(T value, List<String> fields, String prefix) {
 		Builder builder = new Builder();
@@ -226,12 +225,6 @@ public /*abstract*/ class GenericMongoDAO<T extends DBObject> {
 			throw new RuntimeException(e);
 		}
 		return builder;
-	}
-	
-	/**************************************************/
-	
-	public String getCollectionName() {
-		return collectionName;
 	}
 }
 

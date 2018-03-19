@@ -51,48 +51,43 @@ public class Projects extends NGLAPIController<ProjectsAPI, ProjectsDAO, Project
 	@Override
 	@Authenticated
 	@Authorized.Read
-	public Result head(String code) {
-		if(! api().isObjectExist(code)){			
-			return notFound();					
-		}
-		return ok();
-	}
-	
-	@Override
-	@Authenticated
-	@Authorized.Read
 	public Result list() {
-		ProjectsSearchForm form = filledFormQueryString(searchForm, ProjectsSearchForm.class).get();
-		Query q = getQuery(form);
-		BasicDBObject keys = getKeys(form);
-		List<Project> results = null;
-		Source<ByteString, ?> resultsAsStream = null; 
-		if (form.datatable) {
-			if(form.isServerPagination()){
-				resultsAsStream = api().stream(q, form.orderBy, Sort.valueOf(form.orderSense), keys, form.pageNumber, form.numberRecordsPerPage);
+		try {
+			ProjectsSearchForm form = filledFormQueryString(searchForm, ProjectsSearchForm.class).get();
+			Query q = getQuery(form);
+			BasicDBObject keys = getKeys(form);
+			List<Project> results = null;
+			Source<ByteString, ?> resultsAsStream = null; 
+			if (form.datatable) {
+				if(form.isServerPagination()){
+					resultsAsStream = api().streamUDT(q, form.orderBy, Sort.valueOf(form.orderSense), keys, form.pageNumber, form.numberRecordsPerPage);
+				} else {
+					resultsAsStream = api().streamUDT(q, form.orderBy, Sort.valueOf(form.orderSense), keys);
+				}
+				return Streamer.okStream(resultsAsStream);
 			} else {
-				resultsAsStream = api().stream(q, form.orderBy, Sort.valueOf(form.orderSense), keys);
-			}
-			return Streamer.okStream(resultsAsStream);
-		} else {
-			if(form.orderBy == null) {
-				form.orderBy = "code";
-			}
-			if(form.orderSense == null) {
-				form.orderSense = 0;
-			}
+				if(form.orderBy == null) {
+					form.orderBy = "code";
+				}
+				if(form.orderSense == null) {
+					form.orderSense = 0;
+				}
 
-			if(form.list) {
-				keys = new BasicDBObject();
-				keys.put("_id", 0);//Don't need the _id field
-				keys.put("name", 1);
-				keys.put("code", 1);
-				results = api().list(q, form.orderBy, Sort.valueOf(form.orderSense), keys, form.limit);	
-				return ok(Json.toJson(convertToListObject(results, x -> x.getCode(), x -> x.name)));
-			} else {
-				results = api().list(q, form.orderBy, Sort.valueOf(form.orderSense), keys);
-				return ok(Json.toJson(results));
+				if(form.list) {
+					keys = new BasicDBObject();
+					keys.put("_id", 0);//Don't need the _id field
+					keys.put("name", 1);
+					keys.put("code", 1);
+					results = api().list(q, form.orderBy, Sort.valueOf(form.orderSense), keys, form.limit);	
+					return ok(Json.toJson(convertToListObject(results, x -> x.getCode(), x -> x.name)));
+				} else {
+					results = api().list(q, form.orderBy, Sort.valueOf(form.orderSense), keys);
+					return ok(Json.toJson(results));
+				}
 			}
+		} catch (Exception e) {
+			getLogger().error(e.getMessage());
+			return badRequest(Json.toJson(e.getMessage()));
 		}
 	}
 
@@ -100,65 +95,94 @@ public class Projects extends NGLAPIController<ProjectsAPI, ProjectsDAO, Project
 	@Authenticated
 	@Authorized.Read
 	public Result get(String code) {
-		return ok(Json.toJson(api().get(code)));
-	}
-
-	@Override
-	@Authenticated
-	@Authorized.Write
-	public Result save() {
-		Form<Project> filledForm = getFilledForm(projectForm, Project.class);
-		Project projectInput = filledForm.get();
-		if(! filledForm.hasErrors()) {
-			try {
-				Project p = api().create(projectInput, getCurrentUser());
+		try {
+			Project p = api().get(code);
+			if(p != null) {
 				return ok(Json.toJson(p));
-			} catch (APIValidationException e) {
-				getLogger().error(e.getMessage());
-				if(e.getErrors() != null) {
-					return badRequest(errorsAsJson(e.getErrors()));
-				} else {
-					return badRequest(e.getMessage());
-				}
-			} catch (APIException e) {
-				getLogger().error(e.getMessage());
-				return badRequest("use PUT method to update the project");
+			} else {
+				return notFound();
 			}
-		} else {
-			return badRequest(errorsAsJson(mapErrors(filledForm.allErrors())));
+		} catch (Exception e) {
+			getLogger().error(e.getMessage());
+			return badRequest(Json.toJson(e.getMessage()));
 		}
 	}
+
+//	@Override
+//	@Authenticated
+//	@Authorized.Write
+//	public Result save() {
+//		Form<Project> filledForm = getFilledForm(projectForm, Project.class);
+//		Project projectInput = filledForm.get();
+//		if(! filledForm.hasErrors()) {
+//			try {
+//				Project p = api().create(projectInput, getCurrentUser());
+//				return ok(Json.toJson(p));
+//			} catch (APIValidationException e) {
+//				getLogger().error(e.getMessage());
+//				if(e.getErrors() != null) {
+//					return badRequest(errorsAsJson(e.getErrors()));
+//				} else {
+//					return badRequest(e.getMessage());
+//				}
+//			} catch (APIException e) {
+//				getLogger().error(e.getMessage());
+//				return badRequest("use PUT method to update the project");
+//			}
+//		} else {
+//			return badRequest(errorsAsJson(mapErrors(filledForm.allErrors())));
+//		}
+//	}
+	
+	public Project saveImpl() throws APIValidationException, APIException {
+		Project projectInput = getFilledForm(projectForm, Project.class).get();
+		Project p = api().create(projectInput, getCurrentUser());
+		return p;
+	}
+
+//	@Override
+//	@Authenticated
+//	@Authorized.Write
+//	public Result update(String code) {
+//		Project project = api().get(code);
+//		if (project == null) {
+//			return badRequest("Project with code "+ code + " not exist");
+//		}
+//		Form<Project> filledForm = getFilledForm(projectForm, Project.class);
+//		Project projectInput = filledForm.get();
+//		if(! filledForm.hasErrors()) {
+//			try {
+//				api().update(projectInput, getCurrentUser());
+//			} catch (APIValidationException e) {
+//				getLogger().error(e.getMessage());
+//				if(e.getErrors() != null) {
+//					return badRequest(errorsAsJson(e.getErrors()));
+//				} else {
+//					return badRequest(e.getMessage());
+//				}
+//			} catch (APIException e) {
+//				getLogger().error(e.getMessage());
+//				return badRequest(e.getMessage());
+//			}
+//
+//			return ok(Json.toJson(projectInput));
+//		} else {
+//			return badRequest(errorsAsJson(mapErrors(filledForm.allErrors())));
+//		}
+//	}
 
 	@Override
-	@Authenticated
-	@Authorized.Write
-	public Result update(String code) {
-		Project project = api().get(code);
-		if (project == null) {
-			return badRequest("Project with code "+ code + " not exist");
-		}
+	public Project updateImpl(String code) throws Exception, APIException, APIValidationException {
 		Form<Project> filledForm = getFilledForm(projectForm, Project.class);
 		Project projectInput = filledForm.get();
-		if(! filledForm.hasErrors()) {
-			try {
-				api().update(projectInput, getCurrentUser());
-			} catch (APIValidationException e) {
-				getLogger().error(e.getMessage());
-				if(e.getErrors() != null) {
-					return badRequest(errorsAsJson(e.getErrors()));
-				} else {
-					return badRequest(e.getMessage());
-				}
-			} catch (APIException e) {
-				getLogger().error(e.getMessage());
-				return badRequest(e.getMessage());
-			}
-
-			return ok(Json.toJson(projectInput));
+		if(code.equals(projectInput.code)) {
+		Project project = api().update(projectInput, getCurrentUser());
+		return project;
 		} else {
-			return badRequest(errorsAsJson(mapErrors(filledForm.allErrors())));
+			throw new Exception("Project codes are not the same");
 		}
 	}
+
 	
 	// TODO factoriser avec class fr.cea.ig.mongo.QueryBuilder
 	private Query getQuery(ProjectsSearchForm form) {

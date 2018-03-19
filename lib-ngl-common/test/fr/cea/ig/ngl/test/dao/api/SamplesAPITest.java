@@ -43,6 +43,7 @@ import rules.services.test.TestRules6Component;
 import utils.AbstractTests;
 
 /**
+ * Test {@link SamplesAPI} methods
  * @author ajosso
  *
  */
@@ -168,14 +169,9 @@ public class SamplesAPITest extends AbstractTests implements AbstractAPITests {
 		logger.debug("Delete test");
 		setUpData();
 
-		//Assert the exception thrown confirms the deletion of sample
-		exceptions.expect(DAOException.class);
-		exceptions.expectMessage("no instance found");
-
 		api.delete(refSample.code);
-		api.get(refSample.getCode()); // if sample not exists then an APIException is thrown
-
-		// We can't delete dep objects here (due to Exception) so it will delete into tearDown() (@After method)
+		Assert.assertNull(api.get(refSample.getCode()));
+		deleteData();
 	}
 
 	@Test

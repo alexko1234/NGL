@@ -10,13 +10,18 @@ import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.mongo.DBObjectConvertor;
-import fr.cea.ig.ngl.APINGLController;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.dao.GenericMongoDAO;
+import fr.cea.ig.ngl.dao.api.APIException;
+import fr.cea.ig.ngl.dao.api.APISemanticException;
+import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.api.GenericAPI;
 import fr.cea.ig.ngl.support.NGLForms;
+import fr.cea.ig.play.IGBodyParsers;
+import play.mvc.BodyParser;
 import play.data.validation.ValidationError;
+import play.libs.Json;
 import play.mvc.Result;
 
 /**
@@ -25,15 +30,14 @@ import play.mvc.Result;
  * @author ajosso
  *
  * @param <T> GenericAPI
- * @param <R> GenericMongoDAO
- * @param <S> DBObject
+ * @param <U> GenericMongoDAO
+ * @param <V> DBObject
  */
 @Historized
-public abstract class NGLAPIController<T extends GenericAPI<R,S>, R extends GenericMongoDAO<S>, S extends DBObject> 
+public abstract class NGLAPIController<T extends GenericAPI<U,V>, U extends GenericMongoDAO<V>, V extends DBObject> 
 				extends NGLController implements NGLForms, DBObjectConvertor {
 
 	private final T api;
-	
 	public T api() {
 		return api;
 	}
@@ -46,8 +50,8 @@ public abstract class NGLAPIController<T extends GenericAPI<R,S>, R extends Gene
 	/**
 	 * if object exists returns Status 200 OK <br>
 	 * else returns Status 404 NOT FOUND
-	 * @param code
-	 * @return 
+	 * @param code String 
+	 * @return Result HTTP result (200 or 404)
 	 */
 	@Authenticated
 	@Authorized.Read
@@ -62,8 +66,71 @@ public abstract class NGLAPIController<T extends GenericAPI<R,S>, R extends Gene
 	// Mandatory methods
 	public abstract Result list();
 	public abstract Result get(String code);
-	public abstract Result save();
-	public abstract Result update(String code) ;
+	
+	/**
+	 * These method defines the specific creation behavior for each resource. 
+	 * {@link NGLAPIController#save()} wraps the call of this method. <br>
+	 * We do not check here if form has errors because the API validates data. 
+	 * 
+	 * @return V the DBObject created
+	 * @throws APIException exceptions during creation
+	 */
+	public abstract V saveImpl() throws APIException ;
+	
+	@Authenticated
+	@Authorized.Write
+	public Result save() {
+		try {
+			V object = saveImpl();
+			return ok(Json.toJson(object));
+		} catch (APIValidationException e) {
+			getLogger().error(e.getMessage());
+			if(e.getErrors() != null) {
+				return badRequest(errorsAsJson(e.getErrors()));
+			} else {
+				return badRequest(Json.toJson(e.getMessage()));
+			}
+		} catch (APISemanticException e) {
+			getLogger().error(e.getMessage());
+			return badRequest(Json.toJson("use PUT method to update the sample"));
+		} catch (Exception e) {
+			getLogger().error(e.getMessage());
+			return badRequest(Json.toJson(e.getMessage()));
+		}
+	}
+	
+	/**
+	 * These method defines the specific update behavior for each resource. 
+	 * {@link NGLAPIController#update()} wraps the call of this method. <br>
+	 * We do not check here if form has errors because the API validates data. 
+	 * 
+	 * @param code String
+	 * @return V the DBObject created
+	 * @throws Exception global exception
+	 * @throws APIException exception from API
+	 * @throws APIValidationException exception from API
+	 */
+	public abstract V updateImpl(String code) throws Exception, APIException, APIValidationException;
+	
+	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
+	@Authenticated
+	@Authorized.Write
+	public Result update(String code) {
+		try {
+			V object = updateImpl(code);
+			return ok(Json.toJson(object));
+		} catch (APIValidationException e) {
+			getLogger().error(e.getMessage());
+			if(e.getErrors() != null) {
+				return badRequest(errorsAsJson(e.getErrors()));
+			} else {
+				return badRequest(Json.toJson(e.getMessage()));
+			}
+		} catch (Exception e) {
+			getLogger().error(e.getMessage());
+			return badRequest(Json.toJson(e.getMessage()));
+		}
+	}
 
 	public Map<String, List<ValidationError>> mapErrors(List<ValidationError> formErrors) {
 		Map<String, List<ValidationError>> map = new TreeMap<String, List<ValidationError>>(); 

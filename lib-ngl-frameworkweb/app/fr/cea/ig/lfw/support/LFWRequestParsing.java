@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bson.BSONObject;
+import org.terracotta.statistics.archive.SampleSink;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mongodb.BasicDBObject;
@@ -100,15 +101,25 @@ public interface LFWRequestParsing extends LFWApplicationHolder {
 		return values;
     }
 	
+	/**
+	 * can not access to default keys in controller (restriction to the API)
+	 * replace by: <br>
+	 * if {@link IDatatableForm#includes()} contains "default" then call method of API with use default keys <br>
+	 * else retrieve keys from form using {@link LFWRequestParsing#getKeys(IDatatableForm)}
+	 * <br> 
+	 * See example in: {@link controllers.samples.api.Samples#list()} 
+	 * @param form IDatatableForm
+	 * @param defaultKeys List<String>
+	 * @return form IDatatableForm
+	 */
+	@Deprecated
 	default IDatatableForm updateForm(IDatatableForm form, List<String> defaultKeys) {
 		if(form.includes().contains("default")){
 			form.includes().remove("default");
 			if(defaultKeys != null){
 				form.includes().addAll(defaultKeys);
 			}
-			
 		}
 		return form;
 	}
-
 }
