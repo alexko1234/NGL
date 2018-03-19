@@ -1,7 +1,7 @@
 package fr.cea.ig.play.test;
 
 // Scaladoc test import
-import scala.collection.generic.BitOperations.Int;
+// import scala.collection.generic.BitOperations.Int;
 
 import java.io.IOException;
 

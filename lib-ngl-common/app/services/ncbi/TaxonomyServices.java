@@ -40,6 +40,7 @@ import java.util.concurrent.TimeoutException;
 public class TaxonomyServices {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(TaxonomyServices.class);
+	
 	private final NGLContext ctx;
 	
 	@Inject
@@ -92,25 +93,32 @@ public class TaxonomyServices {
 		return CompletableFuture.completedFuture(new NCBITaxon());
 	}
 	
-	@SuppressWarnings("unchecked")
-	private /*static*/ NCBITaxon getObjectInCache(String code){
-		if (null != code) {
-			try {
-				String key = NCBITaxon.class.toString()+"."+code;
+	private static String key(String code) {
+		return NCBITaxon.class.toString() + "." + code;
+	}
+	
+//	@SuppressWarnings("unchecked")
+	private /*static*/ NCBITaxon getObjectInCache(String code) {
+		if (code != null) {
+//			try {
+//				String key = NCBITaxon.class.toString() + "." + code;
 				// return (NCBITaxon) Cache.get(key);
-				return (NCBITaxon) ctx.cache().get(key);
-			} catch (DAOException e) {
-				throw new RuntimeException(e);
-			}
+//				return (NCBITaxon) ctx.cache().get(key);
+//				return ctx.cache().<NCBITaxon>get(key);
+				return ctx.cache().<NCBITaxon>get(key(code));
+//			} catch (DAOException e) {
+//				throw new RuntimeException(e);
+//			}
 		} else {
 			return null;
 		}		
 	}
 	
 	private /*static*/ void setObjectInCache(NCBITaxon o, String code) {
-		if (null != o && null != code) {
+		if (o != null && code != null) {
 			// Cache.set(NCBITaxon.class.toString()+"."+code, o, 60 * 60 * 24);
-			ctx.cache().set(NCBITaxon.class.toString()+"."+code, o, 60 * 60 * 24);
+//			ctx.cache().set(NCBITaxon.class.toString()+"."+code, o, 60 * 60 * 24);
+			ctx.cache().set(key(code), o, 60 * 60 * 24);
 		}		
 	}
 	
@@ -165,16 +173,17 @@ public class TaxonomyServices {
 			return null;
 	}
 	
-	@Deprecated
+	// TODO: suggest fix
+	// @Deprecated
 	// public static String getValue(Promise<Document> xml, String expression) throws XPathExpressionException, RuntimeException, TimeoutException	{
 	public static String getValue(CompletionStage<Document> xml, String expression) throws XPathExpressionException, RuntimeException, TimeoutException	{
 		// TODO: possibly fix time unit original is get(10000), assumed to be milliseconds.
 		try {
-		Document doc = xml.toCompletableFuture().get(10000,TimeUnit.MILLISECONDS);
-		XPath xPath =  XPathFactory.newInstance().newXPath();
-		//String expression = "/TaxaSet/Taxon/ScientificName";
-		//read a string value
-		return xPath.compile(expression).evaluate(doc);
+			Document doc = xml.toCompletableFuture().get(10000,TimeUnit.MILLISECONDS);
+			XPath xPath =  XPathFactory.newInstance().newXPath();
+			//String expression = "/TaxaSet/Taxon/ScientificName";
+			//read a string value
+			return xPath.compile(expression).evaluate(doc);
 		} catch (ExecutionException e) {
 			throw new RuntimeException("wrapped exception",e);
 		} catch (InterruptedException e) {
@@ -182,7 +191,8 @@ public class TaxonomyServices {
 		}
 	}
 	
-	@Deprecated
+	// TODO: suggest fix
+	// @Deprecated
 	public /*static*/ String getScientificName(String taxonCode) {
 		try {
 			return getTaxonomyInfo(taxonCode, "/TaxaSet/Taxon/ScientificName");
@@ -192,7 +202,8 @@ public class TaxonomyServices {
 		return null;
 	}
 	
-	@Deprecated
+	// TODO: suggest fix 
+	// @Deprecated
 	public /*static*/ String getLineage(String taxonCode) {
 		try {
 			return getTaxonomyInfo(taxonCode, "/TaxaSet/Taxon/Lineage");

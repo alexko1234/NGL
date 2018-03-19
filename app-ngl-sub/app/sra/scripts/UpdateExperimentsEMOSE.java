@@ -12,6 +12,7 @@ import org.mongojack.DBQuery;
 
 import services.XmlServices;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.lfw.controllers.AbstractScript;
 import models.sra.submit.sra.instance.Experiment;
 import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;

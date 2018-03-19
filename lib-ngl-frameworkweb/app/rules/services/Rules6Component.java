@@ -1,7 +1,5 @@
 package rules.services;
 
-import javax.inject.Inject;
-
 import play.Application;
 import play.Logger;
 import play.inject.ApplicationLifecycle;

@@ -3,15 +3,15 @@ package workflows;
 import static fr.cea.ig.play.test.DevAppTesting.testInServer;
 import static ngl.bi.Global.devapp;
 import static org.fest.assertions.Assertions.assertThat;
-import static play.mvc.Http.Status.OK;
-import static play.test.Helpers.fakeRequest;
+//import static play.mvc.Http.Status.OK;
+//import static play.test.Helpers.fakeRequest;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.test.RoutesTest;
+//import fr.cea.ig.play.test.RoutesTest;
 import fr.cea.ig.play.test.WSHelper;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
@@ -19,7 +19,7 @@ import models.laboratory.run.instance.Analysis;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
 import play.Logger;
-import play.mvc.Result;
+//import play.mvc.Result;
 import utils.AbstractTests;
 import utils.RunMockHelper;
 
@@ -28,11 +28,9 @@ public class AnalysesWorkflowTest extends AbstractTests {
 	static Analysis analysis;
 
 	@BeforeClass
-	public static void initData()
-	{
+	public static void initData() {
 		analysis = MongoDBDAO.find("ngl_bi.Analysis_dataWF", Analysis.class).toList().get(0);
 		MongoDBDAO.save(InstanceConstants.ANALYSIS_COLL_NAME, analysis);
-
 		for(String codeReadSet : analysis.masterReadSetCodes){
 			ReadSet readSet = MongoDBDAO.findByCode("ngl_bi.ReadSetIllumina_dataWF", ReadSet.class, codeReadSet);
 			MongoDBDAO.save(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSet);
@@ -40,8 +38,7 @@ public class AnalysesWorkflowTest extends AbstractTests {
 	}
 
 	@AfterClass
-	public static void deleteData()
-	{
+	public static void deleteData()	{
 		analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
 		MongoDBDAO.delete(InstanceConstants.ANALYSIS_COLL_NAME, analysis);
 		for(String codeReadSet : analysis.masterReadSetCodes){
@@ -51,8 +48,7 @@ public class AnalysesWorkflowTest extends AbstractTests {
 	}
 
 	@Test
-	public void setStateIPBA()
-	{
+	public void setStateIPBA() {
 		testInServer(devapp(),
 				ws -> {	
 					Logger.debug("setStateIPS");
@@ -68,13 +64,10 @@ public class AnalysesWorkflowTest extends AbstractTests {
 						assertThat(readSet.state.code).isEqualTo("IP-BA");
 					}
 				});
-
-
 	}
 
 	@Test
-	public void setStateFBA()
-	{
+	public void setStateFBA() {
 		testInServer(devapp(),
 				ws -> {	
 					analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
@@ -97,8 +90,7 @@ public class AnalysesWorkflowTest extends AbstractTests {
 	}
 
 	@Test
-	public void setStateIWV()
-	{
+	public void setStateIWV() {
 		testInServer(devapp(),
 				ws -> {	
 					analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
@@ -121,10 +113,8 @@ public class AnalysesWorkflowTest extends AbstractTests {
 				});
 	}
 
-
 	@Test
-	public void setStateFV()
-	{
+	public void setStateFV() {
 		testInServer(devapp(),
 				ws -> {	
 					analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
@@ -146,6 +136,7 @@ public class AnalysesWorkflowTest extends AbstractTests {
 					}
 				});
 	}
+	
 }
 
 

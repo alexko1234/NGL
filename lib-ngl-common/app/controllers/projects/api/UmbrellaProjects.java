@@ -17,13 +17,13 @@ import models.utils.ListObject;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 
 import com.mongodb.BasicDBObject;
 
-import play.Logger;
+//import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -41,9 +41,10 @@ import fr.cea.ig.play.NGLContext;
 // @Controller
 public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(UmbrellaProjects.class);
 	
 	private final /*static*/ Form<UmbrellaProjectsSearchForm> searchForm; // = form(UmbrellaProjectsSearchForm.class); 
-	private final /*static*/ Form<UmbrellaProject> projectForm; // = form(UmbrellaProject.class);
+//	private final /*static*/ Form<UmbrellaProject> projectForm; // = form(UmbrellaProject.class);
 	private final /*static*/ Form<QueryFieldsForm> updateForm; // = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("keep");
 	
@@ -51,17 +52,16 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 	public UmbrellaProjects(NGLContext ctx) {
 		super(ctx,InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class);		
 		searchForm = ctx.form(UmbrellaProjectsSearchForm.class); 
-		projectForm = ctx.form(UmbrellaProject.class);
+//		projectForm = ctx.form(UmbrellaProject.class);
 		updateForm = ctx.form(QueryFieldsForm.class);
 	}
 
-
-	public Result list(){
+	public Result list() {
 		Form<UmbrellaProjectsSearchForm> filledForm = filledFormQueryString(searchForm, UmbrellaProjectsSearchForm.class);
 		UmbrellaProjectsSearchForm form = filledForm.get();
 		Query q = getQuery(form);
 		BasicDBObject keys = getKeys(form);
-		if(form.datatable){			
+		if (form.datatable) {			
 			MongoDBResult<UmbrellaProject> results = mongoDBFinder(form, q, keys);			
 			List<UmbrellaProject> umbrellaProjects = results.toList();
 			return ok(Json.toJson(new DatatableResponse<UmbrellaProject>(umbrellaProjects, results.count())));
@@ -83,8 +83,6 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 			return ok(Json.toJson(projects));
 		}
 	}
-
-	
 
 	private List<ListObject> toListObjects(List<UmbrellaProject> proj) {
 		List<ListObject> lo = new ArrayList<ListObject>();
@@ -115,17 +113,17 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 		Form<UmbrellaProject> filledForm = getMainFilledForm();
 		UmbrellaProject projectInput = filledForm.get();
 
-		if (null == projectInput._id) { 
+		if (projectInput._id == null) { 
 			projectInput.traceInformation = new TraceInformation();
 			projectInput.traceInformation.setTraceInformation(getCurrentUser());			
 		} else {
 			return badRequest("use PUT method to update the project");
 		}
 
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 		ctxVal.setCreationMode();
 		projectInput.validate(ctxVal);
-
 		if (!ctxVal.hasErrors()) {
 			projectInput = saveObject(projectInput);
 			return ok(Json.toJson(projectInput));
@@ -135,27 +133,24 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 		}
 	}
 
-
 	public Result update(String code) {
 		UmbrellaProject objectInDB = getObject(code);
-		if (objectInDB == null) {
+		if (objectInDB == null)
 			return badRequest("ProjectUmbrella with code "+code+" not exist");
-		}
 
 		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
 		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
 		Form<UmbrellaProject> filledForm = getMainFilledForm();
 		UmbrellaProject projectInput = filledForm.get();
-		
-		if(queryFieldsForm.fields == null){
+		if (queryFieldsForm.fields == null) {
 			if (code.equals(projectInput.code)) {
-				if(null != projectInput.traceInformation){
+				if (projectInput.traceInformation != null) {
 					projectInput.traceInformation.setTraceInformation(getCurrentUser());
-				}else{
-					Logger.error("traceInformation is null !!");
+				} else {
+					logger.error("traceInformation is null !!");
 				}
-				
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+//				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 				ctxVal.setUpdateMode();
 				projectInput.validate(ctxVal);
 				if (!ctxVal.hasErrors()) {
@@ -165,13 +160,13 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 					// return badRequest(filledForm.errors-AsJson());
 					return badRequest(errorsAsJson(ctxVal.getErrors()));
 				}
-				
 			} else {
 				return badRequest("Project codes are not the same");
 			}	
-		}else{
-			//warning no validation !!!
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+		} else {
+			// warning no validation !!!
+//			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);

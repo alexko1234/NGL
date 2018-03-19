@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -46,7 +46,6 @@ public class Studies extends DocumentController<AbstractStudy> {
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(Studies.class);
 
-
 	// final static Form<AbstractStudy> studyForm = form(AbstractStudy.class);
 	// final static Form<StudiesSearchForm> studiesSearchForm = form(StudiesSearchForm.class);
 	// final StudyWorkflows studyWorkflows = Spring.get BeanOfType(StudyWorkflows.class);
@@ -58,7 +57,6 @@ public class Studies extends DocumentController<AbstractStudy> {
 //	private final StudyWorkflows          studyWorkflows;
 	private final SubmissionServices      submissionServices;
 
-	
 	@Inject
 	public Studies(NGLContext ctx, SubmissionServices submissionServices) {
 		super(ctx,InstanceConstants.SRA_STUDY_COLL_NAME, AbstractStudy.class);
@@ -82,7 +80,8 @@ public class Studies extends DocumentController<AbstractStudy> {
 			// creer le repertoire de soumission
 			study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, studyCode);
 		} catch (SraException e) {
-			filledForm.reject("release pour studyCode : "+ studyCode, e.getMessage());
+//			filledForm.reject("release pour studyCode : "+ studyCode, e.getMessage());
+			contextValidation.addError("release pour studyCode : "+ studyCode, e.getMessage());
 			// Logger.debug("filled form "+filledForm.errors-AsJson());
 			logger.debug("filled form "+errorsAsJson(contextValidation.getErrors()));
 			//return badRequest(filledForm.errors-AsJson());
@@ -95,7 +94,8 @@ public class Studies extends DocumentController<AbstractStudy> {
 		Form<AbstractStudy> filledForm = getFilledForm(studyForm, AbstractStudy.class);
 		AbstractStudy userStudy = filledForm.get();
 
-		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm);
 		contextValidation.setCreationMode();	
 		if (userStudy._id == null) {
 			userStudy.traceInformation = new TraceInformation(); 
@@ -113,7 +113,6 @@ public class Studies extends DocumentController<AbstractStudy> {
 				if (StringUtils.isNotBlank(((Study)userStudy).centerProjectName)){
 					((Study)userStudy).centerProjectName = ((Study)userStudy).centerProjectName.replaceFirst("_", "");
 				}
-
 				try {
 					((Study)userStudy).code = SraCodeHelper.getInstance().generateStudyCode(((Study)userStudy).projectCodes);
 				} catch (SraException e) {
@@ -133,10 +132,11 @@ public class Studies extends DocumentController<AbstractStudy> {
 			}
 		} else {
 			//return badRequest("study with id " + userStudy._id + " already exist");
-			filledForm.reject("Study_id "+userStudy._id, "study with id " + userStudy._id + " already exist");  // si solution filledForm.reject
-			return badRequest(filledForm.errorsAsJson( )); // legit
+//			filledForm.reject("Study_id "+userStudy._id, "study with id " + userStudy._id + " already exist");  // si solution filledForm.reject
+//			return badRequest(filledForm.errorsAsJson( )); // legit
+			contextValidation.addError("Study_id "+userStudy._id, "study with id " + userStudy._id + " already exist");  // si solution filledForm.reject
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
 		}
-
 		return ok(Json.toJson(userStudy.code));
 	}
 
@@ -222,10 +222,9 @@ public class Studies extends DocumentController<AbstractStudy> {
 
 	public Result update(String code) {
 		AbstractStudy study = getObject(code);
-
 		Form<AbstractStudy> filledForm = getFilledForm(studyForm, AbstractStudy.class);
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
-
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 		if (study == null) {
 			//return badRequest("Study with code "+code+" not exist");
 			ctxVal.addErrors("study ", " not exist");

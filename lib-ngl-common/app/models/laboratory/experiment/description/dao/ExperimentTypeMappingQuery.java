@@ -15,29 +15,38 @@ import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.description.dao.SampleTypeDAO;
 import models.utils.dao.DAOException;
+import models.utils.dao.MappingSqlQueryFactory;
+import models.utils.dao.NGLMappingSqlQuery;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.api.modules.spring.Spring;
 
-public class ExperimentTypeMappingQuery extends MappingSqlQuery<ExperimentType>{
+//public class ExperimentTypeMappingQuery extends MappingSqlQuery<ExperimentType> {
+public class ExperimentTypeMappingQuery extends NGLMappingSqlQuery<ExperimentType> {
 
-	public ExperimentTypeMappingQuery()
-	{
-		super();
+	public static final MappingSqlQueryFactory<ExperimentType> factory = ExperimentTypeMappingQuery::new;
+	
+//	public ExperimentTypeMappingQuery()
+//	{
+//		super();
+//	}
+	
+//	public ExperimentTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)	{
+//		super(ds,sql);
+//		if (sqlParameter != null)
+////			super.declareParameter(sqlParameter);
+//			declareParameter(sqlParameter);
+//		compile();
+//	}
+	
+	public ExperimentTypeMappingQuery(DataSource ds, String sql, SqlParameter... sqlParameters)	{
+		super(ds,sql,sqlParameters);
 	}
 	
-	public ExperimentTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)
-	{
-		super(ds,sql);
-		if(sqlParameter!=null)
-			super.declareParameter(sqlParameter);
-		compile();
-	}
 	@Override
-	protected ExperimentType mapRow(ResultSet rs, int rowNumber)
-			throws SQLException {
+	protected ExperimentType mapRow(ResultSet rs, int rowNumber) throws SQLException {
 		ExperimentType experimentType = new ExperimentType();
 		//play.Logger.debug("Experiment type "+experimentType);
 		experimentType.id = rs.getLong("id");
@@ -70,7 +79,8 @@ public class ExperimentTypeMappingQuery extends MappingSqlQuery<ExperimentType>{
 		ExperimentCategoryDAO experimentCategoryDAO = Spring.getBeanOfType(ExperimentCategoryDAO.class);
 		ExperimentCategory experimentCategory=null;
 		try {
-			experimentCategory = (ExperimentCategory) experimentCategoryDAO.findById(idExperimentCategory);
+//			experimentCategory = (ExperimentCategory) experimentCategoryDAO.findById(idExperimentCategory);
+			experimentCategory = experimentCategoryDAO.findById(idExperimentCategory);
 		} catch (DAOException e) {
 			throw new SQLException(e);
 		}

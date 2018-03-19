@@ -2,16 +2,13 @@ package validation.sample;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import java.util.Map;
-
+//import java.util.Map;
 import models.laboratory.sample.description.SampleCategory;
-import models.utils.DescriptionHelper;
+//import models.utils.DescriptionHelper;
 import models.utils.dao.DAOException;
-
 import org.junit.Test;
-
-import play.Logger;
-import play.Play;
+//import play.Logger;
+//import play.Play;
 import utils.AbstractTests;
 import utils.Constants;
 import validation.ContextValidation;

@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -71,7 +71,10 @@ public class Analyses extends DocumentController<Analysis> {
 		this.workflows        = workflows;
 	}
 	
-	@Permission(value={"reading"})
+//	@Permission(value={"reading"})
+	@Authenticated
+	@Historized
+	@Authorized.Read
 	public Result list() {
 		AnalysesSearchForm form = filledFormQueryString( AnalysesSearchForm.class);
 		Query q = getQuery(form);
@@ -150,7 +153,10 @@ public class Analyses extends DocumentController<Analysis> {
 		return query;
 	}
 	
-	@Permission(value={"writing"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result save() {
 		
 		Form<Analysis> filledForm = getMainFilledForm();
@@ -170,17 +176,16 @@ public class Analyses extends DocumentController<Analysis> {
 		} else {
 			return badRequest("use PUT method to update the analysis");
 		}
-		if(null != input.masterReadSetCodes && input.masterReadSetCodes.size() > 0){
+		if (input.masterReadSetCodes != null && input.masterReadSetCodes.size() > 0)
 			updateAnalysis(input);			
-		}
-		
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		ctxVal.setCreationMode();
 		input.validate(ctxVal);	
 		
 		if (!ctxVal.hasErrors()) {
 			input = saveObject(input);
-			//TODO Update ReadSet
+			// TODO Update ReadSet
 			return ok(Json.toJson(input));
 		} else {
 			// return badRequest(filledForm.errors-AsJson());
@@ -189,7 +194,7 @@ public class Analyses extends DocumentController<Analysis> {
 	}
 	
 	private void updateAnalysis(Analysis input) {
-		for(String code: input.masterReadSetCodes){
+		for (String code: input.masterReadSetCodes) {
 			ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, code);
 			input.projectCodes.add(readSet.projectCode);
 			input.sampleCodes.add(readSet.sampleCode);
@@ -197,7 +202,10 @@ public class Analyses extends DocumentController<Analysis> {
 		
 	}
 
-	@Permission(value={"writing"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result update(String code){
 		Analysis objectInDB =  getObject(code);
 		if(objectInDB == null) {
@@ -209,9 +217,9 @@ public class Analyses extends DocumentController<Analysis> {
 		Form<Analysis> filledForm = getMainFilledForm();
 		Analysis input = filledForm.get();
 		
-		if(queryFieldsForm.fields == null){
+		if (queryFieldsForm.fields == null) {
 			if (input.code.equals(code)) {
-				if (null != input.traceInformation) {
+				if (input.traceInformation != null) {
 					input.traceInformation = getUpdateTraceInformation(input.traceInformation);
 				} else {
 					Logger.error("traceInformation is null !!");
@@ -219,7 +227,8 @@ public class Analyses extends DocumentController<Analysis> {
 				if (!objectInDB.state.code.equals(input.state.code)) {
 					return badRequest("you cannot change the state code. Please used the state url ! ");
 				}
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+//				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 				ctxVal.setUpdateMode();
 				input.validate(ctxVal);
 				if (!ctxVal.hasErrors()) {
@@ -232,18 +241,18 @@ public class Analyses extends DocumentController<Analysis> {
 			} else {
 				return badRequest("Analysis code are not the same");
 			}
-		}else{ //update only some authorized properties
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+		} else { //update only some authorized properties
+//			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
 			
-			if(!ctxVal.hasErrors() && queryFieldsForm.fields.contains("code")){
+			if (!ctxVal.hasErrors() && queryFieldsForm.fields.contains("code")) {
 				ctxVal.setCreationMode();
 				CommonValidationHelper.validateCode(input, collectionName, ctxVal);
 				//TODO Update READSET
 			}
-			
 			if (!ctxVal.hasErrors()) {
 				updateObject(DBQuery.and(DBQuery.is("code", code)), 
 						getBuilder(input, queryFieldsForm.fields).set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
@@ -257,18 +266,20 @@ public class Analyses extends DocumentController<Analysis> {
 		}
 	}
 	
-	
-	@Permission(value={"writing"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result state(String code){
 		Analysis objectInDB = getObject(code);
-		if(objectInDB == null) {
+		if (objectInDB == null)
 			return notFound();
-		}
 		Form<State> filledForm =  getFilledForm(stateForm, State.class);
 		State state = filledForm.get();
 		state.date = new Date();
 		state.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		workflows.setState(ctxVal, objectInDB, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getObject(code)));
@@ -277,46 +288,51 @@ public class Analyses extends DocumentController<Analysis> {
 		}
 	}
 	
-	@Permission(value={"writing"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result stateBatch(){
 		List<Form<AnalysesBatchElement>> filledForms =  getFilledFormList(batchElementForm, AnalysesBatchElement.class);
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
-		
-		for(Form<AnalysesBatchElement> filledForm: filledForms){
+		for (Form<AnalysesBatchElement> filledForm: filledForms) {
 			AnalysesBatchElement element = filledForm.get();
 			Analysis objectInDB = getObject(element.data.code);
-			if (null != objectInDB) {
+			if (objectInDB != null) {
 				State state = element.data.state;
 				state.date = new Date();
 				state.user = getCurrentUser();
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 				workflows.setState(ctxVal, objectInDB, state);
 				if (!ctxVal.hasErrors()) {
 					response.add(new DatatableBatchResponseElement(OK, getObject(objectInDB.code), element.index));
 				} else {
 					response.add(new DatatableBatchResponseElement(BAD_REQUEST,errorsAsJson(ctxVal.getErrors()), element.index));
 				}
-			}else {
+			} else {
 				response.add(new DatatableBatchResponseElement(BAD_REQUEST, element.index));
 			}
-			
 		}		
 		return ok(Json.toJson(response));
 	}
 	
-	@Permission(value={"writing"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result valuation(String code){
 		Analysis objectInDB = getObject(code);
-		if(objectInDB == null) {
+		if (objectInDB == null) {
 			return notFound();
 		}
 		Form<Valuation> filledForm =  getFilledForm(valuationForm, Valuation.class);
 		Valuation input = filledForm.get();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		ctxVal.setUpdateMode();
 		input.date = new Date();
 		input.user = getCurrentUser();
-		
 		CommonValidationHelper.validateValuation(objectInDB.typeCode, input, ctxVal);
 		if (!ctxVal.hasErrors()) {
 			updateObject(DBQuery.and(DBQuery.is("code", code)), DBUpdate.set("valuation", input)
@@ -330,7 +346,10 @@ public class Analyses extends DocumentController<Analysis> {
 		}
 	}
 
-	@Permission(value={"writing"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result valuationBatch(){
 		List<Form<AnalysesBatchElement>> filledForms =  getFilledFormList(batchElementForm, AnalysesBatchElement.class);
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
@@ -338,16 +357,17 @@ public class Analyses extends DocumentController<Analysis> {
 		for(Form<AnalysesBatchElement> filledForm: filledForms){
 			AnalysesBatchElement element = filledForm.get();
 			Analysis objectInDB = getObject(element.data.code);
-			if(null != objectInDB){
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+			if (objectInDB != null) {
+//				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 				ctxVal.setUpdateMode();
 				element.data.valuation.date = new Date();
 				element.data.valuation.user = getCurrentUser();
 				CommonValidationHelper.validateValuation(objectInDB.typeCode, element.data.valuation, ctxVal);
 				if (!ctxVal.hasErrors()) {
-					updateObject(DBQuery.and(DBQuery.is("code", objectInDB.code)), DBUpdate.set("valuation", element.data.valuation)
-							.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
-													
+					updateObject(DBQuery.and(DBQuery.is("code", objectInDB.code)), 
+							                 DBUpdate.set("valuation", element.data.valuation)
+							                         .set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 					objectInDB = getObject(objectInDB.code);
 					workflows.nextState(ctxVal, objectInDB);
 					response.add(new DatatableBatchResponseElement(OK, objectInDB, element.index));
@@ -357,25 +377,26 @@ public class Analyses extends DocumentController<Analysis> {
 			} else {
 				response.add(new DatatableBatchResponseElement(BAD_REQUEST, element.index));
 			}
-			
 		}		
 		return ok(Json.toJson(response));
 	}
 	
-	@Permission(value={"writing"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result properties(String code){
 		Analysis objectInDB = getObject(code);
-		if(objectInDB == null) {
+		if (objectInDB == null)
 			return notFound();
-		}
 			
 		Form<Analysis> filledForm = getMainFilledForm();
 		Map<String, PropertyValue> properties = filledForm.get().properties;
 		
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 		ctxVal.setUpdateMode();
 		//TODO AnalysisValidationHelper.validateAnalysisType(objectInDB.typeCode, properties, ctxVal);
-		
 		if (!ctxVal.hasErrors()) {
 		    updateObject(DBQuery.and(DBQuery.is("code", objectInDB.code)), DBUpdate.set("properties", properties)
 					.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
@@ -386,7 +407,10 @@ public class Analyses extends DocumentController<Analysis> {
 		}		
 	}
 	
-	@Permission(value={"writing"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result propertiesBatch() {
 		List<Form<AnalysesBatchElement>> filledForms =  getFilledFormList(batchElementForm, AnalysesBatchElement.class);
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
@@ -394,8 +418,9 @@ public class Analyses extends DocumentController<Analysis> {
 		for(Form<AnalysesBatchElement> filledForm: filledForms) {
 			AnalysesBatchElement element = filledForm.get();
 			Analysis objectInDB = getObject(element.data.code);
-			if(null != objectInDB){
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+			if (objectInDB != null) {
+//				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 				Map<String, PropertyValue> properties = element.data.properties;
 				ctxVal.setUpdateMode();
 				//TODO AnalysisValidationHelper.validateAnalysisType(objectInDB.typeCode, properties, ctxVal);
@@ -409,15 +434,17 @@ public class Analyses extends DocumentController<Analysis> {
 			} else {
 				response.add(new DatatableBatchResponseElement(BAD_REQUEST, element.index));
 			}
-			
 		}		
 		return ok(Json.toJson(response));
 	}
 	
-	@Permission(value={"writing"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result applyRules(String code, String rulesCode)	{
 		Analysis objectInDB = getObject(code);
-		if(objectInDB == null) {
+		if (objectInDB == null) {
 			return notFound();
 		}		
 		// Outside of an actor and if no reply is needed the second argument can be null

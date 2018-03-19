@@ -77,9 +77,10 @@ public class RunImportCNS extends AbstractImportDataCNS {
 
 				//Save Run du Lims si n'existe pas ou n'est pas transféré dans NGL
 				Run newRun=MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class, run.code);
-				if(newRun==null){
+				if (newRun == null) {
 					logger.debug("Save Run "+run.code + " mode "+contextError.getMode());
-					newRun=(Run) InstanceHelpers.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run, ctx, true);
+//					newRun=(Run) InstanceHelpers.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run, ctx, true);
+					newRun = InstanceHelpers.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run, ctx, true);
 				} else {
 
 					logger.debug("Update Run "+run.code + " mode "+contextError.getMode());	
@@ -88,7 +89,7 @@ public class RunImportCNS extends AbstractImportDataCNS {
 					ctx.putObject("run", run);
 					run.treatments.get("ngsrg").validate(ctx);
 
-					if(!ctx.hasErrors()){
+					if (!ctx.hasErrors()) {
 						
 						run.state = fusionRunStateHistorical(run.state, newRun.state);
 						

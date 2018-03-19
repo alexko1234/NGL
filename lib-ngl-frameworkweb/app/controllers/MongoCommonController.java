@@ -1,13 +1,13 @@
 package controllers;
 
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+//import java.io.InputStream;
+//import java.io.IOException;
+//import java.io.OutputStream;
+//import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
+// import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -28,17 +28,17 @@ import views.components.datatable.DatatableForm;
 
 import com.mongodb.BasicDBObject;
 
-import akka.actor.ActorRef;
+// import akka.actor.ActorRef;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.mongo.MongoStreamer;
 import fr.cea.ig.play.NGLContext;
-import fr.cea.ig.util.Streamer;
+// import fr.cea.ig.util.Streamer;
 // import static fr.cea.ig.util.Streamer.IStreamer.write;
 import fr.cea.ig.MongoDBResult.Sort;
 
-import fr.cea.ig.mongo.MongoStreamer;
+// import fr.cea.ig.mongo.MongoStreamer;
 
 // TODO: cleanup, comment
 
@@ -195,7 +195,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 	 * @param clazz
 	 * @return
 	 */
-	protected Builder getBuilder(Object value, List<String> fields, Class clazz) {
+	protected Builder getBuilder(Object value, List<String> fields, Class<?> clazz) {
 		return getBuilder(value, fields, clazz, null);
 	}
 	
@@ -207,7 +207,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 	 * @param clazz
 	 * @return
 	 */
-	protected Builder getBuilder(Object value, List<String> fields, Class clazz, String prefix) {
+	protected Builder getBuilder(Object value, List<String> fields, Class<?> clazz, String prefix) {
 		Builder builder = new Builder();
 		try {
 			for (String field: fields) {
@@ -287,7 +287,8 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		
 	protected Result nativeMongoDBQuery(ListForm form) {
 		MongoCollection collection = MongoDBPlugin.getCollection(collectionName);
-		MongoCursor<T> all = (MongoCursor<T>) collection.find(form.reportingQuery).as(type);
+//		MongoCursor<T> all = (MongoCursor<T>) collection.find(form.reportingQuery).as(type);
+		MongoCursor<T> all = collection.find(form.reportingQuery).as(type);
 		if (form.datatable) {
 			// return ok(getUDTChunk(all)).as("application/json");
 			return MongoStreamer.okStreamUDT(all);

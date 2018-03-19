@@ -28,13 +28,14 @@ import org.mongojack.DBUpdate;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSRequest;
 import play.libs.ws.WSResponse;
-import sra.scripts.AbstractScript.LogLevel;
 import sra.scripts.utils.CSVParsing;
 import sra.scripts.utils.DateTools;
 import sra.scripts.utils.EbiAPI;
 import sra.scripts.utils.Tools;
 import sra.scripts.utils.iteration.CSVIterable;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.lfw.controllers.AbstractScript;
+import fr.cea.ig.lfw.controllers.AbstractScript.LogLevel;
 
 
 
@@ -50,20 +51,17 @@ public class OriRepriseHistoSample_extId extends AbstractScript {
 	*/
 	
 	// version 2 : On demande à play d'instancier la classe avec un objet EbiAPI
-	private final EbiAPI ebiAPI;	
+//	private final EbiAPI ebiAPI;	
 
 	@Inject
 	public OriRepriseHistoSample_extId(EbiAPI ebiAPI) {
-		this.ebiAPI = ebiAPI;
+//		this.ebiAPI = ebiAPI;
 	}
 	
-	
-	private static class SampleInfos {
-		String accession;
-		String extIdAccession;
-		
-	}
-	
+//	private static class SampleInfos {
+//		String accession;
+//		String extIdAccession;		
+//	}
 	
 	@Override
 	public void execute() throws IOException, ParseException {

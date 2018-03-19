@@ -12,7 +12,7 @@ import models.laboratory.container.instance.Content;
 import models.laboratory.run.instance.Analysis;
 import models.utils.InstanceConstants;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -83,7 +83,8 @@ public class ContainerUpdate extends AbstractUpdate<Container>{
 				}
 			})
 			.forEach(c -> {
-				c.properties.get(input.contentPropertyNameUpdated).value = newValue;
+				// c.properties.get(input.contentPropertyNameUpdated).value = newValue;
+				c.properties.get(input.contentPropertyNameUpdated).assignValue(newValue);
 			});
 		
 	}

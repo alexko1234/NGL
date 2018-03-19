@@ -28,7 +28,8 @@ import controllers.authorisation.Permission;
 import fr.cea.ig.play.NGLContext;
 
 // @Controller
-public class ExperimentComments extends SubDocumentController<Experiment, Comment>{
+public class ExperimentComments extends SubDocumentController<Experiment, Comment> {
+	
 	@Inject
 	public ExperimentComments(NGLContext ctx) {
 		super(ctx,InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, Comment.class);
@@ -52,25 +53,24 @@ public class ExperimentComments extends SubDocumentController<Experiment, Commen
 	}
 	
 	@Permission(value={"writing"})
-	public Result save(String parentCode){
+	public Result save(String parentCode) {
 		Experiment objectInDB = getObject(parentCode);
-		if (objectInDB == null) {
+		if (objectInDB == null)
 			return notFound();
-		}
-		
+
 		Form<Comment> filledForm = getSubFilledForm();
 		Comment inputComment = filledForm.get();
 		
-		if (null == inputComment.code) {
+		if (inputComment.code == null) {
 			inputComment.createUser = getCurrentUser();
 			inputComment.creationDate = new Date();
 			inputComment.code = CodeHelper.getInstance().generateExperimentCommentCode(inputComment);									
 		} else {
 			return badRequest("use PUT method to update the comment");
 		}
-		
-		
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 		ctxVal.setCreationMode();
 		ctxVal.putObject("experiment", objectInDB);		
 		inputComment.validate(ctxVal);
@@ -88,12 +88,12 @@ public class ExperimentComments extends SubDocumentController<Experiment, Commen
 	@Permission(value={"writing"})
 	public Result update(String parentCode, String code){
 		Experiment objectInDB = getObject(getSubObjectQuery(parentCode, code));
-		if (objectInDB == null) {
-			return notFound();			
-		}	
+		if (objectInDB == null)
+			return notFound();
 		
 		Form<Comment> filledForm = getSubFilledForm();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 		
 		Comment inputComment = filledForm.get();
 		if(getCurrentUser().equals(inputComment.createUser)){

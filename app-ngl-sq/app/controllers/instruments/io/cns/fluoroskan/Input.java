@@ -23,9 +23,9 @@ import controllers.instruments.io.utils.AbstractInput;
 public class Input extends AbstractInput {
 
 	@Override
-	public Experiment importFile(Experiment experiment,PropertyFileValue pfv,
-			ContextValidation contextValidation) throws Exception {		
-		InputStream is = new ByteArrayInputStream(pfv.value);
+	public Experiment importFile(Experiment experiment,PropertyFileValue pfv, ContextValidation contextValidation) throws Exception {		
+//		InputStream is = new ByteArrayInputStream(pfv.value);
+		InputStream is = new ByteArrayInputStream(pfv.byteValue());
 		
 		Workbook wb = WorkbookFactory.create(is);
 		Sheet sheet = wb.getSheetAt(0);

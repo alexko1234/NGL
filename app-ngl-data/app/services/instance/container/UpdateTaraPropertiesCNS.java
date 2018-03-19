@@ -46,7 +46,7 @@ public class UpdateTaraPropertiesCNS extends AbstractImportDataCNS{
 		List<Map<String, PropertyValue>> taraPropertyList = taraServices.findTaraSampleUpdated(limsCodes);
 	
 		//Logger.debug("Nb Map Tara"+taraPropertyList.size());
-		for(Map<String,PropertyValue> taraProperties : taraPropertyList){
+		for (Map<String,PropertyValue> taraProperties : taraPropertyList) {
 	
 			if(!taraProperties.containsKey(LimsCNSDAO.LIMS_CODE)){
 				contextError.addErrors(LimsCNSDAO.LIMS_CODE,"error.codeNotExist","");

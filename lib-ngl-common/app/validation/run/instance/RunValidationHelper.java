@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
 import play.Logger;
 
@@ -43,37 +43,33 @@ public class RunValidationHelper extends CommonValidationHelper {
 		}
 	}
 
-	public static void validateRunType(String typeCode,	Map<String, PropertyValue> properties,	ContextValidation contextValidation) {
+	public static void validateRunType(String typeCode,	Map<String, PropertyValue> properties, ContextValidation contextValidation) {
 		RunType runType = validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", RunType.find,true);
-		if(null != runType){
+		if (runType != null) {
 			contextValidation.addKeyToRootKeyName("properties");
 			ValidationHelper.validateProperties(contextValidation, properties, runType.getPropertyDefinitionByLevel(Level.CODE.Run), true);
 			contextValidation.removeKeyFromRootKeyName("properties");
 		}		
 	}
 	
-	public static void validationRunCategoryCode(String categoryCode,
-			ContextValidation contextValidation) {
+	public static void validationRunCategoryCode(String categoryCode, ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "categoryCode", RunCategory.find,false);
 	}
 	
 	public static void validationLaneReadSetCodes(Integer number, List<String> readSetCodes, ContextValidation contextValidation) {
-		if(readSetCodes != null && readSetCodes.size() > 0){
+		if (readSetCodes != null && readSetCodes.size() > 0) {
 			List<String> readSetCodesTreat = new ArrayList<String>();
-			for(int i=0; i< readSetCodes.size(); i++){
+			for (int i=0; i< readSetCodes.size(); i++) {
 				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCodes.get(i));
-				if(null == readSet || !number.equals(readSet.laneNumber)){
-					contextValidation.addErrors("readSetCodes["+i+"]",ValidationConstants.ERROR_CODE_NOTEXISTS_MSG,  readSetCodes.get(i), "ReadSet");
+				if (readSet == null || !number.equals(readSet.laneNumber)) {
+					contextValidation.addErrors("readSetCodes[" + i + "]", ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, readSetCodes.get(i), "ReadSet");
 				}
-				
-				if(readSetCodesTreat.contains(readSetCodes.get(i))){
-					contextValidation.addErrors("readSetCodes["+i+"]",ValidationConstants.ERROR_CODE_DOUBLE_MSG,  readSetCodes.get(i));
+				if (readSetCodesTreat.contains(readSetCodes.get(i))) {
+					contextValidation.addErrors("readSetCodes[" + i + "]", ValidationConstants.ERROR_CODE_DOUBLE_MSG, readSetCodes.get(i));
 				}
 				readSetCodesTreat.add(readSetCodes.get(i));
 			}
 		}
-		
-		
 	}
 	
 	public static void validateRunProjectCodes(String runCode, Set<String> projectCodes, ContextValidation contextValidation) {

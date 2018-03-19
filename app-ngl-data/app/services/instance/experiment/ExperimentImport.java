@@ -71,7 +71,7 @@ public class ExperimentImport {
 		experiment.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 		
 		//define instrumentProperties attributes
-		experiment.instrumentProperties = new HashMap<String, PropertyValue>();
+		experiment.instrumentProperties = new HashMap<>(); // <String, PropertyValue>();
 		experiment.instrumentProperties.put("sequencingProgramType", new PropertySingleValue(rs.getString("type_lecture")));
 		experiment.instrumentProperties.put("nbCyclesRead1", new PropertySingleValue(rs.getString("nb_cycles_read1")));
 		experiment.instrumentProperties.put("nbCyclesReadIndex1", new PropertySingleValue(rs.getString("nb_cycles_index1")));
@@ -182,7 +182,7 @@ public class ExperimentImport {
 
 		
 		//set limsCode
-		experiment.experimentProperties = new HashMap<String, PropertyValue>();
+		experiment.experimentProperties = new HashMap<>(); // <String, PropertyValue>();
 		experiment.experimentProperties.put("limsCode", new PropertySingleValue(rs.getString("lims_code")));
 		
 		//set runStartDate

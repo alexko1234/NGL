@@ -244,12 +244,12 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public void validationPercentageContentsWithGoodValues(){
-		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		List<Content> localContents=new ArrayList<Content>();		
+		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
+		List<Content> localContents = new ArrayList<Content>();		
 		
 		//Test with good values
-		sampleUsed.percentage=75.00;
-		sampleUsed1.percentage=25.00;		
+		sampleUsed.percentage  = 75.00;
+		sampleUsed1.percentage = 25.00;		
 		localContents.add(sampleUsed);
 		localContents.add(sampleUsed1);
 		ContainerValidationHelper.validateContentPercentageSum(localContents, contextValidation);

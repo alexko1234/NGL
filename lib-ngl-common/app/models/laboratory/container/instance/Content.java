@@ -76,9 +76,8 @@ public class Content implements IValidation {
 	
 	public List<Comment> processComments;
 
-	
 	public Content() {
-		properties = new HashMap<String, PropertyValue>();		
+		properties = new HashMap<>(); // String, PropertyValue>();		
 	}
 
 	@JsonIgnore
@@ -86,7 +85,7 @@ public class Content implements IValidation {
 		this.sampleCode         = sampleCode;
 		this.sampleTypeCode     = typeCode;
 		this.sampleCategoryCode = categoryCode;
-		this.properties         = new HashMap<String, PropertyValue>();		
+		this.properties         = new HashMap<>(); // <String, PropertyValue>();		
 	}
 
 
@@ -113,11 +112,11 @@ public class Content implements IValidation {
 		finalContent.referenceCollab    = referenceCollab;
 		finalContent.percentage         = percentage;
 		if (properties != null)
-			finalContent.properties = new HashMap<String,PropertyValue>(properties);
+			finalContent.properties = new HashMap<>(properties); // new HashMap<String,PropertyValue>(properties);
 		finalContent.taxonCode          = taxonCode;
 		finalContent.ncbiScientificName = ncbiScientificName;
 		if(processProperties != null)
-			finalContent.processProperties = new HashMap<String,PropertyValue>(processProperties);
+			finalContent.processProperties = new HashMap<>(processProperties); //new HashMap<String,PropertyValue>(processProperties);
 		finalContent.processComments    = processComments;
 		return finalContent;
 	}

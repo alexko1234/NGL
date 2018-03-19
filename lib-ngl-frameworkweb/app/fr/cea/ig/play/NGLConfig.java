@@ -13,7 +13,7 @@ import fr.cea.ig.play.IGConfig;
  * @author vrd
  *
  */
-@Deprecated
+// @Deprecated
 @Singleton
 public class NGLConfig {
 
@@ -61,7 +61,7 @@ public class NGLConfig {
 	 * @return NGL environment, should be the application attribute 
 	 */
 	// TODO: use application attribute 
-	@Deprecated
+	// @Deprecated
 	public String nglEnv() {
 		return config.getCheckedString(NGL_ENV_PATH,NGL_ENV_VALUES);
 	}

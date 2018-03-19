@@ -2,6 +2,7 @@ package models.laboratory.common.instance.property;
 
 import java.util.Collection;
 
+import static fr.cea.ig.lfw.utils.Iterables.first;
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;
 import models.laboratory.common.description.PropertyDefinition;
@@ -13,7 +14,8 @@ import models.laboratory.common.instance.PropertyValue;
  * 
  *
  */
-public class PropertyByteValue extends PropertyValue<byte[]> {
+//public class PropertyByteValue extends PropertyValue<byte[]> {
+public class PropertyByteValue extends PropertyValue {
 	
 	// TODO: Should be protected and define typeless constructors. 
 	public PropertyByteValue(String _type) {
@@ -24,15 +26,25 @@ public class PropertyByteValue extends PropertyValue<byte[]> {
 		super(_type, value);		
 	}
 	
+	public byte[] getValue() {
+		return byteValue();
+	}
+	
+	public byte[] byteValue() { 
+		return (byte[])value;
+	}
+	
 	@Override
 	public String toString() {
-		return "PropertyByteValue [value=" + value + ", class="+value.getClass().getName()+"]";
+		return "PropertyByteValue [value=" + value + ", class=" + value.getClass().getName() + "]";
 	}
 	
 	@Override
 	public void validate(ContextValidation contextValidation) { 
 		super.validate(contextValidation);
-		PropertyDefinition propertyDefinition = (PropertyDefinition) ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).toArray()[0];
+//		@SuppressWarnings("unchecked") // uncheckable access to validation context object 
+//		PropertyDefinition propertyDefinition = (PropertyDefinition) ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).toArray()[0];
+		PropertyDefinition propertyDefinition = first(contextValidation.<Collection<PropertyDefinition>>getTypedObject("propertyDefinitions")).orElse(null);
 		if (ValidationHelper.checkIfActive(contextValidation, propertyDefinition)) {
 			ValidationHelper.required(contextValidation, this, propertyDefinition); 
 		}		

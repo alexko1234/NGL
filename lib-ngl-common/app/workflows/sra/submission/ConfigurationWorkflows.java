@@ -35,7 +35,7 @@ public class ConfigurationWorkflows extends Workflows<Configuration> {
 //	}
 
 
-	private static final play.Logger.ALogger logger = play.Logger.of(ConfigurationWorkflows.class);
+//	private static final play.Logger.ALogger logger = play.Logger.of(ConfigurationWorkflows.class);
 
 	//public static ConfigurationWorkflows instance= new ConfigurationWorkflows();
 

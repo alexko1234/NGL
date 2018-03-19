@@ -30,6 +30,7 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.lfw.controllers.AbstractScript;
 
 
 
@@ -79,7 +80,7 @@ public class RepriseHistoStudy_extId extends AbstractScript {
 				
 			//String [] tmp = firstCreatedDateEbi.split("-");
 			//Date createdDate = DateFormat.getDateInstance(DateFormat.SHORT).parse(tmp[0]+ "/"+DateTools.monthOrdinal(tmp[1])+"/20"+tmp[2]);
-			Date today = new Date();
+//			Date today = new Date();
 			Date createdDate = DateTools.dmy("-", firstCreatedDateEbi);
 			Date releaseDate = null;
 			

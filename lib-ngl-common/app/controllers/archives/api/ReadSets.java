@@ -41,10 +41,9 @@ public class ReadSets extends CommonController {
 	public Result list(){
 
 		BasicDBObject keys = new BasicDBObject();
-		keys.put("treatments", 0);
-		
+		keys.put("treatments", 0);		
 		Integer archive = getArchiveValue();
-		List<Archive> archives = new ArrayList<Archive>();
+//		List<Archive> archives = new ArrayList<Archive>();
 		MongoDBResult<ReadSet> results =  MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, getQuery(archive), keys);		
 		return MongoStreamer.okStreamUDT(results, r -> { return convertToArchive(archive, r); });
 	}

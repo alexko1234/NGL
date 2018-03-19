@@ -94,39 +94,34 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 
 	public void updateOneSample(Sample sample,ContextValidation contextError) {
 
-		logger.debug("Update sample "+sample.code);
+		logger.debug("Update sample {}", sample.code);
 
-		Map<String, PropertyValue> updatedProperties=new HashMap<String, PropertyValue>();
+		Map<String, PropertyValue> updatedProperties = new HashMap<>(); // String, PropertyValue>();
 		Set<String> deletedPropertyCodes = new TreeSet<String>();
 		SampleType sampleType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.typeCode, "typeCode", SampleType.find,true);
 		ImportType importType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.importTypeCode, "importTypeCode", ImportType.find,true);
 
-		if(importType !=null){
+		if (importType != null) {
 			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(importType.getPropertyDefinitionByLevel(Level.CODE.Sample, Level.CODE.Content), sample.properties,updatedProperties);
 			deletedPropertyCodes.addAll(InstanceHelpers.getDeletedPropertyDefinitionCode(importType.getPropertyDefinitionByLevel(Level.CODE.Sample, Level.CODE.Content), sample.properties));
 		}
-		if(sampleType !=null){
+		if (sampleType != null) {
 			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(sampleType.getPropertyDefinitionByLevel(Level.CODE.Sample, Level.CODE.Content), sample.properties,updatedProperties);
 			deletedPropertyCodes.addAll(InstanceHelpers.getDeletedPropertyDefinitionCode(sampleType.getPropertyDefinitionByLevel(Level.CODE.Sample, Level.CODE.Content), sample.properties));
 		}
-		
-		logger.warn("property will be deleted "+deletedPropertyCodes);
-		
-		
+		logger.warn("property will be deleted " + deletedPropertyCodes);
 		updateCollectionsFromSample(sample, updatedProperties, deletedPropertyCodes,contextError);
-
 	} 
 
 	private void updateCollectionsFromSample(Sample sample, Map<String, PropertyValue> updatedProperties, Set<String> deletedPropertyCodes, ContextValidation contextError){
 
-		logger.info("Update son samples, containers, readSets, process from sample :"+sample.code);
-		
+		logger.info("Update son samples, containers, readSets, process from sample : {}", sample.code);
 		InstanceHelpers.updateContentProperties(sample, updatedProperties, deletedPropertyCodes, contextError);
 		//Update son samples
 		MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,
 				DBQuery.is("life.from.sampleCode",sample.code).in("life.from.projectCode", sample.projectCodes))
 				.cursor
-				.forEach(sonSample ->{
+				.forEach(sonSample -> {
 					updateCollectionsFromSample(sonSample, updatedProperties, deletedPropertyCodes, contextError);
 				});
 	}

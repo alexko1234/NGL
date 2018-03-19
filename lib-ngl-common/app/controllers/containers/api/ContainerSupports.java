@@ -25,7 +25,7 @@ import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 // import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -154,14 +154,15 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 	@Permission(value={"writing"})	
 	public Result updateState(String code){
 		ContainerSupport support = getSupport(code);
-		if(support == null){
+		if (support == null) 
 			return badRequest();
-		}
+
 		Form<State> filledForm =  getFilledForm(stateForm, State.class);
 		State state = filledForm.get();
 		state.date = new Date();
 		state.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
 		ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_STATE, Boolean.TRUE);
 		workflows.setState(ctxVal, support, state);
@@ -189,11 +190,12 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 			.map(filledForm -> {
 				ContainerSupportBatchElement element = filledForm.get();
 				ContainerSupport support = getSupport(element.data.code);
-				if (null != support) {
+				if (support != null) {
 					State state = element.data.state;
 					state.date = new Date();
 					state.user = user;
-					ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+//					ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+					ContextValidation ctxVal = new ContextValidation(user, filledForm);
 					ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
 					ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_STATE, Boolean.TRUE);
 					workflows.setState(ctxVal, support, state);
@@ -245,14 +247,15 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 			// il y a une query string ==> mettre a jour les champs dont le nom est dans la query string:   ?fields=XXXX&fields=YYY
 			if (dbSupport.code.equals(code)) {
 				// on a bien récupéré ce qu'on a demandé....
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+//				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 				ctxVal.setUpdateMode();
 				validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);	
 				// verifier si les champs de la query string font partie des champs modifiables
 				validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm); 
 				// if (!filledForm.hasErrors()) {
 				if (!ctxVal.hasErrors()) {
-					if (null != dbSupport.traceInformation) {
+					if (dbSupport.traceInformation != null) {
 						dbSupport.traceInformation.setTraceInformation(getCurrentUser());
 					} else {
 						logger.error("traceInformation is null for Container support " + code);	
@@ -281,11 +284,10 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 		}
 	}
 
-	private void updateStorages(ContainerSupport dbSupport,
-			ContainerSupport formSupport) {
+	private void updateStorages(ContainerSupport dbSupport, ContainerSupport formSupport) {
 		if (dbSupport.storages == null) {
 			dbSupport.storages = new ArrayList<StorageHistory>();
-			if (null != dbSupport.storageCode) {
+			if (dbSupport.storageCode != null) {
 				StorageHistory sh = getStorageHistory(dbSupport.storageCode, dbSupport.storages.size());
 				dbSupport.storages.add(sh);
 			}
@@ -438,7 +440,6 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 		IntStream.range(0, numberOfCode).forEach(i -> {
 			codes.add(CodeHelper.getInstance().generateContainerSupportCode());
 		});
-		
 		return ok(Json.toJson(codes));
 	}
 	

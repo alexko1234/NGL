@@ -129,7 +129,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, String propertyValueType) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
@@ -155,7 +156,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest a fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, String propertyValueType, int displayOrder) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
@@ -170,7 +172,6 @@ public class DescriptionFactory {
 		return pd;
 	}
 
-	
 	/*
 	 * 
 	 * @param name
@@ -183,7 +184,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest a fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, String propertyValueType, int displayOrder, String defaultValue) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
@@ -211,7 +213,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest a fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, String propertyValueType, String defaultValue) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
@@ -225,7 +228,9 @@ public class DescriptionFactory {
 		pd.defaultValue=defaultValue;
 		return pd;
 	}
-	@Deprecated
+	
+	// TODO: suggest a fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, Boolean editable,  String propertyValueType, int displayOrder) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
@@ -252,7 +257,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest a fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, List<Value> values, String defaultValue, String propertyValueType) {
 		
 		PropertyDefinition pd = new PropertyDefinition();		
@@ -282,9 +288,9 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest a fix 
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, List<Value> values, String defaultValue, String propertyValueType, int displayOrder) {
-		
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
 		pd.code = code;
@@ -299,7 +305,6 @@ public class DescriptionFactory {
 		pd.displayOrder=displayOrder;
 		return pd;
 	}
-
 	
 	/*
 	 * 
@@ -312,7 +317,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest a fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, List<Value> values, String propertyValueType) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
@@ -339,7 +345,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, List<Value> values, String propertyValueType, int displayOrder) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
@@ -369,7 +376,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest a fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required,
 			MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit, String propertyValueType) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
@@ -404,7 +412,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, 
 			List<Value> values, MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit, String propertyValueType, int displayOrder) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
@@ -444,7 +453,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, 
 			List<Value> values, String defaultValue, MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit, String propertyValueType, int displayOrder) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
@@ -468,9 +478,20 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
-	@Deprecated
-	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, 
-			List<Value> values, MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit, String propertyValueType, int displayOrder, Boolean editable) throws DAOException{
+	// TODO: propose fix
+	// @Deprecated
+	public static PropertyDefinition newPropertiesDefinition(String name, 
+			                                                 String code, 
+			                                                 List<Level> levels, 
+			                                                 Class<?> type, 
+			                                                 Boolean required, 
+			                                                 List<Value> values, 
+			                                                 MeasureCategory measureCategory, 
+			                                                 MeasureUnit displayMeasureUnit, 
+			                                                 MeasureUnit saveMeasureUnit, 
+			                                                 String propertyValueType, 
+			                                                 int displayOrder, 
+			                                                 Boolean editable) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
 		pd.code = code;
@@ -479,7 +500,7 @@ public class DescriptionFactory {
 		pd.valueType = type.getName();
 		pd.required = required;
 		pd.choiceInList = false;
-		if(values!=null){ 
+		if (values!=null) { 
 			pd.choiceInList=true;
 			pd.possibleValues = values;
 		}
@@ -492,7 +513,8 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
-	@Deprecated
+	// TODO: suggest fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, 
 			List<Value> values, MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit,
 			String propertyValueType, int displayOrder, Boolean editable,String defaultValue, String displayFormat) throws DAOException{
@@ -620,23 +642,23 @@ public class DescriptionFactory {
 		return l;
 	}
 	
-	/*
-	 * 
-	 * @param code
-	 * @param states
-	 * @return
-	 */
-	public static CommonInfoType setStatesToCommonInfoType(String code, List<State> states) {
-		CommonInfoType cit = new CommonInfoType();
-		try {
-			cit = CommonInfoType.find.findByCode(code);
-		} catch (DAOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		cit.states = states;
-		return cit;
-	}
+//	/*
+//	 * 
+//	 * @param code
+//	 * @param states
+//	 * @return
+//	 */
+//	public static CommonInfoType setStatesToCommonInfoType(String code, List<State> states) {
+//		CommonInfoType cit = new CommonInfoType();
+//		try {
+//			cit = CommonInfoType.find.findByCode(code);
+//		} catch (DAOException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+//		cit.states = states;
+//		return cit;
+//	}
 	
 	/*
 	 * 

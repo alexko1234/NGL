@@ -126,12 +126,11 @@ public class RunMockHelper {
 		return s;
 	}
 	
-	public static SampleOnContainer newSampleOnContainer(String sampleCode)
-	{
+	public static SampleOnContainer newSampleOnContainer(String sampleCode)	{
 		SampleOnContainer soc = new SampleOnContainer();
-		soc.sampleCode=sampleCode;
-		soc.containerSupportCode="support";
-		soc.properties=new HashMap<String, PropertyValue>();
+		soc.sampleCode           = sampleCode;
+		soc.containerSupportCode = "support";
+		soc.properties           = new HashMap<>(); // <String, PropertyValue>();
 		soc.properties.put("libProcessTypeCode", new PropertySingleValue("W"));
 		return soc;
 	}

@@ -21,13 +21,12 @@ import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
 
-public class SamplesInternal extends DocumentController<Sample>{
+public class SamplesInternal extends DocumentController<Sample> {
 
-
-	final /*static*/ Form<Sample> sampleForm;// = form(Sample.class);
-
-	final /*static*/ Form<QueryFieldsForm> updateForm;// = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("accession","externalId");
+
+	private final /*static*/ Form<Sample> sampleForm;// = form(Sample.class);
+	private final /*static*/ Form<QueryFieldsForm> updateForm;// = form(QueryFieldsForm.class);
 
 	@Inject
 	public SamplesInternal(NGLContext ctx) {
@@ -47,17 +46,19 @@ public class SamplesInternal extends DocumentController<Sample>{
 		
 		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
 		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 
 		if (sample == null) {
-			filledForm.reject("Sample " +  code, "not exist in database");  // si solution filledForm.reject
-			return badRequest(filledForm.errorsAsJson( )); // legit
+//			filledForm.reject("Sample " +  code, "not exist in database");  // si solution filledForm.reject
+//			return badRequest(filledForm.errorsAsJson( )); // legit
+			ctxVal.addError("Sample " +  code, "not exist in database");  // si solution filledForm.reject
+			return badRequest(errorsAsJson(ctxVal.getErrors())); 
 		}
 		System.out.println(" ok je suis dans SamplesInternal.update\n");
 		Sample sampleInput = filledForm.get();
 
-		if(queryFieldsForm.fields != null){
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
-
+		if (queryFieldsForm.fields != null) {
+//			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);

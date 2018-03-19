@@ -94,7 +94,8 @@ public class ExcelFileService extends FileService {
 	}
 
 	private Sheet getSheet(Integer sheetNumber) throws IOException, InvalidFormatException {
-		InputStream is = new ByteArrayInputStream(fileValue.value);
+//		InputStream is = new ByteArrayInputStream(fileValue.value);
+		InputStream is = new ByteArrayInputStream(fileValue.byteValue());
 		Workbook wb = WorkbookFactory.create(is);
 		Sheet sheet = wb.getSheetAt(sheetNumber);
 		return sheet;

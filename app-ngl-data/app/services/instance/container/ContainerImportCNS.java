@@ -33,16 +33,17 @@ import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
 import models.utils.instance.ContainerSupportHelper;
-import play.Logger;
+//import play.Logger;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
 
 public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(ContainerImportCNS.class);
+	
 	@Inject
-	public ContainerImportCNS(String name,FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+	public ContainerImportCNS(String name,FiniteDuration durationFromStart,	FiniteDuration durationFromNextIteration, NGLContext ctx) {
 		super(name,durationFromStart, durationFromNextIteration, ctx);
 	}
 
@@ -52,27 +53,26 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		Sample newSample =null;
 		String rootKeyName=null;
 	
-		List<Container> containersList=new ArrayList<Container>(containers);
-		for(Container container :containersList){
-
+		List<Container> containersList = new ArrayList<Container>(containers);
+		for (Container container : containersList) {
 			List<Content> contents;
-			if(sqlContent!=null){	
-						contents=new ArrayList<Content>(limsServices.findContentsFromContainer(sqlContent,container.code));
-			}else{
-						contents=new ArrayList<Content>(container.contents);
+			if (sqlContent != null) {	
+				contents = new ArrayList<>(limsServices.findContentsFromContainer(sqlContent,container.code));
+			} else {
+				contents = new ArrayList<>(container.contents);
 			}
-	
 
-			for(Content content : contents){
+			for (Content content : contents) {
 				/* Sample content not in MongoDB */
-				if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, content.sampleCode)){
+				if (!MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, content.sampleCode)) {
 					rootKeyName="sample["+content.sampleCode+"]";
 					contextError.addKeyToRootKeyName(rootKeyName);
 					
 					sample = limsServices.findSampleToCreate(contextError,content.sampleCode);
 	
-					if(sample!=null){
-						newSample =(Sample) InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,contextError,true);
+					if (sample != null) {
+//						newSample =(Sample) InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,contextError,true);
+						newSample = InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,contextError,true);
 						content.referenceCollab=newSample.referenceCollab;
 						content.taxonCode = newSample.taxonCode;
 						content.ncbiScientificName = newSample.ncbiScientificName;
@@ -80,27 +80,23 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 							limsServices.updateMaterielLims(newSample, contextError);
 						}
 					}
-					
 					contextError.removeKeyFromRootKeyName(rootKeyName);
-	
-				}else {	
+				} else {	
 					/* Find sample in Mongodb */
 					newSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, content.sampleCode);
 					content.referenceCollab=newSample.referenceCollab;
 					content.taxonCode = newSample.taxonCode;
 					content.ncbiScientificName = newSample.ncbiScientificName;
-					
 				}			
 	
 				rootKeyName="container["+container.code+"]";
 				contextError.addKeyToRootKeyName(rootKeyName);
 	
 				/* Error : No sample, remove container from list to create */
-				if(newSample==null){
+				if (newSample == null) {
 					containers.remove(container);
 					contextError.addErrors("sample","error.codeNotExist", content.sampleCode);
-				}
-				else{
+				} else{
 					/* From sample, add content in container */
 					container.contents.remove(content);
 					ContainerHelper.addContent(container, newSample, content);
@@ -112,7 +108,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 	
 	}
 
-	/**
+	/* *
 	 * 
 	 * Create containers, contents and samples from 2 sql queries 
 	 * @param contextError
@@ -125,7 +121,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 	 * @throws DAOException
 	 */
 	public	static void createContainers(ContextValidation contextError, String sqlContainer,String containerCategoryCode,  String containerStateCode, String experimentTypeCode, String sqlContent) throws SQLException, DAOException{
-		String rootKeyName=null;
+		String rootKeyName = null;
 	
 		List<Container> containers=	limsServices.findContainersToCreate(sqlContainer,contextError, containerCategoryCode,containerStateCode,experimentTypeCode);
 	
@@ -133,38 +129,41 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		
 		ContainerImportCNS.saveSampleFromContainer(contextError,containers,sqlContent);
 		
-		Map<String,PropertyValue<String>> propertiesContainerSupports=new HashMap<String, PropertyValue<String>>();
-		Set<String> supportContainers=new HashSet<String>();
-		for(Container container : containers){
-			if(!propertiesContainerSupports.containsKey(container.support.code) && container.properties.get("sequencingProgramType")!=null){
-				propertiesContainerSupports.put(container.support.code, container.properties.get("sequencingProgramType"));
+		Map<String,PropertyValue> propertiesContainerSupports=new HashMap<String, PropertyValue>();
+		Set<String> supportContainers = new HashSet<String>();
+		for (Container container : containers) {
+			if (!propertiesContainerSupports.containsKey(container.support.code) && container.properties.get("sequencingProgramType") != null) {
+				// propertiesContainerSupports.put(container.support.code, container.properties.get("sequencingProgramType"));
+//				propertiesContainerSupports.put(container.support.code, (PropertyValue<String>)container.properties.get("sequencingProgramType"));
+//				@SuppressWarnings("unchecked")
+//				PropertyValue pvs = (PropertyValue)container.properties.get("sequencingProgramType");
+				PropertyValue pvs = container.properties.get("sequencingProgramType");
+				propertiesContainerSupports.put(container.support.code, pvs);
 				container.properties.remove("sequencingProgramType");
 			}
-			
 			supportContainers.add(container.support.code);
-			
 		}
 
 		//List of other containers also in NGL associed to support to create 
-		List<Container> containersSupportContainers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code", supportContainers)).toList();
-		Logger.debug("Nb container  support"+containersSupportContainers.size());
+		List<Container> containersSupportContainers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code", supportContainers)).toList();
+		logger.debug("Nb container  support"+containersSupportContainers.size());
 		containersSupportContainers.addAll(containers);
 		
-		List<ContainerSupport> containerSupports=ContainerHelper.createSupportFromContainers(containersSupportContainers,propertiesContainerSupports, contextError);
+//		List<ContainerSupport> containerSupports=
+				ContainerHelper.createSupportFromContainers(containersSupportContainers,propertiesContainerSupports, contextError);
 	
-		List<Container> newContainers=new ArrayList<Container>();
+		List<Container> newContainers = new ArrayList<Container>();
 		
-		for(Container container:containers){
+		for (Container container:containers) {
 			//Logger.debug("Container :"+container.code+ "nb sample code"+container.sampleCodes.size());
-			rootKeyName="container["+container.code+"]";
+			rootKeyName = "container[" + container.code + "]";
 			contextError.addKeyToRootKeyName(rootKeyName);
-			Container result=(Container) InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME,container, contextError,true);
-			if(result!=null){
+//			Container result=(Container) InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME,container, contextError,true);
+			Container result = InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME,container, contextError,true);
+			if (result != null)
 				newContainers.add(result);
-			}
 			contextError.removeKeyFromRootKeyName(rootKeyName);
 		}
-		
 		
 		//Update traceInformation.creationDate
 		//for(ContainerSupport cs:containerSupports){
@@ -213,7 +212,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		}
 	}
 
-	/**
+	/* *
 	 * 
 	 * Create au niveau Container from a ResultSet
 	 * 
@@ -230,23 +229,21 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 
 		Container container = new Container();
 		container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
-		try{
+		try {
 			container.traceInformation.creationDate=rs.getDate("dc");
 		} catch(SQLException e){
 		}
 
-
 		//Logger.debug("Container :"+rs.getString("code"));
 		container.code=rs.getString("code");
-		
 
-		try{
+		try {
 			container.categoryCode=rs.getString("containerCategoryCode");
-		} catch(SQLException e){
+		} catch(SQLException e) {
 			container.categoryCode=containerCategoryCode;
 		}
 
-		container.comments=new ArrayList<Comment>();				
+		container.comments = new ArrayList<Comment>();				
 		container.comments.add(new Comment(rs.getString("comment"), "ngl-test"));
 		
 		container.state = new State(); 
@@ -257,129 +254,107 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		
 		container.valuation = new Valuation();
 		
-		try{
+		try {
 			container.valuation.valid=TBoolean.valueOf(rs.getString("valide"));
-		} catch(SQLException e){
+		} catch(SQLException e) {
 			container.valuation.valid=TBoolean.UNSET;
 		}
 		
 		String storageCode=null;
-		try{
+		try {
 			storageCode=rs.getString("storageCode");
-		}catch(SQLException e){
-			
+		} catch(SQLException e) {
 		}
 		
 		container.support=ContainerSupportHelper.getContainerSupport(container.categoryCode, rs.getInt("nbContainer"), rs.getString("codeSupport"), rs.getString("column"), rs.getString("line"),storageCode);
 
-		container.properties= new HashMap<String, PropertyValue>();
+		container.properties = new HashMap<>(); // <String, PropertyValue>();
 		container.properties.put("limsCode",new PropertySingleValue(rs.getInt("limsCode")));
 		if(rs.getString("sequencingProgramType")!=null)
 			container.properties.put("sequencingProgramType", new PropertySingleValue(rs.getString("sequencingProgramType")));
 		//TODO GA pass by getDate but need migration on all the tube and plate importing from dblims
 		if(rs.getString("receptionDate")!=null){
-		//GS	container.properties.put("receptionDate",new PropertySingleValue(rs.getString("receptionDate")));	
-		 container.properties.put("receptionDate",new PropertySingleValue(rs.getDate("receptionDate")));
+			//GS	container.properties.put("receptionDate",new PropertySingleValue(rs.getString("receptionDate")));	
+			container.properties.put("receptionDate",new PropertySingleValue(rs.getDate("receptionDate")));
 		}
 
 		String mesuredConcentrationUnit="ng/µl";
 		String mesuredSizeUnit="pb";
 
-		try{
-			if(   rs.getString("measuredConcentrationUnit")!=null){
+		try {
+			if (rs.getString("measuredConcentrationUnit") != null) {
 				mesuredConcentrationUnit=rs.getString("measuredConcentrationUnit");
 			}
 		} catch(SQLException e){
-			
 		}
 		
-		try{
-			if(   rs.getString("measuredSizeUnit")!=null){
+		try {
+			if(rs.getString("measuredSizeUnit") != null) {
 				mesuredSizeUnit=rs.getString("measuredSizeUnit");
 			}
-		} catch(SQLException e){
-			
+		} catch(SQLException e) {
 		}
 		
-		if(rs.getString("measuredConcentration")!=null){
-			container.concentration=new PropertySingleValue(Math.round(rs.getFloat("measuredConcentration")*100.0)/100.0, mesuredConcentrationUnit);}
-		if(rs.getString("measuredVolume")!=null){
-			container.volume=new PropertySingleValue(Math.round(rs.getFloat("measuredVolume")*100.0)/100.0, "µL");}
-		if(rs.getString("measuredQuantity")!=null){
-			container.quantity=new PropertySingleValue(Math.round(rs.getFloat("measuredQuantity")*100.0)/100.0, "ng");}
+		if (rs.getString("measuredConcentration") != null)
+			container.concentration=new PropertySingleValue(Math.round(rs.getFloat("measuredConcentration")*100.0)/100.0, mesuredConcentrationUnit);
+		if (rs.getString("measuredVolume") != null)
+			container.volume = new PropertySingleValue(Math.round(rs.getFloat("measuredVolume")*100.0)/100.0, "µL");
+		if (rs.getString("measuredQuantity") != null)
+			container.quantity = new PropertySingleValue(Math.round(rs.getFloat("measuredQuantity")*100.0)/100.0, "ng");
 		
-		try{
-			if(rs.getString("measuredSize")!=null){
+		try {
+			if (rs.getString("measuredSize") != null) {
 			container.size=new PropertySingleValue(rs.getInt("measuredSize"), mesuredSizeUnit);
 			}
-		}catch(SQLException e){
-			
+		} catch(SQLException e) {	
 		}
-
-		List<QualityControlResult> qualityControlResults=new ArrayList<QualityControlResult>();
-		try{
-			if(rs.getString("concentrationTypeCode")!=null){
-				QualityControlResult qcConcentrationResult=new QualityControlResult();
-				qcConcentrationResult.typeCode=rs.getString("concentrationTypeCode");
+		// List<QualityControlResult> qualityControlResults = new ArrayList<QualityControlResult>();
+		try {
+			if (rs.getString("concentrationTypeCode") != null) {
+				QualityControlResult qcConcentrationResult = new QualityControlResult();
+				qcConcentrationResult.typeCode   = rs.getString("concentrationTypeCode");
 				qcConcentrationResult.code=qcConcentrationResult.typeCode+"_"+container.code;
-				qcConcentrationResult.properties=new HashMap<String, PropertyValue>();
+				qcConcentrationResult.properties = new HashMap<>(); // <String, PropertyValue>();
 				qcConcentrationResult.properties.put("concentration1", container.concentration);
-				qcConcentrationResult.date=rs.getDate("concentrationDate");
+				qcConcentrationResult.date       = rs.getDate("concentrationDate");
 				container.qualityControlResults.add(qcConcentrationResult);
-				}
-			}catch(SQLException e){
-			
+			}
+		} catch(SQLException e) {
 		}
-		try{
-			
-			if(rs.getString("sizeTypeCode")!=null){
-			
-				QualityControlResult qcSizeResult=new QualityControlResult();
-				qcSizeResult.typeCode=rs.getString("sizeTypeCode");
-				qcSizeResult.code=qcSizeResult.typeCode+"_"+container.code;
-				qcSizeResult.properties=new HashMap<String, PropertyValue>();
+		try {
+			if (rs.getString("sizeTypeCode") != null) {
+				QualityControlResult qcSizeResult = new QualityControlResult();
+				qcSizeResult.typeCode   = rs.getString("sizeTypeCode");
+				qcSizeResult.code       = qcSizeResult.typeCode + "_" + container.code;
+				qcSizeResult.properties = new HashMap<>(); // <String, PropertyValue>();
 				qcSizeResult.properties.put("insertSize", container.size);
-				qcSizeResult.date=rs.getDate("sizeDate");
+				qcSizeResult.date       = rs.getDate("sizeDate");
 				container.qualityControlResults.add(qcSizeResult);
 			}
-		}catch(SQLException e){
-			
+		} catch(SQLException e) {
 		}
-		
-		
-		if(null != experimentTypeCode){
-			container.fromTransformationTypeCodes=new HashSet<String>();
+		if (experimentTypeCode != null) {
+			container.fromTransformationTypeCodes = new HashSet<String>();
 			container.fromTransformationTypeCodes.add(experimentTypeCode);	
 		}
-		
-		container.projectCodes=new HashSet<String>();					
-
-		if(rs.getString("project")!=null)
-		{					
+		container.projectCodes = new HashSet<String>();					
+		if (rs.getString("project") != null) 					
 			container.projectCodes.add(rs.getString("project"));
-		}
-		
-		if(rs.getString("controlLane")!=null){
+		if (rs.getString("controlLane") != null)
 			container.properties.put("controlLane",new PropertySingleValue(rs.getBoolean("controlLane")));
-		}
-			
-
 		container.sampleCodes=new HashSet<String>();
-
-		if(rs.getString("sampleCode")!=null){
-			
-			Content sampleUsed=new Content();
-			sampleUsed.percentage=100.0;
-			sampleUsed.sampleCode=rs.getString("sampleCode");
-			if(rs.getString("project")!=null) {					
+		if (rs.getString("sampleCode") != null) {
+			Content sampleUsed = new Content();
+			sampleUsed.percentage = 100.0;
+			sampleUsed.sampleCode = rs.getString("sampleCode");
+			if (rs.getString("project") != null)					
 				sampleUsed.projectCode = rs.getString("project");
-			}
 			//TODO add projectCode
 			//Todo replace by method in containerHelper who update sampleCodes from contents
 			container.sampleCodes.add(rs.getString("sampleCode"));
 
 			if(rs.getString("tag")!=null){
-				sampleUsed.properties = new HashMap<String, PropertyValue>();
+				sampleUsed.properties = new HashMap<>(); // <String, PropertyValue<?>>();
 				sampleUsed.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
 				sampleUsed.properties.put("tagCategory",new PropertySingleValue(rs.getString("tagCategory")));
 			}
@@ -395,12 +370,9 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 			if(rs.getString("sampleAliquoteCode") !=null){
 				sampleUsed.properties.put("sampleAliquoteCode", new PropertySingleValue(rs.getString("sampleAliquoteCode")));
 			}
-			
 			container.contents.add(sampleUsed);
-
 		}
 		return container;
-
 	}
 
 }

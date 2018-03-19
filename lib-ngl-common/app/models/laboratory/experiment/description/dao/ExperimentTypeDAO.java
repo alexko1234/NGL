@@ -21,6 +21,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
+import fr.cea.ig.mongo.MongoDeprecation;
 import play.Logger;
 //import play.Logger;
 import play.api.modules.spring.Spring;
@@ -29,16 +30,20 @@ import play.api.modules.spring.Spring;
 @Repository
 public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType> {
 
+//	public ExperimentTypeDAO() {
+//		super("experiment_type", ExperimentType.class,ExperimentTypeMappingQuery.class,
+//				"SELECT distinct c.id, c.fk_experiment_category, c.fk_common_info_type, c.atomic_transfert_method, c.short_code, c.new_sample ",
+//				"FROM experiment_type as c "+ sqlCommonInfoType, false);
+//	}
 	public ExperimentTypeDAO() {
-		super("experiment_type", ExperimentType.class,ExperimentTypeMappingQuery.class,
+		super("experiment_type", ExperimentType.class,ExperimentTypeMappingQuery.factory,
 				"SELECT distinct c.id, c.fk_experiment_category, c.fk_common_info_type, c.atomic_transfert_method, c.short_code, c.new_sample ",
 				"FROM experiment_type as c "+ sqlCommonInfoType, false);
 	}
 	
 	@Override
 	public long save(ExperimentType experimentType) throws DAOException	{
-
-		if(null == experimentType) {
+		if (experimentType == null) {
 			throw new DAOException("ExperimentType is mandatory");
 		}
 		//Check if category exist
@@ -67,10 +72,10 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 	}
 
 	private void insertSampleTypes(List<SampleType> sampleTypes, Long id, boolean deleteBefore) {
-		if(deleteBefore){
+		if (deleteBefore) {
 			removeSampleTypes(id);
 		}
-		if(sampleTypes!=null && sampleTypes.size()>0){
+		if (sampleTypes != null && sampleTypes.size() > 0) {
 			String sql = "INSERT INTO experiment_type_sample_type (fk_experiment_type, fk_sample_type) VALUES(?,?)";
 			for(SampleType sampleType:sampleTypes){
 				if(sampleType == null || sampleType.id == null ){
@@ -110,11 +115,10 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 
 	}
 
-
 	@Override
-	public void update(ExperimentType experimentType) throws DAOException
-	{
-		ExperimentType expTypeDB = findById(experimentType.id);
+	public void update(ExperimentType experimentType) throws DAOException {
+//		ExperimentType expTypeDB = 
+				findById(experimentType.id);
 		//Add list instruments
 		insertInstrumentUsedTypes(experimentType.instrumentUsedTypes, experimentType.id, true);
 		insertSampleTypes(experimentType.sampleTypes, experimentType.id, true);
@@ -155,8 +159,8 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 				
 				+" where cpt.code = ? and pet.position_in_process > -1";
 		
-		int result = jdbcTemplate.queryForInt(sql, processTypeCode);
-		
+//		int result = jdbcTemplate.queryForInt(sql, processTypeCode);
+		int result = MongoDeprecation.queryForInt(jdbcTemplate, sql, processTypeCode);		
 		return Integer.valueOf(result);
 		
 	}
@@ -304,8 +308,9 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		//Logger.debug(sql);
 		return initializeMapping(sql, new SqlParameter("cp.code", Types.VARCHAR)).execute(previousExperimentTypeCode);
 	}
-	
-	@Deprecated
+
+	// TODO: suggest a fix
+//	@Deprecated
 	public List<ExperimentType> findByPreviousExperimentTypeCodeInProcessTypeContext(String previousExperimentTypeCode, String processTypeCode) throws DAOException{
 		String sql = sqlCommon
 				+" inner join experiment_type_node as n on n.fk_experiment_type = t.id"+

@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import fr.cea.ig.DBObject;
 
-public class Protocol extends DBObject implements IValidation{
+public class Protocol extends DBObject implements IValidation {
 	
 	public String name;
 	public String filePath;
@@ -25,7 +25,7 @@ public class Protocol extends DBObject implements IValidation{
 	public Boolean active = Boolean.TRUE;
 	
 	public Protocol() {		
-		super();
+//		super();
 		this.experimentTypeCodes = new ArrayList<String>();
 	}
 	
@@ -39,8 +39,6 @@ public class Protocol extends DBObject implements IValidation{
 		
 	}
 	
-	
-
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {
@@ -48,9 +46,7 @@ public class Protocol extends DBObject implements IValidation{
 		ProtocolValidationHelper.validateCode(this,InstanceConstants.PROTOCOL_COLL_NAME, contextValidation);
 		ProtocolValidationHelper.validateExperimentTypeCodes(experimentTypeCodes, contextValidation);
 		ProtocolValidationHelper.validateProtocolCategoryCode(this.categoryCode, contextValidation);
-		// filePath ( required ??), version (required ??)
-		
+		// filePath ( required ??), version (required ??)	
 	}
-	
 	
 }

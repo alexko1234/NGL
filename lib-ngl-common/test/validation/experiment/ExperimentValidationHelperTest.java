@@ -3,7 +3,7 @@ package validation.experiment;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+//import java.util.Map;
 import java.util.Set;
 
 import org.junit.AfterClass;
@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.mongojack.DBQuery;
 
 import fr.cea.ig.MongoDBDAO;
-import models.laboratory.common.instance.PropertyValue;
+//import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.description.ExperimentType;
@@ -151,9 +151,9 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 	
 	
 	//@Test
-	public	void validationExperimentType(String typeCode, Map<String, PropertyValue> properties, ContextValidation contextValidation){
-
-	}
+//	public	void validationExperimentType(String typeCode, Map<String, PropertyValue> properties, ContextValidation contextValidation) {
+//	}
+	
 	//@Test
 	public	void validationExperimentCategoryCode(String categoryCode, ContextValidation contextValidation){
 

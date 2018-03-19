@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
@@ -35,7 +35,7 @@ public class QueryBuilder {
 	}
 	
 	public DBQuery.Query query() {
-		return query();
+		return query;
 	}
 	// public void qadd(DBQuery.Query q) {	queryElts.add(q); }
 	// public void and(QueryBuilder q) { qadd(q); }
@@ -140,8 +140,6 @@ public class QueryBuilder {
 	}
 	
 	public static DBQuery.Query getQuery(SamplesSearchForm samplesSearch) {
-		// TODO: simply build return value at method end
-		Query query = DBQuery.empty();
 		
 		Optional<QueryBuilder> qb = Optional.empty();
 		// QueryBuilder qb = null;
@@ -286,11 +284,12 @@ public class QueryBuilder {
 		// queryElts.addAll(NGLControllerHelper.generateQueriesForExistingProperties(samplesSearch.existingFields));
 		
 		
-		if(queryElts.size() > 0){
-			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
-		}		
-		
-		// return query;
+//		// TODO: simply build return value at method end
+//		Query query = DBQuery.empty();
+//		if(queryElts.size() > 0){
+//			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
+//		}		
+//		// return query;
 		
 		return query(qb); 
 	}

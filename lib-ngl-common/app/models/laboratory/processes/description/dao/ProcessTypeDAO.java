@@ -28,10 +28,15 @@ import play.Logger;
 import play.api.modules.spring.Spring;
 
 @Repository
-public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType>{
+public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType> {
 
+//	protected ProcessTypeDAO() {
+//		super("process_type", ProcessType.class, ProcessTypeMappingQuery.class, 
+//				"SELECT distinct c.id, c.fk_common_info_type, c.fk_process_category, c.fk_void_experiment_type, c.fk_first_experiment_type, c.fk_last_experiment_type, t.active as active ",
+//				"FROM process_type as c  "+sqlCommonInfoType, false);
+//	}
 	protected ProcessTypeDAO() {
-		super("process_type", ProcessType.class, ProcessTypeMappingQuery.class, 
+		super("process_type", ProcessType.class, ProcessTypeMappingQuery.factory, 
 				"SELECT distinct c.id, c.fk_common_info_type, c.fk_process_category, c.fk_void_experiment_type, c.fk_first_experiment_type, c.fk_last_experiment_type, t.active as active ",
 				"FROM process_type as c  "+sqlCommonInfoType, false);
 	}

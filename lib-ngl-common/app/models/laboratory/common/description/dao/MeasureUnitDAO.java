@@ -14,8 +14,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class MeasureUnitDAO extends AbstractDAOMapping<MeasureUnit>{
 
+//	protected MeasureUnitDAO() {
+//		super("measure_unit", MeasureUnit.class, MeasureUnitMappingQuery.class,
+//				"SELECT t.id, code, value, default_unit, fk_measure_category "+
+//						"FROM measure_unit as t ",true);
+//	}
 	protected MeasureUnitDAO() {
-		super("measure_unit", MeasureUnit.class, MeasureUnitMappingQuery.class,
+		super("measure_unit", MeasureUnit.class, MeasureUnitMappingQuery.factory,
 				"SELECT t.id, code, value, default_unit, fk_measure_category "+
 						"FROM measure_unit as t ",true);
 	}
@@ -38,13 +43,12 @@ public class MeasureUnitDAO extends AbstractDAOMapping<MeasureUnit>{
 	}
 
 	public long save(MeasureUnit measureValue) throws DAOException {
-		if(null == measureValue){
+		if (measureValue == null) 
 			throw new IllegalArgumentException("measureValue is mandatory");
-		}
 		//Check if category exist
-		if(measureValue.category == null || measureValue.category.id == null){
+		if (measureValue.category == null || measureValue.category.id == null)
 			throw new IllegalArgumentException("MeasureCategory is not present !!");
-		}
+
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("code", measureValue.code);
 		parameters.put("value", measureValue.value);

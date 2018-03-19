@@ -21,7 +21,7 @@ import fr.cea.ig.play.NGLContext;
 import lims.cns.dao.LimsManipDAO;
 import lims.models.Plate;
 import models.utils.CodeHelper;
-import play.Logger;
+//import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.data.validation.ValidationError;
@@ -31,11 +31,13 @@ import play.mvc.Result;
 // TODO: fix readonly errors from the use of filledForm.errors()
 public class Barcodes extends CommonController {
 
-	private final NGLContext ctx;
+	private static final play.Logger.ALogger logger = play.Logger.of(Barcodes.class);
+	
+//	private final NGLContext ctx;
 	
 	@Inject
 	public Barcodes(NGLContext ctx) {
-		this.ctx = ctx;
+//		this.ctx = ctx;
 		form = ctx.form(BarcodesForm.class);
 	}
 	final /*static*/ Form<BarcodesForm> form;// = form(BarcodesForm.class);
@@ -47,7 +49,7 @@ public class Barcodes extends CommonController {
 		validate(form, errors);
 		if (errors.isEmpty()) {
     	    Set<String> set = new TreeSet<String>();
-    	    Logger.debug("number = " + form.number);
+    	    logger.debug("number = " + form.number);
     	    for(int i = 0 ; i < form.number; i++){
     	    	String newCode = newCode(form.typeCode, form.projectCode);
     	    	Spring.getBeanOfType(LimsManipDAO.class).createBarcode(newCode, form.typeCode,getCurrentUser());
@@ -69,30 +71,42 @@ public class Barcodes extends CommonController {
 		return ok();
 	}
 	
-	
 	private /*static*/ void validate(BarcodesForm form, Map<String, List<ValidationError>> errors) {
-		if(required(errors, form, "form")){
-			required(errors, form.number, "number");
-			required(errors, form.typeCode, "typeCode");
+		if (required(errors, form, "form")) {
+			required(errors, form.number,       "number");
+			required(errors, form.typeCode,     "typeCode");
 			required(errors, form.projectCode, "projectCode");
 		}
 	}
-	
-	private /*static*/ String newCode(Integer typeCode, String project) {
-		
-		String code = project.trim()+"_"+CodeHelper.getInstance().generateContainerSupportCode();
-		if(Integer.valueOf(12).equals(typeCode)){
-		    code = "FRGE_"+code;
-		}else if(Integer.valueOf(13).equals(typeCode)){
-		    code = "LIBE_"+code;
-		}else if(Integer.valueOf(18).equals(typeCode)){
-		    code = "PCRE_"+code;
-		}else if(Integer.valueOf(14).equals(typeCode)){
-		    code = "STKE_"+code;
-		}else{
-		    code = "PLE_"+code;
+
+	private String newCode(Integer typeCode, String project) {
+		String code = project.trim() + "_" + CodeHelper.getInstance().generateContainerSupportCode();
+		switch (typeCode) {
+		case 12 : code = "FRGE_" + code; break;
+		case 13 : code = "LIBE_" + code; break;
+		case 18 : code = "PCRE_" + code; break;
+		case 14 : code = "STKE_" + code; break;
+		default : code = "PLE_"  + code;
 		}
-		Logger.debug(code);
+		logger.debug(code);
 		return code;
 	}
+
+//	private /*static*/ String newCode(Integer typeCode, String project) {
+//		String code = project.trim() + "_" + CodeHelper.getInstance().generateContainerSupportCode();
+//		if(Integer.valueOf(12).equals(typeCode)){
+//		    code = "FRGE_"+code;
+//		}else if(Integer.valueOf(13).equals(typeCode)){
+//		    code = "LIBE_"+code;
+//		}else if(Integer.valueOf(18).equals(typeCode)){
+//		    code = "PCRE_"+code;
+//		}else if(Integer.valueOf(14).equals(typeCode)){
+//		    code = "STKE_"+code;
+//		}else{
+//		    code = "PLE_"+code;
+//		}
+//		logger.debug(code);
+//		return code;
+//	}
+	
 }

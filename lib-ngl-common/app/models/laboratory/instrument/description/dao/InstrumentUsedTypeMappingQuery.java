@@ -13,31 +13,37 @@ import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.utils.dao.DAOException;
+import models.utils.dao.MappingSqlQueryFactory;
+import models.utils.dao.NGLMappingSqlQuery;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.api.modules.spring.Spring;
 
+//public class InstrumentUsedTypeMappingQuery extends MappingSqlQuery<InstrumentUsedType> {
+public class InstrumentUsedTypeMappingQuery extends NGLMappingSqlQuery<InstrumentUsedType> {
 
-public class InstrumentUsedTypeMappingQuery extends MappingSqlQuery<InstrumentUsedType>{
-
-	public InstrumentUsedTypeMappingQuery()
-	{
-		super();
+	public static final MappingSqlQueryFactory<InstrumentUsedType> factory = InstrumentUsedTypeMappingQuery::new;
+	
+//	public InstrumentUsedTypeMappingQuery()
+//	{
+//		super();
+//	}
+	
+//	public InstrumentUsedTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
+//		super(ds,sql);
+//		if (sqlParameter != null)
+////			super.declareParameter(sqlParameter);
+//			declareParameter(sqlParameter);
+//		compile();
+//	}
+	public InstrumentUsedTypeMappingQuery(DataSource ds, String sql, SqlParameter... sqlParameters) {
+		super(ds,sql,sqlParameters);
 	}
 	
-	public InstrumentUsedTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)
-	{
-		super(ds,sql);
-		if(sqlParameter!=null)
-			super.declareParameter(sqlParameter);
-		compile();
-
-	}
 	@Override
-	protected InstrumentUsedType mapRow(ResultSet rs, int rowNumber)
-			throws SQLException {
+	protected InstrumentUsedType mapRow(ResultSet rs, int rowNumber) throws SQLException {
 		try {
 			InstrumentUsedType instrumentUsedType = new InstrumentUsedType();
 			instrumentUsedType.id = rs.getLong("id");

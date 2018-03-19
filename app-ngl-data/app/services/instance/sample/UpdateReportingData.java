@@ -294,23 +294,23 @@ public class UpdateReportingData extends AbstractImportData {
 		return sampleExperiments;
 	}
 
-	private Map<String, PropertyValue> computeExperimentProperties(Experiment experiment, InputContainerUsed icu,
-			OutputContainerUsed ocu) {
-		Map<String, PropertyValue> finalProperties = new HashMap<String, PropertyValue>();
-		if(null != experiment.experimentProperties)finalProperties.putAll(filterProperties(experiment.experimentProperties));
-		if(null != experiment.instrumentProperties)finalProperties.putAll(filterProperties(experiment.instrumentProperties));
-		if(null != icu.experimentProperties)finalProperties.putAll(filterProperties(icu.experimentProperties));
-		if(null != icu.instrumentProperties)finalProperties.putAll(filterProperties(icu.instrumentProperties));
-		if(null != ocu){
-			if(null != ocu.experimentProperties)finalProperties.putAll(filterProperties(ocu.experimentProperties));
-			if(null != ocu.instrumentProperties)finalProperties.putAll(filterProperties(ocu.instrumentProperties));
+	private Map<String, PropertyValue> computeExperimentProperties(Experiment experiment, 
+			                                                          InputContainerUsed icu,
+			                                                          OutputContainerUsed ocu) {
+		Map<String, PropertyValue> finalProperties = new HashMap<>(); // <String, PropertyValue>();
+		if (null != experiment.experimentProperties) finalProperties.putAll(filterProperties(experiment.experimentProperties));
+		if (null != experiment.instrumentProperties) finalProperties.putAll(filterProperties(experiment.instrumentProperties));
+		if (null != icu.experimentProperties)        finalProperties.putAll(filterProperties(icu.experimentProperties));
+		if (null != icu.instrumentProperties)        finalProperties.putAll(filterProperties(icu.instrumentProperties));
+		if (null != ocu){
+			if(null != ocu.experimentProperties) finalProperties.putAll(filterProperties(ocu.experimentProperties));
+			if(null != ocu.instrumentProperties) finalProperties.putAll(filterProperties(ocu.instrumentProperties));
 		}
 		
 		return finalProperties;
 	}
 
-	private Map<String, PropertyValue> filterProperties(
-			Map<String, PropertyValue> properties) {
+	private Map<String, PropertyValue> filterProperties(Map<String, PropertyValue> properties) {
 		return properties.entrySet().parallelStream()
 				.filter(entry -> entry.getValue() != null && !entry.getValue()._type.equals(PropertyValue.imgType)
 						&& !entry.getValue()._type.equals(PropertyValue.fileType))
@@ -365,16 +365,16 @@ public class UpdateReportingData extends AbstractImportData {
 		return sampleReadSet;
 	}
 
-	private Map<String, Treatment> filterTreaments(Map<String, Treatment> treatments) {
-		treatments.values()
-			.parallelStream()
-			.forEach(treament ->{
-				treament.results.entrySet().forEach(entry -> {
-					entry.setValue(filterProperties(entry.getValue()));
-				});
-			});
-		return treatments;
-	}
+//	private Map<String, Treatment> filterTreaments(Map<String, Treatment> treatments) {
+//		treatments.values()
+//			.parallelStream()
+//			.forEach(treament ->{
+//				treament.results.entrySet().forEach(entry -> {
+//					entry.setValue(filterProperties(entry.getValue()));
+//				});
+//			});
+//		return treatments;
+//	}
 	
 	/**
 	 * Extract ReadSet before the beginning of ngl-sq used.

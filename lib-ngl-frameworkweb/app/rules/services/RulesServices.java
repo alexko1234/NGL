@@ -16,43 +16,49 @@ import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
 import org.drools.io.ResourceFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
+// import play.Logger;
+// import play.Play;
+import static fr.cea.ig.play.IGGlobals.configuration;
+import static fr.cea.ig.play.IGGlobals.application;
 
-import play.Logger;
-import play.Play;
-
-public class RulesServices 
-{
-	private static final String pathChangesets = Play.application().configuration().getString("rules.changesets");
-	private static KnowledgeBase knowledgeBase;
+public class RulesServices {
 	
-	public RulesServices() {
+	private static final play.Logger.ALogger logger = play.Logger.of(RulesServices.class);
+	
+	// private static final String pathChangesets = Play.application().configuration().getString("rules.changesets");
+	private static String pathChangesets() {
+		return configuration().getString("rules.changesets");
 	}
 	
-	public void buildKnowledgeBase() throws RulesException
-	{
-		
-		KnowledgeBuilderConfiguration kBuilderConfiguration = KnowledgeBuilderFactory.newKnowledgeBuilderConfiguration(null, play.Play.application().classloader());
+	private static KnowledgeBase knowledgeBase;
+	
+//	public RulesServices() {
+//	}
+	
+	public void buildKnowledgeBase() throws RulesException {
+//		KnowledgeBuilderConfiguration kBuilderConfiguration = KnowledgeBuilderFactory.newKnowledgeBuilderConfiguration(null, play.Play.application().classloader());
+		KnowledgeBuilderConfiguration kBuilderConfiguration = KnowledgeBuilderFactory.newKnowledgeBuilderConfiguration(null, application().classloader());
 		KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder(kBuilderConfiguration);
 		URL url;
 		try {
-			url = new URL(pathChangesets);
+			url = new URL(pathChangesets());
 			kbuilder.add(ResourceFactory.newUrlResource(url), ResourceType.CHANGE_SET);
 		} catch (MalformedURLException e) {
-			Logger.debug("Switching from  ResourceFactory.newUrlResource(url) to ResourceFactory.newClassPathResource(path) " + pathChangesets);
-			kbuilder.add(ResourceFactory.newClassPathResource(pathChangesets), ResourceType.CHANGE_SET);
+			logger.debug("Switching from  ResourceFactory.newUrlResource(url) to ResourceFactory.newClassPathResource(path) " + pathChangesets());
+			kbuilder.add(ResourceFactory.newClassPathResource(pathChangesets()), ResourceType.CHANGE_SET);
 		}		
-		Logger.debug("end of building kbuilder");
+		logger.debug("end of building kbuilder");
 		KnowledgeBuilderErrors errors = kbuilder.getErrors();
 		if (errors.size() > 0) {
 			for (KnowledgeBuilderError error: errors) {
-				Logger.error(error.getMessage());
+				logger.error(error.getMessage());
 			}
 			throw new RulesException("Could not parse knowledge.");
 		}
-		KnowledgeBaseConfiguration kbaseConfig = KnowledgeBaseFactory.newKnowledgeBaseConfiguration(null, play.Play.application().classloader()); 
+//		KnowledgeBaseConfiguration kbaseConfig = KnowledgeBaseFactory.newKnowledgeBaseConfiguration(null, play.Play.application().classloader()); 
+		KnowledgeBaseConfiguration kbaseConfig = KnowledgeBaseFactory.newKnowledgeBaseConfiguration(null, application().classloader()); 
 		knowledgeBase = KnowledgeBaseFactory.newKnowledgeBase(kbaseConfig);
 		knowledgeBase.addKnowledgePackages(kbuilder.getKnowledgePackages());
-		
 	}
 
 	public KnowledgeBase getKnowledgeBase() throws RulesException{
@@ -69,19 +75,14 @@ public class RulesServices
 	 * @throws RulesException
 	 */
 	public void callRules(String keyRules, String ruleAnnotationName, List<Object> factsToInsert) throws RulesException {
-		
 		//Create new session
 		StatefulKnowledgeSession kSession = getKnowledgeBase().newStatefulKnowledgeSession();
 		for (Object fact : factsToInsert) {
 			kSession.insert(fact);
 		}
 		kSession.fireAllRules(RulesAgendaFilter.getInstance(keyRules, ruleAnnotationName));
-		
-		
-		//Close session
+		// Close session
 		kSession.dispose();
-		
-		
 	}
 	
 	/*
@@ -93,10 +94,8 @@ public class RulesServices
 	 * @throws RulesException
 	 */
 	public List<Object> callRulesWithGettingFacts(String keyRules, String ruleAnnotationName,List<Object> factsToInsert) throws RulesException {
-		
 		//Create new session
 		StatefulKnowledgeSession kSession = getKnowledgeBase().newStatefulKnowledgeSession();
-				
 		for (Object fact : factsToInsert) {
 			kSession.insert(fact);
 		}
@@ -105,7 +104,6 @@ public class RulesServices
 		//Close session
 		kSession.dispose();
 		return factsAfterRules;
-		
 	}
 	
 }

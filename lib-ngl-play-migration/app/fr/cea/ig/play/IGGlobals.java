@@ -7,8 +7,12 @@ import java.util.ArrayList;
 // import java.util.concurrent.Callable;
 
 // import play.Application;
-// TODO: use play.api.Configuration
-import play.Configuration;
+// TODO: use something like:
+import com.typesafe.config.Config;
+// import play.Configuration;
+import com.typesafe.config.Config;
+
+import play.Application;
 import play.Environment;
 
 import play.cache.SyncCacheApi;
@@ -31,6 +35,7 @@ import akka.actor.ActorSystem;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+
 /**
  * Allows access to some globals that are hard to removed due to the
  * play application life cycle and mostly static initializers. 
@@ -50,25 +55,46 @@ import javax.inject.Singleton;
 @Singleton
 public class IGGlobals {
 // class UNUSED_IGGlobals {
+	
 	private static final play.Logger.ALogger logger = play.Logger.of(IGGlobals.class);
 	
+//	// This is started as a component and before any other that requires 
+//	// access to globals. This component or part of this component should
+//	// be injected when needed but this sets up globals as static component
+//	// require that.
+//	@Inject
+//	public IGGlobals(Configuration conf, Environment env, Injector inj, SyncCacheApi cac) {
+//		configuration = conf; // app.configuration();
+//		environment   = env;  // app.environment();
+//		injector      = inj;  // app.injector();
+//		cache         = cac;
+//		logger.debug("setup globals");
+//	}
+//	
+//	/**
+//	 * Play configuration.
+//	 */
+//	private static Configuration configuration;
+
 	// This is started as a component and before any other that requires 
 	// access to globals. This component or part of this component should
 	// be injected when needed but this sets up globals as static component
 	// require that.
 	@Inject
-	public IGGlobals(Configuration conf, Environment env, Injector inj, SyncCacheApi cac) {
-		configuration = conf; // app.configuration();
+	public IGGlobals(Application app, Config conf, Environment env, Injector inj, SyncCacheApi cac) {
+		application   = app;
+		config        = conf; // app.configuration();
 		environment   = env;  // app.environment();
 		injector      = inj;  // app.injector();
 		cache         = cac;
 		logger.debug("setup globals");
 	}
 	
+	private static Application application;
 	/**
 	 * Play configuration.
 	 */
-	private static Configuration configuration;
+	private static Config config;
 	
 	/**
 	 * Play environment.
@@ -85,12 +111,16 @@ public class IGGlobals {
 	 */
 	private static SyncCacheApi cache;
 	
+	public static Application application() {
+		return assertInitialized("application",application);
+	}
+	
 	/**
 	 * Play configuration. 
 	 * @return Play configuration
 	 */
-	public static Configuration configuration() {
-		return assertInitialized("configuration",configuration);
+	public static Config configuration() {
+		return assertInitialized("configuration",config);
 	}
 	
 	/**

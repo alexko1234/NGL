@@ -213,13 +213,13 @@ public class MetaTProcess extends AbstractDeclaration {
 		return propertyDefinitions;
 	}
 
-	private List<Value> getStrandOrientation(){
-		List<Value> values = new ArrayList<Value>();
-		values.add(DescriptionFactory.newValue("forward", "forward"));		
-		values.add(DescriptionFactory.newValue("reverse", "reverse"));		
-		values.add(DescriptionFactory.newValue("unstranded", "unstranded"));		
-		return values;	
-	}
+//	private List<Value> getStrandOrientation(){
+//		List<Value> values = new ArrayList<Value>();
+//		values.add(DescriptionFactory.newValue("forward", "forward"));		
+//		values.add(DescriptionFactory.newValue("reverse", "reverse"));		
+//		values.add(DescriptionFactory.newValue("unstranded", "unstranded"));		
+//		return values;	
+//	}
 
 	private List<PropertyDefinition> getPropertyDefinitionsCdnaSynthesis() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();

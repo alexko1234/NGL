@@ -1,7 +1,5 @@
 package lims.cns.dao;
 
-
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -46,7 +44,7 @@ import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.mongojack.DBQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -280,7 +278,8 @@ public class LimsAbandonDAO {
     	ls.lmnbclust= (Long)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCluster"); 
     	ls.lmperclustfiltr= (Double)getNGSRGProperty(lane.treatments.get("ngsrg"),"percentClusterIlluminaFilter"); 
     	ls.lmnbbase= (Long)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbBaseInternalAndIlluminaFilter");
-    	ls.lmnbcycle= (Integer)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCycleRead1")+","+(Integer)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCycleRead2"); 
+//    	ls.lmnbcycle= (Integer)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCycleRead1")+","+(Integer)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCycleRead2"); 
+       	ls.lmnbcycle = getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCycleRead1") + "," + getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCycleRead2"); 
     	ls.pistnbcycle= (Integer)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCycleRead1")+(Integer)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCycleRead2");
     	//ls.lmphasing= (String)getNGSRGProperty(lane.treatments.get("ngsrg"),"phasing");
     	//ls.lmprephasing= (String)getNGSRGProperty(lane.treatments.get("ngsrg"),"prephasing");
@@ -320,16 +319,14 @@ public class LimsAbandonDAO {
 		return treatment.results().get("default").get(propertyCode).value;
 	}
 
-
 	private Date getStateDate(String stateCode, State state) {
-		for(TransientState ts : state.historical){
-			if(stateCode.equals(ts.code)){
+		for (TransientState ts : state.historical) {
+			if (stateCode.equals(ts.code)) {
 				return ts.date;
 			}
 		}
-		throw new RuntimeException("insertRun : missing state date : "+stateCode);
+		throw new RuntimeException("insertRun : missing state date : " + stateCode);
 	}
-
 
 	public void insertReadSet(ReadSet rs, BanqueSolexa bs) {
 		/*
@@ -371,24 +368,20 @@ public class LimsAbandonDAO {
 		@futil bit
 		*/
 		
-		if(deleteAllBeforeInsert){
+		if (deleteAllBeforeInsert) {
 			this.jdbcTemplate.update("ps_FichierlotseqUnlotsequence @lseqco = ?", getLseqco(rs));
 		}
 		
-		for(File file:rs.files){
-			
+		for (File file : rs.files) {
 			//Logger.debug("select lseqco from Lotsequence l inner join Runhd r on r.runhco = l.runhco where lseqnom = '"+rs.code+"' and runhnom = '"+rs.runCode+"'");
-			
 			Integer lseqco = getLseqco(rs);
 			Integer tfileco = convertTypeCode(file.typeCode);  //=
 			Integer flabelco = convertLabel((String)file.properties.get("label").value);
 			String flotseqname = file.fullname.replace("."+file.extension, "");
-			
-			
 			this.jdbcTemplate.update("pc_Fichierlotseq @lseqco=?, @flotseqname=?, @flotseqext=?, "
 					+ "@flotseqascii=?, @tfileco=?, @flabelco=?, @futil=?",
-					lseqco, flotseqname, file.extension, Integer.valueOf((String)file.properties.get("asciiEncoding").value.toString()), tfileco, flabelco, file.usable);
-					
+//					lseqco, flotseqname, file.extension, Integer.valueOf((String)file.properties.get("asciiEncoding").value.toString()), tfileco, flabelco, file.usable);
+					lseqco, flotseqname, file.extension, Integer.valueOf(file.properties.get("asciiEncoding").value.toString()), tfileco, flabelco, file.usable);
 		}
 	}
 
@@ -536,93 +529,74 @@ public class LimsAbandonDAO {
 			}
 		}).get(0);
 		
-		 Logger.debug("Matmaco for new flowcellNGL "+ds.matmaco);
-		 List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.in("support.code",expPrepaflowcell.inputContainerSupportCodes)).toList();
-		 if(CollectionUtils.isEmpty(containers)){
-			 throw new RuntimeException("Container vide for "+expPrepaflowcell.inputContainerSupportCodes.toArray(new String[0])[0]);
-		 }
-		 
-		 for(AtomicTransfertMethod atomicTransfertMethods: expPrepaflowcell.atomicTransfertMethods)
-		 {
-			 int laneNum=Integer.valueOf(atomicTransfertMethods.outputContainerUseds.get(0).locationOnContainerSupport.line);
-			 for(InputContainerUsed containerUsed : atomicTransfertMethods.inputContainerUseds){
-				 Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.code);
-				 if(container.properties.containsKey("limsCode")){
-					 int matmacos=Double.valueOf(container.properties.get("limsCode").value.toString()).intValue();
-					 Logger.debug("Matmaco solution stock "+matmacos+" percentage "+containerUsed.percentage+", laneNum ="+laneNum);
-					 Logger.debug("pc_DepotsolutionstockNGL @matmaco="+ds.matmaco+",@matmacos = "+matmacos+",@lanenum="+laneNum+",@rmatperpiste="+containerUsed.percentage);
-					 this.jdbcTemplate.update("pc_DepotsolutionstockNGL @matmaco=?,@matmacos = ?,@lanenum=?,@rmatperpiste=?",ds.matmaco,matmacos,laneNum,containerUsed.percentage);
- 				 }
-			 }
-		 }
+		Logger.debug("Matmaco for new flowcellNGL "+ds.matmaco);
+		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.in("support.code",expPrepaflowcell.inputContainerSupportCodes)).toList();
+		if(CollectionUtils.isEmpty(containers)){
+			throw new RuntimeException("Container vide for "+expPrepaflowcell.inputContainerSupportCodes.toArray(new String[0])[0]);
+		}
+
+		for(AtomicTransfertMethod atomicTransfertMethods: expPrepaflowcell.atomicTransfertMethods) {
+			int laneNum = Integer.valueOf(atomicTransfertMethods.outputContainerUseds.get(0).locationOnContainerSupport.line);
+			for (InputContainerUsed containerUsed : atomicTransfertMethods.inputContainerUseds) {
+				Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.code);
+				if (container.properties.containsKey("limsCode")) {
+					int matmacos=Double.valueOf(container.properties.get("limsCode").value.toString()).intValue();
+					Logger.debug("Matmaco solution stock "+matmacos+" percentage "+containerUsed.percentage+", laneNum ="+laneNum);
+					Logger.debug("pc_DepotsolutionstockNGL @matmaco="+ds.matmaco+",@matmacos = "+matmacos+",@lanenum="+laneNum+",@rmatperpiste="+containerUsed.percentage);
+					this.jdbcTemplate.update("pc_DepotsolutionstockNGL @matmaco=?,@matmacos = ?,@lanenum=?,@rmatperpiste=?",ds.matmaco,matmacos,laneNum,containerUsed.percentage);
+				}
+			}
+		}
 		return ds;
-		
 	}
 	
 	public List<LimsFile> getFiles(String readSetCode){
-		RowMapper<LimsFile> mapper = new RowMapper<LimsFile>(){
-
+		RowMapper<LimsFile> mapper = new RowMapper<LimsFile>() {
 			@Override
-			public LimsFile mapRow(ResultSet rs, int rowNum)
-					throws SQLException {
-					LimsFile ds = new LimsFile();
-					ds.fullname = rs.getString("fullname");
-					ds.extension = rs.getString("extension");
-					ds.asciiEncoding = rs.getString("asciiEncoding");
-					ds.typeCode = rs.getString("typeCode");
-					ds.label = rs.getString("label");
-					ds.usable = rs.getBoolean("usable");
-					return ds;					
+			public LimsFile mapRow(ResultSet rs, int rowNum) throws SQLException {
+				LimsFile ds = new LimsFile();
+				ds.fullname = rs.getString("fullname");
+				ds.extension = rs.getString("extension");
+				ds.asciiEncoding = rs.getString("asciiEncoding");
+				ds.typeCode = rs.getString("typeCode");
+				ds.label = rs.getString("label");
+				ds.usable = rs.getBoolean("usable");
+				return ds;					
 			}
-			
 		};
 		return this.jdbcTemplate.query("pl_FileUnReadSetToNGL @readSetCode = ?", mapper, readSetCode);		
-	
 	}
 	
-	
-	public ResponProjet getResponProjet(String projectCode){
+	public ResponProjet getResponProjet(String projectCode) {
 		RowMapper<ResponProjet> mapper = new RowMapper<ResponProjet>(){
-
 			@Override
-			public ResponProjet mapRow(ResultSet rs, int rowNum)
-					throws SQLException {
-					ResponProjet rp = new ResponProjet();
-					rp.code = rs.getString("code_projet");
-					rp.name = rs.getString("nom_projet");
-					rp.biomanager = rs.getString("nom_bio").toUpperCase()+" "+rs.getString("pren_bio");
-					rp.infomanager = rs.getString("nom_info").toUpperCase()+" "+rs.getString("pren_info");;
-					
-					return rp;					
+			public ResponProjet mapRow(ResultSet rs, int rowNum) throws SQLException {
+				ResponProjet rp = new ResponProjet();
+				rp.code = rs.getString("code_projet");
+				rp.name = rs.getString("nom_projet");
+				rp.biomanager = rs.getString("nom_bio").toUpperCase()+" "+rs.getString("pren_bio");
+				rp.infomanager = rs.getString("nom_info").toUpperCase()+" "+rs.getString("pren_info");;		
+				return rp;					
 			}
-			
 		};
 		return this.jdbcTemplate.queryForObject("pl_ResponDuProjet @prsco = ?", mapper, projectCode);	
-		
 	}
 	
-	public Sample getMateriel(String sampleCode)
-	{
+	public Sample getMateriel(String sampleCode) {
 		List<Sample> results = this.jdbcTemplate.query("pl_MaterielToNGLUn @nom_materiel=?",new Object[]{sampleCode} 
 		,new RowMapper<Sample>() {
-
-			@SuppressWarnings("rawtypes")
+			// @SuppressWarnings("rawtypes")
 			public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
-
 				Sample sample = new Sample();
 				InstanceHelpers.updateTraceInformation(sample.traceInformation, "ngl-bi");
 				String tadco = rs.getString("tadco");
 				String tprco = rs.getString("tprco");
-				sample.code=rs.getString("code");
-
+				sample.code  = rs.getString("code");
 				Logger.debug("Code Materiel (adnco) :"+rs.getString(LIMS_CODE)+" , Type Materiel (tadco) :"+tadco +", Type Projet (tprco) :"+tprco);
-
 				String sampleTypeCode=getSampleTypeFromLims(tadco,tprco);
-
 				if(sampleTypeCode==null){
 					throw new RuntimeException("Empty typeCode "+tadco+" for sample "+sample.code);
 				}
-
 				SampleType sampleType=null;
 				try {
 					sampleType = SampleType.find.findByCode(sampleTypeCode);
@@ -630,47 +604,32 @@ public class LimsAbandonDAO {
 					Logger.error("",e);
 					return null;
 				}
-
-
-				if( sampleType==null ){
-					throw new RuntimeException("Code not exist "+sampleTypeCode+"for "+sample.code);
+				if (sampleType == null) {
+					throw new RuntimeException("Code not exist " + sampleTypeCode + " for " + sample.code);
 				}
-
 				Logger.debug("Sample Type :"+sampleTypeCode);
-
-				sample.typeCode=sampleTypeCode;
-
-
-				sample.projectCodes=new HashSet<String>();
+				sample.typeCode        = sampleTypeCode;
+				sample.projectCodes    = new HashSet<String>();
 				sample.projectCodes.add(rs.getString("project"));
-
-				sample.name=rs.getString("name");
-				sample.referenceCollab=rs.getString("referenceCollab");
-				sample.taxonCode=rs.getString("taxonCode");
-				sample.comments=new ArrayList<Comment>();
+				sample.name            = rs.getString("name");
+				sample.referenceCollab = rs.getString("referenceCollab");
+				sample.taxonCode       = rs.getString("taxonCode");
+				sample.comments        = new ArrayList<Comment>();
 				sample.comments.add(new Comment(rs.getString("comment"), "ngl-test"));
-				sample.categoryCode=sampleType.category.code;
-
-				sample.properties=new HashMap<String, PropertyValue>();
+				sample.categoryCode    = sampleType.category.code;
+				sample.properties      = new HashMap<>(); // <String, PropertyValue>();
 				getPropertiesFromResultSet(rs,sampleType.propertiesDefinitions,sample.properties);
-
 				//Logger.debug("Properties sample "+sample.properties.containsKey("taxonSize"));
-
 				//TODO get properties for Tara sample???
-				
 				sample.importTypeCode="default-import";
 				return sample;
 			}
-
-
 		});        
-
-		if(results.size()==1)
-		{
+		if (results.size() == 1) {
 			//	Logger.debug("One sample");
 			return results.get(0);
-		}
-		else return null;
+		} else 
+			return null;
 	}
 	
 	private String getSampleTypeFromLims(String tadnco,String tprco) {
@@ -712,34 +671,27 @@ public class LimsAbandonDAO {
 	}
 	
 	private void getPropertiesFromResultSet(ResultSet rs,
-			List<PropertyDefinition> propertiesDefinitions,
-			Map<String, PropertyValue> properties) throws SQLException {
-		
-		for(PropertyDefinition propertyDefinition :propertiesDefinitions)
-		{
-			String code=null;
-			String unite=null;
-			try{
-
-				code=rs.getString(propertyDefinition.code);
-				
-			//	Logger.debug("Property definition to retrieve "+propertyDefinition.code+ "value "+ code);
-				if(code!=null){
-					try{
-						unite=rs.getString(propertyDefinition.code+"Unit");
+			                                List<PropertyDefinition> propertiesDefinitions,
+			                                Map<String, PropertyValue> properties) throws SQLException {
+		for (PropertyDefinition propertyDefinition :propertiesDefinitions) {
+			String code  = null;
+			String unite = null;
+			try {
+				code = rs.getString(propertyDefinition.code);
+				// Logger.debug("Property definition to retrieve "+propertyDefinition.code+ "value "+ code);
+				if (code != null) {
+					try {
+						unite = rs.getString(propertyDefinition.code+"Unit");
 						properties.put(propertyDefinition.code, new PropertySingleValue(code,unite));
-					}
-					catch(SQLException e){
+					} catch(SQLException e){
 						properties.put(propertyDefinition.code, new PropertySingleValue(code));
 					}
 				}
-
-			}catch (SQLException e) {
+			} catch (SQLException e) {
 			//	Logger.info("Property "+propertyDefinition.code+" not exist in "+rs.getStatement().toString()+ " query");
 			}
-
 		}
-		
 	}
+	
 }
 

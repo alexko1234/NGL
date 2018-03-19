@@ -42,7 +42,7 @@ public class ReadSetTreatments extends ReadSetsController {
 		ReadSet readSet = getReadSet(readSetCode);
 		if (readSet != null) {
 			return ok(Json.toJson(readSet.treatments));
-		} else{
+		} else {
 			return notFound();
 		}		
 	}
@@ -63,7 +63,7 @@ public class ReadSetTreatments extends ReadSetsController {
 		if(MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.exists("treatments."+treatmentCode)))){
 			return ok();
-		}else{
+		} else {
 			return notFound();
 		}
 	}
@@ -72,17 +72,15 @@ public class ReadSetTreatments extends ReadSetsController {
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public Result save(String readSetCode){
 		ReadSet readSet = getReadSet(readSetCode);
-		if (readSet == null) {
+		if (readSet == null)
 			return badRequest();
-		}
 		// WARN: this is supposed to be standard parser behavior in play 2.5
 		/*else if(request().body().isMaxSizeExceeded()) {
 			return badRequest("Max size exceeded");
 		}*/
-		
-		
 		Form<Treatment> filledForm = getFilledForm(treatmentForm, Treatment.class);
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 		
 		Treatment treatment = filledForm.get();
 		ctxVal.setCreationMode();
@@ -105,12 +103,11 @@ public class ReadSetTreatments extends ReadSetsController {
 	public Result update(String readSetCode, String treatmentCode){
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.exists("treatments."+treatmentCode)));
-		if (readSet == null) {
+		if (readSet == null)
 			return badRequest();
-		}	
-		
 		Form<Treatment> filledForm = getFilledForm(treatmentForm, Treatment.class);
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 		
 		Treatment treatment = filledForm.get();
 		if (treatmentCode.equals(treatment.code)) {
@@ -136,9 +133,8 @@ public class ReadSetTreatments extends ReadSetsController {
 	public Result delete(String readSetCode, String treatmentCode){
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.exists("treatments."+treatmentCode)));
-		if (readSet == null) {
-			return badRequest();
-		}	
+		if (readSet == null)
+			return badRequest();	
 		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.is("code", readSetCode), DBUpdate.unset("treatments."+treatmentCode).set("traceInformation", getUpdateTraceInformation(readSet)));			
 		return ok();		
@@ -147,9 +143,8 @@ public class ReadSetTreatments extends ReadSetsController {
 	@Permission(value={"writing"})
 	public Result deleteAll(String readSetCode){
 		ReadSet readSet = getReadSet(readSetCode);
-		if (readSet == null) {
+		if (readSet == null)
 			return badRequest();
-		}
 		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.is("code", readSetCode), DBUpdate.unset("treatments").set("traceInformation", getUpdateTraceInformation(readSet)));			
 		return ok();		

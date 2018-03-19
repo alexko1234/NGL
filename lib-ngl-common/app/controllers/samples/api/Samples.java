@@ -29,13 +29,13 @@ import models.utils.dao.DAOException;
 // import models.utils.instance.ExperimentHelper;
 import models.utils.instance.SampleHelper;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-import play.Logger;
+//import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
@@ -75,7 +75,7 @@ import fr.cea.ig.play.NGLContext;
 
 public class Samples extends Samples2 {
 // public class Samples extends SamplesCRUD {
-	
+
 	@Inject
 	public Samples(NGLContext ctx) {
 		super(ctx);
@@ -131,8 +131,7 @@ class Samples2 extends DocumentController<Sample> {
 					      "comments",
 					      "traceInformation");
 	
-	private static final List<String> authorizedUpdateFields = 
-			Arrays.asList("comments");
+	private static final List<String> authorizedUpdateFields = Arrays.asList("comments");
 	
 	@Inject
 	public Samples2(NGLContext ctx) {
@@ -294,19 +293,19 @@ class Samples2 extends DocumentController<Sample> {
 	@Permission(value={"writing"})
 	public Result save() throws DAOException {
 		Form<Sample> filledForm = getMainFilledForm();
-		Sample input = filledForm.get();
-		
+		Sample input = filledForm.get();		
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		if (null == input._id) {
-			input.traceInformation = new TraceInformation();
-			input.traceInformation.setTraceInformation(getCurrentUser());				
+//			input.traceInformation = new TraceInformation();
+//			input.traceInformation.setTraceInformation(getCurrentUser());
+			input.setTraceCreationStamp(ctxVal, getCurrentUser());
 		} else {
 			return badRequest("use PUT method to update the sample");
 		}
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 		ctxVal.setCreationMode();
 		SampleHelper.executeRules(input, "sampleCreation");
 		input.validate(ctxVal);
-		
 		if (!ctxVal.hasErrors()) {
 			input = saveObject(input);			
 			return ok(Json.toJson(input));
@@ -316,20 +315,18 @@ class Samples2 extends DocumentController<Sample> {
 		}				
 	}
 
-
 	private static Sample findSample(String sampleCode){
 		return  MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code",sampleCode));
 	}
-
 
 	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	@Permission(value={"writing"})
 	public Result update(String code) throws DAOException {
 		Sample sampleInDB = findSample(code);
-		Logger.debug("Sample with code "+code);
+		logger.debug("Sample with code "+code);
 		if (sampleInDB == null)
-			return badRequest("Sample with code " + code + " does not exist");
+			return badRequest("Sample with code " + code + " does not exist"); // TODO: probably a not found
 
 		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
 
@@ -338,18 +335,18 @@ class Samples2 extends DocumentController<Sample> {
 		Form<Sample> filledForm = getMainFilledForm();
 		Sample sampleInForm = filledForm.get();
 
-		if(queryFieldsForm.fields == null){
+		if (queryFieldsForm.fields == null) {
 			if (code.equals(sampleInForm.code)) {
-				if(null != sampleInForm.traceInformation){
-					sampleInForm.traceInformation = getUpdateTraceInformation(sampleInForm.traceInformation);				
-				}else{
-					Logger.error("traceInformation is null !!");
-				}
-
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
+//				if(null != sampleInForm.traceInformation){
+//					sampleInForm.traceInformation = getUpdateTraceInformation(sampleInForm.traceInformation);				
+//				}else{
+//					Logger.error("traceInformation is null !!");
+//				}
+				sampleInForm.setTraceUpdateStamp(ctxVal, getCurrentUser());
+//				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 				ctxVal.setUpdateMode();
 				sampleInForm.comments = InstanceHelpers.updateComments(sampleInForm.comments, ctxVal);
-
 				sampleInForm.validate(ctxVal);
 				if (!ctxVal.hasErrors()) {
 					MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, sampleInForm);
@@ -358,31 +355,29 @@ class Samples2 extends DocumentController<Sample> {
 					// return badRequest(filledForm.errors-AsJson());
 					return badRequest(errorsAsJson(ctxVal.getErrors()));
 				}
-
 			} else {
 				return badRequest("sample code are not the same");
 			}	
-		}else{
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+		} else {
+//			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
 			// if(!filledForm.hasErrors()){
 			if (!ctxVal.hasErrors()) {
 				sampleInForm.comments = InstanceHelpers.updateComments(sampleInForm.comments, ctxVal);
-
-				TraceInformation ti = sampleInDB.traceInformation;
-				ti.setTraceInformation(getCurrentUser());
-
+//				TraceInformation ti = sampleInDB.traceInformation;
+//				ti.setTraceInformation(getCurrentUser());
+				sampleInDB.setTraceUpdateStamp(ctxVal, getCurrentUser());
 				if(queryFieldsForm.fields.contains("valuation")){
 					sampleInForm.valuation.user = getCurrentUser();
 					sampleInForm.valuation.date = new Date();
 				}
-
 				if (!ctxVal.hasErrors()) {
 					updateObject(DBQuery.and(DBQuery.is("code", code)), 
 							getBuilder(sampleInForm, queryFieldsForm.fields).set("traceInformation", getUpdateTraceInformation(sampleInDB.traceInformation)));
-					if(queryFieldsForm.fields.contains("code") && null != sampleInForm.code){
+					if (queryFieldsForm.fields.contains("code") && sampleInForm.code != null) {
 						code = sampleInForm.code;
 					}
 					return ok(Json.toJson(findSample(code)));

@@ -5,8 +5,9 @@ import static models.utils.InstanceConstants.CONTAINER_SUPPORT_COLL_NAME;
 import static models.utils.InstanceConstants.EXPERIMENT_COLL_NAME;
 import static validation.utils.ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG;
 
-import java.util.ArrayList;
-import java.util.Collection;
+
+// import java.util.ArrayList;
+// import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +24,7 @@ import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.instance.InstrumentUsed;
-import models.laboratory.sample.description.ImportType;
+// import models.laboratory.sample.description.ImportType;
 
 import org.mongojack.DBQuery;
 
@@ -46,7 +47,8 @@ public class ContainerUsedValidationHelper extends CommonValidationHelper {
 		if(inputContainer.contents.size() != container.contents.size()){
 			contextValidation.addErrors("categoryCode", "error.validationexp.inputContainer.contents.sizenotequals", inputContainer.code);
 		}
-		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
+		// String stateCode = 
+		getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
 		
 		if(contextValidation.isCreationMode() && !container.state.code.startsWith("A")){
 			contextValidation.addErrors("state.code", "error.validationexp.inputContainer.state.code", inputContainer.code);

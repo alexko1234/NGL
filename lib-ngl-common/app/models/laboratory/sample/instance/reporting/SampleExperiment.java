@@ -8,12 +8,12 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 
 public class SampleExperiment {
+	
 	public String code;
 	public String typeCode;
 	public String categoryCode;
 	public State state;
 	public Valuation status;
-	
 	public TraceInformation traceInformation;
 	public String protocolCode;
 	public Map<String,PropertyValue> properties;

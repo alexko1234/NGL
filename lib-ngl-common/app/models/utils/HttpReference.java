@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import play.libs.ws.WS;
+//import play.libs.ws.WS;
 import play.libs.ws.WSResponse;
 
 // TODO: cleanup
@@ -52,9 +52,8 @@ public class HttpReference<T> implements IFetch<T> {
 		// WSResponse reponse = WS.url(code).get().toCompletableFuture().get(10, TimeUnit.SECONDS);
 		WSResponse reponse = ctx.ws().url(code).get().toCompletableFuture().get(10, TimeUnit.SECONDS);
 		//if (reponse.getStatus()!=play.mvc.Http.Status.OK) throw new Exception  
-				
 			// TODO: Should probably be better to use the play object mapper
-			return new  ObjectMapper().readValue(reponse.getBody(),className);
+			return new ObjectMapper().readValue(reponse.getBody(),className);
 			// play.libs.Json.mapper().readValue(reponse.getBody(),className);
 		} catch (JsonParseException e) {
 			//TODO
@@ -71,6 +70,5 @@ public class HttpReference<T> implements IFetch<T> {
 		} 
 		return null;
 	}
-
 
 }

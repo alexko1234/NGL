@@ -80,7 +80,8 @@ public class ContainerFactory extends DBObjectFactory {
 		container.contents.get(0).projectCode = new ArrayList<String>(sample.projectCodes).get(0);
 		container.contents.get(0).taxonCode = sample.taxonCode;
 		container.contents.get(0).ncbiScientificName = sample.ncbiScientificName;
-		container.contents.get(0).properties.get("sampleAliquoteCode").value = sample.code;
+		// container.contents.get(0).properties.get("sampleAliquoteCode").value = sample.code;
+		container.contents.get(0).properties.get("sampleAliquoteCode").assignValue(sample.code);
     	DevAppTesting.savage(container,Container.class,models.utils.InstanceConstants.CONTAINER_COLL_NAME);
     	return container;
 	}

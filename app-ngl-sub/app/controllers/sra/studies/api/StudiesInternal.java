@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -40,7 +40,8 @@ import views.components.datatable.DatatableResponse;
 
 
 public class StudiesInternal extends DocumentController<Study> {
-	private static final play.Logger.ALogger logger = play.Logger.of(StudiesInternal.class);
+	
+//	private static final play.Logger.ALogger logger = play.Logger.of(StudiesInternal.class);
 
 	final /*static*/ Form<Study> studyForm;// = form(Study.class);
 	final /*static*/ Form<QueryFieldsForm> updateForm;// = form(QueryFieldsForm.class);
@@ -57,7 +58,8 @@ public class StudiesInternal extends DocumentController<Study> {
 		Study study = getObject(code);
 
 		Form<Study> filledForm = getFilledForm(studyForm, Study.class);
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 
 		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
 		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
@@ -70,8 +72,9 @@ public class StudiesInternal extends DocumentController<Study> {
 		}
 		Study studyInput = filledForm.get();
 
-		if(queryFieldsForm.fields != null){
-			ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+		if (queryFieldsForm.fields != null) {
+//			ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+			ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);

@@ -5,8 +5,12 @@ import models.laboratory.run.description.TreatmentCategory;
 import models.laboratory.run.description.dao.TreatmentCategoryDAO;
 //TODO: fix doc generation that produces an error with the unqualified name
 import models.utils.Model.Finder;
+import models.utils.dao.AbstractDAO;
 
 public class TreatmentCategory extends AbstractCategory<TreatmentCategory>{
+	
+//	public static Finder<TreatmentCategory> find = new Finder<TreatmentCategory>(TreatmentCategoryDAO.class.getName());
+	public static final Finder<TreatmentCategory,TreatmentCategoryDAO> find = new Finder<>(TreatmentCategoryDAO.class);
 	
 	public static enum CODE {
 		ngsrg, 
@@ -14,12 +18,15 @@ public class TreatmentCategory extends AbstractCategory<TreatmentCategory>{
 		sequencing, 
 		quality, 
 		ba
-	};
+	}
 
-	public static Finder<TreatmentCategory> find = new Finder<TreatmentCategory>(TreatmentCategoryDAO.class.getName());
-	
 	public TreatmentCategory() {
 		super(TreatmentCategoryDAO.class.getName());
+	}
+
+	@Override
+	protected Class<? extends AbstractDAO<TreatmentCategory>> daoClass() {
+		return TreatmentCategoryDAO.class;
 	}
 
 }

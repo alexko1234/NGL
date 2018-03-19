@@ -6,6 +6,9 @@ import java.util.Map;
 import models.laboratory.common.instance.PropertyValue;
 
 public class ReadSetProperties {
+	
 	public String code;
-	public Map<String, PropertyValue> properties= new HashMap<String, PropertyValue>();
+	
+	public Map<String, PropertyValue> properties = new HashMap<>(); // <String, PropertyValue>();
+	
 }

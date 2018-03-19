@@ -23,8 +23,8 @@ import models.laboratory.sample.instance.Sample;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.instance.SampleHelper;
-import play.Logger;
-import play.Play;
+//import play.Logger;
+//import play.Play;
 import play.libs.Akka;
 import rules.services.LazyRules6Actor;
 import rules.services.RulesActor6;
@@ -39,9 +39,11 @@ import fr.cea.ig.play.NGLContext;
 
 public class SampleMapping extends Mapping<Sample> {
 	
+	private static final play.Logger.ALogger logger = play.Logger.of(SampleMapping.class);
+	
 	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 	// private /*static*/ ActorRef rulesActor;// = akkaSystem().actorOf(Props.create(RulesActor6.class));
-	private final LazyRules6Actor rulesActor;
+//	private final LazyRules6Actor rulesActor;
 	
 	/*
 	 * 
@@ -58,7 +60,7 @@ public class SampleMapping extends Mapping<Sample> {
 						 NGLContext ctx) {
 		super(objects, configuration, action, InstanceConstants.SAMPLE_COLL_NAME, Sample.class, Mapping.Keys.sample, contextValidation);
 		// rulesActor = ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
-		rulesActor = ctx.rules6Actor();
+//		rulesActor = ctx.rules6Actor();
 	}
 	
 	/*
@@ -101,12 +103,11 @@ public class SampleMapping extends Mapping<Sample> {
 		return object;
 	}
 	
-	
 	protected void update(Sample sample) {
 		
-		if(Action.update.equals(action)){
+		if (Action.update.equals(action)) {
 			sample.traceInformation.setTraceInformation(contextValidation.getUser());
-		}else{
+		} else {
 			sample.traceInformation = new TraceInformation(contextValidation.getUser());
 		}
 		//update categoryCode by default.
@@ -142,11 +143,10 @@ public class SampleMapping extends Mapping<Sample> {
 		}
 		
 		//Call rules to add properties to sample
-		Logger.debug("sample "+sample);
+		logger.debug("sample "+sample);
 		SampleHelper.executeRules(sample, "sampleCreation");
-		Logger.debug("sample "+sample);
+		logger.debug("sample "+sample);
 	}
-
 
 	@Override
 	public void consolidate(Sample sample) {
@@ -161,6 +161,7 @@ public class SampleMapping extends Mapping<Sample> {
 		}
 		super.synchronizeMongoDB(c);
 	}
+
 	@Override
 	public void rollbackInMongoDB(DBObject c){
 		if(Action.save.equals(action) && c._id == null){ 
@@ -177,4 +178,5 @@ public class SampleMapping extends Mapping<Sample> {
 			//replace by old version of the object
 		}		
 	}
+	
 }

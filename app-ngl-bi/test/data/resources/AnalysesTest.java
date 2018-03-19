@@ -1,4 +1,4 @@
-package resources;
+package data.resources;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -11,7 +11,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import controllers.readsets.api.ReadSetValuation;
+//import controllers.readsets.api.ReadSetValuation;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.test.WSHelper;
 import models.laboratory.common.instance.TBoolean;

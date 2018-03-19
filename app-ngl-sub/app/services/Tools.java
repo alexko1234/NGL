@@ -3,7 +3,7 @@ package services;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
+//import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,12 +19,9 @@ import org.apache.xerces.impl.dv.util.Base64;
 
 import models.sra.submit.util.SraException;
 
-
 public class Tools {
 	
-
-	public List<String> loadReadSet(InputStream inputStream) throws SraException {
-		
+	public List<String> loadReadSet(InputStream inputStream) throws SraException {	
 		List<String> listReadSet = new ArrayList<String>();
 		if (inputStream==null) {
 			return listReadSet;
@@ -37,14 +34,14 @@ public class Tools {
 			//String pattern_string_c = "([^#]*)#";
 			String pattern_string_c = "^\\s*#.*";
 			Pattern p_c = Pattern.compile(pattern_string_c);
-			boolean legend = false;	
+//			boolean legend = false;	
 			while ((ligne = input_buffer.readLine()) != null) {					
 				if (this.clean(ligne).equalsIgnoreCase("readSetCode")) {
-					legend = true;
+//					legend = true;
 					continue;
 				}
 				if (this.clean(ligne).equalsIgnoreCase("lotseqname")) {
-					legend = true;
+//					legend = true;
 					continue;
 				}
 				// ignorer ce qui suit le signe de commentaire
@@ -129,12 +126,12 @@ public class Tools {
 
 		// Recuperation des signature md5 si le fichier 'md5.txt' existe dans le repertoire courant de soumission :
 		if ( md5File.exists()) {
-			BufferedReader input_buffer = null;
-			try {
-				input_buffer = new BufferedReader(new FileReader(md5File));
-			} catch (FileNotFoundException e) {
-				throw new SraException("Probleme lors du chargement du fichier ", e);
-			}
+//			BufferedReader input_buffer = null;
+//			try {
+//				input_buffer = new BufferedReader(new FileReader(md5File));
+//			} catch (FileNotFoundException e) {
+//				throw new SraException("Probleme lors du chargement du fichier ", e);
+//			}
 			String ligne = "";
 			String pattern_string = "(\\S+)\\s+(\\S+)";
 			String pattern_string_c = "([^#]*)#";
@@ -143,7 +140,8 @@ public class Tools {
 			Pattern p = Pattern.compile(pattern_string);
 			String ebi_md5Hex = null;
 			String ebiRelatifName;
-			try {
+//			try {
+			try (BufferedReader input_buffer = new BufferedReader(new FileReader(md5File))) {
 				while ((ligne = input_buffer.readLine()) != null) {	
 					// ignorer ce qui suit le signe de commentaire
 					Matcher m_c = p_c.matcher(ligne);
@@ -206,6 +204,5 @@ public class Tools {
 		byte[] dataBytes = Base64.decode(inputBase64);
 		return  new ByteArrayInputStream(dataBytes);
 	}
-
 
 }

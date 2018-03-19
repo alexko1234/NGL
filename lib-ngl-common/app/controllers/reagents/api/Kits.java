@@ -19,7 +19,7 @@ import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.ListObject;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
@@ -41,20 +41,18 @@ import fr.cea.ig.play.NGLContext;
 
 public class Kits extends DocumentController<Kit>{
 
+	private final /*static*/ Form<KitSearchForm> kitSearchForm; // = form(KitSearchForm.class);
+
 	@Inject
 	public Kits(NGLContext ctx) {
 		super(ctx,InstanceConstants.REAGENT_INSTANCE_COLL_NAME, Kit.class);
 		kitSearchForm = ctx.form(KitSearchForm.class);
 	}
 
-	private final /*static*/ Form<KitSearchForm> kitSearchForm; // = form(KitSearchForm.class);
-
 	public Result get(String code){
 		Kit kit = getObject(code);
-		if(kit != null){
+		if (kit != null)
 			return ok(Json.toJson(kit));
-		}
-
 		return badRequest();
 	}
 
@@ -65,24 +63,25 @@ public class Kits extends DocumentController<Kit>{
 
 	public Result save(){
 		Form<Kit> kitFilledForm = getMainFilledForm();
-		
-			Kit kit = kitFilledForm.get();
-			kit.code = ReagentCodeHelper.getInstance().generateKitCode();
-			kit.traceInformation = new TraceInformation();
-			kit.traceInformation.createUser =  getCurrentUser();
-			kit.traceInformation.creationDate = new Date();
-			
-			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), kitFilledForm.errors());
-			contextValidation.setCreationMode();
-			/*if(ValidationHelper.required(contextValidation, kit.name, "name")){
+
+		Kit kit = kitFilledForm.get();
+		kit.code = ReagentCodeHelper.getInstance().generateKitCode();
+		kit.traceInformation = new TraceInformation();
+		kit.traceInformation.createUser =  getCurrentUser();
+		kit.traceInformation.creationDate = new Date();
+
+//		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), kitFilledForm.errors());
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), kitFilledForm);
+		contextValidation.setCreationMode();
+		/*if(ValidationHelper.required(contextValidation, kit.name, "name")){
 				kitCatalog.code = CodeHelper.getInstance().generateKitCatalogCode(kitCatalog.name);
 			}*/
-
-			kit = (Kit)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, kit, contextValidation);
-			if (contextValidation.hasErrors())
-				return badRequest(errorsAsJson(contextValidation.getErrors()));
-			return ok(Json.toJson(kit));
-		 // legit, spaghetti above
+//		kit = (Kit)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, kit, contextValidation);
+		kit = InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, kit, contextValidation);
+		if (contextValidation.hasErrors())
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
+		return ok(Json.toJson(kit));
+		// legit, spaghetti above
 	}
 
 	public Result update(String code){
@@ -93,10 +92,12 @@ public class Kits extends DocumentController<Kit>{
 		kit.traceInformation.modifyUser =  getCurrentUser();
 		kit.traceInformation.modifyDate = new Date();
 		
-		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), kitFilledForm.errors());
+//		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), kitFilledForm.errors());
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), kitFilledForm);
 		contextValidation.setUpdateMode();
 
-		kit = (Kit)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, kit, contextValidation);
+//		kit = (Kit)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, kit, contextValidation);
+		kit = InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, kit, contextValidation);
 		if (contextValidation.hasErrors())
 			return badRequest(errorsAsJson(contextValidation.getErrors()));
 		return ok(Json.toJson(kit));
@@ -109,18 +110,18 @@ public class Kits extends DocumentController<Kit>{
 		BasicDBObject keys = getKeys(kitSearch);
 		DBQuery.Query query = getQuery(kitSearch);
 
-		if(kitSearch.datatable){
+		if (kitSearch.datatable) {
 			MongoDBResult<Kit> results =  mongoDBFinder(kitSearch, query);
 			List<Kit> kits = results.toList();
 
 			return ok(Json.toJson(new DatatableResponse<Kit>(kits, results.count())));
-		}else if (kitSearch.list){
+		} else if (kitSearch.list) {
 			keys = new BasicDBObject();
 			keys.put("code", 1);
 			keys.put("category", 1);
 
-			if(null == kitSearch.orderBy)kitSearch.orderBy = "code";
-			if(null == kitSearch.orderSense)kitSearch.orderSense = 0;				
+			if (kitSearch.orderBy == null)    kitSearch.orderBy    = "code";
+			if (kitSearch.orderSense == null) kitSearch.orderSense = 0;				
 
 			MongoDBResult<Kit> results = mongoDBFinder(kitSearch, query, keys);
 			List<Kit> kits = results.toList();
@@ -130,9 +131,9 @@ public class Kits extends DocumentController<Kit>{
 			}
 
 			return Results.ok(Json.toJson(los));
-		}else{
-			if(null == kitSearch.orderBy)kitSearch.orderBy = "code";
-			if(null == kitSearch.orderSense)kitSearch.orderSense = 0;
+		} else {
+			if (kitSearch.orderBy == null)    kitSearch.orderBy    = "code";
+			if (kitSearch.orderSense == null) kitSearch.orderSense = 0;
 
 			MongoDBResult<Kit> results = mongoDBFinder(kitSearch, query);
 			List<Kit> kits = results.toList();

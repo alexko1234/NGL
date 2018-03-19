@@ -2,20 +2,20 @@ package fr.cea.ig.play.test;
 
 import static org.junit.Assert.assertEquals;
 // import static fr.cea.ig.play.test.ReadUpdateReadTest.*;
-import static fr.cea.ig.play.test.WSHelper.get;
+// import static fr.cea.ig.play.test.WSHelper.get;
 import static fr.cea.ig.play.test.ReadUpdateReadTest.notEqualsPath;
 
-import java.util.concurrent.Callable;
+// import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
-import java.util.concurrent.ExecutionException;
+// import java.util.concurrent.CompletionStage;
+// import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 //import java.util.regex.Pattern;
 import java.util.function.Function;
-import java.io.BufferedReader;
+// import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+// import java.io.FileReader;
+// import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -23,19 +23,19 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
-import java.util.HashMap;
+// import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+// import java.util.Map;
 import java.util.Properties;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
-import com.fasterxml.jackson.databind.node.IntNode;
+// import com.fasterxml.jackson.databind.node.ObjectNode;
+// import com.fasterxml.jackson.databind.node.TextNode;
+// import com.fasterxml.jackson.databind.node.IntNode;
 
 import play.Application;
-import play.Configuration;
+// import play.Configuration;
 import play.Environment;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.inject.ApplicationLifecycle;
@@ -48,12 +48,12 @@ import play.test.WSTestClient;
 
 import static play.test.Helpers.running;
 import static play.test.Helpers.testServer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+// import java.util.regex.Matcher;
+// import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-import com.google.common.io.Resources;
+// import com.google.common.io.Resources;
 
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.DBObject;

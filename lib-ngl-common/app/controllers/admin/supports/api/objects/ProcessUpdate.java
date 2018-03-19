@@ -11,7 +11,7 @@ import models.laboratory.container.instance.Content;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -51,10 +51,10 @@ public class ProcessUpdate extends AbstractUpdate<Process>{
 		PropertyDefinition pd = PropertyDefinition.find.findUnique(input.contentPropertyNameUpdated, Level.CODE.Content);
 		Object newValue = ValidationHelper.convertStringToType(pd.valueType, input.newValue);
 		
-		if(NGLObject.Action.replace.equals(NGLObject.Action.valueOf(input.action))){
-			process.sampleOnInputContainer.properties.get(input.contentPropertyNameUpdated).value = newValue;
-			
-		}else{
+		if (NGLObject.Action.replace.equals(NGLObject.Action.valueOf(input.action))) {
+			// process.sampleOnInputContainer.properties.get(input.contentPropertyNameUpdated).value = newValue;	
+			 process.sampleOnInputContainer.properties.get(input.contentPropertyNameUpdated).assignValue(newValue);	
+		} else {
 			throw new RuntimeException(input.action+" not implemented");
 		}
 		process.validate(cv);

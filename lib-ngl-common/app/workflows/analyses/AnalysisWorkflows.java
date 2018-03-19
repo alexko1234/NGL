@@ -128,7 +128,6 @@ public class AnalysisWorkflows extends Workflows<Analysis> {
 	@Override
 	public void nextState(ContextValidation contextValidation, Analysis analysis) {
 		State nextStep = cloneState(analysis.state, contextValidation.getUser());
-
 		if ("F-BA".equals(analysis.state.code)) {
 			nextStep.code = "IW-V";
 		} else if("IW-V".equals(analysis.state.code)) {
@@ -140,9 +139,7 @@ public class AnalysisWorkflows extends Workflows<Analysis> {
 				nextStep.code = "IW-V";
 			}
 		}
-
 		setState(contextValidation, analysis, nextStep);
-
 	}
 
 }

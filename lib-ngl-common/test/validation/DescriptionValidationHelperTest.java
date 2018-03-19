@@ -215,13 +215,12 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 	
-	/**
+	/*
 	 * ProcessType
 	 */
-	
 	@Test
 	public void validationProcessTypeCode() {
-		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
+		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		ContainerValidationHelper.validateProcessTypeCode(processType.code, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
@@ -240,11 +239,9 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 	
-
-	/***
+	/*
 	 *  ProjectCategory
 	 */
-	
 	@Test
 	public void validationProjectCategoryCode() {
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);

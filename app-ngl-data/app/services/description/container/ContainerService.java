@@ -3,9 +3,7 @@ package services.description.container;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import com.typesafe.config.ConfigFactory;
-
+// import com.typesafe.config.ConfigFactory;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.utils.dao.DAOException;
@@ -19,17 +17,14 @@ public class ContainerService {
 	public static void main(Map<String, List<ValidationError>> errors) throws DAOException{
 		DAOHelpers.removeAll(ContainerSupportCategory.class, ContainerSupportCategory.find);
 		DAOHelpers.removeAll(ContainerCategory.class, ContainerCategory.find);
-
 		saveContainerCategories(errors);
 		saveContainerSupportCategories(errors);
-
 	}
 	
-	
 	/**
-	 * Save All container categories
-	 * @param errors
-	 * @throws DAOException 
+	 * Save All container categories.
+	 * @param errors        error manager
+	 * @throws DAOException DAO problem
 	 */
 	public static void saveContainerCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ContainerCategory> l = new ArrayList<ContainerCategory>();
@@ -48,9 +43,9 @@ public class ContainerService {
 	}
 
 	/**
-	 * Save All support categories
-	 * @param errors
-	 * @throws DAOException 
+	 * Save All support categories.
+	 * @param errors        error manager
+	 * @throws DAOException DAO problem
 	 */
 	public static void saveContainerSupportCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ContainerSupportCategory> l = new ArrayList<ContainerSupportCategory>();
@@ -71,6 +66,6 @@ public class ContainerService {
 		l.add(newContainerSupportCategory("Saphyr Chip", "saphyr-chip", 2, 1, 2, ContainerCategory.find.findByCode("saphyr-fc")));
 		l.add(newContainerSupportCategory("Autre", "other", 1, 1, 1, ContainerCategory.find.findByCode("other")));
 		DAOHelpers.saveModels(ContainerSupportCategory.class, l, errors);
-		
 	}
+	
 }

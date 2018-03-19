@@ -17,12 +17,12 @@ import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.ListObject;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-import play.Logger;
+//import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -40,20 +40,20 @@ import fr.cea.ig.play.NGLContext;
 
 public class KitCatalogs extends DocumentController<KitCatalog> {
 	
+	private static final play.Logger.ALogger logger = play.Logger.of(KitCatalogs.class);
+	
+	private final /*static*/ Form<KitCatalogSearchForm> kitCatalogSearchForm;// = form(KitCatalogSearchForm.class);
+	
 	@Inject
 	public KitCatalogs(NGLContext ctx) {
 		super(ctx,InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class);
 		kitCatalogSearchForm = ctx.form(KitCatalogSearchForm.class);
 	}
 	
-	private final /*static*/ Form<KitCatalogSearchForm> kitCatalogSearchForm;// = form(KitCatalogSearchForm.class);
-	
 	public Result get(String code){
 		KitCatalog kitCatalog = getObject(code);
-		if(kitCatalog != null){
+		if (kitCatalog != null)
 			return ok(Json.toJson(kitCatalog));
-		}
-		
 		return badRequest();
 	}
 	
@@ -65,13 +65,13 @@ public class KitCatalogs extends DocumentController<KitCatalog> {
 	public Result save(){
 		Form<KitCatalog> kitCatalogFilledForm = getMainFilledForm();
 		KitCatalog kitCatalog = kitCatalogFilledForm.get();
-		
-		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), kitCatalogFilledForm.errors());
+//		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), kitCatalogFilledForm.errors());
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), kitCatalogFilledForm);
 		contextValidation.setCreationMode();
-		if(ValidationHelper.required(contextValidation, kitCatalog.name, "name")){
+		if (ValidationHelper.required(contextValidation, kitCatalog.name, "name")) {
 			kitCatalog.code = ReagentCodeHelper.getInstance().generateKitCatalogCode();
-		
-			kitCatalog = (KitCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, kitCatalog, contextValidation);
+//			kitCatalog = (KitCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, kitCatalog, contextValidation);
+			kitCatalog = InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, kitCatalog, contextValidation);
 		}
 		if (contextValidation.hasErrors())
 			return badRequest(errorsAsJson(contextValidation.getErrors()));
@@ -83,10 +83,12 @@ public class KitCatalogs extends DocumentController<KitCatalog> {
 		Form<KitCatalog> kitCatalogFilledForm = getMainFilledForm();
 		KitCatalog kitCatalog = kitCatalogFilledForm.get();
 		
-		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), kitCatalogFilledForm.errors());
+//		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), kitCatalogFilledForm.errors());
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), kitCatalogFilledForm);
 		contextValidation.setUpdateMode();
 		
-		kitCatalog = (KitCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, kitCatalog, contextValidation);
+//		kitCatalog = (KitCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, kitCatalog, contextValidation);
+		kitCatalog = InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, kitCatalog, contextValidation);
 		if (contextValidation.hasErrors())
 			return badRequest(errorsAsJson(contextValidation.getErrors()));
 		return ok(Json.toJson(kitCatalog));
@@ -98,7 +100,7 @@ public class KitCatalogs extends DocumentController<KitCatalog> {
 		KitCatalogSearchForm kitCatalogSearch = kitCatalogFilledForm.get();
 		BasicDBObject keys = getKeys(kitCatalogSearch);
 		DBQuery.Query query = getQuery(kitCatalogSearch);
-		Logger.debug("key kits: " + keys);
+		logger.debug("key kits: " + keys);
 
 		if(kitCatalogSearch.datatable){
 			MongoDBResult<KitCatalog> results =  mongoDBFinder(kitCatalogSearch, query);
@@ -124,9 +126,9 @@ public class KitCatalogs extends DocumentController<KitCatalog> {
 			}
 			
 			return Results.ok(Json.toJson(los)); */ 
-		}else{
-			if(null == kitCatalogSearch.orderBy)kitCatalogSearch.orderBy = "code";
-			if(null == kitCatalogSearch.orderSense)kitCatalogSearch.orderSense = 0;
+		} else {
+			if (kitCatalogSearch.orderBy    == null) kitCatalogSearch.orderBy     = "code";
+			if (kitCatalogSearch.orderSense == null) kitCatalogSearch.orderSense = 0;
 			
 			MongoDBResult<KitCatalog> results = mongoDBFinder(kitCatalogSearch, query);
 			List<KitCatalog> kitCatalogs = results.toList();
@@ -144,7 +146,7 @@ public class KitCatalogs extends DocumentController<KitCatalog> {
 		} 
 		
 		if(CollectionUtils.isNotEmpty(kitCatalogSearch.codes)) {
-			Logger.debug("Codes: "+kitCatalogSearch.codes);
+			logger.debug("Codes: "+kitCatalogSearch.codes);
 			queryElts.add(DBQuery.in("code",kitCatalogSearch.codes));
 		}
 		
@@ -183,7 +185,7 @@ public class KitCatalogs extends DocumentController<KitCatalog> {
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 		}
-
 		return query;
 	}
+	
 }

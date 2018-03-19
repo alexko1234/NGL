@@ -7,48 +7,49 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory; 
-import javax.xml.xpath.XPathConstants;
+// import javax.xml.xpath.XPathConstants;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException; //ajout pour essai catch
+// import org.xml.sax.SAXParseException; //ajout pour essai catch
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
+// import org.w3c.dom.NodeList;
+// import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 
 import org.mongojack.DBQuery;
 
-import java.io.BufferedReader;
+// import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+// import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
+// import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.instance.PropertyValue;
+// import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertyFileValue;
-import models.laboratory.common.instance.property.PropertySingleValue;
+// import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.InputContainerUsed;
+// import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.reagent.instance.ReagentUsed;
 import models.laboratory.reagent.description.BoxCatalog;
 import models.laboratory.reagent.description.KitCatalog;
 import models.laboratory.reagent.description.ReagentCatalog;
 
 import models.utils.InstanceConstants;
-import play.Logger;
+// import play.Logger;
 import validation.ContextValidation;
-import validation.utils.ValidationHelper;
+// import validation.utils.ValidationHelper;
 import controllers.instruments.io.utils.AbstractInput;
-import controllers.instruments.io.utils.InputHelper;
+// import controllers.instruments.io.utils.InputHelper;
 
 import fr.cea.ig.MongoDBDAO;
 
-
 public class NovaSeqInput extends AbstractInput {
+	
+	private static final play.Logger.ALogger logger = play.Logger.of(NovaSeqInput.class);
 	
 	/* F. Dos Santos NGL-1769: Dépôt NovaSeq : import fichier XML
        Description du fichier à traiter:
@@ -84,16 +85,16 @@ public class NovaSeqInput extends AbstractInput {
 	
 	@Override
 	// suppresson throws Exception
-	public Experiment importFile(Experiment experiment,PropertyFileValue pfv, ContextValidation contextValidation) {	
+	public Experiment importFile(Experiment experiment, PropertyFileValue pfv, ContextValidation contextValidation) {	
 		
 	     try {
 	    	 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	    	 DocumentBuilder builder = factory.newDocumentBuilder();  /// c'est ici que des erreur de balises peuvent etre vues
-	   
-	    	 InputStream inputStream = new ByteArrayInputStream(pfv.value);
+//	    	 InputStream inputStream = new ByteArrayInputStream(pfv.value);
+	    	 InputStream inputStream = new ByteArrayInputStream(pfv.byteValue());
 	    	 InputSource is = new InputSource(inputStream);
 	    	 is.setEncoding("UTF-8");
-	    	 Logger.debug("import fichier >>>" + pfv.fullname );
+	    	 logger.debug("import fichier >>>" + pfv.fullname );
 	 		 
 	         Document xml = builder.parse(is);
 	         
@@ -107,11 +108,11 @@ public class NovaSeqInput extends AbstractInput {
 	           
 		     // verifier le node RfidsInfo avant de faire le reste...
 		     String expression="RfidsInfo";
-		     String info = (String)xpath.evaluate(expression, root);
+//		     String info = (String)xpath.evaluate(expression, root);
+		     String info = xpath.evaluate(expression, root);
 		     checkMandatoryXMLTag (contextValidation, expression, info); 
-		     if ( contextValidation.hasErrors() ){
+		     if (contextValidation.hasErrors())
 		    	 return experiment;
-		     }
 		     
 	         checkConsistancy(root, xpath, experiment, contextValidation);
 	         importReagents(root, xpath, experiment, contextValidation);
@@ -123,15 +124,11 @@ public class NovaSeqInput extends AbstractInput {
 	    	  
 	      } catch (SAXException | ParserConfigurationException e) {
 	    	  contextValidation.addErrors("Erreurs fichier", "fichier XML incorrect :" + e.getMessage());
-	    	  
 	      } catch (IOException e) {
 	    	  contextValidation.addErrors("Erreurs fichier", e.getMessage());
-	    	  
-	      } catch ( XPathExpressionException  e) {
+	      } catch (XPathExpressionException  e) {
 	    	  contextValidation.addErrors("Erreurs interne", e.getMessage());
-	   
 	      } 
- 
 		  return experiment;
 	}
 	        
@@ -142,8 +139,9 @@ public class NovaSeqInput extends AbstractInput {
 		     String expression=null;
 		     
 		     //-1- position sur sequenceur: NIVEAU 1
-		     expression="Side";
-		     String side = (String)xpath.evaluate(expression, root);
+		     expression = "Side";
+//		     String side = (String)xpath.evaluate(expression, root);
+		     String side = xpath.evaluate(expression, root);
 		     checkMandatoryXMLTag (contextValidation, expression, side); 
 		     // si la balise OK comparer avec  position
 		     if ((side.length() > 0) && (! experiment.instrumentProperties.get("position").value.equals(side))) {
@@ -151,8 +149,9 @@ public class NovaSeqInput extends AbstractInput {
 			 } 
 		     
 		     //-2- barcode de Flowcell  NIVEAU 2=><RfidsInfo>
-		     expression="RfidsInfo/FlowCellSerialBarcode";
-		     String flowcellId = (String)xpath.evaluate(expression, root);  
+		     expression = "RfidsInfo/FlowCellSerialBarcode";
+//		     String flowcellId = (String)xpath.evaluate(expression, root);  
+		     String flowcellId = xpath.evaluate(expression, root);  
 		     checkMandatoryXMLTag (contextValidation, expression, flowcellId );
 		     // si la balise OK comparer avec inputContainerSupportCodes: <BARCODE>_<POS>
 		     if ((flowcellId.length() > 0) && (! experiment.inputContainerSupportCodes.contains(flowcellId))) {
@@ -162,12 +161,13 @@ public class NovaSeqInput extends AbstractInput {
 			 // -3- barcode du tube de chargement  NIVEAU 2=><RfidsInfo>
 		     // !!! pour l'instant il n'y a qu'un seul tube... mais ca va changer avec l'utilisation d'un support de chargement multi-lanes....
 		     expression="RfidsInfo/LibraryTubeSerialBarcode";
-		     String tubeId = (String)xpath.evaluate(expression, root);
+//		     String tubeId = (String)xpath.evaluate(expression, root);
+		     String tubeId = xpath.evaluate(expression, root);
 		     checkMandatoryXMLTag (contextValidation, expression, tubeId );
 		     // si la balise OK comparer avec novaseqLoadingTube
 		     // !! pas obligatoire dans l'experience...et peut etre manquant  
 		     if (null == experiment.instrumentProperties.get("novaseqLoadingTube") || null == experiment.instrumentProperties.get("novaseqLoadingTube").value) {
-		    	 Logger.debug("novaseqLoadingTube= null !!");
+		    	 logger.debug("novaseqLoadingTube= null !!");
 		    	 // si on importe le fichier a l'etat terminé on ne peut plus renseigner 'Tube chargement (RFID)' !!!
 				 ///contextValidation.addErrors("Erreurs expérience", "Veuillez renseigner 'Tube chargement (RFID)' avant d'importer le fichier.");
 				 
@@ -177,12 +177,13 @@ public class NovaSeqInput extends AbstractInput {
 		     
 		     //-4- flowcell mode    NIVEAU 2=><RfidsInfo>
 		     expression="RfidsInfo/FlowCellMode";
-		     String fcMode = (String)xpath.evaluate(expression, root);
+//		     String fcMode = (String)xpath.evaluate(expression, root);
+		     String fcMode = xpath.evaluate(expression, root);
 		     checkMandatoryXMLTag (contextValidation, expression, fcMode );
 		     // si la balise OK comparer avec novaseqFlowcellMode
 		     // !! pas obligatoire dans l'experience...et peut etre manquant
 		     if (null == experiment.instrumentProperties.get("novaseqFlowcellMode") || null == experiment.instrumentProperties.get("novaseqFlowcellMode").value ) {
-		    	 Logger.debug("novaseqFlowcellMode= null !!");
+		    	 logger.debug("novaseqFlowcellMode= null !!");
 		    	 // si on importe le fichier a l'etat terminé on ne peut plus renseigner 'type de flowcell' !!!
 				 ///contextValidation.addErrors("Erreurs expérience", "Veuillez renseigner 'type de flowcell' avant d'importer le fichier.");
 				 
@@ -194,8 +195,9 @@ public class NovaSeqInput extends AbstractInput {
 		     /* Info Illumina: la balise <InstrumentName> contient toujour l'ID du sequenceur mais la balise <RunId> peut etre parametree pour que le nom
 		      * de run contient le nom du PC : <RunId>180115_MARIECURIX_0008_AH5TCYDMXX</RunId>
 		      */
-		     expression="RunId";
-		     String run = (String)xpath.evaluate(expression, root);
+		     expression = "RunId";
+//		     String run = (String)xpath.evaluate(expression, root);
+		     String run = xpath.evaluate(expression, root);
 		     checkMandatoryXMLTag (contextValidation, expression, run);
 		     if ((run.length() > 0) && (! run.contains(experiment.instrument.code))) {
 	    		 contextValidation.addErrors("Erreurs fichier", "L'instrument dans le nom du run du fichier ne correspond pas à l'instrument de l'expérience.");
@@ -231,9 +233,10 @@ public class NovaSeqInput extends AbstractInput {
     	 String kitName=null;
     	 
     	 try {
-		     String expression="RfidsInfo/FlowCellMode";
-		     String fcMode = (String)xpath.evaluate(expression, root);
-		     
+		     String expression = "RfidsInfo/FlowCellMode";
+//		     String fcMode = (String)xpath.evaluate(expression, root);
+		     String fcMode = xpath.evaluate(expression, root);
+
 		     if ("S2".equals(fcMode)) {
 		    	 kitName="NovaSeq 6000 S2 Rgt kit (300c)";
 		    	 //String boxName="BOX NOVASEQ 6000";
@@ -276,37 +279,37 @@ public class NovaSeqInput extends AbstractInput {
 	    		 
 		    	 ReagentUsed reagent=new ReagentUsed(); 
 	    		 
-	    		 String XMLtag1="RfidsInfo/"+pair.getKey()+"SerialBarcode";
+	    		 String XMLtag1 = "RfidsInfo/" + pair.getKey() + "SerialBarcode";
 	    		 //Logger.debug("XMLtag:"+XMLtag1); 
-	    		 String serialBarcode = (String)xpath.evaluate(XMLtag1, root);
+//	    		 String serialBarcode = (String)xpath.evaluate(XMLtag1, root);
+	    		 String serialBarcode = xpath.evaluate(XMLtag1, root);
 	    		 checkMandatoryXMLTag (contextValidation, XMLtag1, serialBarcode );
 	    		 
-	    		 String XMLtag2="RfidsInfo/"+pair.getKey()+"LotNumber";
+	    		 String XMLtag2 = "RfidsInfo/" + pair.getKey() + "LotNumber";
 	      		 //Logger.debug("XMLtag:"+XMLtag2);
-	    		 String lotNumber = (String)xpath.evaluate(XMLtag2, root);
+//	    		 String lotNumber = (String)xpath.evaluate(XMLtag2, root);
+	    		 String lotNumber = xpath.evaluate(XMLtag2, root);
 	    		 checkMandatoryXMLTag (contextValidation, XMLtag2, lotNumber );
 	    		 
-	    		 String reagName=pair.getValue()[0];
+	    		 String reagName = pair.getValue()[0];
 	    		 //Logger.debug("création reagent used: "+ reagName);
 	    		 
 	    		 // 12/02/2018 ajouter la contrainte sur la boite parent
 	    		 ReagentCatalog reag= MongoDBDAO.findOne(InstanceConstants.REAGENT_CATALOG_COLL_NAME, ReagentCatalog.class, DBQuery.is("category", "Reagent").
 	    				 and(DBQuery.is("name", reagName)).and(DBQuery.is("boxCatalogCode", box.code ))); 		 
-	    		 if ( null == reag ){
+	    		 if (reag == null) {
 	        		 contextValidation.addErrors("Erreurs catalogue", "Pas de réactif nommé '"+reagName +"' dans le catalogue");
 	        	 } else {
-		    		 Logger.debug("code="+ reag.code);
+		    		 logger.debug("code=" + reag.code);
 	        		 
-		    		 reagent.kitCatalogCode=kit.code;       // code NGL du kit parent
-		    		 reagent.boxCatalogCode=box.code;       // code NGL de la boîte parent
-		    		 reagent.reagentCatalogCode=reag.code;  // code NGL du reactif
+		    		 reagent.kitCatalogCode = kit.code;       // code NGL du kit parent
+		    		 reagent.boxCatalogCode = box.code;       // code NGL de la boîte parent
+		    		 reagent.reagentCatalogCode = reag.code;  // code NGL du reactif
 		    		 //reagent.boxCode="XXX";               // barcode de la boîte parent... info non disponible dans le fichier
-		    		 reagent.code=serialBarcode+"_"+lotNumber+"_"; // !!!! les codes doivent se terminer par "_" pour etre filtrables par la suite
+		    		 reagent.code = serialBarcode + "_" + lotNumber + "_"; // !!!! les codes doivent se terminer par "_" pour etre filtrables par la suite
 		    		 //reagent.description="TEST....";      // rien de pertinent a mettre ?????
-	
 					 experiment.reagents.add(reagent); 
 	        	 }
-	    		 
 	    	 }
 	     } catch (XPathExpressionException e) {
 		    	 contextValidation.addErrors("Erreurs interne", e.getMessage());
@@ -320,6 +323,5 @@ public class NovaSeqInput extends AbstractInput {
         	 contextValidation.addErrors("Erreurs fichier","Balise <"+ tagName+"> manquante ou non renseignée (vide)");
          }
 	}
-	
 	
 }

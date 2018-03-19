@@ -3,6 +3,7 @@ package services;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -37,13 +38,13 @@ import org.apache.commons.lang3.StringUtils;
 
 public class XmlServices {
 
-	
 	private static final play.Logger.ALogger logger = play.Logger.of(XmlServices.class);
 
 	public static Submission writeAllXml(String submissionCode) throws IOException, SraException {
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
 		String resultDirectory = submission.submissionDirectory;
-		System.out.println("resultDirectory = " + resultDirectory);
+//		System.out.println("resultDirectory = " + resultDirectory);
+		logger.debug("resultDirectory = " + resultDirectory);
 		return writeAllXml(submissionCode, resultDirectory);
 	}
 
@@ -92,7 +93,6 @@ public class XmlServices {
 	
 		return submission;
 	}
-	
 
 	public static void writeStudyXml (Submission submission, File outputFile) throws IOException, SraException {	
 		if (submission == null) {

@@ -14,9 +14,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
-
-
-
 @JsonTypeInfo(use=Id.NAME, include=As.EXTERNAL_PROPERTY, property="_type", visible=true)
 @JsonSubTypes({
 	@JsonSubTypes.Type(value = DefaultFieldConfiguration.class,         name = AbstractFieldConfiguration.defaultType),
@@ -32,18 +29,18 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 })
 public abstract class AbstractFieldConfiguration {
 
-	public static final String defaultType = "default";
-	public static final String excelType = "excel";
-	public static final String doubleExcelType = "doubleExcel";
-	public static final String propertiesType = "properties";
-	public static final String objectType = "object";
-	public static final String propertyValueType = "propertyValue";
-	public static final String commentsType = "comments";
-	public static final String contentsType = "contents";
+	public static final String defaultType               = "default";
+	public static final String excelType                 = "excel";
+	public static final String doubleExcelType           = "doubleExcel";
+	public static final String propertiesType            = "properties";
+	public static final String objectType                = "object";
+	public static final String propertyValueType         = "propertyValue";
+	public static final String commentsType              = "comments";
+	public static final String contentsType              = "contents";
 	public static final String qualityControlResultsType = "qualityControlResults";
-	public static final String tagExcelType = "tagExcel";
-
-	public static final String deleteFieldValue="A_EFFACER";
+	public static final String tagExcelType              = "tagExcel";
+	
+	public static final String deleteFieldValue          = "A_EFFACER";
 
 	public String _type;
 	public Boolean required = Boolean.FALSE;
@@ -61,8 +58,12 @@ public abstract class AbstractFieldConfiguration {
 	 * @param action TODO
 	 */
 	// * @throws Exception
-	public abstract void populateField(Field field, Object dbObject,
-			Map<Integer, String> rowMap, ContextValidation contextValidation, Action action) throws Exception;
+	public abstract void populateField(Field field, 
+			                           Object dbObject,
+			                           Map<Integer, 
+			                           String> rowMap, 
+			                           ContextValidation contextValidation, 
+			                           Action action) throws Exception;
 
 	/*
 	 * Set value directly in object

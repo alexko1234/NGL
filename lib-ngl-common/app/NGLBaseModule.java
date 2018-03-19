@@ -1,6 +1,13 @@
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import play.api.Configuration;
 import play.api.Environment;
@@ -32,6 +39,7 @@ public class NGLBaseModule extends play.api.inject.Module {
 	 */
 	public NGLBaseModule(Environment environment, Configuration configuration) {
 		logger = play.Logger.of(getClass());
+		// new ConfigChecker().run();
 	}
 
 	/**
@@ -44,12 +52,13 @@ public class NGLBaseModule extends play.api.inject.Module {
 	 *   <li>{@link play.api.modules.spring.SpringPlugin}</li>
 	 *   <li>{@link fr.cea.ig.authorization.IAuthorizator} to {@link fr.cea.ig.authorization.authorizators.ConfiguredAuthorizator}</li>
 	 * </ul>
-	 * @param environment
-	 * @param configuration
-	 * @return
+	 * @param environment   environment
+	 * @param configuration configuration
+	 * @return              application bindings
 	 */
 	public List<Binding<?>> nglBindings(Environment environment, Configuration configuration) {
 		List<Binding<?>> bs = new ArrayList<>();
+		bs.add(bind(ConfigChecker.class                              ).toSelf().eagerly());
 		// Initialize global variables
 		bs.add(bind(fr.cea.ig.play.IGGlobals.class                   ).toSelf().eagerly());
 		// Initialize assets server
@@ -62,7 +71,8 @@ public class NGLBaseModule extends play.api.inject.Module {
 		bs.addAll(nglCustomBindings(environment,configuration));
 		// Bind spring as the last thing as it may access uninitialized
 		// things otherwise.
-		bs.add(bind(play.api.modules.spring.SpringPlugin.class       ).toSelf().eagerly());
+		//bs.add(bind(play.api.modules.spring.SpringPlugin.class       ).toSelf().eagerly());
+		bs.add(bind(play.api.modules.spring.SpringComponent.class       ).toSelf().eagerly());
 		// Bind authorization to configured, user DAO access requires that 
 		// we bind this eagerly after the spring plugin. This still fails 
 		// as the Spring plugin initialization is not complete despite
@@ -100,4 +110,57 @@ public class NGLBaseModule extends play.api.inject.Module {
 
 }
 
+// This only checks the config file, not resource.
+class ConfigChecker {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(ConfigChecker.class);
+	
+	//
+	public ConfigChecker() {
+		checkIncludes();
+		// Check/display commonly defined values
+		// checkPath("ngl.env");
+		// checkPath("")
+	}
+	
+	public void checkIncludes() {
+		try {
+			String configFile = System.getProperty("config.file");
+			// This should not happen except if configuration resource is used but this is
+			// not NGL strategy.
+			if (configFile == null)
+				throw new IOException("config file is not defined");
+			logger.debug("*****************************************************");
+			logger.debug("checking application configuration at '{}'",configFile);
+			logger.debug("***************** config check **********************");
+			include(new File(configFile));
+		} catch (IOException e) {
+			logger.error("config file error",e);
+		} finally  {
+			logger.debug("*****************************************************");
+		}
+	}
+	
+	private static Pattern includePat = Pattern .compile("include\\s+\"(\\S+)\"\\s*");
+	
+	// Recursively check includes, could loop forever if there is a loop
+	// in the includes. This then will lock application start and quite fill the log.
+	public void include(File f) throws IOException {
+		logger.debug("checking '{}'",f);
+		if (!f.isFile())
+			throw new FileNotFoundException(f.toString());
+		Pattern p = includePat; 
+		try (BufferedReader r = new BufferedReader(new FileReader(f))) {
+			String line;
+			while ((line = r.readLine()) != null) {
+				Matcher m = p.matcher(line);
+				if (m.matches()) {
+					String include = m.group(1);
+					File includedFile = new File(f.getParent(),include);
+					include(includedFile);
+				} 
+			}
+		}
+	}
+
+}

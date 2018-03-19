@@ -19,7 +19,7 @@ import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
 import play.Logger;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -106,7 +106,8 @@ public class ReadSetUpdate extends AbstractUpdate<ReadSet>{
 			PropertyDefinition pd = PropertyDefinition.find.findUnique(input.contentPropertyNameUpdated, Level.CODE.Content);
 			Object newValue = ValidationHelper.convertStringToType(pd.valueType, input.newValue);
 			
-			readSet.sampleOnContainer.properties.get(input.contentPropertyNameUpdated).value = newValue;
+			// readSet.sampleOnContainer.properties.get(input.contentPropertyNameUpdated).value = newValue;
+			readSet.sampleOnContainer.properties.get(input.contentPropertyNameUpdated).assignValue(newValue);
 			readSet.validate(cv);
 			if(!cv.hasErrors()){
 				updateObject(readSet);				

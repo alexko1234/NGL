@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.apache.commons.csv.CSVRecord;
 
+import fr.cea.ig.lfw.utils.iteration.MappingIterable;
 import sra.scripts.utils.CSVParsing;
 
 

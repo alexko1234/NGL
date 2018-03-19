@@ -82,7 +82,7 @@ public class TestContainers extends AbstractSQServerTest {
 		container.state.user  = "aloa";
 		
 		container.sampleCodes = new HashSet<String>(Arrays.asList(sample.code));
-		container.properties  = new HashMap<String,PropertyValue>();
+		container.properties  = new HashMap<>(); // <String,PropertyValue>();
 		container.properties.put("meta", new PropertySingleValue(false));
 		container.contents = new ArrayList<Content>();
 		container.contents.add(ContentFactory.createContent(sample, 100, "BXL"));

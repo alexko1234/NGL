@@ -22,8 +22,13 @@ import play.Logger;
 @Repository
 public class StateHierarchyDAO extends AbstractDAOMapping<StateHierarchy> {
 
+//	protected StateHierarchyDAO() {
+//		super("state_object_type_hierarchy", StateHierarchy.class, StateHierarchyMappingQuery.class, 
+//				"SELECT t.id, t.code, t.fk_child_state, t.fk_parent_state, t.fk_object_type " +
+//				"FROM state_object_type_hierarchy t ", true);
+//	}
 	protected StateHierarchyDAO() {
-		super("state_object_type_hierarchy", StateHierarchy.class, StateHierarchyMappingQuery.class, 
+		super("state_object_type_hierarchy", StateHierarchy.class, StateHierarchyMappingQuery.factory, 
 				"SELECT t.id, t.code, t.fk_child_state, t.fk_parent_state, t.fk_object_type " +
 				"FROM state_object_type_hierarchy t ", true);
 	}
@@ -45,8 +50,6 @@ public class StateHierarchyDAO extends AbstractDAOMapping<StateHierarchy> {
 
 	@Override
 	public void update(StateHierarchy value) throws DAOException {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public List<StateHierarchy> findByObjectTypeCode(CODE objectTypeCode) throws DataAccessException, DAOException {

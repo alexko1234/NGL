@@ -1,23 +1,21 @@
 package fr.cea.ig.ngl.test;
 
-import static fr.cea.ig.play.test.DevAppTesting.testInServer;
-import static play.inject.Bindings.bind;
-
+//import static fr.cea.ig.play.test.DevAppTesting.testInServer;
+//import static play.inject.Bindings.bind;
 import java.util.function.Function;
-
 import fr.cea.ig.authentication.IAuthenticator;
-import fr.cea.ig.authorization.IAuthorizator;
+//import fr.cea.ig.authorization.IAuthorizator;
 import fr.cea.ig.ngl.test.authentication.AuthenticatorAdmin;
 import fr.cea.ig.ngl.test.authentication.AuthenticatorNobody;
 import fr.cea.ig.ngl.test.authentication.AuthenticatorRead;
 import fr.cea.ig.ngl.test.authentication.AuthenticatorReadWrite;
 import fr.cea.ig.ngl.test.authentication.AuthenticatorWrite;
 import fr.cea.ig.ngl.test.authentication.Identity;
-import fr.cea.ig.ngl.test.authorization.TestAuthorizator;
+//import fr.cea.ig.ngl.test.authorization.TestAuthorizator;
 import fr.cea.ig.play.test.ApplicationFactory;
 import fr.cea.ig.play.test.WSHelper;
-import play.Application;
-import play.inject.Bindings;
+//import play.Application;
+//import play.inject.Bindings;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.Http.Status;
 

@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -30,26 +30,24 @@ import play.mvc.Result;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
 
-public class Samples extends DocumentController<AbstractSample>{
+public class Samples extends DocumentController<AbstractSample> {
+	
 	private static final play.Logger.ALogger logger = play.Logger.of(Samples.class);
 
-
-	final /*static*/ Form<SamplesSearchForm> samplesSearchForm;// = form(SamplesSearchForm.class);
-	final /*static*/ Form<AbstractSample> sampleForm ;//= form(AbstractSample.class);
+//	private final /*static*/ Form<SamplesSearchForm> samplesSearchForm;// = form(SamplesSearchForm.class);
+	private final /*static*/ Form<AbstractSample> sampleForm ;//= form(AbstractSample.class);
 
 	@Inject
 	public Samples(NGLContext ctx) {
 		super(ctx,InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class);
-		samplesSearchForm = ctx.form(SamplesSearchForm.class);
+//		samplesSearchForm = ctx.form(SamplesSearchForm.class);
 		sampleForm = ctx.form(AbstractSample.class);
 	}
 
-	public Result get(String code)
-	{
+	public Result get(String code) {
 		return ok(Json.toJson(getSample(code)));
 	}
 
-	
 	public Result list() {	
 		/*
 		Form<SamplesSearchForm> samplesSearchFilledForm = filledFormQueryString(samplesSearchForm, SamplesSearchForm.class);
@@ -81,16 +79,18 @@ public class Samples extends DocumentController<AbstractSample>{
 		//Get Submission from DB 
 		AbstractSample sample = getSample(code);
 		Form<AbstractSample> filledForm = getFilledForm(sampleForm, AbstractSample.class);
-
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 		if (sample == null) {
-			filledForm.reject("Sample " +  code, "not exist in database");  // si solution filledForm.reject
-			return badRequest(filledForm.errorsAsJson( )); // legit
+//			filledForm.reject("Sample " +  code, "not exist in database");  // si solution filledForm.reject
+//			return badRequest(filledForm.errorsAsJson( )); // legit
+			ctxVal.addError("Sample " +  code, "not exist in database");  // si solution filledForm.reject
+			return badRequest(errorsAsJson(ctxVal.getErrors())); // legit
 		}
 		System.out.println(" ok je suis dans Samples.update\n");
 		AbstractSample sampleInput = filledForm.get();
 
 		if (code.equals(sampleInput.code)) {
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+//			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 			ctxVal.setUpdateMode();
 			ctxVal.getContextObjects().put("type", "sra");
 			sampleInput.traceInformation.setTraceInformation(getCurrentUser());
@@ -108,18 +108,18 @@ public class Samples extends DocumentController<AbstractSample>{
 				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}		
 		} else {
-			filledForm.reject("sample code " + code + " and sampleInput.code " + sampleInput.code , " are not the same");
-			return badRequest(filledForm.errorsAsJson( )); // legit
+//			filledForm.reject("sample code " + code + " and sampleInput.code " + sampleInput.code , " are not the same");
+//			return badRequest(filledForm.errorsAsJson( )); // legit
+			ctxVal.addError("sample code " + code + " and sampleInput.code " + sampleInput.code , " are not the same");
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
-	private AbstractSample getSample(String code)
-	{
+	private AbstractSample getSample(String code) {
 		AbstractSample sample = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class, code);
 		return sample;
 	}
 
-	
 	private Query getQuery(SamplesSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
@@ -149,9 +149,10 @@ public class Samples extends DocumentController<AbstractSample>{
 		} else if(StringUtils.isNotBlank(form.externalIdRegex)){
 			queries.add(DBQuery.regex("external", Pattern.compile(form.externalIdRegex)));
 		}
-		if(queries.size() > 0){
+		if (queries.size() > 0) {
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}
 		return query;
 	}
+	
 }

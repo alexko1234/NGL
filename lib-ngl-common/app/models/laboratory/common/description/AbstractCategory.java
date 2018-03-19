@@ -1,5 +1,9 @@
 package models.laboratory.common.description;
 
+import static fr.cea.ig.lfw.utils.Hashing.hash;
+import static fr.cea.ig.lfw.utils.Equality.objectEquals;
+import static fr.cea.ig.lfw.utils.Equality.typedEquals;
+
 import models.utils.Model;
 
 /**
@@ -31,20 +35,22 @@ public abstract class AbstractCategory<T> extends Model<T> {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		AbstractCategory<?> other = (AbstractCategory<?>) obj;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} /*else if (!name.equals(other.name))
-			return false;
-		return true;*/
-		return name.equals(other.name);
+//		if (this == obj)
+//			return true;
+//		if (!super.equals(obj))
+//			return false;
+//		if (getClass() != obj.getClass())
+//			return false;
+//		AbstractCategory<?> other = (AbstractCategory<?>) obj;
+//		if (name == null) {
+//			if (other.name != null)
+//				return false;
+//		} /*else if (!name.equals(other.name))
+//			return false;
+//		return true;*/
+//		return name.equals(other.name);
+		return typedEquals(AbstractCategory.class, this, obj, 
+				           (a,b) -> super.equals(obj) && objectEquals(a.name,b.name));
 	}
 
 }

@@ -73,14 +73,13 @@ public class Files extends ReadSetsController {
 	@Permission(value={"writing"})
 	public Result save(String readsetCode) {
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", readsetCode));
-		if (null == readSet) {
+		if (readSet == null)
 			return badRequest();
-		}
 		
 		Form<File> filledForm = getFilledForm(fileForm, File.class);
-		File file = filledForm.get();
-				
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		File file = filledForm.get();				
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		ctxVal.putObject("readSet", readSet);
 		ctxVal.putObject("objectClass", readSet.getClass());
 		ctxVal.setCreationMode();
@@ -107,9 +106,10 @@ public class Files extends ReadSetsController {
 		
 		Form<File> filledForm = getFilledForm(fileForm, File.class);
 		File fileInput = filledForm.get();
-		if(queryFieldsForm.fields == null){
+		if (queryFieldsForm.fields == null) {
 			if (fullname.equals(fileInput.fullname)) {			
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 				ctxVal.putObject("readSet", readSet);
 				ctxVal.putObject("objectClass", readSet.getClass());
 				ctxVal.setUpdateMode();
@@ -127,8 +127,9 @@ public class Files extends ReadSetsController {
 			} else {
 				return badRequest("fullname are not the same");
 			}
-		}else{ //update only some authorized properties
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+		} else { //update only some authorized properties
+//			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 			ctxVal.putObject("readSet", readSet);
 			ctxVal.putObject("objectClass", readSet.getClass());
 			ctxVal.setUpdateMode();
@@ -144,7 +145,7 @@ public class Files extends ReadSetsController {
 						DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.is("files.fullname", fullname)),
 						getBuilder(fileInput, queryFieldsForm.fields, File.class,"files.$").set("traceInformation", getUpdateTraceInformation(readSet))); 
 				
-				if(queryFieldsForm.fields.contains("fullname") && null != fileInput.fullname){
+				if (queryFieldsForm.fields.contains("fullname") && fileInput.fullname != null) {
 					fullname = fileInput.fullname;
 				}
 				return get(readSetCode, fullname);
@@ -157,12 +158,9 @@ public class Files extends ReadSetsController {
 	@Permission(value={"writing"})
 	public Result delete(String readsetCode, String fullname) {
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("code", readsetCode), DBQuery.is("files.fullname", fullname)));
-		if (null == readSet) {
+		if (readSet == null) 
 			return badRequest();
-		}
-		
 		//TODO Doit marcher {$pull : {"files" : {"fullname" : {$regex : "trim"}}}}
-		
 		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("code", readsetCode), DBQuery.is("files.fullname", fullname)), DBUpdate.unset("files.$").set("traceInformation", getUpdateTraceInformation(readSet)));
 		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code",readsetCode), DBUpdate.pull("files", null));
 		return ok();
@@ -171,9 +169,8 @@ public class Files extends ReadSetsController {
 	@Permission(value={"writing"})
 	public Result deleteByReadSetCode(String readsetCode) { 
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", readsetCode));
-		if (null == readSet) {
+		if (readSet == null)
 			return badRequest();
-		}
 		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.is("code", readsetCode), DBUpdate.unset("files"));
 		return ok();
@@ -182,13 +179,11 @@ public class Files extends ReadSetsController {
 	@Permission(value={"writing"})
 	public Result deleteByRunCode(String runCode) { 
 		Run run  = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runCode);
-		if (run==null) {
+		if (run == null)
 			return notFound();
-		}
 		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.and(DBQuery.is("runCode", runCode)), DBUpdate.unset("files"));
 		return ok();
 	}
 	
-
 }

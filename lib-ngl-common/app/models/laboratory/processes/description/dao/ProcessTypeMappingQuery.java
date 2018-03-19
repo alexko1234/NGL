@@ -13,27 +13,36 @@ import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
 import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
 import models.utils.dao.DAOException;
+import models.utils.dao.MappingSqlQueryFactory;
+import models.utils.dao.NGLMappingSqlQuery;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.api.modules.spring.Spring;
 
-public class ProcessTypeMappingQuery extends MappingSqlQuery<ProcessType>{
+//public class ProcessTypeMappingQuery extends MappingSqlQuery<ProcessType> {
+public class ProcessTypeMappingQuery extends NGLMappingSqlQuery<ProcessType> {
 
+	public static final MappingSqlQueryFactory<ProcessType> factory = ProcessTypeMappingQuery::new;
+	
 	boolean lightVersion = false;
 	
-	public ProcessTypeMappingQuery()
-	{
-		super();
-	}
+//	public ProcessTypeMappingQuery()
+//	{
+//		super();
+//	}
 	
-	public ProcessTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)
-	{
-		super(ds,sql);
-		if(sqlParameter!=null)
-			super.declareParameter(sqlParameter);
-		compile();
+//	public ProcessTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
+//		super(ds,sql);
+//		if (sqlParameter != null)
+////			super.declareParameter(sqlParameter);
+//			declareParameter(sqlParameter);
+//		compile();
+//	}
+	
+	public ProcessTypeMappingQuery(DataSource ds, String sql, SqlParameter... sqlParameters) {
+		super(ds,sql,sqlParameters);
 	}
 
 	@Override
@@ -52,7 +61,8 @@ public class ProcessTypeMappingQuery extends MappingSqlQuery<ProcessType>{
 			processType.setCommonInfoType(commonInfoType);
 			//Get category
 			ProcessCategoryDAO processCategoryDAO = Spring.getBeanOfType(ProcessCategoryDAO.class);
-			ProcessCategory processCategory=(ProcessCategory) processCategoryDAO.findById(idProjectCategory);
+//			ProcessCategory processCategory=(ProcessCategory) processCategoryDAO.findById(idProjectCategory);
+			ProcessCategory processCategory = processCategoryDAO.findById(idProjectCategory);
 			processType.category = processCategory;
 			//Get list experimentType
 			if(!lightVersion){

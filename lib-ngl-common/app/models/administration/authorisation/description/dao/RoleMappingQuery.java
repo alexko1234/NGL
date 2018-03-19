@@ -12,31 +12,39 @@ import org.springframework.jdbc.object.MappingSqlQuery;
 import models.administration.authorisation.Permission;
 import models.administration.authorisation.Role;
 import models.utils.dao.DAOException;
+import models.utils.dao.MappingSqlQueryFactory;
+import models.utils.dao.NGLMappingSqlQuery;
 
 /**
  * 
  * @author michieli
  *
  */
-public class RoleMappingQuery extends MappingSqlQuery<Role>{
+//public class RoleMappingQuery extends MappingSqlQuery<Role>{
+public class RoleMappingQuery extends NGLMappingSqlQuery<Role> {
+
+	public static final MappingSqlQueryFactory<Role> factory = (d,s,ps) -> new RoleMappingQuery(d,s,ps);
 	
-	public RoleMappingQuery(){
-		super();
-	}
+//	public RoleMappingQuery(){
+//		super();
+//	}
 	
-	public RoleMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter){
-		super(ds,sql);
-		if (sqlParameter != null)
-			super.declareParameter(sqlParameter);
-		compile();
+//	public RoleMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
+//		super(ds,sql);
+//		if (sqlParameter != null)
+//			super.declareParameter(sqlParameter);
+//		compile();
+//	}
+	
+	public RoleMappingQuery(DataSource ds, String sql, SqlParameter... sqlParameters) {
+		super(ds,sql,sqlParameters);
 	}
 
 	@Override
 	protected Role mapRow(ResultSet rs, int rowNum) throws SQLException {
 		Role role = new Role();
-		role.id = rs.getLong("id");
+		role.id    = rs.getLong("id");
 		role.label = rs.getString("label");
-		
 		return role;
 	}
 

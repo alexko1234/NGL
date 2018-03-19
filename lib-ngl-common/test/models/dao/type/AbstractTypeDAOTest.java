@@ -1,34 +1,30 @@
 package models.dao.type;
 
-import static play.test.Helpers.fakeApplication;
-
-import java.util.Map;
-
+//import static play.test.Helpers.fakeApplication;
+//import java.util.Map;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectType;
-import models.laboratory.reagent.description.ReagentCatalog;
+//import models.laboratory.reagent.description.ReagentCatalog;
 import models.laboratory.run.description.TreatmentType;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
-import models.utils.DescriptionHelper;
+//import models.utils.DescriptionHelper;
 import models.utils.dao.DAOException;
-
-import org.junit.AfterClass;
+//import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
+//import org.junit.BeforeClass;
 import org.junit.Test;
-
-import play.Logger;
-import play.Logger.ALogger;
+//import play.Logger;
+//import play.Logger.ALogger;
 //import play.test.FakeApplication;
-import play.test.Helpers;
+//import play.test.Helpers;
 import utils.AbstractTests;
 
-public class AbstractTypeDAOTest extends AbstractTests{
+public class AbstractTypeDAOTest extends AbstractTests {
 
-	protected static ALogger logger=Logger.of("AbstractTypeDAOTest");
+	protected static play.Logger.ALogger logger = play.Logger.of("AbstractTypeDAOTest");
 
 	@Test
 	public void experimentTypeFindTest() throws DAOException {
@@ -71,7 +67,6 @@ public class AbstractTypeDAOTest extends AbstractTests{
 		Assert.assertNotNull(ProcessType.find.findAll());
 	}
 
-
 	@Test
 	public void sampleTypeFindTest() throws DAOException {
 		SampleType type=SampleType.find.findAll().get(0);
@@ -83,7 +78,6 @@ public class AbstractTypeDAOTest extends AbstractTests{
 		Assert.assertFalse(SampleType.find.isCodeExist(""));
 		Assert.assertNotNull(SampleType.find.findAllForList());
 	}
-
 
 	@Test
 	public void importTypeFindTest() throws DAOException {		

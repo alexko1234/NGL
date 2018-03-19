@@ -53,7 +53,8 @@ public class UpdateSampleCNS extends UpdateSamplePropertiesCNS{
 			Sample sample=limsServices.findSampleToCreate(contextError, sampleCode);
 			ContextValidation contextValidation = new ContextValidation(Constants.NGL_DATA_USER);
 			MongoDBDAO.deleteByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sample.code);
-			Sample newSample =(Sample) InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,contextValidation,true);
+//			Sample newSample =(Sample) InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,contextValidation,true);
+			Sample newSample = InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,contextValidation,true);
 			if(!contextValidation.hasErrors()){
 				limsServices.updateMaterielLims(newSample, contextError);
 				/*

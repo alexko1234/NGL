@@ -9,19 +9,23 @@ import models.laboratory.common.description.CodeLabel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+//import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
 @Repository
 public class CodeLabelDAO {
 
 	protected DataSource dataSource;
-	protected SimpleJdbcTemplate jdbcTemplate;
+//	protected SimpleJdbcTemplate jdbcTemplate;
+	protected JdbcTemplate jdbcTemplate;
 	
 	@Autowired
 	@Qualifier("ngl")
 	public void setDataSource(DataSource dataSource) {
-		this.dataSource=dataSource;
-		jdbcTemplate = new SimpleJdbcTemplate(dataSource);   		
+		this.dataSource = dataSource;
+//		jdbcTemplate = new SimpleJdbcTemplate(dataSource);   		
+		jdbcTemplate = new JdbcTemplate(dataSource);   		
 	}
 	
 	public List<CodeLabel> findAll(){
@@ -53,4 +57,5 @@ public class CodeLabelDAO {
 		BeanPropertyRowMapper<CodeLabel> mapper = new BeanPropertyRowMapper<CodeLabel>(CodeLabel.class);
 		return this.jdbcTemplate.query(sql, mapper);
 	}
+	
 }

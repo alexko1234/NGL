@@ -82,29 +82,24 @@ public class ExpWorkflows extends Workflows<Experiment> {
 	public void applyPreStateRules(ContextValidation validation, Experiment exp, State nextState) {		
 		exp.traceInformation = updateTraceInformation(exp.traceInformation, nextState); 			
 		expWorkflowsHelper.updateStatus(exp, validation);
-		if("N".equals(nextState.code)){
+		if ("N".equals(nextState.code)) {
 			expWorkflowsHelper.updateComments(exp, validation);
 			expWorkflowsHelper.updateXCodes(exp); 	
 		} else if("IP".equals(nextState.code)){
 			expWorkflowsHelper.updateATMs(exp, false);	
-			
 			expWorkflowsHelper.createNewSampleCodesIfNeeded(exp, validation);
 			expWorkflowsHelper.createNewSamplesIfNeeded(exp, validation);
-			
 			expWorkflowsHelper.updateOutputContainerCodes(exp);
 		} else if("F".equals(nextState.code)) {
-			long t0 = System.currentTimeMillis();
+//			long t0 = System.currentTimeMillis();
 			expWorkflowsHelper.updateATMs(exp, false);
-			long t1 = System.currentTimeMillis();
-			
+//			long t1 = System.currentTimeMillis();			
 			expWorkflowsHelper.createNewSampleCodesIfNeeded(exp, validation);
 			expWorkflowsHelper.createNewSamplesIfNeeded(exp, validation);
-			
 			expWorkflowsHelper.updateOutputContainerCodes(exp);
-			long t2 = System.currentTimeMillis();
+//			long t2 = System.currentTimeMillis();
 			expWorkflowsHelper.createOutputContainerSupports(exp, validation);
-			long t3 = System.currentTimeMillis();
-		
+//			long t3 = System.currentTimeMillis();		
 		}
 	}
 	
@@ -113,11 +108,11 @@ public class ExpWorkflows extends Workflows<Experiment> {
 		if ("N".equals(exp.state.code)) {
 			expWorkflowsHelper.updateStateOfInputContainers(exp, getNewState("IW-E", validation.getUser()), validation);
 			expWorkflowsHelper.updateStateOfInputContainerSupports(exp, validation);					
-		} else if("IP".equals(exp.state.code)){		
+		} else if("IP".equals(exp.state.code)) {		
 			expWorkflowsHelper.updateStateOfInputContainers(exp, getNewState("IU", validation.getUser()), validation);
 			expWorkflowsHelper.updateStateOfInputContainerSupports(exp, validation);
 			expWorkflowsHelper.updateStateOfProcesses(exp,  getNewState("IP", validation.getUser()), validation);			
-		}else if("F".equals(exp.state.code)){
+		} else if("F".equals(exp.state.code)) {
 			expWorkflowsHelper.updateStateOfInputContainers(exp, getNewState("IW-D", validation.getUser()), validation);
 			expWorkflowsHelper.updateStateOfInputContainerSupports(exp, validation);				
 			expWorkflowsHelper.updateStateOfProcesses(exp, getNewState("IP", validation.getUser()), validation);
@@ -126,8 +121,7 @@ public class ExpWorkflows extends Workflows<Experiment> {
 			}
 		}
 		expWorkflowsHelper.callWorkflowRules(validation, exp);
-		
-		if(validation.hasErrors()){
+		if (validation.hasErrors()) {
 			logger.error("Problem on ExpWorkflow.applySuccessPostStateRules : "+validation.errors.toString());
 		}
 	}
@@ -136,16 +130,15 @@ public class ExpWorkflows extends Workflows<Experiment> {
 		ContextValidation errorValidation = new ContextValidation(validation.getUser());
 		errorValidation.setContextObjects(validation.getContextObjects());
 		
-		if("N".equals(nextState.code)){
+		if ("N".equals(nextState.code)) {
 			//
-		} else if("IP".equals(nextState.code)){	
+		} else if("IP".equals(nextState.code)) {	
 			expWorkflowsHelper.removeOutputContainerCode(exp, errorValidation);
 			expWorkflowsHelper.deleteSamplesIfNeeded(exp, errorValidation); //TODO Need to clean the output container and replace new sample by old sample
-		}else if("F".equals(nextState.code)){
+		} else if("F".equals(nextState.code)) {
 			expWorkflowsHelper.deleteOutputContainerSupports(exp, errorValidation);
 			expWorkflowsHelper.deleteSamplesIfNeeded(exp, errorValidation);
 		}
-		
 		if(errorValidation.hasErrors()){
 			logger.error("Problem on ExpWorkflow.applyErrorPostStateRules : "+errorValidation.errors.toString());
 		}

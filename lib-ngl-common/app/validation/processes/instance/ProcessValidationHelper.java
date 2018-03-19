@@ -16,7 +16,7 @@ import models.laboratory.processes.instance.SampleOnInputContainer;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.mongojack.DBQuery;
 
 import fr.cea.ig.MongoDBDAO;
@@ -30,20 +30,18 @@ import validation.utils.ValidationHelper;
 public class ProcessValidationHelper extends CommonValidationHelper {
 
 	public static void validateProcessType(String typeCode,
-			Map<String, PropertyValue> properties,
-			ContextValidation contextValidation) {
-		ProcessType processType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ProcessType.find,true);
-		if(processType!=null){
+			                               Map<String, PropertyValue> properties,
+			                               ContextValidation contextValidation) {
+		ProcessType processType = BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ProcessType.find,true);
+		if (processType != null) {
 			contextValidation.addKeyToRootKeyName("properties");
 			ValidationHelper.validateProperties(contextValidation, properties, processType.getPropertiesDefinitionDefaultLevel());
 			contextValidation.removeKeyFromRootKeyName("properties");
 		}
-		
 	}
 
 	public static void validateProcessCategory(String categoryCode, ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "categoryCode", ProcessCategory.find,false);
-		
 	}
 
 	public static void validateCurrentExperimentTypeCode(String currentExperimentTypeCode,
@@ -126,7 +124,7 @@ public class ProcessValidationHelper extends CommonValidationHelper {
 					contextValidation.addErrors("outputContainerCodes."+container.code, ValidationConstants.ERROR_BADSTATE_MSG, container.state.code);
 				}
 			}
-		}
-				
+		}	
 	}
+	
 }

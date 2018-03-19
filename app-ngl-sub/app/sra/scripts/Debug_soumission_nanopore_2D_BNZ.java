@@ -3,6 +3,7 @@ package sra.scripts;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -17,6 +18,7 @@ import services.FileAcServices;
 import services.SubmissionServices;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.lfw.controllers.AbstractScript;
 import mail.MailServiceException;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.run.instance.InstrumentUsed;
@@ -32,17 +34,16 @@ import models.sra.submit.util.SraException;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 
-
 public class Debug_soumission_nanopore_2D_BNZ extends AbstractScript {
 	
-	private FileAcServices fileAcServices;
-	private SubmissionServices submissionServices;
+	private FileAcServices     fileAcServices;
+//	private SubmissionServices submissionServices;
 	
 	@Inject
 	public Debug_soumission_nanopore_2D_BNZ(FileAcServices fileAcServices, SubmissionServices submissionServices) {
-		super();
-		this.fileAcServices = fileAcServices;
-		this.submissionServices = submissionServices;
+//		super();
+		this.fileAcServices     = fileAcServices;
+//		this.submissionServices = submissionServices;
 	}
 	
 	@Override
@@ -51,15 +52,19 @@ public class Debug_soumission_nanopore_2D_BNZ extends AbstractScript {
 	}
 	
 	public void reloadAC() throws IOException, SraException, MailServiceException {
-		List<String> submissionCodes = new ArrayList<String>();
-		submissionCodes.add("CNS_BNZ_2CMG1195V");
-		submissionCodes.add("CNS_BNZ_2CLH1PNRK");
-		submissionCodes.add("CNS_BNZ_2CLH1D04I");
-		
+//		List<String> submissionCodes = new ArrayList<String>();
+//		submissionCodes.add("CNS_BNZ_2CMG1195V");
+//		submissionCodes.add("CNS_BNZ_2CLH1PNRK");
+//		submissionCodes.add("CNS_BNZ_2CLH1D04I");
+		List<String> submissionCodes = 
+				Arrays.asList("CNS_BNZ_2CMG1195V", 
+						      "CNS_BNZ_2CLH1PNRK",
+						      "CNS_BNZ_2CLH1D04I" );
 		for (String submissionCode: submissionCodes) {
 			Submission submission = MongoDBDAO
 					.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, 
-							models.sra.submit.common.instance.Submission.class, submissionCode);
+							    models.sra.submit.common.instance.Submission.class, 
+							    submissionCode);
 			File fileEbi = new File("/env/cns/home/sgas/debug_soumission_nanopore",  "listAC_" + submission.code + ".txt");
 			String user = "william";
 			ContextValidation ctxVal = new ContextValidation(user);
@@ -70,14 +75,12 @@ public class Debug_soumission_nanopore_2D_BNZ extends AbstractScript {
 	public Run createRunEntityForMinion2D(ReadSet readSet, String runCode) {
 		// On cree le run pour le readSet demandé.
 		// La validite du readSet doit avoir été testé avant.
-
 		// Recuperer pour le readSet la liste des fichiers associés:
-
 		String laboratoryRunCode = readSet.runCode;
-		models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
-		InstrumentUsed instrumentUsed = laboratoryRun.instrumentUsed;
-		
-		List <models.laboratory.run.instance.File> list_files =  readSet.files;
+//		models.laboratory.run.instance.Run  laboratoryRun = 
+				MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
+//		InstrumentUsed instrumentUsed = laboratoryRun.instrumentUsed;
+		List <models.laboratory.run.instance.File> list_files = readSet.files;
 		if (list_files == null) {
 			System.out.println("Aucun fichier pour le readSet " + readSet.code +"???");
 		} else {
@@ -87,9 +90,8 @@ public class Debug_soumission_nanopore_2D_BNZ extends AbstractScript {
 		Date runDate = readSet.runSequencingStartDate;
 		Run run = new Run();
 		//run.code = SraCodeHelper.getInstance().generateRunCode(readSet.code);
-		run.code = runCode;
+		run.code    = runCode;
 		run.runDate = runDate;
-
 		//run.projectCode = projectCode;
 		run.runCenter = VariableSRA.centerName;
 		// Renseigner le run pour ces fichiers sur la base des fichiers associes au readSet :
@@ -104,51 +106,46 @@ public class Debug_soumission_nanopore_2D_BNZ extends AbstractScript {
 					//&& ! runInstanceExtentionFileName.equalsIgnoreCase("fna") && ! runInstanceExtentionFileName.equalsIgnoreCase("qual")
 					//&& ! runInstanceExtentionFileName.equalsIgnoreCase("fna.gz") && ! runInstanceExtentionFileName.equalsIgnoreCase("qual.gz")) {
 			if  (runInstanceExtentionFileName.equalsIgnoreCase("fastq.gz") || runInstanceExtentionFileName.equalsIgnoreCase("fastq")) {
-					RawData rawData = new RawData();
-					//System.out.println("fichier " + runInstanceFile.fullname);
-					rawData.extention = runInstanceFile.extension;
-					System.out.println("dataDir "+dataDir);
-					rawData.directory = dataDir.replaceFirst("\\/$", ""); // oter / terminal si besoin
-					System.out.println("raw data directory"+rawData.directory);
-					rawData.relatifName = runInstanceFile.fullname;
-					rawData.location = readSet.location;
-					if (runInstanceFile.properties != null && runInstanceFile.properties.containsKey("md5")) {
-						rawData.md5 = (String) runInstanceFile.properties.get("md5").value;
-						System.out.println("Recuperation du md5 pour" + rawData.relatifName +"= " + rawData.md5);
-					}
-					printfln("----rawData=%s",rawData.relatifName);
-					
-					if(rawData.relatifName.contains("_raw")) {
-						run.listRawData.add(rawData);
-					}		
+				RawData rawData = new RawData();
+				//System.out.println("fichier " + runInstanceFile.fullname);
+				rawData.extention = runInstanceFile.extension;
+				System.out.println("dataDir "+dataDir);
+				rawData.directory = dataDir.replaceFirst("\\/$", ""); // oter / terminal si besoin
+				System.out.println("raw data directory"+rawData.directory);
+				rawData.relatifName = runInstanceFile.fullname;
+				rawData.location = readSet.location;
+				if (runInstanceFile.properties != null && runInstanceFile.properties.containsKey("md5")) {
+					rawData.md5 = (String) runInstanceFile.properties.get("md5").value;
+					System.out.println("Recuperation du md5 pour" + rawData.relatifName +"= " + rawData.md5);
+				}
+				printfln("----rawData=%s",rawData.relatifName);
+				if(rawData.relatifName.contains("_raw")) {
+					run.listRawData.add(rawData);
+				}		
 			}
 		}
 		return run;
 	}
 	
-	
-	
 	public void debugRun() throws Exception {
-		List<String> submissionCodes = new ArrayList<String>();
-		submissionCodes.add("CNS_BNZ_2CMG1195V");
-		submissionCodes.add("CNS_BNZ_2CLH1PNRK");
-		submissionCodes.add("CNS_BNZ_2CLH1D04I");
+//		List<String> submissionCodes = new ArrayList<String>();
+//		submissionCodes.add("CNS_BNZ_2CMG1195V");
+//		submissionCodes.add("CNS_BNZ_2CLH1PNRK");
+//		submissionCodes.add("CNS_BNZ_2CLH1D04I");
+		List<String> submissionCodes = 
+				Arrays.asList("CNS_BNZ_2CMG1195V",
+						      "CNS_BNZ_2CLH1PNRK",
+						      "CNS_BNZ_2CLH1D04I");
 		//SubmissionServices submissionServices = new SubmissionServices();
-		String stateCode = "IP-SUB";
-		
+		// String stateCode = "IP-SUB";
 		for (String submissionCode:submissionCodes) {
 			Submission submission = MongoDBDAO
 					.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
 			printfln("**********soumission = %s avec %d run ", submission.code, submission.runCodes.size());
-
 			for (String expCode : submission.experimentCodes) {
-				Experiment exp = MongoDBDAO
-						.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, expCode);
-
-
-				Run runOri = exp.run;
-				
-				
+//				Experiment exp = 
+				    MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, expCode);
+//				Run runOri = exp.run;
 /*				
 				MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class,
 						DBQuery.is("code", exp.code),

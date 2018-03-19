@@ -1,23 +1,19 @@
 package services;
 
 //import static fr.cea.ig.play.IGGlobals.ws;
-
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
+// import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+// import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-
 
 //import play.Logger;
 import validation.ContextValidation;
@@ -27,7 +23,7 @@ import workflows.sra.submission.SubmissionWorkflowsHelper;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
-import models.laboratory.common.instance.TraceInformation;
+// import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.InstrumentUsed;
 import models.laboratory.run.instance.Lane;
@@ -49,7 +45,7 @@ import models.sra.submit.sra.instance.ReadSpec;
 import models.sra.submit.sra.instance.Run;
 import models.sra.submit.util.SraCodeHelper;
 import models.sra.submit.util.SraException;
-import models.sra.submit.util.SraParameter;
+// import models.sra.submit.util.SraParameter;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import fr.cea.ig.MongoDBDAO;
@@ -64,8 +60,8 @@ import java.nio.file.Paths;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.time.DateUtils;
+// import org.apache.commons.collections.CollectionUtils;
+// import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -82,15 +78,11 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-
-
 // import play.api.modules.spring.Spring;
 // import play.libs.F.Promise;
 // import play.libs.ws.WS;
 import play.libs.ws.WSResponse;
 //import specs2.run;
-
-
 
 public class SubmissionServices {
 	
@@ -213,7 +205,6 @@ public class SubmissionServices {
 	}
 	
 	private Submission createSubmissionEntityforRelease(Study study, String user, List<String> projectCodes) throws SraException{
-		
 		Submission submission = null;
 		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
 		Date courantDate = new java.util.Date();
@@ -278,7 +269,7 @@ public class SubmissionServices {
 
 		System.out.println("\ntaille de la map des userClone dans init = " + mapUserClones.size());
 		
-
+		
 		String user = contextValidation.getUser();
 		
 		System.out.println("Dans init : acStudy = " + acStudy + " et acSample= " + acSample);
@@ -406,7 +397,7 @@ public class SubmissionServices {
 		int countError = 0;
 		String errorMessage = "";
 	
-		for(ReadSet readSet : readSets) {
+		for (ReadSet readSet : readSets) {
 			System.out.println("readSet :" + readSet.code);
 			// Verifier que c'est une premiere soumission pour ce readSet
 			// Verifiez qu'il n'existe pas d'objet experiment referencant deja ce readSet
@@ -542,7 +533,7 @@ public class SubmissionServices {
 			} else { // strategie internal_sample
 				System.out.println ("Dans init, cas strategy_internal_sample");
 
-				Sample sample= null;
+				Sample sample = null;
 
 				if (StringUtils.isNotBlank(acSample)){
 					sample = MongoDBDAO.findOne(InstanceConstants.SRA_SAMPLE_COLL_NAME,
@@ -550,9 +541,7 @@ public class SubmissionServices {
 					if (sample == null){
 						// bug
 					}
-					
 				} else {
-				
 					// Recuperer le sample existant avec son state.code ou bien en creer un nouveau avec state.code='N'
 					sample = fetchSample(readSet, config.strategySample, scientificName, user);
 					// Renseigner l'objet submission :
@@ -579,8 +568,7 @@ public class SubmissionServices {
 						}	
 						// Le champs scientificName est rempli automatiquement et n'est pas surchargeable.
 					}
-				
-}
+				}
 				// Mise a jour de l'objet submission pour les samples references
 				if(!submission.refSampleCodes.contains(sample.code)){
 					submission.refSampleCodes.add(sample.code);
@@ -990,15 +978,11 @@ public class SubmissionServices {
 		submission.configCode = config.code;
 		// Creation de la map deportéé dans methode initPrimarySubmission pour ne mettre dans la map
 		// que les noms de clones utilisee par la soumission
-
-		
 		if (config.strategyStudy.equalsIgnoreCase("strategy_external_study")) {
 			// pas de study à soumettre et par defaut pas de release.
 			// ok submission.release == false et submission sans studyCode.
 		} else if (config.strategyStudy.equalsIgnoreCase("strategy_internal_study")) {
-		
 			Study study = null;
-			
 			if (StringUtils.isNotBlank(studyAc)) {
 				study = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME,
 						Study.class, DBQuery.and(DBQuery.is("accession", studyAc)));
@@ -1007,11 +991,10 @@ public class SubmissionServices {
 			} else {
 				// rien : cela peut etre une soumission avec mapCloneToAc
 			}
-			if (study!=null){
+			if (study != null) {
 				if (study.state == null) {
 					throw new SraException("study.state== null incompatible avec soumission. =>  study.state.code in ('N','F-SUB')");
 				}
-			
 				// mettre à jour l'objet submission pour le study  :
 				if (! submission.refStudyCodes.contains("study.code")){
 					submission.refStudyCodes.add(study.code);
@@ -1112,7 +1095,6 @@ public class SubmissionServices {
 			sample.state = new State("N", user);
 			sample.traceInformation.setTraceInformation(user);			
 		}
-		
 		System.out.println("readSetCode = " + readSet.code);
 		System.out.println("laboratorySampleCode = " + laboratorySampleCode);
 		System.out.println("laboratorySampleName = " + laboratorySampleName);
@@ -1270,8 +1252,7 @@ public class SubmissionServices {
 						}	
 					}
 				}
-			}
-			
+			}		
 			if (experiment.libraryLayoutNominalLength == null) {
 				// mettre valeur theorique de libraryLayoutNominalLength (valeur a prendre dans readSet.sampleOnContainer.properties.nominalLength) 
 				// voir recup un peu plus bas:
@@ -1426,9 +1407,8 @@ public class SubmissionServices {
 				}
 			}
 		}
-		System.out.println("'"+readSet.code+"'");
+		System.out.println("'" + readSet.code + "'");
 		experiment.readSpecs = new ArrayList<ReadSpec>();
-		
 		if( ! "rsnanopore".equalsIgnoreCase(readSet.typeCode)){
 			// IF ILLUMINA ET SINGLE  Attention != si nanopore et SINGLE
 			if (StringUtils.isNotBlank(experiment.libraryLayout) && experiment.libraryLayout.equalsIgnoreCase("SINGLE") ) {
@@ -1437,10 +1417,10 @@ public class SubmissionServices {
 				readSpec_1.readLabel = "F";
 				readSpec_1.readClass = "Application Read";
 				readSpec_1.readType = "forward";
-				readSpec_1.baseCoord = (Integer) 1;
+//				readSpec_1.baseCoord = (Integer) 1;
+				readSpec_1.baseCoord = 1;
 				experiment.readSpecs.add(readSpec_1);
 			}
-
 			// IF ILLUMINA ET PAIRED ET "forward-reverse"
 			if (StringUtils.isNotBlank(experiment.libraryLayout) && experiment.libraryLayout.equalsIgnoreCase("PAIRED") 
 					&& StringUtils.isNotBlank(experiment.libraryLayoutOrientation) && experiment.libraryLayoutOrientation.equalsIgnoreCase("forward-reverse") ) {
@@ -1449,7 +1429,8 @@ public class SubmissionServices {
 				readSpec_1.readLabel = "F";
 				readSpec_1.readClass = "Application Read";
 				readSpec_1.readType = "Forward";
-				readSpec_1.baseCoord = (Integer) 1;
+//				readSpec_1.baseCoord = (Integer) 1;
+				readSpec_1.baseCoord = 1;
 				experiment.readSpecs.add(readSpec_1);
 
 				ReadSpec readSpec_2 = new ReadSpec();
@@ -1469,7 +1450,8 @@ public class SubmissionServices {
 				readSpec_1.readLabel = "R";
 				readSpec_1.readClass = "Application Read";
 				readSpec_1.readType = "Reverse";
-				readSpec_1.baseCoord = (Integer) 1;
+//				readSpec_1.baseCoord = (Integer) 1;
+				readSpec_1.baseCoord = 1;
 				experiment.readSpecs.add(readSpec_1);
 
 				ReadSpec readSpec_2 = new ReadSpec();
@@ -1485,9 +1467,6 @@ public class SubmissionServices {
 		}
 		return experiment;
 	}
-
-	
-
 
 	public Run createRunEntity(ReadSet readSet) {
 		// On cree le run pour le readSet demandé.
@@ -1686,9 +1665,6 @@ public class SubmissionServices {
 		System.out.println("deletion dans base pour submission "+submissionCode);
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
 	}
-
-	
-	
 	
 }
 

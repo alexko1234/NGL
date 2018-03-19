@@ -13,31 +13,33 @@ import models.utils.dao.DAOException;
 
 public class TreatmentType extends CommonInfoType {
 
-	public TreatmentCategory category;
-	public String names;	
+	public static final TreatmentTypeFinder find = new TreatmentTypeFinder(); 
+
+	public TreatmentCategory          category;
+	public String                     names;	
 	public List<TreatmentTypeContext> contexts = new ArrayList<TreatmentTypeContext>();
-	public String displayOrders;
-
+	public String                     displayOrders;
 	
-	public static TreatmentTypeFinder find = new TreatmentTypeFinder(); 
-
 	public TreatmentType() {
 		super(TreatmentTypeDAO.class.getName());
 	}
 	
-	public static class TreatmentTypeFinder extends CommonInfoType.AbstractCommonInfoTypeFinder<TreatmentType>{
+	public static class TreatmentTypeFinder extends CommonInfoType.AbstractCommonInfoTypeFinder<TreatmentType,TreatmentTypeDAO> {
 
 		protected TreatmentTypeFinder() {
 			super(TreatmentTypeDAO.class);			
 		} 
 		
 		public List<TreatmentType> findByLevels(Level.CODE...levels) throws DAOException{
-			 return ((TreatmentTypeDAO)getInstance()).findByLevels(levels);			 
+//			 return ((TreatmentTypeDAO)getInstance()).findByLevels(levels);			 
+			 return getInstance().findByLevels(levels);			 
 		}
 		
 		public List<TreatmentType> findByTreatmentCategoryNames(String...categoryNames) throws DAOException{
-			 return ((TreatmentTypeDAO)getInstance()).findByTreatmentCategoryNames(categoryNames);			 
+//			 return ((TreatmentTypeDAO)getInstance()).findByTreatmentCategoryNames(categoryNames);			 
+			return getInstance().findByTreatmentCategoryNames(categoryNames);			 
 		}	
+
 	}
 	
 }

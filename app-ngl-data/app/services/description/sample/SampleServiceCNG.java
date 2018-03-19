@@ -1,25 +1,25 @@
 package services.description.sample;
 
-import static services.description.DescriptionFactory.newPropertiesDefinition;
+//import static services.description.DescriptionFactory.newPropertiesDefinition;
 import static services.description.DescriptionFactory.newSampleType;
-import static services.description.DescriptionFactory.newValues;
+//import static services.description.DescriptionFactory.newValues;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.Level;
-import models.laboratory.common.description.MeasureCategory;
-import models.laboratory.common.description.MeasureUnit;
-import models.laboratory.common.description.PropertyDefinition;
+//import models.laboratory.common.description.Level;
+//import models.laboratory.common.description.MeasureCategory;
+//import models.laboratory.common.description.MeasureUnit;
+//import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
 import services.description.Constants;
-import services.description.common.LevelService;
-import services.description.common.MeasureService;
+//import services.description.common.LevelService;
+//import services.description.common.MeasureService;
 
 public class SampleServiceCNG extends AbstractSampleService {
 	

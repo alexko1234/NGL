@@ -1,4 +1,4 @@
-package resources;
+package data.resources;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -24,17 +24,18 @@ import play.libs.Json;
 import play.libs.ws.WSResponse;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class RunTreatmentTest extends AbstractBIServerTest{
+public class LaneTreatmentTest extends AbstractBIServerTest{
 
 	static Run run;
 	static List<ReadSet> readSets;
 	static String jsonTopIndex;
+	static int nbLane;
 
 	@BeforeClass
 	public static void initData()
 	{
 		//get JSON Run to insert
-		List<Run> runs  = MongoDBDAO.find("ngl_bi.RunIllumina_dataWF", Run.class, DBQuery.exists("treatments.ngsrg").exists("treatments.topIndex")).toList();
+		List<Run> runs  = MongoDBDAO.find("ngl_bi.RunIllumina_dataWF", Run.class, DBQuery.exists("lanes.treatments.ngsrg").exists("lanes.treatments.topIndex")).toList();
 		for(Run runDB : runs){
 			readSets = MongoDBDAO.find("ngl_bi.ReadSetIllumina_dataWF", ReadSet.class, DBQuery.is("runCode", runDB.code)).toList();
 			if(readSets.size()>0){
@@ -43,8 +44,9 @@ public class RunTreatmentTest extends AbstractBIServerTest{
 			}
 		}
 		//Insert run
-		jsonTopIndex=Json.toJson(run.treatments.get("topIndex")).toString();
-		run.treatments.remove("topIndex");
+		jsonTopIndex=Json.toJson(run.lanes.get(0).treatments.get("topIndex")).toString();
+		nbLane=run.lanes.get(0).number;
+		run.lanes.get(0).treatments.remove("topIndex");
 		MongoDBDAO.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run);
 
 
@@ -53,9 +55,8 @@ public class RunTreatmentTest extends AbstractBIServerTest{
 		for(ReadSet readSet : readSets){
 			MongoDBDAO.save(InstanceConstants.READSET_ILLUMINA_COLL_NAME,readSet);
 		}
-
 	}
-
+	
 	@AfterClass
 	public static void deleteData()
 	{
@@ -67,60 +68,59 @@ public class RunTreatmentTest extends AbstractBIServerTest{
 		}
 
 	}
-
+	
 	@Test
 	public void test1list()
 	{
-		Logger.debug("list RunTreatment");
-		WSResponse response = WSHelper.getAsBot(ws, "/api/runs/"+run.code+"/treatments", 200);
+		Logger.debug("list LaneTreatment");
+		WSResponse response = WSHelper.getAsBot(ws, "/api/runs/"+run.code+"/lanes/1/treatments", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 
 	@Test
 	public void test2get()
 	{
-		Logger.debug("get RunTreatment");
-		WSResponse response = WSHelper.getAsBot(ws, "/api/runs/"+run.code+"/treatments/ngsrg", 200);
+		Logger.debug("get LaneTreatment");
+		WSResponse response = WSHelper.getAsBot(ws, "/api/runs/"+run.code+"/lanes/1/treatments/ngsrg", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 
 	@Test
 	public void test3head()
 	{
-		Logger.debug("head RunTreatment");
-		WSResponse response = WSHelper.headAsBot(ws, "/api/runs/"+run.code+"/treatments/ngsrg", 200);
+		Logger.debug("head LaneTreatment");
+		WSResponse response = WSHelper.headAsBot(ws, "/api/runs/"+run.code+"/lanes/1/treatments/ngsrg", 200);
 		assertThat(response).isNotNull();
 	}
-
+	
 	@Test
 	public void test4save()
 	{
-		Logger.debug("save RunTreatment");
-		WSHelper.postAsBot(ws, "/api/runs/"+run.code+"/treatments", jsonTopIndex, 200);
+		Logger.debug("save LaneTreatment");
+		WSHelper.postAsBot(ws, "/api/runs/"+run.code+"/lanes/"+nbLane+"/treatments", jsonTopIndex, 200);
 		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
 		Logger.debug("Run "+run.code);
-		assertThat(run.treatments.get("topIndex")).isNotNull();
+		assertThat(run.lanes.get(0).treatments.get("topIndex")).isNotNull();
 	}
 
 	@Test
 	public void test5update()
 	{
-		Logger.debug("update RunTreatment");
+		Logger.debug("update LaneTreatment");
 		//Get Treatment ngsrg
-		Treatment ngsrg = run.treatments.get("ngsrg");
-		ngsrg.results.get("default").put("flowcellVersion", new PropertySingleValue("testVersion"));
-		WSHelper.putObjectAsBot(ws, "/api/runs/"+run.code+"/treatments/ngsrg", ngsrg, 200);
+		Treatment ngsrg = run.lanes.get(0).treatments.get("ngsrg");
+		ngsrg.results.get("default").put("nbClusterIlluminaFilter", new PropertySingleValue(new Long(0)));
+		WSHelper.putObjectAsBot(ws, "/api/runs/"+run.code+"/lanes/"+nbLane+"/treatments/ngsrg", ngsrg, 200);
 		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
-		assertThat(run.treatments.get("ngsrg").results.get("default").get("flowcellVersion").getValue()).isEqualTo("testVersion");
+		assertThat(run.lanes.get(0).treatments.get("ngsrg").results.get("default").get("nbClusterIlluminaFilter").getValue()).isEqualTo(new Long(0));
 	}
-
-
+	
 	@Test
 	public void test6delete()
 	{
-		Logger.debug("delete RunTreatment");
-		WSHelper.deleteAsBot(ws,"/api/runs/"+run.code+"/treatments/topIndex",200);
+		Logger.debug("delete LaneTreatment");
+		WSHelper.deleteAsBot(ws,"/api/runs/"+run.code+"/lanes/"+nbLane+"/treatments/topIndex",200);
 		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
-		assertThat(run.treatments.get("topIndex")).isNull();
+		assertThat(run.lanes.get(0).treatments.get("topIndex")).isNull();
 	}
 }

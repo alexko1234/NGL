@@ -19,7 +19,7 @@ import validation.run.instance.ReadSetValidationHelper;
 import validation.run.instance.TreatmentValidationHelper;
 import validation.utils.ValidationHelper;
 
-public class ReadSet extends DBObject implements IValidation{
+public class ReadSet extends DBObject implements IValidation {
 
 	public String typeCode;
 	
@@ -44,7 +44,7 @@ public class ReadSet extends DBObject implements IValidation{
 	public Date archiveDate;
 	public TraceInformation traceInformation;
 	public Map<String,Treatment> treatments = new HashMap<String,Treatment>();
-	public Map<String, PropertyValue> properties= new HashMap<String, PropertyValue>();
+	public Map<String, PropertyValue> properties = new HashMap<>(); // <String, PropertyValue>();
 	
 	public List<File> files;
 	

@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
-import sra.scripts.utils.ZenIterable;
+import fr.cea.ig.lfw.utils.ZenIterable;
 
 
 public class FileLineIterable implements ZenIterable <List<String>> {

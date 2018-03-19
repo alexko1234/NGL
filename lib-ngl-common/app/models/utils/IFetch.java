@@ -1,7 +1,5 @@
 package models.utils;
 
-
-
 /**
  * @author mhaquell
  *

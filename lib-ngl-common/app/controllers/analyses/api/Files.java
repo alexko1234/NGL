@@ -65,7 +65,8 @@ public class Files extends SubDocumentController<Analysis, File> {
 		Form<File> filledForm = getSubFilledForm();
 		File inputFile = filledForm.get();
 				
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		ctxVal.putObject("analysis", objectInDB);
 		ctxVal.putObject("objectClass", objectInDB.getClass());
 		ctxVal.setCreationMode();
@@ -95,7 +96,8 @@ public class Files extends SubDocumentController<Analysis, File> {
 		File fileInput = filledForm.get();
 		if (queryFieldsForm.fields == null) {
 			if (fullname.equals(fileInput.fullname)) {			
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 				ctxVal.putObject("analysis", objectInDB);
 				ctxVal.putObject("objectClass", objectInDB.getClass());
 				ctxVal.setUpdateMode();
@@ -113,7 +115,8 @@ public class Files extends SubDocumentController<Analysis, File> {
 				return badRequest("fullname are not the same");
 			}
 		} else { //update only some authorized properties
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+//			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 			ctxVal.putObject("analysis", objectInDB);
 			ctxVal.putObject("objectClass", objectInDB.getClass());
 			ctxVal.setUpdateMode();
@@ -153,9 +156,8 @@ public class Files extends SubDocumentController<Analysis, File> {
 	@Permission(value={"writing"})
 	public Result deleteByParentCode(String parentCode) {
 		Analysis objectInDB = getObject(parentCode);
-		if (objectInDB == null) {
+		if (objectInDB == null)
 			return notFound();
-		}
 		
 		updateObject(DBQuery.is("code", parentCode), 
 				DBUpdate.unset("files").set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));		

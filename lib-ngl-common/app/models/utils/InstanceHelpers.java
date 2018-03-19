@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import models.laboratory.common.description.Level;
+// import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
@@ -28,15 +28,15 @@ import models.laboratory.run.instance.SampleOnContainer;
 import models.laboratory.sample.instance.Sample;
 import models.sra.submit.common.instance.Readset;
 
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.collections4.Transformer;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
 
-import play.Logger;
+//import play.Logger;
 import play.api.modules.spring.Spring;
 
 import play.mvc.Http;
@@ -52,30 +52,37 @@ import fr.cea.ig.MongoDBResult;
 
 public class InstanceHelpers {
 
-	@SuppressWarnings("unchecked")
+	public static final play.Logger.ALogger logger = play.Logger.of(InstanceHelpers.class);
+	
+	// @SuppressWarnings("unchecked")
 	public static Map<String, PropertyValue> getLazyMapPropertyValue() {
-		return MapUtils.lazyMap(new HashMap<String, PropertyValue>(), new Transformer() {
-			public PropertyValue transform(Object mapKey) {
-				// todo comment je sais quel est le type on doit mettre
+//		return MapUtils.lazyMap(new HashMap<String, PropertyValue<?>>(), new Transformer() {
+		return MapUtils.lazyMap(new HashMap<>(), new Transformer<String, PropertyValue>() {
+//			public PropertyValue<?> transform(Object mapKey) {
+			public PropertyValue transform(String mapKey) {
+				// TODO comment je sais quel est le type on doit mettre
 				return new PropertySingleValue();
 			}
 		});
 	}
-
-	@Deprecated
+	
 	public static String getUser() {
-		String user;
-		try {
-			user = Http.Context.current().session().get("CAS_FILTER_USER");
-			if (user == null) {
-				user = "ngl";
-			}
-		} catch (RuntimeException e) {
-			user = "ngl";
-		}
-		return user;
-
+		return fr.cea.ig.authentication.Authentication.getUser();
 	}
+
+//	@Deprecated
+//	public static String getUser() {
+//		String user;
+//		try {
+//			user = Http.Context.current().session().get("CAS_FILTER_USER");
+//			if (user == null) {
+//				user = "ngl";
+//			}
+//		} catch (RuntimeException e) {
+//			user = "ngl";
+//		}
+//		return user;
+//	}
 
 	public static List<Comment> addComment(String comment, List<Comment> comments, String user) {
 		if (comments == null) {
@@ -107,30 +114,30 @@ public class InstanceHelpers {
 		return new ArrayList<Comment>(0);					
 	}
 	
-	
-	@Deprecated
+	// TODO: replace by implementing ITracingAccess 
+	// @Deprecated
 	public static void updateTraceInformation(TraceInformation traceInformation, String user) {
-
 		if (traceInformation.createUser == null) {
 			traceInformation.createUser = user;
 		} else {
 			traceInformation.modifyUser = user;
 		}
-
 		if (traceInformation.creationDate == null) {
 			traceInformation.creationDate = new Date();
 		} else {
 			traceInformation.modifyDate = new Date();
 		}
-
 	}
-	@Deprecated
+	
+	// @Deprecated
 	public static TraceInformation updateTraceInformation(TraceInformation traceInformation, State nextState) {
 		traceInformation.modifyDate = nextState.date;
 		traceInformation.modifyUser = nextState.user;
 		return traceInformation;
 	}
-	@Deprecated
+	
+	// TODO: replace by implementing ITracingAccess 
+	// @Deprecated
 	public static TraceInformation getUpdateTraceInformation(TraceInformation traceInformation, String user) {
 		TraceInformation ti = null;
 		if (traceInformation == null) {
@@ -143,38 +150,55 @@ public class InstanceHelpers {
 	}
 
 	public static void copyPropertyValueFromPropertiesDefinition(List<PropertyDefinition> propertyDefinitions,
-			Map<String, PropertyValue> propertiesInput, Map<String, PropertyValue> propertiesOutPut) {
-		
-		if (propertiesOutPut == null) {
-			propertiesOutPut = new HashMap<String, PropertyValue>();
-		}
-		
+			                                                     Map<String, PropertyValue> propertiesInput, 
+			                                                     Map<String, PropertyValue> propertiesOutPut) {
+		// TODO: fix as it i is a meaningless creation and could as well return
+		//       immediately without doing anything.
+		if (propertiesOutPut == null) 
+			propertiesOutPut = new HashMap<>(); // <String, PropertyValue>();
 		for (PropertyDefinition propertyDefinition : propertyDefinitions) {
 			PropertyValue propertyValue = propertiesInput.get(propertyDefinition.code);
 			if (propertyValue != null) {
 				propertiesOutPut.put(propertyDefinition.code, propertyValue);
 			}
 		}
-
 	}
 	
-	public static Set<String> getDeletedPropertyDefinitionCode(List<PropertyDefinition> propertyDefinitions,
-			Map<String, PropertyValue> propertiesInput) {
+	public static Set<String> getDeletedPropertyDefinitionCode(List<PropertyDefinition> propertyDefinitions, Map<String, PropertyValue> propertiesInput) {
 		return propertyDefinitions.stream()
 			.filter(pd -> !propertiesInput.containsKey(pd.code))
 			.map(pd -> pd.code)
 			.collect(Collectors.toSet());			
 	}
 	
-	public static DBObject save(String collectionName, IValidation obj, ContextValidation contextError,
-			Boolean keepRootKeyName) {
+//	public static DBObject save(String collectionName, IValidation obj, ContextValidation contextError, Boolean keepRootKeyName) {
+//		ContextValidation localContextError = new ContextValidation(contextError.getUser());
+//		localContextError.setMode(contextError.getMode());
+//		if (keepRootKeyName) {
+//			localContextError.addKeyToRootKeyName(contextError.getRootKeyName());
+//		}
+//		localContextError.setContextObjects(contextError.getContextObjects());
+//		if (obj != null) {
+//			obj.validate(localContextError);
+//		} else {
+//			throw new IllegalArgumentException("missing object to validate");
+//		}
+//
+//		if (localContextError.errors.size() == 0) {
+//			return MongoDBDAO.save(collectionName, (DBObject) obj);
+//		} else {
+//			contextError.errors.putAll(localContextError.errors);
+//			logger.info("error(s) on output :: " + contextError.errors.toString());
+//			return null;
+//		}
+//	}
+	public static <T extends DBObject & IValidation> T save(String collectionName, T obj, ContextValidation contextError, Boolean keepRootKeyName) {
 		ContextValidation localContextError = new ContextValidation(contextError.getUser());
 		localContextError.setMode(contextError.getMode());
 		if (keepRootKeyName) {
 			localContextError.addKeyToRootKeyName(contextError.getRootKeyName());
 		}
 		localContextError.setContextObjects(contextError.getContextObjects());
-
 		if (obj != null) {
 			obj.validate(localContextError);
 		} else {
@@ -182,57 +206,58 @@ public class InstanceHelpers {
 		}
 
 		if (localContextError.errors.size() == 0) {
-			return MongoDBDAO.save(collectionName, (DBObject) obj);
+//			return MongoDBDAO.save(collectionName, (DBObject) obj);
+			return MongoDBDAO.save(collectionName, obj);
 		} else {
 			contextError.errors.putAll(localContextError.errors);
-			Logger.info("error(s) on output :: " + contextError.errors.toString());
+			logger.info("error(s) on output :: " + contextError.errors.toString());
 			return null;
 		}
 	}
 
-	public static DBObject save(String collectionName, IValidation obj, ContextValidation contextError) {
+//	public static DBObject save(String collectionName, IValidation obj, ContextValidation contextError) {
+//		return save(collectionName, obj, contextError, false);
+//	}
+	public static <T extends DBObject & IValidation> T save(String collectionName, T obj, ContextValidation contextError) {
 		return save(collectionName, obj, contextError, false);
 	}
 
-	public static <T extends DBObject> List<T> save(String collectionName, List<T> objects,
-			ContextValidation contextErrors) {
-
+	public static <T extends DBObject & IValidation> List<T> save(String collectionName, List<T> objects, ContextValidation contextErrors) {
 		List<T> dbObjects = new ArrayList<T>();
-
-		for (DBObject object : objects) {
-			@SuppressWarnings("unchecked")
-			T result = (T) InstanceHelpers.save(collectionName, (IValidation) object, contextErrors);
-			if (result != null) {
+//		for (DBObject object : objects) {
+		for (T object : objects) {
+//			@SuppressWarnings("unchecked")
+//			T result = (T) InstanceHelpers.save(collectionName, (IValidation) object, contextErrors);
+//			T result = (T) InstanceHelpers.save(collectionName, (IValidation)object, contextErrors);
+			T result = save(collectionName, object, contextErrors);
+			if (result != null)
 				dbObjects.add(result);
-			}
 		}
-
-		return (List<T>) dbObjects;
+//		return (List<T>) dbObjects;
+		return dbObjects;
 	}
 
-	public static <T extends DBObject> List<T> save(String collectionName, List<T> objects,
-			ContextValidation contextErrors, Boolean keepRootKeyName) {
-
+	public static <T extends DBObject& IValidation> List<T> save(String collectionName, List<T> objects,	ContextValidation contextErrors, Boolean keepRootKeyName) {
 		List<T> dbObjects = new ArrayList<T>();
-
-		for (DBObject object : objects) {
-			@SuppressWarnings("unchecked")
-			T result = (T) InstanceHelpers.save(collectionName, (IValidation) object, contextErrors, keepRootKeyName);
-			if (result != null) {
+//		for (DBObject object : objects) {
+		for (T object : objects) {
+//			@SuppressWarnings("unchecked")
+//			T result = (T) InstanceHelpers.save(collectionName, (IValidation) object, contextErrors, keepRootKeyName);
+			T result = save(collectionName, object, contextErrors, keepRootKeyName);
+			if (result != null) 
 				dbObjects.add(result);
-			}
 		}
-
-		return (List<T>) dbObjects;
+//		return (List<T>) dbObjects;
+		return dbObjects;
 	}
 
 	public static SampleOnContainer getSampleOnContainer(ReadSet readSet) {
 		// 1 retrieve containerSupportCode from Run
 		String containerSupportCode = getContainerSupportCode(readSet);
 		Container container = getContainer(readSet, containerSupportCode);
-		if (null != container) {
+		if (container != null) {
 			Content content = getContent(container, readSet);
-			if (null != content) {
+			if (content != null) {
 				SampleOnContainer sampleContainer = convertToSampleOnContainer(readSet, containerSupportCode,
 						container, content);
 				return sampleContainer;
@@ -244,12 +269,12 @@ public class InstanceHelpers {
 	public static SampleOnInputContainer getSampleOnInputContainer(Content content,Container container) {
 
 		SampleOnInputContainer sampleOnInputContainer = new SampleOnInputContainer();
-		sampleOnInputContainer.projectCode = content.projectCode;
-		sampleOnInputContainer.sampleCode = content.sampleCode;
+		sampleOnInputContainer.projectCode        = content.projectCode;
+		sampleOnInputContainer.sampleCode         = content.sampleCode;
 		sampleOnInputContainer.sampleCategoryCode = content.sampleCategoryCode;
-		sampleOnInputContainer.sampleTypeCode = content.sampleTypeCode;
-		sampleOnInputContainer.percentage = content.percentage;
-		sampleOnInputContainer.properties = content.properties;
+		sampleOnInputContainer.sampleTypeCode     = content.sampleTypeCode;
+		sampleOnInputContainer.percentage         = content.percentage;
+		sampleOnInputContainer.properties         = content.properties;
 
 		Sample sample = getSample(content.sampleCode);
 		
@@ -290,22 +315,22 @@ public class InstanceHelpers {
 		return sc;
 	}
 
-	public static Sample convertToSample(ReadSet readSet)
-	{
+	public static Sample convertToSample(ReadSet readSet) {
 		SampleOnContainer sampleOnContainer = readSet.sampleOnContainer;
 		Sample sample = new Sample();
-		sample.code=sampleOnContainer.sampleCode;
-		sample.name=sampleOnContainer.sampleCode;
-		sample.typeCode=sampleOnContainer.sampleTypeCode;
-		sample.categoryCode=sampleOnContainer.sampleCategoryCode;
-		sample.properties=sampleOnContainer.properties;
-		sample.referenceCollab=sampleOnContainer.referenceCollab;
-		sample.projectCodes = new HashSet<>();
+		sample.code            = sampleOnContainer.sampleCode;
+		sample.name            = sampleOnContainer.sampleCode;
+		sample.typeCode        = sampleOnContainer.sampleTypeCode;
+		sample.categoryCode    = sampleOnContainer.sampleCategoryCode;
+		sample.properties      = sampleOnContainer.properties;
+		sample.referenceCollab = sampleOnContainer.referenceCollab;
+		sample.projectCodes    = new HashSet<>();
 		sample.projectCodes.add(readSet.projectCode);
-		sample.importTypeCode="external";
+		sample.importTypeCode  = "external";
 		InstanceHelpers.getUpdateTraceInformation(sample.traceInformation, "ngl-bi");
 		return sample;
 	}
+	
 	private static Content getContent(Container container, ReadSet readSet) {
 		String tag = getTag(readSet);
 		for (Content sampleUsed : container.contents) {
@@ -317,19 +342,19 @@ public class InstanceHelpers {
 					return sampleUsed;
 				}
 			} catch (Exception e) {
-				Logger.error("Problem with " + readSet.code + " / " + readSet.sampleCode + " : " + e.getMessage());
+				logger.error("Problem with " + readSet.code + " / " + readSet.sampleCode + " : " + e.getMessage());
 			}
 		}
-		Logger.warn("Not found Content for " + readSet.code + " / " + readSet.sampleCode);
+		logger.warn("Not found Content for " + readSet.code + " / " + readSet.sampleCode);
 		return null;
 	}
 
 	private static Object convertTagCodeToTagShortName(String tagCode) {
 		Index index=MongoDBDAO.findOne(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.in("typeCode", "index-illumina-sequencing","index-nanopore-sequencing").is("code", tagCode));
-		if(null != index){
+		if (index != null) {
 			return index.shortName;
-		}else{
-			Logger.error("Index not found for code : "+tagCode);
+		} else {
+			logger.error("Index not found for code : "+tagCode);
 			return null;
 		}		
 	}
@@ -339,12 +364,11 @@ public class InstanceHelpers {
 		return (codeParts.length == 2) ? codeParts[1] : null;
 	}
 	
-	
-	private static Sample getSample(String sampleCode){
-		return MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,
-				DBQuery.is("code", sampleCode));
+	private static Sample getSample(String sampleCode) {
+		return MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, 
+				                  Sample.class,
+				                  DBQuery.is("code", sampleCode));
 	}
-	
 	
 	public static String getReferenceCollab(String sampleCode){
 		Sample sample = getSample(sampleCode);
@@ -356,15 +380,14 @@ public class InstanceHelpers {
 				InstanceConstants.CONTAINER_COLL_NAME,
 				Container.class,
 				DBQuery.and(DBQuery.is("support.code", containerSupportCode),
-						DBQuery.is("support.line", readSet.laneNumber.toString()),
-						DBQuery.in("sampleCodes", readSet.sampleCode)));
+						    DBQuery.is("support.line", readSet.laneNumber.toString()),
+						    DBQuery.in("sampleCodes", readSet.sampleCode)));
 
 		if (cl.size() == 0) {
-			Logger.warn("Not found Container for " + readSet.code + " with : '" + containerSupportCode + ", "
+			logger.warn("Not found Container for " + readSet.code + " with : '" + containerSupportCode + ", "
 					+ readSet.laneNumber.toString() + ", " + readSet.sampleCode + "'");
 			return null;
 		}
-
 		return cl.toList().get(0);
 	}
 
@@ -375,6 +398,7 @@ public class InstanceHelpers {
 				.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code", readSet.runCode), keys);
 		return r.containerSupportCode;
 	}
+	
 	/*
 	 * Used to update content properties 
 	 * @param properties
@@ -382,12 +406,15 @@ public class InstanceHelpers {
 	 * @param deletedPropertyCodes
 	 * @return
 	 */
-	public static Map<String, PropertyValue> updateProperties(Map<String, PropertyValue> properties, Map<String, PropertyValue> newProperties, Set<String> deletedPropertyCodes){
+	public static Map<String, PropertyValue> updateProperties(Map<String, PropertyValue> properties, 
+			                                                     Map<String, PropertyValue> newProperties, 
+			                                                     Set<String> deletedPropertyCodes) {
 		properties.replaceAll((k,v) -> (newProperties.containsKey(k))?newProperties.get(k):v);							
 		newProperties.forEach((k,v)-> properties.putIfAbsent(k, v));
 		deletedPropertyCodes.forEach(code -> properties.remove(code));
 		return properties;
 	}
+	
 	/*
 	 * Update properties with using the oldValue to check if update is needed
 	 * @param properties
@@ -395,7 +422,10 @@ public class InstanceHelpers {
 	 * @param deletedPropertyCodes
 	 * @return
 	 */
-	public static Map<String, PropertyValue> updatePropertiesWithOldValueComparison(Map<String, PropertyValue> properties, Map<String, Pair<PropertyValue,PropertyValue>> newProperties, Set<String> deletedPropertyCodes){
+	public static Map<String, PropertyValue> 
+	              updatePropertiesWithOldValueComparison(Map<String, PropertyValue> properties, 
+	            		                                 Map<String, Pair<PropertyValue,PropertyValue>> newProperties, 
+	            		                                 Set<String> deletedPropertyCodes) {
 		//1 replace if old value equals old value
 		properties.replaceAll((k,v) -> (newProperties.containsKey(k) && ((newProperties.get(k).getLeft() != null && newProperties.get(k).getLeft().equals(v)) || newProperties.get(k).getLeft() == null))?newProperties.get(k).getRight():v);							
 		//2 add new properties
@@ -405,10 +435,13 @@ public class InstanceHelpers {
 		return properties;
 	}
 	
-	
-	public static void updateContentProperties(Set<String> projectCodes, Set<String> sampleCodes, Set<String> containerCodes,
-			Set<String> tags, Map<String, Pair<PropertyValue,PropertyValue>> updatedProperties, Set<String> deletedPropertyCodes,
-			ContextValidation validation) {
+	public static void updateContentProperties(Set<String> projectCodes, 
+			                                   Set<String> sampleCodes, 
+			                                   Set<String> containerCodes,
+			                                   Set<String> tags, 
+			                                   Map<String, Pair<PropertyValue,PropertyValue>> updatedProperties, 
+			                                   Set<String> deletedPropertyCodes,
+			                                   ContextValidation validation) {
 		MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,  DBQuery.in("code", containerCodes))
 			.cursor
 			.forEach(container -> {
@@ -438,7 +471,7 @@ public class InstanceHelpers {
 						.forEach(content -> {
 							content.properties = InstanceHelpers.updatePropertiesWithOldValueComparison(content.properties, updatedProperties, deletedPropertyCodes);							
 						});
-					if(null != atm.outputContainerUseds){
+					if (atm.outputContainerUseds != null) {
 						atm.outputContainerUseds
 							.stream()
 							.filter(ocu -> containerCodes.contains(ocu.code))							
@@ -484,9 +517,11 @@ public class InstanceHelpers {
 				}
 		});	
 	}
-	public static void updateContentProperties(Sample sample, Map<String, PropertyValue> updatedProperties, Set<String> deletedPropertyCodes,
-			ContextValidation validation) {
-		
+	
+	public static void updateContentProperties(Sample sample, 
+			                                   Map<String, PropertyValue> updatedProperties, 
+			                                   Set<String> deletedPropertyCodes,
+			                                   ContextValidation validation) {
 		MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, 
 				DBQuery.is("life.from.sampleCode",sample.code).in("life.from.projectCode", sample.projectCodes))
 			.cursor.forEach(updatedSample -> {
@@ -595,9 +630,10 @@ public class InstanceHelpers {
 	 * @param newProperties
 	 * @return a pair with left element is the old propertyValue and right the new propertyValue
 	 */
-	public static Map<String, Pair<PropertyValue,PropertyValue>> getUpdatedPropertiesForSomePropertyCodes(Set<String> propertyCodes, Map<String, PropertyValue> oldProperties,
-			Map<String, PropertyValue> newProperties) {
-		
+	public static Map<String, Pair<PropertyValue,PropertyValue>> 
+	              getUpdatedPropertiesForSomePropertyCodes(Set<String> propertyCodes, 
+	            		                                   Map<String, PropertyValue> oldProperties,
+	            		                                   Map<String, PropertyValue> newProperties) {
 		return propertyCodes.stream()
 					 .filter(code -> newProperties.containsKey(code))
 					 .filter(code -> !newProperties.get(code).equals(oldProperties.get(code)))
@@ -611,9 +647,9 @@ public class InstanceHelpers {
 	 * @param newProperties
 	 * @return
 	 */
-	public static Set<String> getDeletedPropertiesForSomePropertyCodes(Set<String> propertyCodes, Map<String, PropertyValue> dbProperties,
-			Map<String, PropertyValue> newProperties) {
-		
+	public static Set<String> getDeletedPropertiesForSomePropertyCodes(Set<String> propertyCodes, 
+			                                                           Map<String, PropertyValue> dbProperties,
+			                                                           Map<String, PropertyValue> newProperties) {
 		return propertyCodes.stream()
 					 .filter(code -> dbProperties.containsKey(code) && !newProperties.containsKey(code))
 					 .collect(Collectors.toSet());		

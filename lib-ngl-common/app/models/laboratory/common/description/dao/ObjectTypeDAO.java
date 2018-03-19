@@ -14,20 +14,23 @@ import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ObjectTypeDAO extends AbstractDAOMapping<ObjectType>{
+public class ObjectTypeDAO extends AbstractDAOMapping<ObjectType> {
 
+//	protected ObjectTypeDAO() {
+//		super("object_type", ObjectType.class, ObjectTypeMappingQuery.class, 
+//				"SELECT t.id as oId, t.code as codeObject, t.generic "+
+//				"FROM object_type as t ", true);
+//	}
 	protected ObjectTypeDAO() {
-		super("object_type", ObjectType.class, ObjectTypeMappingQuery.class, 
+		super("object_type", ObjectType.class, ObjectTypeMappingQuery.factory, 
 				"SELECT t.id as oId, t.code as codeObject, t.generic "+
 				"FROM object_type as t ", true);
 	}
 	
-	
 	public long save(ObjectType ot) throws DAOException {
 		//Check if objectType exist
-		if(null == ot){
+		if (ot == null) 
 			throw new DAOException("ObjectType is mandatory");
-		}
 		//Create new ot
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("code", ot.code);

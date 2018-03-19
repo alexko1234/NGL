@@ -15,14 +15,17 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ContainerSupportCategoryDAO extends AbstractDAOMapping<ContainerSupportCategory>{
 
+//	protected ContainerSupportCategoryDAO() {
+//		super("container_support_category", ContainerSupportCategory.class,
+//				ContainerSupportCategoryMappingQuery.class ,
+//				"select DISTINCT t.id, t.code, t.name, t.nbColumn, t.nbLine, t.nbUsableContainer, t.fk_container_category from container_support_category as t",true);
+//	}
 	protected ContainerSupportCategoryDAO() {
 		super("container_support_category", ContainerSupportCategory.class,
-				ContainerSupportCategoryMappingQuery.class ,
+				ContainerSupportCategoryMappingQuery.factory ,
 				"select DISTINCT t.id, t.code, t.name, t.nbColumn, t.nbLine, t.nbUsableContainer, t.fk_container_category from container_support_category as t",true);
 	}
 	
-	
-
 	@Override
 	public long save(ContainerSupportCategory containerSupportCategory) throws DAOException {
 		//Check if category exist

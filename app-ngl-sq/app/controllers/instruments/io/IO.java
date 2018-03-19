@@ -11,7 +11,7 @@ import models.laboratory.instrument.description.dao.InstrumentDAO;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.utils.DescriptionHelper;
 import models.utils.InstanceConstants;
-import play.Logger;
+//import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
@@ -30,6 +30,8 @@ import fr.cea.ig.play.NGLContext;
 import javax.inject.Inject;
 
 public class IO extends TPLCommonController {
+
+	private static final play.Logger.ALogger logger = play.Logger.of(IO.class);
 	
 	private final Form<PropertyFileValue> fileForm ; //= form(PropertyFileValue.class);
 	private final NGLContext context;
@@ -44,18 +46,19 @@ public class IO extends TPLCommonController {
 		return MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, code);
 	}
 	
-	private AbstractOutput getOutputInstance(Experiment experiment, ContextValidation contextValidation){
-		
-		if(ValidationHelper.required(contextValidation, experiment.instrument, "instrument") 
-				&& ValidationHelper.required(contextValidation, experiment.instrument.typeCode, "instrument.code")){
+	private AbstractOutput getOutputInstance(Experiment experiment, ContextValidation contextValidation){	
+		if (ValidationHelper.required(contextValidation, experiment.instrument, "instrument") 
+				&& ValidationHelper.required(contextValidation, experiment.instrument.typeCode, "instrument.code")) {
 			String className = getClassName(experiment, "Output");
-			
-			try{
+			try {
+				@SuppressWarnings("unchecked") // Uncheckable reflection 
 				Class<? extends AbstractOutput> clazz = (Class<? extends AbstractOutput>) Class.forName(className);
-				Constructor<?> constructor = clazz.getConstructor();
-				AbstractOutput instance = (AbstractOutput) constructor.newInstance();
+//				Constructor<?> constructor = clazz.getConstructor();
+//				AbstractOutput instance = (AbstractOutput) constructor.newInstance();
+				Constructor<? extends AbstractOutput> constructor = clazz.getConstructor();
+				AbstractOutput instance = constructor.newInstance();
 				return instance;
-			}catch(Exception e){
+			} catch(Exception e) {
 				contextValidation.addErrors("outputClass", "io.error.instance.notexist",className);
 			}			
 		}
@@ -63,61 +66,61 @@ public class IO extends TPLCommonController {
 	}
 	
 	// FDS 25/10/2017 ajout parametre optionnel extraInstrument
-	private AbstractInput getInputInstance(Experiment experiment, ContextValidation contextValidation, String extraInstrument){
-		
-		if(ValidationHelper.required(contextValidation, experiment.instrument, "instrument") 
-				&& ValidationHelper.required(contextValidation, experiment.instrument.typeCode, "instrument.code")){
+	private AbstractInput getInputInstance(Experiment experiment, ContextValidation contextValidation, String extraInstrument) {
+		if (ValidationHelper.required(contextValidation, experiment.instrument, "instrument") 
+				&& ValidationHelper.required(contextValidation, experiment.instrument.typeCode, "instrument.code")) {
 			String className; 
 			
-			if (null == extraInstrument || extraInstrument.equals("")){
+			if (extraInstrument == null || extraInstrument.equals("")){
 				// ancien comportement
 				className = getClassName(experiment, "Input");
 			} else {
 				// Class Input de extraInstrument
 				String institute = DescriptionHelper.getInstitute().get(0).toLowerCase();
-				className ="controllers.instruments.io."+institute+"."+extraInstrument+".Input";
+				className ="controllers.instruments.io." + institute + "." + extraInstrument + ".Input";
 			}
-
-			try{
+			try {
+				@SuppressWarnings("unchecked") // Uncheckable reflection
 				Class<? extends AbstractInput> clazz = (Class<? extends AbstractInput>) Class.forName(className);
-				Constructor<?> constructor = clazz.getConstructor();
-				AbstractInput instance = (AbstractInput) constructor.newInstance();
+//				Constructor<?> constructor = clazz.getConstructor();
+//				AbstractInput instance = (AbstractInput) constructor.newInstance();
+				Constructor<? extends AbstractInput> constructor = clazz.getConstructor();
+				AbstractInput instance = constructor.newInstance();
 				return instance;
-			}catch(Exception e){
+			} catch(Exception e) {
 				contextValidation.addErrors("outputClass", "io.error.instance.notexist",className);
 			}	
-			
 		}
 		return null;				
 	}
 
 	private String getClassName(Experiment experiment, String type) {
 		String institute = DescriptionHelper.getInstitute().get(0).toLowerCase();
-		
-		return "controllers.instruments.io."+institute+"."+experiment.instrument.typeCode.toLowerCase().replace("-", "")+"."+type;
+		return "controllers.instruments.io." + institute + "." + experiment.instrument.typeCode.toLowerCase().replace("-", "") + "." + type;
 	}
 	
 	public Result generateFile(String experimentCode){
 		Experiment experiment = getExperiment(experimentCode);
-		if(null == experiment)return badRequest("experiment not exist");
-		
+		if (experiment == null) 
+			return badRequest("experiment not exist");
 		// GA/FDS 22/07/2016 ajout .bindFromRequest() + context....putAll pour recuperer un parametre de la query string...
 		DynamicForm filledForm = this.context.form().bindFromRequest(); 
-        ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
-        contextValidation.getContextObjects().putAll(filledForm.data());
-
+//        ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
+        ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm);
+//        contextValidation.getContextObjects().putAll(filledForm.data());
+        contextValidation.getContextObjects().putAll(filledForm.rawData());
 		AbstractOutput output = getOutputInstance(experiment, contextValidation);
 		
 		if (!contextValidation.hasErrors()) {
 			try {
 				File file = output.generateFile(experiment, contextValidation);
 				if (!contextValidation.hasErrors() && null != file) {									
-					response().setContentType("application/x-download");  
-					response().setHeader("Content-disposition","attachment; filename="+file.filename);
-					return ok(file.content);
+					// response().setContentType("application/x-download");  
+					response().setHeader("Content-disposition","attachment; filename=" + file.filename);
+					return ok(file.content).as("application/x-download");
 				}
 			} catch(Throwable e) {
-				Logger.error("IO Error :", e);
+				logger.error("IO Error :", e);
 				contextValidation.addErrors("Error :", e.getMessage());
 			}
 		}		
@@ -130,17 +133,15 @@ public class IO extends TPLCommonController {
 	@Permission(value={"writing"})
 	public Result importFile(String experimentCode, String extraInstrument){ // FDS 25/10 ajout param optionnel pour instrument additionnel  (voir apinglsq.routes??)
 		Experiment experiment = getExperiment(experimentCode);
-		if(null == experiment)return badRequest("experiment not exist");
-		
+		if (experiment == null)
+			return badRequest("experiment not exist");
 		Form<PropertyFileValue> filledForm = getFilledForm(fileForm,PropertyFileValue.class);
 		PropertyFileValue pfv = filledForm.get();
-		
-		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm);
         fillDataWith(contextValidation.getContextObjects(), request().queryString());
-		
-		if(null != pfv){
+		if (pfv != null) {
 			AbstractInput input = getInputInstance(experiment, contextValidation, extraInstrument ); // FDS 25/10 ajout param optionnel pour instrument additionnel
-			
 			if (!contextValidation.hasErrors()) {
 				try {
 					experiment = input.importFile(experiment, pfv,contextValidation);
@@ -148,7 +149,7 @@ public class IO extends TPLCommonController {
 						return ok(Json.toJson(experiment));
 					}
 				} catch(Throwable e) {
-					Logger.error(e.getMessage(),e);
+					logger.error(e.getMessage(),e);
 					contextValidation.addErrors("Error :", e.getMessage()+"");
 				}
 			}
@@ -158,4 +159,5 @@ public class IO extends TPLCommonController {
 			return badRequest("missing file");
 		}		
 	}
+	
 }

@@ -15,9 +15,10 @@ import models.laboratory.sample.description.dao.ImportTypeDAO;
  */
 public class ImportType extends CommonInfoType {
 
-	public ImportCategory category;
+	public static final CommonInfoType.AbstractCommonInfoTypeFinder<ImportType,ImportTypeDAO> find = 
+			new CommonInfoType.AbstractCommonInfoTypeFinder<ImportType,ImportTypeDAO>(ImportTypeDAO.class);
 	
-	public static CommonInfoType.AbstractCommonInfoTypeFinder<ImportType> find = new CommonInfoType.AbstractCommonInfoTypeFinder<ImportType>(ImportTypeDAO.class);
+	public ImportCategory category;
 	
 	public ImportType()	{
 		super(ImportTypeDAO.class.getName());

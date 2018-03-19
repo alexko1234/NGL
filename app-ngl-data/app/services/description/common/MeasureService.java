@@ -11,6 +11,7 @@ import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
 import services.description.DescriptionFactory;
 import static services.description.DescriptionFactory.*;
+
 public class MeasureService {
 	
 	public static final String MEASURE_CAT_CODE_CONCENTRATION = "concentration";
@@ -24,12 +25,11 @@ public class MeasureService {
 		saveMesureCategories(errors);	
 		saveMesureUnits(errors);	
 	}
-	
-	
+		
 	/**
-	 * Save all ExperimentCategory
-	 * @param errors
-	 * @throws DAOException 
+	 * Save all ExperimentCategory.
+	 * @param errors        error manager
+	 * @throws DAOException DAO problem
 	 */
 	public static void saveMesureCategories(Map<String,List<ValidationError>> errors) throws DAOException{
 		List<MeasureCategory> l = new ArrayList<MeasureCategory>();
@@ -45,9 +45,9 @@ public class MeasureService {
 	
 	
 	/**
-	 * Save all ExperimentCategory
-	 * @param errors
-	 * @throws DAOException 
+	 * Save all ExperimentCategory.
+	 * @param errors        error manager
+	 * @throws DAOException DAO problem
 	 */
 	public static void saveMesureUnits(Map<String,List<ValidationError>> errors) throws DAOException{
 		List<MeasureUnit> l = new ArrayList<MeasureUnit>();

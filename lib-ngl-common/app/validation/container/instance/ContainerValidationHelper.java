@@ -1,9 +1,9 @@
 package validation.container.instance;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+// import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
+// import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -21,32 +21,29 @@ import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.container.instance.QualityControlResult;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.instance.Experiment;
+// import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.sample.description.ImportType;
 import models.utils.InstanceConstants;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
-import play.Logger;
+// import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
 
-public class ContainerValidationHelper extends CommonValidationHelper{
+public class ContainerValidationHelper extends CommonValidationHelper {
 
-	public static void validateContainerCategoryCode(String categoryCode,
-			ContextValidation contextValidation) {
+	public static void validateContainerCategoryCode(String categoryCode, ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "categoryCode", ContainerCategory.find,false);
-
 	}
 	
 	public static void validateContents(List<Content> contents, ContextValidation contextValidation) {
-		
-		if(ValidationHelper.required(contextValidation, contents, "contents")){
+		if (ValidationHelper.required(contextValidation, contents, "contents")) {
 			Iterator<Content> iterator = contents.iterator();
 			int i = 0;
 			while (iterator.hasNext()){
@@ -55,11 +52,9 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 				contextValidation.removeKeyFromRootKeyName("contents["+i+"]");
 				i++;
 			}
-
 			validateContentPercentageSum(contents, contextValidation);
 		}
 	}
-	
 	
 	public static void validateState(State state, ContextValidation contextValidation) {
 		if (ValidationHelper.required(contextValidation, state, "state")) {
@@ -73,15 +68,12 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 	
 	public static void validateNextState(Container container, State nextState, ContextValidation contextValidation) {
 		CommonValidationHelper.validateState(ObjectType.CODE.Container, nextState, contextValidation);
-		if(!contextValidation.hasErrors() && !nextState.code.equals(container.state.code)){
-			String nextStateCode = nextState.code;
+		if (!contextValidation.hasErrors() && !nextState.code.equals(container.state.code)) {
+			String nextStateCode    = nextState.code;
 			String currentStateCode = container.state.code;
-			
 			String context = (String) contextValidation.getObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT);
-			
 			switch (context) {
 			case "workflow":
-				
 				if("IW-P".equals(currentStateCode) && !nextStateCode.startsWith("A")){
 					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
 				}else if(currentStateCode.startsWith("A") && !"IW-E".equals(nextStateCode)  && !"IU".equals(nextStateCode) && !"IW-D".equals(nextStateCode)){
@@ -95,7 +87,6 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 				
 				break;
 			case "controllers":
-				
 				if("IW-P".equals(currentStateCode) && 
 						!nextStateCode.equals("UA") && !nextStateCode.equals("IS")){
 					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
@@ -117,24 +108,18 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 				}else if("IW-E".equals(currentStateCode) || "IU".equals(currentStateCode)){
 					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
 				}
-				
 				break;
-
 			default:
 				throw new RuntimeException("FIELD_STATE_CONTAINER_CONTEXT : "+context+" not manage !!!");
-				
 			}
-			
 			/* old validation lol
 			if(("IS".equals(currentStateCode) || "UA".equals(currentStateCode)) && 
 					(!nextStateCode.equals("IW-P") && !nextStateCode.equals("UA") && !nextStateCode.equals("IS")) ){
 				contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
 			}
 			*/
-		}
-				
+		}	
 	}
-	
 	
 	@Deprecated
 	public static void validateStateCode(String stateCode,ContextValidation contextValidation){
@@ -169,25 +154,22 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 	}
 
 	public static void validateInputProcessCodes(Set<String> processCodes, ContextValidation contextValidation) {
-		if(processCodes!=null && processCodes.size() > 0){
-			for(String processCode: processCodes){
+		if (processCodes!=null && processCodes.size() > 0) {
+			for (String processCode: processCodes) {
 				BusinessValidationHelper.validateExistInstanceCode(contextValidation, processCode, "processCodes", Process.class, InstanceConstants.PROCESS_COLL_NAME); 
 			}
 		}
-		
 		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
-		if(stateCode.startsWith("A") || stateCode.startsWith("IW-E")){
+		if (stateCode.startsWith("A") || stateCode.startsWith("IW-E")) {
 			ValidationHelper.required(contextValidation, processCodes, "processCodes");
-		}else if("IW-P".equals(stateCode) && CollectionUtils.isNotEmpty(processCodes)){
+		} else if("IW-P".equals(stateCode) && CollectionUtils.isNotEmpty(processCodes)) {
 			contextValidation.addErrors("processCodes", "error.validation.container.inputProcesses.notnull");
 		}		
 	}
 	
-	public static void validateImportType(String importTypeCode, Map<String, PropertyValue> properties,
-			ContextValidation contextValidation){
-		
+	public static void validateImportType(String importTypeCode, Map<String, PropertyValue> properties,	ContextValidation contextValidation) {
 		ImportType importType = BusinessValidationHelper.validateExistDescriptionCode(contextValidation, importTypeCode,"importTypeCode", ImportType.find,true);
-		if(null != importType){
+		if (importType != null) {
 			List<PropertyDefinition> proDefinitions=new ArrayList<PropertyDefinition>();
 			proDefinitions.addAll(importType.getPropertiesDefinitionContainerLevel());
 			
@@ -195,27 +177,25 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 				ValidationHelper.validateProperties(contextValidation,properties, proDefinitions);
 			}
 		}
-		
-	};
+	}
 	
-	public static void validateQualityControlResults(List<QualityControlResult> qualityControlResults,
-			ContextValidation contextValidation){
+	public static void validateQualityControlResults(List<QualityControlResult> qualityControlResults, ContextValidation contextValidation) {
 		contextValidation.addKeyToRootKeyName("qualityControlResults");
-		if(qualityControlResults!=null){
+		if (qualityControlResults != null) {
 			qualityControlResults.stream().forEach(qcr -> {
 				contextValidation.addKeyToRootKeyName("["+qcr.typeCode+"]");
-				ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, qcr.typeCode, "typeCode", ExperimentType.find,true);
-				if(exType!=null){
+				ExperimentType exType = BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, qcr.typeCode, "typeCode", ExperimentType.find,true);
+				if (exType != null) {
 					ValidationHelper.validateProperties(contextValidation, qcr.properties, exType.getPropertyDefinitionByLevel(Level.CODE.ContainerIn), true, false, null, null);			
 				}
 				contextValidation.removeKeyFromRootKeyName("["+qcr.typeCode+"]");
 			});
 		}
 		contextValidation.removeKeyFromRootKeyName("qualityControlResults");		
-	};
+	}
 	
 	public static void validateVolume(PropertyValue volume, ContextValidation contextValidation) {
-		if(volume!=null && volume.value!=null){
+		if (volume != null && volume.value != null) {
 			Collection<PropertyDefinition> pdefs = new ArrayList<>();		
 			PropertyDefinition pd = new PropertyDefinition();			
 			pd.code = "volume";
@@ -226,12 +206,11 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 			volume.validate(contextValidation);
 			contextValidation.removeObject("propertyDefinitions");	
 			ValidationHelper.required(contextValidation, ((PropertySingleValue)volume).unit, "volume.unit");
-			
 		}
 	}
 	
 	public static void validateConcentration(PropertyValue concentration, ContextValidation contextValidation) {
-		if(concentration!=null && concentration.value!=null){
+		if (concentration != null && concentration.value != null) {
 			Collection<PropertyDefinition> pdefs = new ArrayList<>();
 			PropertyDefinition pd = new PropertyDefinition();
 			pd.code = "concentration";
@@ -240,16 +219,13 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 			pdefs.add(pd);
 			contextValidation.putObject("propertyDefinitions", pdefs);
 			concentration.validate(contextValidation);
-			contextValidation.removeObject("propertyDefinitions");	
-			
+			contextValidation.removeObject("propertyDefinitions");		
 			ValidationHelper.required(contextValidation, ((PropertySingleValue)concentration).unit, "concentration.unit");
-			
 		}
-		
 	}
 	
 	public static void validateQuantity(PropertyValue quantity,	ContextValidation contextValidation) {
-		if(quantity != null && quantity.value != null){
+		if (quantity != null && quantity.value != null) {
 			Collection<PropertyDefinition> pdefs = new ArrayList<>();
 			PropertyDefinition pd = new PropertyDefinition();
 			pd.code = "quantity";
@@ -260,14 +236,11 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 			quantity.validate(contextValidation);
 			contextValidation.removeObject("propertyDefinitions");
 			ValidationHelper.required(contextValidation, ((PropertySingleValue)quantity).unit, "quantity.unit");
-			
 		}
-		
 	}
 
-	
 	public static void validateSize(PropertyValue size, ContextValidation contextValidation) {
-		if(size!=null && size.value!=null){
+		if (size != null && size.value != null) {
 			Collection<PropertyDefinition> pdefs = new ArrayList<>();		
 			PropertyDefinition pd = new PropertyDefinition();			
 			pd.code = "size";
@@ -278,7 +251,6 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 			size.validate(contextValidation);
 			contextValidation.removeObject("propertyDefinitions");	
 			ValidationHelper.required(contextValidation, ((PropertySingleValue)size).unit, "size.unit");
-			
 		}
 	}
 	
@@ -289,22 +261,21 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 		validateRules(validationfacts, contextValidation);
 	}
 	
-	@Deprecated
-	public static void validateProcessTypeCode(String processTypeCode,
-			ContextValidation contextValidation) {
+	// TODO: suggest fix
+	// @Deprecated
+	public static void validateProcessTypeCode(String processTypeCode, ContextValidation contextValidation) {
 		BusinessValidationHelper.validateExistDescriptionCode(contextValidation, processTypeCode, "processTypeCode", ProcessType.find);
 		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
-		if(stateCode.startsWith("A") || stateCode.startsWith("IW-E")){
+		if (stateCode.startsWith("A") || stateCode.startsWith("IW-E")) {
 			ValidationHelper.required(contextValidation, processTypeCode, "processTypeCode");
-		}else if("IW-P".equals(stateCode) && null != processTypeCode){
+		} else if("IW-P".equals(stateCode) && null != processTypeCode) {
 			contextValidation.addErrors("processTypeCode", "error.validation.container.inputProcesses.notnull");
 		}	
 	}
 	
 	@Deprecated
 	public static void validateStateCode(Container container,ContextValidation contextValidation) {
-		
-		boolean workflow=false;
+		boolean workflow = false;
 		if(contextValidation.getObject("workflow")!=null){
 			workflow=true;
 		}

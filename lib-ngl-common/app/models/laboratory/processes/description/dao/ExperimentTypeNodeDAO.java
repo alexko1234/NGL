@@ -17,8 +17,13 @@ import play.Logger;
 @Repository
 public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNode>{
 
+//	public ExperimentTypeNodeDAO() {
+//		super("experiment_type_node", ExperimentTypeNode.class, ExperimentTypeNodeMappingQuery.class,
+//				"SELECT t.id, t.code, t.doPurification, t.mandatoryPurification, t.doQualityControl, t.mandatoryQualityControl,t.doTransfert, t.mandatoryTransfert, " +
+//				"t.fk_experiment_type FROM experiment_type_node as t", true);
+//	}
 	public ExperimentTypeNodeDAO() {
-		super("experiment_type_node", ExperimentTypeNode.class, ExperimentTypeNodeMappingQuery.class,
+		super("experiment_type_node", ExperimentTypeNode.class, ExperimentTypeNodeMappingQuery.factory,
 				"SELECT t.id, t.code, t.doPurification, t.mandatoryPurification, t.doQualityControl, t.mandatoryQualityControl,t.doTransfert, t.mandatoryTransfert, " +
 				"t.fk_experiment_type FROM experiment_type_node as t", true);
 	}

@@ -496,11 +496,11 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		return propertyDefinitions;
 	}
 	
-	private List<PropertyDefinition> getSaphyrChipProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-        propertyDefinitions.add(newPropertiesDefinition("Code Saphyr CHIP", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
-		return propertyDefinitions;
-	}
+//	private List<PropertyDefinition> getSaphyrChipProperties() throws DAOException {
+//		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+//        propertyDefinitions.add(newPropertiesDefinition("Code Saphyr CHIP", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
+//		return propertyDefinitions;
+//	}
 
 	private List<PropertyDefinition> getIrysDepotProperties() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();

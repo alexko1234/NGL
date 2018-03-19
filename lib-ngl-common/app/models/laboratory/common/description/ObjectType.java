@@ -4,6 +4,7 @@ import models.laboratory.common.description.dao.ObjectTypeDAO;
 import models.utils.Model;
 //TODO: fix doc generation that produces an error with the unqualified name
 import models.utils.Model.Finder;
+import models.utils.dao.AbstractDAO;
 
 /**
  * Type definition
@@ -12,6 +13,9 @@ import models.utils.Model.Finder;
  */
 public class ObjectType extends Model<ObjectType> {
 	
+//	public static Finder<ObjectType> find = new Finder<ObjectType>(ObjectTypeDAO.class.getName()); 
+	public static final Finder<ObjectType,ObjectTypeDAO> find = new Finder<>(ObjectTypeDAO.class); 
+
 	public enum CODE {
 		Project, 
 		Process, 
@@ -32,15 +36,18 @@ public class ObjectType extends Model<ObjectType> {
 		SRAExperiment 
 	}; 
 
-	public static Finder<ObjectType> find = new Finder<ObjectType>(ObjectTypeDAO.class.getName()); 
-
+	//Set true if type has additional attributes compared to commonInfoType
+	public Boolean generic;
+		
 	public ObjectType() {
 		super(ObjectTypeDAO.class.getName());
 	}
 
-	//Set true if type has additional attributes compared to commonInfoType
-	public Boolean generic;
-		
+	@Override
+	protected Class<? extends AbstractDAO<ObjectType>> daoClass() {
+		return ObjectTypeDAO.class;
+	}
+
 }
 
 

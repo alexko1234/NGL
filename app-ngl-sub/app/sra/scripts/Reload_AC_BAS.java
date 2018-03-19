@@ -17,6 +17,7 @@ import services.FileAcServices;
 import services.SubmissionServices;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.lfw.controllers.AbstractScript;
 import mail.MailServiceException;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.run.instance.InstrumentUsed;

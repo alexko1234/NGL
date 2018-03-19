@@ -15,6 +15,7 @@ import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
 import models.utils.dao.DAOException;
 
+// Need probably a proper mongoexception wrapping all around.
 public class GenericMongoDAO<T extends DBObject> {
 	
 	private final String   collectionName;

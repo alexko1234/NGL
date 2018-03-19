@@ -48,8 +48,12 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 		return object.treatments.get(code);
 	}
 	
-	
-	@Permission(value={"writing"})	
+//	@Permission(value={"writing"})	
+	@Authenticated
+	@Historized
+	@Authorized.Write
+	//@Permission(value={"creation_update_treatments"})
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public Result save(String parentCode){
 		Analysis objectInDB = getObject(parentCode);
@@ -62,8 +66,8 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 		}*/
 		
 		Form<Treatment> filledForm = getSubFilledForm();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
-		
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 		
 		Treatment inputTreatment = filledForm.get();
 		ctxVal.setCreationMode();
 		ctxVal.putObject("level", Level.CODE.Analysis);
@@ -79,17 +83,20 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 		}		
 	}
 
-	@Permission(value={"writing"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
+	//@Permission(value={"creation_update_treatments"})
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public Result update(String parentCode, String code){
 		Analysis objectInDB = getObject(getSubObjectQuery(parentCode, code));
-		if (objectInDB == null) {
-			return notFound();			
-		}	
-		
+		if (objectInDB == null)
+			return notFound();
 		Form<Treatment> filledForm = getSubFilledForm();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
-		
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 		Treatment inputTreatment = filledForm.get();
 		if (code.equals(inputTreatment.code)) {
 			ctxVal.setUpdateMode();
@@ -109,7 +116,11 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 		}
 	}
 	
-	@Permission(value={"writing"})	
+//	@Permission(value={"writing"})	
+	@Authenticated
+	@Historized
+	@Authorized.Write
+	//@Permission(value={"delete_treatments"})
 	public Result delete(String parentCode, String code){
 		Analysis objectInDB = getObject(getSubObjectQuery(parentCode, code));
 		if (objectInDB == null) {
@@ -121,7 +132,10 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 		return ok();		
 	}
 	
-	@Permission(value={"writing"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public  Result deleteAll(String parentCode){
 		Analysis objectInDB = getObject(parentCode);
 		if (objectInDB == null) {
@@ -131,4 +145,5 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 				DBUpdate.unset("treatments").set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 		return ok();
 	}
+	
 }

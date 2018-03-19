@@ -1,5 +1,6 @@
 package lims.cns.services;
 
+import static fr.cea.ig.play.IGGlobals.configuration;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
@@ -49,9 +50,9 @@ import org.springframework.stereotype.Service;
 
 import com.mongodb.BasicDBObject;
 
-import play.Logger;
-import play.Logger.ALogger;
-import play.Play;
+//import play.Logger;
+//import play.Logger.ALogger;
+// import play.Play;
 import fr.cea.ig.MongoDBDAO;
 
 
@@ -61,7 +62,8 @@ public class LimsRunServices implements ILimsRunServices{
 	@Autowired
 	LimsAbandonDAO dao;
 
-	ALogger logger = Logger.of("CNS");
+	// ALogger logger = Logger.of("CNS");
+	private static final play.Logger.ALogger logger = play.Logger.of(LimsRunServices.class);
 
 	private Map<String, Integer> crScoring;
 	private Map<Integer, Integer> scoreMapping;
@@ -153,7 +155,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 		}	else{
 			//old lims
 			List<LimsExperiment> limsExps = dao.getExperiments(experiment);
-			if(limsExps.size() == 1){
+			if (limsExps.size() == 1) {
 				LimsExperiment limsExp = limsExps.get(0);
 				Experiment exp = new Experiment();
 				exp.date = limsExp.date;
@@ -162,9 +164,9 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 				exp.instrument.code = limsExp.code;
 				exp.instrument.categoryCode = getInstrumentCategoryCode(exp);
 				exp.nbCycles = limsExp.nbCycles;
-				Logger.debug(limsExp.toString());		
+				logger.debug(limsExp.toString());		
 				return exp;
-			}else{
+			} else {
 				return null;
 			}
 		}
@@ -229,41 +231,33 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 	}
 	@Override
 	public void valuationReadSet(ReadSet readSet, boolean firstTime) {
-		try{
-						
-			Logger.info("valuationReadSet : "+readSet.code+" / "+firstTime);
-			
-			if(firstTime){
+		try {			
+//			logger.info("valuationReadSet : "+readSet.code+" / "+firstTime);
+			logger.info("valuationReadSet : {} / {}", readSet.code, firstTime);
+			if (firstTime)
 				sendMailFVQC(readSet);
-			}
 			
 			Integer cptreco = null;
 			Integer tacheId = null;
-			if(firstTime && dao.isLseqco(readSet)){
+			if (firstTime && dao.isLseqco(readSet)) {
 				List<TacheHD> taches = dao.listTacheHD(readSet.code);
-				
-				
-				if(taches.size() > 1){
+				if (taches.size() > 1) {
 					logger.error(readSet.code+" : Plusieurs Taches");					
-				}else if(taches.size() == 1){
+				} else if(taches.size() == 1) {
 					tacheId = taches.get(0).tacco;
-				}else{
+				} else {
 					logger.error(readSet.code+" : O Tache");
-				}	
-				
+				}
 				LotSeqValuation lsv = dao.getLotsequenceValuation(readSet.code);
-				if(null != lsv){
-					Logger.debug(lsv.toString());
-					
-					if(null != lsv.tacco){
+				if (lsv != null) {
+					logger.debug(lsv.toString());
+					if (lsv.tacco != null)
 						tacheId = lsv.tacco;
-					}
-					if(null != lsv.cptreco){
-						cptreco = lsv.cptreco;
-					}										
+					if (lsv.cptreco != null)
+						cptreco = lsv.cptreco;				
 				}				
 				
-				if(null == cptreco || cptreco == 47){ //used to manage history recovery
+				if (cptreco == null || cptreco == 47) { //used to manage history recovery
 					cptreco = getCR(readSet.productionValuation);
 				}
 				
@@ -283,51 +277,46 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 			}else if(dao.isLseqco(readSet)){
 				try{
 					LotSeqValuation lsv = dao.getLotsequenceValuation(readSet.code);
-					if(null != lsv){
-						Logger.debug(lsv.toString());
-						
-						if(null != lsv.tacco){
+					if (lsv != null) {
+						logger.debug(lsv.toString());
+						if (lsv.tacco != null) 
 							tacheId = lsv.tacco;
-						}
-						if(null != lsv.cptreco){
-							cptreco = lsv.cptreco;
-						}										
-					}else{
-						Logger.error("LotSeqValuation is null for "+readSet.code);
+						if (lsv.cptreco != null)
+							cptreco = lsv.cptreco;				
+					} else {
+						logger.error("LotSeqValuation is null for "+readSet.code);
 					}
-					
-					if(null == cptreco || cptreco == 47){ //used to manage history recovery
+					if (cptreco == null || cptreco == 47) { //used to manage history recovery
 						cptreco = getCR(readSet.productionValuation);
 					}
-					
 					dao.updateLotsequenceAbandon(readSet.code, getSeqVal(readSet.productionValuation, readSet.code), cptreco, tacheId, 55);
-					if(!TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)){
+					if (!TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)) {
 						dao.updateLotsequenceAbandonBI(readSet.code, getAbandon(readSet.bioinformaticValuation, readSet.code));
 					}
-				}catch(Throwable t){ //in case of deadlock situation or other error we retry
+				} catch(Throwable t) { // in case of deadlock situation or other error we retry, TODO: do not catch throwable
 					logger.warn(readSet.code+" : second : "+t.getMessage());
-					LotSeqValuation lsv = dao.getLotsequenceValuation(readSet.code);
+//					LotSeqValuation lsv = 
+							dao.getLotsequenceValuation(readSet.code);
 					dao.updateLotsequenceAbandon(readSet.code, getSeqVal(readSet.productionValuation, readSet.code), cptreco, tacheId, 55);
-					if(!TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)){
+					if (!TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)) {
 						dao.updateLotsequenceAbandonBI(readSet.code, getAbandon(readSet.bioinformaticValuation, readSet.code));
 					}
 				}
 				
 			}
-		}catch(Throwable t){
-			logger.error(readSet.code+" : "+t.getMessage(), t);
+		} catch(Throwable t) { // TODO: do not catch throwable
+			logger.error(readSet.code + " : " + t.getMessage(), t);
 		}
 	}
 
-
 	public synchronized void sendMailFVQC(ReadSet readSet) throws MailServiceException {
-		Logger.debug("send mail agirs");
-		if(!MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+		logger.debug("send mail agirs");
+		if (!MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.is("runCode", readSet.runCode).notIn("state.historical.code", "F-VQC"))
 				&& MongoDBDAO.checkObjectExist(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-						DBQuery.is("code", readSet.runCode).notEquals("properties.sendMailAgirs.value", Boolean.TRUE))){
+						DBQuery.is("code", readSet.runCode).notEquals("properties.sendMailAgirs.value", Boolean.TRUE))) {
 			
-			Logger.debug("send mail agirs now");
+			logger.debug("send mail agirs now");
 			String biurl = "http://ngl-bi.genoscope.cns.fr";
 			
 			List<ReadSet> readsets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
@@ -345,7 +334,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 					+ "</div>");
 			message.append("<h3 style='text-decoration: underline;'>").append(readSet.runCode).append("</h3>");
 			
-			for(String key : mReadSets.keySet()){				
+			for (String key : mReadSets.keySet()) {				
 				ResponProjet rp = dao.getResponProjet(key);				
 				message.append("<h4 style='text-decoration: underline;'>Projet : ").append(key).append("</h4>");
 				message.append("<div style='color:green;'>").append(rp.name).append("</div>");
@@ -357,8 +346,10 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 			message.append("<br/>Merci et a bientot sur <a href='"+biurl+"'>NGL-BI</a> !");
 			message.append("</html>");
 			
-			String alertMailExp = Play.application().configuration().getString("validation.mail.from"); 
-			String alertMailDest = Play.application().configuration().getString("validation.mail.to");    	
+//			String alertMailExp = Play.application().configuration().getString("validation.mail.from"); 
+//			String alertMailDest = Play.application().configuration().getString("validation.mail.to");    	
+			String alertMailExp  = configuration().getString("validation.mail.from"); 
+			String alertMailDest = configuration().getString("validation.mail.to");    	
 			MailServices mailService = new MailServices();
 			Set<String> destinataires = new HashSet<String>();
 			destinataires.addAll(Arrays.asList(alertMailDest.split(",")));
@@ -391,110 +382,103 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 	}
 
 	private Integer getAbandon(Valuation valuation, String code) {
-		if(TBoolean.FALSE.equals(valuation.valid)){
+		if (TBoolean.FALSE.equals(valuation.valid)) {
 			return 1; //abandon=true
-		}else if(TBoolean.TRUE.equals(valuation.valid)){
+		} else if(TBoolean.TRUE.equals(valuation.valid)) {
 			return 0; //abandon = false;
-		}else{
-			throw new RuntimeException("Abandon : Mise à jour abandon run ou readset ("+code+") dans lims mais valuation à UNSET");
+		} else {
+			throw new RuntimeException("Abandon : Mise à jour abandon run ou readset (" + code + ") dans lims mais valuation à UNSET");
 		}
 	}
 
 	private Integer getSeqVal(Valuation valuation, String code) {
-		if(TBoolean.FALSE.equals(valuation.valid)){
+		if (TBoolean.FALSE.equals(valuation.valid)) {
 			return 0; //a abandonner
-		}else if(TBoolean.TRUE.equals(valuation.valid)){
+		} else if(TBoolean.TRUE.equals(valuation.valid)) {
 			return 1; //valide;
-		}else{
+		} else {
 			return 2;
 		}
 	}
 
 	@Override
 	public void insertRun(Run run, List<ReadSet> readSets, boolean deleteBeforeInsert) {
-		try{
-			
-			if(deleteBeforeInsert){
-				try{
+		try {
+			if (deleteBeforeInsert) {
+				try {
 					dao.deleteRun(run.code);
 					dao.deleteFlowcellNGL(run.containerSupportCode);					
-				} catch(Throwable t){
-					throw new RuntimeException("Delete RUN : "+run.code+" : "+t.getMessage(),t);
+				} catch(Throwable t) { // TODO: do not catch throwable
+					throw new RuntimeException("Delete RUN : " + run.code + " : " + t.getMessage(), t);
 				}
 			}
-			
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
-			DepotSolexa ds = null;
-			ds=dao.getDepotSolexa(run.containerSupportCode, sdf.format(run.sequencingStartDate));
-			if(ds==null){
-				ds=insertFlowcellNGL(run);
-			}
-			if(null != ds){
+			DepotSolexa ds = dao.getDepotSolexa(run.containerSupportCode, sdf.format(run.sequencingStartDate));
+			if (ds == null)
+				ds = insertFlowcellNGL(run);
+			if (ds != null) {
 				Map<String, BanqueSolexa> mapBanques = new HashMap<String, BanqueSolexa>();
 				for(BanqueSolexa banque:  dao.getBanqueSolexa(run.containerSupportCode)){
 					String key = banque.prsco+"_"+banque.adnnom+"_"+banque.lanenum+"_"+banque.tagkeyseq;
 					//Logger.debug("key banque = "+key);
 					mapBanques.put(key, banque);
 				}
-				if(mapBanques.size()==0){
+				if (mapBanques.size() == 0) {
 					for(BanqueSolexa banque:  dao.getBanqueSolexaFlowcellNGL(run.containerSupportCode)){
 						String key = banque.prsco+"_"+banque.adnnom+"_"+banque.lanenum+"_"+((banque.tagkeyseq != null)?banque.tagkeyseq:"");
-						Logger.debug("key banque = "+key);
+						logger.debug("key banque = "+key);
 						mapBanques.put(key, banque);
 					}
 				}
 				Map<String, ReadSet> mapReadSets = new HashMap<String, ReadSet>();
-				for(ReadSet readSet:  readSets){
+				for (ReadSet readSet:  readSets) {
 					String index = (readSet.code.contains("."))?readSet.code.split("\\.")[1]:"";
 					String key = readSet.sampleCode+"_"+readSet.laneNumber+"_"+index;
 					//Logger.debug("key readSet = "+key);
 					//we insert only that we find in dblims
-					if(mapBanques.containsKey(key)){
+					if (mapBanques.containsKey(key)) {
 						mapReadSets.put(key, readSet);
-						
 					}
 				}
-				
-				Logger.debug("Load DepotSolexa = "+ds);
+				logger.debug("Load DepotSolexa = "+ds);
 				//Delete run if exist ???
 				
 				dao.insertRun(run, ds);
 				dao.insertLanes(run.lanes, ds);
-				for(Map.Entry<String, ReadSet> entry : mapReadSets.entrySet()){
-					try{
-					dao.insertReadSet(entry.getValue(), mapBanques.get(entry.getKey()));
-					dao.insertFiles(entry.getValue(), false);
+				for (Map.Entry<String, ReadSet> entry : mapReadSets.entrySet()) {
+					try {
+						dao.insertReadSet(entry.getValue(), mapBanques.get(entry.getKey()));
+						dao.insertFiles(entry.getValue(), false);
 					}catch(NullPointerException e){
-						Logger.error("No readSet "+entry.getValue());
+						logger.error("No readSet "+entry.getValue());
 					}
 				}
-				
+
 				dao.dispatchRun(run);
 				dao.updateRunInNGL(run);
 				//passe l'etat à traite
 				dao.updateRunEtat(run, 2);
-			}else{
+			} else {
 				throw new RuntimeException("DepotSolexa is null");
 			}
-	    	//TODO Etat
-	    	//TODO RunInNGL
+	    	// TODO Etat
+	    	// TODO RunInNGL
 		
-		}catch(Throwable t){
+		} catch(Throwable t) { // TODO: do not catch throwable
 			logger.error("Synchro RUN : "+run.code+" : "+t.getMessage(),t);
 		}
 	}
 
 	@Override
 	public void updateReadSetAfterQC(ReadSet readset) {
-		try{
+		try {
 			if(dao.isLseqco(readset)){
 				dao.updateReadSetEtat(readset, 2);
 				dao.updateReadSetBaseUtil(readset);
 				dao.insertFiles(readset, true);
 			}
-			
-		}catch(Throwable t){
-			logger.error("Synchro READSET AfterQC: "+readset.code+" : "+t.getMessage(),t);
+		} catch(Throwable t) { // TODO: do not catch throwable
+			logger.error("Synchro READSET AfterQC: " + readset.code + " : " + t.getMessage(), t);
 		}
 	}
 
@@ -516,29 +500,28 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 		}
 	}
 	
-	public void linkRunWithMaterielManip(){
-		try{
+	public void linkRunWithMaterielManip() {
+		try {
 			dao.linkRunWithMaterielManip();
 			
-		}catch(Throwable t){
+		} catch(Throwable t) {
 			logger.error("Synchro LINK RUN / MATERIEL_MANIP: "+t.getMessage(),t);
 		}
 	}
 	
-	
 	public DepotSolexa insertFlowcellNGL(Run run){
-		List<models.laboratory.experiment.instance.Experiment> expPrepaflowcell=MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, models.laboratory.experiment.instance.Experiment.class,DBQuery.in("outputContainerSupportCodes", run.containerSupportCode).in("typeCode", "prepa-flowcell","prepa-fc-ordered")).toList();
-		if(CollectionUtils.isEmpty(expPrepaflowcell)){
+		List<models.laboratory.experiment.instance.Experiment> expPrepaflowcell = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, models.laboratory.experiment.instance.Experiment.class,DBQuery.in("outputContainerSupportCodes", run.containerSupportCode).in("typeCode", "prepa-flowcell","prepa-fc-ordered")).toList();
+		if (CollectionUtils.isEmpty(expPrepaflowcell)) {
 			throw new RuntimeException("Prepaflowcell Experiment with containerOutPut "+run.containerSupportCode+" not found in NGL");
 		}
 		
-		List<models.laboratory.experiment.instance.Experiment> expDepotIllumina=MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, models.laboratory.experiment.instance.Experiment.class,DBQuery.in("inputContainerSupportCodes", run.containerSupportCode).is("typeCode", "illumina-depot")).toList();
-		if(CollectionUtils.isEmpty(expDepotIllumina)){
+		List<models.laboratory.experiment.instance.Experiment> expDepotIllumina = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, models.laboratory.experiment.instance.Experiment.class,DBQuery.in("inputContainerSupportCodes", run.containerSupportCode).is("typeCode", "illumina-depot")).toList();
+		if (CollectionUtils.isEmpty(expDepotIllumina)) {
 			throw new RuntimeException("DepotIllumina Experiment with containerOutPut "+run.containerSupportCode+" not found in NGL");
 		}
 
 		//Create Manip FlowcellNGL
-		DepotSolexa ds=dao.insertFlowcellNGL(expPrepaflowcell.get(0),expDepotIllumina.get(0), run);
+		DepotSolexa ds = dao.insertFlowcellNGL(expPrepaflowcell.get(0),expDepotIllumina.get(0), run);
 		return ds;
 
 	}
@@ -547,4 +530,5 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 	public Sample findSampleToCreate(String sampleCode) {
 		return dao.getMateriel(sampleCode);
 	}
+	
 }

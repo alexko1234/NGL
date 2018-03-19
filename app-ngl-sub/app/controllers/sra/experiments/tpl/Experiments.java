@@ -3,7 +3,7 @@ package controllers.sra.experiments.tpl;
 import javax.inject.Inject;
 
 import controllers.CommonController;
-import controllers.routes;
+//import controllers.routes;
 import play.routing.JavaScriptReverseRouter;
 import play.mvc.Result;
 import views.html.experiments.home;
@@ -40,7 +40,7 @@ public class Experiments extends CommonController {
 	}	
 
 	public Result javascriptRoutes() {
-		response().setContentType("text/javascript");
+//		response().setContentType("text/javascript");
 	    return ok(  	    		
 	    		// Routes.javascriptRouter("jsRoutes",
 	    		// Routes
@@ -54,7 +54,7 @@ public class Experiments extends CommonController {
 	    				controllers.sra.experiments.tpl.routes.javascript.Experiments.get(),
 	    				controllers.sra.experiments.api.routes.javascript.Experiments.list()
 	    				)
-	    );
+	    ).as("text/javascript");
 	}
 	
 }

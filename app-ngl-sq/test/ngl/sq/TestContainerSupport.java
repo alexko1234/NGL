@@ -1,8 +1,8 @@
 package ngl.sq;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+//import java.util.Arrays;
+//import java.util.HashMap;
 import java.util.HashSet;
 
 import org.junit.Test;
@@ -10,16 +10,16 @@ import org.junit.Test;
 import fr.cea.ig.play.test.DevAppTesting;
 import fr.cea.ig.play.test.ReadUpdateReadObjectTest;
 import fr.cea.ig.play.test.WSHelper;
-import models.laboratory.common.instance.Comment;
-import models.laboratory.common.instance.PropertyValue;
+//import models.laboratory.common.instance.Comment;
+//import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
-import models.laboratory.common.instance.property.PropertySingleValue;
-import models.laboratory.container.instance.Container;
+//import models.laboratory.common.instance.property.PropertySingleValue;
+//import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
-import models.laboratory.container.instance.Content;
-import models.laboratory.container.instance.LocationOnContainerSupport;
+//import models.laboratory.container.instance.Content;
+//import models.laboratory.container.instance.LocationOnContainerSupport;
 import play.libs.Json;
 import play.libs.ws.WSResponse;
 

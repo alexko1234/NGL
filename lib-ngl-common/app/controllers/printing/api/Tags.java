@@ -15,7 +15,7 @@ import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.printing.Tag;
 import models.utils.InstanceConstants;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 
@@ -35,6 +35,7 @@ import fr.cea.ig.play.NGLContext;
 public class Tags extends APICommonController<Tag> {
 	
 	private final Form<TagPrintForm> printForm;
+	
 	@Inject
 	public Tags(NGLContext ctx) {
 		super(ctx,Tag.class);
@@ -52,7 +53,8 @@ public class Tags extends APICommonController<Tag> {
 	public Result print() {
 		Form<TagPrintForm> form = getFilledForm(printForm, TagPrintForm.class);
 		TagPrintForm input = form.get();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), form.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), form.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), form);
 		
 		Spring.getBeanOfType(PrinterService.class).printTags(input.printerCode, input.barcodePositionId, input.tags, ctxVal);
 		if (!ctxVal.hasErrors()) {
@@ -65,10 +67,10 @@ public class Tags extends APICommonController<Tag> {
 	
 	private List<Object> getFacts(TagListForm form) {
 		List<Object> facts = new ArrayList<Object>();	
-		if(StringUtils.isNotBlank(form.experimentCode)){
+		if (StringUtils.isNotBlank(form.experimentCode)) {
 			Experiment exp = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, form.experimentCode);		
 			facts.add(exp);
-		}else if(CollectionUtils.isNotEmpty(form.containerSupportCodes)){
+		} else if(CollectionUtils.isNotEmpty(form.containerSupportCodes)) {
 			List<ContainerSupport> supports = MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.in("code", form.containerSupportCodes)).toList();
 			facts.addAll(supports);			
 		}		

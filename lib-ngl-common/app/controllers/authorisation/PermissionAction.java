@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 import javax.inject.Inject;
 
 import play.Logger;
-import play.Play;
+// import play.Play;
 import play.libs.F;
 // import play.libs.F.Function0;
 // import play.libs.F.Promise;
@@ -53,7 +53,8 @@ public class PermissionAction extends Action<Permission> {
 		if (configuration.value().length == 0) 
 			throw new RuntimeException("badly configured permission control with no values");
 		
-		String userAgent = context.request().getHeader("User-Agent");
+//		String userAgent = context.request().getHeader("User-Agent");
+		String userAgent = context.request().header("User-Agent").orElse(null);
 		String agentByPass = authConfiguration.agentByPass(userAgent);
 		logger.debug("Header User-Agent: "+ userAgent);
 		logger.debug("authConfiguration.agentByPass(userAgent): "+ agentByPass);

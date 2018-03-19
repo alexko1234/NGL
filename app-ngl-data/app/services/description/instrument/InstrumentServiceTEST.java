@@ -53,7 +53,6 @@ public class InstrumentServiceTEST extends AbstractInstrumentService{
 		l.add(newInstrumentCategory("Appareil de sizing","sizing-system"));
 				
 		DAOHelpers.saveModels(InstrumentCategory.class, l, errors);
-		
 	}
 	
 	public void saveInstrumentUsedTypes(Map<String, List<ValidationError>> errors) throws DAOException {
@@ -236,7 +235,6 @@ public class InstrumentServiceTEST extends AbstractInstrumentService{
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
 
-	
 	private static List<PropertyDefinition> getTestOneToOneProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Inst. Content 1", "instCont1", LevelService.getLevels(Level.CODE.Instrument),String.class, true,
@@ -248,190 +246,180 @@ public class InstrumentServiceTEST extends AbstractInstrumentService{
         		null, "60",MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_TIME),MeasureUnit.find.findByCode( "s"),MeasureUnit.find.findByCode( "s"), "single", 3));
 		return propertyDefinitions;
 	}
+	
 	private static List<Instrument> getInstrumentTestOneToOne() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		instruments.add(createInstrument("inst-one-to-one", "One To One", null, true, "path", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		return instruments;
 	}
+	
+//	private static List<PropertyDefinition> getNanoporeMiniSpinProperties() throws DAOException {
+//		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+//        propertyDefinitions.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument),String.class, true,
+//        		DescriptionFactory.newValues("G-TUBE"), "G-TUBE", null, null, null, "single", 1));
+//        propertyDefinitions.add(newPropertiesDefinition("Vitesse", "speed", LevelService.getLevels(Level.CODE.Instrument),String.class, false,
+//        		null, "8000", MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SPEED),MeasureUnit.find.findByCode( "rpm"),MeasureUnit.find.findByCode( "rpm"), "single", 2));
+//        // unite s
+//        propertyDefinitions.add(newPropertiesDefinition("Durée", "duration", LevelService.getLevels(Level.CODE.Instrument),String.class, false, 
+//        		null, "60",MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_TIME),MeasureUnit.find.findByCode( "s"),MeasureUnit.find.findByCode( "s"), "single", 3));
+//		return propertyDefinitions;
+//	}
 
-	
+//	private static List<PropertyDefinition> getNanoporeSequencerProperties() throws DAOException {
+//		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+//        propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
+//        propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",200));
+//        //Liste a definir
+//        propertyDefinitions.add(newPropertiesDefinition("Numero PC", "pcNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",300));
+//       // propertyDefinitions.add(newPropertiesDefinition("Version MinKNOW", "minKnowVersion",LevelService.getLevels(Level.CODE.Instrument),String.class,false,"single",400));
+//	//	propertyDefinitions.add(newPropertiesDefinition("Version Metrichor", "metrichorVersion",LevelService.getLevels(Level.CODE.Instrument),String.class,false,"single",500));
+//	//	propertyDefinitions.add(newPropertiesDefinition("Metrichor run ID", "metrichorRunId",LevelService.getLevels(Level.CODE.Instrument),String.class,false,"single",600));
+//
+//		return propertyDefinitions;
+//	}
 
-	private static List<PropertyDefinition> getNanoporeMiniSpinProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-        propertyDefinitions.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument),String.class, true,
-        		DescriptionFactory.newValues("G-TUBE"), "G-TUBE", null, null, null, "single", 1));
-        propertyDefinitions.add(newPropertiesDefinition("Vitesse", "speed", LevelService.getLevels(Level.CODE.Instrument),String.class, false,
-        		null, "8000", MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SPEED),MeasureUnit.find.findByCode( "rpm"),MeasureUnit.find.findByCode( "rpm"), "single", 2));
-        // unite s
-        propertyDefinitions.add(newPropertiesDefinition("Durée", "duration", LevelService.getLevels(Level.CODE.Instrument),String.class, false, 
-        		null, "60",MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_TIME),MeasureUnit.find.findByCode( "s"),MeasureUnit.find.findByCode( "s"), "single", 3));
-		return propertyDefinitions;
-	}
+//	private static List<PropertyDefinition> getCBotProperties() throws DAOException {
+//		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+//        propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType"
+//        		, LevelService.getLevels(Level.CODE.Instrument,Level.CODE.ContainerSupport),String.class, true,DescriptionFactory.newValues("SR","PE"),"single"));
+//      //  propertyDefinitions.add(newPropertiesDefinition("Type flowcell","flowcellType"
+//       // 		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("Paired End FC Hiseq-v3","Single FC Hiseq-v3","Rapid FC PE HS 2500-v1","Rapid FC SR HS 2500-v1"),"single"));
+//        propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
+//        propertyDefinitions.add(newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValuesWithDefault("Pas de piste contrôle (auto-calibrage)","Pas de piste contrôle (auto-calibrage)","1",
+//        		"2","3","4","5","6","7","8"),"Pas de piste contrôle (auto-calibrage)","single"));
+//        return propertyDefinitions;
+//	}
+	
+//	private static List<PropertyDefinition> getCBotInterneProperties() throws DAOException {
+//		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+//        propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType"
+//        		, LevelService.getLevels(Level.CODE.Instrument,Level.CODE.ContainerSupport),String.class, true,DescriptionFactory.newValues("SR","PE"),"single"));
+//     //   propertyDefinitions.add(newPropertiesDefinition("Type flowcell","flowcellType"
+//        //		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("Rapid FC PE HS 2500-v1","Rapid FC SR HS 2500-v1",
+//        	//			"FC Miseq-v2","FC Miseq-v3"),"single"));
+//        propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
+//        propertyDefinitions.add(newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValuesWithDefault("Pas de piste contrôle (auto-calibrage)","Pas de piste contrôle (auto-calibrage)","1",
+//        		"2"),"Pas de piste contrôle (auto-calibrage)","single"));
+//        return propertyDefinitions;
+//	}
+	
+//	private List<PropertyDefinition> getHiseq4000Properties() throws DAOException {
+//		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+//		 propertyDefinitions.add(newPropertiesDefinition("Position","position"
+//        		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B"), "single",100));
+//		
+//		 propertyDefinitions.add(newPropertiesDefinition("Type lectures", "sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE"), "single",200));
+//		
+//		 propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read1", "nbCyclesRead1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",300));
+//	        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index1", "nbCyclesReadIndex1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",400));
+//	        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read2", "nbCyclesRead2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",600));
+//	        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index2", "nbCyclesReadIndex2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",500));
+//	        
+//	        return propertyDefinitions;
+//	}
+	
+//	private static List<PropertyDefinition> getHiseq2000Properties() throws DAOException {
+//		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+//        propertyDefinitions.add(newPropertiesDefinition("Position","position"
+//        		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B"), "single",200));
+//        propertyDefinitions.add(newPropertiesDefinition("Type lectures", "sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE"), "single",300));
+//        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read1", "nbCyclesRead1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",400));
+//        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index1", "nbCyclesReadIndex1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",500));
+//        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read2", "nbCyclesRead2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",700));
+//        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index2", "nbCyclesReadIndex2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",600));
+//        propertyDefinitions.add(newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValuesWithDefault("Pas de piste contrôle (auto-calibrage)","Pas de piste contrôle (auto-calibrage)","1",
+//        		"2","3","4","5","6","7","8"),"Pas de piste contrôle (auto-calibrage)","single",100));
+//        return propertyDefinitions;
+//	}
 
+//	private static List<PropertyDefinition> getMiseqProperties() throws DAOException {
+//		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+//		propertyDefinitions.add(newPropertiesDefinition("Nom cassette Miseq", "miseqReagentCassette",LevelService.getLevels(Level.CODE.Instrument),String.class,true,"single",100));
+//        propertyDefinitions.add(newPropertiesDefinition("Type lectures", "sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE"), "single",200));
+//        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read1", "nbCyclesRead1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",300));
+//        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index1", "nbCyclesReadIndex1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",400));
+//        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read2", "nbCyclesRead2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",600));
+//        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index2", "nbCyclesReadIndex2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",500));
+//        return propertyDefinitions;
+//	}
+	
+//	private static List<PropertyDefinition> getArgusProperties() throws DAOException {
+//		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+//        propertyDefinitions.add(newPropertiesDefinition("Type de MapCard", "mapcardType", LevelService.getLevels(Level.CODE.Instrument),String.class, true, newValues("standard","HD"), "single"));
+//        propertyDefinitions.add(newPropertiesDefinition("Référence Carte", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
+//		propertyDefinitions.add(newPropertiesDefinition("Enzyme de restriction", "restrictionEnzyme", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("AfIII","ApaLI","BamHI","BgIII","EcoRI","HindIII","KpnI","MIuI","Ncol","NdeI","NheI","NotI","PvuII","SpeI","XbaI","XhoI"), "single"));
+//		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Tableau sélection enzyme","enzymeChooser",LevelService.getLevels(Level.CODE.Instrument), Image.class, false, "img"));
+//		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Photo digestion","digestionForTracking",LevelService.getLevels(Level.CODE.Instrument), Image.class, false, "img"));
+//		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Metrix","anlyseMetrics",LevelService.getLevels(Level.CODE.Instrument), Image.class, false, "img"));
+//		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Statistiques Contigs","contigStatistics",LevelService.getLevels(Level.CODE.Instrument), Image.class, false, "img"));
+//        return propertyDefinitions;
+//	}
 
-	private static List<PropertyDefinition> getNanoporeSequencerProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-        propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
-        propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",200));
-        //Liste a definir
-        propertyDefinitions.add(newPropertiesDefinition("Numero PC", "pcNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",300));
-       // propertyDefinitions.add(newPropertiesDefinition("Version MinKNOW", "minKnowVersion",LevelService.getLevels(Level.CODE.Instrument),String.class,false,"single",400));
-	//	propertyDefinitions.add(newPropertiesDefinition("Version Metrichor", "metrichorVersion",LevelService.getLevels(Level.CODE.Instrument),String.class,false,"single",500));
-	//	propertyDefinitions.add(newPropertiesDefinition("Metrichor run ID", "metrichorRunId",LevelService.getLevels(Level.CODE.Instrument),String.class,false,"single",600));
-
-		return propertyDefinitions;
-	}
-
-
-	private static List<PropertyDefinition> getCBotProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-        propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType"
-        		, LevelService.getLevels(Level.CODE.Instrument,Level.CODE.ContainerSupport),String.class, true,DescriptionFactory.newValues("SR","PE"),"single"));
-      //  propertyDefinitions.add(newPropertiesDefinition("Type flowcell","flowcellType"
-       // 		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("Paired End FC Hiseq-v3","Single FC Hiseq-v3","Rapid FC PE HS 2500-v1","Rapid FC SR HS 2500-v1"),"single"));
-        propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
-        propertyDefinitions.add(newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValuesWithDefault("Pas de piste contrôle (auto-calibrage)","Pas de piste contrôle (auto-calibrage)","1",
-        		"2","3","4","5","6","7","8"),"Pas de piste contrôle (auto-calibrage)","single"));
-        return propertyDefinitions;
-	}
-
+//	private static List<PropertyDefinition> getHiseq2500Properties() throws DAOException {
+//		List<PropertyDefinition> propertyDefinitions = getHiseq2000Properties();		
+//	   propertyDefinitions.add(0, newPropertiesDefinition("Mode run","runMode"
+//	        		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("normal","rapide"), "single",50));
+//        return propertyDefinitions;
+//	}
 	
-	private static List<PropertyDefinition> getCBotInterneProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-        propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType"
-        		, LevelService.getLevels(Level.CODE.Instrument,Level.CODE.ContainerSupport),String.class, true,DescriptionFactory.newValues("SR","PE"),"single"));
-     //   propertyDefinitions.add(newPropertiesDefinition("Type flowcell","flowcellType"
-        //		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("Rapid FC PE HS 2500-v1","Rapid FC SR HS 2500-v1",
-        	//			"FC Miseq-v2","FC Miseq-v3"),"single"));
-        propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
-        propertyDefinitions.add(newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValuesWithDefault("Pas de piste contrôle (auto-calibrage)","Pas de piste contrôle (auto-calibrage)","1",
-        		"2"),"Pas de piste contrôle (auto-calibrage)","single"));
-        return propertyDefinitions;
-	}
+//	private static List<PropertyDefinition> getCovarisProperties() throws DAOException {
+//		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+//		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("Frag_PE300","Frag_PE400","Frag_PE500","Frag_cDNA_Solexa"), "single"));
+//		return l;
+//	}
 	
+//	private static List<PropertyDefinition> getSpriProperties() throws DAOException {
+//		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+//		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("300-600"), "single"));		
+//		return l;
+//	}
 	
-	private List<PropertyDefinition> getHiseq4000Properties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		 propertyDefinitions.add(newPropertiesDefinition("Position","position"
-        		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B"), "single",100));
-		
-		 propertyDefinitions.add(newPropertiesDefinition("Type lectures", "sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE"), "single",200));
-		
-		 propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read1", "nbCyclesRead1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",300));
-	        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index1", "nbCyclesReadIndex1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",400));
-	        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read2", "nbCyclesRead2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",600));
-	        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index2", "nbCyclesReadIndex2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",500));
-	        
-	        return propertyDefinitions;
-	}
+//	private static List<PropertyDefinition> getThermocyclerProperties() throws DAOException {
+//		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+//		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("15","18"), "single"));		
+//		return l;
+//	}
 	
-
-	private static List<PropertyDefinition> getHiseq2000Properties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-        propertyDefinitions.add(newPropertiesDefinition("Position","position"
-        		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B"), "single",200));
-        propertyDefinitions.add(newPropertiesDefinition("Type lectures", "sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE"), "single",300));
-        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read1", "nbCyclesRead1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",400));
-        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index1", "nbCyclesReadIndex1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",500));
-        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read2", "nbCyclesRead2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",700));
-        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index2", "nbCyclesReadIndex2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",600));
-        propertyDefinitions.add(newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValuesWithDefault("Pas de piste contrôle (auto-calibrage)","Pas de piste contrôle (auto-calibrage)","1",
-        		"2","3","4","5","6","7","8"),"Pas de piste contrôle (auto-calibrage)","single",100));
-        return propertyDefinitions;
-	}
-
-	private static List<PropertyDefinition> getMiseqProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Nom cassette Miseq", "miseqReagentCassette",LevelService.getLevels(Level.CODE.Instrument),String.class,true,"single",100));
-        propertyDefinitions.add(newPropertiesDefinition("Type lectures", "sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE"), "single",200));
-        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read1", "nbCyclesRead1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",300));
-        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index1", "nbCyclesReadIndex1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",400));
-        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read2", "nbCyclesRead2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",600));
-        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index2", "nbCyclesReadIndex2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",500));
-        return propertyDefinitions;
-	}
+//	private static List<PropertyDefinition> getChipElectrophoresisProperties() throws DAOException {
+//		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+//		l.add(newPropertiesDefinition("Type puce", "chipType", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("DNA HS", "DNA 12000", "RNA"), "single"));		
+//		return l;
+//	}
 	
+//	private static List<PropertyDefinition> getQuBitProperties() throws DAOException {
+//		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+//		l.add(newPropertiesDefinition("Kit", "kit", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("HS", "BR"), "single"));		
+//		return l;
+//	}
 	
-	private static List<PropertyDefinition> getArgusProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-        propertyDefinitions.add(newPropertiesDefinition("Type de MapCard", "mapcardType", LevelService.getLevels(Level.CODE.Instrument),String.class, true, newValues("standard","HD"), "single"));
-        propertyDefinitions.add(newPropertiesDefinition("Référence Carte", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
-		propertyDefinitions.add(newPropertiesDefinition("Enzyme de restriction", "restrictionEnzyme", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("AfIII","ApaLI","BamHI","BgIII","EcoRI","HindIII","KpnI","MIuI","Ncol","NdeI","NheI","NotI","PvuII","SpeI","XbaI","XhoI"), "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Tableau sélection enzyme","enzymeChooser",LevelService.getLevels(Level.CODE.Instrument), Image.class, false, "img"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Photo digestion","digestionForTracking",LevelService.getLevels(Level.CODE.Instrument), Image.class, false, "img"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Metrix","anlyseMetrics",LevelService.getLevels(Level.CODE.Instrument), Image.class, false, "img"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Statistiques Contigs","contigStatistics",LevelService.getLevels(Level.CODE.Instrument), Image.class, false, "img"));
-        return propertyDefinitions;
-	}
-
-
-	private static List<PropertyDefinition> getHiseq2500Properties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = getHiseq2000Properties();		
-	   propertyDefinitions.add(0, newPropertiesDefinition("Mode run","runMode"
-	        		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("normal","rapide"), "single",50));
-        return propertyDefinitions;
-	}
-	
-	
-	private static List<PropertyDefinition> getCovarisProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("Frag_PE300","Frag_PE400","Frag_PE500","Frag_cDNA_Solexa"), "single"));
-		return l;
-	}
-	
-	private static List<PropertyDefinition> getSpriProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("300-600"), "single"));		
-		return l;
-	}
-	
-	private static List<PropertyDefinition> getThermocyclerProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("15","18"), "single"));		
-		return l;
-	}
-	
-	private static List<PropertyDefinition> getChipElectrophoresisProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Type puce", "chipType", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("DNA HS", "DNA 12000", "RNA"), "single"));		
-		return l;
-	}
-	
-	private static List<PropertyDefinition> getQuBitProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Kit", "kit", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("HS", "BR"), "single"));		
-		return l;
-	}
-	
-	private static List<PropertyDefinition> getQPCRProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Nb. Echantillon", "sampleNumber", LevelService.getLevels(Level.CODE.Instrument), Integer.class, true, "single"));		
-		return l;
-	}
-		
-	
+//	private static List<PropertyDefinition> getQPCRProperties() throws DAOException {
+//		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+//		l.add(newPropertiesDefinition("Nb. Echantillon", "sampleNumber", LevelService.getLevels(Level.CODE.Instrument), Integer.class, true, "single"));		
+//		return l;
+//	}
+			
 	public static List<Instrument> getInstrumentOpgen()throws DAOException{
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		instruments.add( createInstrument("APOLLON", "APOLLON", null, true, "/env/ig/atelier/opgen/cns/APOLLON", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		return instruments;
 	}
 	
-	private static List<Instrument> getInstrumentGAII() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("BISMUTH", "BISMUTH", "G3", false, "/env/ig/atelier/illumina_BISMUTH", DescriptionFactory.getInstitutes(Constants.CODE.TEST)) );
-		instruments.add(createInstrument("HELIUM", "HELIUM", "G1", false, "/env/ig/atelier/illumina_HELIUM", DescriptionFactory.getInstitutes(Constants.CODE.TEST)) );
-		instruments.add(createInstrument("AZOTE", "AZOTE", "G2", false, "/env/ig/atelier/illumina_AZOTE", DescriptionFactory.getInstitutes(Constants.CODE.TEST)) );
-		
-		return instruments;
-	}
+//	private static List<Instrument> getInstrumentGAII() throws DAOException {
+//		List<Instrument> instruments=new ArrayList<Instrument>();
+//		instruments.add(createInstrument("BISMUTH", "BISMUTH", "G3", false, "/env/ig/atelier/illumina_BISMUTH", DescriptionFactory.getInstitutes(Constants.CODE.TEST)) );
+//		instruments.add(createInstrument("HELIUM", "HELIUM", "G1", false, "/env/ig/atelier/illumina_HELIUM", DescriptionFactory.getInstitutes(Constants.CODE.TEST)) );
+//		instruments.add(createInstrument("AZOTE", "AZOTE", "G2", false, "/env/ig/atelier/illumina_AZOTE", DescriptionFactory.getInstitutes(Constants.CODE.TEST)) );
+//		
+//		return instruments;
+//	}
 
-	private static List<Instrument> getInstrumentMiSeq() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("MELISSE", "MELISSE", "M2", true, "/env/ig/atelier/illumina/cns/MELISSE", DescriptionFactory.getInstitutes(Constants.CODE.TEST)) );
-		instruments.add(createInstrument("MIMOSA", "MIMOSA", "M1", true, "/env/ig/atelier/illumina/cns/MIMOSA", DescriptionFactory.getInstitutes(Constants.CODE.TEST)) );
-		instruments.add(createInstrument("MISEQ1", "MISEQ1", "M1C", false, "/env/ig/atelier/illumina/cng/MISEQ1", DescriptionFactory.getInstitutes(Constants.CODE.TEST)) );
-		return instruments;
-	}
+//	private static List<Instrument> getInstrumentMiSeq() throws DAOException {
+//		List<Instrument> instruments=new ArrayList<Instrument>();
+//		instruments.add(createInstrument("MELISSE", "MELISSE", "M2", true, "/env/ig/atelier/illumina/cns/MELISSE", DescriptionFactory.getInstitutes(Constants.CODE.TEST)) );
+//		instruments.add(createInstrument("MIMOSA", "MIMOSA", "M1", true, "/env/ig/atelier/illumina/cns/MIMOSA", DescriptionFactory.getInstitutes(Constants.CODE.TEST)) );
+//		instruments.add(createInstrument("MISEQ1", "MISEQ1", "M1C", false, "/env/ig/atelier/illumina/cng/MISEQ1", DescriptionFactory.getInstitutes(Constants.CODE.TEST)) );
+//		return instruments;
+//	}
 	
 	public static List<Instrument> getInstrumentHiseq2000() throws DAOException{
 		List<Instrument> instruments=new ArrayList<Instrument>();
@@ -456,13 +444,12 @@ public class InstrumentServiceTEST extends AbstractInstrumentService{
 		return instruments;
 	}
 	
-	private List<Instrument> getInstrumentHiseq4000() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("TORNADE", "TORNADE", "H5", true, "/env/ig/atelier/illumina/cns/TORNADE", DescriptionFactory.getInstitutes(Constants.CODE.TEST)) );
-		instruments.add(createInstrument("RAFALE", "RAFALE", "H9", true, "/env/ig/atelier/illumina/cns/RAFALE", DescriptionFactory.getInstitutes(Constants.CODE.TEST)) );
-		return instruments;
-	}
-
+//	private List<Instrument> getInstrumentHiseq4000() throws DAOException {
+//		List<Instrument> instruments=new ArrayList<Instrument>();
+//		instruments.add(createInstrument("TORNADE", "TORNADE", "H5", true, "/env/ig/atelier/illumina/cns/TORNADE", DescriptionFactory.getInstitutes(Constants.CODE.TEST)) );
+//		instruments.add(createInstrument("RAFALE", "RAFALE", "H9", true, "/env/ig/atelier/illumina/cns/RAFALE", DescriptionFactory.getInstitutes(Constants.CODE.TEST)) );
+//		return instruments;
+//	}
 	
 	public static List<Instrument> getInstrumentExtSolexa()throws DAOException{
 		List<Instrument> instruments=new ArrayList<Instrument>();
@@ -471,37 +458,34 @@ public class InstrumentServiceTEST extends AbstractInstrumentService{
 		instruments.add( createInstrument("EXTMISEQ", "EXTMISEQ", "M0", true, "/env/atelier", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		return instruments;
 	}
+		
+//	private List<Instrument> getInstrumentMKI() throws DAOException {
+//		List<Instrument> instruments=new ArrayList<Instrument>();
+//		instruments.add(createInstrument("MN15456", "MK15456", null, true, "/env/ig/atelier/nanopore/cns/MN15456", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
+//		instruments.add(createInstrument("MN15302", "MK15302", null, true, "/env/ig/atelier/nanopore/cns/MN15302", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
+//		instruments.add(createInstrument("MN15382", "MK15382", null, true, "/env/ig/atelier/nanopore/cns/MN15382", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
+//		instruments.add(createInstrument("MN15407", "MK15407", null, true, "/env/ig/atelier/nanopore/cns/MN15407", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
+//		instruments.add(createInstrument("MN15464", "MK15464", null, true, "/env/ig/atelier/nanopore/cns/MN15464", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
+//		instruments.add(createInstrument("MN15336", "MK15336", null, true, "/env/ig/atelier/nanopore/cns/MN15336", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
+//		instruments.add(createInstrument("MN15782", "MK15782", null, true, "/env/ig/atelier/nanopore/cns/MN15782", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
+//		instruments.add(createInstrument("MN15794", "MK15794", null, true, "/env/ig/atelier/nanopore/cns/MN15794", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
+//		return instruments;
+//	}
 	
+//	private static List<Instrument> getInstrumentMinIon() throws DAOException {
+//		List<Instrument> instruments=new ArrayList<Instrument>();
+//		instruments.add(createInstrument("MN02528", "MN02528", null, true, "/env/ig/atelier/nanopore/cns/MN02528", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
+//		instruments.add(createInstrument("MN02670", "MN02670", null, true, "/env/ig/atelier/nanopore/cns/MN02670", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
+//		instruments.add(createInstrument("MN02280", "MN02280", null, true, "/env/ig/atelier/nanopore/cns/MN02280", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
+//		instruments.add(createInstrument("MN02259", "MN02259", null, true, "/env/ig/atelier/nanopore/cns/MN02259", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
+//		instruments.add(createInstrument("MN02833", "MN02833", null, true, "/env/ig/atelier/nanopore/cns/MN02833", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
+//		return instruments;
+//	}
 	
-	private List<Instrument> getInstrumentMKI() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("MN15456", "MK15456", null, true, "/env/ig/atelier/nanopore/cns/MN15456", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
-		instruments.add(createInstrument("MN15302", "MK15302", null, true, "/env/ig/atelier/nanopore/cns/MN15302", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
-		instruments.add(createInstrument("MN15382", "MK15382", null, true, "/env/ig/atelier/nanopore/cns/MN15382", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
-		instruments.add(createInstrument("MN15407", "MK15407", null, true, "/env/ig/atelier/nanopore/cns/MN15407", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
-		instruments.add(createInstrument("MN15464", "MK15464", null, true, "/env/ig/atelier/nanopore/cns/MN15464", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
-		instruments.add(createInstrument("MN15336", "MK15336", null, true, "/env/ig/atelier/nanopore/cns/MN15336", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
-		instruments.add(createInstrument("MN15782", "MK15782", null, true, "/env/ig/atelier/nanopore/cns/MN15782", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
-		instruments.add(createInstrument("MN15794", "MK15794", null, true, "/env/ig/atelier/nanopore/cns/MN15794", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
-		return instruments;
-	}
+//	private static List<Instrument> getInstrumentEppendorfMiniSpinPlus() throws DAOException {
+//		List<Instrument> instruments=new ArrayList<Instrument>();
+//		instruments.add(createInstrument("MiniSpin plus 1", "miniSpinPlus1", null, true, "path", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
+//		return instruments;
+//	}
 	
-	private static List<Instrument> getInstrumentMinIon() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("MN02528", "MN02528", null, true, "/env/ig/atelier/nanopore/cns/MN02528", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
-		instruments.add(createInstrument("MN02670", "MN02670", null, true, "/env/ig/atelier/nanopore/cns/MN02670", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
-		instruments.add(createInstrument("MN02280", "MN02280", null, true, "/env/ig/atelier/nanopore/cns/MN02280", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
-		instruments.add(createInstrument("MN02259", "MN02259", null, true, "/env/ig/atelier/nanopore/cns/MN02259", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
-		instruments.add(createInstrument("MN02833", "MN02833", null, true, "/env/ig/atelier/nanopore/cns/MN02833", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
-		return instruments;
-	}
-	
-
-	private static List<Instrument> getInstrumentEppendorfMiniSpinPlus() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("MiniSpin plus 1", "miniSpinPlus1", null, true, "path", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
-		return instruments;
-	}
-	
-
 }

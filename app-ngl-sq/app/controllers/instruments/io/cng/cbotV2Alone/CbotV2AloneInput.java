@@ -31,13 +31,11 @@ import models.laboratory.experiment.instance.InputContainerUsed;
 //import models.laboratory.parameter.index.Index;
 import models.laboratory.reagent.instance.ReagentUsed;
 
-import play.Logger;
+//import play.Logger;
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;
 import controllers.instruments.io.utils.AbstractInput;
 import controllers.instruments.io.utils.InputHelper;
-
-
 
 public class CbotV2AloneInput extends AbstractInput {
 	
@@ -62,7 +60,8 @@ public class CbotV2AloneInput extends AbstractInput {
 		 DocumentBuilder builder = factory.newDocumentBuilder();
 	     
 	     try {
-	    	 InputStream inputStream = new ByteArrayInputStream(pfv.value);
+//	    	 InputStream inputStream = new ByteArrayInputStream(pfv.value);
+	    	 InputStream inputStream = new ByteArrayInputStream(pfv.byteValue());
 	    	 // le fichier produit par Illumina n'est PAS en UTF-16 malgré l'entete <?xml version="1.0" encoding="utf-16"?>
 	    	 // mais en UTF-8 !!! il faut donc remettre la valeur correcte
 	    	 InputSource is = new InputSource(inputStream);
@@ -80,38 +79,45 @@ public class CbotV2AloneInput extends AbstractInput {
 	         XPath xpath = xpf.newXPath();
 	         
 	         // barcode de Flowcell
-	         String expression="FlowCellID";
-	         String flowcellId = (String)xpath.evaluate(expression, root);  
+	         String expression = "FlowCellID";
+//	         String flowcellId = (String)xpath.evaluate(expression, root);  
+	         String flowcellId = xpath.evaluate(expression, root);  
 	         checkMandatoryXMLTag (contextValidation, expression, flowcellId );
  
 	         // barcode de la plaque de reactifs
-	         expression="ReagentID";
-	         String reagentId = (String)xpath.evaluate(expression, root);
+	         expression = "ReagentID";
+//	         String reagentId = (String)xpath.evaluate(expression, root);
+	         String reagentId = xpath.evaluate(expression, root);
 	         checkMandatoryXMLTag (contextValidation, expression, reagentId );
 	       
 	         // barcode du strip
-	         expression="TemplateID";
-	         String stripId = (String)xpath.evaluate(expression, root);
+	         expression = "TemplateID";
+//	         String stripId = (String)xpath.evaluate(expression, root);
+	         String stripId = xpath.evaluate(expression, root);
 	         checkMandatoryXMLTag (contextValidation, expression, stripId);            
 	         
 	         // nom du rum
-	         expression="RunFolderName";
-	         String runFolder = (String)xpath.evaluate(expression, root);
+	         expression = "RunFolderName";
+//	         String runFolder = (String)xpath.evaluate(expression, root);
+	         String runFolder = xpath.evaluate(expression, root);
 	         checkMandatoryXMLTag (contextValidation, expression, runFolder );
 	         
 	         // nom du Protocol
-	         expression="ProtocolName";
-	         String protocol = (String)xpath.evaluate(expression, root);
+	         expression = "ProtocolName";
+//	         String protocol = (String)xpath.evaluate(expression, root);
+	         String protocol = xpath.evaluate(expression, root);
 	         checkMandatoryXMLTag (contextValidation, expression, protocol );
 	         
 	         // pour commentaire
-	         expression="RecipeVersion";
-	         String recipeVersion = (String)xpath.evaluate(expression, root);
+	         expression = "RecipeVersion";
+//	         String recipeVersion = (String)xpath.evaluate(expression, root);
+	         String recipeVersion = xpath.evaluate(expression, root);
 	         checkMandatoryXMLTag (contextValidation, expression, recipeVersion );
 	         
 	         // pour commentaire
-	         expression="ReagentVersion";
-	         String reagentVersion = (String)xpath.evaluate(expression, root);
+	         expression = "ReagentVersion";
+//	         String reagentVersion = (String)xpath.evaluate(expression, root);
+	         String reagentVersion = xpath.evaluate(expression, root);
 	         checkMandatoryXMLTag (contextValidation, expression, reagentVersion );
 	         
 	         //--------------------verifications   ----------------------
@@ -242,13 +248,14 @@ public class CbotV2AloneInput extends AbstractInput {
 	}
 	
 	private void checkMandatoryXMLTag ( ContextValidation contextValidation, String tagName, String tagValue){
-		 //if (null == tagValue )  {
-         //	 contextValidation.addErrors("Erreurs fichier","Balise <"+ tagName+"> manquante");
-         // } else 
-        	 if ( tagValue.equals("NULL") ) {
-        	 contextValidation.addErrors("Erreurs fichier","Balise <"+ tagName+"> incorrecte (NULL)");
-         } else if ( tagValue.equals("") ) {
-        	 contextValidation.addErrors("Erreurs fichier","Balise <"+ tagName+"> manquante ou non renseignée (vide)");
-         }
+		//if (null == tagValue )  {
+		//	 contextValidation.addErrors("Erreurs fichier","Balise <"+ tagName+"> manquante");
+		// } else 
+		if ( tagValue.equals("NULL") ) {
+			contextValidation.addErrors("Erreurs fichier","Balise <"+ tagName+"> incorrecte (NULL)");
+		} else if ( tagValue.equals("") ) {
+			contextValidation.addErrors("Erreurs fichier","Balise <"+ tagName+"> manquante ou non renseignée (vide)");
+		}
 	}
+	
 }

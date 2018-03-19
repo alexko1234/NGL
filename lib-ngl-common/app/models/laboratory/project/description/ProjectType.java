@@ -7,12 +7,13 @@ import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.project.description.dao.ProjectTypeDAO;
 
-public class ProjectType extends CommonInfoType{
+public class ProjectType extends CommonInfoType {
+
+	public static final CommonInfoType.AbstractCommonInfoTypeFinder<ProjectType,ProjectTypeDAO> find = 
+			new CommonInfoType.AbstractCommonInfoTypeFinder<>(ProjectTypeDAO.class); 
 
 	public ProjectCategory category;
 
-	public static CommonInfoType.AbstractCommonInfoTypeFinder<ProjectType> find = new CommonInfoType.AbstractCommonInfoTypeFinder<ProjectType>(ProjectTypeDAO.class); 
-	
 	public ProjectType() {
 		super(ProjectTypeDAO.class.getName());
 	}

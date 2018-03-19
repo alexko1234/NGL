@@ -4,10 +4,10 @@ import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
 
+import fr.cea.ig.lfw.controllers.AbstractScript;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSRequest;
 import play.libs.ws.WSResponse;
-import sra.scripts.AbstractScript;
 
 public class EbiAPI {
 	

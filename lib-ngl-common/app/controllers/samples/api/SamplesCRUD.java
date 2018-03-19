@@ -32,7 +32,7 @@ import validation.ContextValidation;
 
 public class SamplesCRUD extends AbstractCRUDAPIController<Sample> {
 		
-	private static final play.Logger.ALogger logger = play.Logger.of(SamplesCRUD.class);
+//	private static final play.Logger.ALogger logger = play.Logger.of(SamplesCRUD.class);
 	
 	private static final List<String> authorizedUpdateFields = 
 			Arrays.asList("comments");

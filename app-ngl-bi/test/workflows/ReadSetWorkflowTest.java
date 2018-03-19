@@ -3,8 +3,11 @@ package workflows;
 import static fr.cea.ig.play.test.DevAppTesting.testInServer;
 import static ngl.bi.Global.devapp;
 import static org.fest.assertions.Assertions.assertThat;
-import static play.mvc.Http.Status.OK;
-import static play.test.Helpers.fakeRequest;
+//import static play.mvc.Http.Status.OK;
+//import static play.test.Helpers.fakeRequest;
+
+import java.util.List;
+import java.util.ArrayList;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -14,24 +17,24 @@ import org.mongojack.DBQuery;
 import com.mongodb.BasicDBObject;
 
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.test.RoutesTest;
+//import fr.cea.ig.play.test.RoutesTest;
 import fr.cea.ig.play.test.WSHelper;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.project.instance.Project;
-import models.laboratory.run.instance.Analysis;
+//import models.laboratory.run.instance.Analysis;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import play.Logger;
-import play.mvc.Result;
+//import play.mvc.Result;
 import utils.AbstractTests;
 import utils.RunMockHelper;
 
-public class ReadSetWorkflowTest extends AbstractTests{
+public class ReadSetWorkflowTest extends AbstractTests {
 
 	static ReadSet readSet;
 	static Run run;
@@ -39,7 +42,7 @@ public class ReadSetWorkflowTest extends AbstractTests{
 	static Project project;
 
 	@BeforeClass
-	public static void initData()
+	public static void initData() 
 	{
 		readSet = MongoDBDAO.find("ngl_bi.ReadSetIllumina_dataWF", ReadSet.class, DBQuery.is("state.code","N"), getReadSetKeys()).limit(1).toList().get(0);
 		readSet.sampleOnContainer=null;
@@ -48,17 +51,18 @@ public class ReadSetWorkflowTest extends AbstractTests{
 
 		MongoDBDAO.save(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSet);
 
-
 		//get container 
 		run = MongoDBDAO
 				.findOne("ngl_bi.RunIllumina_dataWF", Run.class, DBQuery.is("code", readSet.runCode));
 		MongoDBDAO.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run);
 
 		String containerSupportCode = run.containerSupportCode;
+		List<String> qCodes = new ArrayList<>();
+		qCodes.add(readSet.sampleCode);
 		container = MongoDBDAO.findOne("ngl_sq.Container_dataWF",Container.class,
 				DBQuery.and(DBQuery.is("support.code", containerSupportCode),
-						DBQuery.is("support.line", readSet.laneNumber.toString()),
-						DBQuery.in("sampleCodes", readSet.sampleCode)));
+						    DBQuery.is("support.line", readSet.laneNumber.toString()),
+						    DBQuery.in("sampleCodes", readSet.sampleCode)));
 		MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, container);
 
 		for(Content content : container.contents){
@@ -90,7 +94,6 @@ public class ReadSetWorkflowTest extends AbstractTests{
 		project = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, readSet.projectCode);
 		MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, project);
 	}
-
 
 	@Test
 	public void setStateIPRG()
@@ -350,6 +353,7 @@ public class ReadSetWorkflowTest extends AbstractTests{
 		keys.put("treatments", 0);
 		return keys;
 	}
+	
 }
 
 

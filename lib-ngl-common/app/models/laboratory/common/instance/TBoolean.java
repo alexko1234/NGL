@@ -1,11 +1,13 @@
 package models.laboratory.common.instance;
 
 /**
- * Boolean with 3 states : UNSET, TRUE or FALSE;
+ * Boolean with 3 states : UNSET, TRUE or FALSE.
+ * 
  * @author galbini
  *
  */
 public enum TBoolean {
+	
 	TRUE(1),
 	FALSE(0),
 	UNSET(-1);
@@ -15,6 +17,5 @@ public enum TBoolean {
 	TBoolean(Integer value) {
 		this.value = value;
 	}
-	
 	
 }

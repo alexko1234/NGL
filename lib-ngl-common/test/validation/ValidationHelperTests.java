@@ -28,7 +28,6 @@ import utils.Constants;
 import validation.utils.ValidationHelper;
 
 public class ValidationHelperTests extends AbstractTests {
-
 	
 	private PropertyDefinition getPropertyFileDefinition() {
 		PropertyDefinition pDef = new PropertyDefinition();
@@ -53,7 +52,6 @@ public class ValidationHelperTests extends AbstractTests {
 		return pDef;
 	}
 
-	
 	@Test
 	public void validatePropertiesFileOK() {
 		PropertyFileValue pFileValue = new  PropertyFileValue();
@@ -79,7 +77,6 @@ public class ValidationHelperTests extends AbstractTests {
 		assertThat(cv.errors.size()).isEqualTo(0); 
 		
 	}
-	
 	
 	@Test
 	public void validatePropertiesFileErr1() {
@@ -107,7 +104,6 @@ public class ValidationHelperTests extends AbstractTests {
 		assertThat(cv.errors.toString()).contains("error.required");
 	}
 	
-
 	@Test
 	public void validatePropertiesFileErr2() {
 		PropertyFileValue pFileValue = new  PropertyFileValue();
@@ -135,7 +131,6 @@ public class ValidationHelperTests extends AbstractTests {
 		assertThat(cv.errors.toString()).contains("error.required");
 	}
 	
-
 	@Test
 	public void validatePropertiesFileImgOK() {
 		PropertyImgValue pImgValue = new  PropertyImgValue();
@@ -160,10 +155,8 @@ public class ValidationHelperTests extends AbstractTests {
 		pImgValue.validate(cv);
 		
 		showErrors(cv);
-		assertThat(cv.errors.size()).isEqualTo(0); 
-		
+		assertThat(cv.errors.size()).isEqualTo(0); 	
 	}
-	
 	
 	@Test
 	public void validatePropertiesFileImgErr() {
@@ -193,30 +186,29 @@ public class ValidationHelperTests extends AbstractTests {
 		assertThat(cv.errors.toString()).contains("error.required");
 	}
 	
-	
 	@Test
 	public void validatePropertiesRequired() {
 		ContextValidation cv = new ContextValidation(Constants.TEST_USER);
 		ValidationHelper.validateProperties(cv, getPropertiesRequired(), getPropertyDefinitionsRequired());
-		
 		showErrors(cv);
 		assertThat(cv.errors.size()).isEqualTo(getPropertyDefinitionsRequired().size()+2);
-		
 	}
 
 
+//	private void showErrors(ContextValidation cv) {
+//		if (cv.errors.size() > 0) {
+//			for(Entry<String, List<ValidationError>> e : cv.errors.entrySet()){
+//				System.out.println(e);
+//			}
+//		}
+//	}
 	private void showErrors(ContextValidation cv) {
-		if(cv.errors.size() > 0){
-			for(Entry<String, List<ValidationError>> e : cv.errors.entrySet()){
-				System.out.println(e);
-			}
-			
-		}
+		for (Entry<String, List<ValidationError>> e : cv.errors.entrySet())
+			System.out.println(e);
 	}
-	
-	
-	private Map<String, PropertyValue> getPropertiesRequired(){
-		Map<String, PropertyValue> m = new HashMap<String, PropertyValue>();
+		
+	private Map<String, PropertyValue> getPropertiesRequired() {
+		Map<String, PropertyValue> m = new HashMap<>(); // String, PropertyValue>();
 		
 		PropertySingleValue propSingle = new PropertySingleValue();
 		m.put("single1-1", propSingle);
@@ -224,21 +216,21 @@ public class ValidationHelperTests extends AbstractTests {
 		m.put("single1-3", null);
 		PropertyListValue propList = new PropertyListValue();
 		m.put("list2-1", propList);
-		propList.value=new ArrayList();
+		propList.value = new ArrayList<>();
 		m.put("list2-2",propList);
-		propList.value=Arrays.asList(new String[]{"1", null, "2"});
+		propList.value = Arrays.asList(new String[]{ "1", null, "2" });
 		m.put("list2-3", propList);
 		
-		
-		Map<String, String> mapObject = new HashMap<String, String>();
+//		Map<String, String> mapObject = new HashMap<String, String>();
+		Map<String, Object> mapObject = new HashMap<>();
 		mapObject.put("1", "1");
 		mapObject.put("2", null);
 		mapObject.put("3", "");
 		PropertyObjectValue propObject = new PropertyObjectValue(mapObject);
 		m.put("object4", propObject);
 		
-		
-		List l = new ArrayList();
+//		List<Map<String,?>> l = new ArrayList<>();
+		List<Map<String,Object>> l = new ArrayList<>();
 		l.add(mapObject);
 		l.add(mapObject);
 		l.add(mapObject);
@@ -258,13 +250,14 @@ public class ValidationHelperTests extends AbstractTests {
 		propertyDefinitions.add(newPropertiesDefinition("required2-1", "list2-1", PropertyListValue.class, String.class, true, "list"));
 		propertyDefinitions.add(newPropertiesDefinition("required2-2", "list2-2", PropertyListValue.class, String.class, true, "list"));
 		propertyDefinitions.add(newPropertiesDefinition("required2-3", "list2-3", PropertyListValue.class, String.class, true, "list"));
+		
 		propertyDefinitions.add(newPropertiesDefinition("required3-1", "map3-1", PropertyObjectValue.class, String.class, true, "object"));
 		propertyDefinitions.add(newPropertiesDefinition("required3-2", "map3-2", PropertyObjectValue.class, String.class, true, "object"));
 		propertyDefinitions.add(newPropertiesDefinition("required3-3", "map3-3", PropertyObjectValue.class, String.class, true, "object"));
+		
 		propertyDefinitions.add(newPropertiesDefinition("required4.1", "object4.1", PropertyObjectValue.class, String.class, true, "object"));
 		propertyDefinitions.add(newPropertiesDefinition("required4.2", "object4.2", PropertyObjectValue.class, String.class, true, "object"));
 		propertyDefinitions.add(newPropertiesDefinition("required4.3", "object4.3", PropertyObjectValue.class, String.class, true, "object"));
-		
 		
 		propertyDefinitions.add(newPropertiesDefinition("required5.1", "listObject5.1", PropertyListValue.class, String.class, true, "list"));
 		propertyDefinitions.add(newPropertiesDefinition("required5.2", "listObject5.2", PropertyListValue.class, String.class, true, "list"));
@@ -277,14 +270,12 @@ public class ValidationHelperTests extends AbstractTests {
 	public void validatePropertiesOne() {
 		ContextValidation cv = new ContextValidation(Constants.TEST_USER);
 		ValidationHelper.validateProperties(cv, getPropertiesSingle(), getPropertyDefinitionsSingle());
-		
 		showErrors(cv);
-		assertThat(cv.errors.size()).isEqualTo(0);
-		
+		assertThat(cv.errors.size()).isEqualTo(0);	
 	}
 	
 	private Map<String, PropertyValue> getPropertiesSingle(){
-		Map<String, PropertyValue> m = new HashMap<String, PropertyValue>();
+		Map<String, PropertyValue> m = new HashMap<>(); // String, PropertyValue>();
 		PropertySingleValue propText = new PropertySingleValue("test");
 		m.put("String", propText);
 		PropertySingleValue propInt = new PropertySingleValue(33);
@@ -302,19 +293,16 @@ public class ValidationHelperTests extends AbstractTests {
 		return m;
 	}
 	
-	
 	@Test
 	public void validatePropertiesSingleString() {
 		ContextValidation cv = new ContextValidation(Constants.TEST_USER);
 		ValidationHelper.validateProperties(cv, getPropertiesSingleString(), getPropertyDefinitionsSingle());
-		
 		showErrors(cv);
 		assertThat(cv.errors.size()).isEqualTo(0);
-		
 	}
 	
 	private Map<String, PropertyValue> getPropertiesSingleString(){
-		Map<String, PropertyValue> m = new HashMap<String, PropertyValue>();
+		Map<String, PropertyValue> m = new HashMap<>(); // String, PropertyValue>();
 		PropertySingleValue propString = new PropertySingleValue("test");
 		m.put("String", propString);
 		PropertySingleValue propInt = new PropertySingleValue(33+"");
@@ -356,19 +344,16 @@ public class ValidationHelperTests extends AbstractTests {
 		return pd;
 	}
 	
-	
 	@Test
 	public void validatePropertiesListString() {
 		ContextValidation cv = new ContextValidation(Constants.TEST_USER);
 		ValidationHelper.validateProperties(cv, getPropertiesListString(), getPropertyDefinitionsList());
-		
 		showErrors(cv);
 		assertThat(cv.errors.size()).isEqualTo(0);
-		
 	}
 	
 	private Map<String, PropertyValue> getPropertiesListString(){
-		Map<String, PropertyValue> m = new HashMap<String, PropertyValue>();
+		Map<String, PropertyValue> m = new HashMap<>(); // String, PropertyValue>();
 		PropertyListValue propListString = new PropertyListValue(Arrays.asList("test", "test2", "tes3"));
 		m.put("String", propListString);
 		PropertyListValue propListInt = new PropertyListValue(Arrays.asList("33","36","65"));
@@ -386,70 +371,67 @@ public class ValidationHelperTests extends AbstractTests {
 		return m;
 	}
 	
-	
 	private List<PropertyDefinition> getPropertyDefinitionsList(){
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("String", "String", PropertyListValue.class, String.class, true, "list"));
-		propertyDefinitions.add(newPropertiesDefinition("Integer", "Integer", PropertyListValue.class, Integer.class, true, "list"));
-		propertyDefinitions.add(newPropertiesDefinition("Double", "Double", PropertyListValue.class, Double.class, true, "list"));
-		propertyDefinitions.add(newPropertiesDefinition("Boolean", "Boolean", PropertyListValue.class, Boolean.class, true, "list"));
-		propertyDefinitions.add(newPropertiesDefinition("Long", "Long", PropertyListValue.class, Long.class, true, "list"));
-		propertyDefinitions.add(newPropertiesDefinition("Date", "Date", PropertyListValue.class, Date.class, true, "list"));
+		propertyDefinitions.add(newPropertiesDefinition("String",   "String",   PropertyListValue.class, String.class,   true, "list"));
+		propertyDefinitions.add(newPropertiesDefinition("Integer",  "Integer",  PropertyListValue.class, Integer.class,  true, "list"));
+		propertyDefinitions.add(newPropertiesDefinition("Double",   "Double",   PropertyListValue.class, Double.class,   true, "list"));
+		propertyDefinitions.add(newPropertiesDefinition("Boolean",  "Boolean",  PropertyListValue.class, Boolean.class,  true, "list"));
+		propertyDefinitions.add(newPropertiesDefinition("Long",     "Long",     PropertyListValue.class, Long.class,     true, "list"));
+		propertyDefinitions.add(newPropertiesDefinition("Date",     "Date",     PropertyListValue.class, Date.class,     true, "list"));
 		propertyDefinitions.add(newPropertiesDefinition("TBoolean", "TBoolean", PropertyListValue.class, TBoolean.class, true, "list"));
 		return propertyDefinitions;
 	}
 	
-	private Map<String, String> getMap(String...strings) {
-		Map<String, String> m = new HashMap<String, String>();
+//	private Map<String, String> getMap(String...strings) {
+//		Map<String, String> m = new HashMap<String, String>();
+//		int i = 0;
+//		for(String str: strings){
+//			m.put(i+++"", str);
+//		}		
+//		return m;
+//	}
+	private Map<String, Object> getMap(String...strings) {
+		Map<String, Object> m = new HashMap<>();
 		int i = 0;
-		for(String str: strings){
-			m.put(i+++"", str);
-		}		
+		for (String str : strings)
+			m.put(i++ + "", str);
 		return m;
 	}
 
-
-	private List<PropertyDefinition> getPropertyDefinitionsMap(){
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("String", "String", PropertyObjectValue.class, String.class, true, "object"));
-		propertyDefinitions.add(newPropertiesDefinition("Integer", "Integer", PropertyObjectValue.class, Integer.class, true, "object"));
-		propertyDefinitions.add(newPropertiesDefinition("Double", "Double", PropertyObjectValue.class, Double.class, true, "object"));
-		propertyDefinitions.add(newPropertiesDefinition("Boolean", "Boolean", PropertyObjectValue.class, Boolean.class, true, "object"));
-		propertyDefinitions.add(newPropertiesDefinition("Long", "Long", PropertyObjectValue.class, Long.class, true, "object"));
-		propertyDefinitions.add(newPropertiesDefinition("Date", "Date", PropertyObjectValue.class, Date.class, true, "object"));
-		propertyDefinitions.add(newPropertiesDefinition("TBoolean", "TBoolean", PropertyObjectValue.class, TBoolean.class, true, "object"));
-		return propertyDefinitions;
-	}
-	
+//	private List<PropertyDefinition> getPropertyDefinitionsMap(){
+//		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+//		propertyDefinitions.add(newPropertiesDefinition("String", "String", PropertyObjectValue.class, String.class, true, "object"));
+//		propertyDefinitions.add(newPropertiesDefinition("Integer", "Integer", PropertyObjectValue.class, Integer.class, true, "object"));
+//		propertyDefinitions.add(newPropertiesDefinition("Double", "Double", PropertyObjectValue.class, Double.class, true, "object"));
+//		propertyDefinitions.add(newPropertiesDefinition("Boolean", "Boolean", PropertyObjectValue.class, Boolean.class, true, "object"));
+//		propertyDefinitions.add(newPropertiesDefinition("Long", "Long", PropertyObjectValue.class, Long.class, true, "object"));
+//		propertyDefinitions.add(newPropertiesDefinition("Date", "Date", PropertyObjectValue.class, Date.class, true, "object"));
+//		propertyDefinitions.add(newPropertiesDefinition("TBoolean", "TBoolean", PropertyObjectValue.class, TBoolean.class, true, "object"));
+//		return propertyDefinitions;
+//	}
 	
 	@Test
 	public void validatePropertiesObjectOK() {
 		ContextValidation cv = new ContextValidation(Constants.TEST_USER);
 		ValidationHelper.validateProperties(cv, getPropertiesObjectString(), getPropertyDefinitionsObject());
 		showErrors(cv);
-		assertThat(cv.errors.size()).isEqualTo(0);
-		
+		assertThat(cv.errors.size()).isEqualTo(0);		
 	}
 	
-	
-	private Map<String, PropertyValue> getPropertiesObjectString(){
-		Map<String, PropertyValue> m = new HashMap<String, PropertyValue>();
+	private Map<String, PropertyValue> getPropertiesObjectString() {
+		Map<String, PropertyValue> m = new HashMap<>(); // String, PropertyValue>();
 		PropertyObjectValue propObject = new PropertyObjectValue(getMap("test", "45", "36985214456467789654"));
 		m.put("Object", propObject);
-		
 		return m;
 	}
 	
-	private List<PropertyDefinition> getPropertyDefinitionsObject(){
+	private List<PropertyDefinition> getPropertyDefinitionsObject() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Object.String", "Object.0", PropertyObjectValue.class, String.class, true, "object"));
+		propertyDefinitions.add(newPropertiesDefinition("Object.String",  "Object.0", PropertyObjectValue.class, String.class,  true, "object"));
 		propertyDefinitions.add(newPropertiesDefinition("Object.Integer", "Object.1", PropertyObjectValue.class, Integer.class, true, "object"));
-		propertyDefinitions.add(newPropertiesDefinition("Object.Double", "Object.2", PropertyObjectValue.class, Double.class, true, "object"));		
+		propertyDefinitions.add(newPropertiesDefinition("Object.Double",  "Object.2", PropertyObjectValue.class, Double.class,  true, "object"));		
 		return propertyDefinitions;
 	}
 
-
-
-	
-	
 }

@@ -1,55 +1,70 @@
 package models.utils.dao;
 
-import java.sql.Types;
+// import java.sql.Types;
 import java.util.List;
 
 import models.laboratory.common.description.CommonInfoType;
 import models.utils.ListObject;
 
-import org.springframework.asm.Type;
+// import org.springframework.asm.Type;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.SqlParameter;
+// import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
-import play.Logger;
+import fr.cea.ig.mongo.MongoDeprecation;
+
+// import play.Logger;
 
 public abstract class AbstractDAOCommonInfoType<T extends CommonInfoType> extends AbstractDAOMapping<T> {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(AbstractDAOCommonInfoType.class);
+	
 	protected final static String sqlCommonInfoType="INNER JOIN common_info_type as t ON t.id=c.fk_common_info_type ";
+	
 	protected String sqlCommonFrom;
+	
 	protected String sqlCommonSelect;
 
+//	protected AbstractDAOCommonInfoType(String tableName, Class<T> entityClass,
+//			Class<? extends MappingSqlQuery<T>> classMapping, String sqlCommonSelect, String sqlCommonFrom,
+//					boolean useGeneratedKey) {
+//		super(tableName, entityClass, classMapping, sqlCommonSelect+sqlCommonFrom+DAOHelpers.getCommonInfoTypeDefaultSQLForInstitute(), useGeneratedKey);
+//		this.sqlCommonFrom   = sqlCommonFrom + DAOHelpers.getCommonInfoTypeDefaultSQLForInstitute();
+//		this.sqlCommonSelect = sqlCommonSelect;		
+//	}
 	protected AbstractDAOCommonInfoType(String tableName, Class<T> entityClass,
-			Class<? extends MappingSqlQuery<T>> classMapping, String sqlCommonSelect, String sqlCommonFrom,
+			MappingSqlQueryFactory<T> classMapping, String sqlCommonSelect, String sqlCommonFrom,
 					boolean useGeneratedKey) {
 		super(tableName, entityClass, classMapping, sqlCommonSelect+sqlCommonFrom+DAOHelpers.getCommonInfoTypeDefaultSQLForInstitute(), useGeneratedKey);
-		this.sqlCommonFrom=sqlCommonFrom+DAOHelpers.getCommonInfoTypeDefaultSQLForInstitute();
-		this.sqlCommonSelect=sqlCommonSelect;		
+		this.sqlCommonFrom   = sqlCommonFrom + DAOHelpers.getCommonInfoTypeDefaultSQLForInstitute();
+		this.sqlCommonSelect = sqlCommonSelect;		
 	}
 	
 	public Boolean isCodeExist(String code) throws DAOException {
-		if(null == code){
+		if (code == null) 
 			throw new DAOException("code is mandatory");
-		}
 		try {
-			String	sql = "SELECT t.id FROM common_info_type t "+DAOHelpers.getCommonInfoTypeDefaultSQLForInstitute()+" where t.code=?";
+			String	sql = "SELECT t.id FROM common_info_type t " + DAOHelpers.getCommonInfoTypeDefaultSQLForInstitute() + " where t.code=?";
 			try {
-				long id =  this.jdbcTemplate.queryForLong(sql, code);
-				if(id > 0) {
+//				long id =  this.jdbcTemplate.queryForLong(sql, code);
+//				long id =  jdbcTemplate.queryForLong(sql, code);
+				long id = MongoDeprecation.queryForLong(jdbcTemplate, sql, code);
+				if (id > 0) {
 					return Boolean.TRUE;
-				}else{
+				} else {
 					return Boolean.FALSE;
 				}
 			} catch (EmptyResultDataAccessException e) {
 				return Boolean.FALSE;
 			}
 		} catch (DataAccessException e) {
-			Logger.warn(e.getMessage());
+			logger.warn(e.getMessage());
 			return null;
 		}
 	}
+	
 /*
 	public T findById(Long id) throws DAOException {
 		if(null == id){

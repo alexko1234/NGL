@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
@@ -272,14 +272,14 @@ public class ContainersCRUD extends AbstractCRUDAPIController<Container> {
 	@Permission(value={"writing"})
 	public Result updateState(String code) {
 		Container container = findContainer(code);
-		if (container == null) {
+		if (container == null)
 			return badRequest("Container with code " + code + " does not exist");
-		}
 		Form<State> filledForm =  getFilledForm(stateForm, State.class);
 		State state = filledForm.get();
 		state.date = new Date();
 		state.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
 		ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE, Boolean.TRUE);		
 		workflows.setState(ctxVal, container, state);
@@ -299,24 +299,24 @@ public class ContainersCRUD extends AbstractCRUDAPIController<Container> {
 		.map(filledForm -> {
 			ContainerBatchElement element = filledForm.get();
 			Container container = findContainer(element.data.code);
-			if(null != container){
+			if (container != null) {
 				State state = element.data.state;
 				state.date = new Date();
 				state.user = user;
-				ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+//				ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+				ContextValidation ctxVal = new ContextValidation(user, filledForm);
 				ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
 				ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE, Boolean.TRUE);
 				workflows.setState(ctxVal, container, state);
 				if (!ctxVal.hasErrors()) {
 					return new DatatableBatchResponseElement(OK,  findContainer(container.code), element.index);
-				}else {
+				} else {
 					return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);
 				}
-			}else {
+			} else {
 				return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
 			}
 		}).collect(Collectors.toList());
-		
 		return ok(Json.toJson(response));
 	}
 

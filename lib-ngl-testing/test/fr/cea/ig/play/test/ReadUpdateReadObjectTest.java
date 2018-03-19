@@ -4,12 +4,12 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import fr.cea.ig.DBObject;
-import play.libs.Json;
+// import play.libs.Json;
 import play.libs.ws.WSClient;
-import play.libs.ws.WSResponse;
+// import play.libs.ws.WSResponse;
 import play.mvc.Http.Status;
 
-import com.fasterxml.jackson.databind.JsonNode;
+// import com.fasterxml.jackson.databind.JsonNode;
 
 public class ReadUpdateReadObjectTest<T extends DBObject> {
 	/**

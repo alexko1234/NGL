@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import play.Logger;
+//import play.Logger;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
@@ -38,27 +38,22 @@ import fr.cea.ig.play.NGLContext;
 
 public abstract class FileService {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(FileService.class);
+	
 	protected Map<Integer, String> headerByIndex = new HashMap<Integer,String>();
-
 	protected ReceptionConfiguration configuration;
 	protected PropertyFileValue fileValue;
 	protected ContextValidation contextValidation;
+	private Map<String, Project> lastSampleCodeForProjects = new HashMap<String, Project>(0);
+	private Map<String, Mapping<? extends DBObject>> mappings = new HashMap<String,Mapping<? extends DBObject>>();
+	private Map<String, Map<String, DBObject>> objects = new HashMap<String,Map<String, DBObject>>();
 	
 	private final NGLContext ctx;
 
-	private Map<String, Project> lastSampleCodeForProjects = new HashMap<String, Project>(0);
-
-
-	private Map<String, Mapping<? extends DBObject>> mappings = new HashMap<String,Mapping<? extends DBObject>>();
-
-	private Map<String, Map<String, DBObject>> objects = new HashMap<String,Map<String, DBObject>>();
-
-	public Map<String, Map<String, DBObject>> getObjects() {
-		return objects;
-	}
-
 	protected FileService(ReceptionConfiguration configuration,
-			PropertyFileValue fileValue, ContextValidation contextValidation, NGLContext ctx) {
+			              PropertyFileValue fileValue, 
+			              ContextValidation contextValidation, 
+			              NGLContext ctx) {
 		this.configuration = configuration;
 		this.fileValue = fileValue;
 		this.contextValidation = contextValidation;
@@ -72,18 +67,20 @@ public abstract class FileService {
 
 	}
 
-	private Mapping<? extends DBObject> mappingFactory(String objectType) {
+	public Map<String, Map<String, DBObject>> getObjects() {
+		return objects;
+	}
 
-		if(Mapping.Keys.sample.toString().equals(objectType)){
+	private Mapping<? extends DBObject> mappingFactory(String objectType) {
+		if (Mapping.Keys.sample.toString().equals(objectType)) {
 			return new SampleMapping(objects, configuration.configs.get(objectType), configuration.action, contextValidation, ctx);
-		}else if(Mapping.Keys.support.toString().equals(objectType)){
+		} else if(Mapping.Keys.support.toString().equals(objectType)) {
 			return new SupportMapping(objects, configuration.configs.get(objectType), configuration.action, contextValidation);
-		}else if(Mapping.Keys.container.toString().equals(objectType)){
+		} else if(Mapping.Keys.container.toString().equals(objectType)) {
 			return new ContainerMapping(objects, configuration.configs.get(objectType), configuration.action, contextValidation);
-		}
-		else{
-			contextValidation.addErrors("Error", "Mapping : "+objectType);
-			throw new UnsupportedOperationException("Mapping : "+objectType);
+		} else {
+			contextValidation.addErrors("Error", "Mapping : " + objectType);
+			throw new UnsupportedOperationException("Mapping : " + objectType);
 		}
 	}
 
@@ -112,65 +109,59 @@ public abstract class FileService {
 		.stream().forEach(entry -> {
 			String s = entry.getKey();
 			DBObject dbObject = entry.getValue();
-			if (null != dbObject.code && !objects.get(s).containsKey(dbObject.code)){
+			if (dbObject.code != null && !objects.get(s).containsKey(dbObject.code)) {
 				objects.get(s).put(dbObject.code, dbObject);
-			}else if(null != dbObject.code){
-				Logger.warn(s+" already load from another line");
-			}else{
+			} else if (dbObject.code != null) {
+				logger.warn(s+" already load from another line");
+			} else {
 				throw new RuntimeException("no code found for "+s);
 			}
 		});		
 	}
 
-
 	private void consolidateCodesOnLineObject(Map<String, DBObject> objectInLine) {
 		Container container = (Container)objectInLine.get(Mapping.Keys.container.toString());
-		if(null != container){
-			if(Action.save.equals(configuration.action)){
+		if (container != null) {
+			if (Action.save.equals(configuration.action)) {
 				//allready one sample by line
 				Sample sample = (Sample)objectInLine.get(Mapping.Keys.sample.toString());
-				if(null != sample && null == sample.code && sample.projectCodes != null && sample.projectCodes.size() == 1){
+				if (sample != null && sample.code != null && sample.projectCodes != null && sample.projectCodes.size() == 1) {
 					sample.code = generateSampleCode(sample); 
 					//update content sampleCode
-					
 					List<Content> contents = container.contents.stream().filter(c -> (c.sampleCode == null)).collect(Collectors.toList());
-					if(contents.size() == 1){
+					if (contents.size() == 1) {
 						contents.get(0).sampleCode = sample.code;																
-					}else if(contents.size() > 1){
+					} else if(contents.size() > 1) {
 						contextValidation.addErrors("container.contents", "several contents without sampleCode");
 					}
-					
-						
-				}else if(null != sample && null != sample.code){
+				} else if (sample != null && sample.code != null) {
 					List<Content> contents = container.contents.stream().filter(c -> (c.sampleCode == null)).collect(Collectors.toList());
-					if(contents.size() == 1){
+					if (contents.size() == 1) {
 						contents.get(0).sampleCode = sample.code;																
-					}else if(contents.size() > 1){
+					} else if(contents.size() > 1) {
 						contextValidation.addErrors("container.contents", "several contents without sampleCode");
 					}
-
-				}else if(null != sample && null == sample.code && sample.projectCodes != null && sample.projectCodes.size() == 0){
+				} else if (sample != null && sample.code == null && sample.projectCodes != null && sample.projectCodes.size() == 0) {
 					contextValidation.addErrors("sample.projectCodes", "no project code found for sample code generation");
 				}
-
 				ContainerSupport support = (ContainerSupport)objectInLine.get(Mapping.Keys.support.toString());
-				if(null != support && null == support.code){
+				if (support != null && support.code == null) {
 					support.code = CodeHelper.getInstance().generateContainerSupportCode(); 
 					//update content sampleCode
-					if(container.support.code == null){
+					if (container.support.code == null) {
 						container.support.code = support.code;				
-					}else{
+					} else {
 						contextValidation.addErrors("container.support.code", "not null during support code generation : "+container.support.code);
-					};			
+					}
 				}
 			}
 			//compute container code from support code and line and column
 			ContainerSupport support = (ContainerSupport)objectInLine.get(Mapping.Keys.support.toString());
-			if(null != support){
+			if (support != null) {
 				String containerCode = getContainerCode(support, container);
-				if(null != containerCode && null == container.code){
+				if (containerCode != null && container.code == null) {
 					container.code = containerCode;
-				}else if(!containerCode.equals(container.code)){
+				} else if(!containerCode.equals(container.code)) {
 					contextValidation.addErrors("container.code", "error during container code generation : "+containerCode+" / "+container.code);
 				}
 			}
@@ -180,38 +171,35 @@ public abstract class FileService {
 	private String generateSampleCode(Sample sample) {
 		String projectCode = sample.projectCodes.iterator().next();
 
-		if(!lastSampleCodeForProjects.containsKey(projectCode)){
+		if (!lastSampleCodeForProjects.containsKey(projectCode)) {
 			Project project = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, projectCode);
 			lastSampleCodeForProjects.put(projectCode, project);
 		}
 		Project project = lastSampleCodeForProjects.get(projectCode);
-		if(null != project){
+		if (project != null) {
 			project.lastSampleCode = CodeHelper.getInstance().generateSampleCode(project, false);
 			return project.lastSampleCode;
-		}else{
+		} else {
 			return null;
 		}
 	}
+	
 	/*
 	 * compute container code with the support code in case of container.code is null
 	 */
-	private String getContainerCode(ContainerSupport support,
-			Container container) {
+	private String getContainerCode(ContainerSupport support, Container container) {
 		ContainerSupportCategory csc = ContainerSupportCategory.find.findByCode(container.support.categoryCode);
 		String code = null;
-		if(csc.nbLine == 1 && csc.nbColumn == 1){
-			code= support.code;
-		}else if(csc.nbLine > 1 && csc.nbColumn == 1){
+		if (csc.nbLine == 1 && csc.nbColumn == 1) {
+			code = support.code;
+		} else if(csc.nbLine > 1 && csc.nbColumn == 1) {
 			container.support.line = container.support.line.toUpperCase();
-			code=support.code+"_"+container.support.line;
-
-		}else if(csc.nbLine > 1 && csc.nbColumn > 1){
+			code = support.code+"_"+container.support.line;
+		} else if(csc.nbLine > 1 && csc.nbColumn > 1) {
 			container.support.line = container.support.line.toUpperCase();
-			container.support.column = container.support.column.toUpperCase();
-			
-			code=support.code+"_"+container.support.line+container.support.column;
+			container.support.column = container.support.column.toUpperCase();	
+			code = support.code+"_"+container.support.line+container.support.column;
 		}
-
 		return code;
 	}
 
@@ -220,34 +208,29 @@ public abstract class FileService {
 	 */
 	protected void consolidateObjects() {
 		//First consolidate container
-		if(configuration.configs.containsKey(Mapping.Keys.container.toString())){
+		if (configuration.configs.containsKey(Mapping.Keys.container.toString())) {
 			Map<String, DBObject> containers = objects.get(Mapping.Keys.container.toString());
 			containers.values().forEach(c -> {
 				((ContainerMapping)mappings.get(Mapping.Keys.container.toString())).consolidate((Container)c);
-
 			});
 		}
 		//Second consolidate support
-		if(configuration.configs.containsKey(Mapping.Keys.support.toString())){
+		if (configuration.configs.containsKey(Mapping.Keys.support.toString())) {
 			Map<String, DBObject> supports = objects.get(Mapping.Keys.support.toString());
 			supports.values().forEach(c -> {
 				((SupportMapping)mappings.get(Mapping.Keys.support.toString())).consolidate((ContainerSupport)c);
-
 			});
 		}
-
-		
-
-
 	}
+	
 	/**
 	 * Save or update objects in mongodb
 	 */
 	protected void saveObjects() {
 		//First sampe if needed
-		if(Action.save.equals(configuration.action)){
+		if (Action.save.equals(configuration.action)) {
 			contextValidation.setCreationMode();
-		}else{
+		} else {
 			contextValidation.setUpdateMode();
 		}
 		if(saveObjectsForKey(Mapping.Keys.sample.toString())){
@@ -313,62 +296,62 @@ public abstract class FileService {
 	}
 
 	private void updateAbstractFieldConfigurationHeader(AbstractFieldConfiguration afc) {
-		if(ExcelFieldConfiguration.class.isAssignableFrom(afc.getClass())){
+		if (ExcelFieldConfiguration.class.isAssignableFrom(afc.getClass())) {
 			updateExcelConfigurationHeader((ExcelFieldConfiguration)afc);
-		}else if(DoubleExcelFieldConfiguration.class.isAssignableFrom(afc.getClass())){
+		} else if (DoubleExcelFieldConfiguration.class.isAssignableFrom(afc.getClass())) {
 			updateDoubleExcelConfigurationHeader((DoubleExcelFieldConfiguration)afc);
-		}else if(PropertiesFieldConfiguration.class.isAssignableFrom(afc.getClass())){
+		} else if (PropertiesFieldConfiguration.class.isAssignableFrom(afc.getClass())) {
 			PropertiesFieldConfiguration pfc = (PropertiesFieldConfiguration)afc;
 			Set<String> propertyNames = pfc.configs.keySet();
-			propertyNames.stream().forEach(_pName ->{
+			propertyNames.stream().forEach(_pName -> {
 				updateAbstractFieldConfigurationHeader(pfc.configs.get(_pName));
 			});
-		}else if(PropertyValueFieldConfiguration.class.isAssignableFrom(afc.getClass())){
+		} else if (PropertyValueFieldConfiguration.class.isAssignableFrom(afc.getClass())) {
 			PropertyValueFieldConfiguration pvfc = (PropertyValueFieldConfiguration)afc;
 			updateAbstractFieldConfigurationHeader(pvfc.value);
-			if(null != pvfc.unit)
+			if (pvfc.unit != null)
 				updateAbstractFieldConfigurationHeader(pvfc.unit);
-		}else if(ObjectFieldConfiguration.class.isAssignableFrom(afc.getClass())){
-			@SuppressWarnings("rawtypes")
-			ObjectFieldConfiguration ofc = (ObjectFieldConfiguration)afc;
+		} else if (ObjectFieldConfiguration.class.isAssignableFrom(afc.getClass())) {
+//			@SuppressWarnings("rawtypes")
+//			ObjectFieldConfiguration ofc = (ObjectFieldConfiguration)afc;
+			ObjectFieldConfiguration<?> ofc = (ObjectFieldConfiguration<?>)afc;
 			Set<String> propertyNames = ofc.configs.keySet();
-			propertyNames.stream().forEach(_pName ->{
-				updateAbstractFieldConfigurationHeader((AbstractFieldConfiguration) ofc.configs.get(_pName));
+			propertyNames.stream().forEach(_pName -> {
+//				updateAbstractFieldConfigurationHeader((AbstractFieldConfiguration) ofc.configs.get(_pName));
+				updateAbstractFieldConfigurationHeader(ofc.configs.get(_pName));
 			});
-		}else if(TagExcelFieldConfiguration.class.isAssignableFrom(afc.getClass())){
+		} else if (TagExcelFieldConfiguration.class.isAssignableFrom(afc.getClass())) {
 			updateTagExcelConfigurationHeader((TagExcelFieldConfiguration)afc);
 		}
 	}
 
 	//FDS 04/07/2017 remplacer cellCode par cellName
 	private void updateTagExcelConfigurationHeader(TagExcelFieldConfiguration efc) {
-		if(this.headerByIndex.containsKey(efc.cellSequence) && this.headerByIndex.containsKey(efc.cellName)){
+		if (this.headerByIndex.containsKey(efc.cellSequence) && this.headerByIndex.containsKey(efc.cellName)) {
 			efc.headerValue = this.headerByIndex.get(efc.cellSequence)+" / "+this.headerByIndex.get(efc.cellName);
-		}else if(this.headerByIndex.containsKey(efc.cellSequence)){
+		} else if(this.headerByIndex.containsKey(efc.cellSequence)) {
 			efc.headerValue = this.headerByIndex.get(efc.cellSequence);
-		}else{
+		} else {
 			contextValidation.addErrors("Headers","not found header for cell position "+efc.cellSequence);
 		}
 	}
 	
 	private void updateExcelConfigurationHeader(ExcelFieldConfiguration efc) {
-		if(this.headerByIndex.containsKey(efc.cellPosition)){
+		if (this.headerByIndex.containsKey(efc.cellPosition)) {
 			efc.headerValue = this.headerByIndex.get(efc.cellPosition);
-		}else{
+		} else {
 			contextValidation.addErrors("Headers","not found header for cell position "+efc.cellPosition);
 		}
 	}
 
 	private void updateDoubleExcelConfigurationHeader(DoubleExcelFieldConfiguration efc) {
-		if(this.headerByIndex.containsKey(efc.cellPosition1)&&this.headerByIndex.containsKey(efc.cellPosition2)){
+		if (this.headerByIndex.containsKey(efc.cellPosition1) && this.headerByIndex.containsKey(efc.cellPosition2)) {
 			efc.headerValue = this.headerByIndex.get(efc.cellPosition1)+" / "+this.headerByIndex.get(efc.cellPosition2);
-		}else{
+		} else {
 			contextValidation.addErrors("Headers","not found header for cell position "+efc.cellPosition1);
 		}
 	}
 
-	
-	
 	public abstract void analyse();
 
 }

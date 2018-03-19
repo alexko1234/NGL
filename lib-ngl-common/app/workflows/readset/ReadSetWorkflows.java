@@ -32,11 +32,11 @@ public class ReadSetWorkflows extends Workflows<ReadSet> {
 	
 	private static final String ruleFQC  = "F_QC_1";
 	private static final String ruleFRG  = "F_RG_1";
-	private static final String ruleIPS  = "IP_S_1";
-	private static final String ruleFV   = "F_V_1";
+//	private static final String ruleIPS  = "IP_S_1";
+//	private static final String ruleFV   = "F_V_1";
 	private static final String ruleFVQC = "F_VQC_1";
 	private static final String ruleIWBA = "IW_BA_1";
-	private static final String ruleFBA  = "F_BA_1";
+//	private static final String ruleFBA  = "F_BA_1";
 	private static final String ruleAUA  = "A-UA_1";
 	private static final String ruleA    = "A_1";
 	private static final String ruleFTF  = "F_TF_1";

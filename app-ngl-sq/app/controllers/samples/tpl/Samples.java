@@ -2,7 +2,7 @@ package controllers.samples.tpl;
 
 import models.laboratory.processes.description.ProcessType;
 import models.utils.dao.DAOException;
-import play.Logger;
+// import play.Logger;
 // import play.Routes;
 import play.libs.Json;
 import play.mvc.Result;
@@ -12,7 +12,6 @@ import views.html.samples.search;
 
 import javax.inject.Inject;
 
-//import controllers.NGLBaseController;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
@@ -21,7 +20,6 @@ import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.support.NGLJavascript;
 import fr.cea.ig.play.NGLContext;
 import play.routing.JavaScriptReverseRouter;
-
 
 // TODO: clean, comment
 

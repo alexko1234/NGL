@@ -16,16 +16,22 @@ import validation.ContextValidation;
 import validation.IValidation;
 import fr.cea.ig.DBObject;
 
-public class ReceptionConfiguration extends DBObject implements IValidation{
+public class ReceptionConfiguration extends DBObject implements IValidation {
 
-	public enum FileType {excel};
-	public enum Action {save, update};
+	public enum FileType { 
+		excel 
+	}
 	
-	public String name;
-	public FileType fileType;
-	public Action action;
+	public enum Action {
+		save, 
+		update
+	}
+	
+	public String           name;
+	public FileType         fileType;
+	public Action           action;
 	public TraceInformation traceInformation;
-	public Short displayOrder;
+	public Short            displayOrder;
 	 
 	@JsonIgnore
 	public Map<String, Map<String, ? extends AbstractFieldConfiguration>> configs = new HashMap<String, Map<String, ? extends AbstractFieldConfiguration>>();
