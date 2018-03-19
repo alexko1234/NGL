@@ -12,8 +12,8 @@ import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OutputContainerUsed;
 import validation.ContextValidation;
+import views.html.helper.input;
 
-//import controllers.instruments.io.cns.tecanevo100.SampleSheetPoolLine;
 import controllers.instruments.io.cns.brandlhs.PlateSampleSheetLine;
 import controllers.instruments.io.cns.brandlhs.tpl.txt.*;
 import controllers.instruments.io.utils.AbstractOutput;
@@ -29,6 +29,7 @@ public class Output extends AbstractOutput {
 	private String name1="pipette_P50";
 	private String name2="pipette_P200";
 	private static int sampleNum;
+	private static Boolean isBuffer;
 	
 	@Override
 	public File generateFile(Experiment experiment,ContextValidation contextValidation) throws Exception {
@@ -38,7 +39,12 @@ public class Output extends AbstractOutput {
 		String bufferContent=null;
 		File file;
 		Boolean isPlaque = "96-well-plate".equals(experiment.instrument.inContainerSupportCategoryCode);	
-
+	
+		if ("normalisation".equals(type) || "normalisation-highVol".equals(type))
+			isBuffer=false;
+		else
+			isBuffer=true;
+		
 		//tube / 96-well-plate
 		if("96-well-plate".equals(experiment.instrument.outContainerSupportCategoryCode)){
 			if ("normalisation".equals(type) ){
@@ -109,31 +115,35 @@ public class Output extends AbstractOutput {
 
 		Double vol = new Double(0);
 
-		if(icu.experimentProperties!=null && icu.experimentProperties.containsKey("inputVolume"))
-			vol = (Double)icu.experimentProperties.get("inputVolume").value;
-		else if(ocu.volume!=null && ocu.volume.value!=null)
-			vol = (Double)ocu.volume.value;
-		else
-			Logger.error("Aucun volume renseigné dans l'expérience! ");
+		if (! isBuffer){
+			if(icu.experimentProperties!=null && icu.experimentProperties.containsKey("inputVolume"))
+				vol = (Double)icu.experimentProperties.get("inputVolume").value;
+			else if(ocu.volume!=null && ocu.volume.value!=null)
+				vol = (Double)ocu.volume.value;
+			else
+				Logger.error("Aucun volume renseigné dans l'expérience! ");
 
 
-		if (vol < treshold){
-			pssl.inputVolume = vol.toString().replace(".", ",");
-			pssl.inputHighVolume = "0,0";
-		}else{
-			pssl.inputHighVolume = vol.toString().replace(".", ",");
-			pssl.inputVolume = "0,0";
+			if (vol < treshold){
+				pssl.inputVolume = vol.toString().replace(".", ",");
+				pssl.inputHighVolume = "0,0";
+			}else{
+				pssl.inputHighVolume = vol.toString().replace(".", ",");
+				pssl.inputVolume = "0,0";
+			}
 		}
 
-		if(icu.experimentProperties!=null && icu.experimentProperties.containsKey("bufferVolume"))
-			vol = (Double)icu.experimentProperties.get("bufferVolume").value;
+		if (isBuffer){
+			if(icu.experimentProperties!=null && icu.experimentProperties.containsKey("bufferVolume"))
+				vol = (Double)icu.experimentProperties.get("bufferVolume").value;
 
-		if (vol < treshold){
-			pssl.bufferVolume = vol.toString().replace(".", ",");
-			pssl.bufferHighVolume = "0,0";
-		}else{
-			pssl.bufferHighVolume = vol.toString().replace(".", ",");
-			pssl.bufferVolume = "0,0";
+			if (vol < treshold){
+				pssl.bufferVolume = vol.toString().replace(".", ",");
+				pssl.bufferHighVolume = "0,0";
+			}else{
+				pssl.bufferHighVolume = vol.toString().replace(".", ",");
+				pssl.bufferVolume = "0,0";
+			}
 		}
 		pssl.dwell = ocu.locationOnContainerSupport.line.concat(ocu.locationOnContainerSupport.column);
 
@@ -143,26 +153,38 @@ public class Output extends AbstractOutput {
 	private List<PlateSampleSheetLine> checkSampleSheetLines (List<PlateSampleSheetLine> psslList, Boolean isPlate){
 
 		List<PlateSampleSheetLine> psslListNew = new LinkedList<PlateSampleSheetLine>();
+
 		
 		if (isPlate){
 			List<String> plateLines = Arrays.asList("A","B","C","D","E","F","G","H"); 	
 			List<Integer> colNums = Arrays.asList(1,2,3,4,5,6,7,8,9,10,11,12);
 			sampleNum=0;
-			 psslListNew = filledSampleSheetLines(psslList,plateLines,colNums);
+			psslListNew = filledSampleSheetLines(psslList,plateLines,colNums);
 
 		}else{
 			/* on gere finalement les tubes par 4 racks 
-			*/
-			sampleNum=0;
+			 */
+
 			List<String> plateLines = Arrays.asList("A","B","C","D"); 	
 			List<String> plateLines2 = Arrays.asList("E","F","G","H"); 	
 			List<Integer> colNums= Arrays.asList(1,2,3,4,5,6);
 			List<Integer> colNums2 = Arrays.asList(7,8,9,10,11,12);
-			
-			 psslListNew = filledSampleSheetLines(psslList,plateLines,colNums);
-			 psslListNew.addAll(filledSampleSheetLines(psslList,plateLines,colNums2));
-			 psslListNew.addAll(filledSampleSheetLines(psslList,plateLines2,colNums));
-			 psslListNew.addAll(filledSampleSheetLines(psslList,plateLines2,colNums2));
+			List<String> plateLinesBuf = Arrays.asList("A","B","C","D","E","F","G","H"); 	
+			List<Integer> colNumsBuf = Arrays.asList(1,2,3,4,5,6,7,8,9,10,11,12);
+
+			//Logger.debug("isBuffer "+);
+			//ADN
+			if (! isBuffer){
+				sampleNum=0;
+				psslListNew = filledSampleSheetLines(psslList,plateLines,colNums);
+				psslListNew.addAll(filledSampleSheetLines(psslList,plateLines,colNums2));
+				psslListNew.addAll(filledSampleSheetLines(psslList,plateLines2,colNums));
+				psslListNew.addAll(filledSampleSheetLines(psslList,plateLines2,colNums2));
+			}else {
+				sampleNum=0;
+				psslListNew = filledSampleSheetLines(psslList,plateLinesBuf,colNumsBuf);
+			}
+
 		}
 
 		return psslListNew;	
@@ -170,7 +192,7 @@ public class Output extends AbstractOutput {
 
 
 	private  List<PlateSampleSheetLine> filledSampleSheetLines (List<PlateSampleSheetLine> psslList, List<String> plateLines, List<Integer> colNums){
-		
+
 		boolean found = false;
 		List<PlateSampleSheetLine> psslListNew = new LinkedList<PlateSampleSheetLine>();
 
@@ -183,15 +205,18 @@ public class Output extends AbstractOutput {
 			while(colNumsItr.hasNext()) {
 				Integer col =(Integer) colNumsItr.next();		
 				found = false;
+
 				sampleNum ++;
 				ListIterator<PlateSampleSheetLine> psslListItr = psslList.listIterator();	
 				while(psslListItr.hasNext()) {
 					PlateSampleSheetLine pssl =(PlateSampleSheetLine) psslListItr.next();					
 					if (pssl.dwell.equals(line+col)){
+						Logger.debug("--"+pssl.dwell+" "+sampleNum);
+
 						found=true;	
 						pssl.dwellNum=sampleNum;
 						pssl.sampleName = "Sample "+sampleNum;
-						psslListNew.add(pssl);			
+						psslListNew.add(pssl);
 					}
 				}
 
@@ -201,11 +226,14 @@ public class Output extends AbstractOutput {
 					psslBlank.dwellNum=sampleNum;
 
 					psslBlank.sampleName = "Sample "+sampleNum;
-					psslBlank.inputVolume = "0,0";
-					psslBlank.bufferVolume = "0,0";
-					psslBlank.inputHighVolume = "0,0";
-					psslBlank.bufferHighVolume = "0,0";
-					
+					if (! isBuffer){
+						psslBlank.inputVolume = "0,0";
+						psslBlank.inputHighVolume = "0,0";
+					}else{
+						psslBlank.bufferVolume = "0,0";
+						psslBlank.bufferHighVolume = "0,0";
+					}
+				
 					psslListNew.add(psslBlank);
 				}
 			}
