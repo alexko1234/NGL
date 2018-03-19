@@ -46,7 +46,7 @@ public class AnalysisWorkflowsHelper {
 		for (String rsCode : analysis.masterReadSetCodes) {
 			ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, rsCode, getReadSetKeys());
 			State nextStep = cloneState(readSet.state, validation.getUser());
-			nextStep.code = "IP-BA";
+			nextStep.code = nextStepCode;
 			readSetWorkflows.setState(validation, readSet, nextStep);
 		}
 	}
@@ -59,7 +59,6 @@ public class AnalysisWorkflowsHelper {
 			//if(valid.equals(TBoolean.UNSET) && !"IW-VBA".equals(readSet.state.code)){
 			if((analysis.state.code.equals("IW-V") && !"IW-VBA".equals(readSet.state.code)) ||
 					(analysis.state.code.equals("F-V") && TBoolean.TRUE.equals(analysis.valuation.valid))){
-				if (valid.equals(TBoolean.UNSET) && !"IW-VBA".equals(readSet.state.code)) {
 					readSet.bioinformaticValuation.valid = valid;
 					readSet.bioinformaticValuation.date = date;
 					readSet.bioinformaticValuation.user = user;
@@ -71,7 +70,6 @@ public class AnalysisWorkflowsHelper {
 					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
 							DBQuery.is("code", rsCode), DBUpdate.set("bioinformaticValuation", readSet.bioinformaticValuation).set("traceInformation", readSet.traceInformation));
 	
-				}
 			}
 		}
 	}
