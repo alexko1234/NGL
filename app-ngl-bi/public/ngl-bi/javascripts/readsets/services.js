@@ -16,6 +16,7 @@
 							header: Messages("readsets.runCode"),
 							type :"text",
 							group:true,
+							groupMethod:"collect:true",
 							order:true,
 				    	  	position:2});
 			columns.push({	property:"laneNumber",
