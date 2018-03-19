@@ -95,7 +95,7 @@ public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> im
 					int count = api().count(samplesSearch.reportingQuery);
 					Map<String, Integer> map = new HashMap<String, Integer>(1);
 					map.put("result", count);
-					return ok(Json.toJson(map));
+					return nglOk(map);
 				} else {
 					return badRequest();
 				}
@@ -133,11 +133,10 @@ public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> im
 						results = api().list(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.limit);	
 						return MongoStreamer.okStream(convertToListObject(results, x -> x.code, x -> x.code)); // in place of getLOChunk(MongoDBResult<T> all)
 					} else if(samplesSearch.count) {
-						getLogger().info("list mode normal count");
 						int count = api().count(samplesSearch.reportingQuery);
 						Map<String, Integer> m = new HashMap<String, Integer>(1);
 						m.put("result", count);
-						return ok(Json.toJson(m));
+						return nglOk(m);
 					} else {
 						return Streamer.okStream(api().stream(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.limit));
 					}
@@ -145,7 +144,7 @@ public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> im
 			}
 		} catch (Exception e) {
 			getLogger().error(e.getMessage());
-			return badRequest(Json.toJson(e.getMessage()));
+			return nglGlobalBadRequest();
 		}
 	}
 	
@@ -159,10 +158,10 @@ public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> im
 			if (sample == null) {
 				return notFound();
 			} 
-			return ok(Json.toJson(sample));
+			return nglOk(sample);
 		} catch (Exception e) {
 			getLogger().error(e.getMessage());
-			return badRequest(Json.toJson(e.getMessage()));
+			return nglGlobalBadRequest();
 		}	
 	}	
 
