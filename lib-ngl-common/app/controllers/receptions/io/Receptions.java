@@ -29,12 +29,13 @@ public class Receptions extends TPLCommonController {
 
 	final Form<PropertyFileValue> fileForm;// = form(PropertyFileValue.class);
 	
-	private final NGLContext ctx;
+//	private final NGLContext ctx;
 	private final ReceptionFileService receptionFileService;
+
 	@Inject
 	public Receptions(NGLContext ctx, ReceptionFileService receptionFileService) {
 		fileForm = ctx.form(PropertyFileValue.class);
-		this.ctx = ctx;
+//		this.ctx = ctx;
 		this.receptionFileService = receptionFileService;
 	}
 	

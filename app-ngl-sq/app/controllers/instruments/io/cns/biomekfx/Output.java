@@ -60,7 +60,7 @@ public class Output extends AbstractOutput {
 	}
 
 	private String getFileName(Experiment experiment) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyMMdd");
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyMMdd");
 		return experiment.code.toUpperCase();
 	}
 

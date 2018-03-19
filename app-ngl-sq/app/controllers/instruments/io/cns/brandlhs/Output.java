@@ -62,9 +62,8 @@ public class Output extends AbstractOutput {
 	}
 
 	private String getFileName(Experiment experiment) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyMMdd");
-		return experiment.code.toUpperCase();
-		
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyMMdd");
+		return experiment.code.toUpperCase();		
 	}
 
 
@@ -78,8 +77,8 @@ public class Output extends AbstractOutput {
 	}
 
 	private PlateSampleSheetLine getPlateSampleSheetLine(AtomicTransfertMethod atm, String inputContainerCategory,Experiment experiment) {
-		Map<String, String> sourceMapping = getSourceMapping(experiment);
-		Map<String, String> destPositionMapping = getDestMapping(experiment);
+//		Map<String, String> sourceMapping = getSourceMapping(experiment);
+//		Map<String, String> destPositionMapping = getDestMapping(experiment);
 		
 		InputContainerUsed icu = atm.inputContainerUseds.get(0);
 		OutputContainerUsed ocu = atm.outputContainerUseds.get(0);
@@ -102,36 +101,37 @@ public class Output extends AbstractOutput {
 	}
 	private List<PlateSampleSheetLine> checkPlateSampleSheetLines (List<PlateSampleSheetLine> psslList, Boolean isPlaque){
 
-		PlateSampleSheetLine psslTemplate = new PlateSampleSheetLine();
+//		PlateSampleSheetLine psslTemplate = new PlateSampleSheetLine();
 		List<PlateSampleSheetLine> psslListNew = new LinkedList<PlateSampleSheetLine>();
 		List<String> plateLines ;
 		int colNum;	
-		if (isPlaque){
+		if (isPlaque) {
 			plateLines = Arrays.asList("A","B","C","D","E","F","G","H"); 	
 			colNum=12;
-		}else{
+		} else {
 			plateLines = Arrays.asList("A","B","C","D");
 			colNum=6;
 		}
 		boolean found =false;	
 		int sampleNum=0;
-		for(int line = 0; line < plateLines.size(); line++){
+		for (int line = 0; line < plateLines.size(); line++) {
 
 			for(int plateCol = 1; plateCol <= colNum ;plateCol++){
 				found = false;
 				sampleNum ++;
 				ListIterator<PlateSampleSheetLine> psslListItr = psslList.listIterator();	
 				while(psslListItr.hasNext()) {
-					PlateSampleSheetLine pssl =(PlateSampleSheetLine) psslListItr.next();					
+//					PlateSampleSheetLine pssl =(PlateSampleSheetLine) psslListItr.next();					
+					PlateSampleSheetLine pssl = psslListItr.next();					
 					if (pssl.dwell.equals(plateLines.get(line)+plateCol)){
-						found=true;	
-						pssl.dwellNum=sampleNum;
-						pssl.sampleName = "Sample "+sampleNum;
+						found = true;	
+						pssl.dwellNum = sampleNum;
+						pssl.sampleName = "Sample " + sampleNum;
 						psslListNew.add(pssl);			
 					}
 				}
 
-				if (! found){
+				if (! found) {
 					PlateSampleSheetLine psslBlank = new PlateSampleSheetLine();
 					psslBlank.dwell=plateLines.get(line)+plateCol;
 					psslBlank.dwellNum=sampleNum;
@@ -147,25 +147,26 @@ public class Output extends AbstractOutput {
 	}
 
 
-	private Map<String, String> getSourceMapping(Experiment experiment) {
-		Map<String, String> sources = new HashMap<String, String>();
+//	private Map<String, String> getSourceMapping(Experiment experiment) {
+//		Map<String, String> sources = new HashMap<String, String>();
+//
+//		String[] inputContainerSupportCodes = experiment.inputContainerSupportCodes.toArray(new String[0]);
+//		Arrays.sort(inputContainerSupportCodes);
+//		for(int i = 0; i < inputContainerSupportCodes.length ; i++){
+//			sources.put(inputContainerSupportCodes[i], "Src"+(i+1));
+//		}
+//		return sources;
+//	}
 
-		String[] inputContainerSupportCodes = experiment.inputContainerSupportCodes.toArray(new String[0]);
-		Arrays.sort(inputContainerSupportCodes);
-		for(int i = 0; i < inputContainerSupportCodes.length ; i++){
-			sources.put(inputContainerSupportCodes[i], "Src"+(i+1));
-		}
-		return sources;
-	}
+//	private Map<String, String> getDestMapping(Experiment experiment) {
+//		Map<String, String> dest = new HashMap<String, String>();
+//
+//		String[] outputContainerSupportCodes = experiment.outputContainerSupportCodes.toArray(new String[0]);
+//		Arrays.sort(outputContainerSupportCodes);
+//		for(int i = 0; i < outputContainerSupportCodes.length ; i++){
+//			dest.put(outputContainerSupportCodes[i], (i+1)+"");
+//		}
+//		return dest;
+//	}
 
-	private Map<String, String> getDestMapping(Experiment experiment) {
-		Map<String, String> dest = new HashMap<String, String>();
-
-		String[] outputContainerSupportCodes = experiment.outputContainerSupportCodes.toArray(new String[0]);
-		Arrays.sort(outputContainerSupportCodes);
-		for(int i = 0; i < outputContainerSupportCodes.length ; i++){
-			dest.put(outputContainerSupportCodes[i], (i+1)+"");
-		}
-		return dest;
-	}
 }

@@ -129,10 +129,10 @@ public class Variables extends NGLController
 		return query;
 	}*/
 	
-	private Query getQuery(VariablesSearchForm form) {
-		return query(and(is("type", form.type), 
-				         is("code", form.code)));
-	}
+//	private Query getQuery(VariablesSearchForm form) {
+//		return query(and(is("type", form.type), 
+//				         is("code", form.code)));
+//	}
 	
 	private Result list(VariablesSearchForm variableSearch) {
 		logger.debug("variableSearch type " + variableSearch.type);

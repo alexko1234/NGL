@@ -120,7 +120,7 @@ public class ProcWorkflowHelper {
 					.forEach(content -> {
 						content.processProperties = process.properties;
 						content.processComments = process.comments;	
-						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, contentHelper.getContentQuery(container, content), DBUpdate.set("contents.$", content));
+						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, ContentHelper.getContentQuery(container, content), DBUpdate.set("contents.$", content));
 					});
 					
 			});

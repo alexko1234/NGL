@@ -287,7 +287,7 @@ public class Processes extends DocumentController<Process> {
 	public Result saveBatch(String from){	
 		List<Form<ProcessesBatchElement>> filledForms =  getFilledFormList(batchElementForm, ProcessesBatchElement.class);
 		final String user = getCurrentUser();
-		final Lang lang = Http.Context.Implicit.lang();
+//		final Lang lang = Http.Context.Implicit.lang();
 		List<DatatableBatchResponseElement> response = filledForms.parallelStream()
 		.map(filledForm -> {
 			ProcessesBatchElement element = filledForm.get();
@@ -361,9 +361,9 @@ public class Processes extends DocumentController<Process> {
 				
 				if (!process.state.code.equals(input.state.code)) {
 					return new DatatableBatchResponseElement(BAD_REQUEST, "you cannot change the state code. Please used the state url ! ", element.index);					
-				}
-				
-				ContextValidation ctxVal = new ContextValidation(user, filledForm.errors()); 
+				}				
+//				ContextValidation ctxVal = new ContextValidation(user, filledForm.errors()); 
+				ContextValidation ctxVal = new ContextValidation(user, filledForm); 
 				ctxVal.setUpdateMode();
 				workflows.applyPreValidateCurrentStateRules(ctxVal, input);
 				input.validate(ctxVal);			
@@ -443,9 +443,9 @@ public class Processes extends DocumentController<Process> {
 			}
 		}
 		DynamicForm deleteForm = getNGLContext().form();
-		ContextValidation contextValidation=new ContextValidation(getCurrentUser(),deleteForm.errors());
-		
-		if(process.state.code.equals("IP")) {
+//		ContextValidation contextValidation=new ContextValidation(getCurrentUser(),deleteForm.errors());
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(),deleteForm);		
+		if (process.state.code.equals("IP")) {
 			contextValidation.addErrors("process.state.code", ValidationConstants.ERROR_BADSTATE_MSG, container.code);
 		} else if(CollectionUtils.isNotEmpty(process.experimentCodes)) {
 			contextValidation.addErrors("process.experimentCodes", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, process.experimentCodes);

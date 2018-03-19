@@ -37,14 +37,14 @@ import models.utils.InstanceConstants;
 public class Reload_AC_BAS extends AbstractScript {
 	
 	private FileAcServices fileAcServices;
-	private SubmissionServices submissionServices;
-	private ContextValidation contextValidation; 
+//	private SubmissionServices submissionServices;
+//	private ContextValidation contextValidation; 
 	
 	@Inject
 	public Reload_AC_BAS(FileAcServices fileAcServices, SubmissionServices submissionServices) {
 		super();
 		this.fileAcServices = fileAcServices;
-		this.submissionServices = submissionServices;
+//		this.submissionServices = submissionServices;
 	}
 	
 	@Override

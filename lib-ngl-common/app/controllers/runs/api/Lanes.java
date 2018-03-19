@@ -34,13 +34,13 @@ public class Lanes extends RunsController {
 	private static final play.Logger.ALogger logger = play.Logger.of(Lanes.class);
 	
 	private final Form<Lane> laneForm ;
-	private final Form<Treatment> treatmentForm;
+//	private final Form<Treatment> treatmentForm;
 	private final Form<Valuation> valuationForm ;
 	
 	@Inject
 	public Lanes(NGLContext ctx) {
 		laneForm = ctx.form(Lane.class);
-		treatmentForm = ctx.form(Treatment.class);
+//		treatmentForm = ctx.form(Treatment.class);
 		valuationForm = ctx.form(Valuation.class);
 	}
 	

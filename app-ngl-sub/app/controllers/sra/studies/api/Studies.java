@@ -53,7 +53,7 @@ public class Studies extends DocumentController<AbstractStudy> {
 	
 	private final Form<AbstractStudy>     studyForm;
 	private final Form<StudiesSearchForm> studiesSearchForm;
-	private final Form<State>             stateForm;
+//	private final Form<State>             stateForm;
 //	private final StudyWorkflows          studyWorkflows;
 	private final SubmissionServices      submissionServices;
 
@@ -62,7 +62,7 @@ public class Studies extends DocumentController<AbstractStudy> {
 		super(ctx,InstanceConstants.SRA_STUDY_COLL_NAME, AbstractStudy.class);
 		studyForm               = ctx.form(AbstractStudy.class);
 		studiesSearchForm       = ctx.form(StudiesSearchForm.class);
-		stateForm               = ctx.form(State.class);		
+//		stateForm               = ctx.form(State.class);		
 //		this.studyWorkflows     = studyWorkflows;
 		this.submissionServices = submissionServices;
 	}
@@ -71,8 +71,8 @@ public class Studies extends DocumentController<AbstractStudy> {
 		System.out.println("Dans Studies.java.release ");
 		ContextValidation contextValidation = new ContextValidation(user);
 		// SubmissionServices submissionServices = new SubmissionServices();
-		Form<AbstractStudy> filledForm = getFilledForm(studyForm, AbstractStudy.class);
-		AbstractStudy userStudy = filledForm.get();	
+//		Form<AbstractStudy> filledForm = getFilledForm(studyForm, AbstractStudy.class);
+//		AbstractStudy userStudy = filledForm.get();	
 		Study study = null;
 		try {
 			String submissionCode = submissionServices.initReleaseSubmission(studyCode, contextValidation);
@@ -280,10 +280,10 @@ public class Studies extends DocumentController<AbstractStudy> {
 //		}
 //	}
 
-	private Study getStudy(String code)	{
-		Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, code);
-		return study;
-	}
+//	private Study getStudy(String code)	{
+//		Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, code);
+//		return study;
+//	}
 
 	/*	public Result release(String code) {
 		//Get Submission from DB 

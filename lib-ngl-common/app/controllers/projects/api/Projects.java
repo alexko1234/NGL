@@ -111,11 +111,12 @@ public class Projects extends NGLController implements APINGLController, NGLForm
 		Form<Project> filledForm = getFilledForm(projectForm, Project.class);
 		Project projectInput = filledForm.get();
 		try {
-			Project p = getProjectAPI().create(projectInput, getCurrentUser(), filledForm.errors());
+//			Project p = getProjectAPI().create(projectInput, getCurrentUser(), filledForm.errors());
+			Project p = getProjectAPI().create(projectInput, getCurrentUser(), getFormErrors(filledForm));
 			return ok(Json.toJson(p));
 		} catch (APIValidationException e) {
 			getLogger().error(e.getMessage());
-			if(e.getErrors() != null) {
+			if (e.getErrors() != null) {
 				return badRequest(errorsAsJson(e.getErrors()));
 			} else {
 				return badRequest(e.getMessage());
@@ -124,7 +125,6 @@ public class Projects extends NGLController implements APINGLController, NGLForm
 			getLogger().error(e.getMessage());
 			return badRequest("use PUT method to update the project");
 		}
-		
 	}
 	
 	@Override
@@ -139,7 +139,8 @@ public class Projects extends NGLController implements APINGLController, NGLForm
 		Project projectInput = filledForm.get();
 		
 		try {
-			getProjectAPI().update(code, projectInput, getCurrentUser(), filledForm.errors());
+//			getProjectAPI().update(code, projectInput, getCurrentUser(), filledForm.errors());
+			getProjectAPI().update(code, projectInput, getCurrentUser(), getFormErrors(filledForm));
 		} catch (APIValidationException e) {
 			getLogger().error(e.getMessage());
 			if(e.getErrors() != null) {
