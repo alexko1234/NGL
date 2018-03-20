@@ -79,10 +79,10 @@ public class Projects extends NGLAPIController<ProjectsAPI, ProjectsDAO, Project
 					keys.put("name", 1);
 					keys.put("code", 1);
 					results = api().list(q, form.orderBy, Sort.valueOf(form.orderSense), keys, form.limit);	
-					return nglOk(convertToListObject(results, x -> x.getCode(), x -> x.name));
+					return okAsJson(convertToListObject(results, x -> x.getCode(), x -> x.name));
 				} else {
 					results = api().list(q, form.orderBy, Sort.valueOf(form.orderSense), keys);
-					return nglOk(results);
+					return okAsJson(results);
 				}
 			}
 		} catch (Exception e) {
@@ -98,7 +98,7 @@ public class Projects extends NGLAPIController<ProjectsAPI, ProjectsDAO, Project
 		try {
 			Project p = api().get(code);
 			if(p != null) {
-				return nglOk(p);
+				return okAsJson(p);
 			} else {
 				return notFound();
 			}

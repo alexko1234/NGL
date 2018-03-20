@@ -84,17 +84,17 @@ public abstract class NGLAPIController<T extends GenericAPI<U,V>, U extends Gene
 	public Result save() {
 		try {
 			V object = saveImpl();
-			return nglOk(object);
+			return okAsJson(object);
 		} catch (APIValidationException e) {
 			getLogger().error(e.getMessage());
 			if(e.getErrors() != null) {
-				return nglBadRequest(errorsAsJson(e.getErrors()));
+				return badRequestAsJson(errorsAsJson(e.getErrors()));
 			} else {
-				return nglBadRequest(e.getMessage());
+				return badRequestAsJson(e.getMessage());
 			}
 		} catch (APISemanticException e) {
 			getLogger().error(e.getMessage());
-			return nglBadRequest("use PUT method to update");
+			return badRequestAsJson("use PUT method to update");
 		} catch (Exception e) {
 			getLogger().error(e.getMessage());
 			return nglGlobalBadRequest();
@@ -120,17 +120,17 @@ public abstract class NGLAPIController<T extends GenericAPI<U,V>, U extends Gene
 	public Result update(String code) {
 		try {
 			V object = updateImpl(code);
-			return nglOk(object);
+			return okAsJson(object);
 		} catch (APIValidationException e) {
 			getLogger().error(e.getMessage());
 			if(e.getErrors() != null) {
-				return nglBadRequest(errorsAsJson(e.getErrors()));
+				return badRequestAsJson(errorsAsJson(e.getErrors()));
 			} else {
-				return nglBadRequest(e.getMessage());
+				return badRequestAsJson(e.getMessage());
 			}
 		} catch (APIException e) {
 			getLogger().error(e.getMessage());
-			return nglBadRequest(e.getMessage());
+			return badRequestAsJson(e.getMessage());
 		} catch (Exception e) {
 			getLogger().error(e.getMessage());
 			return nglGlobalBadRequest();
@@ -148,31 +148,12 @@ public abstract class NGLAPIController<T extends GenericAPI<U,V>, U extends Gene
 		});
 		return map;
 	}
-	
-	/**
-	 * convert object to Json and return a badRequest response
-	 * @param o Object
-	 * @return badRequest Result and convert object to Json
-	 */
-	protected Result nglBadRequest(Object o) {
-		return badRequest(Json.toJson(o));
-	}
-	
-	/**
-	 * convert object to Json and return an ok response
-	 * @param o Object
-	 * @return ok Result and convert object to Json
-	 */
-	protected Result nglOk(Object o) {
-		return ok(Json.toJson(o));
-	}
-	
 
 	/**
 	 * @return badRequest Result with standard message
 	 */
 	protected Result nglGlobalBadRequest() {
-		return nglBadRequest("Error on server: contact support for more details");
+		return badRequestAsJson("Error on server: contact support for more details");
 	}
 
 }

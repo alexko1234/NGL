@@ -95,7 +95,7 @@ public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> im
 					int count = api().count(samplesSearch.reportingQuery);
 					Map<String, Integer> map = new HashMap<String, Integer>(1);
 					map.put("result", count);
-					return nglOk(map);
+					return okAsJson(map);
 				} else {
 					return badRequest();
 				}
@@ -136,7 +136,7 @@ public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> im
 						int count = api().count(samplesSearch.reportingQuery);
 						Map<String, Integer> m = new HashMap<String, Integer>(1);
 						m.put("result", count);
-						return nglOk(m);
+						return okAsJson(m);
 					} else {
 						return Streamer.okStream(api().stream(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.limit));
 					}
@@ -158,7 +158,7 @@ public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> im
 			if (sample == null) {
 				return notFound();
 			} 
-			return nglOk(sample);
+			return okAsJson(sample);
 		} catch (Exception e) {
 			getLogger().error(e.getMessage());
 			return nglGlobalBadRequest();
