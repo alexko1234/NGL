@@ -138,6 +138,9 @@ public class QualityControl extends AbstractDeclaration {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see services.description.declaration.AbstractDeclaration#getProcessTypeCommon()
+	 */
 	@Override
 	protected List<ProcessType> getProcessTypeCommon() {
 		List<ProcessType> l = new ArrayList<ProcessType>();
@@ -152,14 +155,16 @@ public class QualityControl extends AbstractDeclaration {
 		l.add(DescriptionFactory.newProcessType("Evaluation ADN à réception", "dna-sample-valuation", 
 				ProcessCategory.find.findByCode("sample-valuation"), 1010,
 				getPropertyDefinitionsEvalAReception(), 
-				Arrays.asList(getPET("ext-to-dna-sample-valuation",-1)), 
+				Arrays.asList(getPET("ext-to-dna-sample-valuation",-1),
+						 getPET("dna-rna-extraction",-1)), 
 				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-dna-sample-valuation").get(0), getExperimentTypes("ext-to-dna-sample-valuation").get(0), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(DescriptionFactory.newProcessType("Evaluation ARN à réception", "rna-sample-valuation", 
 				ProcessCategory.find.findByCode("sample-valuation"), 1011,
 				getPropertyDefinitionsEvalAReception(), 
-				Arrays.asList(getPET("ext-to-rna-sample-valuation",-1)), 
+				Arrays.asList(getPET("ext-to-rna-sample-valuation",-1),
+						 getPET("dna-rna-extraction",-1)),  
 				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
