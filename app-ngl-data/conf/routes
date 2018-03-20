@@ -14,6 +14,9 @@ GET		/api/instance/parameters/printers		controllers.instance.parameters.Printers
 
 GET		/migrationTaxonSample					controllers.admin.supports.api.MigrationUpdateNCBITaxonSample.migration(code: java.lang.String ?= "all", onlyNull:Boolean ?=false)
 
+
+GET		/migration/primers						controllers.migration.Primers.migration()
+
 ####remove old part (not used anymore)
 #GET		/api/description/ngl-sample				controllers.description.NGLSample.save()
 #GET		/api/description/commons/states			controllers.description.commons.States.save()
