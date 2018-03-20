@@ -18,7 +18,7 @@
 							group:true,
 							groupMethod:"collect:true",
 							order:true,
-							render:"<div list-resize='cellValue' list-resize-min-size='3'>",
+							render:"<div list-resize='cellValue' list-resize-min-size='3' vertical>",
 				    	  	position:2});
 			columns.push({	property:"laneNumber",
 							header: Messages("readsets.laneNumber"),
