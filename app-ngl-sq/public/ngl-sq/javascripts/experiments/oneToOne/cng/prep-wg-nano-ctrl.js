@@ -325,12 +325,12 @@ angular.module('home').controller('PrepWgNanoCtrl',['$scope', '$parse',  '$filte
 			// exemple dans prepa-fc-ordered: var categoryCodes = $scope.$eval("getBasket().get()|getArray:'support.categoryCode'|unique",mainService);
 			// mais ici mainService n'est pas defini, et pas necessaire...
 			// obliger de passer par contents[0], mais normalement ne doit pas poser de probleme...
-			var ngsRunWorkLabels= $scope.$eval("getBasket().get()|getArray:'contents[0].processProperties.ngsRunWorkLabel.value'|unique");
-			if ( ngsRunWorkLabels.length !== 1 ){
-				$parse("instrumentProperties.robotRunCode.value").assign($scope.experiment, "0 ou >1 RunWorkLabel trouvés !!");
-				console.log('0 ou >1  RunWorkLabel trouvé !!');
+			var workLabels= $scope.$eval("getBasket().get()|getArray:'contents[0].processProperties.ngsRunWorkLabel.value'|unique");
+			if (workLabels.length !== 1 ){
+				$parse("instrumentProperties.robotRunCode.value").assign($scope.experiment, "0 ou >1 run workLabels trouvés !!");
+				console.log('0 ou >1  run workLabels trouvés !!');
 			} else {
-				$parse("instrumentProperties.robotRunCode.value").assign($scope.experiment, ngsRunWorkLabels[0]);
+				$parse("instrumentProperties.robotRunCode.value").assign($scope.experiment, workLabels[0]);
 			}
 		}
 	});

@@ -287,6 +287,23 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 		// rien  ????
 	});
 	
+	// FDS 16/03/2018 : NGL-1906 rechercher le robotRunWorkLabel positionné au niveau processus pour le copier dans robotRunCode (sauf s'il y en plusieurs!!)
+	$scope.$watch("experiment.instrument.code", function(newValue, OldValue){
+		if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {
+			// exemple dans prepa-fc-ordered: var categoryCodes = $scope.$eval("getBasket().get()|getArray:'support.categoryCode'|unique",mainService);
+			// mais ici mainService n'est pas defini, et pas necessaire...
+			// obliger de passer par contents[0], mais normalement ne doit pas poser de probleme...
+			var workLabels= $scope.$eval("getBasket().get()|getArray:'contents[0].processProperties.robotRunWorkLabel.value'|unique");
+			if ( workLabels.length !== 1 ){
+				$parse("instrumentProperties.robotRunCode.value").assign($scope.experiment, "0 ou >1 run workLabels trouvés !!");
+				console.log('0 ou >1  run workLabel trouvé !!');
+			} else {
+				$parse("instrumentProperties.robotRunCode.value").assign($scope.experiment, workLabels[0]);
+			}
+		}
+	});
+		
+	
 	//init data
 	//GA 16/10/2017 Cette experience est la seule qui fait du one to many avec plaque en entre/ plaques en sortie.
 	//=>Il faut refaire un atmService "allégé" par rapport a celui dans atomicTransfereServices.js

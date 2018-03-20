@@ -230,7 +230,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				60,
 				null, // pas de propriétés ??  
 				getPETForTransfertQCPurif(),
-				getExperimentTypes("tubes-to-plate").get(0),                       //first experiment type ( 1 transfert n'importe lequel...?)
+				getExperimentTypes("tubes-to-plate").get(0),             //first experiment type ( 1 transfert n'importe lequel...?)
 				getExperimentTypes("ext-to-transfert-qc-purif").get(0),  //last  experiment type ( doit etre la ext-to...)
 				getExperimentTypes("ext-to-transfert-qc-purif").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -313,7 +313,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		// FDS 14/12/2017 NGL-1730 : renommage label (ajout NovaSeq)
 		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise (1) (4000 / X5 / NovaSeq)", "pcr-capture-pcr-indexing-fc-ord", ProcessCategory.find.findByCode("library"),
 				7,
-				null,
+				getPropertyDefinitionsPrcCapturePcrIndexing(),// FDS 19/03/2018 NGL-1906 ajout 
 				Arrays.asList(
 						getPET("ext-to-pcr-capture-pcr-indexing-fc-ord",-1), //ordered list of experiment type in process type
 						getPET("sample-prep",-1), 
@@ -333,7 +333,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		// FDS 14/12/2017 NGL-1730 : renommage label (suppression 2000 : ne sont plus en fonction)
 		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise (1) (2500 / NextSeq)", "pcr-capture-pcr-indexing-fc", ProcessCategory.find.findByCode("library"),
 				8,
-				null,
+				getPropertyDefinitionsPrcCapturePcrIndexing(), // FDS 19/03/2018 NGL-1906 ajout 
 				Arrays.asList(
 						getPET("ext-to-pcr-capture-pcr-indexing-fc",-1), //ordered list of experiment type in process type
 						getPET("sample-prep",-1), 
@@ -722,11 +722,29 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.newPropertiesDefinition("Protocole / Kit","captureProtocol",
 						LevelService.getLevels(Level.CODE.Process, Level.CODE.Content), String.class, true, "F",
 						getCaptureProtocolValues(), "single" ,103, null, null, null));
+		
+		// NGL-1906: ajout robotRunWorkLabel
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Nom de travail run (robot)","robotRunWorkLabel",
+						LevelService.getLevels(Level.CODE.Process), String.class, false, "F",
+						null, "single" ,105, true, null, null));
 
 		
 		return propertyDefinitions;
 	}
 	
+	// FDS ajout 19/03/2018 JIRA NGL-1906: ajout propriété "robotRunWorkLabel
+	private static List<PropertyDefinition> getPropertyDefinitionsPrcCapturePcrIndexing() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Nom de travail run (robot)","robotRunWorkLabel",
+						LevelService.getLevels(Level.CODE.Process), String.class, false, "F",
+						null, "single" ,105, true, null, null));
+
+		
+		return propertyDefinitions;
+	}
 	
     // FDS ajout 10/07/2017 pour JIRA NGL-1201: processus capture
 	// utilisé par process getPropertyDefinitionsCapture ET getPropertyDefinitionsCapturePcrIndexing
