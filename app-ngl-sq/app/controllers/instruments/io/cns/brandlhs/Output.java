@@ -54,19 +54,19 @@ public class Output extends AbstractOutput {
 				adnContent = OutputHelper.format(normalisation_x_to_plate.render(pssl).body());
 				file = new File(getFileName(experiment)+"_ADN_"+name1+".csv", adnContent);
 
-			}else if("normalisation-buffer".equals(type)){
-				List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
-				pssl = checkSampleSheetLines(pssl, isPlaque);
-
-				bufferContent = OutputHelper.format(normalisation_x_to_plate_buffer.render(pssl).body());
-				file = new File(getFileName(experiment)+"_Buffer_"+name1+".csv", bufferContent);
-
 			}else if ("normalisation-highVol".equals(type) ){
 				List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
 				pssl = checkSampleSheetLines(pssl, isPlaque);
 
 				adnContent = OutputHelper.format(normalisation_x_to_plate_highVol.render(pssl).body());
 				file = new File(getFileName(experiment)+"_ADN_"+name2+".csv", adnContent);
+
+			}else if("normalisation-buffer".equals(type)){
+				List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
+				pssl = checkSampleSheetLines(pssl, isPlaque);
+
+				bufferContent = OutputHelper.format(normalisation_x_to_plate_buffer.render(pssl).body());
+				file = new File(getFileName(experiment)+"_Buffer_"+name1+".csv", bufferContent);
 
 			}else if("normalisation-buffer-highVol".equals(type)){
 				List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
