@@ -81,8 +81,8 @@ public class Processes extends DocumentController<Process> {
 
 	/**
 	 * Construct the process query
-	 * @param processesSearch
-	 * @return the query
+	 * @param processesSearch processes search form
+	 * @return                the query
 	 */
 	private DBQuery.Query getQuery(ProcessesSearchForm processesSearch) throws DAOException{
 		List<Query> queryElts = new ArrayList<Query>();
@@ -275,16 +275,14 @@ public class Processes extends DocumentController<Process> {
 		}
 		return null;
 	}
-	
-	
-	
+
 	/**
-	 * 
-	 * @param from : origin of process creation Container or Sample
-	 * @return
+	 * Save a batch of processes.
+	 * @param from origin of process creation Container or Sample
+	 * @return     HTTP result
 	 */
 	@Permission(value={"writing"})
-	public Result saveBatch(String from){	
+	public Result saveBatch(String from) {	
 		List<Form<ProcessesBatchElement>> filledForms =  getFilledFormList(batchElementForm, ProcessesBatchElement.class);
 		final String user = getCurrentUser();
 //		final Lang lang = Http.Context.Implicit.lang();

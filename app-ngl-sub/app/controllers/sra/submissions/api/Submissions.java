@@ -486,7 +486,7 @@ public class Submissions extends DocumentController<Submission>{
 
 	/**
 	 * Cree une soumission pour la release du study indiqué et active cette soumission en la mettant dans un status IW_SUB_R
-	 * @param studyCode
+	 * @param studyCode study code
 	 * @return ok(Json.toJson(submission))
 	 */           
 	public Result createFromStudy(String studyCode) {

@@ -136,13 +136,12 @@ public class SubmissionWorkflowsHelper {
 	/**
 	 * Cree le bon repertoire de soumission 
 	 * (regle de nomage si soumission primaire de données brutes ou si soumission release)
-	 * et met à jour la soumission dans la base pour le champs submissionDirectory  
-	 * @param submission 
-	 * @param contextValidation : contient une erreur si le repertoire n'a pas pu etre crée
+	 * et met à jour la soumission dans la base pour le champs submissionDirectory.  
+	 * @param submission submission
+	 * @param validation contient une erreur si le repertoire n'a pas pu etre crée
 	 */
-	public void createDirSubmission(Submission submission,ContextValidation validation){
+	public void createDirSubmission(Submission submission, ContextValidation validation) {
 		// Determiner le repertoire de soumission:
-
 		submission.submissionDirectory = VariableSRA.submissionRootDirectory + File.separator + submission.code; 
 		if (submission.release) {
 			submission.submissionDirectory = submission.submissionDirectory + "_release"; 
@@ -279,8 +278,8 @@ public class SubmissionWorkflowsHelper {
 
 	/**
 	 * Cascade le traceInformation et le state de la soumission à ses sous-objets
-	 * @param submission
-	 * @param validation
+	 * @param submission submission
+	 * @param validation validation context
 	 */
 	public void updateSubmissionChildObject(Submission submission, ContextValidation validation) {
 		logger.debug("dans applySuccessPostStateRules submission=" + submission.code + " avec state.code='"+submission.state.code+"'");
@@ -334,9 +333,9 @@ public class SubmissionWorkflowsHelper {
 
 	/**
 	 * Cree le repertoire de soumission et met à jour le champs submission.submissionDirectory, sans sauvegarde dans la base.
-	 * @param submission
+	 * @param submission submission
 	 * @return File : Repertoire crée.
-	 * @throws SraException
+	 * @throws SraException SRA exception
 	 */
 	private File createDirSubmission(Submission submission) throws SraException{
 		// Determiner le repertoire de soumission:
@@ -366,7 +365,7 @@ public class SubmissionWorkflowsHelper {
 	/**
 	 * Active la soumission primaire de données si possible et met à jour la soumission dans la base avec bon etat.
 	 * @param contextValidation : Ne doit pas contenir d'erreur si activation reussie
-	 * @param submission
+	 * @param submission submission
 	 */
 	public void activationPrimarySubmission(ContextValidation contextValidation, Submission submission) {
 		checkForActivatePrimarySubmission(contextValidation, submission);
@@ -378,8 +377,8 @@ public class SubmissionWorkflowsHelper {
 	/**
 	 * Active une première soumission de données : 
 	 * cree le repertoire de soumission et fait les liens sur les données brutes si données zippées
-	 * @param contextValidation
-	 * @param submission
+	 * @param contextValidation validation context
+	 * @param submission        submission
 	 */
 	public void activatePrimarySubmission(ContextValidation contextValidation, Submission submission) {
 //		System.out.println("Dans SubmissionWorkflowsHelper.activatePrimarySubmission");
@@ -487,8 +486,8 @@ public class SubmissionWorkflowsHelper {
 
 	/**
 	 * Verifie que la soumission primaire de données peut etre activée.
-	 * @param contextValidation 
-	 * @param submission 
+	 * @param contextValidation validation context
+	 * @param submission        submission
 	 */
 	public void checkForActivatePrimarySubmission(ContextValidation contextValidation, Submission submission) {
 //		System.out.println("Dans SubmissionWorkflowsHelper.checkForActivatePrimarySubmission");

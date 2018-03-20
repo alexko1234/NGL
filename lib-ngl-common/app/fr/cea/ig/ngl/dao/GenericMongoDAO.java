@@ -87,74 +87,74 @@ public class GenericMongoDAO<T extends DBObject> {
 	}
 	
 	/**
-	 * A finder for mongoDB
-	 * @param query
-	 * @param orderBy
-	 * @param orderSense
-	 * @param limit
-	 * @return a MongoDBResult
-	 * @throws DAOException
+	 * A finder for mongoDB.
+	 * @param query         query
+	 * @param orderBy       order criteria
+	 * @param orderSense    order sense
+	 * @param limit         result count limit (-1 for no limit)
+	 * @return              a MongoDBResult
+	 * @throws DAOException DAO exception
 	 */
 	public MongoDBResult<T> mongoDBFinder(Query query, String orderBy, Sort orderSense, Integer limit) throws DAOException {
 		MongoDBResult<T> results = MongoDBDAO.find(collectionName, elementClass, query).sort(orderBy, orderSense);
-		if(limit != -1){
+		if (limit != -1) {
 			results.limit(limit);
 		}
 		return results;
 	}
 	
 	/**
-	 * A finder for mongoDB
-	 * @param query
-	 * @param orderBy
-	 * @param orderSense
-	 * @param limit
-	 * @param keys
-	 * @return a MongoDBResult
-	 * @throws DAOException
+	 * A finder for mongoDB.
+	 * @param query         query
+	 * @param orderBy       order criteria
+	 * @param orderSense    order sense
+	 * @param limit         result count limit
+	 * @param keys          keys
+	 * @return              a MongoDBResult 
+	 * @throws DAOException DAO exception
 	 */
 	public MongoDBResult<T> mongoDBFinder(Query query, String orderBy, Sort orderSense, Integer limit, BasicDBObject keys) throws DAOException {
 		MongoDBResult<T> results = MongoDBDAO.find(collectionName, elementClass, query, keys).sort(orderBy, orderSense);
-		if(limit != -1){
+		if (limit != -1) {
 			results.limit(limit);
 		}
 		return results;
 	}
 
 	/**
-	 * A finder for mongoDB without size limit of elements
-	 * @param query
-	 * @param orderBy
-	 * @param orderSense
-	 * @return a MongoDBResult
-	 * @throws DAOException
+	 * A finder for mongoDB without size limit of elements.
+	 * @param query         query
+	 * @param orderBy       order criteria
+	 * @param orderSense    order sense
+	 * @return              a MongoDBResult
+	 * @throws DAOException DAO exception
 	 */
 	public MongoDBResult<T> mongoDBFinder(Query query, String orderBy, Sort orderSense) throws DAOException {
 		return mongoDBFinder(query, orderBy, orderSense, -1);
 	}
 	
 	/**
-	 * A finder for mongoDB without size limit of elements
-	 * @param query
-	 * @param orderBy
-	 * @param orderSense
-	 * @param keys
-	 * @return a MongoDBResult
-	 * @throws DAOException
+	 * A finder for mongoDB without size limit of elements.
+	 * @param query         query
+	 * @param orderBy       order criteria
+	 * @param orderSense    order sense
+	 * @param keys          keys
+	 * @return              a MongoDBResult
+	 * @throws DAOException DAO exception
 	 */
 	public MongoDBResult<T> mongoDBFinder(Query query, String orderBy, Sort orderSense, BasicDBObject keys) throws DAOException {
 		return mongoDBFinder(query, orderBy, orderSense, -1, keys);
 	}
 	
 	/**
-	 * A finder for mongoDB with pagination of results
-	 * @param query
-	 * @param orderBy
-	 * @param orderSense
-	 * @param pageNumber
-	 * @param numberRecordsPerPage
-	 * @return a MongoDBResult
-	 * @throws DAOException
+	 * A finder for mongoDB with pagination of results.
+	 * @param query                query
+	 * @param orderBy              order criteria
+	 * @param orderSense           order sense
+	 * @param pageNumber           page number
+	 * @param numberRecordsPerPage records per page
+	 * @return                     a MongoDBResult
+	 * @throws DAOException        DAO exception
 	 */
 	public MongoDBResult<T> mongoDBFinderWithPagination(Query query, String orderBy, Sort orderSense, 
 														Integer pageNumber, Integer numberRecordsPerPage) throws DAOException {
@@ -162,19 +162,20 @@ public class GenericMongoDAO<T extends DBObject> {
 	}
 	
 	/**
-	 * A finder for mongoDB with pagination of results
-	 * @param query
-	 * @param orderBy
-	 * @param orderSense
-	 * @param pageNumber
-	 * @param numberRecordsPerPage
-	 * @param keys
-	 * @return a MongoDBResult
-	 * @throws DAOException
+	 * A finder for mongoDB with pagination of results.
+	 * @param query                query
+	 * @param orderBy              order criteria
+	 * @param orderSense           order sense
+	 * @param pageNumber           page number
+	 * @param numberRecordsPerPage records per page
+	 * @param keys                 keys
+	 * @return                     a MongoDBResult    
+	 * @throws DAOException        DAO Exception
 	 */
 	public MongoDBResult<T> mongoDBFinderWithPagination(Query query, String orderBy, Sort orderSense, 
 														Integer pageNumber, Integer numberRecordsPerPage, BasicDBObject keys) throws DAOException {
 		return mongoDBFinder(query, orderBy, orderSense, keys).page(pageNumber, numberRecordsPerPage);
 	}
+	
 }
 

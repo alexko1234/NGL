@@ -107,7 +107,9 @@ public class RunWorkflowsHelper {
 		readSet.traceInformation.modifyUser = contextValidation.getUser();
 
 		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
-				DBQuery.is("code", readSet.code), DBUpdate.set("productionValuation", readSet.productionValuation).set("traceInformation", readSet.traceInformation));
+				DBQuery.is("code", readSet.code), 
+				DBUpdate.set("productionValuation", readSet.productionValuation)
+				        .set("traceInformation", readSet.traceInformation));
 
 		if(bioinformaticValuation){
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
