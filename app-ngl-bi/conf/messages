@@ -16,6 +16,7 @@ home.runs.ips = Runs en cours de séquençage
 home.runs.iprg = Runs en cours de read generation
 home.runs.iwpv = Runs en attente d''évaluation
 home.runs.keep = Runs à conserver
+home.runs.noValid = Runs à valider
 
 active.true = Actif
 active.false = Inactif
@@ -80,6 +81,7 @@ search.placeHolder.run.states = Etats runs
 search.placeHolder.run.types = Types de run
 search.placeholder.run.categories = Catégories run
 search.placeholder.run.valid = Evaluation run
+search.placeholder.run.regexCode = Regex code run
 search.placeholder.readset.states = Etats readset
 search.placeholder.readset.regexCode = Regex code readset
 search.placeholder.readset.types = Types readset (techno)

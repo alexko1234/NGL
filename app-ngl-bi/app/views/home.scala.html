@@ -95,6 +95,22 @@
 				</div>
 			</div>
 		</div>
+		
+		<div class="col-md-6 col-lg-6">	
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="text-center">
+						<a href="@controllers.runs.tpl.routes.Runs.home("search")?{{runCodesUrl}}">
+							<span class="label label-primary pull-right">{{runsNoValid.totalNumberRecords}}</span>
+							@Messages("home.runs.noValid")
+						</a>												
+					</h3>					
+				</div>
+				<div class="panel-body">
+					<div ultimate-datatable="runsNoValid"></div>
+				</div>
+			</div>
+		</div>
     </div>
  </div>
 }

@@ -1,6 +1,6 @@
 "use strict";
 
-angular.module('home').controller('SearchCtrl', ['$scope', 'datatable' , function($scope, datatable) {
+angular.module('home').controller('SearchCtrl', ['$scope', '$http','$httpParamSerializer', 'datatable' , function($scope, $http,$httpParamSerializer,datatable) {
 
 	var datatableConfig = {
 			order :{by:'sequencingStartDate', reverse:true, mode:'remote'},
@@ -59,7 +59,20 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable' , functio
 		$scope.runsIWV_IPV.search({stateCodes:["IW-V","IP-V"], excludes:["lanes","treatments"]});	
 		$scope.runsKeep = datatable(datatableConfig);			
 		$scope.runsKeep.search({keep:true});	
-	}	
+		
+		//Init list runCodes
+		var form = {includes : []};
+		form.includes.push("runCode");
+		form.productionValidCode="UNSET";
+		form.typeCode="rsillumina";
+		$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:form}).then(function(result){
+			$scope.runCodes =result.data.map(function(readSet){return readSet.runCode;}).filter((value, index, self) => self.indexOf(value) === index);
+			$scope.runsNoValid = datatable(datatableConfig);			
+			$scope.runsNoValid.search({codes:$scope.runCodes});
+			$scope.runCodesUrl = $httpParamSerializer({codes:$scope.runCodes});
+		});
+	}
+		
 }]);
 
 
