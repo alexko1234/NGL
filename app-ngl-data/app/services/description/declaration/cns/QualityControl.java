@@ -156,7 +156,8 @@ public class QualityControl extends AbstractDeclaration {
 				ProcessCategory.find.findByCode("sample-valuation"), 1010,
 				getPropertyDefinitionsEvalAReception(), 
 				Arrays.asList(getPET("ext-to-dna-sample-valuation",-1),
-						 getPET("dna-rna-extraction",-1)), 
+						 getPET("dna-rna-extraction",-1),
+						 getPET("fluo-quantification",0)), 
 				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-dna-sample-valuation").get(0), getExperimentTypes("ext-to-dna-sample-valuation").get(0), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
@@ -164,7 +165,8 @@ public class QualityControl extends AbstractDeclaration {
 				ProcessCategory.find.findByCode("sample-valuation"), 1011,
 				getPropertyDefinitionsEvalAReception(), 
 				Arrays.asList(getPET("ext-to-rna-sample-valuation",-1),
-						 getPET("dna-rna-extraction",-1)),  
+						 getPET("dna-rna-extraction",-1),
+						 getPET("fluo-quantification",0)),  
 				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
