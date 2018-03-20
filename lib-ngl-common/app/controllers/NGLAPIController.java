@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import fr.cea.ig.DBObject;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
@@ -162,7 +164,7 @@ public abstract class NGLAPIController<T extends GenericAPI<U,V>, U extends Gene
 	 * @return ok Result and convert object to Json
 	 */
 	protected Result nglOk(Object o) {
-		return nglOk(o);
+		return ok(Json.toJson(o));
 	}
 	
 
