@@ -303,12 +303,13 @@ angular.module('home').controller('NanoporeSizingCtrl',['$scope', '$parse', 'atm
 			copie de Concentration dans propriété content ligationConcentrationPostSizing A LA CONDITION du from transformation type = nanopore-library
 			copie de Quantity dans propriété content ligationQuantityPostSizing A LA CONDITION du from transformation type = nanopore-library
 			copie de Taille dans propriété content measuredSizePostSizing A LA CONDITION du from transformation type = nanopore-frg ou ext-to-nanopore-rep-lib-depot
-			
+			OU Ext to Process nanopore DEV OU Ext to Process nanopore DEV v2 OU Ext to Frg, Rep ADN, Lib, Dépôt OU Ext to Frg (sans rep), Lib, Dépôt OU Ext to Lib ONT, Dépôt
 			*/
 			var icu = atm.inputContainerUseds[0]; //only one because oneToMany
 			for(var j=0 ; j < atm.outputContainerUseds.length ; j++){		
 				var ocu = atm.outputContainerUseds[j];
 				if(icu.fromTransformationTypeCodes.indexOf('nanopore-library') > -1 
+						||  icu.fromTransformationTypeCodes.indexOf('nanopore-final-ligation') > -1			
 						&& ocu.concentration && ocu.concentration.value){
 					var concentration = ocu.concentration;
 					console.log("conc",concentration);	
@@ -318,6 +319,8 @@ angular.module('home').controller('NanoporeSizingCtrl',['$scope', '$parse', 'atm
 				}
 				
 				if(icu.fromTransformationTypeCodes.indexOf('nanopore-library') > -1 
+						||  icu.fromTransformationTypeCodes.indexOf('nanopore-final-ligation') > -1
+						||  icu.fromTransformationTypeCodes.indexOf('ext-to-nanopore-run') > -1
 						&& ocu.quantity && ocu.quantity.value){
 					var quantity = ocu.quantity.value;	
 					$parse('experimentProperties.ligationQuantityPostSizing').assign(ocu, {value:quantity, unit:"ng"});
@@ -328,8 +331,14 @@ angular.module('home').controller('NanoporeSizingCtrl',['$scope', '$parse', 'atm
 				//si from transfo type=frg ou ext-to-nanopore-rep-lib-depot
 				if((icu.fromTransformationTypeCodes.indexOf('nanopore-frg') > -1 
 						||  icu.fromTransformationTypeCodes.indexOf('nanopore-fragmentation') > -1 
-						||  icu.fromTransformationTypeCodes.indexOf('ext-to-nanopore-rep-lib-depot') > -1 )
-						&& ocu.size && ocu.size.value){
+						||  icu.fromTransformationTypeCodes.indexOf('ext-to-nanopore-rep-lib-depot') > -1
+						|| icu.fromTransformationTypeCodes.indexOf('ext-to-nanopore-process-dev') > -1
+						||  icu.fromTransformationTypeCodes.indexOf('ext-to-nanopore-process-dev-2') > -1
+						||  icu.fromTransformationTypeCodes.indexOf('ext-to-nanopore-frg-rep-lib-depot') > -1
+						||  icu.fromTransformationTypeCodes.indexOf('ext-to-nanopore-frg-lib-depot') > -1
+						||  icu.fromTransformationTypeCodes.indexOf('ext-to-nanopore-process-library-no-frg"') > -1
+				)
+				&& ocu.size && ocu.size.value){
 					var size = ocu.size.value;	
 					$parse('experimentProperties.measuredSizePostSizing').assign(ocu, {value:size, unit:"pb"});
 				}else{
