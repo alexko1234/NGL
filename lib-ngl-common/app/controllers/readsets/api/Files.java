@@ -20,6 +20,7 @@ import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
+// import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -27,45 +28,44 @@ import validation.ContextValidation;
 import validation.run.instance.FileValidationHelper;
 
 public class Files extends ReadSetsController {
-
-	private final Form<File> fileForm; 
-	private final Form<QueryFieldsForm> updateForm; 
-	final static List<String> authorizedUpdateFields = Arrays.asList("fullname");
+	
+	private static final play.Logger.ALogger logger = play.Logger.of(Files.class);
+	
+	private static final List<String> authorizedUpdateFields = Arrays.asList("fullname");
+	
+	private final Form<File>            fileForm; 
+	private final Form<QueryFieldsForm> updateForm;
 	
 	@Inject
 	public Files(NGLContext ctx) {
-		fileForm = ctx.form(File.class);
+		fileForm   = ctx.form(File.class);
 		updateForm = ctx.form(QueryFieldsForm.class);
 	}
 	
 	@Permission(value={"reading"})
 	public Result list(String readsetCode) {
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", readsetCode));
-		if (null == readSet) {
-			return badRequest();
-		}
+		if (readSet == null) 
+			return badRequest(); // TODO : return notFound()
 		return ok(Json.toJson(readSet.files));
 	}
 
 	@Permission(value={"reading"})
 	public Result get(String readsetCode, String fullname) {
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("code", readsetCode), DBQuery.is("files.fullname", fullname)));
-		if (null == readSet) {
-			return badRequest();
-		}
-		for (File file : readSet.files) {
-			if (file.fullname.equals(fullname)) {
+		if (readSet == null) 
+			return badRequest(); // TODO : return a value coherent with head() 
+		for (File file : readSet.files) 
+			if (file.fullname.equals(fullname)) 
 				return ok(Json.toJson(file));
-			}
-		}
 		return notFound();
 	}
 	
 	@Permission(value={"reading"})
 	public Result head(String readsetCode, String fullname) {
-		if(MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("code", readsetCode), DBQuery.is("files.fullname", fullname)))){			
+		if (MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("code", readsetCode), DBQuery.is("files.fullname", fullname)))){			
 			return ok();					
-		}else{
+		} else {
 			return notFound();
 		}		
 	}
@@ -77,10 +77,12 @@ public class Files extends ReadSetsController {
 			return badRequest();
 		
 		Form<File> filledForm = getFilledForm(fileForm, File.class);
-		File file = filledForm.get();				
+		File file = filledForm.get();
+		logger.debug("file " + file);
+		
 //		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
-		ctxVal.putObject("readSet", readSet);
+		ctxVal.putObject("readSet",     readSet);
 		ctxVal.putObject("objectClass", readSet.getClass());
 		ctxVal.setCreationMode();
 		file.validate(ctxVal);

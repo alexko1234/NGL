@@ -103,7 +103,7 @@ public class FileValidationHelper extends CommonValidationHelper {
 		ReadSet readSet = getReadSetFromContext(contextValidation);
 		try {
 			ReadSetType readSetType = ReadSetType.find.findByCode(readSet.typeCode);
-			if (null != readSetType) {
+			if (readSetType != null) {
 				contextValidation.addKeyToRootKeyName("properties");
 				ValidationHelper.validateProperties(contextValidation, properties, readSetType.getPropertyDefinitionByLevel(Level.CODE.File), true);
 				contextValidation.removeKeyFromRootKeyName("properties");

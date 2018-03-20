@@ -145,19 +145,21 @@ public class ValidationHelper {
 		Map<String, PropertyValue> inputProperties = new HashMap<>(); //<String, PropertyValue>(0);
 		if (properties != null && !properties.isEmpty()) {
 			cleanningProperties(properties);
-			inputProperties = new HashMap<>(); // String, PropertyValue>(properties);		
+			inputProperties = new HashMap<>(properties); // String, PropertyValue>(properties);		
 		}		
 		Multimap<String, PropertyDefinition> multimap = getMultimap(propertyDefinitions);
 		
-		for(String key : multimap.keySet()){
+		for (String key : multimap.keySet()) {
 			Collection<PropertyDefinition> pdefs = multimap.get(key); 
+			logger.debug("checking property '{}'", key);
 			PropertyValue pv = inputProperties.get(key);
+			logger.debug("property value '{}' ('{}')", pv, properties.get(key));
 			PropertyDefinition propertyDefinition = (PropertyDefinition) pdefs.toArray()[0];			
-			//if pv null and required
+			// if pv null and required
 			if (pv == null && propertyDefinition.required 
 					       && testRequired 
 				           && isStateRequired(currentStateCode, propertyDefinition.requiredState, defaultRequiredState)) {				
-				contextValidation.addErrors(propertyDefinition.code+".value", ERROR_REQUIRED_MSG,"");					
+				contextValidation.addErrors(propertyDefinition.code + ".value", ERROR_REQUIRED_MSG, "");					
 			} else if (pv != null) {
 				contextValidation.putObject("propertyDefinitions", pdefs);				
 				pv.validate(contextValidation);
@@ -169,7 +171,7 @@ public class ValidationHelper {
 		}		
 		//treat other property not defined
 		if (validateNotDefined) {
-			for(String key : inputProperties.keySet()){
+			for (String key : inputProperties.keySet()) {
 				contextValidation.addErrors(key, ERROR_NOTDEFINED_MSG);
 			}
 		}
@@ -189,9 +191,11 @@ public class ValidationHelper {
 			.filter(entry -> (entry.getValue() == null || entry.getValue().value == null || StringUtils.isBlank(entry.getValue().value.toString())))
 			.map(entry -> entry.getKey())
 			.collect(Collectors.toList());
+		logger.debug("removing keys {} from {}", removedKeys, properties.keySet());
 		if (!removedKeys.isEmpty()) {
 			removedKeys.parallelStream().forEach(key -> properties.remove(key));
-		}		
+		}
+		logger.debug("remaining keys {}", properties.keySet());
 	}
 
 	private static boolean isStateRequired(String currentStateCode,	String requiredState, String defaultRequiredState) {

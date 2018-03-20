@@ -21,13 +21,15 @@ import models.laboratory.run.instance.Treatment;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import ngl.bi.AbstractBIServerTest;
-import play.Logger;
+//import play.Logger;
 import play.libs.Json;
 import play.libs.ws.WSResponse;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class AnalysesTreatmentTest extends AbstractBIServerTest{
 
+	private static final play.Logger.ALogger logger = play.Logger.of(AnalysesTreatmentTest.class);
+	
 	static Analysis analysis;
 	static String jsonAssemblyBA;
 	
@@ -68,7 +70,7 @@ public class AnalysesTreatmentTest extends AbstractBIServerTest{
 	@Test
 	public void test1list()
 	{
-		Logger.debug("list AnalysesTreatment");
+		logger.debug("list AnalysesTreatment");
 		WSResponse response = WSHelper.get(ws, "/api/analyses/"+analysis.code+"/treatments", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
@@ -76,7 +78,7 @@ public class AnalysesTreatmentTest extends AbstractBIServerTest{
 	@Test
 	public void test2get()
 	{
-		Logger.debug("get AnalysesTreatment");
+		logger.debug("get AnalysesTreatment");
 		WSResponse response = WSHelper.get(ws, "/api/analyses/"+analysis.code+"/treatments/mergingBA", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
@@ -84,23 +86,27 @@ public class AnalysesTreatmentTest extends AbstractBIServerTest{
 	@Test
 	public void test3head()
 	{
-		Logger.debug("head AnalysesTreatment");
+		logger.debug("head AnalysesTreatment");
 		WSResponse response = WSHelper.head(ws, "/api/analyses/"+analysis.code+"/treatments/mergingBA", 200);
 		assertThat(response).isNotNull();
 	}
+	
+	// failed: POST /api/analyses/BA.BFY_AAAAOSF_1_A737Y.IND1/treatments {"pairs.readsUsed.value":["PropriÚtÚ obligatoire"], ...
 	@Test
 	public void test4save()
 	{
-		Logger.debug("save AnalysesTreatment");
+		logger.debug("save AnalysesTreatment");
 		WSHelper.postAsBot(ws, "/api/analyses/"+analysis.code+"/treatments", jsonAssemblyBA, 200);
 		analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
 		assertThat(analysis.treatments.get("assemblyBA")).isNotNull();
 	}
 	
+	// -- once the save fails, everything after that fails (e.g: delete -> 404)
+	
 	@Test
 	public void test5update()
 	{
-		Logger.debug("update AnalysesTreatment");
+		logger.debug("update AnalysesTreatment");
 		//Get Treatment ngsrg
 		Treatment assemblyBA = analysis.treatments.get("assemblyBA");
 		assemblyBA.results.get("pairs").put("GCpercent", new PropertySingleValue(new Double(0)));
@@ -112,9 +118,10 @@ public class AnalysesTreatmentTest extends AbstractBIServerTest{
 	@Test
 	public void test6delete()
 	{
-		Logger.debug("delete AnalysesTreatment");
-		WSHelper.deleteAsBot(ws,"/api/analyses/"+analysis.code+"/treatments/assemblyBA",200);
+		logger.debug("delete AnalysesTreatment");
+		WSHelper.deleteAsBot(ws, "/api/analyses/"+analysis.code+"/treatments/assemblyBA", 200);
 		analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
 		assertThat(analysis.treatments.get("assemblyBA")).isNull();
 	}
+	
 }
