@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import fr.cea.ig.authentication.Authentication;
 import fr.cea.ig.lfw.support.LoggerHolder;
 import play.Logger.ALogger;
+import play.api.libs.json.JsString;
 import play.data.validation.ValidationError;
 import play.i18n.Lang;
 import play.i18n.Messages;
@@ -57,6 +58,9 @@ public class LFWController extends Controller implements LFWApplicationHolder, L
 	
 	public Result badRequestAsJson(Object o) {
 		return badRequest(Json.toJson(o)).as("application/json");
+	}
+	public Result badRequestAsJson(String s) {
+		return badRequest(Json.newObject().put("message", s)).as("application/json");
 	}
 
 	public Lang currentLang() {
