@@ -5,7 +5,7 @@ package ngl.sub;
 //import static play.mvc.Http.Status.OK;
 //import static play.mvc.Http.Status.FORBIDDEN;
 //
-//import org.junit.Test;
+import org.junit.Test;
 //
 //import fr.cea.ig.ngl.test.TestAuthConfig;
 //import fr.cea.ig.ngl.test.authentication.Identity;
