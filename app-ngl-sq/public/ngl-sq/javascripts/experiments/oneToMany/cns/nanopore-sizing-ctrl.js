@@ -308,9 +308,9 @@ angular.module('home').controller('NanoporeSizingCtrl',['$scope', '$parse', 'atm
 			var icu = atm.inputContainerUseds[0]; //only one because oneToMany
 			for(var j=0 ; j < atm.outputContainerUseds.length ; j++){		
 				var ocu = atm.outputContainerUseds[j];
-				if(icu.fromTransformationTypeCodes.indexOf('nanopore-library') > -1 
+				if((icu.fromTransformationTypeCodes.indexOf('nanopore-library') > -1 
 						||  icu.fromTransformationTypeCodes.indexOf('nanopore-final-ligation') > -1	
-						||  icu.fromTransformationTypeCodes.indexOf('ext-to-nanopore-run')
+						||  icu.fromTransformationTypeCodes.indexOf('ext-to-nanopore-run') > -1)
 						&& ocu.concentration && ocu.concentration.value){
 					var concentration = ocu.concentration;
 					console.log("conc",concentration);	
@@ -319,9 +319,9 @@ angular.module('home').controller('NanoporeSizingCtrl',['$scope', '$parse', 'atm
 					$parse('experimentProperties.ligationConcentrationPostSizing').assign(ocu, undefined);
 				}
 				
-				if(icu.fromTransformationTypeCodes.indexOf('nanopore-library') > -1 
+				if((icu.fromTransformationTypeCodes.indexOf('nanopore-library') > -1 
 						||  icu.fromTransformationTypeCodes.indexOf('nanopore-final-ligation') > -1
-						||  icu.fromTransformationTypeCodes.indexOf('ext-to-nanopore-run') > -1
+						||  icu.fromTransformationTypeCodes.indexOf('ext-to-nanopore-run') > -1)
 						&& ocu.quantity && ocu.quantity.value){
 					var quantity = ocu.quantity.value;	
 					$parse('experimentProperties.ligationQuantityPostSizing').assign(ocu, {value:quantity, unit:"ng"});
