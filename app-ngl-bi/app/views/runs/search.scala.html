@@ -42,7 +42,8 @@
 			@formGroup{
 				<!-- <input type="text" class="form-control"  ng-model="searchService.form.code"  typeahead="run.code as run.name for run in searchService.lists.getRuns() | filter:$viewValue | limitTo:20" 
 					placeholder='@Messages("search.placeholder.run")' title='@Messages("search.placeholder.run")'> -->
-				<bt-input class="form-control"  input-ng-model="searchService.form.regexCode" textarea-ng-model="searchService.form.codes" placeholder='@Messages("search.placeholder.run.regexCode")' >
+				<div class="form-control" bt-select ng-model="searchService.form.codes" multiple="true" textarea="true" filter="true" placeholder='@Messages("search.placeholder.run")' bt-options="run.code as run.name for run in searchService.lists.getRuns()"></div>
+				<!-- <bt-input class="form-control"  input-ng-model="searchService.form.regexCode" textarea-ng-model="searchService.form.codes" placeholder='@Messages("search.placeholder.run.regexCode")' > -->
 			}	
 	}
 	@columnSearchForm{		
