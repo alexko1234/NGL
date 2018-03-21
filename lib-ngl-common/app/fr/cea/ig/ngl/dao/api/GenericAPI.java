@@ -16,18 +16,19 @@ import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBResult.Sort;
 import fr.cea.ig.mongo.MongoStreamer;
 import fr.cea.ig.ngl.dao.GenericMongoDAO;
-import play.Logger;
+//import play.Logger;
 import validation.ContextValidation;
 
 public abstract class GenericAPI<O extends GenericMongoDAO<T>, T extends DBObject> {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(GenericAPI.class);
+	
 	protected final O dao; 
 
 	@Inject
 	public GenericAPI(O dao) {
 		this.dao = dao;
 	}
-
 
 	/**
 	 * @return the list of field of DBObject which could be updated
@@ -155,13 +156,13 @@ public abstract class GenericAPI<O extends GenericMongoDAO<T>, T extends DBObjec
 	}
 
 	protected void checkIfFieldsAreDefined(ContextValidation ctxVal, List<String> fields, T s) {
-		for(String field: fields){
+		for (String field: fields) {
 			try {
-				if(s.getClass().getField(field).get(s) == null){
+				if (s.getClass().getField(field).get(s) == null) {
 					ctxVal.addErrors(field, "error.notdefined");
 				}
-			} catch(Exception e){
-				Logger.error(e.getMessage());
+			} catch(Exception e) {
+				logger.error(e.getMessage());
 			}
 		}
 	}

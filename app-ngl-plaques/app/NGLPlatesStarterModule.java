@@ -19,7 +19,7 @@ public class NGLPlatesStarterModule extends NGLCommonStarterModule {
 		super(environment,configuration);
 		logger.debug("created module " + this);
 		logger.info("starting NGL-Plates");
-		enableDrools();
+		// enableDrools();
 	}
 
 }
