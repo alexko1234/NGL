@@ -25,7 +25,7 @@ public class PropertyImgValue extends PropertyFileValue {
 	public Integer width;
 	public Integer height;
 	// TODO: Information is available in the file full name in the superclass
-	public String  path; //for information
+	public String  path; // for information
 
 	// TODO: should pass a type arg to super()
 	public PropertyImgValue() {
@@ -51,7 +51,7 @@ public class PropertyImgValue extends PropertyFileValue {
 //		PropertyDefinition propertyDefinition = (PropertyDefinition) ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).toArray()[0];
 		PropertyDefinition propertyDefinition = first(contextValidation.<Collection<PropertyDefinition>>getTypedObject("propertyDefinitions")).orElse(null);
 		super.validate(contextValidation); 
-		ValidationHelper.required(contextValidation, this.width, propertyDefinition.code + ".width");
+		ValidationHelper.required(contextValidation, this.width,  propertyDefinition.code + ".width");
 		ValidationHelper.required(contextValidation, this.height, propertyDefinition.code + ".height");
 	}
 
@@ -63,7 +63,7 @@ public class PropertyImgValue extends PropertyFileValue {
 //		result = prime * result + ((path == null) ? 0 : path.hashCode());
 //		result = prime * result + ((width == null) ? 0 : width.hashCode());
 //		return result;
-		return hash(super.hashCode(),height,path,width);
+		return hash(super.hashCode(), height, path, width);
 	}
 
 	@Override
@@ -93,9 +93,9 @@ public class PropertyImgValue extends PropertyFileValue {
 //		return true;
 		return typedEquals(PropertyImgValue.class, this, obj,
 				           (x,y) -> super.equals(obj)
-				                    && objectEquals(x.height,y.height)
-				                    && objectEquals(x.path,y.path)
-				                    && objectEquals(x.width,y.width));
+				                    && objectEquals(x.height, y.height)
+				                    && objectEquals(x.path,   y.path)
+				                    && objectEquals(x.width,  y.width));
 	}
 
 }

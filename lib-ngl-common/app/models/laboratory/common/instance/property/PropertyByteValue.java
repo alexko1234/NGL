@@ -10,7 +10,7 @@ import models.laboratory.common.instance.PropertyValue;
 
 
 /**
- * Used to stock an array of bytes.
+ * Property value that is a byte array.
  * 
  *
  */
@@ -25,12 +25,17 @@ public class PropertyByteValue extends PropertyValue {
 	public PropertyByteValue(String _type, byte[] value) {
 		super(_type, value);		
 	}
+
+	// TODO : activate this method, fails at the moment because the value field holds a String value in some cases.
+//	public byte[] getValue() {
+//		return byteValue();
+//	}
 	
-	public byte[] getValue() {
-		return byteValue();
-	}
-	
-	public byte[] byteValue() { 
+	public byte[] byteValue() {
+		// If the value is a string we could assume that it is in fact a base64
+		// encoded byte array.
+		if (! (value instanceof byte[]))
+			throw new RuntimeException("value in " + this + " is not a byte[] : " + value.getClass());
 		return (byte[])value;
 	}
 	

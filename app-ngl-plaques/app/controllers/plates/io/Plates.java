@@ -77,12 +77,14 @@ public class Plates extends TPLCommonController {
 	}
 
 
-	private List<Well> importFile(Integer emnco, PropertyFileValue pfv,
-			ContextValidation contextValidation)  throws Exception {
+	private List<Well> importFile(Integer emnco, 
+			                      PropertyFileValue pfv,
+			                      ContextValidation contextValidation)  throws Exception {
 		// TODO Auto-generated method stub
 		logger.debug("Load plate files");
 //		InputStream is = new ByteArrayInputStream(pfv.value);
-		InputStream is = new ByteArrayInputStream(pfv.getValue());
+//		InputStream is = new ByteArrayInputStream(pfv.getValue());
+		InputStream is = new ByteArrayInputStream(pfv.byteValue());
 		Workbook wb = WorkbookFactory.create(is);
 		Sheet sheet = wb.getSheetAt(0);//case sensitive??
 		if (sheet == null ) {

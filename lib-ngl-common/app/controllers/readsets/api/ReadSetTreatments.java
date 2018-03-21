@@ -91,7 +91,8 @@ public class ReadSetTreatments extends ReadSetsController {
 		if(!ctxVal.hasErrors()){
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.is("code", readSetCode),
-					DBUpdate.set("treatments."+treatment.code, treatment).set("traceInformation", getUpdateTraceInformation(readSet)));	
+					DBUpdate.set("treatments." + treatment.code, treatment)
+					        .set("traceInformation", getUpdateTraceInformation(readSet)));	
 			return ok(Json.toJson(treatment));			
 		} else {
 			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));

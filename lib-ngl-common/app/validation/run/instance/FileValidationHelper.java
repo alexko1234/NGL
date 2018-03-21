@@ -72,22 +72,20 @@ public class FileValidationHelper extends CommonValidationHelper {
 				contextValidation.addErrors("fullname",ValidationConstants.ERROR_NOTEXISTS_MSG, fullname);
 			}
 		}
-		
 	}
 
 	private static void validateAnalysisFileFullName(String fullname, ContextValidation contextValidation) {
 		Analysis analysis = getAnalysisFromContext(contextValidation);
 		if(ValidationHelper.required(contextValidation, fullname, "fullname")) {
 			//Validate unique file.code if not already exists
-			if(contextValidation.isCreationMode() && MongoDBDAO.checkObjectExist(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, 
-					DBQuery.and(DBQuery.is("code", analysis.code), DBQuery.is("files.fullname", fullname)))){
+			if (contextValidation.isCreationMode() && MongoDBDAO.checkObjectExist(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, 
+					DBQuery.and(DBQuery.is("code", analysis.code), DBQuery.is("files.fullname", fullname)))) {
 				contextValidation.addErrors("fullname",ValidationConstants.ERROR_NOTUNIQUE_MSG, fullname);
-			}else if(contextValidation.isUpdateMode() && !MongoDBDAO.checkObjectExist(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, 
-					DBQuery.and(DBQuery.is("code", analysis.code), DBQuery.is("files.fullname", fullname)))){
+			} else if(contextValidation.isUpdateMode() && !MongoDBDAO.checkObjectExist(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, 
+					DBQuery.and(DBQuery.is("code", analysis.code), DBQuery.is("files.fullname", fullname)))) {
 				contextValidation.addErrors("fullname",ValidationConstants.ERROR_NOTEXISTS_MSG, fullname);
 			}
 		}
-		
 	}
 	
 	public static void validateFileProperties(Map<String, PropertyValue> properties, ContextValidation contextValidation) {

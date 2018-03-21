@@ -72,11 +72,12 @@ rule "Find Pattern Krona for taxonomy treatment"
 		String krona = null;
 		if($treatmentTaxo.results.get("read1")!=null){
 //			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).value);
-			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).getValue());
-
+//			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).getValue());
+			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).byteValue());
 		}else if($treatmentTaxo.results.get("pairs")!=null){
 //			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("pairs").get("krona")).value);
-			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("pairs").get("krona")).getValue());
+//			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("pairs").get("krona")).getValue());
+			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("pairs").get("krona")).byteValue());
 		}
 		if(krona!=null){
 			Pattern p1 = Pattern.compile(".*<node name=\"all\">\\s+<magnitude><val>(\\d+)</val></magnitude>.*", Pattern.DOTALL);
@@ -127,7 +128,8 @@ rule "Find Fungi for taxonomy treatment"
 		if($treatmentTaxo.results.get("read1")!=null){
 			Logger.debug("Get from read1");
 //			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).value);
-			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).getValue());
+//			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).getValue());
+			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).byteValue());
 			if($treatmentTaxo.results.get("read1").get("keywordBilan")!=null){
 //				keywordBilan = ((PropertyObjectListValue)$treatmentTaxo.results.get("read1").get("keywordBilan")).value;
 				keywordBilan = ((PropertyObjectListValue)$treatmentTaxo.results.get("read1").get("keywordBilan")).getValue();
@@ -136,7 +138,8 @@ rule "Find Fungi for taxonomy treatment"
 		}else if($treatmentTaxo.results.get("pairs")!=null){
 			Logger.debug("Get from pairs");
 //			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("pairs").get("krona")).value);
-			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("pairs").get("krona")).getValue());
+//			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("pairs").get("krona")).getValue());
+			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("pairs").get("krona")).byteValue());
 			if($treatmentTaxo.results.get("pairs").get("keywordBilan")!=null){
 //				keywordBilan = ((PropertyObjectListValue)$treatmentTaxo.results.get("pairs").get("keywordBilan")).value;
 				keywordBilan = ((PropertyObjectListValue)$treatmentTaxo.results.get("pairs").get("keywordBilan")).getValue();

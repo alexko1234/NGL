@@ -26,8 +26,6 @@ public class PropertyFileValue extends PropertyByteValue {
 	public String fullname;
 	public String extension;
 	
-	// TODO: Should provide protected constructors that take a type argument.
-	
 	public PropertyFileValue() {
 		super(PropertyValue.fileType);
 	}
@@ -49,7 +47,7 @@ public class PropertyFileValue extends PropertyByteValue {
 //		PropertyDefinition propertyDefinition = (PropertyDefinition) ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).toArray()[0];
 		PropertyDefinition propertyDefinition = first(contextValidation.<Collection<PropertyDefinition>>getTypedObject("propertyDefinitions")).orElse(null);
 		super.validate(contextValidation);
-		ValidationHelper.required(contextValidation, this.fullname, propertyDefinition.code + ".fullname");
+		ValidationHelper.required(contextValidation, this.fullname,  propertyDefinition.code + ".fullname");
 		ValidationHelper.required(contextValidation, this.extension, propertyDefinition.code + ".extension");
 	}
 
@@ -60,7 +58,7 @@ public class PropertyFileValue extends PropertyByteValue {
 //		result = prime * result + ((extension == null) ? 0 : extension.hashCode());
 //		result = prime * result + ((fullname == null) ? 0 : fullname.hashCode());
 //		return result;
-		return hash(super.hashCode(),extension,fullname);
+		return hash(super.hashCode(), extension, fullname);
 	}
 
 	@Override
@@ -85,8 +83,8 @@ public class PropertyFileValue extends PropertyByteValue {
 //		return true;
 		return typedEquals(PropertyFileValue.class, this, obj,
 				           (x,y) -> super.equals(obj) 
-				                    && objectEquals(x.extension,y.extension) 
-				                    && objectEquals(x.fullname,y.fullname));
+				                    && objectEquals(x.extension, y.extension) 
+				                    && objectEquals(x.fullname, y.fullname));
 	}
 
 }

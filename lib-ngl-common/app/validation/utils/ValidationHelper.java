@@ -42,7 +42,11 @@ public class ValidationHelper {
 //	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue<?>> properties,List<PropertyDefinition> propertyDefinitions, Boolean validateNotDefined) {
 //		validateProperties(contextValidation, properties, propertyDefinitions, validateNotDefined, true, null, null);
 //	}
-	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, Boolean validateNotDefined) {
+	
+	public static void validateProperties(ContextValidation contextValidation, 
+			                              Map<String, PropertyValue> properties,
+			                              List<PropertyDefinition> propertyDefinitions, 
+			                              Boolean validateNotDefined) {
 		validateProperties(contextValidation, properties, propertyDefinitions, validateNotDefined, true, null, null);
 	}
 	
@@ -55,7 +59,9 @@ public class ValidationHelper {
 //	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue<?>> properties,List<PropertyDefinition> propertyDefinitions){
 //		validateProperties(contextValidation, properties, propertyDefinitions, true, true, null, null);		
 //	}
-	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions){
+	public static void validateProperties(ContextValidation contextValidation, 
+			                              Map<String, PropertyValue> properties,
+			                              List<PropertyDefinition> propertyDefinitions) {
 		validateProperties(contextValidation, properties, propertyDefinitions, true, true, null, null);		
 	}
 	
@@ -141,7 +147,13 @@ public class ValidationHelper {
 //		}
 //	}
 	
-	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, Boolean validateNotDefined, Boolean testRequired, String currentStateCode, String defaultRequiredState) {
+	public static void validateProperties(ContextValidation contextValidation, 
+			                              Map<String, PropertyValue> properties,
+			                              List<PropertyDefinition> propertyDefinitions, 
+			                              Boolean validateNotDefined, 
+			                              Boolean testRequired, 
+			                              String currentStateCode, 
+			                              String defaultRequiredState) {
 		Map<String, PropertyValue> inputProperties = new HashMap<>(); //<String, PropertyValue>(0);
 		if (properties != null && !properties.isEmpty()) {
 			cleanningProperties(properties);
@@ -164,8 +176,8 @@ public class ValidationHelper {
 				contextValidation.putObject("propertyDefinitions", pdefs);				
 				pv.validate(contextValidation);
 			}
-			//TODO REMOVE NOT ACTIVE IF NOT ACTIVE is a warning and not an error
-			if(inputProperties.containsKey(key)){
+			// TODO : REMOVE NOT ACTIVE IF NOT ACTIVE is a warning and not an error
+			if (inputProperties.containsKey(key)) {
 				inputProperties.remove(key);
 			}
 		}		
@@ -188,7 +200,7 @@ public class ValidationHelper {
 //	}
 	private static void cleanningProperties(Map<String, PropertyValue> properties) {
 		List<String> removedKeys = properties.entrySet().parallelStream()
-			.filter(entry -> (entry.getValue() == null || entry.getValue().value == null || StringUtils.isBlank(entry.getValue().value.toString())))
+			.filter(entry -> entry.getValue() == null || entry.getValue().value == null || StringUtils.isBlank(entry.getValue().value.toString()))
 			.map(entry -> entry.getKey())
 			.collect(Collectors.toList());
 		logger.debug("removing keys {} from {}", removedKeys, properties.keySet());
@@ -199,7 +211,7 @@ public class ValidationHelper {
 	}
 
 	private static boolean isStateRequired(String currentStateCode,	String requiredState, String defaultRequiredState) {
-		if (currentStateCode== null || (null == defaultRequiredState && null == requiredState)){
+		if (currentStateCode == null || (defaultRequiredState == null && requiredState == null)) {
 			return true;
 		} else {
 			State currentState = State.find.findByCode(currentStateCode);
@@ -220,15 +232,12 @@ public class ValidationHelper {
 	 */
 	private static Multimap<String, PropertyDefinition> getMultimap(List<PropertyDefinition> propertyDefinitions) {
 		Multimap<String, PropertyDefinition> multimap = ArrayListMultimap.create();		
-		for(PropertyDefinition pd : propertyDefinitions){
+		for (PropertyDefinition pd : propertyDefinitions) {
 			multimap.put(splitCodePropertyDefinition(pd)[0], pd);			
 		}		
 		return multimap;
 	}
 
-	
-
-	
 	/*
 	 * 
 	 * @param className
@@ -255,7 +264,7 @@ public class ValidationHelper {
 	 * @return
 	 * @deprecated used convertValue(Class type, String value,String inputFormat)
 	 */
-	public static Object transformValue(String type, Object value,String inputFormat) {
+	public static Object transformValue(String type, Object value, String inputFormat) {
 		Object o = null;
 		if (String.class.getName().equals(type)) {
 			o = value.toString();
@@ -270,12 +279,12 @@ public class ValidationHelper {
 		} else if (Long.class.getName().equals(type)) {
 			o = Long.valueOf(value.toString());
 		} else if (Date.class.getName().equals(type)) {
-			if(inputFormat==null){
+			if (inputFormat==null) {
 				o = new Date(Long.valueOf(value.toString()));
 			} else {  
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(inputFormat);
 				try {
-					o=simpleDateFormat.parse(value.toString());
+					o = simpleDateFormat.parse(value.toString());
 				} catch (ParseException e) {
 					throw new RuntimeException(e.getMessage(),e);
 				}
@@ -284,9 +293,34 @@ public class ValidationHelper {
 			o = TBoolean.valueOf(value.toString());
 		} else {
 			logger.info("Erreur de type :"+type);
-			throw new RuntimeException("Type not managed: "+type);
+			throw new RuntimeException("Type not managed: " + type);
 		}
 		return o;
+	}
+	
+	public static Object transformValue_(String type, Object value, String inputFormat) {
+		if (String .class.getName().equals(type)) return value.toString();
+		if (Integer.class.getName().equals(type)) return Integer.valueOf(value.toString());
+		if (Double .class.getName().equals(type)) return Double.valueOf(value.toString());
+		if (Float  .class.getName().equals(type)) return Float.valueOf(value.toString());
+		if (Boolean.class.getName().equals(type)) return Boolean.valueOf(value.toString());
+		if (Long   .class.getName().equals(type)) return Long.valueOf(value.toString());
+		if (Date   .class.getName().equals(type)) {
+			if (inputFormat == null) {
+				return new Date(Long.valueOf(value.toString()));
+			} else {  
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(inputFormat);
+				try {
+					return simpleDateFormat.parse(value.toString());
+				} catch (ParseException e) {
+					throw new RuntimeException(e.getMessage(),e);
+				}
+			}
+		}
+		if (TBoolean.class.getName().equals(type)) return TBoolean.valueOf(value.toString());
+		
+		logger.info("Erreur de type :"+type);
+		throw new RuntimeException("Type not managed: " + type);
 	}
 
 	/*
@@ -800,19 +834,33 @@ public class ValidationHelper {
         return isValid;		
 	}
 	
+//	// Assertion style, cases are mutually exclusive
+//	public static boolean required_(ContextValidation contextValidation, Object object, String property) {
+//		if (object == null) {
+//			contextValidation.addErrors(property, ERROR_REQUIRED_MSG, object);
+//			return false;
+//		}
+//        if ((object instanceof String) && StringUtils.isNotBlank((String)object))
+//        	return true;
+//        if ((object instanceof Collection) && CollectionUtils.isNotEmpty((Collection<?>)object))        	
+//        	return true;
+//        if ((object instanceof Map) && MapUtils.isNotEmpty((Map<?,?>)object))        	
+//        	return true;
+//        if ((object instanceof byte[]) && (((byte[])object).length > 0))
+//        	return true;        
+//        contextValidation.addErrors(property, ERROR_REQUIRED_MSG, object);        
+//        return false;		
+//	}
 	// Assertion style, cases are mutually exclusive
 	public static boolean required_(ContextValidation contextValidation, Object object, String property) {
 		if (object == null) {
 			contextValidation.addErrors(property, ERROR_REQUIRED_MSG, object);
 			return false;
 		}
-        if ((object instanceof String) && StringUtils.isNotBlank((String)object))
-        	return true;
-        if ((object instanceof Collection) && CollectionUtils.isNotEmpty((Collection<?>)object))        	
-        	return true;
-        if ((object instanceof Map) && MapUtils.isNotEmpty((Map<?,?>)object))        	
-        	return true;
-        if ((object instanceof byte[]) && (((byte[])object).length > 0))
+        if (   ((object instanceof String)     && StringUtils.isNotBlank((String)object))
+            || ((object instanceof Collection) && CollectionUtils.isNotEmpty((Collection<?>)object))        	
+            || ((object instanceof Map)        && MapUtils.isNotEmpty((Map<?,?>)object))        	
+            || ((object instanceof byte[])     && (((byte[])object).length > 0)))
         	return true;        
         contextValidation.addErrors(property, ERROR_REQUIRED_MSG, object);        
         return false;		
@@ -826,10 +874,10 @@ public class ValidationHelper {
 	 * @return
 	 */
 	public static boolean checkIfExistInTheList(ContextValidation contextValidation, PropertySingleValue propertyValue, PropertyDefinition propertyDefinition){
-		if(propertyDefinition.choiceInList && !checkIfExistInTheList(propertyDefinition, propertyValue.value)){
+		if (propertyDefinition.choiceInList && !checkIfExistInTheList(propertyDefinition, propertyValue.value)) {
 			contextValidation.addErrors(propertyDefinition.code+".value", ERROR_VALUENOTAUTHORIZED_MSG, propertyValue.value);
 			return false;
-		}else{
+		} else {
 			return true;
 		}
 	}
@@ -857,7 +905,6 @@ public class ValidationHelper {
 			return true;
 		}
 	}
-	
 	
 	/*
 	 * 
@@ -932,20 +979,19 @@ public class ValidationHelper {
 	 * @return
 	 */
 	public static boolean checkIfActive(ContextValidation contextValidation, PropertyDefinition propertyDefinition){
-		if(propertyDefinition.active){
+		if (propertyDefinition.active) {
 			return true;
-		}else{
+		} else {
 			String[] codes = splitCodePropertyDefinition(propertyDefinition);
-			if(codes.length == 1){ //simple case
+			if (codes.length == 1) { //simple case
 				contextValidation.addErrors(propertyDefinition.code, ERROR_NOTACTIVE);
-			}else{ // object case
+			} else { // object case
 				contextValidation.addErrors(codes[0]+".value."+codes[1], ERROR_NOTACTIVE);
 			}
 			return false;			
 		}
 	}
 
-	
 	/*
 	 * Check if property value type is the same as property definition type 
 	 * @param contextValidation

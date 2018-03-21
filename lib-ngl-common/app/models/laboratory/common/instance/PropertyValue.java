@@ -46,11 +46,10 @@ public abstract class PropertyValue implements IValidation {
 	// TODO: use and abstract getValue accessor so the value field can be moved in subclasses and properly typed.
 	public Object value;
 	
-	// TODO: remove super() calls that are implicit
 	public PropertyValue(String _type) {
 		// super();
 //		this._type = _type;
-		this(_type,null);
+		this(_type, null);
 	}
 	
 //	public PropertyValue(String _type, T value) {
