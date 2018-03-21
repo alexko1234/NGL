@@ -28,6 +28,7 @@ import rules.services.RulesServices6;
 import validation.ContextValidation;
 import validation.utils.ValidationConstants;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.IGGlobals;
 
 public class SampleHelper {
 	

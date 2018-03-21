@@ -2,21 +2,22 @@ package fr.cea.ig.ngl.dao;
 
 import java.util.List;
 
-import org.mongojack.DBQuery;
+import org.jongo.MongoCollection;
+import org.jongo.MongoCursor;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate.Builder;
 
 import com.mongodb.BasicDBObject;
 
-import controllers.ListForm;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
 import models.utils.dao.DAOException;
+import play.modules.jongo.MongoDBPlugin;
 
-// Need probably a proper mongoexception wrapping all around.
-public class GenericMongoDAO<T extends DBObject> {
+// TODO transformer cette classe en classe abstraite si on décide d'utiliser l'héritage au lieu d'une association d'objet pour les DAO "concrêtes"
+public /*abstract*/ class GenericMongoDAO<T extends DBObject> {
 	
 	private final String   collectionName;
 	private final Class<T> elementClass;
@@ -26,7 +27,12 @@ public class GenericMongoDAO<T extends DBObject> {
 		this.elementClass   = elementClass;
 	}
 	
-	// Fails hard if no instance is found
+	/**
+	 * Throw exception if no instance is found.
+	 * @param  q            Query
+	 * @return              T the DBObject
+	 * @throws DAOException if no instance is found
+	 */
 	public T findOne(Query q) throws DAOException {
 		T t = MongoDBDAO.findOne(collectionName, elementClass, q);
 		if (t == null)
@@ -88,16 +94,16 @@ public class GenericMongoDAO<T extends DBObject> {
 	
 	/**
 	 * A finder for mongoDB.
-	 * @param query         query
-	 * @param orderBy       order criteria
-	 * @param orderSense    order sense
-	 * @param limit         result count limit (-1 for no limit)
-	 * @return              a MongoDBResult
-	 * @throws DAOException DAO exception
+	 * @param query      Query
+	 * @param orderBy    String
+	 * @param orderSense how to sort the results
+	 * @param limit      if it is set to -1 then results are unlimited  
+	 * @return           a MongoDBResult
+	 * @throws DAOException exception
 	 */
 	public MongoDBResult<T> mongoDBFinder(Query query, String orderBy, Sort orderSense, Integer limit) throws DAOException {
 		MongoDBResult<T> results = MongoDBDAO.find(collectionName, elementClass, query).sort(orderBy, orderSense);
-		if (limit != -1) {
+		if(limit != -1){
 			results.limit(limit);
 		}
 		return results;
@@ -105,13 +111,13 @@ public class GenericMongoDAO<T extends DBObject> {
 	
 	/**
 	 * A finder for mongoDB.
-	 * @param query         query
-	 * @param orderBy       order criteria
-	 * @param orderSense    order sense
-	 * @param limit         result count limit
-	 * @param keys          keys
-	 * @return              a MongoDBResult 
-	 * @throws DAOException DAO exception
+	 * @param query      Query
+	 * @param orderBy    String
+	 * @param orderSense how to sort the results
+	 * @param limit      if it is set to -1 then results are unlimited  
+	 * @param keys       map to restrict keys of object
+	 * @return           a MongoDBResult
+	 * @throws DAOException exception
 	 */
 	public MongoDBResult<T> mongoDBFinder(Query query, String orderBy, Sort orderSense, Integer limit, BasicDBObject keys) throws DAOException {
 		MongoDBResult<T> results = MongoDBDAO.find(collectionName, elementClass, query, keys).sort(orderBy, orderSense);
@@ -123,11 +129,11 @@ public class GenericMongoDAO<T extends DBObject> {
 
 	/**
 	 * A finder for mongoDB without size limit of elements.
-	 * @param query         query
-	 * @param orderBy       order criteria
-	 * @param orderSense    order sense
-	 * @return              a MongoDBResult
-	 * @throws DAOException DAO exception
+	 * @param query      Query
+	 * @param orderBy    String
+	 * @param orderSense how to sort the results
+	 * @return           a MongoDBResult
+	 * @throws DAOException exception
 	 */
 	public MongoDBResult<T> mongoDBFinder(Query query, String orderBy, Sort orderSense) throws DAOException {
 		return mongoDBFinder(query, orderBy, orderSense, -1);
@@ -135,26 +141,26 @@ public class GenericMongoDAO<T extends DBObject> {
 	
 	/**
 	 * A finder for mongoDB without size limit of elements.
-	 * @param query         query
-	 * @param orderBy       order criteria
-	 * @param orderSense    order sense
-	 * @param keys          keys
-	 * @return              a MongoDBResult
-	 * @throws DAOException DAO exception
+	 * @param query      Query
+	 * @param orderBy    String
+	 * @param orderSense how to sort the results
+	 * @param keys       map to restrict keys of object
+	 * @return           a MongoDBResult
+	 * @throws DAOException exception
 	 */
 	public MongoDBResult<T> mongoDBFinder(Query query, String orderBy, Sort orderSense, BasicDBObject keys) throws DAOException {
 		return mongoDBFinder(query, orderBy, orderSense, -1, keys);
 	}
 	
 	/**
-	 * A finder for mongoDB with pagination of results.
-	 * @param query                query
-	 * @param orderBy              order criteria
-	 * @param orderSense           order sense
-	 * @param pageNumber           page number
-	 * @param numberRecordsPerPage records per page
-	 * @return                     a MongoDBResult
-	 * @throws DAOException        DAO exception
+	 * A finder for mongoDB with pagination of results
+	 * @param query Query
+	 * @param orderBy String
+	 * @param orderSense how to sort the results
+	 * @param pageNumber Integer
+	 * @param numberRecordsPerPage Integer
+	 * @return a MongoDBResult
+	 * @throws DAOException exception
 	 */
 	public MongoDBResult<T> mongoDBFinderWithPagination(Query query, String orderBy, Sort orderSense, 
 														Integer pageNumber, Integer numberRecordsPerPage) throws DAOException {
@@ -163,18 +169,62 @@ public class GenericMongoDAO<T extends DBObject> {
 	
 	/**
 	 * A finder for mongoDB with pagination of results.
-	 * @param query                query
-	 * @param orderBy              order criteria
-	 * @param orderSense           order sense
-	 * @param pageNumber           page number
-	 * @param numberRecordsPerPage records per page
-	 * @param keys                 keys
-	 * @return                     a MongoDBResult    
-	 * @throws DAOException        DAO Exception
+	 * @param query                Query
+	 * @param orderBy              String
+	 * @param orderSense           how to sort the results
+	 * @param pageNumber           Integer
+	 * @param numberRecordsPerPage Integer
+	 * @param keys                 map to restrict keys of object
+	 * @return                     a MongoDBResult
+	 * @throws DAOException exception
 	 */
 	public MongoDBResult<T> mongoDBFinderWithPagination(Query query, String orderBy, Sort orderSense, 
 														Integer pageNumber, Integer numberRecordsPerPage, BasicDBObject keys) throws DAOException {
 		return mongoDBFinder(query, orderBy, orderSense, keys).page(pageNumber, numberRecordsPerPage);
+	}
+
+	/**
+	 * use to replace controllers.MongoCommonController.nativeMongoDBQuery(ListForm form).
+	 * @param query String
+	 * @return      mongo cursor
+	 */
+	public MongoCursor<T> findByQuery(String query) {
+//		MongoCollection collection = MongoDBPlugin.getCollection(this.collectionName);
+//		return (MongoCursor<T>) collection.find(query).as(elementClass);
+		MongoCollection collection = MongoDBPlugin.getCollection(collectionName);
+		return collection.find(query).as(elementClass);
+	}
+	
+	/**
+	 * Construct a builder from some fields.
+	 * Use to update a mongodb document.
+	 * @param value  DBObject
+	 * @param fields {@literal List<String>}
+	 * @return       Builder
+	 */
+	public Builder getBuilder(T value, List<String> fields) {
+		return getBuilder(value, fields, null);
+	}
+	
+	/**
+	 * Construct a builder from some fields.
+	 * Use to update a mongodb document.
+	 * @param value  DBObject
+	 * @param fields {@literal List<String>}
+	 * @param prefix String
+	 * @return       Builder
+	 */
+	public Builder getBuilder(T value, List<String> fields, String prefix) {
+		Builder builder = new Builder();
+		try {
+			for (String field: fields) {
+				String fieldName = (null != prefix) ? prefix + "." + field : field;
+				builder.set(fieldName, elementClass.getField(field).get(value));
+			}
+		} catch(Exception e) {
+			throw new RuntimeException(e);
+		}
+		return builder;
 	}
 	
 }

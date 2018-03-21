@@ -8,13 +8,13 @@ import models.laboratory.project.instance.Project;
 import models.utils.InstanceConstants;
 
 @Singleton
-public class ProjectDAO extends GenericMongoDAO<Project> {
+public class ProjectsDAO extends GenericMongoDAO<Project> {
 
 	// Generic access to db
 	//private final GenericMongoDAO<Project> gdao;
 	
 	@Inject
-	public ProjectDAO() {
+	public ProjectsDAO() {
 		//gdao = new GenericMongoDAO<>(InstanceConstants.PROJECT_COLL_NAME, Project.class);
 		super(InstanceConstants.PROJECT_COLL_NAME, Project.class);
 	}

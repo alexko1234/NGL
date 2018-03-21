@@ -17,11 +17,11 @@ public class Rules6Component {
 	public Rules6Component(Application          app, 
 						   ApplicationLifecycle lifecycle) {
 		logger.debug("injecting " + app);
-//		onStart(app,lifecycle);
-//		logger.debug("injected");
-//	}
-//	
-//	public void onStart(Application app, ApplicationLifecycle lifecycle) {
+		onStart(app,lifecycle);
+		logger.debug("injected");
+	}
+	
+	public void onStart(Application app, ApplicationLifecycle lifecycle) {
 		logger.info("loading knowledge base");
 		try {
 			RulesServices6.initSingleton(app);

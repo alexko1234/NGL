@@ -4,19 +4,25 @@ import static play.mvc.Http.Context.Implicit.request;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 // import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.bson.BSONObject;
+import org.terracotta.statistics.archive.SampleSink;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.mongodb.BasicDBObject;
 
 import fr.cea.ig.lfw.LFWApplicationHolder;
 // import play.data.Form;
 import play.libs.Json;
+import views.components.datatable.IDatatableForm;
 
 /**
  * HTTP request parsing. 
@@ -67,5 +73,55 @@ public interface LFWRequestParsing extends LFWApplicationHolder {
 		if (strings.length == 1 && StringUtils.isBlank(strings[0])) return false;
 		return true;
 	}
-
+	
+	default BasicDBObject getKeys(IDatatableForm form) {
+		BasicDBObject keys = new BasicDBObject();
+		if(!form.includes().contains("*")){
+			keys.putAll((BSONObject)getIncludeKeys(form.includes().toArray(new String[form.includes().size()])));
+		}
+		keys.putAll((BSONObject)getExcludeKeys(form.excludes().toArray(new String[form.excludes().size()])));		
+		return keys;
+	}
+	
+	default BasicDBObject getIncludeKeys(String[] keys) {
+		Arrays.sort(keys, Collections.reverseOrder());
+		BasicDBObject values = new BasicDBObject();
+		for(String key : keys){
+		    values.put(key, 1);
+		}
+		return values;
+    }
+	
+	default BasicDBObject getExcludeKeys(String[] keys) {
+		Arrays.sort(keys, Collections.reverseOrder());
+		BasicDBObject values = new BasicDBObject();
+		for(String key : keys){
+		    values.put(key, 0);
+		}
+		return values;
+    }
+	
+	// Cannot use a forward reference to controllers.samples.api.Samples that is in ngl-common.
+	/**
+	 * can not access to default keys in controller (restriction to the API)
+	 * replace by: <br>
+	 * if {@link IDatatableForm#includes()} contains "default" then call method of API with use default keys <br>
+	 * else retrieve keys from form using {@link LFWRequestParsing#getKeys(IDatatableForm)}
+	 * <br> 
+	 * see controllers.samples.api.Samples#list() 
+	 * @param form        IDatatableForm
+	 * @param defaultKeys {@literal List<String>}
+	 * @return            form IDatatableForm
+	 */
+	@Deprecated
+	default IDatatableForm updateForm(IDatatableForm form, List<String> defaultKeys) {
+		if(form.includes().contains("default")){
+			form.includes().remove("default");
+			if(defaultKeys != null){
+				form.includes().addAll(defaultKeys);
+			}
+		}
+		return form;
+	}
+	
 }

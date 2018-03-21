@@ -79,6 +79,10 @@ public class ApplicationFactory {
 		return mod(b -> b.overrides(Bindings.bind(t).to(u)));
 	}
 
+	public <T> ApplicationFactory bind(Class<T> t) {
+		return mod(b -> b.overrides(Bindings.bind(t).toSelf()));
+	}
+
 	/**
 	 * Create an application.
 	 * @return created application

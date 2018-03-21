@@ -40,6 +40,7 @@ import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.IGGlobals;
 
 public class CommonValidationHelper {
 	

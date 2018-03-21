@@ -38,7 +38,8 @@ public class SamplesCRUD extends AbstractCRUDAPIController<Sample> {
 			Arrays.asList("comments");
 
 	public SamplesCRUD(NGLContext ctx) {
-		super(ctx,InstanceConstants.SAMPLE_COLL_NAME, Sample.class, Samples2.defaultKeys);
+		super(ctx,InstanceConstants.SAMPLE_COLL_NAME, Sample.class, null);
+//		super(ctx,InstanceConstants.SAMPLE_COLL_NAME, Sample.class, Samples2.defaultKeys);
 		// Probably an early initialization and validation of the meta would be good. 
 	}
 	
@@ -91,8 +92,8 @@ public class SamplesCRUD extends AbstractCRUDAPIController<Sample> {
 		}
 		SamplesSearchForm samplesSearch = (SamplesSearchForm)form;
 		// We use the old school query to avoid testing the new one.
-		if (true)
-			Samples2.getQuery(samplesSearch);
+//		if (true)
+//			Samples2.getQuery(samplesSearch);
 		
 		return query(
 			and(first(in   ("code", samplesSearch.codes),

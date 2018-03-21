@@ -54,6 +54,10 @@ public class LFWController extends Controller implements LFWApplicationHolder, L
 	public Result okAsJson(Object o) {
 		return ok(Json.toJson(o)).as("application/json");
 	}
+	
+	public Result badRequestAsJson(Object o) {
+		return badRequest(Json.toJson(o)).as("application/json");
+	}
 
 	public Lang currentLang() {
 		if (play.mvc.Http.Context.current() != null) {
