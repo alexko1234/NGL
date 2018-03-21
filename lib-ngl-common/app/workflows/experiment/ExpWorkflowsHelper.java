@@ -1370,7 +1370,7 @@ public class ExpWorkflowsHelper {
 		}
 	};
 	
-	public void updateNewSamplesIfNeeded(Experiment exp, ContextValidation validation){
+	public void updateNewSamplesIfNeeded(ContextValidation validation, Experiment exp){
 		ExperimentType experimentType=ExperimentType.find.findByCode(exp.typeCode);
 		if(experimentType.newSample){
 			exp.atomicTransfertMethods
