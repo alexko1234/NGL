@@ -74,7 +74,8 @@ public class ExpWorkflows extends Workflows<Experiment> {
 				expWorkflowsHelper.updateQCResultInInputContainers(validation, exp);
 			}
 			if (PermissionHelper.checkPermission(validation.getUser(), "admin") && validation.getObject("updateContentProperties") != null){
-				expWorkflowsHelper.updateContentPropertiesWithExperimentContentProperties(validation, exp);
+				Experiment oldExp = (Experiment) validation.getObject(OBJECT_IN_DB);
+				expWorkflowsHelper.updateContentPropertiesWithExperimentContentProperties(validation, exp, oldExp);
 			}
 		}	
 	}

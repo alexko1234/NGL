@@ -1556,7 +1556,8 @@ public class ExpWorkflowsHelper {
 	}
 
 
-	public void updateContentPropertiesWithExperimentContentProperties(ContextValidation validation, Experiment exp) {
+	public void updateContentPropertiesWithExperimentContentProperties(ContextValidation validation, Experiment exp, Experiment oldExp) {
+		if(null == oldExp || null == exp)throw new IllegalArgumentException("missing parameters");
 		long t1 = System.currentTimeMillis();
 		//1 extract content property code
 	
@@ -1575,7 +1576,6 @@ public class ExpWorkflowsHelper {
 		//2 update only if content property exist
 		if(contentPropertyCodes.size() > 0){
 			
-			Experiment oldExp = (Experiment) validation.getObject(OBJECT_IN_DB);
 			Map<String, Content> oldExpContents = flatMapContentsToMap(oldExp, exp.categoryCode, contentPropertyCodes);
 			
 			exp.atomicTransfertMethods.forEach(atm -> {
