@@ -75,7 +75,9 @@ public class ExpWorkflows extends Workflows<Experiment> {
 			}
 			if (PermissionHelper.checkPermission(validation.getUser(), "admin") && validation.getObject("updateContentProperties") != null){
 				Experiment oldExp = (Experiment) validation.getObject(OBJECT_IN_DB);
+				expWorkflowsHelper.updateNewSamplesIfNeeded(exp, validation);
 				expWorkflowsHelper.updateContentPropertiesWithExperimentContentProperties(validation, exp, oldExp);
+				
 			}
 		}	
 	}
