@@ -1,10 +1,12 @@
 package models;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -55,17 +57,28 @@ import utils.AbstractTests;
 import utils.Constants;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
+import io.jsonwebtoken.lang.Collections;
 
 public class InstanceTest extends AbstractTests {
 
-	@SuppressWarnings("unchecked")
-	static final Class<DBObject>[] classTest = new Class[]
-			{ Process.class
-		    , Sample.class
-		    , Experiment.class
-		    , Project.class
-		    , Container.class
-		    };
+	private static final play.Logger.ALogger logger = play.Logger.of(InstanceTest.class);
+	
+//	@SuppressWarnings("unchecked")
+//	static final Class<DBObject>[] classTest = new Class[]
+//			{ Process.class
+//		    , Sample.class
+//		    , Experiment.class
+//		    , Project.class
+//		    , Container.class
+//		    };
+
+	static final List<Class<? extends DBObject>> classTest = 
+			Arrays.asList( Process.class
+		                 , Sample.class
+		                 , Experiment.class
+		                 , Project.class
+		                 , Container.class
+					     );
 
 	// private static final Map<String, List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
 
@@ -78,19 +91,19 @@ public class InstanceTest extends AbstractTests {
 	static models.laboratory.common.description.State sState;
 	static Resolution         sResolution;
 
-	@AfterClass
-	public static  void deleteData() {
-	}
-
 	@BeforeClass
 	public static  void initData() throws DAOException {
 		//ExperimentType
 		sexpExperimentType = ExperimentType.find.findAll().get(0);
 	}	
 
+	@AfterClass
+	public static  void deleteData() {
+	}
+
 	//@Test 
 	public void saveInstanceMongo() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		for (Class<DBObject> t : classTest)
+		for (Class<? extends DBObject> t : classTest)
 			saveDBOject(t);
 	}
 
@@ -162,25 +175,25 @@ public class InstanceTest extends AbstractTests {
 	public void updateContainer(){
 		Container container=findObject(Container.class);
 
-		container.support=new LocationOnContainerSupport();
-		container.support.code="containerName";
-		container.categoryCode="containerCategory";
+		container.support = new LocationOnContainerSupport();
+		container.support.code = "containerName";
+		container.categoryCode = "containerCategory";
 
-		container.projectCodes= new HashSet<String>();
+		container.projectCodes = new HashSet<String>();
 		container.projectCodes.add("ProjectCode");
 
-		container.sampleCodes=new HashSet<String>();
+		container.sampleCodes = new HashSet<String>();
 		container.sampleCodes.add("SampleCode");
 
 		container.state = new State(); 
-		container.state.code="Etatcontainer";
+		container.state.code = "Etatcontainer";
 		container.state.user = Constants.TEST_USER;
 		container.state.date = new Date();
 
 		container.valuation = new Valuation();
 		container.valuation.valid = TBoolean.FALSE;
-		container.valuation.user = Constants.TEST_USER;
-		container.valuation.date = new Date(); 
+		container.valuation.user  = Constants.TEST_USER;
+		container.valuation.date  = new Date(); 
 		
 		container.contents.add(new Content("SampleCode", "sampleType", "sampleCategory"));
 
@@ -227,22 +240,22 @@ public class InstanceTest extends AbstractTests {
 	}
 
 	@Test
-	public void updateExperience(){
+	public void updateExperience() {
 		MongoDBDAO.delete(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", "ExperimentCode"));
 
-		Experiment experiment=new Experiment();
+		Experiment experiment = new Experiment();
 		
 		experiment.code="ExperimentCode";
 		experiment.typeCode="experimentType";
 		experiment.categoryCode="experimentCategory";
 
-		experiment.projectCodes= new HashSet<String>();
+		experiment.projectCodes = new HashSet<String>();
 		experiment.projectCodes.add("ProjectCode");
 
-		experiment.sampleCodes=new HashSet<String>();
+		experiment.sampleCodes = new HashSet<String>();
 		experiment.sampleCodes.add("SampleCode");
 
-		experiment.instrument=new InstrumentUsed();
+		experiment.instrument = new InstrumentUsed();
 		experiment.instrument.categoryCode="instrumentCategory";
 		experiment.instrument.code="instrumentCode";
 
@@ -260,7 +273,7 @@ public class InstanceTest extends AbstractTests {
 		experiment.traceInformation.setTraceInformation("test"); 
 
 		experiment.atomicTransfertMethods= new ArrayList<AtomicTransfertMethod>();
-		for(int i=0; i<10; i++){
+		for (int i=0; i<10; i++) {
 			OneToOneContainer oneToOneContainer =new OneToOneContainer();
 			oneToOneContainer.inputContainerUseds=new ArrayList<InputContainerUsed>();
 			oneToOneContainer.inputContainerUseds.add( new InputContainerUsed("containerInput"+i));
@@ -273,10 +286,15 @@ public class InstanceTest extends AbstractTests {
 		
 		assertThat(newExperiment.code).isEqualTo(experiment.code);
 		//assertThat(newExperiment.state.code).isEqualTo(state.code);
-		assertThat(experiment.state.resolutionCodes.iterator()).isEqualTo(experiment.state.resolutionCodes.iterator());
+		
+		// Test fails but it's x==x so it looks pretty bad
+		// assertThat(experiment.state.resolutionCodes.iterator()).isEqualTo(experiment.state.resolutionCodes.iterator());
+		// We at least compare things that could be different, not the same as in the previous test
+		assertEquals("resolutionCodes", new ArrayList<>(experiment.state.resolutionCodes), 
+				                        new ArrayList<>(newExperiment.state.resolutionCodes));
 		
 		MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code",experiment.code),DBUpdate.set("state",state));
-		newExperiment=MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class,experiment.code);
+		newExperiment = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class,experiment.code);
 		
 		assertThat(newExperiment.code).isEqualTo(experiment.code);
 		assertThat(newExperiment.state.code).isEqualTo(state.code);
@@ -303,7 +321,7 @@ public class InstanceTest extends AbstractTests {
 	
 	////@Test
 	public void removeInstanceMongo(){
-		for (Class<DBObject> t : classTest)
+		for (Class<? extends DBObject> t : classTest)
 			removeDBOject(t);
 	}
 
@@ -335,12 +353,14 @@ public class InstanceTest extends AbstractTests {
 		return MongoDBDAO.findByCode(collection, type, code);		
 	}
 	
-	@Test
-	public void generateExperimentCode() throws InterruptedException{
+	// TODO: evaluate if this is a real test as it does not look like one
+//	@Test
+	public void generateExperimentCode() throws InterruptedException {
 		Experiment e = new Experiment();
 		e.typeCode = "test-tt";
 		for (int i = 0; i < 120; i++) {	
-			System.out.println(CodeHelper.getInstance().generateExperimentCode(e));			
+//			System.out.println(CodeHelper.getInstance().generateExperimentCode(e));			
+			logger.debug("generated experiment code : {}", CodeHelper.getInstance().generateExperimentCode(e));			
 		}
 	}
 	

@@ -14,23 +14,25 @@ public class Rules6Component {
 	private static final Logger.ALogger logger = Logger.of(Rules6Component.class);
 	
 	@Inject
-	public Rules6Component(Application                                   app, 
-						   ApplicationLifecycle                          lifecycle) {
+	public Rules6Component(Application          app, 
+						   ApplicationLifecycle lifecycle) {
 		logger.debug("injecting " + app);
-		onStart(app,lifecycle);
-		logger.debug("injected");
-	}
-	
-	public void onStart(Application app, ApplicationLifecycle lifecycle) {
+//		onStart(app,lifecycle);
+//		logger.debug("injected");
+//	}
+//	
+//	public void onStart(Application app, ApplicationLifecycle lifecycle) {
 		logger.info("loading knowledge base");
 		try {
 			RulesServices6.initSingleton(app);
 			logger.info("drools started");
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			logger.error("error loading drools knowledge base " + e.getMessage(),e);
-			//Shutdown application
+			// Shutdown application
 			// play.Play.stop(app.getWrappedApplication());
+			// app.getWrappedApplication().stop();
 			// logger.info("shutting down app after drools initialization error");
+			throw new RuntimeException("Rules6Component initialization failure");			
 		}
 	}
 	
