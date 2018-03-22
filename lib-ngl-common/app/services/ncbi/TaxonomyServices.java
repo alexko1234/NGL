@@ -125,7 +125,7 @@ public class TaxonomyServices {
 	@Deprecated
 	public /*static*/ String getTaxonomyInfo(String taxonCode, String expression) throws XPathExpressionException {
 		if (taxonCode != null && expression != null) {
-			logger.debug("Get taxo info for "+expression+" for taxon "+taxonCode);
+			logger.debug("Get taxon info for "+expression+" for taxon "+taxonCode);
 			/*Promise<WSResponse> homePage = WS.url(URLNCBI+"&id="+taxonCode).get();
 			Promise<Document> xml = homePage.map(response -> {
 				DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();

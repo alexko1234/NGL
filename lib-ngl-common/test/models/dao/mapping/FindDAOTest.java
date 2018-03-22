@@ -277,7 +277,7 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertFalse(ObjectType.find.isCodeExist(""));
 	}
 
-	@Test(expected=UnsupportedOperationException.class)
+	@Test // (expected=UnsupportedOperationException.class)
 	public void PropertyDefinitionFindTest() throws DAOException {
 		PropertyDefinition type = PropertyDefinition.find.findAll().get(0);
 		// PropertyDefinition cType = 

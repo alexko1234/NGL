@@ -207,7 +207,7 @@ public class DevAppTesting {
 	// TODO: change to use the devappF version that use file configuration and not resource.
 	@SafeVarargs
 	public static Application devapp(String appConfFile, Function<GuiceApplicationBuilder,GuiceApplicationBuilder>... mods) { //, String logConfFile) {
-		return devapp(appConfFile,Arrays.asList(mods));
+		return devapp(appConfFile, Arrays.asList(mods));
 	}
 	
 	public static Application devapp(String appConfFile, List<Function<GuiceApplicationBuilder,GuiceApplicationBuilder>> mods) {
@@ -435,6 +435,7 @@ public class DevAppTesting {
 			break;
 		case NUMBER:
 			assertEquals(path,n0,n1);
+			break;
 		case OBJECT:
 			Iterator<String> iter = n0.fieldNames();
 			while(iter.hasNext()) {
