@@ -41,7 +41,28 @@ public abstract class GenericAPI<O extends GenericMongoDAO<T>, T extends DBObjec
 	protected abstract List<String> defaultKeys();
 
 	public abstract T create(T input, String currentUser) throws APIValidationException, APIException;
+	
+	/**
+	 * Update a complete object
+	 * @param input 					Object to update
+	 * @param currentUser 				current user
+	 * @param fields 					fields
+	 * @return 							updated object
+	 * @throws APIException if the code doesn't correspond to an object 
+	 * @throws APIValidationException validation failure
+	 */
 	public abstract T update(T input, String currentUser) throws APIException, APIValidationException;
+	
+	/**
+	 * Define only fields to update (not the entire object). <br>
+	 * Get the list of editable fields using {@link #authorizedUpdateFields()}.
+	 * @param input 			Object to update
+	 * @param currentUser 		current user
+	 * @param fields 			fields
+	 * @return 					updated object
+	 * @throws APIException if the code doesn't correspond to an object 
+	 * @throws APIValidationException validation failure
+	 */
 	public abstract T update(T input, String currentUser, List<String> fields) throws APIException, APIValidationException;
 
 	public void delete(String code) {
@@ -147,9 +168,10 @@ public abstract class GenericAPI<O extends GenericMongoDAO<T>, T extends DBObjec
 		return keys;		
 	}
 
-	public void checkAuthorizedUpdateFields(ContextValidation ctxVal, List<String> authorizedFields, List<String> fields) {
+
+	public void checkAuthorizedUpdateFields(ContextValidation ctxVal, List<String> fields) {
 		for (String field: fields) {
-			if (!authorizedFields.contains(field)) {
+			if (!authorizedUpdateFields().contains(field)) {
 				ctxVal.addErrors("fields", "error.valuenotauthorized", field);
 			}
 		}
