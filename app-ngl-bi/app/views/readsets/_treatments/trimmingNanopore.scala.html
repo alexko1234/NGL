@@ -12,6 +12,7 @@
 					<th>@Messages("readsets.treatments.trimming.nanopore.startTrimmed")</th>
 					<th>@Messages("readsets.treatments.trimming.nanopore.endTrimmed")</th>
 					<th>@Messages("readsets.treatments.trimming.nanopore.bothTrimmed")</th>
+					<th>@Messages("readsets.treatments.trimming.nanopore.inside")</th>
 					<th>@Messages("readsets.treatments.trimming.nanopore.short")</th>
 				</tr>
 			</thead>
@@ -24,6 +25,7 @@
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.trimmedStartNbReads.value | number}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.trimmedEndNbReads.value | number}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.trimmedBothNbReads.value | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.insideMatchNbReads.value | number}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.shortNbReads.value | number}}</td>
 				</tr>						
 				<tr>
@@ -34,6 +36,7 @@
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.trimmedStartNbBases.value | number}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.trimmedEndNbBases.value | number}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.trimmedBothNbBases.value | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.insideMatchNbBases.value | number}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.shortNbBases.value | number}}</td>
 				</tr>						
 			</tbody>
@@ -115,4 +118,21 @@
 	    </div>
     </div> 	
 </div>
+
+<div class="row"> 
+   
+    <div class="col-md-10 col-lg-10">
+	   <div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
+		ng-click="setImage(readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.histInsideMatch.value,'histInsideMatch','',treament.code!=undefined?treament.code:treatments.getTreatment().code,
+		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.histInsideMatch.width,
+		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.histInsideMatch.height)">
+		 <a href="#">
+		    <img id="default_histInsideMatch" ng-src="data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.histInsideMatch.value}}" />
+		 </a> 
+	    </div>
+    </div>
+    
+  	
+</div>
+
 

@@ -600,6 +600,7 @@ readsets.treatments.trimming.nanopore.trimmed=Trimmed
 readsets.treatments.trimming.nanopore.startTrimmed=Trimmed start
 readsets.treatments.trimming.nanopore.endTrimmed=Trimmed end
 readsets.treatments.trimming.nanopore.bothTrimmed=Trimmed both
+readsets.treatments.trimming.nanopore.inside=Inside
 readsets.treatments.trimming.nanopore.short=Short
 readsets.treatments.trimming.nanopore.name=Name
 readsets.treatments.trimming.nanopore.read=Read

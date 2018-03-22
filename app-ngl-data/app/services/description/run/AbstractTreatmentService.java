@@ -564,10 +564,15 @@ public abstract class AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb both trimmed bases","trimmedBothNbBases",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb short reads","shortNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb short bases","shortNbBases",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Inside reads","insideMatchNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Inside bases","insideMatchNbBases",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Curve known adapters start","curveKnownAdaptersStart",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Image.class, false, "img"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Curve known adapters end","curveKnownAdaptersEnd",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Image.class, false, "img"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Hist known adapters start","histKnownAdaptersStart",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Image.class, false, "img"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Hist known adapters end","histKnownAdaptersEnd",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Image.class, false, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Hist inside match","histInsideMatch",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Image.class, false, "img"));
+		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cont. adaptateur sequence name","adapterConta.seqName",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), String.class, false, "object_list"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cont. adaptateur nb trim read","adapterConta.trimNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "object_list"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cont. adaptateur nb trim start reads","adapterConta.trimStartNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "object_list"));
