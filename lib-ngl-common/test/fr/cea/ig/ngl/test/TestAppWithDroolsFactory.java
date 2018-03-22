@@ -50,6 +50,11 @@ public class TestAppWithDroolsFactory extends ApplicationFactory {
 	}
 	
 	@Override
+	public TestAppWithDroolsFactory configure(String key, String value) {
+		return (TestAppWithDroolsFactory)super.configure(key,value);
+	}
+	
+	@Override
 	protected TestAppWithDroolsFactory constructorClone() {
 		return new TestAppWithDroolsFactory(this);
 	}

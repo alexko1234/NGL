@@ -66,14 +66,14 @@ object ApplicationBuild extends Build {
 	// parallelExecution in Global := false
 	
  	val appName                = "ngl"
-    val scala                  = "2.12.3"
+  val scala                  = "2.12.3"
   // Dist suffix should be "-SNAPSHOT" for the master and "xxx-SNAPSHOT" for specific branches
   // so the deployed application do not land in the same directories. This could be defined 
   // in some configuration instead of being hardcoded.
-    val distSuffix             = "-SNAPSHOT"
+  val distSuffix             = "-SNAPSHOT"
   //val appVersion             = "2.0.0"    + distSuffix
   
-    val buildOrganization      = "fr.cea.ig"
+  val buildOrganization      = "fr.cea.ig"
 	val buildVersion           = "2.1"    + distSuffix
 	val nglVersion             = "2.0"    + distSuffix
 	
@@ -93,20 +93,20 @@ object ApplicationBuild extends Build {
 	val nglCommonVersion       = "2.1.0"  + distSuffix
 
 	// IG libraries
-    val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.0.11"
-    val ceaSpring   = "fr.cea.ig"           %% "play-spring-module" % "2.0.2"
-    val ceaMongo    = "fr.cea.ig"           %% "mongodbplugin"      % "2.0.5"
+  val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.0.11"
+  val ceaSpring   = "fr.cea.ig"           %% "play-spring-module" % "2.0.2"
+  val ceaMongo    = "fr.cea.ig"           %% "mongodbplugin"      % "2.0.5"
 	// The fix concerns the Query "in" constructs for collection properties
 	// that should be converted roughly like :
 	// Query.in(a,b)     -> Query.in(a,Arrays.asList(b))
 	// Query.in(a,b,c,d) -> Query.in(a,Arrays.asList(b,c,d))
-    val mongoJack   = "org.mongojack"        % "mongojack"          % "2.6.1.IG"
+  val mongoJack   = "org.mongojack"        % "mongojack"          % "2.6.1.IG"
 //      "org.mongojack" % "mongojack" % "2.6.1",
 //      "org.mongojack" % "mongojack" % "2.7.0",
 
     // External libraries versions
 	val postgresql  = "org.postgresql"       % "postgresql"         % "9.4-1206-jdbc41"  
-    val commonsLang = "commons-lang"         % "commons-lang"       % "2.4"
+  val commonsLang = "commons-lang"         % "commons-lang"       % "2.4"
   val jsMessages  = "org.julienrf"        %% "play-jsmessages"    % "3.0.0" 
   val fest        = "org.easytesting"      % "fest-assert"        % "1.4" % "test"
   val jtds        = "net.sourceforge.jtds" % "jtds"               % "1.3.1"
@@ -172,6 +172,7 @@ object ApplicationBuild extends Build {
 			dependencyOverrides  += "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % "2.7.3",
 			
 			javaOptions in Test ++= testJavaOptions,
+			// fork        in Test  := true,
 			fork                 := true,
 			// --- javadoc configuration
 			// Remove scala files from the doc process so javadoc is used. 

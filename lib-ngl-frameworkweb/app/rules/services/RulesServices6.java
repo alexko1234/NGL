@@ -62,9 +62,11 @@ public class RulesServices6 {
 		logger.debug("initializing singleton");
 //		String kbasename = app.configuration().getString("rules.kbasename");
 		String kbasename = app.config().getString("rules.kbasename");
+		logger.info("using knowledge base name {}", kbasename);
 		SingletonHolder.instance = instances.get(kbasename);
 		if (SingletonHolder.instance == null) {
 			SingletonHolder.instance = new RulesServices6(app);
+			logger.debug("create instance for {} : {}", kbasename, SingletonHolder.instance);
 			instances.put(kbasename, SingletonHolder.instance);
 		} else {
 			logger.debug("reusing instance for {} : {}", kbasename, SingletonHolder.instance);

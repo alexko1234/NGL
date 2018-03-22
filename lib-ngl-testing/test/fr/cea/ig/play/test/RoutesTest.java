@@ -21,6 +21,8 @@ import play.libs.ws.WSClient;
 
 public class RoutesTest {
 	
+//	private static final play.Logger.ALogger logger = play.Logger.of(RoutesTest.class);
+	
 	private List<Routes> routesList;
 	private Set<String> ignore;
 	
@@ -63,7 +65,11 @@ public class RoutesTest {
 	}
 	
 	static class Routes {
+		
+		private static final play.Logger.ALogger logger = play.Logger.of(Routes.class);
+		
 		private boolean loadRedirects = false;
+		
 		static class Entry {
 			public String method,url,target;
 			public Entry(String method, String url, String target) {
@@ -72,11 +78,13 @@ public class RoutesTest {
 				this.target = target;
 			}
 		}
+		
 		public List<Entry> entries = new ArrayList<Entry>();
+		
 		public void load(String name) throws IOException,java.net.URISyntaxException {
 			URL resource = DevAppTesting.class.getClassLoader().getResource(name);
 			if (resource == null) {
-				System.out.println("skipping route file " + name);
+				logger.debug("skipping route file " + name);
 				return;
 			}
 			File file = new File(resource.toURI());
@@ -91,13 +99,13 @@ public class RoutesTest {
 				if (m.matches()) {
 					Entry e = new Entry(m.group(1),m.group(2),m.group(3));
 					entries.add(e);
-					//System.out.println("matched entry    " + l);
+					//logger.debug("matched entry    " + l);
 				} else if ((m = blanks.matcher(l)).matches()) {
-					//System.out.println("matched blanks   " + l);
+					//logger.debug("matched blanks   " + l);
 				} else if ((m = com.matcher(l)).matches()) {
-					//System.out.println("matched comments " + l);
+					//logger.debug("matched comments " + l);
 				} else if ((m = redirect.matcher(l)).matches()) {
-					//System.out.println("matched redirect " + l);
+					//logger.debug("matched redirect " + l);
 					if (loadRedirects)
 						load(m.group(2));
 				} else {

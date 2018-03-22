@@ -165,7 +165,7 @@ public class ValidationHelper {
 			Collection<PropertyDefinition> pdefs = multimap.get(key); 
 			logger.debug("checking property '{}'", key);
 			PropertyValue pv = inputProperties.get(key);
-			logger.debug("property value '{}' ('{}')", pv, properties.get(key));
+//			logger.debug("property value '{}' ('{}')", pv, properties.get(key));
 			PropertyDefinition propertyDefinition = (PropertyDefinition) pdefs.toArray()[0];			
 			// if pv null and required
 			if (pv == null && propertyDefinition.required 

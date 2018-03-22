@@ -30,20 +30,21 @@ import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.projects.ProjectsAPI;
 import fr.cea.ig.ngl.dao.samples.SamplesAPI;
 import fr.cea.ig.ngl.test.AbstractAPITests;
-import fr.cea.ig.ngl.test.TestAppWithDroolsFactory;
 import fr.cea.ig.ngl.test.dao.api.factory.TestProjectFactory;
 import fr.cea.ig.ngl.test.dao.api.factory.TestSampleFactory;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
 import models.utils.DescriptionHelper;
 import models.utils.dao.DAOException;
+import ngl.common.Global;
 import play.Logger.ALogger;
 import rules.services.RulesServices6;
 import rules.services.test.TestRules6Component;
 import utils.AbstractTests;
 
 /**
- * Test {@link SamplesAPI} methods
+ * Test {@link SamplesAPI} methods.
+ * 
  * @author ajosso
  *
  */
@@ -64,8 +65,6 @@ public class SamplesAPITest extends AbstractTests implements AbstractAPITests {
 	private static Sample refSample;
 	private static Project refProject;
 	
-	private static final TestAppWithDroolsFactory TEST_APP_FACTORY = new TestAppWithDroolsFactory("ngl-sq.test.conf");
-	
 	private Sample data;
 	
 	@Rule
@@ -80,7 +79,8 @@ public class SamplesAPITest extends AbstractTests implements AbstractAPITests {
 	@BeforeClass
 	public static void startTestApplication() {
 		logger.info("Start an app (Test Mode) using NGL-SQ TU config");
-		app = TEST_APP_FACTORY.bindRulesComponent().createApplication();
+		// app = TEST_APP_FACTORY.bindRulesComponent().createApplication();
+		app = Global.afSq.createApplication();
 		DescriptionHelper.initInstitute();
 		logger.info("test app started");
 	}
@@ -107,7 +107,6 @@ public class SamplesAPITest extends AbstractTests implements AbstractAPITests {
 			logger.trace("data already cleaned");
 		}
 	}
-
 
 	@Override
 	public void setUpData() {
@@ -149,7 +148,6 @@ public class SamplesAPITest extends AbstractTests implements AbstractAPITests {
 			projectApi.delete(refProject.code);	
 			clean = true;
 		}
-		
 	}
 
 	@Test

@@ -83,6 +83,10 @@ public class ApplicationFactory {
 		return mod(b -> b.overrides(Bindings.bind(t).toSelf()));
 	}
 
+	public ApplicationFactory configure(String key, String value) {
+		return mod(b -> b.configure(key,value));
+	}
+	
 	/**
 	 * Create an application.
 	 * @return created application

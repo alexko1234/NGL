@@ -25,6 +25,7 @@ public class NGLCommonStarterModule extends NGLBaseModule {
 	 */
 	public NGLCommonStarterModule(Environment environment, Configuration configuration) {
 		super(environment,configuration);
+		logger.debug("created {}", this);
 	}
 	
 	/**
