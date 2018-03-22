@@ -61,12 +61,15 @@ public class PrinterService {
 			commands.append("P1\n");
 		});
 		
+		Logger.info("Sending\n" + commands.toString() + "\n to " + bbp11.name);
+		/*
 		try {
 			sendCommands(bbp11, commands.toString());
 		} catch (PrintServicesException e) {
 			Logger.error("Error when try to print with "+bbp11.name, e);
 			ctxVal.addErrors("printer", "Error when try to print with "+bbp11.name);
 		}
+		*/
 	}
 
 	
@@ -83,7 +86,8 @@ public class PrinterService {
 	    //logger.debug("Impression de deux lignes : " + lignes[0] + ", " + lignes[1]);
 	   
 	    if(configuration.twoDimension){
-		    printCommand.append(labelCommand).append(",\"").append(label.label).append("\"\n");
+		    if(label.barcode.equals(label.label))label.label="";
+	    	printCommand.append(labelCommand).append(",\"").append(label.label).append("\"\n");
 		    printCommand.append(labelCommand.replace("3", "7")).append(",\"").append(label.barcode).append("\"\n");
 		    printCommand.append(barcodeCommand).append(",\"").append(label.barcode).append('\"'); 
 	    }else{
