@@ -60,6 +60,8 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$http','$httpParamSe
 		$scope.runsKeep = datatable(datatableConfig);			
 		$scope.runsKeep.search({keep:true});	
 		
+		
+		
 		//Init list runCodes
 		var form = {includes : []};
 		form.includes.push("runCode");
@@ -67,6 +69,9 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$http','$httpParamSe
 		form.typeCode="rsillumina";
 		$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:form}).then(function(result){
 			$scope.runCodes =result.data.map(function(readSet){return readSet.runCode;}).filter((value, index, self) => self.indexOf(value) === index);
+			
+			var datatableConfigRunsNoValid = datatableConfig;
+			datatableConfigRunsNoValid.order={by:'sequencingStartDate', reverse:false, mode:'remote'},
 			$scope.runsNoValid = datatable(datatableConfig);			
 			$scope.runsNoValid.search({codes:$scope.runCodes});
 			$scope.runCodesUrl = $httpParamSerializer({codes:$scope.runCodes});
