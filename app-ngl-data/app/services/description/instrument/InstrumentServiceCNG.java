@@ -762,10 +762,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 
 		l.addAll(getScicloneNGSXProperties());
 		
-		/* 22/03/2018 supprimé a la demande de J.Guy
 		l.add(newPropertiesDefinition("Nom du Run","robotRunCode", LevelService.getLevels(Level.CODE.Instrument),  String.class, false, null,
 										null, null, null, null, "single", null, true ,null, null));
-		*/
 		
 		return l;
 	}

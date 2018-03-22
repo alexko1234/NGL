@@ -326,7 +326,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 			if ( workLabels.length > 1 ){
 				$scope.messages.clear();
 				$scope.messages.clazz = "alert alert-warning";
-				$scope.messages.text = "Plusieurs 'nom de travail de run' trouvés";
+				$scope.messages.text = "Plusieurs noms de travail (robot) trouvés parmi les containers d'entrée (info processus)";    
 				$scope.messages.open();			
 			
 				console.log('>1  run workLabel trouvé !!');
@@ -338,13 +338,13 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 				if ( labels.length < contents.length ) {
 					$scope.messages.clear();
 					$scope.messages.clazz = "alert alert-warning";
-					$scope.messages.text = "Certains containers n'ont pas de 'nom de travail de run'.";
+					$scope.messages.text = "Certains containers en entrée n'ont pas de nom de travail run (robot) (info processus)";
 					$scope.messages.open();			
 				
-					console.log("Certains containers n'ont pas de workLabel.");
+					console.log("Certains containers n'ont pas de workLabel !!");
+				} else {
+					$parse("instrumentProperties.robotRunCode.value").assign($scope.experiment, workLabels[0]);
 				}
-			
-				$parse("instrumentProperties.robotRunCode.value").assign($scope.experiment, workLabels[0]);
 			} 
 			// si aucun workLabel ne rien faire
 		}

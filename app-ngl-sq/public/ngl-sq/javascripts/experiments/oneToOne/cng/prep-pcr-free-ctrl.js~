@@ -1,14 +1,16 @@
-// FDS 04/8/2016 -- JIRA NGL-1026 :library-prep experiment ( idem a frg-and-library-prep mais sans la fragmentation )
-// difference avec PrepPcrFreeCtrl est sur la/les plaques index...
-angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filter', 'atmToSingleDatatable','$http',
+// FDS 04/02/2016 -- JIRA NGL-894 : prep pcr free experiment
+// 16/09/2016 commun a prepprcfree et prepwgnano ???NON
+angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filter', 'atmToSingleDatatable','$http',
                                                      function($scope, $parse, $filter, atmToSingleDatatable, $http){
+
 	
 	var inputExtraHeaders=Messages("experiments.inputs");
 	var outputExtraHeaders=Messages("experiments.outputs");	
 	
+	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
 	var datatableConfig = {
 			name: $scope.experiment.typeCode.toUpperCase(),
-
+			//Guillaume le 04/03 => utiliser containerUsed seulement pour proprietes dynamiques...
 			"columns":[
 			         //--------------------- INPUT containers section -----------------------
 			         
@@ -183,9 +185,7 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
 			},
 			"order":{
 				"mode":"local",
-				"active":true//,
-				// FDS : ce tri donne 1,10,11,12,2.... comment avoir un tri 1,2....10,11,12,13 ??
-				//"by":"inputContainer.support.column*1"
+				"active":true
 			},
 			"remove":{
 				"active": ($scope.isEditModeAvailable() && $scope.isNewState()),
@@ -230,7 +230,7 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
                 complex:true,
                 template:''
                 	+'<div class="btn-group" style="margin-left:5px">'
-                	+'<button class="btn btn-default" ng-click="copyVolumeInToExp()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.copyVolumeTo")+' vol. eng. librairie'
+                	+'<button class="btn btn-default" ng-click="copyVolumeInToExp()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.copyVolumeTo")+' vol. eng. librairie ET vol. eng. fragmentation'
                 	+'" ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-files-o" aria-hidden="true"></i> Volume </button>'                	                	
                 	+'</div>'
 			}
@@ -281,7 +281,7 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		$scope.$emit('viewRefeshed');
 	});
-	
+		
 	$scope.$on('cancel', function(e) {
 		console.log("call event cancel");
 		$scope.atmService.data.cancel();
@@ -300,7 +300,7 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
 		$scope.atmService.data.setEdit();
 	});
 	
-    // 24/11/2016 FDS copier le volume containerIn dans le volume engagé Librairie
+    // 24/11/2016 FDS copier le volume containerIn dans le volume engagé Librairie ET volume Engagé Frag...
 	//     code adapté depuis copyVolumeInToOut de x-to-plates-ctrl.js
 	$scope.copyVolumeInToExp = function(){
 		console.log("copyVolumeInToExp");
@@ -312,9 +312,10 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
 				value.data.inputContainerUsed.experimentProperties = {};
 			}
 			value.data.inputContainerUsed.experimentProperties.inputVolumeLib=value.data.inputContainerUsed.volume;
+			value.data.inputContainerUsed.experimentProperties.inputVolumeFrag=value.data.inputContainerUsed.volume;	
 		})		
 	};
-	
+		
 	// FDS 16/03/2018 : NGL-1906. rechercher le  ngsRunWorkLabel positionné au niveau processus pour le copier dans robotRunCode (sauf s'il y en plusieurs!!)
 	$scope.$watch("experiment.instrument.code", function(newValue, OldValue){
 		if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {		
@@ -325,7 +326,7 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
 			if ( workLabels.length > 1 ){
 				$scope.messages.clear();
 				$scope.messages.clazz = "alert alert-warning";
-				$scope.messages.text = "Plusieurs noms de travail (robot) trouvés parmi les containers d'entrée (info processus)";
+				$scope.messages.text = "Plusieurs noms de travail (robot) trouvés parmi les containers d'entrée (info processus)";    
 				$scope.messages.open();			
 			
 				console.log('>1  run workLabel trouvé !!');
@@ -339,8 +340,8 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
 					$scope.messages.clazz = "alert alert-warning";
 					$scope.messages.text = "Certains containers en entrée n'ont pas de nom de travail run (robot) (info processus)";
 					$scope.messages.open();			
-
-					console.log("Certains containers n'ont pas de workLabel.");
+				
+					console.log("Certains containers n'ont pas de workLabel !!");
 				} else {
 					$parse("instrumentProperties.robotRunCode.value").assign($scope.experiment, workLabels[0]);
 				}
@@ -348,7 +349,7 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
 			// si aucun workLabel ne rien faire
 		}
 	});
-		
+	
 	//Init
 	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
@@ -366,91 +367,10 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
 	//defined default output unit
 	atmService.defaultOutputUnit = {
 			volume : "µL"
-	};
+	}
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	$scope.atmService = atmService;
-	
-	// Calculs 
-	$scope.updatePropertyFromUDT = function(value, col){
-		console.log("update from property : "+col.property);
-
-		// si l'utilisateur défini le volume a engager => calculer la quantité
-		if(col.property === 'inputContainerUsed.experimentProperties.inputVolumeLib.value'){
-			computeQuantity(value.data);
-		}
-		
-		// 05/08/2016 essai d'ajouter le calcul inverse...===> PB LES 2 MODIFICATIONS SE MARCHENT SUR LES PIEDS !!
-		//
-		// si l'utilisateur défini la quantité a engager => calculer le volume
-		//if(col.property === 'inputContainerUsed.experimentProperties.inputQuantityLib.value'){
-		//	computeVolume(value.data);
-		//}
-	}
-
-	// -1- inputQuantityLib=inputContainerUsed.concentration.value * inputContainerUsed.experimentProperties.inputVolumeLib.value
-	var computeQuantity = function(udtData){
-		var getter = $parse("inputContainerUsed.experimentProperties.inputQuantityLib.value");
-
-		if($parse("inputContainerUsed.concentration.unit === 'nM'")(udtData)) {
-			console.log("unit = nM");
-		}
-		
-		var compute = {
-				inputConcUnit: $parse("inputContainerUsed.concentration.unit")(udtData),
-				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
-				inputVolume : $parse("inputContainerUsed.experimentProperties.inputVolumeLib.value")(udtData),		
-				isReady:function(){
-					/// return (this.inputVolume && this.inputConc); bug!!!  le calcul ne se fait pas si inputConc=0 ( par exemple WATER)
-					/// bloquer le calcul si l'unité n'est pas nM TODO...
-					return (this.inputVolume && (this.inputConc != undefined));
-				}
-		};
-		
-		if(compute.isReady()){
-			var result = $parse("inputConc * inputVolume")(compute);
-			console.log("result = "+result);
-			
-			if(angular.isNumber(result) && !isNaN(result)){
-				inputQuantity = Math.round(result*10)/10;				
-			}else{
-				inputQuantity = undefined;
-			}	
-			getter.assign(udtData, inputQuantity);
-			
-		}else{
-			console.log("Missing values to calculate Quantity");
-		}
-	}
-	
-	// PLUS APPELLEE...voir plus haut...
-	// -2- inputVolumeLib= inputContainerUsed.experimentProperties.QuantityLib.value / inputContainerUsed.concentration.value
-	var computeVolume = function(udtData){
-		var getter = $parse("inputContainerUsed.experimentProperties.inputVolumeLib.value");
-
-		var compute = {
-				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
-				inputQuantity : $parse("inputContainerUsed.experimentProperties.inputQuantityLib.value")(udtData),		
-				isReady:function(){
-					return (this.inputConc && this.inputQuantity);
-				}
-		};
-		
-		if(compute.isReady()){
-			var result = $parse("inputQuantity / inputConc")(compute);
-			console.log("result = "+result);
-			
-			if(angular.isNumber(result) && !isNaN(result)){
-				inputVolume = Math.round(result*10)/10;				
-			}else{
-				inputVolume = undefined;
-			}	
-			getter.assign(udtData, inputVolume);
-			
-		}else{
-			console.log("Missing values to calculate Volume");
-		}
-	}
 	
 	
 	var importData = function(){
@@ -513,17 +433,15 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
 	                 ];
 	$scope.tagPlateColumn = $scope.columns[0]; // defaut du select
 	
-	// 21/11/2017 modifications pour possibilité d'utiliser plusieurs plaques
-	$scope.plates = [ {name:"RAP TruSeq RNA HT",   tagCategory:"DUAL-INDEX", tags:[] }, 
+	// 17/11/2017 modifications pour possibilité d'utiliser plusieurs plaques
+	$scope.plates = [ {name:"DAP TruSeq DNA HT",   tagCategory:"DUAL-INDEX", tags:[] }, 
 	                  {name:"IDT-ILMN TruSeq DNA UD Indexes (96 Indexes)", tagCategory:"DUAL-INDEX", tags:[] },
 	                  {name:"IDT-ILMN TruSeq DNA UD Indexes (24 Indexes)", tagCategory:"DUAL-INDEX", tags:[] }];
 	
 	// l'indice dans le tableau correspond a l'ordre "colonne d'abord" dans la plaque
-    // c'est le code des index qu'il faut mettre ici  exemple:  AglSSXT-01(name)/aglSSXT-01(code) 
+    // c'est le code des index qu'il faut mettre ici exemple:  AglSSXT-01(name)/aglSSXT-01(code) 
 	
-	//-1- RAP TruSeq RNA HT
-	// NB: ce sont les memes index et dans la meme disposition que pour la "DAP TruSeq DNA HT"
-	var tagPlateCode=[];
+	//-1- DAP TruSeq DNA HT
 	$scope.plates[0].tags.push("D701-D501", "D701-D502", "D701-D503", "D701-D504", "D701-D505", "D701-D506", "D701-D507", "D701-D508"); //colonne 1
 	$scope.plates[0].tags.push("D702-D501", "D702-D502", "D702-D503", "D702-D504", "D702-D505", "D702-D506", "D702-D507", "D702-D508"); //colonne 2
 	$scope.plates[0].tags.push("D703-D501", "D703-D502", "D703-D503", "D703-D504", "D703-D505", "D703-D506", "D703-D507", "D703-D508"); //colonne 3
@@ -583,7 +501,7 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
         var maxcol=last.atomicTransfertMethod.column*1;
         console.log("last col in input plate="+maxcol);
         
-        if  ($scope.tagPlateColumn.name*1 + maxcol > 13 ){		
+        if  ($scope.tagPlateColumn.name*1 + maxcol > 13 ){			
 			$scope.messages.clazz="alert alert-danger";
 			//$scope.messages.text=Messages('select.WrongStartColumnTagPlate'+ " "+$scope.tagPlateColumn.position +"+"+dataMain.length+"="+ ($scope.tagPlateColumn.position + dataMain.length));
 			$scope.messages.text=Messages('select.wrongStartColumnTagPlate');
@@ -608,9 +526,10 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
 				if(ocu.experimentProperties===undefined || ocu.experimentProperties===null){
 					ocu.experimentProperties={};
 				}				
-				// 21/11/2017 modification pour possibilité d'utilisation plusieurs plaques
+				// 17/11/2017 modification pour possibilité d'utilisation plusieurs plaques
 				ocu.experimentProperties["tag"]={"_type":"single","value":$scope.tagPlate.tags[indexPos]};
 				ocu.experimentProperties["tagCategory"]={"_type":"single","value":$scope.tagPlate.tagCategory};
+				
 
 			} else {
 				//l'utilisateur n'a rien selectionné => suprimer les PSV tagCategory et tagCode 
@@ -627,4 +546,89 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
 			},	
 		select:setTags,
 	};
+	
+	// 24/11/2016  ajouté comme dans prep-wg-nano pour remplacer les valeurs par defaut dans la definition de l'experience
+	// calculer les qtés inputQuantityFrag et inputQuantityLib a partir de inputVolumeFrag et inputVolumeLib
+	// updatePropertyFromUDT  est automatiqut defini pour les colonnes injectees dans le datatable....
+	$scope.updatePropertyFromUDT = function(value, col){
+		//console.log("update from property : "+col.property);
+
+		if(col.property === 'inputContainerUsed.experimentProperties.inputVolumeFrag.value'){
+			// verifier si le volume saisi est > au volume IN:  si oui ecraser le volume saisi par volume IN
+			// TODO...?? plus tard
+			computeQuantityFrag(value.data);
+		}
+		
+		if(col.property === 'inputContainerUsed.experimentProperties.inputVolumeLib.value'){
+			// verifier si le volume saisi est > au volume IN:  si oui ecraser le volume saisi par volume IN
+			// TODO...?? plus tard
+			computeQuantityLib(value.data);
+		}
+	}
+
+	//inputQuantity=inputContainerUsed.concentration.value * inputContainerUsed.experimentProperties.inputVolume.value
+	var computeQuantityFrag = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.inputQuantityFrag.value");
+		var getter2 = $parse("inputContainerUsed.experimentProperties.inputVolumeLib.value");
+
+		var compute = {
+				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
+				inputVolume : $parse("inputContainerUsed.experimentProperties.inputVolumeFrag.value")(udtData),		
+				isReady:function(){
+					// traiter le cas ou il y a 1 des 2 valeurs (en general c'est la conc) est a 0
+					return (this.inputConc >= 0  && this.inputVolume >= 0);
+				}
+			};
+		
+		if(compute.isReady()){
+			var result = $parse("inputConc * inputVolume")(compute);
+			//console.log("result = "+result);
+			
+			if(angular.isNumber(result) && !isNaN(result)){
+				inputQuantity = Math.round(result*10)/10;				
+			}else{
+				//inputQuantity = undefined;
+				inputQuantity = 0;
+			}	
+			getter.assign(udtData, inputQuantity);
+			
+			//copie inputVolumeLib--> inputVolumeFrag
+			getter2.assign(udtData, $parse("inputVolume")(compute));
+			
+		}else{
+			console.log("Missing values to exec computeQuantityFrag");
+		}
+	}
+	
+	/// TODO: faire une seule fonction mais avec un parametre Lib ou Frag
+	var computeQuantityLib = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.inputQuantityLib.value");
+
+		var compute = {
+				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
+				inputVolume : $parse("inputContainerUsed.experimentProperties.inputVolumeLib.value")(udtData),		
+				isReady:function(){
+					// traiter le cas ou il y a 1 des 2 valeurs (en general c'est la conc) est a 0
+					return (this.inputConc >= 0 && this.inputVolume >= 0 );
+				}
+			};
+		
+		if(compute.isReady()){
+			var result = $parse("inputConc * inputVolume")(compute);
+			console.log("result = "+result);
+			
+			if(angular.isNumber(result) && !isNaN(result)){
+				inputQuantity = Math.round(result*10)/10;				
+			}else{
+				///inputQuantity = undefined;\\
+				inputQuantity = 0;
+			}	
+			getter.assign(udtData, inputQuantity);
+			
+		}else{
+			console.log("Missing values to exec computeQuantityLib");
+		}
+	}	
+
+    
 }]);
