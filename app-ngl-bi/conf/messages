@@ -45,7 +45,7 @@ search.config = Configuration
 search.tab.addcolumns = Colonnes supplémentaires
 search.tab.addfilters = Filtres supplémentaires
 search.tab.filters = Filtres
-
+search.tab.expSearchMode = Experimental search mode
 
 
 valuation.menu = Evaluation
@@ -75,6 +75,7 @@ search.placeholder.instruments = Instruments
 search.placeholder.types = Types
 search.placeholder.type = Type
 search.placeholder.valid = Evaluation
+search.placeholder.expSearchMode = Warning : Only to use with MongoDB query language
 
 search.placeholder.run = Code run
 search.placeHolder.run.states = Etats runs
