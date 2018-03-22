@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 // import java.util.Iterator;
 import java.util.List;
@@ -14,6 +15,8 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bson.BSONObject;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.PropertyAccessorFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mongodb.BasicDBObject;
@@ -34,25 +37,45 @@ public interface LFWRequestParsing extends LFWApplicationHolder {
 
 	// This is extracted from common controller
 	
-	default <T> T objectFromRequestQueryString(Class<T> clazz) {
-		Map<String, String[]> queryString = request().queryString();
-		Map<String, Object> transformMap = new HashMap<>();
-		for (String key : queryString.keySet()) {
-			try {
-				if (isNotEmpty(queryString.get(key))) {				
-					Field field = clazz.getField(key);
-					Class<?> type = field.getType();
-					if (type.isArray() || Collection.class.isAssignableFrom(type)) {
-						transformMap.put(key, queryString.get(key));						
-					} else {
-						transformMap.put(key, queryString.get(key)[0]);						
+	/**
+	 * Fill a form from the request query string. <br>
+	 * The method throws a RuntimeException if an exception if catch during the reflection
+	 * @param clazz class of form
+	 * @return the filled form
+	 */
+	// extracted from APICommonController
+	default <T> T objectFromRequestQueryString(Class<T> clazz) {		
+		try {
+			Map<String, String[]> queryString = request().queryString();
+			BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(clazz.newInstance());
+			wrapper.setAutoGrowNestedPaths(true);
+			for(String key :queryString.keySet()){
+				try {
+					if(isNotEmpty(queryString.get(key))){
+						Object value = queryString.get(key);
+						if(wrapper.isWritableProperty(key)){
+							Class<?> c = wrapper.getPropertyType(key);
+							if(null != c && Date.class.isAssignableFrom(c)){
+								value = convertTimestampStringToDate(((String[])value)[0]);
+							}							
+						}
+						wrapper.setPropertyValue(key, value);
 					}
-				}
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			} 
-		}
-		return Json.fromJson(Json.toJson(transformMap),clazz);
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				} 
+			}
+			@SuppressWarnings("unchecked")
+			T instance = (T)wrapper.getWrappedInstance();
+			return instance; 
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} 
+
+	}
+	
+	default Date convertTimestampStringToDate(String timestamp) {
+		return new Date(Long.valueOf(timestamp));
 	}
 	
 	default <T> T objectFromRequestBody(Class<T> clazz) {
