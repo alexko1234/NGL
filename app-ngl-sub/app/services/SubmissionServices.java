@@ -19,6 +19,9 @@ import java.util.concurrent.TimeoutException;
 
 
 
+
+
+
 //import play.Logger;
 import validation.ContextValidation;
 import workflows.sra.submission.ConfigurationWorkflows;
@@ -53,6 +56,9 @@ import models.sra.submit.util.SraParameter;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.ngl.dao.api.sra.AbstractStudyAPI;
+import fr.cea.ig.ngl.dao.api.sra.ExternalStudyAPI;
+import fr.cea.ig.ngl.dao.api.sra.StudyAPI;
 import fr.cea.ig.play.NGLContext;
 
 import java.io.File;
@@ -84,6 +90,9 @@ import org.xml.sax.SAXException;
 
 
 
+
+
+
 // import play.api.modules.spring.Spring;
 // import play.libs.F.Promise;
 // import play.libs.ws.WS;
@@ -96,6 +105,9 @@ public class SubmissionServices {
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(SubmissionServices.class);
 
+	public static final String initialStateCode = "NONE";
+	public static final String startStateCode = "N";
+	
 	// final ConfigurationWorkflows configWorkflows  = Spring.get BeanOfType(ConfigurationWorkflows.class);
 	// final SubmissionWorkflows submissionWorkflows = Spring.get BeanOfType(SubmissionWorkflows.class);
 	// SubmissionWorkflowsHelper submissionWorkflowsHelper;
@@ -104,7 +116,9 @@ public class SubmissionServices {
 	private final SubmissionWorkflows       submissionWorkflows;
 	private final SubmissionWorkflowsHelper submissionWorkflowsHelper;
 	private final NGLContext ctx;
-	public static final String initialStateCode = "NONE";
+	private final StudyAPI studyAPI;
+	private final AbstractStudyAPI abstractStudyAPI;
+	private final ExternalStudyAPI externalStudyAPI;
 
 //	@Inject
 //	public SubmissionServices(ConfigurationWorkflows configWorkflows, 
@@ -118,10 +132,17 @@ public class SubmissionServices {
 //	
 	@Inject
 	public SubmissionServices(SubmissionWorkflows submissionWorkflows, 
-			                  SubmissionWorkflowsHelper submissionWorkflowsHelper, NGLContext ctx) {
+			                  SubmissionWorkflowsHelper submissionWorkflowsHelper, 
+			                  NGLContext ctx,
+			                  StudyAPI studyAPI,
+			                  AbstractStudyAPI abstractStudyAPI,
+			                  ExternalStudyAPI externalStudyAPI) {
 		this.submissionWorkflows       = submissionWorkflows;
 		this.submissionWorkflowsHelper = submissionWorkflowsHelper;
 		this.ctx = ctx;
+		this.studyAPI = studyAPI;
+		this.abstractStudyAPI = abstractStudyAPI;
+		this.externalStudyAPI = externalStudyAPI;
 	}
 	
 	public String updateLaboratorySampleForNcbiScientificName(String taxonCode, ContextValidation contextValidation) throws SraException {		
@@ -145,8 +166,10 @@ public class SubmissionServices {
 		String user = contextValidation.getUser();
 		Study study = null;
 		if (StringUtils.isNotBlank(studyCode)) {
-			study = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME,
-				Study.class, DBQuery.and(DBQuery.is("code", studyCode)));
+//			study = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME,
+//				Study.class, DBQuery.and(DBQuery.is("code", studyCode)));
+//			study = studyAPI.findOne(DBQuery.and(DBQuery.is("code", studyCode)));
+			study = studyAPI.getByCode(studyCode);
 		} 
 		if (study == null){
 			throw new SraException("SubmissionServices::initReleaseSubmission::impossible de recuperer le study '" + studyCode +"' dans la base");
@@ -171,10 +194,14 @@ public class SubmissionServices {
 			study.state.code = "IW-SUB-R";
 			study.traceInformation.modifyDate = new Date();
 			study.traceInformation.modifyUser = user;
-			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
-					DBQuery.is("code", study.code),
-					DBUpdate.set("state.code", study.state.code).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date()));	
-			}
+//			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
+//					DBQuery.is("code", study.code),
+//					DBUpdate.set("state.code", study.state.code).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date()));	
+			studyAPI.update(DBQuery.is("code", study.code),
+					        DBUpdate.set("state.code", study.state.code)
+					                .set("traceInformation.modifyUser", user)
+					                .set("traceInformation.modifyDate", new Date()));	
+		}
 		
 		// puis valider et sauver submission
 		contextValidation.setCreationMode();
@@ -303,17 +330,21 @@ public class SubmissionServices {
 		if (config.strategyStudy.equalsIgnoreCase("strategy_internal_study")) {
 			if (StringUtils.isNotBlank(acStudy)) {
 				// Recuperer le study si acStudy renseigné et strategy_internal_study :
-				if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, "accession", acStudy)){
-					study = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME,
-							Study.class, DBQuery.and(DBQuery.is("accession", acStudy)));
+//				if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, "accession", acStudy)){
+				if (studyAPI.checkObjectExist("accession", acStudy)) {
+//					study = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME,
+//							Study.class, DBQuery.and(DBQuery.is("accession", acStudy)));
+					study = studyAPI.findOne(DBQuery.is("accession", acStudy));
 				} else {
 					throw new SraException("strategy_internal_study et acStudy passé en parametre "+ acStudy + "n'existe pas dans database");	
 				}	
 			} else {
 				if (StringUtils.isNotBlank(studyCode)) {
 					// Recuperer le study si studyCode renseigné et strategy_internal_study :
-					if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, "code", studyCode)){
-						study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.Study.class, studyCode);			
+//					if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, "code", studyCode)){
+					if (studyAPI.checkObjectExist("code", studyCode)) {
+//						study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.Study.class, studyCode);			
+						study = studyAPI.getByCode(studyCode);			
 					} else {
 						throw new SraException("strategy_internal_study et studyCode passé en parametre "+ studyCode + "n'existe pas dans database");	
 					}	
@@ -321,7 +352,7 @@ public class SubmissionServices {
 			}
 			// updater le studyà soumettre pour son status (avant controle de validation)
 			if (study.state != null && StringUtils.isNotBlank(study.state.code) && initialStateCode.equals(study.state.code)) {
-				study.state.code = "N";
+				study.state.code = startStateCode;
 				study.traceInformation.modifyDate = new Date();
 				study.traceInformation.modifyUser = user;
 			}
@@ -341,7 +372,7 @@ public class SubmissionServices {
 		}
 		
 		if (config.state != null && StringUtils.isNotBlank(config.state.code) && initialStateCode.equals(config.state.code)) {
-			config.state.code = "N";
+			config.state.code = startStateCode;
 			config.traceInformation.modifyDate = new Date();
 			config.traceInformation.modifyUser = user;
 		}	
@@ -654,11 +685,13 @@ public class SubmissionServices {
 					
 			} else { // strategie internal_study
 				if (StringUtils.isNotBlank(acStudy)) {
-					study = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME,
-							Study.class, DBQuery.and(DBQuery.is("accession", acStudy)));
+//					study = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME,
+//							Study.class, DBQuery.and(DBQuery.is("accession", acStudy)));
+					study = studyAPI.findOne(DBQuery.is("accession", acStudy));
 				} else if (StringUtils.isNotBlank(studyCode)) {
-					study = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME,
-							Study.class, DBQuery.and(DBQuery.is("code", studyCode)));
+//					study = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME,
+//							Study.class, DBQuery.and(DBQuery.is("code", studyCode)));
+					study = studyAPI.findOne(DBQuery.is("code", studyCode));
 				} else {
 					// bug
 				}
@@ -734,11 +767,12 @@ public class SubmissionServices {
 		// updater la configuration pour le statut 'used' 
 		State confState = new State();
 		confState.date = new Date();
-		confState.code = "N";
+		confState.code = startStateCode;
 		confState.user = user;
 
 		// updater si besoin le study pour le statut 'N'
-		MongoDBDAO.save(InstanceConstants.SRA_STUDY_COLL_NAME, study);
+//		MongoDBDAO.save(InstanceConstants.SRA_STUDY_COLL_NAME, study);
+		studyAPI.save(study);
 
 		// updater si besoin la config pour le statut 'N'
 		MongoDBDAO.save(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, config);
@@ -793,19 +827,23 @@ public class SubmissionServices {
 
 	public ExternalStudy fetchExternalStudy(String studyAc, String user) throws SraException {
 		ExternalStudy externalStudy;
-		if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_STUDY_COLL_NAME, AbstractStudy.class, "accession", studyAc)){
+//		if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_STUDY_COLL_NAME, AbstractStudy.class, "accession", studyAc)){
+		if (abstractStudyAPI.checkObjectExist("accession", studyAc)){
 			// verifier que si objet existe dans base avec cet AC c'est bien un type externalStudy et non un type study
 			AbstractStudy absStudy;
-			absStudy = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME,
-				AbstractStudy.class, DBQuery.and(DBQuery.is("accession", studyAc)));
+//			absStudy = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME,
+//				AbstractStudy.class, DBQuery.and(DBQuery.is("accession", studyAc)));
+			absStudy = abstractStudyAPI.findOne(DBQuery.is("accession", studyAc));
+			
 			//if (! (absStudy instanceof ExternalStudy)) {
 			if ( ExternalStudy.class.isInstance(absStudy)) {
 				//System.out.println("Recuperation dans base du study avec Ac = " + studyAc +" qui est du type externalStudy ");
 			} else {
 				throw new SraException("Recuperation dans base du study avec Ac = " + studyAc +" qui n'est pas du type externalStudy ");
 			}
-			externalStudy = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME,
-					ExternalStudy.class, DBQuery.and(DBQuery.is("accession", studyAc)));
+//			externalStudy = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME,
+//					ExternalStudy.class, DBQuery.and(DBQuery.is("accession", studyAc)));
+			externalStudy = externalStudyAPI.findOne(DBQuery.is("accession", studyAc));		
 		} else {
 			// Creer objet externalStudy
 			String externalStudyCode = SraCodeHelper.getInstance().generateExternalStudyCode(studyAc);
@@ -1000,10 +1038,13 @@ public class SubmissionServices {
 			Study study = null;
 			
 			if (StringUtils.isNotBlank(studyAc)) {
-				study = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME,
-						Study.class, DBQuery.and(DBQuery.is("accession", studyAc)));
+//				study = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME,
+//						Study.class, DBQuery.and(DBQuery.is("accession", studyAc)));
+				study = studyAPI.findOne(DBQuery.is("accession", studyAc));
+				
 			} else if (StringUtils.isNotBlank(studyCode)) {
-				study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, studyCode);
+//				study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, studyCode);
+				study = studyAPI.getByCode(studyCode);
 			} else {
 				// rien : cela peut etre une soumission avec mapCloneToAc
 			}
@@ -1553,7 +1594,7 @@ public class SubmissionServices {
 	
 	// delete la soumission et ses experiments et samples s'ils ne sont pas references par une autre soumission
 	// Ne delete pas le study et la config associée car saisis par l'utilisateur qui peut vouloir les utiliser pour une prochaine soumission
-	public static void cleanDataBase(String submissionCode, ContextValidation contextValidation) throws SraException {
+	public void cleanDataBase(String submissionCode, ContextValidation contextValidation) throws SraException {
 		System.out.println("Recherche objet submission dans la base pour "+ submissionCode);
 
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
@@ -1576,9 +1617,16 @@ public class SubmissionServices {
 			MongoDBDAO.deleteByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submission.code);
 			// remettre le status du study avec un status F-SUB
 			// La date de release du study est modifié seulement si retour posifit de l'EBI pour release donc si status F-SUB-R
-			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class,
-					DBQuery.is("code", submission.studyCode),
-					DBUpdate.set("state.code", "F-SUB").set("traceInformation.modifyUser", contextValidation.getUser()).set("traceInformation.modifyDate", new Date()));
+//			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class,
+//					DBQuery.is("code", submission.studyCode),
+//					DBUpdate.set("state.code", "F-SUB").set("traceInformation.modifyUser", contextValidation.getUser()).set("traceInformation.modifyDate", new Date()));
+
+			studyAPI.update(DBQuery.is("code", submission.studyCode),
+			        		DBUpdate.set("state.code", "F-SUB")
+			                		.set("traceInformation.modifyUser", contextValidation.getUser())
+			                		.set("traceInformation.modifyDate", new Date()));				
+			
+			
 			//System.out.println("state.code remis à 'N' pour le readSet "+experiment.readSetCode);
 			return;
 		} 
@@ -1668,13 +1716,15 @@ public class SubmissionServices {
 						System.out.println(studyCode + " utilise par objet Submission " + sub.code);
 					}
 				} else {
-					AbstractStudy study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.AbstractStudy.class, studyCode);
+//					AbstractStudy study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.AbstractStudy.class, studyCode);
+					AbstractStudy study = abstractStudyAPI.getByCode(studyCode);
 					if (study != null){
 						if ( ExternalStudy.class.isInstance(study)) {
 							// on ne veut enlever que les external_study cree par cette soumission, si internalStudy cree, on veut juste le remettre avec bon state.
 							//System.out.println("Recuperation dans base du study avec Ac = " + studyAc +" qui est du type externalStudy ");
 							if("F-SUB".equalsIgnoreCase(study.state.code) ){
-								MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.Study.class, studyCode);		
+//								MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.Study.class, studyCode);		
+								externalStudyAPI.deleteByCode(studyCode);		
 								System.out.println("deletion dans base pour study "+studyCode);
 							}
 						}

@@ -226,5 +226,24 @@ public /*abstract*/ class GenericMongoDAO<T extends DBObject> {
 		}
 		return builder;
 	}
+	
+	/// ---- Recablage iso 
+	
+	public boolean checkObjectExist(String key, String keyValue) {
+		return MongoDBDAO.checkObjectExist(collectionName, elementClass, key, keyValue);
+	}
+	
+	public void update(T o) throws DAOException {
+		MongoDBDAO.update(collectionName, o);
+	}
+	
+	public void update(Query query, Builder builder) throws DAOException {
+		MongoDBDAO.update(collectionName, elementClass, query, builder);
+	}
+	
+	public void deleteByCode(String code) throws DAOException {
+		MongoDBDAO.deleteByCode(collectionName,  elementClass, code);
+	}
+
 }
 

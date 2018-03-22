@@ -105,7 +105,7 @@ public class WorkflowsCyclesTests extends AbstractTests {
 	
 	@Test
 	public void sraStudyWorkflows() {
-		instanciate(workflows.sra.study.StudyWorkflows.class);
+		instanciate(fr.cea.ig.ngl.dao.sra.StudyDAO.StudyWorkflows.class);
 	}
 	
 	@Test
