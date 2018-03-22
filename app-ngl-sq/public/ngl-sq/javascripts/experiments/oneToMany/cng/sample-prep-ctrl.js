@@ -309,7 +309,7 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 			} else if ( workLabels.length === 1 ){
 				// verifier que TOUS les containers ont une valeur...
 				var contents= $scope.$eval("getBasket().get()|getArray:'contents[0]'");
-				var labels= $scope.$eval("getBasket().get()|getArray:'contents[0].processProperties.ngsRunWorkLabel.value'");
+				var labels= $scope.$eval("getBasket().get()|getArray:'contents[0].processProperties.robotRunWorkLabel.value'");
 				if ( labels.length < contents.length ) {
 					$scope.messages.clear();
 					$scope.messages.clazz = "alert alert-warning";
