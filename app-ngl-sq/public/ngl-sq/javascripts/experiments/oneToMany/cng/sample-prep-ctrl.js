@@ -204,7 +204,11 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 
 		   // faudrait empecher la page de se charger... ATTENTION dans cette experience on a un atmService local car specifique oneToMany
 		   //var atmService = null; // n' empeche pas la page de se charger.. car redefini en lignes 310...
-	   } 
+	   } else {
+		   //22/03/2018 ajouté car supprimé precedemment??? ( bug vu par J.Guy pendant test NGL-1906)
+		   $scope.inputSupportCode=$scope.inputSupportCodes[0];
+	   }
+	   
 	} else {
 		 getExperimentData();
 	}
