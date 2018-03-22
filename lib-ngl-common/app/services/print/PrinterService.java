@@ -61,15 +61,12 @@ public class PrinterService {
 			commands.append("P1\n");
 		});
 		
-		Logger.info("Sending\n" + commands.toString() + "\n to " + bbp11.name);
-		
 		try {
 			sendCommands(bbp11, commands.toString());
 		} catch (PrintServicesException e) {
 			Logger.error("Error when try to print with "+bbp11.name, e);
 			ctxVal.addErrors("printer", "Error when try to print with "+bbp11.name);
 		}
-		
 	}
 
 	
