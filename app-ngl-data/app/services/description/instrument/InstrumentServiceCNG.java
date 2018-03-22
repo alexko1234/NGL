@@ -295,8 +295,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		//FDS ajout 04/08/2016 JIRA NGL-1026: Sciclone NGSX seul
-		//15/03/2018 l.add(newInstrumentUsedType("Sciclone NGSX", "sciclone-ngsx", InstrumentCategory.find.findByCode("liquid-handling-robot"), getScicloneNGSXAloneProperties(), 
-		l.add(newInstrumentUsedType("Sciclone NGSX", "sciclone-ngsx", InstrumentCategory.find.findByCode("liquid-handling-robot"), getScicloneNGSXProperties(), 
+		l.add(newInstrumentUsedType("Sciclone NGSX", "sciclone-ngsx", InstrumentCategory.find.findByCode("liquid-handling-robot"), getScicloneNGSXAloneProperties(),  
 				getInstruments(
 						createInstrument("ngs1", "NGS 1",null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),  // FDS 29/08/2017 NGS-1 plus utilisé=> désactiver
 						createInstrument("ngs2", "NGS 2",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -732,15 +731,11 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		//prop obligatoire
 		l.add(newPropertiesDefinition("Programme Sciclone NGSX", "programScicloneNGSX", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
 				                       newValues(progList2), "single",null,false, null,null));
-		
-		// optionnel : ajout 15/03/2018 NGL-1906
-				l.add(newPropertiesDefinition("Nom du Run","robotRunCode", LevelService.getLevels(Level.CODE.Instrument),  String.class, false, null,
-												null, null, null, null, "single", null, true ,null, null));
+
 		
 		return l;
 	}
 
-	/*  15/03/2018 PLUS NECESSAIRE car  robotRunCode" par defaut dans getScicloneNGSXProperties.......
 	// 05/08/2016 Il faut une methode distincte pour ajouter la propriété "robotRunCode", et ne pas la mettre directement dans getScicloneNGSXProperties
 	// sinon il y a un doublon pour l'instrument fictif CovarisAndScicloneNGSX
 	private static List<PropertyDefinition> getScicloneNGSXAloneProperties() throws DAOException {
@@ -753,7 +748,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 										null, null, null, null, "single", null, true ,null, null));
 		return l;
 	}
-	*/
 	
 	//FDS 29/01/2016 (instrument fictif composé de 2 instruments) -- JIRA NGL-894
 	//    ses propriétés sont la somme des propriétés de chacun (Attention au noms de propriété communs...)
@@ -768,8 +762,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 
 		l.addAll(getScicloneNGSXProperties());
 		
-		/* 15/03/2018 maintenant deja dans getScicloneNGSXPropertie
-		// optionnel
+		/* 22/03/2018 supprimé a la demande de J.Guy
 		l.add(newPropertiesDefinition("Nom du Run","robotRunCode", LevelService.getLevels(Level.CODE.Instrument),  String.class, false, null,
 										null, null, null, null, "single", null, true ,null, null));
 		*/
@@ -920,10 +913,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		l.add(newPropertiesDefinition("Programme Bravo WS","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),String.class, false, null,
 										null, null, null , null, "single", null, true ,null, null));
 		
-		// optionnel: ajout 15/03/2018 : NGL-1906
-		l.add(newPropertiesDefinition("Nom du Run","robotRunCode", LevelService.getLevels(Level.CODE.Instrument),  String.class, false, null,
-										null, null, null, null, "single", null, true ,null, null));
-		
 		return l;
 	}
 	
@@ -943,9 +932,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		l.add(newPropertiesDefinition("Programme Bravo WS","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),String.class, false, null,
 										null, null, null , null, "single", null, true ,null, null));
 		
-		// optionnel: ajout 15/03/2018 : NGL-1906
-		l.add(newPropertiesDefinition("Nom du Run","robotRunCode", LevelService.getLevels(Level.CODE.Instrument),  String.class, false, null,
-										null, null, null, null, "single", null, true ,null, null));
 		return l;
 	}
 	
@@ -1056,7 +1042,9 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	private static List<Instrument> getInstrumentHiseq4000() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		
-		instruments.add(createInstrument("FALBALA", "FALBALA", "H4", true, "/env/ig/atelier/illumina/cng/FALBALA/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );		
+		instruments.add(createInstrument("FALBALA", "FALBALA", "H4", true, "/env/ig/atelier/illumina/cng/FALBALA/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
+		
+		//GA ajout temporaire de 2 instruments du CNS
 		instruments.add(createInstrument("TORNADE", "TORNADE", "H5", false, "/env/ig/atelier/illumina/cns/TORNADE", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
 		instruments.add(createInstrument("RAFALE", "RAFALE", "H9", false, "/env/ig/atelier/illumina/cns/RAFALE", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
 		
