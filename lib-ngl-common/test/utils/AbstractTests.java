@@ -6,11 +6,12 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 import play.Application;
-
+import play.Logger;
 import models.utils.DescriptionHelper;
-
+import ngl.common.Global;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.test.ApplicationFactory;
 
 /**
  * Application provider for test classes.
@@ -50,7 +51,9 @@ public abstract class AbstractTests {
 	 * @return
 	 */
 	private static Application getFakeApplication() {
-		return fr.cea.ig.play.test.DevAppTesting.devapp("ngl-common.test.conf");
+//		System.out.println("************ USING COMMON FACTORY ***********");
+		// return fr.cea.ig.play.test.DevAppTesting.devapp("ngl-common.test.conf");
+		return Global.af.createApplication();
 	}
 	
 	/**

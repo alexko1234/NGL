@@ -43,17 +43,17 @@ public class TestAppAuthFactory extends ApplicationFactory {
 	}
 	
 	@Override
-	public <T,U extends T> TestAppAuthFactory bind(Class<T> t, Class<U> u) {
-		return (TestAppAuthFactory)super.bind(t,u);
+	public <T,U extends T> TestAppAuthFactory override(Class<T> t, Class<U> u) {
+		return (TestAppAuthFactory)super.override(t,u);
 	}
 
 	public TestAppAuthFactory as(Identity i) {
 		switch (i) {
-		case Nobody   : return bind(IAuthenticator.class,AuthenticatorNobody.class);
-		case Read     : return bind(IAuthenticator.class,AuthenticatorRead.class);
-		case Write    : return bind(IAuthenticator.class,AuthenticatorWrite.class);
-		case ReadWrite: return bind(IAuthenticator.class,AuthenticatorReadWrite.class);
-		case Admin    : return bind(IAuthenticator.class,AuthenticatorAdmin.class);
+		case Nobody   : return override(IAuthenticator.class, AuthenticatorNobody.class);
+		case Read     : return override(IAuthenticator.class, AuthenticatorRead.class);
+		case Write    : return override(IAuthenticator.class, AuthenticatorWrite.class);
+		case ReadWrite: return override(IAuthenticator.class, AuthenticatorReadWrite.class);
+		case Admin    : return override(IAuthenticator.class, AuthenticatorAdmin.class);
 		default       : throw new RuntimeException("unhandled identity " + i); 
 		}
 	}

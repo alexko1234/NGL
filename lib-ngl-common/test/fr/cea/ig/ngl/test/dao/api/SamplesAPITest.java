@@ -40,6 +40,7 @@ import ngl.common.Global;
 import play.Logger.ALogger;
 import rules.services.RulesServices6;
 import rules.services.test.TestRules6Component;
+import utils.AbstractSQTests;
 import utils.AbstractTests;
 
 /**
@@ -49,7 +50,7 @@ import utils.AbstractTests;
  *
  */
 @Singleton  
-public class SamplesAPITest extends AbstractTests implements AbstractAPITests {
+public class SamplesAPITest extends AbstractSQTests implements AbstractAPITests {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(SamplesAPITest.class);
 
@@ -72,18 +73,18 @@ public class SamplesAPITest extends AbstractTests implements AbstractAPITests {
 
 	private static boolean clean = true;
 
-	/**
-	 * Override default method
-	 * Initialize test application.
-	 */
-	@BeforeClass
-	public static void startTestApplication() {
-		logger.info("Start an app (Test Mode) using NGL-SQ TU config");
-		// app = TEST_APP_FACTORY.bindRulesComponent().createApplication();
-		app = Global.afSq.createApplication();
-		DescriptionHelper.initInstitute();
-		logger.info("test app started");
-	}
+//	/**
+//	 * Override default method
+//	 * Initialize test application.
+//	 */
+//	@BeforeClass
+//	public static void startTestApplication() {
+//		logger.info("Start an app (Test Mode) using NGL-SQ TU config");
+//		// app = TEST_APP_FACTORY.bindRulesComponent().createApplication();
+//		app = Global.afSq.createApplication();
+//		DescriptionHelper.initInstitute();
+//		logger.info("test app started");
+//	}
 	
 	@BeforeClass
 	public static void setUpClass() {
@@ -92,8 +93,7 @@ public class SamplesAPITest extends AbstractTests implements AbstractAPITests {
 		assertNotNull(projectApi);
 		api = app.injector().instanceOf(SamplesAPI.class);
 		Assert.assertNotNull(api);
-		app.injector().instanceOf(TestRules6Component.class);
-		
+		// app.injector().instanceOf(TestRules6Component.class);
 		logger.debug("define ref objects");
 		refProject = TestProjectFactory.project(USER);
 		refSample = TestSampleFactory.sample(USER, refProject);

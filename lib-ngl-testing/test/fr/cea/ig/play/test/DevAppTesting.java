@@ -212,7 +212,7 @@ public class DevAppTesting {
 	
 	public static Application devapp(String appConfFile, List<Function<GuiceApplicationBuilder,GuiceApplicationBuilder>> mods) {
 		if (application != null) {
-			logger.warn("returning already application");
+			logger.warn("returning already running application (may not be configured as expected)");
 			return application;
 		}
 		try {

@@ -71,16 +71,20 @@ public class ApplicationFactory {
 	 * @param u binding value
 	 * @return cloned factory with the binding added
 	 */
-	public <T,U extends T> ApplicationFactory bind(Class<T> t, Class<U> u) {
+	public <T,U extends T> ApplicationFactory overrideEagerly(Class<T> t, Class<U> u) {
 		// This is a clone operation, should be declared as such.
 		// ApplicationFactory f = new ApplicationFactory(this);
 		// f.mods.add(b -> b.overrides(Bindings.bind(t).to(u)));
 		// return f;
-		return mod(b -> b.overrides(Bindings.bind(t).to(u)));
+		return mod(b -> b.overrides(Bindings.bind(t).to(u).eagerly()));
 	}
 
-	public <T> ApplicationFactory bind(Class<T> t) {
-		return mod(b -> b.overrides(Bindings.bind(t).toSelf()));
+	public <T> ApplicationFactory overrideEagerly(Class<T> t) {
+		return mod(b -> b.overrides(Bindings.bind(t).toSelf().eagerly()));
+	}
+
+	public <T,U extends T> ApplicationFactory override(Class<T> t, Class<U> u) {
+		return mod(b -> b.overrides(Bindings.bind(t).to(u)));
 	}
 
 	public ApplicationFactory configure(String key, String value) {

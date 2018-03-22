@@ -26,6 +26,7 @@ import models.laboratory.reagent.instance.Reagent;
 import models.laboratory.sample.instance.Sample;
 import models.laboratory.storage.instance.Storage;
 import models.utils.InstanceConstants;
+import ngl.common.Global;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -33,6 +34,7 @@ import org.junit.Test;
 
 //import play.Logger;
 import play.data.validation.ValidationError;
+import utils.AbstractSQTests;
 import utils.AbstractTests;
 import utils.Constants;
 import validation.common.instance.CommonValidationHelper;
@@ -40,7 +42,7 @@ import validation.container.instance.ContainerSupportValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import fr.cea.ig.MongoDBDAO;
 
-public class InstanceValidationHelperTest extends AbstractTests {
+public class InstanceValidationHelperTest extends AbstractSQTests {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(InstanceValidationHelperTest.class);
 	
@@ -54,22 +56,21 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	static ContainerSupport containerSupport;
 	static Reagent   reagentInstance;
 	static int       randomInt;
-		
+			
 	@BeforeClass
 	public static void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-
-		//use a random int to avoid concurrency acces to this test
+		//use a random int to avoid concurrency access to this test
 		Random randomGenerator = new Random();
 		int randomInt = randomGenerator.nextInt(10000);
 
-		project  = saveDBOject(Project.class,InstanceConstants.PROJECT_COLL_NAME,"project" + randomInt);
-		project1 = saveDBOject(Project.class,InstanceConstants.PROJECT_COLL_NAME,"project1" + randomInt);
-		sample   = saveDBOject(Sample.class,InstanceConstants.SAMPLE_COLL_NAME,"sample" + randomInt);
-		sample1  = saveDBOject(Sample.class,InstanceConstants.SAMPLE_COLL_NAME,"sample1" + randomInt);
+		project  = saveDBOject(Project.class, InstanceConstants.PROJECT_COLL_NAME, "project"  + randomInt);
+		project1 = saveDBOject(Project.class, InstanceConstants.PROJECT_COLL_NAME, "project1" + randomInt);
+		sample   = saveDBOject(Sample.class,  InstanceConstants.SAMPLE_COLL_NAME,  "sample"   + randomInt);
+		sample1  = saveDBOject(Sample.class,  InstanceConstants.SAMPLE_COLL_NAME,  "sample1"  + randomInt);
 		
 		sample2  = new Sample(); 
 		sample2.code = "SampleCode" + randomInt;
-		Set<String> l =new HashSet<String>();
+		Set<String> l = new HashSet<String>();
 		l.add("ProjectCode"); 
 		sample2.projectCodes = l;
 		MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, sample2);

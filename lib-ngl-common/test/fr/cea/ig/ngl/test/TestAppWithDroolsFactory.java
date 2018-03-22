@@ -27,7 +27,7 @@ public class TestAppWithDroolsFactory extends ApplicationFactory {
 	public TestAppWithDroolsFactory bindRulesComponent() {
 		// requires overriding of super.bind(t,u) / super.mod(mod) / constructorClone()
 //		return (TestAppWithDroolsFactory) bind(Rules6Component.class, TestRules6Component.class);
-		return bind(Rules6Component.class, TestRules6Component.class);
+		return overrideEagerly(Rules6Component.class, TestRules6Component.class);
 	}
 	
 	// Moved to ApplicationFactory
@@ -35,13 +35,13 @@ public class TestAppWithDroolsFactory extends ApplicationFactory {
 //		return (TestAppWithDroolsFactory) this.mod(b -> b.overrides(Bindings.bind(t).toSelf()));
 //	}
 	@Override
-	public <T> TestAppWithDroolsFactory bind(Class<T> t) {
-		return (TestAppWithDroolsFactory) super.bind(t);
+	public <T> TestAppWithDroolsFactory overrideEagerly(Class<T> t) {
+		return (TestAppWithDroolsFactory) super.overrideEagerly(t);
 	}
 	
 	@Override
-	public <T,U extends T> TestAppWithDroolsFactory bind(Class<T> t, Class<U> u) {
-		return (TestAppWithDroolsFactory)super.bind(t,u);
+	public <T,U extends T> TestAppWithDroolsFactory overrideEagerly(Class<T> t, Class<U> u) {
+		return (TestAppWithDroolsFactory)super.overrideEagerly(t,u);
 	}
 	
 	@Override

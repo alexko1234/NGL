@@ -10,7 +10,8 @@ import utils.AbstractTests;
 
 
 /**
- * normalization of DAO/API tests
+ * Normalization of DAO/API tests.
+ * 
  * @author ajosso
  *
  */
@@ -28,7 +29,7 @@ public interface AbstractAPITests {
 	}
 
 	/**
-	 * Log Validation Errors only if logger level is DEBUG or less
+	 * Log Validation Errors only if logger level is DEBUG or less.
 	 * @param e
 	 */
 	default void logValidationErrors(APIValidationException e) {

@@ -1,6 +1,8 @@
 package ngl.common;
 
 import fr.cea.ig.ngl.test.TestAppWithDroolsFactory;
+import rules.services.Rules6Component;
+import rules.services.test.TestRules6Component;
 
 /**
  * Test global definitions.
