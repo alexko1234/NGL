@@ -720,6 +720,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		return propertyDefinitions;
 	}
 	
+	/* TODO OLD VALUES need clean
 	private static List<Value> getAmplificationPrimers() {
 		return DescriptionFactory.newValues("Fuhrman primer", "V9 primer", "16S primer + Fuhrman primer", "ITS2 primer",
 				"ITSintfor2 / ITS-Reverse", "SYM_VAR_5.8S2 / SYM_VAR_REV", "ITSD / ITS2REV", "CP23S primers",
@@ -727,6 +728,17 @@ public class ImportServiceCNS extends AbstractImportService {
 				"Sneed2015 27F / 519Rmodbio", "16SV4V5 Archae", "16SV5V6 Prok", "18SV1V2 Metazoaire",
 				"16SV4 Procaryote", "16SFL", "18S FungiF390/FungiR1");
 	}
+	*/
+	
+	private static List<Value> getAmplificationPrimers() {
+		return DescriptionFactory.newValues("16S FL 27F/1390R + Fuhrman primers","16S FL 27F/1390R","16S FL 27F/1492R","16S FL 27F/1492R + Fuhrman primers",
+				"16S FL W18/W02","16S V1V2V3 Prok Sneed2015 27F/519Rmodbio","16S V4 Prok 515FF/806R","16S V4V5 Archae 517F/958R",
+				"16S V5V6 Prok 784F/1061R","18S FungiF390/FungiR1","18S V1V2 Metazoaire  SSUF04/SSURmod","18S V4 Euk V4f (TAReukF1)/V4r (TAReukR)",
+				"18S V9 1389F/1510R","5.8S F1/R1","COI primers LCOI1490/HC022198","COI primers m1COIintF/jgHCO2198",
+				"CP23S primers","Fuhrman primers","ITS2/SYM_VAR_5,8S2/SYM_VAR_REV","ITSD/ITS2REV","ITSintfor2/ITS-Reverse");
+	}
+
+	
 /*
 	private static List<Value> getOriginAmplificationPrimers() {
 		return DescriptionFactory.newValues("Fuhrman primer", "V9 primer", "16S primer + Fuhrman primer",

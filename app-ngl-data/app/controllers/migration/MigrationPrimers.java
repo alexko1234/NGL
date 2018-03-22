@@ -49,12 +49,11 @@ public class MigrationPrimers extends UpdateSamplePropertiesCNS {
 		super("MigrationPrimers", durationFromStart, durationFromNextIteration, ctx);
 		expWorkflows = ctx.injector().instanceOf(ExpWorkflows.class);
 		mapping = new HashMap<String, String>();
-		mapping.put("", "");
 		mapping.put("16SV4 Procaryote", "16S V4 Prok 515FF/806R");
 		mapping.put("16SV4V5 Archae", "16S V4V5 Archae 517F/958R");
 		mapping.put("16SV5V6 Prok", "16S V5V6 Prok 784F/1061R");
 		mapping.put("18S_V4 primer", "18S V4 Euk V4f (TAReukF1)/V4r (TAReukR)");
-		mapping.put("18SV1V2 Metazoaire", "18S V1V2 Metazoaire  SSUF04/SSURmod ");
+		mapping.put("18SV1V2 Metazoaire", "18S V1V2 Metazoaire SSUF04/SSURmod");
 		mapping.put("ITS2 primer", "ITS2/SYM_VAR_5,8S2/SYM_VAR_REV");
 		mapping.put("SYM_VAR_5.8S2 / SYM_VAR_REV", "ITS2/SYM_VAR_5,8S2/SYM_VAR_REV");
 		mapping.put("V9 primer", "18S V9 1389F/1510R");
@@ -107,13 +106,13 @@ public class MigrationPrimers extends UpdateSamplePropertiesCNS {
 		Integer skip = 0;
 		final ContextValidation contextVal = new ContextValidation("galbini");
 		contextVal.putObject("updateContentProperties", Boolean.TRUE);
-		MongoDBResult<Experiment> result = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.exists("experimentProperties.amplificationPrimers").is("typeCode","tag-pcr")/*.is("code", "TAG-PCR-20171120_093827CDA")*/);
+		MongoDBResult<Experiment> result = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.exists("experimentProperties.amplificationPrimers").is("typeCode","tag-pcr").is("code", "TAG-PCR-20171023_094723AIG"));
 		Integer nbResult = result.count(); 
 		logger.info("Nb exp to update :"+nbResult);
 		while(skip < nbResult) {
 			try {
 				long t1 = System.currentTimeMillis();
-					List<Experiment> cursor = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.exists("experimentProperties.amplificationPrimers").is("typeCode","tag-pcr")/*.is("code", "TAG-PCR-20171120_093827CDA")*/)
+					List<Experiment> cursor = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.exists("experimentProperties.amplificationPrimers").is("typeCode","tag-pcr").is("code", "TAG-PCR-20171023_094723AIG"))
 						.sort("code").skip(skip).limit(1000)
 						.toList();
 	
@@ -132,6 +131,8 @@ public class MigrationPrimers extends UpdateSamplePropertiesCNS {
 							}else{
 								logger.error("not managed "+primer +" "+exp.code);
 							}
+							logger.info("treat end :"+exp.code);
+							
 						}catch(Throwable e){
 							logger.error("Experiment : "+exp.code+" - "+e,e);
 							if(null != e.getMessage())
