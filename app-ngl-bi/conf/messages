@@ -900,6 +900,7 @@ analyses.treatments.assemblyFilter_ba.GCpercent = % GC
 treatments.assignation.assignationBilan.cluster=Cluster
 treatments.assignation.assignationBilan.otu=OTU
 treatments.assignation.assignationBilan.abundance=Abundance
+treatments.assignation.assignationBilan.abundanceClusterPercent=Abundance readset %
 treatments.assignation.assignationBilan.taxonomy=Taxonomy
 treatments.assignation.assignationBilan.idPercent=% id
 treatments.assignation.assignationBilan.matchLength=% match length

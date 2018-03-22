@@ -7,6 +7,7 @@
  				<th>@Messages("treatments.assignation.assignationBilan.cluster")</th>
 				<th>@Messages("treatments.assignation.assignationBilan.otu")</th>
 				<th>@Messages("treatments.assignation.assignationBilan.abundance")</th>
+				<th>@Messages("treatments.assignation.assignationBilan.abundanceClusterPercent")</th>
 				<th>@Messages("treatments.assignation.assignationBilan.taxonomy")</th>
 				<th>@Messages("treatments.assignation.assignationBilan.idPercent")</th>
 				<th>@Messages("treatments.assignation.assignationBilan.matchLength")</th>
@@ -17,6 +18,7 @@
  				<td>{{value.cluster}}</td>
  				<td>{{value.otu}}</td>
  				<td>{{value.abundance | number}}</td>
+ 				<td>{{value.abundanceClusterPercent | number:2}}</td>
  				<td>{{value.taxonomy}}</td>
  				<td>{{value.idPercent | number:2}}</td>
  				<td>{{value.matchLength | number:2}}</td>
