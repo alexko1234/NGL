@@ -44,7 +44,7 @@ import fr.cea.ig.play.IGGlobals;
 
 public class CommonValidationHelper {
 	
-//	private static final play.Logger.ALogger logger = play.Logger.of(CommonValidationHelper.class);
+	private static final play.Logger.ALogger logger = play.Logger.of(CommonValidationHelper.class);
 	
 	private static final String nameRules                              = "validations";
 
@@ -426,6 +426,7 @@ public class CommonValidationHelper {
 		try {
 			if (required(contextValidation, stateCode, "code")) {
 				if (!models.laboratory.common.description.State.find.isCodeExistForTypeCode(stateCode, typeCode)) {
+					logger.debug("state code '{}' does not exist for type code '{}'", stateCode, typeCode);
 					contextValidation.addErrors("code", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, stateCode);
 				}
 			}

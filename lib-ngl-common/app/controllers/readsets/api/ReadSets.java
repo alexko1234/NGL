@@ -327,16 +327,16 @@ public class ReadSets extends ReadSetsController {
 	}
 
 	@Permission(value={"writing"})
-	public Result save(){
+	public Result save() {
 
 		Form<ReadSet> filledForm = getFilledForm(readSetForm, ReadSet.class);
 		ReadSet readSetInput = filledForm.get();
 
-		if (null == readSetInput._id) { 
+		if (readSetInput._id == null) { 
 			readSetInput.traceInformation = new TraceInformation();
 			readSetInput.traceInformation.setTraceInformation(getCurrentUser());
 
-			if(null == readSetInput.state){
+			if (readSetInput.state == null) {
 				readSetInput.state = new State();
 			}
 			readSetInput.state.code = "N";
@@ -345,13 +345,10 @@ public class ReadSets extends ReadSetsController {
 			readSetInput.submissionState = new State("NONE", getCurrentUser());
 			readSetInput.submissionState.date = new Date();	
 
-
 			//hack to simplify ngsrg => move to workflow but workflow not call here !!!
-			if(null != readSetInput.runCode && (null == readSetInput.runSequencingStartDate || null == readSetInput.runTypeCode)){
+			if (readSetInput.runCode != null && (readSetInput.runSequencingStartDate == null || readSetInput.runTypeCode == null)) {
 				updateReadSet(readSetInput);
-
 			}
-
 		} else {
 			return badRequest("use PUT method to update the run");
 		}
@@ -360,7 +357,7 @@ public class ReadSets extends ReadSetsController {
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		
 		ReadSetsSaveForm readSetsSaveForm = filledFormQueryString(ReadSetsSaveForm.class);
-		if(readSetsSaveForm.external!=null)
+		if (readSetsSaveForm.external != null)
 			ctxVal.putObject("external", readSetsSaveForm.external);
 		else
 			ctxVal.putObject("external", false);
@@ -369,7 +366,7 @@ public class ReadSets extends ReadSetsController {
 		workflows.get().applyPreStateRules(ctxVal, readSetInput, readSetInput.state);
 		
 		ctxVal.setCreationMode();
-		readSetInput.validate(ctxVal);	
+		readSetInput.validate(ctxVal);
 
 		if (!ctxVal.hasErrors()) {
 			readSetInput = MongoDBDAO.save(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSetInput);
