@@ -49,13 +49,22 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 				
 				
 				if(experiment.typeCode === "chip-migration-rna-evaluation"){
-					var concentration1 = $parse("experimentProperties.concentration1")(inputContainerUsed);
-					if(concentration1){
-						inputContainerUsed.newConcentration = concentration1;
+					if($scope.experiment.experimentProperties.copyConcentration.value === true){
+						console.log("copy concentration and quantity");
+						var concentration1 = $parse("experimentProperties.concentration1")(inputContainerUsed);
+						if(concentration1){
+							inputContainerUsed.newConcentration = concentration1;
+						}
+						inputContainerUsed.newQuantity = $scope.computeQuantity(
+								(concentration1)?inputContainerUsed.newConcentration:inputContainerUsed.concentration, 
+								(volume1)?inputContainerUsed.newVolume:inputContainerUsed.volume);
+					}else{
+						console.log("not copy concentration and quantity");
+						inputContainerUsed.newConcentration = null;
+						inputContainerUsed.newQuantity = $scope.computeQuantity(
+										inputContainerUsed.concentration, 
+										(volume1)?inputContainerUsed.newVolume:inputContainerUsed.volume); 
 					}
-					inputContainerUsed.newQuantity = $scope.computeQuantity(
-							(concentration1)?inputContainerUsed.newConcentration:inputContainerUsed.concentration, 
-							(volume1)?inputContainerUsed.newVolume:inputContainerUsed.volume);
 				}else{
 					var quantity1 = $parse("experimentProperties.quantity1")(inputContainerUsed);
 					if(quantity1){

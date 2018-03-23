@@ -316,6 +316,40 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 		})		
 	};
 		
+	// FDS 16/03/2018 : NGL-1906. rechercher le  ngsRunWorkLabel positionné au niveau processus pour le copier dans robotRunCode (sauf s'il y en plusieurs!!)
+	$scope.$watch("experiment.instrument.code", function(newValue, OldValue){
+		if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {		
+			// exemple dans prepa-fc-ordered: var categoryCodes = $scope.$eval("getBasket().get()|getArray:'support.categoryCode'|unique",mainService);
+			// mais ici mainService n'est pas defini, et pas necessaire...
+			// obliger de passer par contents[0], mais normalement ne doit pas poser de probleme...
+			var workLabels= $scope.$eval("getBasket().get()|getArray:'contents[0].processProperties.ngsRunWorkLabel.value'|unique");
+			if ( workLabels.length > 1 ){
+				$scope.messages.clear();
+				$scope.messages.clazz = "alert alert-warning";
+				$scope.messages.text = "Plusieurs noms de travail (robot) trouvés parmi les containers d'entrée (info processus)";    
+				$scope.messages.open();			
+			
+				console.log('>1  run workLabel trouvé !!');
+				
+			} else if ( workLabels.length === 1 ){
+				// verifier que TOUS les containers ont une valeur...
+				var contents= $scope.$eval("getBasket().get()|getArray:'contents[0]'");
+				var labels= $scope.$eval("getBasket().get()|getArray:'contents[0].processProperties.ngsRunWorkLabel.value'");
+				if ( labels.length < contents.length ) {
+					$scope.messages.clear();
+					$scope.messages.clazz = "alert alert-warning";
+					$scope.messages.text = "Certains containers en entrée n'ont pas de nom de travail run (robot) (info processus)";
+					$scope.messages.open();			
+				
+					console.log("Certains containers n'ont pas de workLabel !!");
+				} else {
+					$parse("instrumentProperties.robotRunCode.value").assign($scope.experiment, workLabels[0]);
+				}
+			} 
+			// si aucun workLabel ne rien faire
+		}
+	});
+	
 	//Init
 	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);

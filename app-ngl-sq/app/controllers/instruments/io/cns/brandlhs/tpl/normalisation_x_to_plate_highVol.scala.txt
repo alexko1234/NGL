@@ -4,5 +4,6 @@
 
 Well;Volume;Name;Type;Priority\u000D\u000A
 @for((line) <- lines.sorted){
-@line.dwell;@line.bufferVolume;@line.sampleName;@line.sampleType;@line.priority\u000D\u000A	
+@line.dwell;@line.inputHighVolume;@line.sampleName;@line.sampleType;@line.priority\u000D\u000A	
 }
+

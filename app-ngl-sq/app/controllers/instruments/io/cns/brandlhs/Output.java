@@ -12,8 +12,8 @@ import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OutputContainerUsed;
 import validation.ContextValidation;
+import views.html.helper.input;
 
-//import controllers.instruments.io.cns.tecanevo100.SampleSheetPoolLine;
 import controllers.instruments.io.cns.brandlhs.PlateSampleSheetLine;
 import controllers.instruments.io.cns.brandlhs.tpl.txt.*;
 import controllers.instruments.io.utils.AbstractOutput;
@@ -24,7 +24,13 @@ import controllers.instruments.io.utils.OutputHelper;
 import java.util.zip.*;
 
 public class Output extends AbstractOutput {
-
+//vol seuil pour petit vol
+	private int treshold= 20;
+	private String name1="pipette_P50";
+	private String name2="pipette_P200";
+	private static int sampleNum;
+	private static Boolean isBuffer;
+	
 	@Override
 	public File generateFile(Experiment experiment,ContextValidation contextValidation) throws Exception {
 		String type = (String)contextValidation.getObject("type");
@@ -33,22 +39,41 @@ public class Output extends AbstractOutput {
 		String bufferContent=null;
 		File file;
 		Boolean isPlaque = "96-well-plate".equals(experiment.instrument.inContainerSupportCategoryCode);	
+	
+		if ("normalisation".equals(type) || "normalisation-highVol".equals(type))
+			isBuffer=false;
+		else
+			isBuffer=true;
 		
 		//tube / 96-well-plate
 		if("96-well-plate".equals(experiment.instrument.outContainerSupportCategoryCode)){
 			if ("normalisation".equals(type) ){
 				List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
-				pssl = checkPlateSampleSheetLines(pssl, isPlaque);
+				pssl = checkSampleSheetLines(pssl, isPlaque);
 
 				adnContent = OutputHelper.format(normalisation_x_to_plate.render(pssl).body());
-				file = new File(getFileName(experiment)+"_ADN.csv", adnContent);
+				file = new File(getFileName(experiment)+"_ADN_"+name1+".csv", adnContent);
+
+			}else if ("normalisation-highVol".equals(type) ){
+				List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
+				pssl = checkSampleSheetLines(pssl, isPlaque);
+
+				adnContent = OutputHelper.format(normalisation_x_to_plate_highVol.render(pssl).body());
+				file = new File(getFileName(experiment)+"_ADN_"+name2+".csv", adnContent);
 
 			}else if("normalisation-buffer".equals(type)){
 				List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
-				pssl = checkPlateSampleSheetLines(pssl, isPlaque);
+				pssl = checkSampleSheetLines(pssl, isPlaque);
 
 				bufferContent = OutputHelper.format(normalisation_x_to_plate_buffer.render(pssl).body());
-				file = new File(getFileName(experiment)+"_Buffer.csv", bufferContent);
+				file = new File(getFileName(experiment)+"_Buffer_"+name1+".csv", bufferContent);
+
+			}else if("normalisation-buffer-highVol".equals(type)){
+				List<PlateSampleSheetLine> pssl = getPlateSampleSheetLines(experiment, experiment.instrument.inContainerSupportCategoryCode);
+				pssl = checkSampleSheetLines(pssl, isPlaque);
+
+				bufferContent = OutputHelper.format(normalisation_x_to_plate_buffer_highVol.render(pssl).body());
+				file = new File(getFileName(experiment)+"_Buffer_"+name2+".csv", bufferContent);
 
 			}else{
 				throw new RuntimeException("brandlhs sampleSheet io not managed : "+type);
@@ -80,7 +105,7 @@ public class Output extends AbstractOutput {
 	private PlateSampleSheetLine getPlateSampleSheetLine(AtomicTransfertMethod atm, String inputContainerCategory,Experiment experiment) {
 		Map<String, String> sourceMapping = getSourceMapping(experiment);
 		Map<String, String> destPositionMapping = getDestMapping(experiment);
-		
+
 		InputContainerUsed icu = atm.inputContainerUseds.get(0);
 		OutputContainerUsed ocu = atm.outputContainerUseds.get(0);
 		PlateSampleSheetLine pssl = new PlateSampleSheetLine();
@@ -88,65 +113,134 @@ public class Output extends AbstractOutput {
 		pssl.inputContainerCode = icu.code;
 		pssl.outputContainerCode = ocu.code;
 
-		if(icu.experimentProperties!=null && icu.experimentProperties.containsKey("inputVolume")){
-			pssl.inputVolume = (Double)icu.experimentProperties.get("inputVolume").value;
-		}else if(ocu.volume!=null && ocu.volume.value!=null){
-			pssl.inputVolume = (Double)ocu.volume.value;
+		Double vol = new Double(0);
+
+		if (! isBuffer){
+			if(icu.experimentProperties!=null && icu.experimentProperties.containsKey("inputVolume"))
+				vol = (Double)icu.experimentProperties.get("inputVolume").value;
+			else if(ocu.volume!=null && ocu.volume.value!=null)
+				vol = (Double)ocu.volume.value;
+			else
+				Logger.error("Aucun volume renseigné dans l'expérience! ");
+
+
+			if (vol < treshold){
+				pssl.inputVolume = vol.toString().replace(".", ",");
+				pssl.inputHighVolume = "0,0";
+			}else{
+				pssl.inputHighVolume = vol.toString().replace(".", ",");
+				pssl.inputVolume = "0,0";
+			}
 		}
-		if(icu.experimentProperties!=null && icu.experimentProperties.containsKey("bufferVolume")){
-			pssl.bufferVolume = (Double)icu.experimentProperties.get("bufferVolume").value;
+
+		if (isBuffer){
+			if(icu.experimentProperties!=null && icu.experimentProperties.containsKey("bufferVolume"))
+				vol = (Double)icu.experimentProperties.get("bufferVolume").value;
+
+			if (vol < treshold){
+				pssl.bufferVolume = vol.toString().replace(".", ",");
+				pssl.bufferHighVolume = "0,0";
+			}else{
+				pssl.bufferHighVolume = vol.toString().replace(".", ",");
+				pssl.bufferVolume = "0,0";
+			}
 		}
 		pssl.dwell = ocu.locationOnContainerSupport.line.concat(ocu.locationOnContainerSupport.column);
 
 		return pssl;
 	}
-	private List<PlateSampleSheetLine> checkPlateSampleSheetLines (List<PlateSampleSheetLine> psslList, Boolean isPlaque){
+	
+	private List<PlateSampleSheetLine> checkSampleSheetLines (List<PlateSampleSheetLine> psslList, Boolean isPlate){
 
-		PlateSampleSheetLine psslTemplate = new PlateSampleSheetLine();
 		List<PlateSampleSheetLine> psslListNew = new LinkedList<PlateSampleSheetLine>();
-		List<String> plateLines ;
-		int colNum;	
-		if (isPlaque){
-			plateLines = Arrays.asList("A","B","C","D","E","F","G","H"); 	
-			colNum=12;
-		}else{
-			plateLines = Arrays.asList("A","B","C","D");
-			colNum=6;
-		}
-		boolean found =false;	
-		int sampleNum=0;
-		for(int line = 0; line < plateLines.size(); line++){
 
-			for(int plateCol = 1; plateCol <= colNum ;plateCol++){
+		
+		if (isPlate){
+			List<String> plateLines = Arrays.asList("A","B","C","D","E","F","G","H"); 	
+			List<Integer> colNums = Arrays.asList(1,2,3,4,5,6,7,8,9,10,11,12);
+			sampleNum=0;
+			psslListNew = filledSampleSheetLines(psslList,plateLines,colNums);
+
+		}else{
+			/* on gere finalement les tubes par 4 racks 
+			 */
+
+			List<String> plateLines = Arrays.asList("A","B","C","D"); 	
+			List<String> plateLines2 = Arrays.asList("E","F","G","H"); 	
+			List<Integer> colNums= Arrays.asList(1,2,3,4,5,6);
+			List<Integer> colNums2 = Arrays.asList(7,8,9,10,11,12);
+			List<String> plateLinesBuf = Arrays.asList("A","B","C","D","E","F","G","H"); 	
+			List<Integer> colNumsBuf = Arrays.asList(1,2,3,4,5,6,7,8,9,10,11,12);
+
+			//Logger.debug("isBuffer "+);
+			//ADN
+			if (! isBuffer){
+				sampleNum=0;
+				psslListNew = filledSampleSheetLines(psslList,plateLines,colNums);
+				psslListNew.addAll(filledSampleSheetLines(psslList,plateLines,colNums2));
+				psslListNew.addAll(filledSampleSheetLines(psslList,plateLines2,colNums));
+				psslListNew.addAll(filledSampleSheetLines(psslList,plateLines2,colNums2));
+			}else {
+				sampleNum=0;
+				psslListNew = filledSampleSheetLines(psslList,plateLinesBuf,colNumsBuf);
+			}
+
+		}
+
+		return psslListNew;	
+	}
+
+
+	private  List<PlateSampleSheetLine> filledSampleSheetLines (List<PlateSampleSheetLine> psslList, List<String> plateLines, List<Integer> colNums){
+
+		boolean found = false;
+		List<PlateSampleSheetLine> psslListNew = new LinkedList<PlateSampleSheetLine>();
+
+		ListIterator<String> LinesItr = plateLines.listIterator();	
+		while(LinesItr.hasNext()) {
+			String line =(String) LinesItr.next();		
+
+
+			ListIterator<Integer> colNumsItr = colNums.listIterator();	
+			while(colNumsItr.hasNext()) {
+				Integer col =(Integer) colNumsItr.next();		
 				found = false;
+
 				sampleNum ++;
 				ListIterator<PlateSampleSheetLine> psslListItr = psslList.listIterator();	
 				while(psslListItr.hasNext()) {
 					PlateSampleSheetLine pssl =(PlateSampleSheetLine) psslListItr.next();					
-					if (pssl.dwell.equals(plateLines.get(line)+plateCol)){
+					if (pssl.dwell.equals(line+col)){
+						Logger.debug("--"+pssl.dwell+" "+sampleNum);
+
 						found=true;	
 						pssl.dwellNum=sampleNum;
 						pssl.sampleName = "Sample "+sampleNum;
-						psslListNew.add(pssl);			
+						psslListNew.add(pssl);
 					}
 				}
 
 				if (! found){
 					PlateSampleSheetLine psslBlank = new PlateSampleSheetLine();
-					psslBlank.dwell=plateLines.get(line)+plateCol;
+					psslBlank.dwell=line+col;
 					psslBlank.dwellNum=sampleNum;
 
 					psslBlank.sampleName = "Sample "+sampleNum;
-					psslBlank.inputVolume = new Double(0);
-					psslBlank.bufferVolume = new Double(0);
+					if (! isBuffer){
+						psslBlank.inputVolume = "0,0";
+						psslBlank.inputHighVolume = "0,0";
+					}else{
+						psslBlank.bufferVolume = "0,0";
+						psslBlank.bufferHighVolume = "0,0";
+					}
+				
 					psslListNew.add(psslBlank);
 				}
 			}
 		}
 		return psslListNew;	
 	}
-
-
+	
 	private Map<String, String> getSourceMapping(Experiment experiment) {
 		Map<String, String> sources = new HashMap<String, String>();
 

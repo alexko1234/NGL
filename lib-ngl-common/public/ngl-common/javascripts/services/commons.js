@@ -1211,6 +1211,37 @@ angular.module('commonsServices', []).
 				    });
     			}
     		};	    	
+    	}]).directive('pdefDefaultValue',['$parse', function($parse) {
+    		return {
+    			require: 'ngModel',
+    			link: function(scope, element, attrs, ngModel) {
+    				var _pdef = null;
+    				scope.$watch(attrs.pdefDefaultValue, function(pdef){
+    					if(pdef !== null && pdef !== undefined && pdef.defaultValue !== undefined && pdef.defaultValue !== null ){
+    						_pdef = pdef;
+    					}
+    				});
+    				//TODO GA ?? better way with formatter
+					scope.$watch(ngModel, function(value){
+			                if(_pdef != null && (ngModel.$modelValue === undefined || ngModel.$modelValue === "")){
+								if(_pdef.valueType === "java.lang.Boolean"){
+									if(_pdef.defaultValue === "true" || _pdef.defaultValue === true){
+										ngModel.$setViewValue(true);
+										ngModel.$render();
+									}else if(_pdef.defaultValue === "false" || _pdef.defaultValue === false){
+										ngModel.$setViewValue(true); // hack to insert false value 
+										ngModel.$setViewValue(false);
+										ngModel.$render();
+									}											
+								}else {
+									ngModel.$setViewValue(_pdef.defaultValue);
+									ngModel.$render();
+								}
+			                	
+							}
+				    });
+    			}
+    		};	    	
     	}]).filter('filters',['$filter',function ($filter) {
     		return function (array, expressions, comparator) {
     			if(!angular.isArray(expressions)) expressions = [expressions];

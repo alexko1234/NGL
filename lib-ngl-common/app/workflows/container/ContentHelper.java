@@ -1,6 +1,5 @@
 package workflows.container;
 
-import javax.inject.Singleton;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
