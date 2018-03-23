@@ -76,7 +76,7 @@ public class MigrationPrimers extends UpdateSamplePropertiesCNS {
 	@Override
 	public void runImport() throws SQLException, DAOException, MongoException,
 	RulesException {
-		//updateSampleImported(contextError);
+		updateSampleImported(contextError);
 		updateExperiments(contextError);		
 	}
 
@@ -106,13 +106,13 @@ public class MigrationPrimers extends UpdateSamplePropertiesCNS {
 		Integer skip = 0;
 		final ContextValidation contextVal = new ContextValidation("galbini");
 		contextVal.putObject("updateContentProperties", Boolean.TRUE);
-		MongoDBResult<Experiment> result = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.exists("experimentProperties.amplificationPrimers").is("typeCode","tag-pcr").is("code", "TAG-PCR-20171023_094723AIG"));
+		MongoDBResult<Experiment> result = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.exists("experimentProperties.amplificationPrimers").is("typeCode","tag-pcr")/*.is("code", "TAG-PCR-20171023_094723AIG")*/);
 		Integer nbResult = result.count(); 
 		logger.info("Nb exp to update :"+nbResult);
 		while(skip < nbResult) {
 			try {
 				long t1 = System.currentTimeMillis();
-					List<Experiment> cursor = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.exists("experimentProperties.amplificationPrimers").is("typeCode","tag-pcr").is("code", "TAG-PCR-20171023_094723AIG"))
+					List<Experiment> cursor = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.exists("experimentProperties.amplificationPrimers").is("typeCode","tag-pcr")/*.is("code", "TAG-PCR-20171023_094723AIG")*/)
 						.sort("code").skip(skip).limit(1000)
 						.toList();
 	

@@ -465,7 +465,9 @@ public class InstanceHelpers {
 				process.traceInformation.setTraceInformation(validation.getUser());
 				process.sampleOnInputContainer.lastUpdateDate = new Date();
 				process.sampleOnInputContainer.properties = InstanceHelpers.updatePropertiesWithOldValueComparison(process.sampleOnInputContainer.properties, updatedProperties, deletedPropertyCodes);	
-				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, process);
+				//MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, process);
+				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("code", process.code), 
+						DBUpdate.set("sampleOnInputContainer", process.sampleOnInputContainer).set("traceInformation", process.traceInformation));
 			}
 		});
 		
@@ -480,7 +482,9 @@ public class InstanceHelpers {
 					readset.traceInformation.setTraceInformation(validation.getUser());
 					readset.sampleOnContainer.lastUpdateDate = new Date();
 					readset.sampleOnContainer.properties = InstanceHelpers.updatePropertiesWithOldValueComparison(readset.sampleOnContainer.properties, updatedProperties, deletedPropertyCodes);	
-					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readset);
+					//MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readset);
+					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", readset.code), 
+							DBUpdate.set("sampleOnContainer", readset.sampleOnContainer).set("traceInformation", readset.traceInformation));
 				}
 		});	
 	}
