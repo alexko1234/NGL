@@ -17,12 +17,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-
-
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bson.BSONObject;
@@ -34,22 +33,6 @@ import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.PropertyAccessorFactory;
 //import org.springframework.core.convert.TypeDescriptor;
 
-//import play.Logger;
-import play.data.DynamicForm;
-import play.data.Form;
-import play.libs.Json;
-import play.modules.jongo.MongoDBPlugin;
-import play.mvc.Controller;
-import play.mvc.Http.Context;
-import play.routing.JavaScriptReverseRouter;
-//import play.mvc.Results.StringChunks;
-//import play.mvc.Results.Chunks.Out;
-import play.mvc.Result;
-import play.mvc.With;
-// import scala.io.Source;
-import validation.ContextValidation;
-import views.components.datatable.DatatableForm;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mongodb.BasicDBObject;
 
@@ -60,8 +43,22 @@ import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
-
 import fr.cea.ig.mongo.MongoStreamer;
+//import play.Logger;
+import play.data.DynamicForm;
+import play.data.Form;
+import play.libs.Json;
+import play.modules.jongo.MongoDBPlugin;
+import play.mvc.Controller;
+import play.mvc.Http.Context;
+//import play.mvc.Results.StringChunks;
+//import play.mvc.Results.Chunks.Out;
+import play.mvc.Result;
+import play.mvc.With;
+import play.routing.JavaScriptReverseRouter;
+// import scala.io.Source;
+import validation.ContextValidation;
+import views.components.datatable.DatatableForm;
 
 // New version is probably MongoCommonController<T>
 
@@ -258,6 +255,17 @@ public abstract class CommonController extends Controller {
 		return keys;
 	}
 	
+	protected static String getJSONKeys(DatatableForm form) {
+		Set<String> keys = new HashSet<String>();
+		if(null != form.includes && form.includes.size() > 0 && !form.includes.contains("*")){
+			getIncludeJSONKeys(form.includes.toArray(new String[form.includes.size()]),keys);
+		}else if(null != form.excludes && form.excludes.size() > 0){
+			getExcludeJSONKeys(form.excludes.toArray(new String[form.excludes.size()]),keys);					
+		}
+		String jsonKey = "{"+String.join(",", keys)+"}";
+		return jsonKey;
+	}
+	
 	protected static BasicDBObject getIncludeKeys(String[] keys) {
 		Arrays.sort(keys, Collections.reverseOrder());
 		BasicDBObject values = new BasicDBObject();
@@ -267,6 +275,16 @@ public abstract class CommonController extends Controller {
 		return values;
     }
 	
+	protected static void getIncludeJSONKeys(String[] includes, Set<String> keys) {
+		Arrays.sort(includes, Collections.reverseOrder());
+		for(int i=0; i<includes.length;i++){
+		    keys.add(includes[i]+":1");
+		}
+		
+    }
+	
+	
+	
 	protected static BasicDBObject getExcludeKeys(String[] keys) {
 		Arrays.sort(keys, Collections.reverseOrder());
 		BasicDBObject values = new BasicDBObject();
@@ -274,6 +292,14 @@ public abstract class CommonController extends Controller {
 		    values.put(key, 0);
 		}
 		return values;
+    }
+	
+
+	protected static void getExcludeJSONKeys(String[] excludes, Set<String> keys) {
+		Arrays.sort(excludes, Collections.reverseOrder());
+		for(int i=0;i<excludes.length;i++){
+		    keys.add(excludes[i]+":0");
+		}
     }
 	
 	/*
@@ -362,6 +388,25 @@ public abstract class CommonController extends Controller {
 	protected static <T extends DBObject> Result nativeMongoDBQQuery(String collectionName, ListForm form, Class<T> type){
 		MongoCollection collection = MongoDBPlugin.getCollection(collectionName);
 		MongoCursor<T> all = collection.find(form.reportingQuery).as(type);
+		if (form.datatable) {
+			// return ok(getUDTChunk(all)).as("application/json");
+			return MongoStreamer.okStreamUDT(all);
+		} else if(form.list) {
+			// return ok(getChunk(all)).as("application/json");
+			return MongoStreamer.okStream(all);
+		} else if(form.count) {
+			int count = all.count();
+			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			m.put("result", count);
+			return ok(Json.toJson(m));
+		} else {
+			return badRequest();
+		}
+	}
+	
+	protected static <T extends DBObject> Result nativeMongoDBQQuery(String collectionName, ListForm form, Class<T> type, String keys){
+		MongoCollection collection = MongoDBPlugin.getCollection(collectionName);
+		MongoCursor<T> all = collection.find(form.reportingQuery).projection(keys).as(type);
 		if (form.datatable) {
 			// return ok(getUDTChunk(all)).as("application/json");
 			return MongoStreamer.okStreamUDT(all);

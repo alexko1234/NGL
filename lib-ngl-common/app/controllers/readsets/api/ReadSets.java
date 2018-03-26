@@ -88,7 +88,9 @@ public class ReadSets extends ReadSetsController {
 		BasicDBObject keys = getKeys(updateForm(form));
 
 		if (form.reporting) {
-			return nativeMongoDBQQuery(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class);
+			//return nativeMongoDBQQuery(form);
+			String jsonKeys = getJSONKeys(updateForm(form));
+			return nativeMongoDBQQuery(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class,jsonKeys);
 		}else if (form.datatable) {			
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);				
 			return MongoStreamer.okStreamUDT(results);
