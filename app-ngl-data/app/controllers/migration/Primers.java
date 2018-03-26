@@ -18,7 +18,7 @@ public class Primers extends Controller {
 	}
 	
 	public Result migration(){
-		new MigrationPrimers(ImportDataUtil.getDurationForNextSeconds(5),Duration.create(48,TimeUnit.HOURS), ctx);
+		new MigrationPrimers(ImportDataUtil.getDurationForNextSeconds(5),Duration.create(96,TimeUnit.HOURS), ctx);
 		return ok();
 	}
 
