@@ -180,7 +180,6 @@ object ApplicationBuild extends Build {
 			javacOptions in (Compile,doc) ++= Seq("-notimestamp", "-linksource"),
 			javacOptions in (Compile,doc)  += "-quiet", // do not show the genneration info
 			// TODO: should use some defined output dir, don't know what the name is
-			// unmanagedResourceDirectories in (Compile, doc) += baseDirectory.value / "target" / "scala-2.12" / "classes_managed/",
 			dependencyClasspath in (Compile, doc) += baseDirectory.value / "target" / "scala-2.12" / "classes_managed/",
 			doc.in(Compile) := doc.in(Compile).dependsOn(compile.in(Compile)).value,
 			//
@@ -216,7 +215,7 @@ object ApplicationBuild extends Build {
   object Resolvers {        
     import BuildSettings._
     var location        = sys.env.getOrElse("NGL_LOCATION", default = "external")
-    val nglgithub	    = "NGL GitHub Repo"  at "https://institut-de-genomique.github.io/NGL-Dependencies/"    
+    val nglgithub	      = "NGL GitHub Repo"  at "https://institut-de-genomique.github.io/NGL-Dependencies/"    
     val nexusoss        = "Sonatype OSS"     at "https://oss.sonatype.org/content/groups/public/"
     val mavencentral    = "Maven central"    at "http://central.maven.org/maven2/"
     val nexusig         = "Nexus repository" at "https://gsphere.genoscope.cns.fr/nexus/content/groups/public/" 
@@ -235,7 +234,10 @@ object ApplicationBuild extends Build {
     
     val nglTestingDependencies = Seq(
       javaCore,
-      javaWs
+      javaWs,
+      guice,
+      //fest
+      "org.easytesting"      % "fest-assert"        % "1.4"
       // ceaMongo
     )
     
@@ -284,7 +286,7 @@ object ApplicationBuild extends Build {
 		  "org.kie"      % "kie-api"         % "6.1.0.Final",
 		  "org.kie"      % "kie-internal"    % "6.1.0.Final",
 	      "commons-lang" % "commons-lang"    % "2.2"
-		) ++ (if (embeddedAuth) Seq() else Seq(ceaAuth))
+		) // ++ (if (embeddedAuth) Seq() else Seq(ceaAuth))
 		
 		val nglbiDependencies = Seq(
 			javaCore, 
@@ -422,6 +424,10 @@ object ApplicationBuild extends Build {
       .settings(
         libraryDependencies ++= nglPlayMigrationDependencies,   
         version              := "0.1-SNAPSHOT",
+        javacOptions in (Compile,doc) := Seq("-link", "https://docs.oracle.com/javase/7/docs/api/"),
+        // javacOptions in (Compile,doc) := Seq("-doctitle", "ngl-play-migration-0.1"),
+        // javacOptions in (Compile,doc) := Seq("-top", "ngl-play-migration-0.1"),
+        
         resolvers            := nexus
 	    ).dependsOn(mongoPlugin)
 	
@@ -471,7 +477,7 @@ object ApplicationBuild extends Build {
           val assets: java.io.File = (PlayKeys.playPackageAssets in Compile).value
           artifacts + (Artifact(moduleName.value, "asset", "jar", "assets") -> assets)
         }
-      ).dependsOn(ngldatatable,authentication,springPlugin)
+      ).dependsOn(ngldatatable, authentication, springPlugin)
   
   val nglcommon = Project(appName + "-common", file("lib-ngl-common"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
     // version                    := appVersion,
@@ -490,15 +496,17 @@ object ApplicationBuild extends Build {
     // resourceDirectory.in(Test).:=(baseDirectory.value./("conftest"))
     resourceDirectory in Test  := baseDirectory.value / "conftest"
   // ).dependsOn(nglframeworkweb % "compile->compile;test->test;doc->doc", nglPlayMigration, nglTesting % "test->test")
-  ).dependsOn(nglframeworkweb, nglPlayMigration, nglTesting % "test->test")
-
+//  ).dependsOn(nglframeworkweb, nglPlayMigration, nglTesting % "test->test")
+  // ).dependsOn(nglframeworkweb, nglPlayMigration, nglTesting % "compile->test")
+    ).dependsOn(nglframeworkweb, nglPlayMigration, nglTesting % "test->test")
+    
   val nglbi = Project(appName + "-bi", file("app-ngl-bi"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
     version                    := biVersion,
     libraryDependencies       ++= nglbiDependencies,
     resolvers                  := nexus,
     publishArtifact in makePom := false,
     publishTo                  := Some(nexusigpublish)
-  ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
+  ).dependsOn(nglcommon % "compile;test->test" , nglTesting % "test->test")
 
   val ngldata = Project(appName + "-data", file("app-ngl-data"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
     version                    := nglDataVersion,
@@ -555,48 +563,175 @@ object ApplicationBuild extends Build {
     publishTo                  := Some(nexusigpublish) 
   ).dependsOn(nglcommon % "test->test;compile->compile")
   
-  val nglprojects = Project(appName + "-projects", file("app-ngl-projects"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
-		version                    := projectsVersion,
-		libraryDependencies       ++= nglprojectsDependencies,   
-    resolvers                  := nexus,
-    publishArtifact in makePom := false,
-    publishTo                  := Some(nexusigpublish)
-  ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
+  val nglprojects = Project(appName + "-projects", file("app-ngl-projects"),settings = buildSettings)
+    .enablePlugins(play.sbt.PlayJava)
+    .settings(
+  		version                    := projectsVersion,
+	  	libraryDependencies       ++= nglprojectsDependencies,   
+      resolvers                  := nexus,
+      publishArtifact in makePom := false,
+      publishTo                  := Some(nexusigpublish)
+    ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
 	 
-	val nglreagents = Project(appName + "-reagents", file("app-ngl-reagents"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
-		version                    := reagentsVersion,
-		libraryDependencies       ++= nglreagentsDependencies,   
-    resolvers                  := nexus,
-    publishArtifact in makePom := false,
-    publishTo                  := Some(nexusigpublish)
-  ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
+	val nglreagents = Project(appName + "-reagents", file("app-ngl-reagents"), settings = buildSettings)
+	  .enablePlugins(play.sbt.PlayJava)
+	  .settings(
+		  version                    := reagentsVersion,
+  		libraryDependencies       ++= nglreagentsDependencies,   
+      resolvers                  := nexus,
+      publishArtifact in makePom := false,
+      publishTo                  := Some(nexusigpublish)
+    ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
 
-  val main = Project(appName, file("."), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
-		version                    := nglVersion,			  
-    resolvers                  := nexus,
-    publishArtifact in makePom := false,
-    publishTo                  := Some(nexusigpublish)
-  ).aggregate(
-    // libs
-   	nglcommon,
-   	nglframeworkweb,
-   	ngldatatable,
-    // applications
-   	nglsq,       // 2.6
-   	nglbi,       // 
-   	nglassets,   // 2.6 - empty
-   	nglplates,   // 2.6 - compiles, partial routes
-   	ngldata,     // 2.6 - compiles, routes fail, test removed
-   	nglsub,      // 2.6 - compiles, partial routes
-   	nglreagents, // 2.6
-   	nglprojects, // 2.6
-   	ngldevguide,
-    // play migration and testing
-    nglPlayMigration,
-   	nglTesting,
-   	authentication,
-   	springPlugin,
-   	mongoPlugin
-  )
+  val main = Project(appName, file("."), settings = buildSettings)
+    .enablePlugins(play.sbt.PlayJava)
+    .settings(
+	  	version                    := nglVersion,			  
+      resolvers                  := nexus,
+      publishArtifact in makePom := false,
+      publishTo                  := Some(nexusigpublish)
+    ).aggregate(
+      // libs
+   	  nglcommon,
+     	nglframeworkweb,
+      ngldatatable,
+      // applications
+      nglsq,       
+   	  nglbi,        
+   	  nglassets,   
+     	nglplates,   
+     	ngldata,     
+   	  nglsub,      
+     	nglreagents, 
+     	nglprojects, 
+   	  ngldevguide,
+      // play migration and testing
+      nglPlayMigration,
+   	  nglTesting,
+     	authentication,
+      springPlugin,
+      mongoPlugin
+    )
 
+    // -- Javadoc generation experiment
+    
+//  lazy val foo = taskKey[Seq[Seq[File]]]("foo")
+//  lazy val sharedProjects = settingKey[Seq[ProjectReference]]("shared projects")
+//
+//  sharedProjects := Seq(
+//      nglcommon,
+//      nglframeworkweb,
+//      ngldatatable,
+//      // applications
+//      nglsq,       
+//   	  nglbi,        
+//   	  nglassets,   
+//     	nglplates,   
+//     	ngldata,     
+//   	  nglsub,      
+//     	nglreagents, 
+//     	nglprojects, 
+//   	  ngldevguide,
+//      // play migration and testing
+//      nglPlayMigration,
+//   	  nglTesting,
+//     	authentication,
+//      springPlugin,
+//      mongoPlugin
+//    )
+//
+//  foo := (Def.taskDyn {
+//    val projects = sharedProjects.value
+//    val filter = ScopeFilter(inProjects(projects: _*), inConfigurations(Compile))
+//    Def.task {
+//      val allSources = sources.all(filter).value
+//      allSources
+//    }
+//  }).value
+
+  val projectList = Seq(
+      nglcommon,
+      nglframeworkweb,
+      ngldatatable,
+      // applications
+      nglsq,       
+   	  nglbi,        
+   	  nglassets,   
+     	nglplates,   
+     	ngldata,     
+   	  nglsub,      
+     	nglreagents, 
+     	nglprojects, 
+   	  ngldevguide,
+      // play migration and testing
+      nglPlayMigration,
+   	  nglTesting,
+     	authentication,
+      springPlugin,
+      mongoPlugin
+    )
+  
+//  val coreSources =
+//       (((sources in nglcommon)        in Compile).value)
+//    ++ (((sources in nglframeworkweb)  in Compile).value)
+//    ++ ((sources in ngldatatable)     in Compile).value
+//    ++ ((sources in nglPlayMigration) in Compile).value
+//    ++ ((sources in nglTesting)       in Compile).value
+//    ++ ((sources in authentication)   in Compile).value
+//    ++ ((sources in springPlugin)     in Compile).value
+//    ++ ((sources in mongoPlugin)      in Compile).value
+    
+  // We cannot merge the docs as individual projects defines the
+  // same classes in the same packages.
+  // 
+  val fulldoc = Project("fulldoc", file("fulldoc"), settings=buildSettings)
+    .enablePlugins(play.sbt.PlayJava)
+    .settings(
+      version                    := "0.1",
+      // sources in Compile := foo,
+      // sources in (Compile, doc) <<= (sources in nglcommon)       in (Compile,doc),
+      (sources in Compile) :=   (((sources in nglcommon)        in Compile).value
+                              ++ ((sources in nglframeworkweb)  in Compile).value
+                              ++ ((sources in ngldatatable)     in Compile).value
+                              ++ ((sources in nglsq)            in Compile).value       
+//                              ++ ((sources in nglbi)            in Compile).value        
+//                              ++ ((sources in nglassets)        in Compile).value   
+//                              ++ ((sources in nglplates)        in Compile).value   
+//                              ++ ((sources in ngldata)          in Compile).value     
+//                              ++ ((sources in nglsub)           in Compile).value  
+//                              ++ ((sources in nglreagents)      in Compile).value 
+//                              ++ ((sources in nglprojects)      in Compile).value 
+//                              ++ ((sources in ngldevguide)      in Compile).value
+                              ++ ((sources in nglPlayMigration) in Compile).value
+   	                          ++ ((sources in nglTesting)       in Compile).value
+     	                        ++ ((sources in authentication)   in Compile).value
+                              ++ ((sources in springPlugin)     in Compile).value
+                              ++ ((sources in mongoPlugin)      in Compile).value),
+//      (sources in Compile) := projectList flatMap { p => ((sources in p) in Compile) },
+      // (sources in Compile) := foo.value.flatten,
+      // sources in (Compile, doc) <<= (sources in nglframeworkweb) in (Compile, doc),
+      // sources in (Compile, doc) <<= (sources in nglframeworkweb) in (Compile, doc),
+      libraryDependencies       ++= nglcommonDependencies
+    ).dependsOn(
+      nglcommon,
+      nglframeworkweb,
+      ngldatatable,
+      // applications
+      nglsq,       
+   	  nglbi,        
+   	  nglassets,   
+     	nglplates,   
+     	ngldata,     
+   	  nglsub,      
+     	nglreagents, 
+     	nglprojects, 
+   	  ngldevguide,
+      // play migration and testing
+      nglPlayMigration,
+   	  nglTesting,
+     	authentication,
+      springPlugin,
+      mongoPlugin
+    )
+     
 }

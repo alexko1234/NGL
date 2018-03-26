@@ -39,3 +39,4 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-mocha" % "1.1.2")
 
 libraryDependencies += "org.javassist" % "javassist" % "3.20.0-GA"
 
+// addSbtPlugin("com.eed3si9n" % "sbt-unidoc" % "0.4.1")

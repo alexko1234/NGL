@@ -74,8 +74,10 @@ public class CommonValidationHelper {
 	 * @return collctionName
 	 */
 	public static <T extends DBObject> boolean validateUniqueInstanceCode(ContextValidation contextValidation,
-			String code, Class<T> type, String collectionName){
-		if (null != code) {
+			                                                              String code, 
+			                                                              Class<T> type, 
+			                                                              String collectionName) {
+		if (code != null) {
 			if (MongoDBDAO.checkObjectExistByCode(collectionName, type, code)) {
 				contextValidation.addErrors(FIELD_CODE,	ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG, code);
 				return false;
@@ -192,6 +194,7 @@ public class CommonValidationHelper {
 //		return o;
 		T o = null;
 		try {
+			// TODO : fix test (isNotBlank(code))
 			if (code != "" && code != null && returnObject) {
 				o = find.findByCode(code);
 				if (o == null) {
@@ -211,7 +214,7 @@ public class CommonValidationHelper {
 			                                                             Class<T> type, 
 			                                                             String collectionName, 
 			                                                             ContextValidation contextValidation) {
-		if(required(contextValidation, code, key))
+		if (required(contextValidation, code, key))
 			validateExistInstanceCode(contextValidation, code, key, type,collectionName);
 	}
 
@@ -458,9 +461,9 @@ public class CommonValidationHelper {
 	}
 	
 	public static void validateResolutionCodes(String typeCode, Set<String> resoCodes, ContextValidation contextValidation){
-		if(null != resoCodes){
+		if (resoCodes != null) {
 			int i = 0;
-			for(String resoCode: resoCodes){
+			for (String resoCode: resoCodes) {
 				
 				List<String> typeCodes = new ArrayList<String>();
 				typeCodes.add(typeCode);
@@ -474,7 +477,7 @@ public class CommonValidationHelper {
 	}
 	
 	public static void validateResolutionCodes(ObjectType.CODE objectTypeCode, Set<String> resoCodes, ContextValidation contextValidation){
-		if(null != resoCodes){
+		if (resoCodes != null) {
 			int i = 0;
 			for(String resoCode: resoCodes){
 				if (! MongoDBDAO.checkObjectExist(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, DBQuery.and(DBQuery.is("resolutions.code", resoCode), DBQuery.is("objectTypeCode", objectTypeCode.toString())))) {
@@ -486,21 +489,21 @@ public class CommonValidationHelper {
 	}
 	
 	public static void validateCriteriaCode(String criteriaCode, ContextValidation contextValidation) {
-			String typeCode = getObjectFromContext(FIELD_TYPE_CODE, String.class, contextValidation);
-			validateCriteriaCode(typeCode, criteriaCode, contextValidation);		
+		String typeCode = getObjectFromContext(FIELD_TYPE_CODE, String.class, contextValidation);
+		validateCriteriaCode(typeCode, criteriaCode, contextValidation);		
 	}
 
 	public static void validateCriteriaCode(String typeCode, String criteriaCode, ContextValidation contextValidation) {
-		if (null != criteriaCode) {
+		if (criteriaCode != null) {
 			Query q = DBQuery.and(DBQuery.is("code", criteriaCode), DBQuery.in("typeCodes", typeCode));
-			if(!MongoDBDAO.checkObjectExist(InstanceConstants.VALUATION_CRITERIA_COLL_NAME, ValuationCriteria.class, q)){
+			if (!MongoDBDAO.checkObjectExist(InstanceConstants.VALUATION_CRITERIA_COLL_NAME, ValuationCriteria.class, q)) {
 				contextValidation.addErrors("criteriaCode", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, criteriaCode);
 			}
 		}		
 	}
 	
 	public static void validateValuation(String typeCode, Valuation valuation, ContextValidation contextValidation) {
-		if(ValidationHelper.required(contextValidation, valuation, "valuation")){
+		if (ValidationHelper.required(contextValidation, valuation, "valuation")) {
 			contextValidation.putObject(FIELD_TYPE_CODE, typeCode);
 			contextValidation.addKeyToRootKeyName("valuation");
 			valuation.validate(contextValidation);
@@ -532,10 +535,10 @@ public class CommonValidationHelper {
 		BusinessValidationHelper.validateRequiredInstanceCodes(contextValidation, projectCodes, "projectCodes",Project.class,InstanceConstants.PROJECT_COLL_NAME,false);
 	}
 	
-	public static void validateProjectCodes(Set<String> projectCodes,ContextValidation contextValidation){
-		List<String> listProject=null;
+	public static void validateProjectCodes(Set<String> projectCodes, ContextValidation contextValidation) {
+		List<String> listProject = null;
 		if (CollectionUtils.isNotEmpty(projectCodes)) {
-			listProject=new ArrayList<String>();
+			listProject = new ArrayList<String>();
 			listProject.addAll(projectCodes);
 		}
 		validateProjectCodes(listProject,contextValidation);
@@ -561,10 +564,9 @@ public class CommonValidationHelper {
 	public static void validateSampleCode(String sampleCode, String projectCode, ContextValidation contextValidation) {
 		if(ValidationHelper.required(contextValidation, sampleCode, "sampleCode")) {
 			Sample sample =  MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,  sampleCode);
-			if (sample == null)  {
+			if (sample == null) {
 				contextValidation.addErrors("sampleCode", ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, sampleCode);
-			}
-			else {
+			} else {
 				if ((sample.projectCodes == null) || (!sample.projectCodes.contains(projectCode))) { 
 					contextValidation.addErrors("projectCode", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, projectCode);
 				}
@@ -603,8 +605,7 @@ public class CommonValidationHelper {
 	}
 	*/
 
-	public static void validateExperimentTypeCodes(
-			List<String> experimentTypeCodes, ContextValidation contextValidation) {
+	public static void validateExperimentTypeCodes(List<String> experimentTypeCodes, ContextValidation contextValidation) {
 		if(experimentTypeCodes!=null){
 			for(String s: experimentTypeCodes){
 				BusinessValidationHelper.validateExistDescriptionCode(contextValidation, s, "experimentTypeCodes", ExperimentType.find);
@@ -614,8 +615,8 @@ public class CommonValidationHelper {
 
 	public static void validateExperimentTypeCodes(Set<String> experimentTypeCodes, ContextValidation contextValidation) {
 		List<String> arrayExperiments=null;
-		if(CollectionUtils.isNotEmpty(experimentTypeCodes)){
-			arrayExperiments=new ArrayList<String>();
+		if (CollectionUtils.isNotEmpty(experimentTypeCodes)) {
+			arrayExperiments = new ArrayList<String>();
 			arrayExperiments.addAll(experimentTypeCodes);
 		}
 		validateExperimentTypeCodes( arrayExperiments,contextValidation); 
