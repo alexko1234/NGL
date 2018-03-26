@@ -318,7 +318,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		if (form.datatable) {
 			// return ok(getUDTChunk(all)).as("application/json");
 			// return ok(MongoStreamer.streamUDT(all)).as("application/json");
-			return MongoStreamer.okStreamUDT(Iterators.size(all.iterator()), all);			
+			return MongoStreamer.okStream(all);			
 		} else if(form.list) {
 			//return ok(getChunk(all)).as("application/json");
 			// return ok(MongoStreamer.stream(all)).as("application/json");
