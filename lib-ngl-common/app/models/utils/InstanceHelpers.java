@@ -540,6 +540,7 @@ public class InstanceHelpers {
 					if(null != atm.outputContainerUseds){
 						atm.outputContainerUseds
 							.stream()
+							.filter(ocu -> ocu.contents != null)
 							.map(ocu -> ocu.contents)
 							.flatMap(List::stream)
 							.filter(content -> sample.code.equals(content.sampleCode) && sample.projectCodes.contains(content.projectCode) )
