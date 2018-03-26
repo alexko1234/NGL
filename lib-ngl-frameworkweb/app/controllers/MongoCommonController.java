@@ -312,13 +312,14 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 	protected Result nativeMongoDBAggregate(ListForm form) {
 		MongoCollection collection = MongoDBPlugin.getCollection(collectionName);
 		Aggregate.ResultsIterator<T> all = collection.aggregate(form.reportingQuery)
+				. 
 				.options(AggregationOptions.builder().outputMode( AggregationOptions.OutputMode.CURSOR).build())
 				.as(type);
 		
 		if (form.datatable) {
 			// return ok(getUDTChunk(all)).as("application/json");
 			// return ok(MongoStreamer.streamUDT(all)).as("application/json");
-			return MongoStreamer.okStreamUDT(Iterators.size(all.iterator()), all);			
+			return MongoStreamer.okStream(all);			
 		} else if(form.list) {
 			//return ok(getChunk(all)).as("application/json");
 			// return ok(MongoStreamer.stream(all)).as("application/json");

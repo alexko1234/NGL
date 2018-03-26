@@ -362,7 +362,11 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                             params: this.getParams(params),
                             datatable: this
                         }).then(function(resp) {
-                            resp.config.datatable._setData(resp.data.data, resp.data.recordsNumber);
+                        	if(angular.isArray(resp.data)){
+                        		resp.config.datatable._setData(resp.data, resp.data.length);
+                        	}else{
+                        		resp.config.datatable._setData(resp.data.data, resp.data.recordsNumber);
+                        	}
                             that.computeDisplayResultTimeOut.then(function() {
                                 that.setSpinner(false);
                             });

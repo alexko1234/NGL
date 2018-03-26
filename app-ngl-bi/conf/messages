@@ -46,7 +46,7 @@ search.tab.addcolumns = Colonnes supplémentaires
 search.tab.addfilters = Filtres supplémentaires
 search.tab.filters = Filtres
 search.tab.expSearchMode = Experimental search mode
-
+search.tab.aggregateSearchMode = Aggregate query
 
 valuation.menu = Evaluation
 valuation.menu.runs = Runs
