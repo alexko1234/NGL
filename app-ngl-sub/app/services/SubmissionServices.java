@@ -22,6 +22,10 @@ import java.util.concurrent.TimeoutException;
 
 
 
+
+
+
+
 //import play.Logger;
 import validation.ContextValidation;
 import workflows.sra.submission.ConfigurationWorkflows;
@@ -56,9 +60,13 @@ import models.sra.submit.util.SraParameter;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.ngl.dao.api.sra.AbstractSampleAPI;
 import fr.cea.ig.ngl.dao.api.sra.AbstractStudyAPI;
+import fr.cea.ig.ngl.dao.api.sra.ExternalSampleAPI;
 import fr.cea.ig.ngl.dao.api.sra.ExternalStudyAPI;
+import fr.cea.ig.ngl.dao.api.sra.SampleAPI;
 import fr.cea.ig.ngl.dao.api.sra.StudyAPI;
+import fr.cea.ig.ngl.dao.samples.SamplesAPI;
 import fr.cea.ig.play.NGLContext;
 
 import java.io.File;
@@ -93,6 +101,10 @@ import org.xml.sax.SAXException;
 
 
 
+
+
+
+
 // import play.api.modules.spring.Spring;
 // import play.libs.F.Promise;
 // import play.libs.ws.WS;
@@ -106,7 +118,7 @@ public class SubmissionServices {
 	private static final play.Logger.ALogger logger = play.Logger.of(SubmissionServices.class);
 
 	public static final String initialStateCode = "NONE";
-	public static final String startStateCode = "N";
+	public static final String startStateCode   = "N";
 	
 	// final ConfigurationWorkflows configWorkflows  = Spring.get BeanOfType(ConfigurationWorkflows.class);
 	// final SubmissionWorkflows submissionWorkflows = Spring.get BeanOfType(SubmissionWorkflows.class);
@@ -119,7 +131,12 @@ public class SubmissionServices {
 	private final StudyAPI studyAPI;
 	private final AbstractStudyAPI abstractStudyAPI;
 	private final ExternalStudyAPI externalStudyAPI;
-
+	private final SampleAPI sampleAPI;
+	private final AbstractSampleAPI abstractSampleAPI;
+	private final ExternalSampleAPI externalSampleAPI;
+	private final SamplesAPI laboSampleAPI;
+	
+	
 //	@Inject
 //	public SubmissionServices(ConfigurationWorkflows configWorkflows, 
 //			                  SubmissionWorkflows submissionWorkflows, 
@@ -136,31 +153,24 @@ public class SubmissionServices {
 			                  NGLContext ctx,
 			                  StudyAPI studyAPI,
 			                  AbstractStudyAPI abstractStudyAPI,
-			                  ExternalStudyAPI externalStudyAPI) {
+			                  ExternalStudyAPI externalStudyAPI,
+			                  SampleAPI sampleAPI,
+			                  AbstractSampleAPI abstractSampleAPI,
+			                  ExternalSampleAPI externalSampleAPI,
+			                  SamplesAPI laboSampleAPI) {
 		this.submissionWorkflows       = submissionWorkflows;
 		this.submissionWorkflowsHelper = submissionWorkflowsHelper;
 		this.ctx = ctx;
 		this.studyAPI = studyAPI;
 		this.abstractStudyAPI = abstractStudyAPI;
 		this.externalStudyAPI = externalStudyAPI;
+		this.sampleAPI = sampleAPI;
+		this.abstractSampleAPI = abstractSampleAPI;
+		this.externalSampleAPI = externalSampleAPI;
+		this.laboSampleAPI = laboSampleAPI;
+
 	}
-	
-	public String updateLaboratorySampleForNcbiScientificName(String taxonCode, ContextValidation contextValidation) throws SraException {		
-		try {
-			String scientificName = getNcbiScientificName(new Integer(taxonCode));
-			// Met a jour dans la base les laboratorySample qui n'ont pas encore de ncbiScientificName.
-			// Pas de gestion des incoherences de mise à jour !!!
-			MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,
-					DBQuery.is("taxonCode", taxonCode).notExists("ncbiScientificName"),
-					DBUpdate.set("ncbiScientificName", scientificName).set("traceInformation.modifyUser", contextValidation.getUser()).set("traceInformation.modifyDate", new Date()));
-			return scientificName;
-			
-		} catch (XPathExpressionException | IOException | InterruptedException | ExecutionException | TimeoutException e) {
-			e.printStackTrace();
-			throw new SraException("impossible de recuperer le scientificName au ncbi pour le taxonId '" + taxonCode + "' : \n" + e.getMessage());
-		}
-	}
-	
+
 	public String initReleaseSubmission(String studyCode, ContextValidation contextValidation) throws SraException {
 		System.out.println("Dans SubmissionServices.java.initReleaseSubmission");
 		String user = contextValidation.getUser();
@@ -239,8 +249,8 @@ public class SubmissionServices {
 		return submission.code;
 	}
 	
-	private Submission createSubmissionEntityforRelease(Study study, String user, List<String> projectCodes) throws SraException{
-		
+	
+	private Submission createSubmissionEntityforRelease(Study study, String user, List<String> projectCodes) throws SraException {
 		Submission submission = null;
 		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
 		Date courantDate = new java.util.Date();
@@ -285,8 +295,9 @@ public class SubmissionServices {
 		return submission;
 	}
 	
+	public String initPrimarySubmission(List<String> readSetCodes, String studyCode, String configCode, String acStudy, String acSample, Map<String, UserCloneType>mapUserClones, ContextValidation contextValidation) throws SraException, IOException {
 	
-	public String initPrimarySubmission(List<String> readSetCodes, String studyCode, String configCode, String acStudy, String acSample, Map<String, UserCloneType>mapUserClones, Map<String, UserExperimentType> mapUserExperiments, Map< String, UserSampleType> mapUserSamples, ContextValidation contextValidation) throws SraException, IOException {
+	//public String initPrimarySubmission(List<String> readSetCodes, String studyCode, String configCode, String acStudy, String acSample, Map<String, UserCloneType>mapUserClones, Map<String, UserExperimentType> mapUserExperiments, Map< String, UserSampleType> mapUserSamples, ContextValidation contextValidation) throws SraException, IOException {
 		//public String initNewSubmission(List<String> readSetCodes, String studyCode, String configCode, Map<String, UserCloneType>mapUserClones, Map<String, UserExperimentType> mapUserExperiments, ContextValidation contextValidation) throws SraException, IOException {
 		// Cree en base un objet submission avec state.code=N, met dans la base la configuration avec state.code='U-SUB'
 		// met les readSet avec state.code = 'N', les experiments avec state.code='N', les samples à soumettre 
@@ -303,8 +314,6 @@ public class SubmissionServices {
 		// de quelques contraintes en lien avec soumission.
 		
 
-		System.out.println("\ntaille de la map des userClone dans init = " + mapUserClones.size());
-		
 
 		String user = contextValidation.getUser();
 		
@@ -393,8 +402,9 @@ public class SubmissionServices {
 		if (config.strategySample.equalsIgnoreCase("strategy_internal_sample")) {
 			if (StringUtils.isNotBlank(acSample)) {
 				//System.out.println ("Dans init, cas strategy_internal_sample");
-				uniqSample = MongoDBDAO.findOne(InstanceConstants.SRA_SAMPLE_COLL_NAME,
-						Sample.class, DBQuery.and(DBQuery.is("accession", acSample)));
+//				uniqSample = MongoDBDAO.findOne(InstanceConstants.SRA_SAMPLE_COLL_NAME,
+//						Sample.class, DBQuery.and(DBQuery.is("accession", acSample)));
+				uniqSample = sampleAPI.findOne(DBQuery.is("accession", acSample));
 			} /*else {
 				if (mapUserClones== null || mapUserClones.isEmpty()){
 					throw new SraException("Configuration " + config.code + "avec configuration.strategy_sample='strategy_external_sample' incompatible avec mapUserClone non renseigné");
@@ -414,7 +424,7 @@ public class SubmissionServices {
 					throw new SraException("Le readSet " + readSetCode + " n'existe pas dans database");
 				} else if ((readSet.submissionState == null)||(StringUtils.isBlank(readSet.submissionState.code))) {
 					throw new SraException("Le readSet " + readSet.code + " n'a pas de submissionState.code");
-				} else if(!readSet.submissionState.code.equalsIgnoreCase("NONE")){
+				} else if(!readSet.submissionState.code.equalsIgnoreCase(initialStateCode)){
 					throw new SraException("Le readSet " + readSet.code + " a un submissionState.code à la valeur " + readSet.submissionState.code);
 				} else {
 					readSets.add(readSet);
@@ -464,7 +474,9 @@ public class SubmissionServices {
 			// Recuperer scientificName via NCBI pour ce readSet. Le scientificName est utilisé dans la construction
 			// des samples et des experiments 
 			String laboratorySampleCode = readSet.sampleCode;
-			models.laboratory.sample.instance.Sample laboratorySample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, models.laboratory.sample.instance.Sample.class, laboratorySampleCode);
+			//TODO
+//			models.laboratory.sample.instance.Sample laboratorySample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, models.laboratory.sample.instance.Sample.class, laboratorySampleCode);
+			models.laboratory.sample.instance.Sample laboratorySample = laboSampleAPI.get(laboratorySampleCode);
 			String taxonId = laboratorySample.taxonCode;
 			String scientificName = laboratorySample.ncbiScientificName;
 			if (StringUtils.isBlank(scientificName)){
@@ -576,8 +588,9 @@ public class SubmissionServices {
 				Sample sample= null;
 
 				if (StringUtils.isNotBlank(acSample)){
-					sample = MongoDBDAO.findOne(InstanceConstants.SRA_SAMPLE_COLL_NAME,
-							Sample.class, DBQuery.and(DBQuery.is("accession", acSample)));
+//					sample = MongoDBDAO.findOne(InstanceConstants.SRA_SAMPLE_COLL_NAME,
+//							Sample.class, DBQuery.and(DBQuery.is("accession", acSample)));
+					sample = sampleAPI.getByCode(acSample);
 					if (sample == null){
 						// bug
 					}
@@ -589,36 +602,17 @@ public class SubmissionServices {
 					// Renseigner l'objet submission :
 					// Verifier que l'objet sample n'a jamais ete soumis et n'est pas en cours de soumission
 					System.out.println("sample = " + sample + " et state="+ sample.state.code);
-					if (!("F-SUB").equalsIgnoreCase(sample.state.code) && !("N").equalsIgnoreCase(sample.state.code)) {
+					if (!("F-SUB").equalsIgnoreCase(sample.state.code) && !(startStateCode).equalsIgnoreCase(sample.state.code)) {
 						throw new SraException("Tentative d'utilisation dans la soumission du sample "+ sample.code +" en cours de soumission avec state.code==" + sample.state.code);
 					}
-					// surcharger le sample si besoin pour les champs autorises :
-					//----------------------------------------------------------
-					UserSampleType userSample = mapUserSamples.get(sample.code);
-					if (userSample != null) {				
-						if (StringUtils.isNotBlank(userSample.getAnonymizedName())){
-							sample.anonymizedName = userSample.getAnonymizedName();
-						}
-						if (StringUtils.isNotBlank(userSample.getTitle())){
-							sample.title = userSample.getTitle();
-						}
-						if (StringUtils.isNotBlank(userSample.getDescription())){
-						sample.description = userSample.getDescription();
-						}
-						if (StringUtils.isNotBlank(userSample.getCommonName())){
-							sample.commonName = userSample.getCommonName();
-						}	
-						// Le champs scientificName est rempli automatiquement et n'est pas surchargeable.
-					}
-				
-}
+				}
 				// Mise a jour de l'objet submission pour les samples references
 				if(!submission.refSampleCodes.contains(sample.code)){
 					submission.refSampleCodes.add(sample.code);
 				}
 				// Mise a jour de l'objet submission pour les samples à soumettre :
 				//------------------------------------------------------------------
-				if (("N").equalsIgnoreCase(sample.state.code)){
+				if ((startStateCode).equalsIgnoreCase(sample.state.code)){
 					if (! submission.sampleCodes.contains(sample.code)){
 						submission.sampleCodes.add(sample.code);
 					}
@@ -709,7 +703,7 @@ public class SubmissionServices {
 				
 				// Mise a jour de l'objet submission pour le study à soumettre :// normalement deja fait dans createSubmissionEntity
 				//--------------------------------------------------------------
-				if (StringUtils.isBlank(acStudy) && ("NONE").equalsIgnoreCase(study.state.code)) {
+				if (StringUtils.isBlank(acStudy) && (initialStateCode.equalsIgnoreCase(study.state.code))) {
 					submission.studyCode = study.code;
 				}
 			}	
@@ -717,7 +711,7 @@ public class SubmissionServices {
 			// Ajouter l'experiment avec le statut forcement à 'N' à l'objet submission :
 			// Mise à jour de l'objet submission avec les experiments à soumettre :
 			//---------------------------------------------------------------------
-			if (experiment.state.code.equalsIgnoreCase("N")) { 
+			if (experiment.state.code.equalsIgnoreCase(startStateCode)) { 
 				if(!submission.experimentCodes.contains(experiment.code)){
 					listExperiments.add(experiment);
 					submission.experimentCodes.add(experiment.code);
@@ -748,9 +742,14 @@ public class SubmissionServices {
 		// On ne sauvent que les samples qui n'existent pas dans la base donc des Samples avec state.code='N'
 		// ou bien des ExternalSample avec state.code='F-SUB'
 		for (AbstractSample sampleElt: listAbstractSamples) {
-			if (!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class, "code", sampleElt.code)){	
+//			if (!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class, "code", sampleElt.code)){	
+//				sampleElt.validate(contextValidation);
+//				MongoDBDAO.save(InstanceConstants.SRA_SAMPLE_COLL_NAME, sampleElt);
+//				System.out.println ("ok pour sauvegarde dans la base du sample " + sampleElt.code);
+//			}
+			if (!abstractSampleAPI.checkObjectExist("code", sampleElt.code)){	
 				sampleElt.validate(contextValidation);
-				MongoDBDAO.save(InstanceConstants.SRA_SAMPLE_COLL_NAME, sampleElt);
+				abstractSampleAPI.save(sampleElt);
 				System.out.println ("ok pour sauvegarde dans la base du sample " + sampleElt.code);
 			}
 		}
@@ -782,10 +781,10 @@ public class SubmissionServices {
 			if (readSet == null){
 				throw new SraException("readSet " + readSet.code + " n'existe pas dans database");
 			} else {
-				readSet.submissionState.code = "N";
+				readSet.submissionState.code = startStateCode;
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,
 						DBQuery.is("code", readSet.code),
-						DBUpdate.set("submissionState.code", "N").set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date()));
+						DBUpdate.set("submissionState.code", startStateCode).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date()));
 			}
 		}		
 	
@@ -1022,7 +1021,7 @@ public class SubmissionServices {
 		submission.code = SraCodeHelper.getInstance().generateSubmissionCode(config.projectCodes);
 		submission.creationDate = courantDate;
 		System.out.println("submissionCode="+ submission.code);
-		submission.state = new State("N", user);
+		submission.state = new State(startStateCode, user);
 		submission.release = false; // soumission toujours en confidentielle et levee de confidentialite du
 		                            // study par l'utilisateur via interface.
 		submission.configCode = config.code;
@@ -1057,7 +1056,7 @@ public class SubmissionServices {
 				if (! submission.refStudyCodes.contains("study.code")){
 					submission.refStudyCodes.add(study.code);
 				}
-				if (study.state.code.equals("NONE")) {
+				if (study.state.code.equals(initialStateCode)) {
 					submission.studyCode = study.code; // studyCode à soumettre
 				
 				} else if (study.state.code.equals("F-SUB")) {
@@ -1121,7 +1120,8 @@ public class SubmissionServices {
 		// Recuperer pour chaque readSet les objets de laboratory qui existent forcemment dans mongoDB, 
 		// et qui permettront de renseigner nos objets SRA :
 		String laboratorySampleCode = readSet.sampleCode;
-		models.laboratory.sample.instance.Sample laboratorySample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, models.laboratory.sample.instance.Sample.class, laboratorySampleCode);
+//		models.laboratory.sample.instance.Sample laboratorySample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, models.laboratory.sample.instance.Sample.class, laboratorySampleCode);
+		models.laboratory.sample.instance.Sample laboratorySample = laboSampleAPI.get(laboratorySampleCode);
 		String laboratorySampleName = laboratorySample.name;
 
 		String clone = laboratorySample.referenceCollab;
@@ -1134,12 +1134,15 @@ public class SubmissionServices {
 		Sample sample = null;
 		// Si sample existe, prendre l'existant, sinon en creer un nouveau
 		//if (services.SraDbServices.checkCodeSampleExistInSampleCollection(codeSample)) {
-		if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, "code", codeSample)){
-			//System.out.println("Recuperation du sample "+ codeSample);
-			sample = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.submit.common.instance.Sample.class, codeSample);			
-			//System.out.println(sample.clone);
-			//System.out.println(sample.taxonId);
-			//System.out.println(sample.title);
+//		if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, "code", codeSample)){
+//			System.out.println("Recuperation du sample "+ codeSample);
+//			sample = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.submit.common.instance.Sample.class, codeSample);			
+//			System.out.println(sample.clone);
+//			System.out.println(sample.taxonId);
+//			System.out.println(sample.title);
+		if (sampleAPI.checkObjectExist("code", codeSample)){
+			sample = sampleAPI.getByCode(codeSample);			
+
 		} else {
 			//System.out.println("Creation du sample '"+ codeSample + "'");
 			// creation du sample :
@@ -1150,7 +1153,7 @@ public class SubmissionServices {
 			sample.scientificName = scientificName;
 			sample.clone = laboratorySample.referenceCollab;
 			sample.projectCode = readSet.projectCode;
-			sample.state = new State("N", user);
+			sample.state = new State(startStateCode, user);
 			sample.traceInformation.setTraceInformation(user);			
 		}
 		
@@ -1339,8 +1342,9 @@ public class SubmissionServices {
 			}
 		}
 		//System.out.println("valeur de experiment.libLayoutExpLength"+ experiment.libraryLayoutNominalLength);			
-		experiment.state = new State("N", user); 
+		experiment.state = new State(startStateCode, user); 
 		String laboratorySampleCode = readSet.sampleCode;
+		//TODO
 		models.laboratory.sample.instance.Sample laboratorySample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, models.laboratory.sample.instance.Sample.class, laboratorySampleCode);
 		String taxonId = laboratorySample.taxonCode;
 		//System.out.println("sampleCode=" +laboratorySampleCode); 
@@ -1646,7 +1650,7 @@ public class SubmissionServices {
 					// remettre les readSet dans la base avec submissionState à "NONE":
 					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,
 							DBQuery.is("code", experiment.readSetCode),
-							DBUpdate.set("submissionState.code", "NONE").set("traceInformation.modifyUser", contextValidation.getUser()).set("traceInformation.modifyDate", new Date()));
+							DBUpdate.set("submissionState.code", initialStateCode).set("traceInformation.modifyUser", contextValidation.getUser()).set("traceInformation.modifyDate", new Date()));
 					//System.out.println("submissionState.code remis à 'N' pour le readSet "+experiment.readSetCode);
 
 					List <Submission> submissionList = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.in("experimentCodes", experimentCode)).toList();
@@ -1657,7 +1661,7 @@ public class SubmissionServices {
 						throw new SraException(experimentCode + " utilise par plusieurs objets submissions");	
 					} else {
 						// todo : verifier qu'on ne detruit que des experiments en new ou uservalidate
-						if ("N".equals(experiment.state.code) ||"V-SUB".equals(experiment.state.code)){
+						if (startStateCode.equals(experiment.state.code) ||"V-SUB".equals(experiment.state.code)){
 							MongoDBDAO.deleteByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, experimentCode);
 							//System.out.println("deletion dans base pour experiment "+experimentCode);
 						} else {
@@ -1690,7 +1694,7 @@ public class SubmissionServices {
 		if (submissionList.size() <= 1) {
 			MongoDBDAO.update(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, 
 					DBQuery.is("code", submission.configCode),
-					DBUpdate.set("state.code", "N").set("traceInformation.modifyUser", contextValidation.getUser()).set("traceInformation.modifyDate", new Date()));	
+					DBUpdate.set("state.code", startStateCode).set("traceInformation.modifyUser", contextValidation.getUser()).set("traceInformation.modifyDate", new Date()));	
 			System.out.println("state.code remis à 'N' pour configuration "+submission.configCode);
 		}
 
@@ -1700,8 +1704,8 @@ public class SubmissionServices {
 			if (submissionList2.size() == 1) {
 				MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
 						DBQuery.is("code", submission.studyCode),
-						DBUpdate.set("state.code", "N").set("traceInformation.modifyUser", contextValidation.getUser()).set("traceInformation.modifyDate", new Date()));	
-				System.out.println("state.code remis à 'N' pour study "+submission.studyCode);
+						DBUpdate.set("state.code", startStateCode).set("traceInformation.modifyUser", contextValidation.getUser()).set("traceInformation.modifyDate", new Date()));	
+				System.out.println("state.code remis à N pour study "+submission.studyCode);
 			}	
 		}
 

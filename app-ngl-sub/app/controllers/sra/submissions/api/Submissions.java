@@ -64,26 +64,9 @@ public class Submissions extends DocumentController<Submission>{
 	private static final play.Logger.ALogger logger = play.Logger.of(Submissions.class);
 	
 	private final static List<String> authorizedUpdateFields = Arrays.asList("accession","submissionDate", "xmlSubmission", "xmlStudys", "xmlSamples", "xmlExperiments", "xmlRuns");
-
 	private Map<String, UserCloneType>      mapUserClones      = new HashMap<String, UserCloneType>();
-	private Map<String, UserExperimentType> mapUserExperiments = new HashMap<String, UserExperimentType>();
-	private Map<String, UserSampleType>     mapUserSamples     = new HashMap<String, UserSampleType>();
-
-	// final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
-	// final static Form<Submission> submissionForm = form(Submission.class);
-	// final static Form<File> pathForm = form(File.class);
-	// declaration d'une instance submissionCreationForm qui permet de recuperer les
-	// données du formulaire initSubmission pour realiser la creation de la soumission => utilisee dans save()
-	// final static Form<SubmissionsCreationForm> submissionsCreationForm = form(SubmissionsCreationForm.class);
-	// declaration d'une instance submissionSearchForm qui permet de recuperer la liste des soumissions => utilisee dans list()
-	// final static Form<SubmissionsSearchForm> submissionsSearchForm = form(SubmissionsSearchForm.class);
-	// final static Form<SubmissionsFileForm> submissionsACForm = form(SubmissionsFileForm.class);
-	// final SubmissionWorkflows subWorkflows = Spring.get BeanOfType(SubmissionWorkflows.class);
-	// final static Form<State> stateForm = form(State.class);
-
 	private final Form<QueryFieldsForm>         updateForm;
 	private final Form<Submission>              submissionForm;
-	// private final Form<File>            pathForm;
 	private final Form<SubmissionsCreationForm> submissionsCreationForm;
 	private final Form<SubmissionsSearchForm>   submissionsSearchForm;
 	private final Form<SubmissionsFileForm>     submissionsACForm; 
@@ -134,11 +117,9 @@ public class Submissions extends DocumentController<Submission>{
 	}
 
 	private Query getQuery(SubmissionsSearchForm form) {
-
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
-
-		if (CollectionUtils.isNotEmpty(form.projCodes)) { //
+		if (CollectionUtils.isNotEmpty(form.projCodes)) { 
 			queries.add(DBQuery.in("projectCodes", form.projCodes)); // doit pas marcher car pour state.code
 			// C'est une valeur qui peut prendre une valeur autorisee dans le formulaire. Ici on veut que 
 			// l'ensemble des valeurs correspondent à l'ensemble des valeurs du formulaire independamment de l'ordre.
@@ -209,11 +190,9 @@ public class Submissions extends DocumentController<Submission>{
 			}	
 		} else { //update only some authorized properties
 			ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
-			
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
-			
 			if (!ctxVal.hasErrors()) {
 				updateObject(DBQuery.and(DBQuery.is("code", code)), 
 						getBuilder(submissionInput, queryFieldsForm.fields).set("traceInformation", getUpdateTraceInformation(submission.traceInformation)));
@@ -227,7 +206,6 @@ public class Submissions extends DocumentController<Submission>{
 	}
 
 	public Result updateState(String code) {
-		
 		//Get Submission from DB 
 		System.out.println("Dans Submissions.updateState, submission.code="+ code);
 		Submission submission = getSubmission(code); // ou bien Submission submission2 = getObject(code);
@@ -256,7 +234,6 @@ public class Submissions extends DocumentController<Submission>{
 	public Result createXml(String code) {
 		//Get Submission from DB 
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, code);
-
 		// declaration d'un filledForm uniquement pour utiliser messages.addDetails au niveau des javascript et 
 		// pouvoir afficher l'ensemble des erreurs.
 		//Form initialise avec l'objet submission car pas d'objet submission dans le body
@@ -264,7 +241,6 @@ public class Submissions extends DocumentController<Submission>{
 		// Form<Submission> filledForm = /*Form.*/form(Submission.class);
 		// filledForm.fill(submission);
 		Form<Submission> filledForm = getFilledForm(submissionForm, Submission.class);
-
 		if (submission == null) {
 			//return badRequest("Submission with code "+code+" not exist");
 			filledForm.reject("Submission " + code," not exist");  // si solution filledForm.reject
@@ -294,8 +270,6 @@ public class Submissions extends DocumentController<Submission>{
 		}
 		Form<SubmissionsFileForm> submissionsACFilledForm = filledFormQueryString(submissionsACForm, SubmissionsFileForm.class);
 		SubmissionsFileForm submissionsACForm = submissionsACFilledForm.get();
-
-
 		//Logger.debug("filledForm "+filledForm);
 		File ebiFileAc =new File(submissionsACForm.fileName);
 		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser());
@@ -353,22 +327,14 @@ public class Submissions extends DocumentController<Submission>{
 	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 15000 * 1024)
 	@BodyParser.Of(value = fr.cea.ig.play.IGBodyParsers.Json5MB.class)
 	public Result save() throws SraException, IOException {
-
-		// play 2.6: This should not be needed as the body parser should fail if the limit is exceeeded
-		//if(request().body().isMaxSizeExceeded()){
-		//	return badRequest("Max size exceeded");
-		//}
-
 		Form<SubmissionsCreationForm> filledForm = getFilledForm(submissionsCreationForm, SubmissionsCreationForm.class);
 		logger.debug("filledForm "+filledForm);
 		SubmissionsCreationForm submissionsCreationForm = filledForm.get();
 		logger.debug("readsets "+submissionsCreationForm.readSetCodes);
-
 		String user = getCurrentUser();
 		ContextValidation contextValidation = new ContextValidation(user, filledForm.errors());
 		contextValidation.setCreationMode();
 		contextValidation.getContextObjects().put("type", "sra");
-
 		String submissionCode;
 		try {
 			if (StringUtils.isBlank(submissionsCreationForm.base64UserFileExperiments)) {
@@ -386,7 +352,7 @@ public class Submissions extends DocumentController<Submission>{
 			logger.debug("Read base64UserFileExperiments");
 			InputStream inputStreamUserFileExperiments = Tools.decodeBase64(submissionsCreationForm.base64UserFileExperiments);
 			UserExperimentTypeParser userExperimentsParser = new UserExperimentTypeParser();
-			mapUserExperiments = userExperimentsParser.loadMap(inputStreamUserFileExperiments);		
+			//mapUserExperiments = userExperimentsParser.loadMap(inputStreamUserFileExperiments);		
 			/*for (Iterator<Entry<String, UserExperimentType>> iterator = mapUserExperiments.entrySet().iterator(); iterator.hasNext();) {
 				Entry<String, UserExperimentType> entry = iterator.next();
 				System.out.println("  cle de exp = '" + entry.getKey() + "'");
@@ -397,12 +363,7 @@ public class Submissions extends DocumentController<Submission>{
 			}*/
 			logger.debug("Read base64UserFileSamples");
 			InputStream inputStreamUserFileSamples = Tools.decodeBase64(submissionsCreationForm.base64UserFileSamples);
-			UserSampleTypeParser userSamplesParser = new UserSampleTypeParser();
-			mapUserSamples = userSamplesParser.loadMap(inputStreamUserFileSamples);		
-			for (Iterator<Entry<String, UserSampleType>> iterator = mapUserSamples.entrySet().iterator(); iterator.hasNext();) {
-				Entry<String, UserSampleType> entry = iterator.next();
-				System.out.println("       title : '" + entry.getValue().getTitle()+  "'");
-			}			
+			UserSampleTypeParser userSamplesParser = new UserSampleTypeParser();		
 			logger.debug("Read base64UserFileClonesToAc");
 			InputStream inputStreamUserFileClonesToAc = Tools.decodeBase64(submissionsCreationForm.base64UserFileClonesToAc);
 			UserCloneTypeParser userClonesParser = new UserCloneTypeParser();
@@ -427,18 +388,12 @@ public class Submissions extends DocumentController<Submission>{
 				// remplir la liste readSetCodes
 				// à partir de la selection de readset des utilisateurs
 			}
-
-			//String codeReadSet1 = "BCZ_BGOSW_2_H9M6KADXX.IND15"; 
-			//String codeReadSet2 = "BCZ_BIOSW_2_H9M6KADXX.IND19"; 
-			// SubmissionServices submissionServices = new SubmissionServices();
-			//submissionCode = submissionServices.initNewSubmission(readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, mapUserClones, mapUserExperiments, mapUserSamples, contextValidation);
-			submissionCode = submissionServices.initPrimarySubmission(readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, submissionsCreationForm.acStudy,submissionsCreationForm.acSample, mapUserClones, mapUserExperiments, mapUserSamples, contextValidation);
+			submissionCode = submissionServices.initPrimarySubmission(readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, submissionsCreationForm.acStudy,submissionsCreationForm.acSample, mapUserClones, contextValidation);
 			if (contextValidation.hasErrors()) {
 				contextValidation.displayErrors(logger);
 				// return badRequest(filledForm.errors-AsJson());
 				return badRequest(errorsAsJson(contextValidation.getErrors()));
 			}	
-
 		} catch (SraException e) {
 			contextValidation.addErrors("save submission ", e.getMessage()); // si solution avec ctxVal
 			// return badRequest(filledForm.errors-AsJson());
