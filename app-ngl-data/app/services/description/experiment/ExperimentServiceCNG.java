@@ -1126,8 +1126,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		propertyDefinitions.add(newPropertiesDefinition("Profil de migration", "migrationProfile", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, false, null, null, 				
 				"img", 14, false, null, null));
 		
-		// 07/03/2018 NGL-1859: propriété pour demander a l'utilisateur s'il faut copier concentration/quantité
-		// 12/03/2018 si on met required=true on ne pas utiliser la valeur false du booleen !!!!
+		// 07/03/2018 NGL-1859: propriété pour demander a l'utilisateur s'il faut copier concentration (par defaut TRUE)
 		propertyDefinitions.add(newPropertiesDefinition("Copier concentration dans concentration finale du container ?", "copyConcentration", LevelService.getLevels(Level.CODE.Experiment), Boolean.class, true, null,
 				null, "single",15, true,"true", null));
 		
@@ -1563,7 +1562,11 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),
 				MeasureUnit.find.findByCode("ng/µL"),
 				MeasureUnit.find.findByCode("ng/µL"),
-				"single", 13, true, null, null));        //////////position a definir...
+				"single", 13, true, null, null));  
+		
+		// FDS ajout 26/03/2018 NGL-1970: propriété pour demander a l'utilisateur s'il faut copier concentration (par defaut TRUE)
+		propertyDefinitions.add(newPropertiesDefinition("Copier concentration dans concentration finale du container ?", "copyConcentration", LevelService.getLevels(Level.CODE.Experiment), Boolean.class, true, null,
+				null, "single",15, true,"true", null));
 		
 		return propertyDefinitions;
 	}
