@@ -213,9 +213,6 @@ public class MongoStreamer {
 	public static <T extends DBObject> Result okStream(MongoCursor<T> all) {
 		return Streamer.okStream(stream(all)); 
 	}
-	public static <T> Result okStream(Iterator<T> all) {
-		return Streamer.okStream(stream(all)); 
-	}
 	public static <T> Result okStream(Iterable<T> all) {
 		return Streamer.okStream(stream(all)); 
 	}
