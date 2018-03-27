@@ -1,6 +1,7 @@
 package fr.cea.ig.lfw.utils;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -66,6 +67,44 @@ public class Iterables {
 			for (A a : i)
 				b = f.apply(b, a);
 		return b;
+	}
+	
+	// Insert the fold result in the stream itself
+	public static <A,B> ZenIterable<A> foldlIn(Iterable<A> i, B b, BiFunction<B,A,B> f, Function<B,A> post) {
+		ZenIterable<A> fi = new ZenIterable<A>() {
+
+			@Override
+			public Iterator<A> iterator() {
+				return new Iterator<A>() {
+					
+					private B acc = b;
+					private Iterator<A> i = iterator();
+					private boolean append = true;
+					
+					@Override
+					public boolean hasNext() {
+						return i.hasNext() || append;
+					}
+
+					@Override
+					public A next() {
+						if (i.hasNext()) {
+							A a = i.next();
+							acc = f.apply(acc,a);
+							return a;
+						}
+						if (append) {
+							append = false;
+							return post.apply(acc);
+						}
+						throw new RuntimeException("no more elements");
+					}
+					
+				};
+			}
+			
+		};
+		return fi;
 	}
 	
 	public static String concat(Iterable<String> i) {

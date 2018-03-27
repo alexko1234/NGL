@@ -2,6 +2,7 @@ package fr.cea.ig.lfw.utils;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -67,6 +68,9 @@ public interface ZenIterable <A> extends Iterable <A> {
 	default ZenIterable<A> append     (A a) { return Iterables.append     (this, a); }
 	default ZenIterable<A> intercalate(A a) { return Iterables.intercalate(this, a); }
 	default ZenIterable<A> surround(A before, A between, A after) { return Iterables.surround(this, before, between, after); }
+	default ZenIterable<A> countIn(Function<Integer,A> f) { return this.foldlIn(0, (a,e) -> a + 1, f); }
+	default <B> ZenIterable<A> foldlIn(B start, BiFunction<B,A,B> f, Function<B,A> g) { return Iterables.foldlIn(this,start,f,g); }
+	default <B> B          foldl(B b, BiFunction<B,A,B> f) { return Iterables.foldl(this,b,f); }
 	
 }
 

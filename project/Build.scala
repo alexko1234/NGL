@@ -236,6 +236,11 @@ object ApplicationBuild extends Build {
       javaCore,
       javaWs,
       guice,
+      // https://mvnrepository.com/artifact/junit/junit
+      "junit" % "junit" % "4.10",
+      // https://mvnrepository.com/artifact/com.typesafe.play/play-test
+      // Could not find any shortcut
+      "com.typesafe.play" %% "play-test" % "2.6.11",
       //fest
       "org.easytesting"      % "fest-assert"        % "1.4"
       // ceaMongo
@@ -497,8 +502,7 @@ object ApplicationBuild extends Build {
     resourceDirectory in Test  := baseDirectory.value / "conftest"
   // ).dependsOn(nglframeworkweb % "compile->compile;test->test;doc->doc", nglPlayMigration, nglTesting % "test->test")
 //  ).dependsOn(nglframeworkweb, nglPlayMigration, nglTesting % "test->test")
-  // ).dependsOn(nglframeworkweb, nglPlayMigration, nglTesting % "compile->test")
-    ).dependsOn(nglframeworkweb, nglPlayMigration, nglTesting % "test->test")
+  ).dependsOn(nglframeworkweb, nglPlayMigration, nglTesting % "compile->test")
     
   val nglbi = Project(appName + "-bi", file("app-ngl-bi"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
     version                    := biVersion,

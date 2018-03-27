@@ -189,8 +189,7 @@ public class MongoStreamer {
 	public static <T,R> Source<ByteString, ?> streamUDT(int count, Source<T, ?> source, Function<T,R> transform) {
 		return streamUDT(count, source.map(x -> { return transform.apply(x); }));
 	}
-	
-	
+		
 	// Iterator/iterable overloads
 	public static <T> Source<ByteString, ?> stream(Iterable<T> all) {
 		return stream(Source.from(all));
