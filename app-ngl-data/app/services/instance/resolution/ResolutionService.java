@@ -811,6 +811,7 @@ public class ResolutionService {
 		l.add(InstanceFactory.newResolution("Processus partiel (MUST BE REPLACE)","processus-partiel", resolutionCategories.get("Default"), (short) 18));
 		l.add(InstanceFactory.newResolution("Arrêt - erreur déclaration","stop-pb-declaration", resolutionCategories.get("Default"), (short) 19));
 		l.add(InstanceFactory.newResolution("Arrêt - Rendement trop faible","stop-pb-yield-too-low", resolutionCategories.get("Default"), (short) 20));	
+		l.add(InstanceFactory.newResolution("Arrêt - erreur manip","stop-pb-experiment", resolutionCategories.get("Default"), (short) 21));
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "processReso";
