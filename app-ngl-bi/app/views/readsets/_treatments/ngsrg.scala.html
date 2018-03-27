@@ -5,6 +5,7 @@
 	 		<thead>
 				<tr>
 					<th>@Messages("readsets.sampleOnContainer.percentPerLane")</th>
+					<th>@Messages("readsets.treatments.ngsrg_illumina.percentOccupied")</th>
 					<th>@Messages("readsets.treatments.ngsrg_illumina.validSeqPercent")</th>
 					<th>@Messages("readsets.treatments.ngsrg_illumina.nbCluster")</th>
 					<th>@Messages("readsets.treatments.ngsrg_illumina.nbBases")</th>
@@ -16,6 +17,7 @@
 	 		<tbody>
 	 			<tr>
 	 				<td ng-bind="readset.sampleOnContainer.percentage|number:2"></td>
+	 				<td ng-bind="readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.percentPerLane.value|number:2"></td>
 					<td ng-class="highLight('treatments.' + treatments.getTreatment().code + '.default.validSeqPercent.value')" 
 						ng-bind="readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.validSeqPercent.value|number:2"></td>
 					<td ng-bind="readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.nbCluster.value|number"></td>

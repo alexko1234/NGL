@@ -198,6 +198,7 @@ runs.lane.ngsrg_illumina.nbCycles = Nb Cycles Utiles
 runs.lane.ngsrg_illumina.seqLossPercent = % Perte
 runs.lane.ngsrg_illumina.nbMismatch = Nb Mismatch Démultiplexage 
 
+
 runs.ngsrg_nanopore.poreOccupancy = Occupation des pores
 runs.ngsrg_nanopore.poreOccupancyTime = Activité des pores
 runs.ngsrg_nanopore.yieldBasePairs = Rendement
@@ -416,6 +417,7 @@ readsets.treatments.ngsrg_illumina.qualityScore = Score Qualité moyen
 readsets.treatments.ngsrg_illumina.validSeqPercent = % Séquences valides / piste
 readsets.treatments.ngsrg_illumina.fraction = Fraction de run
 readsets.treatments.ngsrg_illumina.nbReadIllumina = Nb Read Illumina
+readsets.treatments.ngsrg_illumina.percentOccupied = % puits occupés
 
 treatments.nanopore.1DForward = 1D forward
 treatments.nanopore.1DReverse = 1D reverse
