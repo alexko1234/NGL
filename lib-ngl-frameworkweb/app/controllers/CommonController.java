@@ -25,6 +25,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bson.BSONObject;
+import org.jongo.Aggregate;
 import org.jongo.MongoCollection;
 import org.jongo.MongoCursor;
 import org.mongojack.DBQuery;
@@ -34,7 +35,10 @@ import org.springframework.beans.PropertyAccessorFactory;
 //import org.springframework.core.convert.TypeDescriptor;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.Iterators;
+import com.mongodb.AggregationOptions;
 import com.mongodb.BasicDBObject;
+import com.mongodb.util.JSON;
 
 //import akka.stream.javadsl.Source;
 //import akka.util.ByteString;
@@ -423,6 +427,40 @@ public abstract class CommonController extends Controller {
 		}
 	}
 
+	protected static <T extends DBObject> Result nativeMongoDBAggregate(String collectionName, ListForm form, Class<T> type) {
+		MongoCollection collection = MongoDBPlugin.getCollection(collectionName);
+		
+		String[] pipeline = getAggregatePipeline(form.reportingQuery);
+		Aggregate aggregateQuery = collection.aggregate("{"+pipeline[0]+"}");
+		if(pipeline.length>1){
+			for(int i=1; i<pipeline.length;i++){
+				aggregateQuery.and("{"+pipeline[i]+"}");
+			}
+		}
+		Aggregate.ResultsIterator<T> all = aggregateQuery.options(AggregationOptions.builder().outputMode( AggregationOptions.OutputMode.CURSOR).build())
+				.as(type);
+		if (form.datatable) {
+			return MongoStreamer.okStream(all);			
+		} else if(form.list) {
+			return MongoStreamer.okStream(all);
+		} else if(form.count) {
+			int count = Iterators.size(all);
+			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			m.put("result", count);
+			return ok(Json.toJson(m));
+		} else {
+			return badRequest();
+		}
+	}
+	
+	private static String[] getAggregatePipeline(String reportingQuery){
+		reportingQuery=reportingQuery.replaceAll("\n", "");
+		reportingQuery=reportingQuery.substring(1, reportingQuery.length()-1);
+		String[] pipeline = reportingQuery.split("\\},\\{");
+		return pipeline;
+			
+	}
+	
 	/**
 	 * Javascript routes.
 	 * @param routes routes to provide as javascript

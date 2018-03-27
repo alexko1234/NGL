@@ -312,7 +312,6 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 	protected Result nativeMongoDBAggregate(ListForm form) {
 		MongoCollection collection = MongoDBPlugin.getCollection(collectionName);
 		Aggregate.ResultsIterator<T> all = collection.aggregate(form.reportingQuery)
-				. 
 				.options(AggregationOptions.builder().outputMode( AggregationOptions.OutputMode.CURSOR).build())
 				.as(type);
 		
