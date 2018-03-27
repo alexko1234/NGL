@@ -3350,12 +3350,21 @@ directive('udtDefaultValue',['$parse', function($parse) {
 	    				var _col = null;
 	    				scope.$watch(attrs.udtDefaultValue, function(col){
 	    					if(col !== null && col !== undefined && col.defaultValues !== undefined && col.defaultValues !== null ){
-	    						_col = col;
+	    						_col = col;	
+	    						if(angular.isFunction(_col.defaultValues)){
+	    							scope.$watch(attrs.udtDefaultValue+".defaultValues(value.data,col)", function(value){
+		    							console.log("change !!!")
+	    								ngModel.$setViewValue(value);
+		    							ngModel.$render();
+		    						});
+	    						}
+	    						
+	    						
 	    					}
 	    				});
 	    				//TODO GA ?? better way with formatter
 						scope.$watch(ngModel, function(value){
-				                if(_col != null && (ngModel.$modelValue === undefined || ngModel.$modelValue === "")){
+				                if(_col != null && (ngModel.$modelValue === undefined || ngModel.$modelValue === "" || ngModel.$modelValue !== value)){
 									if(_col.type === "boolean"){
 										if(_col.defaultValues === "true" || _col.defaultValues === true){
 											ngModel.$setViewValue(true);
@@ -3369,7 +3378,7 @@ directive('udtDefaultValue',['$parse', function($parse) {
 										ngModel.$setViewValue(_col.defaultValues);
 										ngModel.$render();
 									}else{
-										ngModel.$setViewValue(_col.defaultValues(scope.value.data));
+										ngModel.$setViewValue(_col.defaultValues(scope.value.data, _col));
 										ngModel.$render();
 									}
 				                	
