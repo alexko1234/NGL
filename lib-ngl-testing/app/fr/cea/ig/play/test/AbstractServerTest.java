@@ -38,10 +38,12 @@ public class AbstractServerTest {
 	 */
 	protected static TestServer   server;
 	
-	/**
-	 * Web client.
-	 */
-	protected static WSClient     ws;
+//	/**
+//	 * Web client.
+//	 */
+//	protected static WSClient     ws;
+
+	protected static NGLWSClient     ws;
 	
 	/**
 	 * Complete test server stack instance.

@@ -48,8 +48,7 @@ public class ReadSetTreatmentTest extends AbstractBIServerTest {
 		readSet = readSets.remove(0);
 		jsonTaxonomy = Json.toJson(readSet.treatments.get("taxonomy")).toString();
 		readSet.treatments.remove("taxonomy");
-		MongoDBDAO.save(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSet);
-		
+		MongoDBDAO.save(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSet);		
 	}
 	
 	@AfterClass
@@ -64,7 +63,8 @@ public class ReadSetTreatmentTest extends AbstractBIServerTest {
 	public void test1list()
 	{
 		logger.debug("list ReadSetTreatment");
-		WSResponse response = WSHelper.getAsBot(ws, "/api/readsets/"+readSet.code+"/treatments", 200);
+//		WSResponse response = WSHelper.getAsBot(ws, "/api/readsets/"+readSet.code+"/treatments", 200);
+		WSResponse response = wsBot.get("/api/readsets/"+readSet.code+"/treatments", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 	
@@ -72,7 +72,8 @@ public class ReadSetTreatmentTest extends AbstractBIServerTest {
 	public void test2get()
 	{
 		logger.debug("get ReadSetTreatment");
-		WSResponse response = WSHelper.getAsBot(ws, "/api/readsets/"+readSet.code+"/treatments/ngsrg", 200);
+//		WSResponse response = WSHelper.getAsBot(ws, "/api/readsets/"+readSet.code+"/treatments/ngsrg", 200);
+		WSResponse response = wsBot.get("/api/readsets/"+readSet.code+"/treatments/ngsrg", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 	
@@ -80,7 +81,8 @@ public class ReadSetTreatmentTest extends AbstractBIServerTest {
 	public void test3head()
 	{
 		logger.debug("head ReadSetTreatment");
-		WSResponse response = WSHelper.headAsBot(ws, "/api/readsets/"+readSet.code+"/treatments/ngsrg", 200);
+//		WSResponse response = WSHelper.headAsBot(ws, "/api/readsets/"+readSet.code+"/treatments/ngsrg", 200);
+		WSResponse response = wsBot.head("/api/readsets/"+readSet.code+"/treatments/ngsrg", 200);
 		assertThat(response).isNotNull();
 	}
 	
@@ -88,7 +90,8 @@ public class ReadSetTreatmentTest extends AbstractBIServerTest {
 	public void test4save()
 	{
 		logger.debug("save ReadSetTreatment");
-		WSHelper.postAsBot(ws, "/api/readsets/" + readSet.code + "/treatments", jsonTaxonomy, 200);
+//		WSHelper.postAsBot(ws, "/api/readsets/" + readSet.code + "/treatments", jsonTaxonomy, 200);
+		wsBot.post("/api/readsets/" + readSet.code + "/treatments", jsonTaxonomy, 200);
 		readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 		logger.debug("ReadSet " + readSet.code);
 		assertThat(readSet.treatments.get("taxonomy")).isNotNull();
@@ -101,7 +104,8 @@ public class ReadSetTreatmentTest extends AbstractBIServerTest {
 		//Get Treatment ngsrg
 		Treatment taxonomy = readSet.treatments.get("taxonomy");
 		taxonomy.results.get("read1").put("software", new PropertySingleValue("kraken"));
-		WSHelper.putObjectAsBot(ws, "/api/readsets/"+readSet.code+"/treatments/taxonomy", taxonomy, 200);
+//		WSHelper.putObjectAsBot(ws, "/api/readsets/"+readSet.code+"/treatments/taxonomy", taxonomy, 200);
+		wsBot.putObject("/api/readsets/"+readSet.code+"/treatments/taxonomy", taxonomy, 200);
 		readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 		assertThat(readSet.treatments.get("taxonomy").results.get("read1").get("software").getValue()).isEqualTo("kraken");
 	}
@@ -110,7 +114,8 @@ public class ReadSetTreatmentTest extends AbstractBIServerTest {
 	public void test6delete()
 	{
 		logger.debug("delete ReadSetTreatment");
-		WSHelper.deleteAsBot(ws,"/api/readsets/"+readSet.code+"/treatments/taxonomy",200);
+//		WSHelper.deleteAsBot(ws,"/api/readsets/"+readSet.code+"/treatments/taxonomy",200);
+		wsBot.delete("/api/readsets/"+readSet.code+"/treatments/taxonomy",200);
 		readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 		assertThat(readSet.treatments.get("taxonomy")).isNull();
 	}

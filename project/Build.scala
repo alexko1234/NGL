@@ -142,9 +142,11 @@ object ApplicationBuild extends Build {
 	  val globSettings = Seq(
 	    // -- Scala compilation options are not defined as there are no scala sources
       // scalacOptions += "-deprecation",
-	    // -- Java compilation options are not defined as there are too many warnings
-	    // TODO: enable java compilation warnings
-			// javacOptions  ++= Seq("-Xlint:deprecation","-Xlint:unchecked")
+	    // -- Java compilation options 
+			javacOptions         += "-Xlint:deprecation",
+			javacOptions         += "-Xlint:unchecked",
+			javacOptions         += "-Xlint:-processing", // suppress annotation warning 
+	    javacOptions         += "-implicit:class",
 			// javacOptions         += "-verbose",
 			javacOptions         += "-Xlint",
 			// javacOptions         += "-Werror", // warnings as errors

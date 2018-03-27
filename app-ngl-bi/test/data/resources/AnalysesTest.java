@@ -28,7 +28,7 @@ import play.libs.Json;
 import play.libs.ws.WSResponse;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class AnalysesTest extends AbstractBIServerTest{
+public class AnalysesTest extends AbstractBIServerTest {
 
 	static Analysis analysis;
 	static String jsonAnalysis;
@@ -101,7 +101,8 @@ public class AnalysesTest extends AbstractBIServerTest{
 	public void test1save()
 	{
 		Logger.debug("save Analysis");
-		WSHelper.postAsBot(ws, "/api/analyses", jsonAnalysis, 200);
+		// WSHelper.postAsBot(ws, "/api/analyses", jsonAnalysis, 200);
+		wsBot.post("/api/analyses", jsonAnalysis, 200);
 		analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
 		assertThat(analysis).isNotNull();
 	}
@@ -110,7 +111,8 @@ public class AnalysesTest extends AbstractBIServerTest{
 	public void test2list()
 	{
 		Logger.debug("list Analysis");
-		WSResponse response = WSHelper.getAsBot(ws, "/api/analyses", 200);
+//		WSResponse response = WSHelper.getAsBot(ws, "/api/analyses", 200);
+		WSResponse response = wsBot.get("/api/analyses", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 	
@@ -118,7 +120,8 @@ public class AnalysesTest extends AbstractBIServerTest{
 	public void test3get()
 	{
 		Logger.debug("get Analysis");
-		WSResponse response = WSHelper.getAsBot(ws, "/api/analyses/"+analysis.code, 200);
+//		WSResponse response = WSHelper.getAsBot(ws, "/api/analyses/"+analysis.code, 200);
+		WSResponse response = wsBot.get("/api/analyses/" + analysis.code, 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 	
@@ -126,7 +129,8 @@ public class AnalysesTest extends AbstractBIServerTest{
 	public void test4head()
 	{
 		Logger.debug("head Analysis");
-		WSResponse response = WSHelper.headAsBot(ws, "/api/analyses/"+analysis.code, 200);
+//		WSResponse response = WSHelper.headAsBot(ws, "/api/analyses/"+analysis.code, 200);
+		WSResponse response = wsBot.head("/api/analyses/"+analysis.code, 200);
 		assertThat(response).isNotNull();
 	}
 	
@@ -135,7 +139,8 @@ public class AnalysesTest extends AbstractBIServerTest{
 	{
 		Logger.debug("update Analyses");
 		analysis.path="test";
-		WSHelper.putObjectAsBot(ws, "/api/analyses/"+analysis.code,analysis, 200);
+//		WSHelper.putObjectAsBot(ws, "/api/analyses/"+analysis.code,analysis, 200);
+		wsBot.putObject("/api/analyses/"+analysis.code,analysis, 200);
 		analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
 		assertThat(analysis.path).isEqualTo("test");
 	}
@@ -151,7 +156,8 @@ public class AnalysesTest extends AbstractBIServerTest{
 		valuation.date=new Date();
 		valuation.valid=TBoolean.FALSE;
 
-		WSHelper.putObjectAsBot(ws, "/api/analyses/"+analysis.code+"/valuation",valuation, 200);
+//		WSHelper.putObjectAsBot(ws, "/api/analyses/"+analysis.code+"/valuation",valuation, 200);
+		wsBot.putObject("/api/analyses/"+analysis.code+"/valuation",valuation, 200);
 		analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
 		assertThat(analysis.valuation.valid).isEqualTo(TBoolean.FALSE);
 		assertThat(analysis.valuation.comment).isEqualTo("test valuation");
@@ -161,7 +167,8 @@ public class AnalysesTest extends AbstractBIServerTest{
 	public void test7properties()
 	{
 		analysis.properties.put("test", new PropertySingleValue("test"));
-		WSHelper.putObjectAsBot(ws, "/api/analyses/"+analysis.code+"/properties",analysis, 200);
+//		WSHelper.putObjectAsBot(ws, "/api/analyses/"+analysis.code+"/properties",analysis, 200);
+		wsBot.putObject("/api/analyses/"+analysis.code+"/properties",analysis, 200);
 		analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
 		assertThat(analysis.properties.get("test").value).isEqualTo("test");
 	}
@@ -170,8 +177,10 @@ public class AnalysesTest extends AbstractBIServerTest{
 	public void test8delete()
 	{
 		Logger.debug("delete Analysis");
-		WSHelper.deleteAsBot(ws,"/api/analyses/"+analysis.code,200);
+//		WSHelper.deleteAsBot(ws,"/api/analyses/"+analysis.code,200);
+		wsBot.delete("/api/analyses/"+analysis.code,200);
 		Analysis analysisDB = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
 		assertThat(analysisDB).isNull();
 	}
+	
 }

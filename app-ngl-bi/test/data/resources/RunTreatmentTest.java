@@ -39,7 +39,7 @@ public class RunTreatmentTest extends AbstractBIServerTest {
 		List<Run> runs  = MongoDBDAO.find("ngl_bi.RunIllumina_dataWF", Run.class, DBQuery.exists("treatments.ngsrg").exists("treatments.topIndex")).toList();
 		for(Run runDB : runs){
 			readSets = MongoDBDAO.find("ngl_bi.ReadSetIllumina_dataWF", ReadSet.class, DBQuery.is("runCode", runDB.code)).toList();
-			if (readSets.size()>0) {
+			if (readSets.size() > 0) {
 				run = runDB;
 				break;
 			}
@@ -61,18 +61,18 @@ public class RunTreatmentTest extends AbstractBIServerTest {
 	{
 		if (MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code) != null) {
 			MongoDBDAO.deleteByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
-			for(ReadSet readSet: readSets){
+			for (ReadSet readSet: readSets) {
 				MongoDBDAO.deleteByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 			}
 		}
-
 	}
 
 	@Test
 	public void test1list()
 	{
 		logger.debug("list RunTreatment");
-		WSResponse response = WSHelper.getAsBot(ws, "/api/runs/"+run.code+"/treatments", 200);
+//		WSResponse response = WSHelper.getAsBot(ws, "/api/runs/"+run.code+"/treatments", 200);
+		WSResponse response = wsBot.get("/api/runs/"+run.code+"/treatments", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 
@@ -80,7 +80,8 @@ public class RunTreatmentTest extends AbstractBIServerTest {
 	public void test2get()
 	{
 		logger.debug("get RunTreatment");
-		WSResponse response = WSHelper.getAsBot(ws, "/api/runs/"+run.code+"/treatments/ngsrg", 200);
+//		WSResponse response = WSHelper.getAsBot(ws, "/api/runs/"+run.code+"/treatments/ngsrg", 200);
+		WSResponse response = wsBot.get("/api/runs/"+run.code+"/treatments/ngsrg", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 
@@ -88,7 +89,8 @@ public class RunTreatmentTest extends AbstractBIServerTest {
 	public void test3head()
 	{
 		logger.debug("head RunTreatment");
-		WSResponse response = WSHelper.headAsBot(ws, "/api/runs/"+run.code+"/treatments/ngsrg", 200);
+//		WSResponse response = WSHelper.headAsBot(ws, "/api/runs/"+run.code+"/treatments/ngsrg", 200);
+		WSResponse response = wsBot.head("/api/runs/"+run.code+"/treatments/ngsrg", 200);
 		assertThat(response).isNotNull();
 	}
 
@@ -96,7 +98,8 @@ public class RunTreatmentTest extends AbstractBIServerTest {
 	public void test4save()
 	{
 		logger.debug("save RunTreatment");
-		WSHelper.postAsBot(ws, "/api/runs/"+run.code+"/treatments", jsonTopIndex, 200);
+//		WSHelper.postAsBot(ws, "/api/runs/"+run.code+"/treatments", jsonTopIndex, 200);
+		wsBot.post("/api/runs/"+run.code+"/treatments", jsonTopIndex, 200);
 		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
 		logger.debug("Run "+run.code);
 		assertThat(run.treatments.get("topIndex")).isNotNull();
@@ -109,7 +112,8 @@ public class RunTreatmentTest extends AbstractBIServerTest {
 		//Get Treatment ngsrg
 		Treatment ngsrg = run.treatments.get("ngsrg");
 		ngsrg.results.get("default").put("flowcellVersion", new PropertySingleValue("testVersion"));
-		WSHelper.putObjectAsBot(ws, "/api/runs/"+run.code+"/treatments/ngsrg", ngsrg, 200);
+//		WSHelper.putObjectAsBot(ws, "/api/runs/"+run.code+"/treatments/ngsrg", ngsrg, 200);
+		wsBot.putObject("/api/runs/"+run.code+"/treatments/ngsrg", ngsrg, 200);
 		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
 		assertThat(run.treatments.get("ngsrg").results.get("default").get("flowcellVersion").getValue()).isEqualTo("testVersion");
 	}
@@ -119,7 +123,8 @@ public class RunTreatmentTest extends AbstractBIServerTest {
 	public void test6delete()
 	{
 		logger.debug("delete RunTreatment");
-		WSHelper.deleteAsBot(ws,"/api/runs/"+run.code+"/treatments/topIndex",200);
+//		WSHelper.deleteAsBot(ws,"/api/runs/"+run.code+"/treatments/topIndex",200);
+		wsBot.delete("/api/runs/"+run.code+"/treatments/topIndex",200);
 		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
 		assertThat(run.treatments.get("topIndex")).isNull();
 	}

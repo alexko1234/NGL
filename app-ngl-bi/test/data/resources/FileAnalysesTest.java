@@ -19,13 +19,14 @@ import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
 import ngl.bi.AbstractBIServerTest;
-import play.Logger;
+//import play.Logger;
 import play.libs.Json;
 import play.libs.ws.WSResponse;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class FileAnalysesTest extends AbstractBIServerTest{
 
+	private static final play.Logger.ALogger logger = play.Logger.of(FileAnalysesTest.class);
 	
 	static Analysis analysis;
 	static File file;
@@ -47,62 +48,63 @@ public class FileAnalysesTest extends AbstractBIServerTest{
 		file = analysis.files.remove(0);
 		jsonFile = Json.toJson(file).toString();
 		MongoDBDAO.save(InstanceConstants.ANALYSIS_COLL_NAME, analysis);
-		
-		
-		
 	}
 	
 	@AfterClass
 	public static void deleteData()
 	{
-		if(MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code)!=null){
+		if (MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code) != null) {
 			MongoDBDAO.deleteByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
 		}
-		
 	}
 	
 	@Test
 	public void test1list()
 	{
-		Logger.debug("list File");
-		WSResponse response = WSHelper.get(ws, "/api/analyses/"+analysis.code+"/files", 200);
+		logger.debug("list File");
+//		WSResponse response = WSHelper.get(ws, "/api/analyses/"+analysis.code+"/files", 200);
+		WSResponse response = ws.get("/api/analyses/"+analysis.code+"/files", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 	
 	@Test
 	public void test2get()
 	{
-		Logger.debug("get File");
-		WSResponse response = WSHelper.get(ws, "/api/analyses/"+analysis.code+"/files/"+analysis.files.get(0).fullname, 200);
+		logger.debug("get File");
+//		WSResponse response = WSHelper.get(ws, "/api/analyses/"+analysis.code+"/files/"+analysis.files.get(0).fullname, 200);
+		WSResponse response = ws.get("/api/analyses/"+analysis.code+"/files/"+analysis.files.get(0).fullname, 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 	
 	@Test
 	public void test3head()
 	{
-		Logger.debug("head File");
-		WSResponse response = WSHelper.head(ws, "/api/analyses/"+analysis.code+"/files/"+analysis.files.get(0).fullname, 200);
+		logger.debug("head File");
+//		WSResponse response = WSHelper.head(ws, "/api/analyses/"+analysis.code+"/files/"+analysis.files.get(0).fullname, 200);
+		WSResponse response = ws.head("/api/analyses/"+analysis.code+"/files/"+analysis.files.get(0).fullname, 200);
 		assertThat(response).isNotNull();
 	}
 	
 	@Test
 	public void test4save()
 	{
-		Logger.debug("save File");
-		WSHelper.postAsBot(ws, "/api/analyses/"+analysis.code+"/files", jsonFile, 200);
+		logger.debug("save File");
+//		WSHelper.postAsBot(ws, "/api/analyses/"+analysis.code+"/files", jsonFile, 200);
+		wsBot.post("/api/analyses/"+analysis.code+"/files", jsonFile, 200);
 		analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
-		Logger.debug("Analysis "+analysis.code);
+		logger.debug("Analysis "+analysis.code);
 		assertThat(analysis.files.size()).isEqualTo(2);
 	}
 	
 	@Test
 	public void test5update()
 	{
-		Logger.debug("update File");
+		logger.debug("update File");
 		//Get Treatment ngsrg
 		File file = analysis.files.get(0);
 		file.extension="test";
-		WSHelper.putObjectAsBot(ws, "/api/analyses/"+analysis.code+"/files/"+file.fullname, file, 200);
+//		WSHelper.putObjectAsBot(ws, "/api/analyses/"+analysis.code+"/files/"+file.fullname, file, 200);
+		wsBot.putObject("/api/analyses/"+analysis.code+"/files/"+file.fullname, file, 200);
 		analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
 		assertThat(analysis.files.get(0).extension).isEqualTo("test");
 	}
@@ -110,8 +112,9 @@ public class FileAnalysesTest extends AbstractBIServerTest{
 	@Test
 	public void test6Delete()
 	{
-		Logger.debug("delete File");
-		WSHelper.deleteAsBot(ws,"/api/analyses/"+analysis.code+"/files/"+analysis.files.get(0).fullname,200);
+		logger.debug("delete File");
+//		WSHelper.deleteAsBot(ws,"/api/analyses/"+analysis.code+"/files/"+analysis.files.get(0).fullname,200);
+		wsBot.delete("/api/analyses/"+analysis.code+"/files/"+analysis.files.get(0).fullname,200);
 		analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
 		assertThat(analysis.files.size()).isEqualTo(1);
 	}
@@ -119,11 +122,11 @@ public class FileAnalysesTest extends AbstractBIServerTest{
 	@Test
 	public void test7DeleteByAnalyses()
 	{
-		Logger.debug("delete File");
-		WSHelper.deleteAsBot(ws,"/api/analyses/"+analysis.code+"/files",200);
+		logger.debug("delete File");
+//		WSHelper.deleteAsBot(ws,"/api/analyses/"+analysis.code+"/files",200);
+		wsBot.delete("/api/analyses/"+analysis.code+"/files",200);
 		analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
 		assertThat(analysis.files).isNull();
 	}
-	
 	
 }

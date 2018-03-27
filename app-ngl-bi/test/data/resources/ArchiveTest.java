@@ -20,13 +20,15 @@ import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
 import ngl.bi.AbstractBIServerTest;
-import play.Logger;
-//import play.libs.Json;
+//import play.Logger;
+////import play.libs.Json;
 import play.libs.ws.WSResponse;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ArchiveTest extends AbstractBIServerTest {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(ArchiveTest.class);
+	
 	static List<ReadSet> readSets;
 	static ReadSet readSet;
 	
@@ -48,25 +50,27 @@ public class ArchiveTest extends AbstractBIServerTest {
 	
 	@AfterClass
 	public static void deleteData()	{
-		if(MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code) != null) {
+		if (MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code) != null) {
 			MongoDBDAO.deleteByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 		}
 	}
 	
 	@Test
 	public void test1update() {
-		Logger.debug("update Archive");
+		logger.debug("update Archive");
 		//Get Treatment ngsrg
 		readSet.archiveId="testArchive";
-		WSHelper.putObject(ws, "/api/archives/readsets/"+readSet.code, readSet, 200);
+//		WSHelper.putObject(ws, "/api/archives/readsets/"+readSet.code, readSet, 200);
+		ws.putObject("/api/archives/readsets/"+readSet.code, readSet, 200);
 		readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 		assertThat(readSet.archiveId).isEqualTo("testArchive");
 	}
 	
 	@Test
 	public void test2list()	{
-		Logger.debug("list Archive");
-		WSResponse response = WSHelper.get(ws, "/api/archives/readsets", 200);
+		logger.debug("list Archive");
+//		WSResponse response = WSHelper.get(ws, "/api/archives/readsets", 200);
+		WSResponse response = ws.get("/api/archives/readsets", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 	

@@ -14,14 +14,13 @@ import play.libs.ws.WSResponse;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class RunCategoryTest extends AbstractBIServerTest{
 
-
 	@Test
 	public void test1list()
 	{
 		Logger.debug("list RunCategory");
-		WSResponse response = WSHelper.getAsBot(ws, "/api/run-categories", 200);
+//		WSResponse response = WSHelper.getAsBot(ws, "/api/run-categories", 200);
+		WSResponse response = wsBot.get("/api/run-categories", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
-
 
 }

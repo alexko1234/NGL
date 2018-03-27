@@ -106,11 +106,11 @@ public class RunTest extends AbstractBIServerTest{
 	public void test1saveRun() throws InterruptedException
 	{
 		Logger.debug("save Run");
-		WSHelper.postAsBot(ws, "/api/runs", jsonRun, 200);
+//		WSHelper.postAsBot(ws, "/api/runs", jsonRun, 200);
+		wsBot.post("/api/runs", jsonRun, 200);
 		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
 		Logger.debug("Run "+run.code);
-		assertThat(run).isNotNull();
-		
+		assertThat(run).isNotNull();	
 	}
 
 	@Test
@@ -120,7 +120,8 @@ public class RunTest extends AbstractBIServerTest{
 		Date date = new Date();
 		run.sequencingStartDate=date;
 		//run.properties.remove("libProcessTypeCodes");
-		WSHelper.putObjectAsBot(ws, "/api/runs/"+run.code,run, 200);
+//		WSHelper.putObjectAsBot(ws, "/api/runs/"+run.code,run, 200);
+		wsBot.putObject("/api/runs/"+run.code,run, 200);
 		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
 		assertThat(run.sequencingStartDate).isEqualTo(date);
 		//assertThat(run.properties.get("libProcessTypeCodes")).isNull();
@@ -130,7 +131,8 @@ public class RunTest extends AbstractBIServerTest{
 	public void test3listRun()
 	{
 		Logger.debug("save Run");
-		WSResponse response = WSHelper.getAsBot(ws, "/api/runs", 200);
+//		WSResponse response = WSHelper.getAsBot(ws, "/api/runs", 200);
+		WSResponse response = wsBot.get("/api/runs", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 
@@ -138,7 +140,8 @@ public class RunTest extends AbstractBIServerTest{
 	public void test4getRun()
 	{
 		Logger.debug("get Run");
-		WSResponse response = WSHelper.getAsBot(ws, "/api/runs/"+run.code, 200);
+//		WSResponse response = WSHelper.getAsBot(ws, "/api/runs/"+run.code, 200);
+		WSResponse response = wsBot.get("/api/runs/"+run.code, 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 
@@ -146,7 +149,8 @@ public class RunTest extends AbstractBIServerTest{
 	public void test5headRun()
 	{
 		Logger.debug("head Run");
-		WSResponse response = WSHelper.headAsBot(ws, "/api/runs/"+run.code, 200);
+//		WSResponse response = WSHelper.headAsBot(ws, "/api/runs/"+run.code, 200);
+		WSResponse response = wsBot.head("/api/runs/"+run.code, 200);
 		assertThat(response).isNotNull();
 	}
 
@@ -154,7 +158,8 @@ public class RunTest extends AbstractBIServerTest{
 	public void test6GetState()
 	{
 		Logger.debug("get State");
-		WSResponse response = WSHelper.getAsBot(ws, "/api/runs/"+run.code+"/state", 200);
+//		WSResponse response = WSHelper.getAsBot(ws, "/api/runs/"+run.code+"/state", 200);
+		WSResponse response = wsBot.get("/api/runs/"+run.code+"/state", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 
@@ -162,7 +167,8 @@ public class RunTest extends AbstractBIServerTest{
 	public void test7GetStateHistorical()
 	{
 		Logger.debug("get State historical");
-		WSResponse response = WSHelper.getAsBot(ws, "/api/runs/"+run.code+"/state/historical", 200);
+//		WSResponse response = WSHelper.getAsBot(ws, "/api/runs/"+run.code+"/state/historical", 200);
+		WSResponse response = wsBot.get("/api/runs/"+run.code+"/state/historical", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 
@@ -176,7 +182,8 @@ public class RunTest extends AbstractBIServerTest{
 		valuation.date=new Date();
 		valuation.valid=TBoolean.FALSE;
 
-		WSHelper.putObjectAsBot(ws, "/api/runs/"+run.code+"/valuation",valuation, 200);
+//		WSHelper.putObjectAsBot(ws, "/api/runs/"+run.code+"/valuation",valuation, 200);
+		wsBot.putObject("/api/runs/"+run.code+"/valuation",valuation, 200);
 		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
 		assertThat(run.valuation.valid).isEqualTo(TBoolean.FALSE);
 		assertThat(run.valuation.comment).isEqualTo("test valuation");
@@ -205,12 +212,10 @@ public class RunTest extends AbstractBIServerTest{
 	public void test9DeleteRun()
 	{
 		Logger.debug("delete Run");
-		WSHelper.deleteAsBot(ws,"/api/runs/"+run.code,200);
+//		WSHelper.deleteAsBot(ws,"/api/runs/"+run.code,200);
+		wsBot.delete("/api/runs/"+run.code,200);
 		Run runDB = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
 		assertThat(runDB).isNull();
 	}
-
-
-
 
 }

@@ -28,11 +28,13 @@ public abstract class CompleteTestServer {
 	 */
 	protected TestServer   server;
 	
-	/**
-	 * Web client.
-	 */
-	protected WSClient     ws;
+//	/**
+//	 * Web client.
+//	 */
+//	protected WSClient     ws;
 
+	protected NGLWSClient ws;
+	
 	/**
 	 * Override to define custom application creation.
 	 * @return application to run
@@ -54,7 +56,8 @@ public abstract class CompleteTestServer {
 		app = createApplication();
 		server = new TestServer(getPort(),app);
 		server.start();
-		ws = WSTestClient.newClient(getPort());
+		// ws = WSTestClient.newClient(getPort());
+		ws = new NGLWSClient(WSTestClient.newClient(getPort()));
 	}
 
 	/**
@@ -83,11 +86,14 @@ public abstract class CompleteTestServer {
 		return server; 
 	}
 	
-	/**
-	 * Web client.
-	 * @return web client
-	 */
-	public WSClient getWSClient() { 
+//	/**
+//	 * Web client.
+//	 * @return web client
+//	 */
+//	public WSClient getWSClient() { 
+//		return ws; 
+//	}
+	public NGLWSClient getWSClient() { 
 		return ws; 
 	}
 	

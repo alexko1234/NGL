@@ -59,7 +59,6 @@ public class FileReadSetTest extends AbstractBIServerTest {
 		for (ReadSet r : readSets) {
 			MongoDBDAO.save(InstanceConstants.READSET_ILLUMINA_COLL_NAME,r);
 		}
-		
 	}
 	
 	@AfterClass
@@ -78,21 +77,24 @@ public class FileReadSetTest extends AbstractBIServerTest {
 	@Test
 	public void test1list() {
 		logger.debug("list File");
-		WSResponse response = WSHelper.getAsBot(ws, "/api/readsets/"+readSet.code+"/files", 200);
+//		WSResponse response = WSHelper.getAsBot(ws, "/api/readsets/"+readSet.code+"/files", 200);
+		WSResponse response = wsBot.get("/api/readsets/"+readSet.code+"/files", 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 	
 	@Test
 	public void test2get() {
 		logger.debug("get File");
-		WSResponse response = WSHelper.getAsBot(ws, "/api/readsets/"+readSet.code+"/files/"+readSet.files.get(0).fullname, 200);
+//		WSResponse response = WSHelper.getAsBot(ws, "/api/readsets/"+readSet.code+"/files/"+readSet.files.get(0).fullname, 200);
+		WSResponse response = wsBot.get("/api/readsets/"+readSet.code+"/files/"+readSet.files.get(0).fullname, 200);
 		assertThat(response.asJson()).isNotNull();
 	}
 	
 	@Test
 	public void test3head()	{
 		logger.debug("head File");
-		WSResponse response = WSHelper.headAsBot(ws, "/api/readsets/"+readSet.code+"/files/"+readSet.files.get(0).fullname, 200);
+//		WSResponse response = WSHelper.headAsBot(ws, "/api/readsets/"+readSet.code+"/files/"+readSet.files.get(0).fullname, 200);
+		WSResponse response = wsBot.head("/api/readsets/"+readSet.code+"/files/"+readSet.files.get(0).fullname, 200);
 		assertThat(response).isNotNull();
 	}
 	
@@ -102,7 +104,8 @@ public class FileReadSetTest extends AbstractBIServerTest {
 	public void test4save()	{
 		logger.debug("save File");
 		logger.debug("json {}", jsonFile);
-		WSHelper.postAsBot(ws, "/api/readsets/" + readSet.code + "/files", jsonFile, 200);
+//		WSHelper.postAsBot(ws, "/api/readsets/" + readSet.code + "/files", jsonFile, 200);
+		wsBot.post("/api/readsets/" + readSet.code + "/files", jsonFile, 200);
 		readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 		logger.debug("ReadSet "+readSet.code);
 		assertThat(readSet.files.size()).isEqualTo(2);
@@ -115,7 +118,8 @@ public class FileReadSetTest extends AbstractBIServerTest {
 		//Get Treatment ngsrg
 		File file = readSet.files.get(0);
 		file.extension = "test";
-		WSHelper.putObjectAsBot(ws, "/api/readsets/" + readSet.code + "/files/" + file.fullname, file, 200);
+//		WSHelper.putObjectAsBot(ws, "/api/readsets/" + readSet.code + "/files/" + file.fullname, file, 200);
+		wsBot.putObject("/api/readsets/" + readSet.code + "/files/" + file.fullname, file, 200);
 		readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 		for (File f : readSet.files)
 			logger.debug("readSet file {}",f.fullname);
@@ -126,7 +130,8 @@ public class FileReadSetTest extends AbstractBIServerTest {
 	@Test
 	public void test6Delete() {
 		logger.debug("delete File");
-		WSHelper.deleteAsBot(ws,"/api/readsets/" + readSet.code + "/files/" + file.fullname, 200);
+//		WSHelper.deleteAsBot(ws,"/api/readsets/" + readSet.code + "/files/" + file.fullname, 200);
+		wsBot.delete("/api/readsets/" + readSet.code + "/files/" + file.fullname, 200);
 		readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 		assertThat(readSet.files.size()).isEqualTo(1);
 	}
@@ -134,7 +139,8 @@ public class FileReadSetTest extends AbstractBIServerTest {
 	@Test
 	public void test7DeleteByReadSet() {
 		logger.debug("delete File");
-		WSHelper.deleteAsBot(ws,"/api/readsets/"+readSet.code+"/files",200);
+//		WSHelper.deleteAsBot(ws,"/api/readsets/"+readSet.code+"/files",200);
+		wsBot.delete("/api/readsets/"+readSet.code+"/files",200);
 		readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 		assertThat(readSet.files).isNull();
 	}
@@ -142,8 +148,9 @@ public class FileReadSetTest extends AbstractBIServerTest {
 	@Test
 	public void test8DeleteByRun() {
 		logger.debug("delete File");
-		WSHelper.deleteAsBot(ws,"/api/runs/"+run.code+"/files",200);
-		for(ReadSet readSetList : readSets){
+//		WSHelper.deleteAsBot(ws,"/api/runs/"+run.code+"/files",200);
+		wsBot.delete("/api/runs/"+run.code+"/files",200);
+		for (ReadSet readSetList : readSets) {
 			ReadSet readSetDB = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetList.code);
 			assertThat(readSetDB.files).isNull();
 		}

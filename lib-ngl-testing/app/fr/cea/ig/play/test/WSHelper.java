@@ -26,14 +26,17 @@ import play.mvc.Http.Status;
  */
 public class WSHelper {
 	
+	/**
+	 * Logger.
+	 */
 	private static final play.Logger.ALogger logger = play.Logger.of(WSHelper.class);
 	
 	/**
-	 * Shorcut for http get. Exceptions are converted to runtime
+	 * Shortcut for HTTP get. Exceptions are converted to runtime
 	 * exceptions.
 	 * @param ws  web client to use
-	 * @param url url to get 
-	 * @return    web response for the given url
+	 * @param url URL to get 
+	 * @return    web response for the given URL
 	 */
 	public static WSResponse get(WSClient ws, String url, boolean asbot) { // throws InterruptedException,ExecutionException {
 		try {
@@ -53,7 +56,7 @@ public class WSHelper {
 	 * @return
 	 */
 	private static WSRequest addUserAgent(boolean asbot, WSRequest request) {
-		if(asbot) {
+		if (asbot) {
 			Map<String, List<String>> header = new HashMap<>();
 			header.put("User-Agent", Arrays.asList("bot"));
 			logger.debug("set User-Agent to bot");

@@ -77,7 +77,7 @@ public class DevAppTesting {
 	 */
 	private static final play.Logger.ALogger logger = play.Logger.of(DevAppTesting.class);
 	
-	public static final String PROP_NAME_LOGGER_FILE = "ngl.test.logger.file";
+	public static final String PROP_NAME_LOGGER_FILE     = "ngl.test.logger.file";
 	public static final String PROP_NAME_LOGGER_RESOURCE = "ngl.test.logger.resource"; 
 	
 	/**
@@ -93,6 +93,20 @@ public class DevAppTesting {
 	private static String hexToLetters(String s) {
 		return org.apache.commons.lang3.StringUtils.replaceChars(s,"0123456789abcdef","ABCDEFGHIJKLMONP");	
 	}
+	
+//	private static String hexToLetters_(String s) {
+//		StringBuilder b = new StringBuilder(s.length());
+//		for (int i = 0; i < s.length(); i++) {
+//			char c = s.charAt(i);
+//			if (c >= '0' && c <= '9')
+//				b.append(c + 'A' - '0');
+//			else if (c >= 'a' && c <= 'z')
+//				b.append(c + 'K' - 'a');
+//			else
+//				b.append('_');
+//		}
+//		return b.toString();	
+//	}
 	
 	/**
 	 * Somewhat unique identifier that can be used to create unique identifiers.
