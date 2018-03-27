@@ -311,7 +311,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		};
 		
 		if($scope.experiment.state.code === 'F' && !Permissions.check("admin")){
-			callbackFunctions.updateURL ='?fields=status&fields=reagents';
+			callbackFunctions.updateURL ='?fields=status&fields=reagents&fields=state';
 		}
 		
 		$scope.$broadcast('saveReagents', callbackFunctions);		
