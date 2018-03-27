@@ -44,7 +44,7 @@ object ApplicationBuild extends Build {
 	val embeddedAuth   = System.getProperty("embedded.auth")   == "true"
 	val embeddedSpring = System.getProperty("embedded.spring") == "true"
 	val embeddedMongo  = System.getProperty("embedded.mongo")  == "true"
-
+  
 	// Workaround for missing properties in test vms. Build the test child
 	// VM option for the logger.
 	val tjl =
@@ -676,6 +676,13 @@ object ApplicationBuild extends Build {
       springPlugin,
       mongoPlugin
     )
+  
+    // Should be aggregated conditionaly
+    val sqLite =
+         Project("ngl-sq-lite", file("app-ngl-sq-lite"), settings=buildSettings) 
+                .enablePlugins(play.sbt.PlayJava)
+                .dependsOn(nglsq)
+    
   
 //  val coreSources =
 //       (((sources in nglcommon)        in Compile).value)

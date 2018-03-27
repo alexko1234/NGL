@@ -19,7 +19,7 @@ import play.libs.ws.WSResponse;
 import play.mvc.Http.Status;
 
 /**
- * WSClient shortcuts.
+ * WSClient shortcuts. Should be replaced by NGLWSClient.
  * 
  * @author vrd
  *
