@@ -171,7 +171,7 @@ public class RunMockHelper {
 		
 		
 		
-		r.typeCode = "default-readset"; 
+		r.typeCode = "rsillumina"; 
 		
 		r.bioinformaticValuation = getValuation(TBoolean.TRUE);
 		
