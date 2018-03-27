@@ -135,7 +135,7 @@ public class ImportServiceCNS extends AbstractImportService {
 				getTaraPacificFinalDestination(), "single", 3, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Protocole TARA Pacific", "taraProtocol", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null, 
 				getTaraPacificProtocolValues(), "single", 4, true, null, null));
-		
+		/*keep when all data are not migrated*/
 		propertyDefinitions.add(newPropertiesDefinition("Station TARA", "taraStation", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Integer.class, false, null, 
 				null, "single", 5, true, null, null));
 		/* OLD VERSION
@@ -182,7 +182,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null,
 				null, "single", 1, true, null, null));
-		
+		/*keep when all data are not migrated*/
 		propertyDefinitions.add(newPropertiesDefinition("Station TARA", "taraStation", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Integer.class, false, null, 
 				null, "single", 2, true, null, null));
 		/* OLD VERSION		
