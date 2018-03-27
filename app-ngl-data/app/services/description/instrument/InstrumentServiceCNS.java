@@ -719,7 +719,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		//l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("Frag_PE300","Frag_PE400","Frag_PE500","Frag_cDNA_Solexa"), "single"));
 		
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null, 
-				newValues("Low cost 400","Low cost 500","Low cost LC400","Low cost LC500","Low cost LC300","Frag CDNA","Projet BCB","MP Nextera post circ","PCR-Free", "Accel_ssDNA"), 
+				newValues("Low cost 400","Low cost 500","Low cost LC400","Low cost LC500","Low cost LC300","Frag CDNA","Projet BCB","MP Nextera post circ","PCR-Free", "Accel_ssDNA", "EPGV_Frag_350_PCR-Free_Pl96"), 
 				"single", 10, true, null,null));
 		
 		return l;
