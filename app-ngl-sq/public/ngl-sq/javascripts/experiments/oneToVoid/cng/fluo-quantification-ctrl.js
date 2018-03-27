@@ -14,8 +14,11 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNGCtrl',['$scope'
 			if(inputContainerUsed){
 				
 				var concentration1 = $parse("experimentProperties.concentration1")(inputContainerUsed);
-				if(concentration1){
+				// 26/03/2018: NGL-1970 la copie de la concentration ne doit etre faite que si l'utilisateur le demande explicitement !!!
+				if (concentration1  &&  $scope.experiment.experimentProperties.copyConcentration.value){
 					inputContainerUsed.newConcentration = concentration1;
+				} else {
+					inputContainerUsed.newConcentration = null;
 				}
 				
 				// pas de newsize 
