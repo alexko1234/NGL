@@ -290,6 +290,10 @@ public class RunIllumina extends AbstractDeclaration {
 	private List<PropertyDefinition> getPropertyDefinitionsPrepaflowcellOrdered() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
+		propertyDefinitions.add(newPropertiesDefinition("Choix feuille de calculs", "worksheet", LevelService.getLevels(Level.CODE.Experiment), String.class, true, null,
+				DescriptionFactory.newValues("4000","NovaSeq S2 / onboard","NovaSeq S2 / XP FC","NovaSeq S4 / onboard","NovaSeq S4 / XP FC"),null,null,null, 
+				"single",10, true, null,null));	
+		
 		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",11, false,null,"1"));
