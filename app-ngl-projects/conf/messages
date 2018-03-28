@@ -70,6 +70,7 @@ projects.bioinformaticParameters.fgPriority = Priorité Transfert CCRT
 
 projects.lastSampleCode=Dernier sample code
 projects.nbCharactersInSampleCode = Nb de lettres dans le code sample initial
+projects.unixGroup= Groupe unix 
 
 umbrellaProjects.code = Code
 umbrellaProjects.name = Nom

@@ -28,18 +28,25 @@ public class ProjectServiceCNS extends AbstractProjectService{
 	public void saveProjectTypes(Map<String, List<ValidationError>> errors) throws DAOException{
 		List<ProjectType> l = new ArrayList<ProjectType>();
 		
-		l.add(DescriptionFactory.newProjectType("Defaut", "default-project", ProjectCategory.find.findByCode("default"), null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		l.add(DescriptionFactory.newProjectType("France Génomique", "france-genomique", ProjectCategory.find.findByCode("default"), getFGPropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		l.add(DescriptionFactory.newProjectType("Defaut", "default-project", ProjectCategory.find.findByCode("default"), getProjectPropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		l.add(DescriptionFactory.newProjectType("France Génomique", "france-genomique", ProjectCategory.find.findByCode("default"), getProjectPropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		DAOHelpers.saveModels(ProjectType.class, l, errors);
 		
 	}
 
-	private static List<PropertyDefinition> getFGPropertyDefinitions() throws DAOException {
+	/*private static List<PropertyDefinition> getFGPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> pds = new ArrayList<PropertyDefinition>();
 		pds.add(DescriptionFactory.newPropertiesDefinition("Groupe", "fgGroup", LevelService.getLevels(Level.CODE.Project), String.class, true, "single"));
 		return pds;
+	}*/
+	
+	private static List<PropertyDefinition> getProjectPropertyDefinitions() throws DAOException {
+		List<PropertyDefinition> pds = new ArrayList<PropertyDefinition>();
+		pds.add(DescriptionFactory.newPropertiesDefinition("Groupe unix", "unixGroup", LevelService.getLevels(Level.CODE.Project), String.class, true, "single", "g-extprj"));
+		return pds;
 	}
+	
 	
 	
 	
