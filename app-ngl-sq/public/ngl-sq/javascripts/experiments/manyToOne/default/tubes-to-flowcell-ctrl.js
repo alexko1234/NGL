@@ -194,11 +194,19 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 				mergeCells:{
 					active:true 
 				},
-
+/* OLD COnfig change 28/03/2018 by GA
 				edit:{
 					active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP') || Permissions.check("admin")),
 					columnMode:true
 				},
+*/				
+				edit:{
+					active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+					showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+					byDefault:($scope.isCreationMode()),
+					columnMode:true
+				},
+				
 				messages:{
 					active:false,
 					columnMode:true
