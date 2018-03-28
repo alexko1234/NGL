@@ -118,7 +118,9 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
 				"inputContainerUsed.experimentProperties.NaOHConcentration.value":"0.1N",
 				"inputContainerUsed.experimentProperties.trisHCLVolume.value":5,
 				"inputContainerUsed.experimentProperties.trisHCLConcentration.value":200, 
-				"inputContainerUsed.experimentProperties.masterEPXVolume.value":35
+				"inputContainerUsed.experimentProperties.masterEPXVolume.value":35,
+				"outputContainerUsed.experimentProperties.finalVolume.value":50
+				
 			},
 			"NovaSeq S2 / onboard":{
 				"inputContainerUsed.experimentProperties.inputVolume2.value":150,
@@ -126,7 +128,8 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
 				"inputContainerUsed.experimentProperties.NaOHConcentration.value":"0.2N",
 				"inputContainerUsed.experimentProperties.trisHCLVolume.value":38,
 				"inputContainerUsed.experimentProperties.trisHCLConcentration.value":400, 
-				"inputContainerUsed.experimentProperties.masterEPXVolume.value":525
+				"inputContainerUsed.experimentProperties.masterEPXVolume.value":525,
+				"outputContainerUsed.experimentProperties.finalVolume.value":750
 			},
 			"NovaSeq S2 / XP FC":{
 				"inputContainerUsed.experimentProperties.inputVolume2.value":22,
@@ -134,7 +137,8 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
 				"inputContainerUsed.experimentProperties.NaOHConcentration.value":"0.2N",
 				"inputContainerUsed.experimentProperties.trisHCLVolume.value":6,
 				"inputContainerUsed.experimentProperties.trisHCLConcentration.value":400, 
-				"inputContainerUsed.experimentProperties.masterEPXVolume.value":77
+				"inputContainerUsed.experimentProperties.masterEPXVolume.value":77,
+				"outputContainerUsed.experimentProperties.finalVolume.value":110
 			},
 			"NovaSeq S4 / onboard":{
 				"inputContainerUsed.experimentProperties.inputVolume2.value":310,
@@ -142,7 +146,8 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
 				"inputContainerUsed.experimentProperties.NaOHConcentration.value":"0.2N",
 				"inputContainerUsed.experimentProperties.trisHCLVolume.value":78,
 				"inputContainerUsed.experimentProperties.trisHCLConcentration.value":400, 
-				"inputContainerUsed.experimentProperties.masterEPXVolume.value":1085				
+				"inputContainerUsed.experimentProperties.masterEPXVolume.value":1085,
+				"outputContainerUsed.experimentProperties.finalVolume.value":1550				
 			},
 			"NovaSeq S4 / XP FC":{
 				"inputContainerUsed.experimentProperties.inputVolume2.value":30,
@@ -150,7 +155,8 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
 				"inputContainerUsed.experimentProperties.NaOHConcentration.value":"0.2N",
 				"inputContainerUsed.experimentProperties.trisHCLVolume.value":8,
 				"inputContainerUsed.experimentProperties.trisHCLConcentration.value":400, 
-				"inputContainerUsed.experimentProperties.masterEPXVolume.value":105				
+				"inputContainerUsed.experimentProperties.masterEPXVolume.value":105,
+				"outputContainerUsed.experimentProperties.finalVolume.value":150			
 			}
 	};
 	
@@ -166,15 +172,16 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
 		
 		if(worksheet && defaultValues[worksheet][col.property]){
 			return defaultValues[worksheet][col.property];
+		}else {
+			return undefined;
 		}
-		return undefined;
+		
 		
 	}
 	
 	//overide defaut method
 	atmToSingleDatatable.convertOutputPropertiesToDatatableColumn = function(property){
-		return   this.$commonATM.convertSinglePropertyToDatatableColumn(property,"outputContainerUsed.experimentProperties.",{"0":"prep FC"});
-		
+		return this.$commonATM.convertSinglePropertyToDatatableColumn(property,"outputContainerUsed.experimentProperties.",{"0":"prep FC"});				
 	};
 	atmToSingleDatatable.convertInputPropertiesToDatatableColumn = function(property){
 		if(property.displayOrder < 20){		
@@ -204,4 +211,27 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
 		}
 	};
 	
+	//reset some properties when change worksheet
+	$scope.$watch("experiment.experimentProperties.worksheet.value", function(newValue, OldValue){
+			console.log('worksheet changed to :'+ newValue);
+			$scope.atmService.data.atm.forEach(function(atm){
+				atm.inputContainerUseds.forEach(function(icu){					
+					$parse("experimentProperties.inputVolume2.value").assign(icu, undefined);
+					$parse("experimentProperties.NaOHVolume.value").assign(icu, undefined);
+					$parse("experimentProperties.NaOHConcentration.value").assign(icu, undefined);
+					$parse("experimentProperties.trisHCLVolume.value").assign(icu, undefined);
+					$parse("experimentProperties.trisHCLConcentration.value").assign(icu, undefined);
+					$parse("experimentProperties.masterEPXVolume.value").assign(icu, undefined);
+					$parse("experimentProperties.finalConcentration2.value").assign(icu, undefined);										
+				});
+				atm.outputContainerUseds.forEach(function(ocu){					
+					if(newValue && defaultValues[newValue]["outputContainerUsed.experimentProperties.finalVolume.value"]){
+						$parse("experimentProperties.finalVolume.value").assign(ocu, defaultValues[newValue]["outputContainerUsed.experimentProperties.finalVolume.value"]);
+					}else{
+						$parse("experimentProperties.finalVolume.value").assign(ocu, undefined);
+					}																						
+				});
+			});
+			$scope.atmService.data.updateDatatable();		
+	});
 }]);

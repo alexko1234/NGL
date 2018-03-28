@@ -3,7 +3,8 @@
 */
 "use strict";
 
-angular.module('ultimateDataTableServices', ['infinite-scroll']).
+//angular.module('ultimateDataTableServices', ['infinite-scroll']).
+angular.module('ultimateDataTableServices', []).
 factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', '$timeout', '$anchorScroll', '$location',
 		function($http, $filter, $parse, $window, $q, udtI18n, $timeout, $anchorScroll, $location) { //service to manage datatable
     var constructor = function(iConfig) {
@@ -2538,7 +2539,7 @@ directive('udtAutoSelect',['$parse', function($parse) {
 					var model = $parse(match[7]);
 					scope.$watch(model, function(value){
 						if(value){
-			                if(value.length === 1 && (ngModel.$modelValue == undefined || ngModel.$modelValue == "")){
+			                if(value.length === 1 && ngModel.$isEmpty(ngModel.$modelValue)){
 								
 			                	var value = (multiple)?[getModelValue(value[0])]:getModelValue(value[0]);
 			                	
@@ -3348,42 +3349,59 @@ directive('udtDefaultValue',['$parse', function($parse) {
 	    			require: 'ngModel',
 	    			link: function(scope, element, attrs, ngModel) {
 	    				var _col = null;
+	    				
+	    				var setDefaultValue = function(){
+	    					if(_col != null && ngModel.$isEmpty(ngModel.$modelValue)){
+								if(_col.type === "boolean"){
+									if(_col.defaultValues === "true" || _col.defaultValues === true){
+										ngModel.$setViewValue(true);
+										ngModel.$render();
+									}else if(_col.defaultValues === "false" || _col.defaultValues === false){
+										ngModel.$setViewValue(true); // hack to insert false value 
+										ngModel.$setViewValue(false);
+										ngModel.$render();
+									}											
+								}else if(!angular.isFunction(_col.defaultValues)){
+									ngModel.$setViewValue(_col.defaultValues);
+									ngModel.$render();
+								}else{
+									ngModel.$setViewValue(_col.defaultValues(scope.value.data, _col));
+									ngModel.$render();
+								}
+			                	
+							}
+	    				}
+	    				
+	    				if(attrs.udtDefaultValue){
+	    					_col = scope[attrs.udtDefaultValue];
+	    					setDefaultValue();
+	    					if(angular.isFunction(_col.defaultValues)){ //only watch when function to limit watching
+    							scope.$watch(attrs.udtDefaultValue+".defaultValues(value.data,col)", function(value){
+    								setDefaultValue();
+	    						});
+    						}
+	    				}
+	    				/*
 	    				scope.$watch(attrs.udtDefaultValue, function(col){
 	    					if(col !== null && col !== undefined && col.defaultValues !== undefined && col.defaultValues !== null ){
 	    						_col = col;	
-	    						if(angular.isFunction(_col.defaultValues)){
+	    						if(angular.isFunction(_col.defaultValues)){ //only watch when function to limit watching
+	    							setDefaultValue();
 	    							scope.$watch(attrs.udtDefaultValue+".defaultValues(value.data,col)", function(value){
-		    							console.log("change !!!")
-	    								ngModel.$setViewValue(value);
-		    							ngModel.$render();
+	    								setDefaultValue();
 		    						});
 	    						}
-	    						
-	    						
 	    					}
 	    				});
+	    				*/
+	    				
 	    				//TODO GA ?? better way with formatter
-						scope.$watch(ngModel, function(value){
-				                if(_col != null && (ngModel.$modelValue === undefined || ngModel.$modelValue === "" || ngModel.$modelValue !== value)){
-									if(_col.type === "boolean"){
-										if(_col.defaultValues === "true" || _col.defaultValues === true){
-											ngModel.$setViewValue(true);
-											ngModel.$render();
-										}else if(_col.defaultValues === "false" || _col.defaultValues === false){
-											ngModel.$setViewValue(true); // hack to insert false value 
-											ngModel.$setViewValue(false);
-											ngModel.$render();
-										}											
-									}else if(!angular.isFunction(_col.defaultValues)){
-										ngModel.$setViewValue(_col.defaultValues);
-										ngModel.$render();
-									}else{
-										ngModel.$setViewValue(_col.defaultValues(scope.value.data, _col));
-										ngModel.$render();
-									}
-				                	
-								}
+						/*
+	    				scope.$watch(ngModel, function(value){
+							setDefaultValue();
 					    });
+					    */
+					    
 	    			}
 	    		};	    	
 	    	}]);;angular.module('ultimateDataTableServices').
@@ -4522,4 +4540,4 @@ run(['$templateCache', function($templateCache) {
 			   +'</div>');
 }]);
 /* ng-infinite-scroll - v1.0.0 - 2013-02-23 */
-var mod;mod=angular.module("infinite-scroll",[]),mod.directive("infiniteScroll",["$rootScope","$window","$timeout",function(i,n,e){return{link:function(t,l,o){var r,c,f,a;return n=angular.element(n),f=0,null!=o.infiniteScrollDistance&&t.$watch(o.infiniteScrollDistance,function(i){return f=parseInt(i,10)}),a=!0,r=!1,null!=o.infiniteScrollDisabled&&t.$watch(o.infiniteScrollDisabled,function(i){return a=!i,a&&r?(r=!1,c()):void 0}),c=function(){var e,c,u,d;return d=n.height()+n.scrollTop(),e=l.offset().top+l.height(),c=e-d,u=n.height()*f>=c,u&&a?i.$$phase?t.$eval(o.infiniteScroll):t.$apply(o.infiniteScroll):u?r=!0:void 0},n.on("scroll",c),t.$on("$destroy",function(){return n.off("scroll",c)}),e(function(){return o.infiniteScrollImmediateCheck?t.$eval(o.infiniteScrollImmediateCheck)?c():void 0:c()},0)}}}]);
+//var mod;mod=angular.module("infinite-scroll",[]),mod.directive("infiniteScroll",["$rootScope","$window","$timeout",function(i,n,e){return{link:function(t,l,o){var r,c,f,a;return n=angular.element(n),f=0,null!=o.infiniteScrollDistance&&t.$watch(o.infiniteScrollDistance,function(i){return f=parseInt(i,10)}),a=!0,r=!1,null!=o.infiniteScrollDisabled&&t.$watch(o.infiniteScrollDisabled,function(i){return a=!i,a&&r?(r=!1,c()):void 0}),c=function(){var e,c,u,d;return d=n.height()+n.scrollTop(),e=l.offset().top+l.height(),c=e-d,u=n.height()*f>=c,u&&a?i.$$phase?t.$eval(o.infiniteScroll):t.$apply(o.infiniteScroll):u?r=!0:void 0},n.on("scroll",c),t.$on("$destroy",function(){return n.off("scroll",c)}),e(function(){return o.infiniteScrollImmediateCheck?t.$eval(o.infiniteScrollImmediateCheck)?c():void 0:c()},0)}}}]);
