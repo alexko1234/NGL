@@ -1691,12 +1691,19 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	$scope.isProcessResolutionsMustBeSet = function(value){
 		//TODO GA rename to fromTransformationCodes
 		if(value !== undefined){
+			
+			/* Old test, comment because dont see resolutions on dispatch === 4 with QC
 			var fromTransformationTypeCode = ($scope.isOutputATMVoid())?$scope.experiment.typeCode:value.data.container.fromTransformationTypeCodes[0];
 			if(value.data.dispatch === 6 || 
 					(value.data.dispatch === 4 
 							&& fromTransformationTypeCode === processTypes[value.data.container.processTypeCodes[0]].lastExperimentType.code)){
 				return true;
-			}else{
+			}*/
+			if(value.data.dispatch === 6 || 
+					value.data.dispatch === 4){
+				return true;
+			}
+			else{
 				value.data.processResolutions = undefined;
 				return false;
 			}
