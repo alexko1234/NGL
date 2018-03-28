@@ -321,6 +321,10 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
     	$scope.poolingModes.push({code: 'ID4', name:'Ill Dual 4-p', poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'});
     	$scope.poolingModes.push({code: 'ID6', name:'Ill Dual 6-p', poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'});
     	$scope.poolingModes.push({code: 'ID8', name:'Ill Dual 8-p', poolPlex: 8, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'});
+    	// 28/03/2018 NGL-1971: ajout 3 modes de pool de type colonne
+       	$scope.poolingModes.push ( {code: 'C4',  name:'Col 4-p',  poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'});
+    	$scope.poolingModes.push ( {code: 'C6',  name:'Col 6-p',  poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'});
+    	$scope.poolingModes.push ( {code: 'C8',  name:'Col 8-p',  poolPlex: 8, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'});
 
     } else if ( $scope.experiment.instrument.typeCode === "epmotion") {	 	
     	$scope.poolingModes.push ( {code: 'C4',  name:'Col 4-p',  poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'});
@@ -372,8 +376,8 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
         	}
         	//console.log ("start position ="+ startPos + "/ end position ="+ endPos);
 
-		
-        	if (( poolingMode.code === "L4")||( poolingMode.code === "L6")||( poolingMode.code === "C4")||( poolingMode.code === "C6")){ 
+        	// 28/03/2018 NGL-1971: ajout C8
+        	if (( poolingMode.code === "L4")||( poolingMode.code === "L6")||( poolingMode.code === "C4")||( poolingMode.code === "C6")||( poolingMode.code === "C8")){ 
         		poolContigu( poolingMode.poolPlex, startPos, endPos, poolingMode.numtype ); 
         	}
         	else if ((poolingMode.code === "ID4")||(poolingMode.code === "ID6")||(poolingMode.code === "ID8")){ 
