@@ -25,6 +25,8 @@ import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 import services.description.common.MeasureService;
+import services.description.declaration.cns.MetaBarCoding;
+import services.description.declaration.cns.MetaGenomique;
 
 public class ImportServiceCNS extends AbstractImportService {
 
@@ -700,8 +702,14 @@ public class ImportServiceCNS extends AbstractImportService {
 					
 		propertyDefinitions.add(newPropertiesDefinition("Nom organisme / collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				null, null,null,null,"single", 17, false, null,null));		
+		
+		List<Value> libProcessTypeCodes = new ArrayList<Value>();
+		libProcessTypeCodes.addAll(MetaBarCoding.getBanqueProcessTypeMetaTA());
+		libProcessTypeCodes.addAll(MetaBarCoding.getBanqueProcessTypeMetaTB());
+		
+		
 		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Content), String.class, true, null,
-				 DescriptionFactory.newValues("TA", "TB"),null,null,null,"single", 18, false, null, null));
+				libProcessTypeCodes,null,null,null,"single", 18, false, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Taille théorique sizing", "expectedSize", LevelService.getLevels(Level.CODE.Content), String.class, false, null,
                  DescriptionFactory.newValues("280-310 (F300)","400-550 (ITS2)","450-550 (W500)","550-650 (W600)","500-650","550-700 (ITS2)","600-700 (W700)","650-750 (W700)","650-700 (W700)","650-800","700-800 (W800)","750-800", "autre"),  MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 20, true, null,null));
