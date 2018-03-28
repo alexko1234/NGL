@@ -85,66 +85,15 @@ public class DevAppTesting {
 	 */
 	private static String testTimeKey = null;
 	
-	/**
-	 * Map hexadecimal chars to letters.
-	 * @param s string to apply substitution to
-	 * @return  string with applied substitution
-	 */
-	private static String hexToLetters(String s) {
-		return org.apache.commons.lang3.StringUtils.replaceChars(s,"0123456789abcdef","ABCDEFGHIJKLMONP");	
-	}
-	
-//	private static String hexToLetters_(String s) {
-//		StringBuilder b = new StringBuilder(s.length());
-//		for (int i = 0; i < s.length(); i++) {
-//			char c = s.charAt(i);
-//			if (c >= '0' && c <= '9')
-//				b.append(c + 'A' - '0');
-//			else if (c >= 'a' && c <= 'z')
-//				b.append(c + 'K' - 'a');
-//			else
-//				b.append('_');
-//		}
-//		return b.toString();	
-//	}
-	
-	/**
-	 * Somewhat unique identifier that can be used to create unique identifiers.
-	 * @return 
-	 */
-	public static String testTimeKey() {
-		if (testTimeKey == null) {
-			testTimeKey = Long.toHexString(System.currentTimeMillis());
-			testTimeKey = testTimeKey.substring(testTimeKey.length() - 6);
-			testTimeKey = hexToLetters(testTimeKey); 			                                                                                
-		}
-		return testTimeKey;
-	}
-
 	private static int codeId = 0;
-	
-	/**
-	 * Generate a code with the given prefix.
-	 * @param head prefix to prepend
-	 * @return     generated code
-	 */
-	public static String newCode(String head) {
-		String testRunner = System.getProperty("user.name").toUpperCase();
-		String datePart   = testTimeKey();
-		String iid        = hexToLetters(String.format("%04d", codeId ++)); 
-		return head + testRunner + datePart + iid;
-	}
-	
-	/**
-	 * Generate a new code with "TEST" as prefix.
-	 * @return generated code
-	 */
-	public static String newCode() {
-		return newCode("TEST");
-	}
 
 	/*
-	 * Get the full name of the file that mathces the given resource. 
+	 * Application singleton instance.
+	 */
+	private static Application application;
+
+	/*
+	 * Get the full name of the file that matches the given resource. 
 	 * @param name name of the resource to find
 	 * @return     full path to the found file
 	 */
@@ -174,10 +123,6 @@ public class DevAppTesting {
 	 */
 	// private static GuiceApplicationBuilder applicationBuilder;
 	
-	/*
-	 * Application singleton instance.
-	 */
-	private static Application application;
 
 	private static void propsDump() {
 		Properties p = System.getProperties();
@@ -221,8 +166,24 @@ public class DevAppTesting {
 	// TODO: change to use the devappF version that use file configuration and not resource.
 	@SafeVarargs
 	public static Application devapp(String appConfFile, Function<GuiceApplicationBuilder,GuiceApplicationBuilder>... mods) { //, String logConfFile) {
-		return devapp(appConfFile, Arrays.asList(mods));
+		List<Function<GuiceApplicationBuilder,GuiceApplicationBuilder>> ms = new ArrayList<>();
+		for (Function<GuiceApplicationBuilder,GuiceApplicationBuilder> m : mods)
+			ms.add(m);
+		// The Arrays.asList call produces a warning
+		// Arrays.asList(mods);
+		return devapp(appConfFile, ms);
 	}
+	
+//	public static Application devapp(String appConfFile) {
+//		ArrayList<Function<GuiceApplicationBuilder,GuiceApplicationBuilder>> l = new ArrayList<>();
+//		return devapp(appConfFile,l);
+//	}
+//	
+//	public static Application devapp(String appConfFile, Function<GuiceApplicationBuilder,GuiceApplicationBuilder> mod0) {
+//		ArrayList<Function<GuiceApplicationBuilder,GuiceApplicationBuilder>> l = new ArrayList<>();
+//		l.add(mod0);
+//		return devapp(appConfFile,l);
+//	}
 	
 	public static Application devapp(String appConfFile, List<Function<GuiceApplicationBuilder,GuiceApplicationBuilder>> mods) {
 		if (application != null) {
@@ -322,9 +283,9 @@ public class DevAppTesting {
 	
 	/**
 	 * Run the given test using the app and the http server at the given port.
-	 * @param app
-	 * @param port
-	 * @param toRun
+	 * @param app   application to run
+	 * @param port  server port to use
+	 * @param toRun code to execute
 	 */
 	public static void testInServer(Application app, int port, Consumer<WSClient> toRun) {
 		TestServer server = testServer(port,app);
@@ -504,6 +465,65 @@ public class DevAppTesting {
 	
 	public static <T extends DBObject> void savage(T o, Class<T> t, String collectionName) {
 		MongoDBDAO.save(collectionName, o);
+	}
+
+	// ------------------------------------------------------------------
+	// ----- Object codes generation
+	
+	/**
+	 * Map hexadecimal chars to letters.
+	 * @param s string to apply substitution to
+	 * @return  string with applied substitution
+	 */
+	private static String hexToLetters(String s) {
+		return org.apache.commons.lang3.StringUtils.replaceChars(s,"0123456789abcdef","ABCDEFGHIJKLMONP");	
+	}
+	
+//	private static String hexToLetters_(String s) {
+//		StringBuilder b = new StringBuilder(s.length());
+//		for (int i = 0; i < s.length(); i++) {
+//			char c = s.charAt(i);
+//			if (c >= '0' && c <= '9')
+//				b.append(c + 'A' - '0');
+//			else if (c >= 'a' && c <= 'z')
+//				b.append(c + 'K' - 'a');
+//			else
+//				b.append('_');
+//		}
+//		return b.toString();	
+//	}
+	
+	/**
+	 * Somewhat unique identifier that can be used to create unique identifiers.
+	 * @return session related base key
+	 */
+	public static String testTimeKey() {
+		if (testTimeKey == null) {
+			testTimeKey = Long.toHexString(System.currentTimeMillis());
+			testTimeKey = testTimeKey.substring(testTimeKey.length() - 6);
+			testTimeKey = hexToLetters(testTimeKey); 			                                                                                
+		}
+		return testTimeKey;
+	}
+
+	/**
+	 * Generate a code with the given prefix.
+	 * @param head prefix to prepend
+	 * @return     generated code
+	 */
+	public static String newCode(String head) {
+		String testRunner = System.getProperty("user.name").toUpperCase();
+		String datePart   = testTimeKey();
+		String iid        = hexToLetters(String.format("%04d", codeId ++)); 
+		return head + testRunner + datePart + iid;
+	}
+	
+	/**
+	 * Generate a new code with "TEST" as prefix.
+	 * @return generated code
+	 */
+	public static String newCode() {
+		return newCode("TEST");
 	}
 	
 }

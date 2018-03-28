@@ -34,9 +34,10 @@ public class WSHelper {
 	/**
 	 * Shortcut for HTTP get. Exceptions are converted to runtime
 	 * exceptions.
-	 * @param ws  web client to use
-	 * @param url URL to get 
-	 * @return    web response for the given URL
+	 * @param ws    web client to use
+	 * @param url   URL to get 
+	 * @param asbot use bot identity if true
+	 * @return      web response for the given URL
 	 */
 	public static WSResponse get(WSClient ws, String url, boolean asbot) { // throws InterruptedException,ExecutionException {
 		try {
@@ -51,9 +52,9 @@ public class WSHelper {
 	/**
 	 * add user-agent definition in http request header if asbot parameter is true
 	 * "User-Agent": ["bot"]
-	 * @param asbot
-	 * @param request
-	 * @return
+	 * @param asbot   set bot identity in request
+	 * @param request base request
+	 * @return        new updated request
 	 */
 	private static WSRequest addUserAgent(boolean asbot, WSRequest request) {
 		if (asbot) {
@@ -111,7 +112,7 @@ public class WSHelper {
 	 * @param ws      web client to use
 	 * @param url     url to put to
 	 * @param payload payload to send along the put request
-	 * @param asbot 
+	 * @param asbot   use bot identity if true
 	 * @return        web response
 	 */
 	public static WSResponse put(WSClient ws, String url, String payload, boolean asbot) { // throws InterruptedException,ExecutionException {
@@ -164,6 +165,7 @@ public class WSHelper {
 	 * @param ws      web client to use
 	 * @param url     url to post to
 	 * @param payload payload to send along the post request
+	 * @param asbot   use bot identity if true
 	 * @return        web response
 	 */
 	public static WSResponse post(WSClient ws, String url, String payload, boolean asbot) { // throws InterruptedException,ExecutionException {
@@ -213,6 +215,7 @@ public class WSHelper {
 	 * Short for http delete with some payload.
 	 * @param ws      web client to use
 	 * @param url     url to put to
+	 * @param asbot   use bot identity if true
 	 * @return        web response
 	 */
 	public static WSResponse delete(WSClient ws, String url, boolean asbot) { 
@@ -255,9 +258,10 @@ public class WSHelper {
 	/**
 	 * Shorcut for http head. Exceptions are converted to runtime
 	 * exceptions.
-	 * @param ws  web client to use
-	 * @param url url to get 
-	 * @return    web response for the given url
+	 * @param ws    web client to use
+	 * @param url   url to get 
+	 * @param asbot use bot identity if true
+	 * @return      web response for the given url
 	 */
 	public static WSResponse head(WSClient ws, String url, boolean asbot) { // throws InterruptedException,ExecutionException {
 		try {

@@ -62,7 +62,7 @@ public abstract class CompleteTestServer {
 
 	/**
 	 * Stop the full application stack.
-	 * @throws IOException
+	 * @throws IOException error while stopping the server, the client or the application
 	 */
 	public void stop() throws IOException {
 		app.asScala().stop();

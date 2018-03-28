@@ -76,6 +76,8 @@ public class ApplicationFactory {
 	
 	/**
 	 * Build a cloned application factory that has the given binding added. 
+	 * @param <T> binding point type
+	 * @param <U> binding value type
 	 * @param t binding point
 	 * @param u binding value
 	 * @return cloned factory with the binding added
@@ -90,6 +92,7 @@ public class ApplicationFactory {
 
 	/**
 	 * Build a cloned factory with the given to self eager binding added.
+	 * @param <T> binding point and value type
 	 * @param t self binding to add
 	 * @return  cloned factory with the added binding
 	 */
@@ -98,7 +101,9 @@ public class ApplicationFactory {
 	}
 
 	/**
-	 * Build a cloned factory with the lazy override added. 
+	 * Build a cloned factory with the lazy override added.
+	 * @param <T> binding point type
+	 * @param <U> binding value type 
 	 * @param t binding point
 	 * @param u binding value
 	 * @return  cloned factory with added override

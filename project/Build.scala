@@ -44,6 +44,7 @@ object ApplicationBuild extends Build {
 	val embeddedAuth   = System.getProperty("embedded.auth")   == "true"
 	val embeddedSpring = System.getProperty("embedded.spring") == "true"
 	val embeddedMongo  = System.getProperty("embedded.mongo")  == "true"
+  val nglLite        = System.getProperty("ngl.lite")        == "true"
   
 	// Workaround for missing properties in test vms. Build the test child
 	// VM option for the logger.
@@ -243,6 +244,12 @@ object ApplicationBuild extends Build {
       // https://mvnrepository.com/artifact/com.typesafe.play/play-test
       // Could not find any shortcut
       "com.typesafe.play" %% "play-test" % "2.6.11",
+//      "org.seleniumhq.selenium" % "selenium-server"          % "3.11.0",
+//      "org.seleniumhq.selenium" % "selenium-java"          % "3.11.0",
+      // Requires extra installation steps
+      // "org.seleniumhq.selenium" % "selenium-chrome-driver" % "3.11.0",
+//      "org.seleniumhq.selenium" % "selenium-htmlunit"      % "3.11.0",
+
       //fest
       "org.easytesting"      % "fest-assert"        % "1.4"
       // ceaMongo
@@ -588,10 +595,10 @@ object ApplicationBuild extends Build {
       publishArtifact in makePom := false,
       publishTo                  := Some(nexusigpublish)
     ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
-
+    
   val main = Project(appName, file("."), settings = buildSettings)
-    .enablePlugins(play.sbt.PlayJava)
-    .settings(
+        .enablePlugins(play.sbt.PlayJava)
+        .settings(
 	  	version                    := nglVersion,			  
       resolvers                  := nexus,
       publishArtifact in makePom := false,
@@ -618,7 +625,7 @@ object ApplicationBuild extends Build {
       springPlugin,
       mongoPlugin
     )
-
+    
     // -- Javadoc generation experiment
     
 //  lazy val foo = taskKey[Seq[Seq[File]]]("foo")
@@ -677,13 +684,11 @@ object ApplicationBuild extends Build {
       mongoPlugin
     )
   
-    // Should be aggregated conditionaly
-    val sqLite =
-         Project("ngl-sq-lite", file("app-ngl-sq-lite"), settings=buildSettings) 
-                .enablePlugins(play.sbt.PlayJava)
-                .dependsOn(nglsq)
-    
-  
+//    val sqLite =
+//         Project("ngl-sq-lite", file("app-ngl-sq-lite"), settings=buildSettings) 
+//                .enablePlugins(play.sbt.PlayJava)
+//                .dependsOn(nglsq)
+                  
 //  val coreSources =
 //       (((sources in nglcommon)        in Compile).value)
 //    ++ (((sources in nglframeworkweb)  in Compile).value)
@@ -697,54 +702,54 @@ object ApplicationBuild extends Build {
   // We cannot merge the docs as individual projects defines the
   // same classes in the same packages.
   // 
-  val fulldoc = Project("fulldoc", file("fulldoc"), settings=buildSettings)
-    .enablePlugins(play.sbt.PlayJava)
-    .settings(
-      version                    := "0.1",
-      // sources in Compile := foo,
-      // sources in (Compile, doc) <<= (sources in nglcommon)       in (Compile,doc),
-      (sources in Compile) :=   (((sources in nglcommon)        in Compile).value
-                              ++ ((sources in nglframeworkweb)  in Compile).value
-                              ++ ((sources in ngldatatable)     in Compile).value
-                              ++ ((sources in nglsq)            in Compile).value       
-//                              ++ ((sources in nglbi)            in Compile).value        
-//                              ++ ((sources in nglassets)        in Compile).value   
-//                              ++ ((sources in nglplates)        in Compile).value   
-//                              ++ ((sources in ngldata)          in Compile).value     
-//                              ++ ((sources in nglsub)           in Compile).value  
-//                              ++ ((sources in nglreagents)      in Compile).value 
-//                              ++ ((sources in nglprojects)      in Compile).value 
-//                              ++ ((sources in ngldevguide)      in Compile).value
-                              ++ ((sources in nglPlayMigration) in Compile).value
-   	                          ++ ((sources in nglTesting)       in Compile).value
-     	                        ++ ((sources in authentication)   in Compile).value
-                              ++ ((sources in springPlugin)     in Compile).value
-                              ++ ((sources in mongoPlugin)      in Compile).value),
-//      (sources in Compile) := projectList flatMap { p => ((sources in p) in Compile) },
-      // (sources in Compile) := foo.value.flatten,
-      // sources in (Compile, doc) <<= (sources in nglframeworkweb) in (Compile, doc),
-      // sources in (Compile, doc) <<= (sources in nglframeworkweb) in (Compile, doc),
-      libraryDependencies       ++= nglcommonDependencies
-    ).dependsOn(
-      nglcommon,
-      nglframeworkweb,
-      ngldatatable,
-      // applications
-      nglsq,       
-   	  nglbi,        
-   	  nglassets,   
-     	nglplates,   
-     	ngldata,     
-   	  nglsub,      
-     	nglreagents, 
-     	nglprojects, 
-   	  ngldevguide,
-      // play migration and testing
-      nglPlayMigration,
-   	  nglTesting,
-     	authentication,
-      springPlugin,
-      mongoPlugin
-    )
+//  val fulldoc = Project("fulldoc", file("fulldoc"), settings=buildSettings)
+//    .enablePlugins(play.sbt.PlayJava)
+//    .settings(
+//      version                    := "0.1",
+//      // sources in Compile := foo,
+//      // sources in (Compile, doc) <<= (sources in nglcommon)       in (Compile,doc),
+//      (sources in Compile) :=   (((sources in nglcommon)        in Compile).value
+//                              ++ ((sources in nglframeworkweb)  in Compile).value
+//                              ++ ((sources in ngldatatable)     in Compile).value
+//                              ++ ((sources in nglsq)            in Compile).value       
+////                              ++ ((sources in nglbi)            in Compile).value        
+////                              ++ ((sources in nglassets)        in Compile).value   
+////                              ++ ((sources in nglplates)        in Compile).value   
+////                              ++ ((sources in ngldata)          in Compile).value     
+////                              ++ ((sources in nglsub)           in Compile).value  
+////                              ++ ((sources in nglreagents)      in Compile).value 
+////                              ++ ((sources in nglprojects)      in Compile).value 
+////                              ++ ((sources in ngldevguide)      in Compile).value
+//                              ++ ((sources in nglPlayMigration) in Compile).value
+//   	                          ++ ((sources in nglTesting)       in Compile).value
+//     	                        ++ ((sources in authentication)   in Compile).value
+//                              ++ ((sources in springPlugin)     in Compile).value
+//                              ++ ((sources in mongoPlugin)      in Compile).value),
+////      (sources in Compile) := projectList flatMap { p => ((sources in p) in Compile) },
+//      // (sources in Compile) := foo.value.flatten,
+//      // sources in (Compile, doc) <<= (sources in nglframeworkweb) in (Compile, doc),
+//      // sources in (Compile, doc) <<= (sources in nglframeworkweb) in (Compile, doc),
+//      libraryDependencies       ++= nglcommonDependencies
+//    ).dependsOn(
+//      nglcommon,
+//      nglframeworkweb,
+//      ngldatatable,
+//      // applications
+//      nglsq,       
+//   	  nglbi,        
+//   	  nglassets,   
+//     	nglplates,   
+//     	ngldata,     
+//   	  nglsub,      
+//     	nglreagents, 
+//     	nglprojects, 
+//   	  ngldevguide,
+//      // play migration and testing
+//      nglPlayMigration,
+//   	  nglTesting,
+//     	authentication,
+//      springPlugin,
+//      mongoPlugin
+//    )
      
 }

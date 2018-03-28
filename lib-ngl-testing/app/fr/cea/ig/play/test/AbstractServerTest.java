@@ -65,7 +65,7 @@ public class AbstractServerTest {
 	
 	/**
 	 * Stop the complete test server instance.
-	 * @throws IOException
+	 * @throws IOException error while stopping the server or application
 	 */
 	public static void stop() throws IOException {
 		cts.stop();
@@ -74,6 +74,7 @@ public class AbstractServerTest {
 
 	/**
 	 * Shutdown test application, annotated for JUnit tests.
+	 * @throws IOException error while stopping the server or the application
 	 */
 	@AfterClass
 	public static void shutdownTestApplication() throws IOException {
