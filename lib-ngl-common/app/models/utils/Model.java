@@ -91,6 +91,12 @@ public class Model<T> {
 			return getInstance().findByCode(code);
 		}
 		
+		//FDS 28/03/2018 ----------------------------- !!!!!!!
+		@JsonIgnore
+		public T findByCodeOrName(String code) throws DAOException {
+			return getInstance().findByCodeOrName(code);
+		}
+		
 		@JsonIgnore
 		public List<T> findByCodes(List<String> codes) throws DAOException {
 			return getInstance().findByCodes(codes);

@@ -64,7 +64,28 @@ public abstract class AbstractDAOMapping<T> extends AbstractDAO<T> {
 			return o;
 		}
 	}
-
+	
+	// FDS 28/03/2018--------------------------------------!!!!!!!
+	public T findByCodeOrName(String code) throws DAOException {
+		// TODO: change exception to IllegalArgument exception ?
+		if (null == code)
+			throw new DAOException("code is mandatory");
+		T o = getObjectInCache(code);// impact sur l'ajout 2eme parametre ???
+		if (null != o) {
+			return o;
+		} else {
+			String sql= sqlCommon+" where t.code = ? or t.name = ?";
+			// doc spring: findObject=> lui doner un tableau avec autant  d'elements qu'on a de parametre a remplir..
+			// le nom des parametres est inemployé, pourraient s'appeler toto !!! Merci Nicolas...
+			o = initializeMapping(sql, new SqlParameter("code",Types.VARCHAR),new SqlParameter("name",Types.VARCHAR) ).findObject(new Object[]{code,code});
+			Logger.warn("DAO Mapping: "+sql);//DEBUG
+			Logger.warn("DAO Mapping: "+o );//DEBUG
+			setObjectInCache(o, code); // impact sur l'ajout 2eme parametre ???
+			return o;
+		}
+	}
+	
+	
 	public List<T> findByCodes(List<String> codes) throws DAOException
 	{
 		if(null == codes){
