@@ -141,8 +141,8 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 		}
 	}
 	
-	// FDS 28/03/2018 NGL-1969: pour autoriser l'import de samples en se basant sur le nom du sampleType OU comme avant sur son code
-	//  cas de l'import depuis le fichier LIMS ModulBio ou les type sont designés par des labels en français (ex: ADN) au lieu du code (ex: DNA)
+	// ajout FDS 28/03/2018 NGL-1969: pour trouver un sampleType en se basant sur son code OU SUR SON NOM
+	// sert dans quel cas ?????????????? la methode reellement utilisee est celle de AbstractDAOMapping....
 	// TODO: fix silent error handling		
 	public T findByCodeOrName(String code) throws DAOException {
 		if (null == code) {
@@ -157,8 +157,6 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 				String sql = getSqlCommon() + " WHERE t.code=? or t.name=?";
 				BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
 				o = this.jdbcTemplate.queryForObject(sql, mapper, code, code); /// ajout 2eme parametre
-				Logger.warn("DAO Default :"+sql);//DEBUG
-				Logger.warn("DAO Default :"+o);//DEBUG
 				setObjectInCache(o, code);
 				return o;
 			} catch (IncorrectResultSizeDataAccessException e) {
@@ -168,6 +166,7 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 		}
 	}
 	
+	/// corriger le warning !!!!
 	public List<T> findByCodes(List<String> codes) throws DAOException {
 		if(null == codes){
 			throw new DAOException("codes is mandatory");

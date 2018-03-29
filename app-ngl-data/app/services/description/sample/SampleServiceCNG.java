@@ -73,7 +73,6 @@ public class SampleServiceCNG extends AbstractSampleService {
 		//use only in  NGL-BI. Please not used in sample import !!!!!!!!!!!!!!!
 		l.add(makeSampleType("Non défini", 		"not-defined", 	"unknown",		null,		CNG));
 		
-		
 		DAOHelpers.saveModels(SampleType.class, l, errors);
 	}
 	

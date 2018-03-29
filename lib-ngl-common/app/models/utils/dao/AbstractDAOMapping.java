@@ -4,8 +4,11 @@ import java.sql.Types;
 import java.util.List;
 
 import org.springframework.asm.Type;
+
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
@@ -65,23 +68,29 @@ public abstract class AbstractDAOMapping<T> extends AbstractDAO<T> {
 		}
 	}
 	
-	// FDS 28/03/2018--------------------------------------!!!!!!!
+	// ajout FDS 28/03/2018 NGL-1969 (avec try/catch)
+	// pour trouver un sampleType en se basant sur son code OU SUR SON NOM
 	public T findByCodeOrName(String code) throws DAOException {
 		// TODO: change exception to IllegalArgument exception ?
-		if (null == code)
+		if (null == code){
 			throw new DAOException("code is mandatory");
-		T o = getObjectInCache(code);// impact sur l'ajout 2eme parametre ???
+		}
+		
+		T o = getObjectInCache(code);
 		if (null != o) {
 			return o;
 		} else {
-			String sql= sqlCommon+" where t.code = ? or t.name = ?";
-			// doc spring: findObject=> lui doner un tableau avec autant  d'elements qu'on a de parametre a remplir..
-			// le nom des parametres est inemployé, pourraient s'appeler toto !!! Merci Nicolas...
-			o = initializeMapping(sql, new SqlParameter("code",Types.VARCHAR),new SqlParameter("name",Types.VARCHAR) ).findObject(new Object[]{code,code});
-			Logger.warn("DAO Mapping: "+sql);//DEBUG
-			Logger.warn("DAO Mapping: "+o );//DEBUG
-			setObjectInCache(o, code); // impact sur l'ajout 2eme parametre ???
-			return o;
+			try {
+				String sql= sqlCommon+" where t.code = ? or t.name = ?";
+				// doc spring: findObject=> lui donner un tableau avec autant d'object qu'on a de parametres a remplir, ici 2) => new Object[]{code,code})
+				// le nom des parametres est inemployé, pourraient s'appeler toto !!!      Merci N.W.
+				o = initializeMapping(sql, new SqlParameter("code",Types.VARCHAR),new SqlParameter("name",Types.VARCHAR) ).findObject(new Object[]{code,code});
+				setObjectInCache(o, code); 
+				return o;
+			} catch(IncorrectResultSizeDataAccessException e) {
+				//Logger.warn(e.getMessage());
+				return null;
+			}
 		}
 	}
 	
@@ -93,8 +102,9 @@ public abstract class AbstractDAOMapping<T> extends AbstractDAO<T> {
 		}
 		try {
 			String sql =sqlCommon+" WHERE t.code in ("+listToParameters(codes)+")";
-			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
-			return initializeMapping(sql, listToSqlParameters(codes ,"t.code", Types.VARCHAR)).execute(codes.toArray( new String[0]));			
+			// FDS 29/03/2018 sert a rien....BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
+			return initializeMapping(sql, listToSqlParameters(codes ,"t.code", Types.VARCHAR)).execute(codes.toArray( new String[0]));		
+	
 		} catch (DataAccessException e) {
 			Logger.warn(e.getMessage());
 			return null;
