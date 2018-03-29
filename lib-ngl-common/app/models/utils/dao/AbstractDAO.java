@@ -5,6 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
+
 // import models.laboratory.common.description.State;
 import models.utils.Model;
 
@@ -82,6 +83,9 @@ public abstract class AbstractDAO<T> {
 	public abstract T findById(Long id) throws DAOException;
 	
 	public abstract T findByCode(String code) throws DAOException;
+	
+	//FDS 28/03/2018 -----------------------------!!!!
+	public abstract T findByCodeOrName(String code) throws DAOException;
 
 	public abstract List<T> findByCodes(List<String> code) throws DAOException;
 

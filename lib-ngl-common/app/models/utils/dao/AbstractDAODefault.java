@@ -141,6 +141,33 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 		}
 	}
 	
+	// FDS 28/03/2018 NGL-1969: pour autoriser l'import de samples en se basant sur le nom du sampleType OU comme avant sur son code
+	//  cas de l'import depuis le fichier LIMS ModulBio ou les type sont designés par des labels en français (ex: ADN) au lieu du code (ex: DNA)
+	// TODO: fix silent error handling		
+	public T findByCodeOrName(String code) throws DAOException {
+		if (null == code) {
+			throw new DAOException("code is mandatory");
+		}
+		T o = getObjectInCache(code);
+		if (null != o) {
+			//Logger.debug("find in cache "+entityClass.getCanonicalName() + " : "+code);
+			return o;
+		} else {
+			try {
+				String sql = getSqlCommon() + " WHERE t.code=? or t.name=?";
+				BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
+				o = this.jdbcTemplate.queryForObject(sql, mapper, code, code); /// ajout 2eme parametre
+				Logger.warn("DAO Default :"+sql);//DEBUG
+				Logger.warn("DAO Default :"+o);//DEBUG
+				setObjectInCache(o, code);
+				return o;
+			} catch (IncorrectResultSizeDataAccessException e) {
+				//Logger.warn(e.getMessage());
+				return null;
+			}
+		}
+	}
+	
 	public List<T> findByCodes(List<String> codes) throws DAOException {
 		if(null == codes){
 			throw new DAOException("codes is mandatory");
