@@ -67,12 +67,12 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 
 		l.addAll(new Opgen().getExperimentType());
-	//	l.addAll(new Nanopore().getExperimentType());
+		//	l.addAll(new Nanopore().getExperimentType());
 		l.addAll(new Bionano().getExperimentType());
-			l.addAll(new QualityControl().getExperimentType());
-			l.addAll(new Transfert().getExperimentType());
-			l.addAll(new Purif().getExperimentType());
-			
+		l.addAll(new QualityControl().getExperimentType());
+		l.addAll(new Transfert().getExperimentType());
+		l.addAll(new Purif().getExperimentType());
+
 		l.addAll(new SamplePrep().getExperimentType());
 		l.addAll(new MetaBarCoding().getExperimentType());
 		l.addAll(new MetaGenomique().getExperimentType());
@@ -80,35 +80,35 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		l.addAll(new BanqueIllumina().getExperimentType());
 		l.addAll(new RunIllumina().getExperimentType());
 		l.addAll(new Nanopore().getExperimentType());
-		
-		
+
+
 		if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
-			
+
 			/*
 			l.add(newExperimentType("Ext to Banque","ext-to-library",null,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
+
 			l.add(newExperimentType("Ampure Non Ampli","ampure-na",null,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()),
 					null, getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-			
+
 			l.add(newExperimentType("Ampure Ampli","ampure-a",null,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null,
 					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));		
-			
-			
-			
+
+
+
 			l.add(newExperimentType("Librairie indexée","librairie-indexing",null,400,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibIndexing(),
 					getInstrumentUsedTypes("hand","spri"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-			*/
-			
+			 */
+
 		}
-		
+
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
 
 	}

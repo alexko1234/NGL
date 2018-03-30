@@ -157,7 +157,8 @@ public class ProtocolServiceCNS {
 				concatMap(newPSV("extractionProtocol","ZR Duet prok."))));
 		lp.add(newProtocol("zr-duet-extraction-dev","Extraction ZR Duet DEV","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-rna-extraction")));
 		
-			
+		lp.add(newProtocol("quick-dna-96-plus-prok-v1","Quick-DNA 96 Plus Kit Prok.v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-extraction"),
+		concatMap(newPSV("extractionProtocol","ZR Duet prok."))));
 		
 		lp.add(newProtocol("fast_prep_grinding","Broyage Fast Prep","path2","1","production",InstanceFactory.setExperimentTypeCodes("grinding")));
 		
