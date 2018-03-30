@@ -530,9 +530,9 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
 						, null, "single" ,104, true, null, null));
 		
-		// FDS 29/03/2018  JIRA NGL-1985 ajout N-Plex: optionnel, niveau process uniquement, editable, pas de defaut
+		// FDS 29/03/2018  JIRA NGL-1985 ajout N-plex: optionnel, niveau process uniquement, editable, pas de defaut
 		propertyDefinitions.add(
-				DescriptionFactory.newPropertiesDefinition("N-Plex","nPlex"
+				DescriptionFactory.newPropertiesDefinition("N-plex","nPlex"
 						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
 						, null, "single" ,105, true, null, null));
 		
@@ -575,9 +575,9 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
 						, null, "single" ,103, true, null, null));
 		
-		// FDS 29/03/2018  JIRA NGL-1985 ajout N-Plex: optionnel, niveau process uniquement, editable, pas de defaut
+		// FDS 29/03/2018  JIRA NGL-1985 ajout N-plex: optionnel, niveau process uniquement, editable, pas de defaut
 		propertyDefinitions.add(
-				DescriptionFactory.newPropertiesDefinition("N-Plex","nPlex"
+				DescriptionFactory.newPropertiesDefinition("N-plex","nPlex"
 						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
 						, null, "single" ,104, true, null, null));
 		
@@ -624,9 +624,9 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
 						, null, "single" ,103, true, null, null));
 		
-		// FDS 29/03/2018  JIRA NGL-1985 ajout N-Plex: optionnel, niveau process uniquement, editable, pas de defaut
+		// FDS 29/03/2018  JIRA NGL-1985 ajout N-plex: optionnel, niveau process uniquement, editable, pas de defaut
 		propertyDefinitions.add(
-				DescriptionFactory.newPropertiesDefinition("N-Plex","nPlex"
+				DescriptionFactory.newPropertiesDefinition("N-plex","nPlex"
 						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
 						, null, "single" ,104, true, null, null));
 		
@@ -715,7 +715,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		
 		//N-plex: optionnel,niveau process uniquement
 		propertyDefinitions.add(
-				DescriptionFactory.newPropertiesDefinition("N-Plex","nPlex",
+				DescriptionFactory.newPropertiesDefinition("N-plex","nPlex",
 						LevelService.getLevels(Level.CODE.Process), String.class, false, "F",
 						null, "single" ,106, true, null, null));
 		
