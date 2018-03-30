@@ -511,24 +511,30 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						, LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, false, "F"
 						, null, "single" ,101, true, null, null));
 		
-		// FDS 23/11/2016 SUPSQCNG-424 : ajout sequencingType optionnelle avec liste de choix,  niveau process uniquement
+		// FDS 23/11/2016 SUPSQCNG-424 : ajout sequencingType optionnelle avec liste de choix, niveau process uniquement
 		// FDS 19/12/2017 ajout "NovaSeq 6000"
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type de séquencage","sequencingType"
 						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
 						, DescriptionFactory.newValues("Hiseq 4000","Hiseq X","NovaSeq 6000"), "single" ,102, null, null, null));
 		
-		// FDS 18/01/2017 JIRA NGL-1259 ajout plateWorkLabel: optionnel,niveau process uniquement
+		// FDS 18/01/2017 JIRA NGL-1259 ajout plateWorkLabel: optionnel, niveau process uniquement, editable, pas de default
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Nom de travail plaque","plateWorkLabel"
 						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
 						, null, "single" ,103, true, null, null));
 		
-		// FDS 18/01/2017 JIRA NGL-1259 ajout ngsRunWorkLabel: optionnel,niveau process uniquement
+		// FDS 18/01/2017 JIRA NGL-1259 ajout ngsRunWorkLabel: optionnel, niveau process uniquement, editable, pas de defaut
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Nom de travail run NGS","ngsRunWorkLabel"
 						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
 						, null, "single" ,104, true, null, null));
+		
+		// FDS 29/03/2018  JIRA NGL-1985 ajout N-Plex: optionnel, niveau process uniquement, editable, pas de defaut
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("N-Plex","nPlex"
+						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
+						, null, "single" ,105, true, null, null));
 		
 		return propertyDefinitions;
 	}
@@ -551,23 +557,29 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						, LevelService.getLevels(Level.CODE.Process,Level.CODE.Content) , String.class, true, "F"
 						, getRNALibProcessTypeCodeValues(), "single" ,100, null, null, null));
 
-		// FDS 27/10/2016 NGL-1025: ajout expectedCoverage: : optionnel, editable, pas de defaut
+		// FDS 27/10/2016 NGL-1025: ajout expectedCoverage: optionnel, editable, pas de defaut
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Couverture souhaitée","expectedCoverage"
 						, LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, false, "F"
 						, null, "single" ,101, true, null, null));
 		
-		// FDS 18/01/2017 JIRA NGL-1259 ajout plateWorkLabel: optionnel,niveau process uniquement
+		// FDS 18/01/2017 JIRA NGL-1259 ajout plateWorkLabel: optionnel, niveau process uniquement, editable, pas de defaut
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Nom de travail plaque","plateWorkLabel"
 						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
 						, null, "single" ,102, true, null, null));
 		
-		// FDS 18/01/2017 JIRA NGL-1259 ajout ngsRunWorkLabel: optionnel,niveau process uniquement
+		// FDS 18/01/2017 JIRA NGL-1259 ajout ngsRunWorkLabel: optionnel, niveau process uniquement, editable, pas de defaut
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Nom de travail run NGS","ngsRunWorkLabel"
 						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
 						, null, "single" ,103, true, null, null));
+		
+		// FDS 29/03/2018  JIRA NGL-1985 ajout N-Plex: optionnel, niveau process uniquement, editable, pas de defaut
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("N-Plex","nPlex"
+						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
+						, null, "single" ,104, true, null, null));
 		
 		return propertyDefinitions;
 	}
@@ -594,23 +606,29 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						, LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, "F"
 						, getX5WgNanoLibProcessTypeCodeValues(), "single" ,100, null, null, null));
 		
-		// FDS 27/10/2016 NGL-1025: ajout expectedCoverage: : optionnel, editable, pas de defaut
+		// FDS 27/10/2016 NGL-1025: ajout expectedCoverage: optionnel, editable, pas de defaut
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Couverture souhaitée","expectedCoverage"
 						, LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, false, "F"
 						, null, "single" ,101, true, null, null));
 		
-		// FDS 18/01/2017 JIRA NGL-1259 ajout plateWorkLabel: optionnel,niveau process uniquement
+		// FDS 18/01/2017 JIRA NGL-1259 ajout plateWorkLabel: optionnel, niveau process uniquement,editable, pas de defaut
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Nom de travail plaque","plateWorkLabel"
 						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
 						, null, "single" ,102, true, null, null));
 		
-		// FDS 18/01/2017 JIRA NGL-1259 ajout ngsRunWorkLabel
+		// FDS 18/01/2017 JIRA NGL-1259 ajout ngsRunWorkLabel: optionnel, niveau process uniquement, editable, pas de defaut
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Nom de travail run NGS","ngsRunWorkLabel"
 						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
 						, null, "single" ,103, true, null, null));
+		
+		// FDS 29/03/2018  JIRA NGL-1985 ajout N-Plex: optionnel, niveau process uniquement, editable, pas de defaut
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("N-Plex","nPlex"
+						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
+						, null, "single" ,104, true, null, null));
 		
 		return propertyDefinitions;
 	}
