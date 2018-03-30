@@ -16,7 +16,7 @@ public class Projects extends Controller { // CommonController {
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(Projects.class);
 	
-	public static Result save() {
+	public Result save() {
 		try {
 			Map<String,List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
 			ProjectService.main(errors);

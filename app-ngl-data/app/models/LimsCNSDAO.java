@@ -73,12 +73,14 @@ public class LimsCNSDAO {
 	protected static final String PROJECT_CATEGORY_CODE       = "default";
 	protected static final String PROJECT_TYPE_CODE_FG        = "france-genomique";
 	protected static final String PROJECT_TYPE_CODE_DEFAULT   = "default-project";
-	protected static final String PROJECT_PROPERTIES_FG_GROUP = "fgGroup";
+	//protected static final String PROJECT_PROPERTIES_FG_GROUP = "fgGroup";
+	protected static final String PROJECT_PROPERTIES_UNIX_GROUP = "unixGroup";
 	protected static final String NGSRG_CODE                  = "ngsrg";
 	protected static final String GLOBAL_CODE                 = "global";
 	protected static final String IMPORT_CATEGORY_CODE        = "sample-import";
 	protected static final String RUN_TYPE_CODE               = "ngsrg-illumina";
 	protected static final String READSET_DEFAULT_CODE        = "default-readset";
+	protected static final String UNIX_GROUP_DEFAULT		  = "g-extprj";
 
 	public JdbcTemplate jdbcTemplate;
 
@@ -235,16 +237,26 @@ public class LimsCNSDAO {
 				Project project = new Project();
 				project.code = rs.getString(2).trim();
 				project.name = rs.getString(1);
+				project.properties=new HashMap<String,PropertyValue>();
+				
 				String fgGroupe=rs.getString("groupefg");
 				if(fgGroupe==null){
 					project.typeCode=PROJECT_TYPE_CODE_DEFAULT;
 				}
 				else {
 					project.typeCode=PROJECT_TYPE_CODE_FG;
-					project.properties= new HashMap<String, PropertyValue>();
-					project.properties.put(PROJECT_PROPERTIES_FG_GROUP, new PropertySingleValue(fgGroupe));
+					project.bioinformaticParameters.fgGroup=fgGroupe;
+					
 				}
-
+				
+				String unixGroup = rs.getString(6);
+				if(unixGroup==null){
+					project.properties.put(PROJECT_PROPERTIES_UNIX_GROUP, new PropertySingleValue(UNIX_GROUP_DEFAULT));
+				}else{
+					project.properties.put(PROJECT_PROPERTIES_UNIX_GROUP, new PropertySingleValue(unixGroup));
+				}
+				
+				
 				project.categoryCode=PROJECT_CATEGORY_CODE;
 
 				project.state = new State(); 

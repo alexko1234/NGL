@@ -19,6 +19,7 @@ public class NGLDataStarterModule extends NGLCommonStarterModule {
 		super(environment,configuration);
 		logger.debug("created module " + this);
 		logger.info("starting NGL-DATA");	
+		enableDrools();
 	}
 
 	/**
@@ -27,7 +28,7 @@ public class NGLDataStarterModule extends NGLCommonStarterModule {
 	@Override
 	public List<Binding<?>> nglCustomBindings(Environment environment, Configuration configuration) {
 		List<Binding<?>> l = super.nglCustomBindings(environment,configuration);
-		l.add(bind(rules.services.Rules6Component.class             ).toSelf().eagerly());
+		//l.add(bind(rules.services.Rules6Component.class             ).toSelf().eagerly());
 		return l;
 	}
 

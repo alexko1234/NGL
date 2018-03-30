@@ -7,12 +7,14 @@ GET     /                           			controllers.Application.index()
 GET		/api/description/all					controllers.description.All.save()
 GET		/api/description/ngl-sq					controllers.description.NGLSeq.save()
 GET		/api/description/ngl-bi					controllers.description.NGLBI.save()
+GET		/api/description/projects				controllers.description.projects.Projects.save()
 
 GET		/api/instance/resolutions				controllers.instance.resolution.Resolutions.save()
 GET		/api/instance/protocols					controllers.instance.protocol.Protocols.save()
 GET		/api/instance/parameters/printers		controllers.instance.parameters.Printers.save()
 
 GET		/migrationTaxonSample					controllers.admin.supports.api.MigrationUpdateNCBITaxonSample.migration(code: java.lang.String ?= "all", onlyNull:Boolean ?=false)
+GET		/cns/migrationUnixGroupProject			controllers.migration.MigrationUnixGroupProject()
 
 ####remove old part (not used anymore)
 #GET		/api/description/ngl-sample				controllers.description.NGLSample.save()
@@ -22,7 +24,7 @@ GET		/migrationTaxonSample					controllers.admin.supports.api.MigrationUpdateNCB
 #GET		/api/description/commons/institutes		controllers.description.commons.Institutes.save()
 
 
-#GET		/api/description/projects				controllers.description.projects.Projects.save()
+
 #GET		/api/description/samples				controllers.description.samples.Samples.save()
 #GET		/api/description/containers				controllers.description.containers.Containers.save()
 #GET		/api/description/instruments			controllers.description.instruments.Instruments.save()
