@@ -14,7 +14,8 @@ GET		/api/instance/protocols					controllers.instance.protocol.Protocols.save()
 GET		/api/instance/parameters/printers		controllers.instance.parameters.Printers.save()
 
 GET		/migrationTaxonSample					controllers.admin.supports.api.MigrationUpdateNCBITaxonSample.migration(code: java.lang.String ?= "all", onlyNull:Boolean ?=false)
-GET		/cns/migrationUnixGroupProject			controllers.migration.MigrationUnixGroupProject()
+
+GET		/migrationUnixGroupProject				controllers.migration.MigrationUnixGroupProject.migration(fileName: java.lang.String)
 
 ####remove old part (not used anymore)
 #GET		/api/description/ngl-sample				controllers.description.NGLSample.save()

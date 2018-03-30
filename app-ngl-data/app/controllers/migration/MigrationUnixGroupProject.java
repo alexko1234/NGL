@@ -1,53 +1,65 @@
 package controllers.migration;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+
+import javax.inject.Inject;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-import org.springframework.jdbc.core.RowMapper;
 
+import com.mongodb.MongoException;
+
+import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
-import models.LimsCNSDAO;
+import fr.cea.ig.play.NGLContext;
+import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
-import models.laboratory.container.instance.Container;
 import models.laboratory.project.instance.Project;
+import models.laboratory.run.instance.ReadSet;
+import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
-import play.api.modules.spring.Spring;
-import play.mvc.Controller;
+import play.Logger;
 import play.mvc.Result;
 
-public class MigrationUnixGroupProject extends Controller{
+public class MigrationUnixGroupProject extends DocumentController<Project>{
 
-	protected static LimsCNSDAO  limsServices = Spring.getBeanOfType(LimsCNSDAO.class);
 	
-	public static Result migration() {
-		
-		List<Project> results = limsServices.jdbcTemplate.query("pl_ProjetToNGL ",new Object[]{} 
-		,new RowMapper<Project>() {
+	@Inject
+	protected MigrationUnixGroupProject(NGLContext ctx) {
+		super(ctx, InstanceConstants.PROJECT_COLL_NAME, Project.class);
+	}
 
-			@SuppressWarnings("rawtypes")
-			public Project mapRow(ResultSet rs, int rowNum) throws SQLException {
-				//Get code and unix groupe
-				String code = rs.getString(2).trim();
-				Project project = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, code);
-				String unixGroup =  rs.getString(6);
-				
-				if(unixGroup==null){
-					project.properties.put("unixGroup", new PropertySingleValue("g-extprj"));
-				}else{
-					project.properties.put("unixGroup", new PropertySingleValue(unixGroup));
-				}
-				
-				return project;
+	
+	public Result migration(String fileName) throws NumberFormatException, MongoException, IOException {
+		
+		BufferedReader reader = new BufferedReader(new FileReader(new File(fileName)));
+		Logger.debug("File name "+fileName);
+		String line = "";
+		while ((line = reader.readLine()) != null) {
+			String[] tabLine = line.split("\t");
+			String codeProjet = tabLine[0];
+			String unixGroup = tabLine[4];
+			Logger.debug("Project "+codeProjet+" "+unixGroup);
+			Project project = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, codeProjet);
+			Logger.debug("Get project "+project.code+" "+unixGroup);
+			if(project.properties==null){
+				project.properties=new HashMap<String,PropertyValue>();
 			}
-		});
-		
-		for(Project project : results){
-			MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME,Container.class, DBQuery.is("code", project.code),DBUpdate.set("project.properties",project.properties));
+			
+			if(unixGroup==null){
+				project.properties.put("unixGroup", new PropertySingleValue("g-extprj"));
+			}else{
+				project.properties.put("unixGroup", new PropertySingleValue(unixGroup));
+			}
+			Logger.debug("Project "+project);
+			MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME,Project.class, DBQuery.is("code", project.code),DBUpdate.set("properties",project.properties));
 		}
-		
+		reader.close();		
 		return ok("Migration UnixGroup finished");
 	}
 }
