@@ -337,6 +337,8 @@
 					var _form = angular.copy(this.form);
 					if(_form.fromDate)_form.fromDate = moment(_form.fromDate, Messages("date.format").toUpperCase()).valueOf();
 					if(_form.toDate)_form.toDate = moment(_form.toDate, Messages("date.format").toUpperCase()).valueOf();		
+					if(_form.fromEvalDate)_form.fromEvalDate = moment(_form.fromEvalDate, Messages("date.format").toUpperCase()).valueOf();
+					if(_form.toEvalDate)_form.toEvalDate = moment(_form.toEvalDate, Messages("date.format").toUpperCase()).valueOf();	
 					return _form
 				},
 				
@@ -502,6 +504,12 @@
 					if(lists.get("readsets-addfilters") && lists.get("readsets-addfilters").length === 1){
 						var formFilters = [];
 						var allFilters = angular.copy(lists.get("readsets-addfilters")[0].filters);
+						/* add static filters*/
+						allFilters.push({property:"fromEvalDate",html:"<input type='text' class='form-control' ng-model='searchService.form.fromEvalDate' placeholder='"+Messages("search.placeholder.fromEvalDate")+"' title='"+Messages("search.placeholder.fromEvalDate")+"'>",position:allFilters.length+1});
+						allFilters.push({property:"toEvalDate",html:'<input type="text" class="form-control" ng-model="searchService.form.toEvalDate" placeholder="'+Messages("search.placeholder.toEvalDate")+'" title="'+Messages("search.placeholder.toEvalDate")+'">',position:allFilters.length+1});
+						
+						
+						
 						var nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
 						for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){
 							formFilters.push(allFilters.splice(0, nbElementByColumn));	    								
