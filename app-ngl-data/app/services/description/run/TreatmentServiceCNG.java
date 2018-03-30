@@ -483,6 +483,8 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version Genome","humanReferenceGenome", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), String.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version Pipeline","pipelineVersion", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), String.class, true, "single"));
 		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Duplicats","duplicatedReadsPercent", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Double.class, false, "single"));
+		
 		return propertyDefinitions;
 	}
 	
