@@ -269,7 +269,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"96-well-plate"}),null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newInstrumentUsedType("Tapestation", "tapestation", InstrumentCategory.find.findByCode("chip-electrophoresis"), null, 
+		l.add(newInstrumentUsedType("Tapestation", "tapestation", InstrumentCategory.find.findByCode("chip-electrophoresis"), getTapestationProperties(), 
 				getInstruments(
 						createInstrument("tapestation-inra", "Tapestation INRA", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))),
 						getContainerSupportCategories(new String[]{"96-well-plate","tube"}),null, 
@@ -518,6 +518,12 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
         propertyDefinitions.add(newPropertiesDefinition("Durée", "duration", LevelService.getLevels(Level.CODE.Instrument),String.class, false, 
         		null, "60",MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_TIME),MeasureUnit.find.findByCode( "s"),MeasureUnit.find.findByCode( "s"), "single", 3));
 		return propertyDefinitions;
+	}
+	private List<PropertyDefinition> getTapestationProperties() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		 propertyDefinitions.add(newPropertiesDefinition("Taille estimée", "estimatedSize", LevelService.getLevels(Level.CODE.Instrument),String.class, false,null,
+		 null, "single", 48, true, null, null));
+		 return propertyDefinitions;
 	}
 	
 	private List<PropertyDefinition> getNanoporeMegaruptor2Properties() {
