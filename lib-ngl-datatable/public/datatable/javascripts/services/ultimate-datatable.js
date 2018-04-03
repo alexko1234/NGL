@@ -3212,18 +3212,12 @@ directive('udtChange', function() {
 	return {
 	  require: 'ngModel',
 		link: function(scope, element, attr, ngModelController) {
-			/*
+			
 			scope.$watch(attr.ngModel, function(newValue, oldValue){
 				if(newValue !== oldValue){
 					scope.$evalAsync(attr.udtChange);						
 				}
-			});
-			*/
-			
-			ngModelController.$viewChangeListeners.push(function() {
-				scope.$evalAsync(attr.udtChange);	
-			});
-			
+			});									
 	  }
 	};	    	
 });;angular.module('ultimateDataTableServices').
