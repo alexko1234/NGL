@@ -54,8 +54,8 @@ public class MigrationPrimers extends UpdateSamplePropertiesCNS {
 		mapping.put("16SV5V6 Prok", "16S V5V6 Prok 784F/1061R");
 		mapping.put("18S_V4 primer", "18S V4 Euk V4f (TAReukF1)/V4r (TAReukR)");
 		mapping.put("18SV1V2 Metazoaire", "18S V1V2 Metazoaire SSUF04/SSURmod");
-		mapping.put("ITS2 primer", "ITS2/SYM_VAR_5,8S2/SYM_VAR_REV");
-		mapping.put("SYM_VAR_5.8S2 / SYM_VAR_REV", "ITS2/SYM_VAR_5,8S2/SYM_VAR_REV");
+		mapping.put("ITS2 primer", "ITS2/SYM_VAR_5.8S2/SYM_VAR_REV");
+		mapping.put("SYM_VAR_5.8S2 / SYM_VAR_REV", "ITS2/SYM_VAR_5.8S2/SYM_VAR_REV");
 		mapping.put("V9 primer", "18S V9 1389F/1510R");
 		mapping.put("Fuhrman primer", "Fuhrman primers");
 		mapping.put("COI primer LCO1490/ HC02198", "COI primers LCOI1490/HC022198");
