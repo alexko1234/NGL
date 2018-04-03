@@ -656,6 +656,12 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			    	"order":false,
 			    	"tdClass": "valuationService.valuationCriteriaClass({lanes:value.data}, run.valuation.criteriaCode, 'lanes.' + col.property)"
 				},
+				{  	"property":"treatments.ngsrg.default.occupiedPatternedWellPercentage.value",
+			    	"header": Messages("runs.lane.ngsrg_illumina.occupiedPatternedWellPercentage"),
+			    	"type":"number",
+			    	"order":false,
+			    	"tdClass": "valuationService.valuationCriteriaClass({lanes:value.data}, run.valuation.criteriaCode, 'lanes.' + col.property)"
+				},
 				{  	"property":"treatments.ngsrg.default.nbMismatch.value",
 			    	"header": Messages("runs.lane.ngsrg_illumina.nbMismatch"),
 			    	"type":"number",

@@ -16,7 +16,9 @@
 							header: Messages("readsets.runCode"),
 							type :"text",
 							group:true,
+							groupMethod:"collect:true",
 							order:true,
+							render:"<div list-resize='cellValue' list-resize-min-size='3' vertical>",
 				    	  	position:2});
 			columns.push({	property:"laneNumber",
 							header: Messages("readsets.laneNumber"),
@@ -317,6 +319,17 @@
 							this.form.includes.push(this.selectedAddColumns[i].property.replace('.value',''));	
 						}
 						
+					}
+					
+					if(this.form.reportingQuery){
+						this.form.reportingQuery.trim();
+						if(this.form.reportingQuery.length > 0){
+							this.form.reporting=true;
+						}else{
+							this.form.reporting=false;
+						}
+					}else{
+						this.form.reporting=false;
 					}
 				},
 				

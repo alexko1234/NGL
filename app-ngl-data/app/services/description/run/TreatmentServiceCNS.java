@@ -448,6 +448,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taxonomy","assignationBilan.taxonomy",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, false, "object_list"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% id","assignationBilan.idPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Double.class, false, "object_list"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% match length","assignationBilan.matchLength",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Double.class, false, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% abundance cluster percent","assignationBilan.abundanceClusterPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Double.class, false, "object_list"));
 		return propertyDefinitions;		
 	}
 	
@@ -460,6 +461,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taxonomy","assignationBilan.taxonomy",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Read1), String.class, false, "object_list"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% id","assignationBilan.idPercent",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Read1), Double.class, false, "object_list"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% match length","assignationBilan.matchLength",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Read1), Double.class, false, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% abundance cluster percent","assignationBilan.abundanceClusterPercent",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Read1), Double.class, false, "object_list"));
 		return propertyDefinitions;		
 	}
 
