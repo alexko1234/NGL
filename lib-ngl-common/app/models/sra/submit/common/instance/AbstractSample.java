@@ -30,7 +30,7 @@ public abstract class AbstractSample extends DBObject implements IValidation {
 	public TraceInformation traceInformation = new TraceInformation();
 	
 	public AbstractSample(String _type) {
-		super();
+//		super();
 		this._type=_type;
 	} 
 	

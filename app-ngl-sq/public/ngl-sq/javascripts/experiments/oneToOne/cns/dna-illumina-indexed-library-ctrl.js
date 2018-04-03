@@ -434,6 +434,35 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 		return values
 	}
 	
+	var populateEPGVDualIndexColumnPlate = function(prefix, startIndex, endIndex){
+		var currentIndex = startIndex;
+		
+		var values={};
+		var lines = ["A","B","C","D","E","F","G","H"];
+		
+		for(var i = 1 ; i <= 12; i++){
+			for(var j=0; j < lines.length; j++){
+				var line = lines[j];
+				
+				var computePrefix = null;
+				if(currentIndex < 10){
+					computePrefix = prefix+"0";
+				}else {
+					computePrefix = prefix;
+				}
+				values[line+i]=computePrefix+currentIndex+"_i7-"+computePrefix+currentIndex+"_i5"; //ex "udi0001_i7-udi0001_i5"
+				if(currentIndex === endIndex){
+					currentIndex = startIndex;
+				}else{
+					currentIndex++;
+				}
+			}
+			
+		}
+		return values
+	}
+	
+	
 	$scope.indexPlates = [];
 	//12BA001-12BA096 ; 12BA097-12BA192 ; 12BA193-12BA288 ; 12BA289-12BA384
 	
@@ -447,6 +476,10 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 	$scope.indexPlates.push({label:"FLD0097-FLD0192 (EPGV)", value:populateIndexColumnPlate("fld0", 97, 192)});
 	$scope.indexPlates.push({label:"FLD0193-FLD0288 (EPGV)", value:populateIndexColumnPlate("fld0", 193, 288)});
 	$scope.indexPlates.push({label:"FLD0289-FLD0384 (EPGV)", value:populateIndexColumnPlate("fld0", 289, 384)});
+	$scope.indexPlates.push({label:"FLD0289-FLD0384 (EPGV)", value:populateIndexColumnPlate("fld0", 289, 384)});
+	
+	$scope.indexPlates.push({label:"IDT-ILMN TruSeq DNA UD Indexes (24 Indexes) (EPGV)", value:populateEPGVDualIndexColumnPlate("udi00", 1, 24)});
+	
 	
 	$scope.updatePlateWithIndex = function(selectedPlateIndex){
 		console.log("choose : "+selectedPlateIndex);

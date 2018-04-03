@@ -184,6 +184,7 @@ public class NGLWSClient {
 
 	/**
 	 * Get an object from an URL JSON response, asserting an OK status.
+	 * @param <T>   type of encoded object
 	 * @param url   URL
 	 * @param clazz class of JSON encoded object
 	 * @return      Object read from GET URL 

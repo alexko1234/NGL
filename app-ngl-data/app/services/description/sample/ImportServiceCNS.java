@@ -606,10 +606,10 @@ public class ImportServiceCNS extends AbstractImportService {
 
 		propertyDefinitions.add(newPropertiesDefinition("Amorces (origine)", "originAmplificationPrimers",
 				LevelService.getLevels(Level.CODE.Sample, Level.CODE.Content), String.class, true, null,
-				getOriginAmplificationPrimers(), null, null, null, "single", 5, true, null, null));
+				getAmplificationPrimers(), null, null, null, "single", 5, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Région ciblée (origine)", "originTargetedRegion",
 				LevelService.getLevels(Level.CODE.Sample, Level.CODE.Content), String.class, true, null,
-				getOriginTargetedRegion(), null, null, null, "single", 3, true, null, null));
+				getTargetedRegion(), null, null, null, "single", 3, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Taille amplicon attendue (origine)",
 				"originExpectedAmpliconSize", LevelService.getLevels(Level.CODE.Sample, Level.CODE.Content),
 				String.class, true, null, null, null, null, null, "single", 6, true, null, null));
@@ -725,25 +725,26 @@ public class ImportServiceCNS extends AbstractImportService {
 				"ITSintfor2 / ITS-Reverse", "SYM_VAR_5.8S2 / SYM_VAR_REV", "ITSD / ITS2REV", "CP23S primers",
 				"5.8S F1 / R1", "18S_V4 primer", "COI primer m1COIintF / jgHCO2198", "COI primer LCO1490/ HC02198",
 				"Sneed2015 27F / 519Rmodbio", "16SV4V5 Archae", "16SV5V6 Prok", "18SV1V2 Metazoaire",
-				"16SV4 Procaryote", "16SFL");
+				"16SV4 Procaryote", "16SFL", "18S FungiF390/FungiR1");
 	}
-
+/*
 	private static List<Value> getOriginAmplificationPrimers() {
 		return DescriptionFactory.newValues("Fuhrman primer", "V9 primer", "16S primer + Fuhrman primer",
 				"ITSintfor2 / ITS-Reverse", "SYM_VAR_5.8S2 / SYM_VAR_REV", "ITSD / ITS2REV", "CP23S primers",
 				"5.8S F1 / R1", "18S_V4 primer", "COI primer m1COIintF / jgHCO2198", "Sneed2015 27F / 519Rmodbio",
 				"16SV4V5 Archae", "16SV5V6 Prok", "18SV1V2 Metazoaire", "16SV4 Procaryote", "16SFL");
 	}
-
+*/
 	private static List<Value> getTargetedRegion() {
 		return DescriptionFactory.newValues("16S_V4V5", "18S_V9", "16S_Full Length + 16S_V4V5", "ITS2", "CP23S",
-				"18S_V4", "COI", "16S_V1V2V3", "16S_V5V6", "18S_V1V2", "16S_V4", "5.8S","16SFL");
+				"18S_V4", "COI", "16S_V1V2V3", "16S_V5V6", "18S_V1V2", "16S_V4", "5.8S","16SFL", "18S_V7V8");
 	}
-
+/*
 	private static List<Value> getOriginTargetedRegion() {
 		return DescriptionFactory.newValues("16S_V4V5", "18S_V9", "16S_Full Length + 16S_V4V5", "ITS2", "CP23S",
 				"18S_V4", "COI", "16S_V1V2V3", "16S_V5V6", "18S_V1V2", "16S_V4","5.8S", "16SFL");
 	}
+*/	
 	private List<PropertyDefinition> getPoolLibraryReceptionPropertyDefinitions() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null, null));

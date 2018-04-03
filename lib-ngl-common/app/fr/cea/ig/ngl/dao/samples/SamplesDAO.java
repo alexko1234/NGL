@@ -9,8 +9,10 @@ import models.utils.InstanceConstants;
 
 @Singleton
 public class SamplesDAO extends GenericMongoDAO<Sample> {
+
 	@Inject
 	public SamplesDAO() {
 		super(InstanceConstants.SAMPLE_COLL_NAME, Sample.class);
 	}	
+
 }

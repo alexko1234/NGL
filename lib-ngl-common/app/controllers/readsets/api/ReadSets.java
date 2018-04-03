@@ -1,7 +1,5 @@
 package controllers.readsets.api;
 
-import fr.cea.ig.mongo.MongoStreamer;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -23,15 +21,14 @@ import org.mongojack.DBUpdate;
 import com.google.inject.Provider;
 import com.mongodb.BasicDBObject;
 
-import akka.actor.ActorRef;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.authentication.Authenticated;
-import fr.cea.ig.lfw.Historized;
-import fr.cea.ig.authorization.Authorized;
+import fr.cea.ig.mongo.MongoStreamer;
+import fr.cea.ig.play.IGBodyParsers;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -49,16 +46,12 @@ import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
-import play.mvc.With;
 import rules.services.LazyRules6Actor;
-import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.run.instance.ReadSetValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableForm;
 import workflows.readset.ReadSetWorkflows;
-import fr.cea.ig.play.IGBodyParsers;
-import fr.cea.ig.play.NGLContext;
 
 // TODO: cleanup
 
@@ -94,7 +87,13 @@ public class ReadSets extends ReadSetsController {
 		Query q = getQuery(form);		
 		BasicDBObject keys = getKeys(updateForm(form));
 
-		if (form.datatable) {			
+		if (form.reporting && !form.aggregate) {
+			//return nativeMongoDBQQuery(form);
+			String jsonKeys = getJSONKeys(updateForm(form));
+			return nativeMongoDBQQuery(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class,jsonKeys);
+		}else if(form.reporting && form.aggregate){
+			return nativeMongoDBAggregate(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class);
+		}else if (form.datatable) {			
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);				
 			return MongoStreamer.okStreamUDT(results);
 		} else if(form.count) {

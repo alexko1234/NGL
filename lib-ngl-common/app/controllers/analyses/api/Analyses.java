@@ -26,6 +26,7 @@ import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
+import fr.cea.ig.mongo.MongoStreamer;
 import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
@@ -44,7 +45,6 @@ import rules.services.LazyRules6Actor;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
-import views.components.datatable.DatatableResponse;
 import workflows.analyses.AnalysisWorkflows;
 
 // TODO: use packed construction of query
@@ -80,13 +80,11 @@ public class Analyses extends DocumentController<Analysis> {
 		Query q = getQuery(form);
 		BasicDBObject keys = getKeys(form);
 		if (form.datatable) {			
-			MongoDBResult<Analysis> results = mongoDBFinder(form, q, keys);				
-			List<Analysis> list = results.toList();
-			return ok(Json.toJson(new DatatableResponse<Analysis>(list, results.count())));
+			MongoDBResult<Analysis> results = mongoDBFinder(form, q, keys);	
+			return MongoStreamer.okStreamUDT(results);
 		} else {
 			MongoDBResult<Analysis> results = mongoDBFinder(form, q, keys);							
-			List<Analysis> list = results.toList();
-			return ok(Json.toJson(list));
+			return MongoStreamer.okStream(results);
 		}
 	}
 	

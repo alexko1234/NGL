@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -123,6 +124,8 @@ public class Runs extends RunsController {
 			queries.add(DBQuery.in("code", form.codes));
 		}else if(StringUtils.isNotBlank(form.code)){
 			queries.add(DBQuery.is("code", form.code));
+		}else if (StringUtils.isNotBlank(form.regexCode)) { //all
+			queries.add(DBQuery.regex("code", Pattern.compile(form.regexCode)));
 		}
 		
 		if(CollectionUtils.isNotEmpty(form.categoryCodes)){

@@ -62,7 +62,7 @@ public class Sample extends AbstractSample {
 			contextValidation.addErrors("sample non evaluable ", "avec type de contexte de validation " + contextValidation.getContextObjects().get("type"));	
 		}
 		contextValidation.removeKeyFromRootKeyName("sample");
-		logger.error("sortie de sample.validate pour {0}", this.code);
+		logger.debug("sortie de sample.validate pour {}", this.code);
 	}
 
 

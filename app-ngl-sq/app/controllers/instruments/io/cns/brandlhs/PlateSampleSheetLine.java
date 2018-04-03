@@ -10,8 +10,10 @@ public class PlateSampleSheetLine  implements Comparable<PlateSampleSheetLine>{
 	public String dwell;
 	public Integer dwellNum;
 	
-	public Double inputVolume;
-	public Double bufferVolume;
+	public String inputVolume;
+	public String  bufferVolume;
+	public String  inputHighVolume;
+	public String  bufferHighVolume;
 	
 	public String priority = "No";
 	public String sampleType = "Standard";

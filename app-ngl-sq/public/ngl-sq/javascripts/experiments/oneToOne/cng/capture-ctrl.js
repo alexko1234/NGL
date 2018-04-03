@@ -326,6 +326,40 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 		$scope.atmService.data.selectAll(true);
 		$scope.atmService.data.setEdit();
 	});
+	
+	// FDS 16/03/2018 : NGL-1906 rechercher le robotRunWorkLabel positionné au niveau processus pour le copier dans robotRunCode (sauf s'il y en plusieurs!!)
+	$scope.$watch("experiment.instrument.code", function(newValue, OldValue){
+		if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {		
+			// exemple dans prepa-fc-ordered: var categoryCodes = $scope.$eval("getBasket().get()|getArray:'support.categoryCode'|unique",mainService);
+			// mais ici mainService n'est pas defini, et pas necessaire...
+			// obliger de passer par contents[0], mais normalement ne doit pas poser de probleme...
+			var workLabels= $scope.$eval("getBasket().get()|getArray:'contents[0].processProperties.robotRunWorkLabel.value'|unique");
+			if ( workLabels.length > 1 ){
+				$scope.messages.clear();
+				$scope.messages.clazz = "alert alert-warning";
+				$scope.messages.text = "Plusieurs noms de travail (robot) trouvés parmi les containers d'entrée (info processus)";
+				$scope.messages.open();			
+			
+				console.log('>1  run workLabel trouvé !!');
+				
+			} else if ( workLabels.length === 1 ){
+				// verifier que TOUS les containers ont une valeur...
+				var contents= $scope.$eval("getBasket().get()|getArray:'contents[0]'");
+				var labels= $scope.$eval("getBasket().get()|getArray:'contents[0].processProperties.robotRunWorkLabel.value'");
+				if ( labels.length < contents.length ) {
+					$scope.messages.clear();
+					$scope.messages.clazz = "alert alert-warning";
+					$scope.messages.text = "Certains containers en entrée n'ont pas de nom de travail run (robot) (info processus)";
+					$scope.messages.open();			
+				
+					console.log("Certains containers n'ont pas de workLabel.");
+				} else {
+					$parse("instrumentProperties.robotRunCode.value").assign($scope.experiment, workLabels[0]);
+				}
+			} 
+			// si aucun workLabel ne rien faire
+		}
+	});
 		
 	//Init atmService
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
@@ -369,13 +403,12 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 		$scope.outputContainerSupport.storageCode=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.storageCode;
 		//console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
 	}
-	
-	
-	
-	// FDS 15/11/2017 ajout 'bravows-mastercycler-epg'
+		
 	$scope.setAdditionnalButtons([{
 		isDisabled : function(){return $scope.isCreationMode();},
-		isShow:function(){return (($scope.experiment.instrument.typeCode === 'bravo-workstation')||($scope.experiment.instrument.typeCode=== 'bravows-and-mastercycler-epg'))}, 
+		// FDS 15/03/2018 SUPSQCNG-547: inutile de tester les instruments=> FDR pour tous !!!
+		//isShow:function(){return (($scope.experiment.instrument.typeCode === 'bravo-workstation')||($scope.experiment.instrument.typeCode=== 'bravows-and-mastercycler-epg'))}, 
+		isShow:function(){return true;},
 		click: $scope.fileUtils.generateSampleSheet,
 		label:Messages("experiments.sampleSheet") 
 	}]);

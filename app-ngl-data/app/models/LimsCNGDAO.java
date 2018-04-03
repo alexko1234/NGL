@@ -66,6 +66,8 @@ public class LimsCNGDAO {
 	
 	protected static final String PROJECT_TYPE_CODE_DEFAULT  = "default-project";
 	protected static final String PROJECT_STATE_CODE_DEFAULT = "IP";
+	protected static final String PROJECT_PROPERTIES_UNIX_GROUP = "unixGroup";
+	protected static final String UNIX_GROUP_DEFAULT = "solexa";
 	
 	protected static final String IMPORT_CATEGORY_CODE     = "sample-import";  // inutilisé...
 	protected static final String IMPORT_TYPE_CODE_DEFAULT = "default-import";
@@ -108,6 +110,9 @@ public class LimsCNGDAO {
 		}
 		
 		project.categoryCode=projectType.category.code;
+		
+		project.properties=new HashMap<String,PropertyValue>();
+		project.properties.put(PROJECT_PROPERTIES_UNIX_GROUP, new PropertySingleValue(UNIX_GROUP_DEFAULT));
 		
 		project.state = new State(); 
 		project.state.code=PROJECT_STATE_CODE_DEFAULT;

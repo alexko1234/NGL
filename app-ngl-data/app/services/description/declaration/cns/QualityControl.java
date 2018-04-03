@@ -136,6 +136,9 @@ public class QualityControl extends AbstractDeclaration {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see services.description.declaration.AbstractDeclaration#getProcessTypeCommon()
+	 */
 	@Override
 	protected List<ProcessType> getProcessTypeCommon() {
 		List<ProcessType> l = new ArrayList<ProcessType>();
@@ -150,14 +153,18 @@ public class QualityControl extends AbstractDeclaration {
 		l.add(DescriptionFactory.newProcessType("Evaluation ADN à réception", "dna-sample-valuation", 
 				ProcessCategory.find.findByCode("sample-valuation"), 1010,
 				getPropertyDefinitionsEvalAReception(), 
-				Arrays.asList(getPET("ext-to-dna-sample-valuation",-1)), 
+				Arrays.asList(getPET("ext-to-dna-sample-valuation",-1),
+						 getPET("dna-rna-extraction",-1),
+						 getPET("fluo-quantification",0)), 
 				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-dna-sample-valuation").get(0), getExperimentTypes("ext-to-dna-sample-valuation").get(0), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(DescriptionFactory.newProcessType("Evaluation ARN à réception", "rna-sample-valuation", 
 				ProcessCategory.find.findByCode("sample-valuation"), 1011,
 				getPropertyDefinitionsEvalAReception(), 
-				Arrays.asList(getPET("ext-to-rna-sample-valuation",-1)), 
+				Arrays.asList(getPET("ext-to-rna-sample-valuation",-1),
+						 getPET("dna-rna-extraction",-1),
+						 getPET("fluo-quantification",0)),  
 				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
@@ -454,6 +461,9 @@ public class QualityControl extends AbstractDeclaration {
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode( "ng/µl"), MeasureUnit.find.findByCode("ng/µl"),
 				"single", 18, true, null, "2"));
 		
+		propertyDefinitions.add(newPropertiesDefinition("Copier concentration dans concentration finale du container ?", "copyConcentration", LevelService.getLevels(Level.CODE.Experiment), Boolean.class, true, null,
+				null, "single",15, true, "false", null));
+		
 		return propertyDefinitions;
 	}
 	
@@ -592,6 +602,8 @@ public class QualityControl extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode("µL"),"single", 20, true, null,null));
 		
+		propertyDefinitions.add(newPropertiesDefinition("Copier concentration dans concentration finale du container ?", "copyConcentration", LevelService.getLevels(Level.CODE.Experiment), Boolean.class, true, null,
+				null, "single",15, true, "false", null));
 		
 		return propertyDefinitions;
 	}

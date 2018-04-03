@@ -58,9 +58,8 @@ public class ImportDataCNS{
 		new UpdateSizingCNS(Duration.create(1,TimeUnit.MINUTES),Duration.create(10,TimeUnit.MINUTES));
 		new UpdateAmpliCNS(Duration.create(1,TimeUnit.MINUTES),Duration.create(10,TimeUnit.MINUTES));
 		*/
-		
-		new UpdateSamplePropertiesCNS(ImportDataUtil.getDurationForNextHour(30),Duration.create(6,TimeUnit.HOURS), ctx);
-		new UpdateSampleNCBITaxonCNS(ImportDataUtil.getDurationForNextHour(45),Duration.create(6,TimeUnit.HOURS), ctx, new TaxonomyServices(ctx));
+		new UpdateSampleNCBITaxonCNS(ImportDataUtil.getDurationForNextHour(15),Duration.create(6,TimeUnit.HOURS), ctx, new TaxonomyServices(ctx));
+		new UpdateSamplePropertiesCNS(ImportDataUtil.getDurationForNextHour(45),Duration.create(6,TimeUnit.HOURS), ctx);
 		
 		//new RunExtImportCNS(ImportDataUtil.getDurationInMillinsBefore(12, 30),Duration.create(12,TimeUnit.HOURS), ctx);
 		

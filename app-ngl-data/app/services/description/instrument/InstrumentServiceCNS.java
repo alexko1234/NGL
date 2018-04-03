@@ -148,7 +148,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentUsedType("Brand LHS", "brand-lhs", InstrumentCategory.find.findByCode("liquid-handling-robot"), null, 
 				getInstruments(
 						createInstrument("celeste", "CELESTE", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)) ), 
-						getContainerSupportCategories(new String[]{"96-well-plate","tube"}),getContainerSupportCategories(new String[]{"96-well-plate", "tube"}), 
+						getContainerSupportCategories(new String[]{"96-well-plate","tube"}),getContainerSupportCategories(new String[]{"96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		
@@ -960,6 +960,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		instruments.add(createInstrument("PCA0026", "PCA0026", null, true, "/env/ig/atelier/nanopore/cns/PCA0026", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add(createInstrument("PCA0032", "PCA0032", null, true, "/env/ig/atelier/nanopore/cns/PCA0032", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("PCT0004", "PCT0004", null, true, "/env/ig/atelier/nanopore/cns/PCT0004", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return instruments;
 	}
 	

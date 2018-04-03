@@ -16,6 +16,7 @@ home.runs.ips = Runs en cours de séquençage
 home.runs.iprg = Runs en cours de read generation
 home.runs.iwpv = Runs en attente d''évaluation
 home.runs.keep = Runs à conserver
+home.runs.noValid = Runs Illumina dont il reste au moins un readset à évaluer
 
 active.true = Actif
 active.false = Inactif
@@ -44,8 +45,8 @@ search.config = Configuration
 search.tab.addcolumns = Colonnes supplémentaires
 search.tab.addfilters = Filtres supplémentaires
 search.tab.filters = Filtres
-
-
+search.tab.expSearchMode = Experimental search mode
+search.tab.aggregateSearchMode = Aggregate query
 
 valuation.menu = Evaluation
 valuation.menu.runs = Runs
@@ -74,12 +75,14 @@ search.placeholder.instruments = Instruments
 search.placeholder.types = Types
 search.placeholder.type = Type
 search.placeholder.valid = Evaluation
+search.placeholder.expSearchMode = Warning : Only to use with MongoDB query language
 
 search.placeholder.run = Code run
 search.placeHolder.run.states = Etats runs
 search.placeHolder.run.types = Types de run
 search.placeholder.run.categories = Catégories run
 search.placeholder.run.valid = Evaluation run
+search.placeholder.run.regexCode = Regex code run
 search.placeholder.readset.states = Etats readset
 search.placeholder.readset.regexCode = Regex code readset
 search.placeholder.readset.types = Types readset (techno)
@@ -193,7 +196,9 @@ runs.lane.ngsrg_illumina.phasing = Phasing
 runs.lane.ngsrg_illumina.prephasing = Prephasing
 runs.lane.ngsrg_illumina.nbCycles = Nb Cycles Utiles
 runs.lane.ngsrg_illumina.seqLossPercent = % Perte
+runs.lane.ngsrg_illumina.occupiedPatternedWellPercentage = % puits occupés
 runs.lane.ngsrg_illumina.nbMismatch = Nb Mismatch Démultiplexage 
+
 
 runs.ngsrg_nanopore.poreOccupancy = Occupation des pores
 runs.ngsrg_nanopore.poreOccupancyTime = Activité des pores
@@ -413,6 +418,7 @@ readsets.treatments.ngsrg_illumina.qualityScore = Score Qualité moyen
 readsets.treatments.ngsrg_illumina.validSeqPercent = % Séquences valides / piste
 readsets.treatments.ngsrg_illumina.fraction = Fraction de run
 readsets.treatments.ngsrg_illumina.nbReadIllumina = Nb Read Illumina
+readsets.treatments.ngsrg_illumina.percentOccupied = % puits occupés
 
 treatments.nanopore.1DForward = 1D forward
 treatments.nanopore.1DReverse = 1D reverse
@@ -598,6 +604,7 @@ readsets.treatments.trimming.nanopore.trimmed=Trimmed
 readsets.treatments.trimming.nanopore.startTrimmed=Trimmed start
 readsets.treatments.trimming.nanopore.endTrimmed=Trimmed end
 readsets.treatments.trimming.nanopore.bothTrimmed=Trimmed both
+readsets.treatments.trimming.nanopore.inside=Inside
 readsets.treatments.trimming.nanopore.short=Short
 readsets.treatments.trimming.nanopore.name=Name
 readsets.treatments.trimming.nanopore.read=Read
@@ -897,6 +904,7 @@ analyses.treatments.assemblyFilter_ba.GCpercent = % GC
 treatments.assignation.assignationBilan.cluster=Cluster
 treatments.assignation.assignationBilan.otu=OTU
 treatments.assignation.assignationBilan.abundance=Abundance
+treatments.assignation.assignationBilan.abundanceClusterPercent=Abundance readset %
 treatments.assignation.assignationBilan.taxonomy=Taxonomy
 treatments.assignation.assignationBilan.idPercent=% id
 treatments.assignation.assignationBilan.matchLength=% match length

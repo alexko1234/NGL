@@ -50,7 +50,7 @@
 						<div ng-switch-when="java.lang.Boolean" class="col-md-6 col-lg-6" ng-switch on="mainService.isEditMode()">
 							<div class="checkbox" ng-switch-when="true">
 			 					<label>
-								<input type="checkbox"  ng-model="experiment.@{name}[propertyDef.code].value" default-value="propertyDef.defaultValue"/>&nbsp;	
+								<input type="checkbox"  ng-model="experiment.@{name}[propertyDef.code].value" pdef-default-value="propertyDef"/>&nbsp;	
 								</label>
 							</div>
 					

@@ -131,6 +131,12 @@
 										<input type="text" class="form-control" ng-switch-when="true" ng-model="project.nbCharactersInSampleCode">										
 									</div>
 								}
+								@views.html.helper.columnLabelValue(Messages("projects.unixGroup")){
+									<div ng-switch on="mainService.isEditMode()">
+										<p class="form-control-static" ng-switch-when="false">{{project.properties.unixGroup.value}}</p>
+										<input type="text" class="form-control" ng-switch-when="true" ng-model="project.properties.unixGroup.value">										
+									</div>
+								}
 							}				
 						</div>
 						

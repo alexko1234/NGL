@@ -12,6 +12,7 @@ public class RunsSearchForm extends ListForm {
 	
     public List<String> codes;
     public String code;
+    public String regexCode;
     
     public List<String> categoryCodes;
     public String categoryCode;

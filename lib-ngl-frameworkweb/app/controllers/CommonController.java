@@ -8,12 +8,15 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bson.BSONObject;
+import org.jongo.Aggregate;
 import org.jongo.MongoCollection;
 import org.jongo.MongoCursor;
 import org.mongojack.DBQuery;
@@ -39,6 +42,8 @@ import validation.ContextValidation;
 import views.components.datatable.DatatableForm;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.Iterators;
+import com.mongodb.AggregationOptions;
 import com.mongodb.BasicDBObject;
 
 //import akka.stream.javadsl.Source;
@@ -237,6 +242,17 @@ public abstract class CommonController extends Controller {
 		return keys;
 	}
 	
+	protected static String getJSONKeys(DatatableForm form) {
+		Set<String> keys = new HashSet<String>();
+		if(null != form.includes && form.includes.size() > 0 && !form.includes.contains("*")){
+			getIncludeJSONKeys(form.includes.toArray(new String[form.includes.size()]),keys);
+		}else if(null != form.excludes && form.excludes.size() > 0){
+			getExcludeJSONKeys(form.excludes.toArray(new String[form.excludes.size()]),keys);					
+		}
+		String jsonKey = "{"+String.join(",", keys)+"}";
+		return jsonKey;
+	}
+	
 	protected static BasicDBObject getIncludeKeys(String[] keys) {
 		Arrays.sort(keys, Collections.reverseOrder());
 		BasicDBObject values = new BasicDBObject();
@@ -246,6 +262,14 @@ public abstract class CommonController extends Controller {
 		return values;
     }
 	
+	protected static void getIncludeJSONKeys(String[] includes, Set<String> keys) {
+		Arrays.sort(includes, Collections.reverseOrder());
+		for(int i=0; i<includes.length;i++){
+		    keys.add(includes[i]+":1");
+		}
+		
+    }
+	
 	protected static BasicDBObject getExcludeKeys(String[] keys) {
 		Arrays.sort(keys, Collections.reverseOrder());
 		BasicDBObject values = new BasicDBObject();
@@ -253,6 +277,13 @@ public abstract class CommonController extends Controller {
 		    values.put(key, 0);
 		}
 		return values;
+    }
+	
+	protected static void getExcludeJSONKeys(String[] excludes, Set<String> keys) {
+		Arrays.sort(excludes, Collections.reverseOrder());
+		for(int i=0;i<excludes.length;i++){
+		    keys.add(excludes[i]+":0");
+		}
     }
 	
 	/*
@@ -355,7 +386,60 @@ public abstract class CommonController extends Controller {
 			return badRequest();
 		}
 	}
+	
+	protected static <T extends DBObject> Result nativeMongoDBQQuery(String collectionName, ListForm form, Class<T> type, String keys){
+		MongoCollection collection = MongoDBPlugin.getCollection(collectionName);
+		MongoCursor<T> all = collection.find(form.reportingQuery).projection(keys).as(type);
+		if (form.datatable) {
+			// return ok(getUDTChunk(all)).as("application/json");
+			return MongoStreamer.okStreamUDT(all);
+		} else if(form.list) {
+			// return ok(getChunk(all)).as("application/json");
+			return MongoStreamer.okStream(all);
+		} else if(form.count) {
+			int count = all.count();
+			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			m.put("result", count);
+			return ok(Json.toJson(m));
+		} else {
+			return badRequest();
+		}
+	}
 
+	protected static <T extends DBObject> Result nativeMongoDBAggregate(String collectionName, ListForm form, Class<T> type) {
+		MongoCollection collection = MongoDBPlugin.getCollection(collectionName);
+		
+		String[] pipeline = getAggregatePipeline(form.reportingQuery);
+		Aggregate aggregateQuery = collection.aggregate("{"+pipeline[0]+"}");
+		if(pipeline.length>1){
+			for(int i=1; i<pipeline.length;i++){
+				aggregateQuery.and("{"+pipeline[i]+"}");
+			}
+		}
+		Aggregate.ResultsIterator<T> all = aggregateQuery.options(AggregationOptions.builder().outputMode( AggregationOptions.OutputMode.CURSOR).build())
+				.as(type);
+		if (form.datatable) {
+			return MongoStreamer.okStream(all);			
+		} else if(form.list) {
+			return MongoStreamer.okStream(all);
+		} else if(form.count) {
+			int count = Iterators.size(all);
+			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			m.put("result", count);
+			return ok(Json.toJson(m));
+		} else {
+			return badRequest();
+		}
+	}
+	
+	private static String[] getAggregatePipeline(String reportingQuery){
+		reportingQuery=reportingQuery.replaceAll("\n", "");
+		reportingQuery=reportingQuery.substring(1, reportingQuery.length()-1);
+		String[] pipeline = reportingQuery.split("\\},\\{");
+		return pipeline;
+			
+	}
+	
 	/**
 	 * Javascript routes.
 	 * @param routes routes to provide as javascript

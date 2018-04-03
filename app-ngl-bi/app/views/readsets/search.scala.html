@@ -99,7 +99,8 @@
 		<ul class="nav nav-tabs margin-bottom-5">
 	   	<li class="active"><a href="#" data-target="#filters" data-toggle="tab">@Messages("search.tab.filters")</a></li>
 	   	<li ng-if="searchService.getAddFiltersToForm().length > 0"><a href="#" data-target="#addfilters" data-toggle="tab">@Messages("search.tab.addfilters")</a></li>    
-	   	<li ng-if="searchService.getAddColumnsToForm().length > 0"><a href="#" data-target="#addcolumns" data-toggle="tab">@Messages("search.tab.addcolumns")</a></li>    	
+	   	<li ng-if="searchService.getAddColumnsToForm().length > 0"><a href="#" data-target="#addcolumns" data-toggle="tab">@Messages("search.tab.addcolumns")</a></li>
+	   	<li><a href="#" data-target="#nativeQuery" data-toggle="tab">@Messages("search.tab.expSearchMode")</a></li>     	
 	    </ul>
 			
 		<div class="tab-content">
@@ -187,6 +188,38 @@
 			</div>			
 		</form>	
 	</div>
+	
+	<div class="tab-pane" id="nativeQuery">
+			<form class="well well-small">
+			<div class="row">
+				<div class="col-md-10 col-lg-10">
+					<textarea class="form-control" rows="10" ng-model="searchService.form.reportingQuery" placeholder="@Messages("search.placeholder.expSearchMode")"></textarea>
+				</div>
+			@columnSearchForm{
+				@formGroup{
+				<div class="btn-toolbar">
+					<button type="submit" title='@Messages("button.search")' data-toggle="tooltip" ng-click="search()" class="btn btn-primary" >
+						<i class="fa fa-search"></i>
+					</button>
+					<button title='@Messages("button.reset")' data-toggle="tooltip" ng-click="reset()"  class="btn btn-default">
+						<i class="fa fa-undo"></i>
+					</button>						 	
+				</div>
+				}				
+			}
+			@columnSearchForm{
+				@formGroup{
+			  		<div class="checkbox">
+				    <label>
+				      <input type="checkbox" ng-model="searchService.form.aggregate"> @Messages("search.tab.aggregateSearchMode")
+				    </label>
+				  </div>	
+				  }
+			}		
+			</div>		
+		</form>	
+	</div>
+	
 	</div>
 	</div>
 </div>
