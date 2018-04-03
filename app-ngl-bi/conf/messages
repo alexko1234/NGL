@@ -944,7 +944,7 @@ analyses.treatments.gapClosing_ba.numberOfN = Nombre de N
 analyses.treatments.gapClosing_ba.percentOfN = % N
 
 analyses.treatments.wholeGenome = Whole Genome
-analyses.treatments.wholeGenome.statAnalysis = Statistiques de l'analyse
+analyses.treatments.wholeGenome.statAnalysis = Statistiques de l''analyse
 analyses.treatments.wholeGenome.gender= Sex
 analyses.treatments.wholeGenome.coveredGenomeSize = Taille Couv. Genome
 analyses.treatments.wholeGenome.coveragePercent=Couverture %
@@ -955,6 +955,7 @@ analyses.treatments.wholeGenome.coverageMedian = Couv. Med
 analyses.treatments.wholeGenome.Q1Coverage = Couv. Q1
 analyses.treatments.wholeGenome.iqr = IQR
 analyses.treatments.wholeGenome.outlierPercent = % Outlier
+analyses.treatments.wholeGenome.duplicatedReadsPercent = % Duplicats
 analyses.treatments.wholeGenome.humanReferenceGenome = Version Génome
 analyses.treatments.wholeGenome.pipelineVersion = Version Pipeline
 
