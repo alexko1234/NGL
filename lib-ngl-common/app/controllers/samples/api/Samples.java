@@ -86,6 +86,7 @@ public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> im
 		try {
 			SamplesSearchForm samplesSearch = objectFromRequestQueryString(SamplesSearchForm.class);
 			if (samplesSearch.reporting) {
+				logger.debug("list : running query {}",samplesSearch.reportingQuery);
 				MongoCursor<Sample> data = api().findByQuery(samplesSearch.reportingQuery);
 				if (samplesSearch.datatable) {
 					return MongoStreamer.okStreamUDT(data);

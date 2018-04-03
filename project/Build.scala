@@ -662,27 +662,27 @@ object ApplicationBuild extends Build {
 //    }
 //  }).value
 
-  val projectList = Seq(
-      nglcommon,
-      nglframeworkweb,
-      ngldatatable,
-      // applications
-      nglsq,       
-   	  nglbi,        
-   	  nglassets,   
-     	nglplates,   
-     	ngldata,     
-   	  nglsub,      
-     	nglreagents, 
-     	nglprojects, 
-   	  ngldevguide,
-      // play migration and testing
-      nglPlayMigration,
-   	  nglTesting,
-     	authentication,
-      springPlugin,
-      mongoPlugin
-    )
+//  val projectList = Seq(
+//      nglcommon,
+//      nglframeworkweb,
+//      ngldatatable,
+//      // applications
+//      nglsq,       
+//   	  nglbi,        
+//   	  nglassets,   
+//     	nglplates,   
+//     	ngldata,     
+//   	  nglsub,      
+//     	nglreagents, 
+//     	nglprojects, 
+//   	  ngldevguide,
+//      // play migration and testing
+//      nglPlayMigration,
+//   	  nglTesting,
+//     	authentication,
+//      springPlugin,
+//      mongoPlugin
+//    )
   
 //    val sqLite =
 //         Project("ngl-sq-lite", file("app-ngl-sq-lite"), settings=buildSettings) 

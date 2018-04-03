@@ -69,39 +69,77 @@ public class NGLWSClient {
 		return new NGLWSClient(c);
 	}
 	
+	/**
+	 * Copy constructor.
+	 * @param c client to copy
+	 */
 	protected NGLWSClient(NGLWSClient c) {
 		ws   = c.ws;
 		mods = new ArrayList<>(c.mods);
 	}
 	
+	/**
+	 * Build a clone.
+	 * @return cloned client
+	 */
 	protected NGLWSClient clone() {
 		return new NGLWSClient(this);
 	}
 
+	/**
+	 * Add a modification that will be applied to requests.
+	 * @param f request modification
+	 * @return  client copy with added modification
+	 */
 	public NGLWSClient mod(Function<WSRequest,WSRequest> f) {
 		NGLWSClient c = clone();
 		c.mods.add(f);
 		return c;
 	}
 	
+	/**
+	 * Adds a "bot" user agent in the request header.
+	 * @return client copy with the bot user agent
+	 */
 	public NGLWSClient asBot() {
 		return mod(r -> r.addHeader("User-Agent", "bot"));
 	}
 	
+	/**
+	 * Adds the application/json and UTF-8 content types.
+	 * @return client copy with added modification
+	 */
 	public NGLWSClient asJSON() {
 		return mod(r -> r.setContentType("application/json;charset=UTF-8"));
 	}
 	
+	/**
+	 * Close the client.
+	 * @throws IOException an error occured when closing the client
+	 */
 	public void close() throws IOException {
 		ws.close();
 	}
 	
-	public WSResponse assertResponseStatus(String message, WSResponse response, int status) {
+	/**
+	 * Assert WSResponse status.
+	 * @param message  on failure message
+	 * @param response response to check 
+	 * @param status   status to assert
+	 * @return         response or an assertion failure exception
+	 */
+	public static WSResponse assertResponseStatus(String message, WSResponse response, int status) {
 		assertEquals(message + " " + response.getBody(), status, response.getStatus());
 		return response;
 	}
 
-	private WSResponse getResponse(CompletionStage<WSResponse> completionStage) {
+	/**
+	 * Extract response from a completion stage (request response), all exceptions
+	 * are converted to runtime exceptions.
+	 * @param completionStage completion stage to wait for completion
+	 * @return                response
+	 */
+	public static WSResponse getResponse(CompletionStage<WSResponse> completionStage) {
 		try {
 			return  completionStage.toCompletableFuture().get();
 		} catch (Exception e) {
@@ -109,7 +147,12 @@ public class NGLWSClient {
 		}
 	}
 	
-	private WSRequest url(String url) {
+	/**
+	 * Build a request for an URL.
+	 * @param url URL
+	 * @return    request
+	 */
+	public WSRequest url(String url) {
 		WSRequest r = ws.url(url);
 		for (Function<WSRequest,WSRequest> f : mods)
 			r = f.apply(r);
@@ -117,38 +160,48 @@ public class NGLWSClient {
 	}
 	
 	// --------------------------------------------------------------
-	// ----------- GET
+	// ---- GET
 	
+	/**
+	 * Execute an HTTP GET on the provided URL.
+	 * @param url URL
+	 * @return    response
+	 */
 	public WSResponse get(String url) {
-//		try {
-//			CompletionStage<WSResponse> completionStage = addUserAgent(asbot, ws.url(url)).get();
-//			WSResponse response = completionStage.toCompletableFuture().get();	
-//			return response;
-//		} catch (Exception e) {
-//			throw new RuntimeException(e);
-//		}
 		return getResponse(url(url).get());
 	}
 
+	/**
+	 * Execute an HTTP GET on the URL expecting a specific HTTP response
+	 * status.
+	 * @param url    URL
+	 * @param status expected response status
+	 * @return       response
+	 */
 	public WSResponse get(String url, int status) {
 		return assertResponseStatus("GET " + url, get(url), status);
 	}
 
+	/**
+	 * Get an object from an URL JSON response, asserting an OK status.
+	 * @param url   URL
+	 * @param clazz class of JSON encoded object
+	 * @return      Object read from GET URL 
+	 */
 	public <T> T getObject(String url, Class<T> clazz) {
 		return Json.fromJson(Json.parse(get(url,Status.OK).getBody()),clazz);
 	}
 
 	// -------------------------------------------------------------
-	// ------ PUT
-	
+	// ---- PUT
+
+	/**
+	 * Execute PUT on the given URL with the given data.
+	 * @param url     URL to PUT
+	 * @param payload text to send
+	 * @return        response
+	 */
 	public WSResponse put(String url, String payload) {
-//		try {
-//			CompletionStage<WSResponse> completionStage = addUserAgent(asbot, ws.url(url)).setContentType("application/json;charset=UTF-8").put(payload);
-//			WSResponse response = completionStage.toCompletableFuture().get();	
-//			return response;
-//		} catch (Exception e) {
-//			throw new RuntimeException(e);
-//		}
 		return getResponse(url(url).setContentType("application/json;charset=UTF-8").put(payload));
 	}
 		
@@ -176,13 +229,6 @@ public class NGLWSClient {
 	// ------ POST
 	
 	public WSResponse post(String url, String payload) {
-//		try {
-//			CompletionStage<WSResponse> completionStage = addUserAgent(asbot, ws.url(url)).setContentType("application/json;charset=UTF-8").post(payload);
-//			WSResponse response = completionStage.toCompletableFuture().get();	
-//			return response;
-//		} catch (Exception e) {
-//			throw new RuntimeException(e);
-//		}
 		return getResponse(url(url).setContentType("application/json;charset=UTF-8").post(payload));
 	}
 
@@ -211,13 +257,6 @@ public class NGLWSClient {
 	
 	public WSResponse delete(String url) {
 		return getResponse(url(url).delete());
-//		try {
-//			CompletionStage<WSResponse> completionStage = addUserAgent(asbot, ws.url(url)).delete();
-//			WSResponse response = completionStage.toCompletableFuture().get();	
-//			return response;
-//		} catch (Exception e) {
-//			throw new RuntimeException(e);
-//		}
 	}
 	
 	public WSResponse delete(String url, int status) {
@@ -227,30 +266,16 @@ public class NGLWSClient {
 	}
 
 	// ---------------------------------------------------------------------------
-	// --------- HEAD
-	public WSResponse head(String url, int status) {
-		WSResponse r = head(url);
-		assertEquals("GET " + url + " " + r.getBody(), status, r.getStatus());
-		return r; 
-	}
+	// ---- HEAD
 	
 	public WSResponse head(String url) {
-//		try {
-//			CompletionStage<WSResponse> completionStage = addUserAgent(asbot, ws.url(url)).head();
-//			WSResponse response = completionStage.toCompletableFuture().get();	
-//			return response;
-//		} catch (Exception e) {
-//			throw new RuntimeException(e);
-//		}
 		return getResponse(url(url).head());
 	}
 
-//	public WSResponse get(String url, boolean asbot) { 
-//		return WSHelper.get(ws, url, asbot);
-//	}
-//	
-//	public WSResponse get(String url, int status) {
-//		return WSHelper.get(ws, url, status);
-//	}
+	public WSResponse head(String url, int status) {
+		WSResponse r = head(url);
+		assertEquals("HEAD " + url + " " + r.getBody(), status, r.getStatus());
+		return r; 
+	}
 	
 }

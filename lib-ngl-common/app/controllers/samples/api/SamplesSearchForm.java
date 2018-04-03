@@ -38,11 +38,13 @@ public class SamplesSearchForm extends ListForm {
 	
 	public String toString() {
 		return "SamplesSearchForm [projectCode=" + projectCode
-
-				+ ", projectCodes=" + projectCodes + ",sampleCode=" + ", code=" + code
-				+ ", typeCodes"
-				+ ", createUser=" + createUser 
-				+ ", fromDate=" + fromDate + ", toDate=" + toDate
-				 + "]";
-					}
+					+ ", projectCodes=" + projectCodes
+					+ ", sampleCode=" + ", code=" + code
+					+ ", typeCodes"
+					+ ", createUser=" + createUser 
+					+ ", fromDate=" + fromDate
+					+ ", toDate=" + toDate
+				 	+ "]";
+	}
+	
 }

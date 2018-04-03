@@ -32,6 +32,7 @@ public class SampleMeta {
 	// private Boolean                       metagenomic; // This is not optional, probably a TBoolean
 	// private Optional<String>              refCollab;
 
+	// Def is too light, it is beans level without the type.
 	public static final Def<Sample,CodeReference<Sample>> code =
 			new Def<>("code",
 					  (s,c) -> s.code = c.getCode(),
@@ -51,7 +52,7 @@ public class SampleMeta {
 			new Def<>("importTypeCode",
 					  (s,c) -> s.importTypeCode = c.getCode(),
 					  s     -> CodeReference.of(s.importTypeCode));
-	
+		
 	// We have to handle embedded objects and this does not look pretty.
 	// We probably need an Embedded type.
 	// Standard mapping from and to Set<CodeReference<Project>> / Set<String> is
@@ -72,7 +73,8 @@ public class SampleMeta {
 		
 	}
 	
-	// This is truly an embedded object.
+	// We have a set of project code. This behaves like a set of strings
+	// but is logically linked to project codes.
 	public static final Def<Sample,Set<CodeReference<Project>>> projects =
 			new Def<>("projectCodes",
 					  (s,c) -> s.projectCodes = codes(c),
@@ -97,8 +99,7 @@ public class SampleMeta {
 	// definition as some builder method. The properties map is probably always 
 	// copied, so copying a lone data does not look of any interest.
 	// Same problem occurs if we create a metagenomic accessor in any facade.
-	// The facade could store arbitrary data/state where the meta def cannot.
-	// 
+	// The facade could store arbitrary data/state where the meta def cannot. 
 	public static final Def<Sample,Boolean> metagenomic =
 			new Def<>((q,t) -> { q.set("properties.metagenomic",true); },
 					  (s,c) -> { return; },
@@ -119,7 +120,8 @@ public class SampleMeta {
 	// The current problem is that there are other processes accessing the
 	// original data and those are not aware of a facade. We assume that we are in control
 	// and know everything about the update. We either update the trace information
-	// in full or not at at all.
+	// in full or not at at all. The trace information is a know type that
+	// can provide a simple set of restrictions.
 	public static final Def<Sample,TraceInformation> traceInformation =
 			new Def<>("traceInformation",
 					  (s,c) -> s.traceInformation = c,
