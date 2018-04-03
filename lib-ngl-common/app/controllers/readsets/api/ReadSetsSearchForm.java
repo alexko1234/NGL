@@ -39,6 +39,9 @@ public class ReadSetsSearchForm extends ListForm{
 	public String bioinformaticValidCode;
 	public String productionValidCode;
 	
+	public Date fromEvalDate;
+	public Date toEvalDate;
+	
 	public Set<String> runTypeCodes;
 	
 	public Set<String> sampleTypeCodes;

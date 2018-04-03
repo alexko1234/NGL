@@ -111,6 +111,9 @@ search.placeholder.treatment = Traitement
 search.placeholder.fromEndRGDate = Fin RG depuis le (jj/mm/aaaa)
 search.placeholder.toEndRGDate = Fin RG jusqu''au (jj/mm/aaaa)
 
+search.placeholder.fromEvalDate = Eval. depuis le (jj/mm/aaaa)
+search.placeholder.toEvalDate = Eval. jusqu''au (jj/mm/aaaa)
+
 search.placeholder.userLogin = Login utilisateur
 search.placeHolder.config.context = Contexte
 
