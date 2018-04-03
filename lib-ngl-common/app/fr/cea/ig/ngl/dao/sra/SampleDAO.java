@@ -1,7 +1,6 @@
 package fr.cea.ig.ngl.dao.sra;
 
 import javax.inject.Inject;
-
 import models.sra.submit.common.instance.Sample;
 import models.utils.InstanceConstants;
 import fr.cea.ig.ngl.dao.GenericMongoDAO;

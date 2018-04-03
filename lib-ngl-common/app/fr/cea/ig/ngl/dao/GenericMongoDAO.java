@@ -244,6 +244,10 @@ public /*abstract*/ class GenericMongoDAO<T extends DBObject> {
 	public void deleteByCode(String code) throws DAOException {
 		MongoDBDAO.deleteByCode(collectionName,  elementClass, code);
 	}
-
+	
+	public MongoDBResult<T> dao_find(Query q) {
+		return MongoDBDAO.find(collectionName, elementClass, q);
+	}
+	
 }
 
