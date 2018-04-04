@@ -31,6 +31,7 @@ public class RoleDAO extends AbstractDAOMapping<Role> {
 	/*
 	 * findAll()
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	public List<Role> findAll() throws DAOException {
 		String sql = sqlCommon ;

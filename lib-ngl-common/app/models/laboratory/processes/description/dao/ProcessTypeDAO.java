@@ -32,6 +32,7 @@ public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType> {
 				"FROM process_type as c  "+sqlCommonInfoType, false);
 	}
 
+	@SuppressWarnings("deprecation")
 	public List<ProcessType> findByProcessCategoryCodes(String...processCategoryCodes){	
 		try {
 			String sql = sqlCommonSelect + ",t.name, t.code " + sqlCommonFrom + ", process_category as pc WHERE c.fk_process_category=pc.id "
@@ -96,6 +97,7 @@ public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType> {
 		return processType.id;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void update(ProcessType processType) throws DAOException
 	{
@@ -123,6 +125,7 @@ public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType> {
 		insertExperimentTypes(processType.experimentTypes, processType.id, true);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void insertExperimentTypes(
 			List<ProcessExperimentType> experimentTypes, Long id, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
@@ -140,12 +143,14 @@ public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType> {
 		}		
 	}
 
+	@SuppressWarnings("deprecation")
 	private void removeExperimentTypes(Long id) {
 		String sql = "DELETE FROM process_experiment_type WHERE fk_process_type=?";
 		jdbcTemplate.update(sql, id);
 
 	}
 	
+	@SuppressWarnings("deprecation")
 	public List<ProcessExperimentType> getProcessExperimentType(Long processId){
 		String sql = "SELECT pet.position_in_process, et.code as experimentTypeCode "+
 				"FROM process_experiment_type as pet inner join common_info_type as et on et.id = pet.fk_experiment_type WHERE pet.fk_process_type = ? ";
@@ -165,6 +170,7 @@ public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType> {
 		commonInfoTypeDAO.remove(processType);
 	}
 
+	@SuppressWarnings("deprecation")
 	public List<ProcessType> findByExperimentCode(String experimentTypeCode) {
 		try {
 			String sql = sqlCommonSelect + ",t.name, t.code " + sqlCommonFrom + ", process_experiment_type as pe, common_info_type ce WHERE pe.fk_process_type=t.id and pe.fk_experiment_type=ce.id AND ce.code=?";

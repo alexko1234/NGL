@@ -58,6 +58,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 	 * @param id
 	 * @return
 	 */
+	@SuppressWarnings("deprecation")
 	public Map<String, Object> findTypeCodeAndCatCode(long id){
 		String sql = "SELECT distinct t.code as typeCode, cat.code as catCode "+this.sqlCommonFrom+" inner join instrument_category cat on cat.id = c.fk_instrument_category where c.id = ?"; 
 		return jdbcTemplate.queryForMap(sql, id);
@@ -94,6 +95,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 	}
 
 
+	@SuppressWarnings("deprecation")
 	private void saveContainerSupportCategoryIn(Long id,List<ContainerSupportCategory> containerSupportCategories, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
 			removeContainerSupportCategoryIn(id);
@@ -110,6 +112,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void saveContainerSupportCategoryOut(Long id,List<ContainerSupportCategory> containerSupportCategories,  boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
 			removeContainerSupportCategoryOut(id);
@@ -128,15 +131,17 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 		
 	}
 
+	@SuppressWarnings("deprecation")
 	private void removeContainerSupportCategoryOut(Long id) {
 			String sql = "DELETE FROM instrument_ut_out_container_support_cat WHERE fk_instrument_used_type=?";
 			jdbcTemplate.update(sql, id);
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void removeContainerSupportCategoryIn(Long id) {
 		String sql = "DELETE FROM instrument_ut_in_container_support_cat WHERE fk_instrument_used_type=?";
 		jdbcTemplate.update(sql, id);
-}
+	}
 
 
 	@Override
@@ -151,6 +156,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 		saveContainerSupportCategoryOut(instrumentUsedType.id, instrumentUsedType.outContainerSupportCategories, true);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void remove(InstrumentUsedType instrumentUsedType) throws DAOException {
 		//remove from abstractExperiment common_info_type_instrument_type
@@ -187,6 +193,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private void updateFKInstrumentUsedType(String code, Long id) {
 		String sqlInst = "update instrument set fk_instrument_used_type=? WHERE code=?";
 		jdbcTemplate.update(sqlInst, id, code);
@@ -198,6 +205,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 //		}
 //	}
 
+	@SuppressWarnings("deprecation")
 	private void deleteFKFromInstruments(Long id) {
 		String sqlInst = "update instrument set fk_instrument_used_type=null WHERE fk_instrument_used_type=?";
 		jdbcTemplate.update(sqlInst, id);

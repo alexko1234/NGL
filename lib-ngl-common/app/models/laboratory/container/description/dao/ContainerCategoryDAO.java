@@ -1,11 +1,11 @@
 package models.laboratory.container.description.dao;
 
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.stereotype.Repository;
+
 import models.laboratory.container.description.ContainerCategory;
 import models.utils.dao.AbstractDAODefault;
 import models.utils.dao.DAOException;
-
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.stereotype.Repository;
 
 @Repository
 public class ContainerCategoryDAO extends AbstractDAODefault<ContainerCategory> {
@@ -14,6 +14,7 @@ public class ContainerCategoryDAO extends AbstractDAODefault<ContainerCategory> 
 		super("container_category", ContainerCategory.class, true);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public ContainerCategory findByContainerSupportCategoryCode(String containerSupportCategoryCode) {
 		if (null == containerSupportCategoryCode) {
 			throw new DAOException("containerSupportCategoryCode is mandatory");

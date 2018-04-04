@@ -45,6 +45,7 @@ public class ContainerSupportCategoryDAO extends AbstractDAOMapping<ContainerSup
 		return containerSupportCategory.id;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void update(ContainerSupportCategory containerSupportCategory) throws DAOException {
 		if(containerSupportCategory.containerCategory == null || containerSupportCategory.containerCategory.id == null){
@@ -57,6 +58,7 @@ public class ContainerSupportCategoryDAO extends AbstractDAOMapping<ContainerSup
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public void remove(ContainerSupportCategory containerSupportCategory) throws DAOException
 	{

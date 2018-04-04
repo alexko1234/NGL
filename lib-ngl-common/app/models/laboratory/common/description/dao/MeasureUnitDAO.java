@@ -33,6 +33,7 @@ public class MeasureUnitDAO extends AbstractDAOMapping<MeasureUnit> {
 		return this.jdbcTemplate.query(sql, mapper, idMeasureCategory);
 	}
 */
+	@SuppressWarnings("deprecation")
 	public MeasureUnit findByValue(String value) {
 		String sql = "SELECT id, code, value,default_unit " +
 				"FROM measure_unit "+
@@ -61,6 +62,7 @@ public class MeasureUnitDAO extends AbstractDAOMapping<MeasureUnit> {
 	}
 
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void update(MeasureUnit measureValue) throws DAOException {
 		String sql = "UPDATE measure_unit SET code=?, value=?, default_unit=? WHERE id=?";

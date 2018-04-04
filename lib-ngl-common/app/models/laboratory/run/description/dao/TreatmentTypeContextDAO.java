@@ -17,6 +17,7 @@ public class TreatmentTypeContextDAO extends AbstractDAODefault<TreatmentTypeCon
 		super("treatment_context", TreatmentTypeContext.class, true);	
 	}
 	
+	@SuppressWarnings("deprecation")
 	public List<TreatmentTypeContext> findByTreatmentTypeId(Long id) throws DAOException {
 		
 		String sql ="SELECT t.id, t.code, t.name, ttc.required "+
@@ -36,6 +37,7 @@ public class TreatmentTypeContextDAO extends AbstractDAODefault<TreatmentTypeCon
 				"WHERE ttc.fk_treatment_type = ? and t.code = ?";
 		
 		BeanPropertyRowMapper<TreatmentTypeContext> mapper = new BeanPropertyRowMapper<>(TreatmentTypeContext.class);
+		@SuppressWarnings("deprecation")
 		List<TreatmentTypeContext> result = this.jdbcTemplate.query(sql, mapper, id, code);
 		if(result != null && result.size() == 1){
 			return result.get(0);

@@ -24,6 +24,7 @@ public class PermissionDAO extends AbstractDAODefault<Permission>{
 	/*
 	 * findByUserLogin()
 	 */
+	@SuppressWarnings("deprecation")
 	public List<Permission> findByUserLogin(String aLogin) throws DAOException{
 		if(null == aLogin){
 			throw new DAOException("login is mandatory");

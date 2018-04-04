@@ -19,6 +19,7 @@ public class ProcessCategoryDAO extends AbstractDAODefault<ProcessCategory>{
 	}
 
 	//overload to delete "order by" in sql query
+	@SuppressWarnings("deprecation")
 	@Override
 	public List<ProcessCategory> findAll() throws DAOException {
 		try {

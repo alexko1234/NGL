@@ -19,6 +19,7 @@ public class ValueDAO extends AbstractDAODefault<Value>{
 		super("value", Value.class,true);
 	}
 
+	@SuppressWarnings("deprecation")
 	public List<Value> findByPropertyDefinition(long idPropertyDefinition)
 	{
 		String sql = "SELECT id, value, code, name, default_value FROM value WHERE fk_property_definition=?";
@@ -39,6 +40,7 @@ public class ValueDAO extends AbstractDAODefault<Value>{
 		return value;
 	}
 
+	@SuppressWarnings("deprecation")
 	public void update(Value value, long idPropertyDefinition)
 	{
 		String sql = "UPDATE value SET value=?, code=?, name=?, default_value=? WHERE id=? AND fk_property_definition=?";
@@ -56,6 +58,7 @@ public class ValueDAO extends AbstractDAODefault<Value>{
 		
 	}
 
+	@SuppressWarnings("deprecation")
 	public List<Value> findUnique(String propertyDefinitionCode){
 		String sql =  
 				"select distinct v.value, v.code, v.name "

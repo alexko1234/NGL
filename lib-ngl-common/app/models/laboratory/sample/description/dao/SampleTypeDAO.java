@@ -55,6 +55,7 @@ public class SampleTypeDAO extends AbstractDAOCommonInfoType<SampleType> {
 		commonInfoTypeDAO.update(sampleType);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void remove(SampleType sampleType) throws DAOException {
 		//remove from abstractExperiment experiment_type_sample_type

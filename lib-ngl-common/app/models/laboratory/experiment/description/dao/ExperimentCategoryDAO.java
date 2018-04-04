@@ -16,6 +16,7 @@ public class ExperimentCategoryDAO extends AbstractDAODefault<ExperimentCategory
 		super("experiment_category",ExperimentCategory.class,true);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public List<ExperimentCategory> findByProcessTypeCode(String processTypeCode) {
 		try {
 			String sql = "SELECT DISTINCT(ec.name), ec.code " +

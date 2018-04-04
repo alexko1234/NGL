@@ -58,6 +58,7 @@ public class TreatmentTypeDAO extends AbstractDAOCommonInfoType<TreatmentType> {
 	}
 	
 	
+	@SuppressWarnings("deprecation")
 	private void insertTreatmentContexts(List<TreatmentTypeContext> contexts, Long id, boolean deleteBefore) throws DAOException {
 		if (deleteBefore) {
 			removeTreatmentContexts(id);
@@ -78,12 +79,14 @@ public class TreatmentTypeDAO extends AbstractDAOCommonInfoType<TreatmentType> {
 	}
 	
 	
+	@SuppressWarnings("deprecation")
 	private void removeTreatmentContexts(Long id)  throws DAOException {
 		String sql = "DELETE FROM treatment_type_context WHERE fk_treatment_type=?";
 		jdbcTemplate.update(sql, id);
 	}
 	
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void update(TreatmentType treatmentType) throws DAOException {
 		//Update contexts

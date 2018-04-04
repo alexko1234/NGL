@@ -158,6 +158,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		return propertyDefinition;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void update(PropertyDefinition propertyDefinition) throws DAOException
 	{
@@ -199,6 +200,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		insertPropertyDefinitionLevel(propertyDefinition.levels, propertyDefinition.id, true);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void insertValues(List<Value> values, Long id, boolean deleteBefore) {
 		//Add values list
 		if(deleteBefore){
@@ -214,6 +216,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 	}
 
 
+	@SuppressWarnings("deprecation")
 	private void insertPropertyDefinitionLevel(List<Level> levels, Long id, boolean deleteBefore)  throws DAOException {
 		if(deleteBefore){
 			removePropertyDefinitionLevel(id);
@@ -230,12 +233,14 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 	}
 
 
+	@SuppressWarnings("deprecation")
 	private void removePropertyDefinitionLevel(Long id) {
 		String sqlState = "DELETE FROM property_definition_level WHERE fk_property_definition_id=?";
 		jdbcTemplate.update(sqlState, id);
 	}
 
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void remove(PropertyDefinition propertyDefinition) throws DAOException {
 		//Delete value

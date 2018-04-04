@@ -25,6 +25,7 @@ public class InstituteDAO extends AbstractDAOMapping<Institute>{
 				true);
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public void remove(Institute institute) throws DAOException {
 		//Remove list institute for common_info_type
@@ -49,6 +50,7 @@ public class InstituteDAO extends AbstractDAOMapping<Institute>{
 		return institute.id;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void update(Institute institute) throws DAOException {
 		String sql = "UPDATE institute SET code=?, name=? WHERE id=?";
@@ -56,6 +58,7 @@ public class InstituteDAO extends AbstractDAOMapping<Institute>{
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	public List<Institute> findByCommonInfoType(long idCommonInfoType) {
 		String sql = "SELECT i.id, i.name, i.code "+
 				"FROM institute i "+

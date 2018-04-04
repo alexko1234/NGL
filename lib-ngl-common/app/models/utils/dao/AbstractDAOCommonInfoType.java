@@ -46,6 +46,7 @@ public abstract class AbstractDAOCommonInfoType<T extends CommonInfoType> extend
 			String	sql = "SELECT t.id FROM common_info_type t " + DAOHelpers.getCommonInfoTypeDefaultSQLForInstitute() + " where t.code=?";
 			try {
 //				long id =  this.jdbcTemplate.queryForLong(sql, code);
+				@SuppressWarnings("deprecation")
 				long id =  jdbcTemplate.queryForLong(sql, code);
 //				long id = MongoDeprecation.queryForLong(jdbcTemplate, sql, code);
 //				if (id > 0) {
@@ -84,6 +85,7 @@ public abstract class AbstractDAOCommonInfoType<T extends CommonInfoType> extend
 	}
 */
 
+	@SuppressWarnings("deprecation")
 	public List<ListObject> findAllForList(){
 		String sql = "SELECT t.code, t.name "+sqlCommonFrom;
 		BeanPropertyRowMapper<ListObject> mapper = new BeanPropertyRowMapper<>(ListObject.class);

@@ -50,6 +50,7 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument> {
         return instrument.id;
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public void update(Instrument instrument) throws DAOException {
 		String sql = "UPDATE instrument SET code=?, short_name=?, name=?, active=?, path=? WHERE id=?";
@@ -61,11 +62,13 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument> {
 	 * @param instrument
 	 */
 	// * @throws DAOException
+	@SuppressWarnings("deprecation")
 	public void updateByCode(Instrument instrument) throws DAOException {
 		String sql = "UPDATE instrument SET short_name=?, name=?, path=? WHERE code=?";
 		jdbcTemplate.update(sql, instrument.shortName, instrument.name, instrument.path, instrument.code);		
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void insertInstitutes(List<Institute> institutes, Long instrumentId, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
 			removeInstitutes(instrumentId);
@@ -82,6 +85,7 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument> {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void removeInstitutes( long instrumentId) {
 		String sql = "DELETE FROM instrument_institute WHERE fk_instrument=?";
 		jdbcTemplate.update(sql, instrumentId);
@@ -108,6 +112,7 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument> {
 		try {
 			try {
 				String sql = "select distinct(t.code) as code FROM instrument as t "+DAOHelpers.getInstrumentSQLForInstitute("t")+" WHERE t.code=?";
+				@SuppressWarnings("deprecation")
 				String returnCode =  this.jdbcTemplate.queryForObject(sql, String.class, code);
 				if (returnCode != null) {
 					return Boolean.TRUE;

@@ -44,6 +44,7 @@ public class UserDAO extends AbstractDAOMapping<User> {
 		return initializeMapping(sql).execute();
 	}
 	
+	@SuppressWarnings("deprecation")
 	public boolean isExistUserWithLoginAndPassword(String login, String password) {
 		String sql = "SELECT login " +
 				"FROM user WHERE login='" + login + "' AND password='" + password + "'";
@@ -65,6 +66,7 @@ public class UserDAO extends AbstractDAOMapping<User> {
 //		parameters.put("login", login);	
 		BeanPropertyRowMapper<User> mapper = new BeanPropertyRowMapper<>(User.class);
 //		List<User> users =  this.jdbcTemplate.query(sql, mapper);
+		@SuppressWarnings("deprecation")
 		List<User> users = jdbcTemplate.query(sql, mapper);
 //		if (users != null && users.size() == 1 && users.get(0).password != null) {
 //			return users.get(0).password.toString();
@@ -84,6 +86,7 @@ public class UserDAO extends AbstractDAOMapping<User> {
 		logger.debug("UserDAO - isUserActive : requête SQL : " + sql + " for " + login);
 //		List<User> users =  this.jdbcTemplate.query(sql, mapper, parameters);
 //		List<User> users = jdbcTemplate.query(sql, mapper, parameters);
+		@SuppressWarnings("deprecation")
 		List<User> users = jdbcTemplate.query(sql, mapper);
 		/*if (users != null && users.size() == 1 ) {
 			return users.get(0).active;
@@ -92,6 +95,7 @@ public class UserDAO extends AbstractDAOMapping<User> {
 		return users != null && users.size() == 1 && users.get(0).active;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public boolean isUserAccessApplication(String login, String application) {
 		if (!login.equals("") && getUserId(login) != 0) {
 			applicationAccess(login, application);
@@ -107,6 +111,7 @@ public class UserDAO extends AbstractDAOMapping<User> {
 		return false;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void setDefaultRole(String login, String role) {
 		String sql = "SELECT u.id FROM user u, user_role ur WHERE u.login=? and u.id=ur.user_id";
 		BeanPropertyRowMapper<User> mapper = new BeanPropertyRowMapper<>(User.class);
@@ -116,12 +121,14 @@ public class UserDAO extends AbstractDAOMapping<User> {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	private long getRoleId(String label) {
 		String sql = "SELECT r.id FROM role r WHERE r.label=?";
 		BeanPropertyRowMapper<Role> mapper = new BeanPropertyRowMapper<>(Role.class);
 		return this.jdbcTemplate.query(sql, mapper,label).get(0).id;
 	}
 	
+	@SuppressWarnings("deprecation")
 	private long getApplicationId(String code) {
 		String sql = "SELECT a.id FROM application a WHERE a.code=?";
 		BeanPropertyRowMapper<Role> mapper = new BeanPropertyRowMapper<>(Role.class);
@@ -131,6 +138,7 @@ public class UserDAO extends AbstractDAOMapping<User> {
 	private long getUserId(String login) {
 		String sql = "SELECT u.id as id FROM user u WHERE u.login=?";
 		BeanPropertyRowMapper<User> mapper = new BeanPropertyRowMapper<>(User.class);
+		@SuppressWarnings("deprecation")
 		List<User> users = this.jdbcTemplate.query(sql, mapper,login);
 		if (users != null && users.size() > 0) {
 			return users.get(0).id;
@@ -139,6 +147,7 @@ public class UserDAO extends AbstractDAOMapping<User> {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void applicationAccess(String login,String application) {
 		String sql = "SELECT u.id FROM user u, user_application ua, application a WHERE u.login=? and u.id=ua.user_id and a.code = ? and a.id=ua.application_id";
 		BeanPropertyRowMapper<User> mapper = new BeanPropertyRowMapper<>(User.class);
@@ -148,6 +157,7 @@ public class UserDAO extends AbstractDAOMapping<User> {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void createUser(String login) {
 		String sql = "INSERT INTO user (login) VALUE (?)";
 		this.jdbcTemplate.update(sql, login);
@@ -179,6 +189,7 @@ public class UserDAO extends AbstractDAOMapping<User> {
 	/*
 	 * insertUserRoles
 	 */
+	@SuppressWarnings("deprecation")
 	public void insertUserRoles(Long userId, List<Long> roleIds, boolean deleteBefore) throws DAOException {		
 		if (deleteBefore)
 			removeUserRoles(userId);
@@ -197,6 +208,7 @@ public class UserDAO extends AbstractDAOMapping<User> {
 	/*
 	 * removeUserRoles()
 	 */
+	@SuppressWarnings("deprecation")
 	public void removeUserRoles(Long userId) throws DAOException {
 		String sql = "DELETE FROM user_role WHERE user_id=?";	
 		jdbcTemplate.update(sql, userId);
@@ -220,6 +232,7 @@ public class UserDAO extends AbstractDAOMapping<User> {
 		return user.id;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void update(User user) throws NotImplementedException {
 		String sql = "UPDATE user SET firstname=?, lastname=?, email=?, password = ?, technicaluser = ?, active=? WHERE id=?";
@@ -241,6 +254,7 @@ public class UserDAO extends AbstractDAOMapping<User> {
 		setDefaultRole(login,role);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public boolean canAccessApplication(String login, String application) {
 		String sql = "SELECT u.id FROM user u, user_application ua, application a WHERE u.login=? and u.id=ua.user_id and a.code = ? and a.id=ua.application_id";
 		BeanPropertyRowMapper<User> mapper = new BeanPropertyRowMapper<>(User.class);

@@ -40,6 +40,7 @@ public class ObjectTypeDAO extends AbstractDAOMapping<ObjectType> {
 		return ot.id;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void update(ObjectType ot) throws DAOException {
 		if (null == ot) {
@@ -65,6 +66,7 @@ public class ObjectTypeDAO extends AbstractDAOMapping<ObjectType> {
 		super.remove(objectType);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void removeStates(Long otId) {
 		String sqlState = "DELETE FROM state_object_type WHERE fk_object_type=?";
 		jdbcTemplate.update(sqlState, otId);

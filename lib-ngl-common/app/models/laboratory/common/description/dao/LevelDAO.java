@@ -15,6 +15,7 @@ public class LevelDAO extends AbstractDAODefault<Level>{
 		super("level", Level.class, true);
 	}
 
+	@SuppressWarnings("deprecation")
 	public List<Level> findByPropertyDefinitionID(Long id) {
 		
 		String sql = "SELECT le.id, le.code, le.name "+
@@ -23,9 +24,7 @@ public class LevelDAO extends AbstractDAODefault<Level>{
 				"WHERE p.fk_property_definition = ? ";
 		
 		BeanPropertyRowMapper<Level> mapper = new BeanPropertyRowMapper<>(Level.class);
-		return jdbcTemplate.query(sql, mapper, id);
-		
+		return jdbcTemplate.query(sql, mapper, id);		
 	}
 
-	
 }

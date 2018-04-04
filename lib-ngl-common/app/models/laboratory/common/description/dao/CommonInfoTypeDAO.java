@@ -63,6 +63,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType> {
 	}
 
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public void update(CommonInfoType cit) throws DAOException {
 		if(null == cit || cit.id == null){
@@ -94,16 +95,19 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType> {
 	}
 
 	
+	@SuppressWarnings("deprecation")
 	private void removeStates(Long citId) {
 		String sqlState = "DELETE FROM common_info_type_state WHERE fk_common_info_type=?";
 		jdbcTemplate.update(sqlState, citId);
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void removeInstitutes( Long citId) {
 		String sqlInstit = "DELETE FROM common_info_type_institute WHERE fk_common_info_type=?";
 		jdbcTemplate.update(sqlInstit, citId);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void removeProperties(Long citId)
 			throws DAOException {
 		String sqlValues = "DELETE FROM value  WHERE fk_property_definition in (select p.id from property_definition p "
@@ -134,6 +138,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType> {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void insertState(List<State> states, Long citId, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
 			removeStates(citId);
@@ -153,6 +158,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType> {
 
 	
 	
+	@SuppressWarnings("deprecation")
 	private void insertInstitutes(List<Institute> institutes, Long citId, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
 			removeInstitutes(citId);

@@ -68,6 +68,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		return experimentType.id;
 	}
 
+	@SuppressWarnings("deprecation")
 	private void insertSampleTypes(List<SampleType> sampleTypes, Long id, boolean deleteBefore) {
 		if (deleteBefore) {
 			removeSampleTypes(id);
@@ -84,11 +85,13 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void removeSampleTypes(Long id) {
 		String sql = "DELETE FROM experiment_type_sample_type WHERE fk_experiment_type=?";
 		jdbcTemplate.update(sql, id);
 		
 	}
+	@SuppressWarnings("deprecation")
 	private void insertInstrumentUsedTypes(
 			List<InstrumentUsedType> instrumentUsedTypes, Long id, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
@@ -106,6 +109,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 	}
 
 
+	@SuppressWarnings("deprecation")
 	private void removeInstrumentUsedTypes(Long id) {
 		String sql = "DELETE FROM experiment_type_instrument_type WHERE fk_experiment_type=?";
 		jdbcTemplate.update(sql, id);
@@ -156,6 +160,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 				
 				+" where cpt.code = ? and pet.position_in_process > -1";
 		
+		@SuppressWarnings("deprecation")
 		int result = jdbcTemplate.queryForInt(sql, processTypeCode);
 //		int result = MongoDeprecation.queryForInt(jdbcTemplate, sql, processTypeCode);		
 		return Integer.valueOf(result);
@@ -168,6 +173,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 				"inner join common_info_type as cp on p.fk_common_info_type=cp.id "+
 				" where cp.code=?";
 
+		@SuppressWarnings("deprecation")
 		List<String> list = jdbcTemplate.query(
 				query,
 				new RowMapper<String>() {
@@ -236,6 +242,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		return initializeMapping(sql, new SqlParameter("p.fk_process_type", Type.LONG)).execute(id);
 	}
 
+	@SuppressWarnings("deprecation")
 	public List<ExperimentType> findByCategoryCode(String categoryCode){
 		String sql = "SELECT t.code AS code, t.name AS name , t.display_order AS displayOrder, t.active as active  "+
 				 sqlCommonFrom+
@@ -246,6 +253,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		return this.jdbcTemplate.query(sql, mapper, categoryCode);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public List<ExperimentType> findActiveByCategoryCode(String categoryCode){
 		String sql = "SELECT t.code AS code, t.name AS name , t.display_order AS displayOrder, t.active as active  "+
 				 sqlCommonFrom+
@@ -257,6 +265,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 	}
 	
 	
+	@SuppressWarnings("deprecation")
 	public List<ExperimentType> findByCategoryCodes(List<String> categoryCodes){
 		String sql = "SELECT t.code AS code, t.name AS name , t.display_order AS displayOrder, t.active as active  "+
 				 sqlCommonFrom+
@@ -267,6 +276,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		return this.jdbcTemplate.query(sql, mapper, Collections.singletonMap("list", categoryCodes));
 	}
 	
+	@SuppressWarnings("deprecation")
 	public List<ExperimentType> findByCategoryCodesWithoutOneToVoid(List<String> categoryCodes){
 		String sql = "SELECT t.code AS code, t.name AS name, t.display_order AS displayOrder, t.active as active  "
 					+sqlCommonFrom
@@ -277,6 +287,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		return this.jdbcTemplate.query(sql, mapper,Collections.singletonMap("list", categoryCodes));
 	}
 	
+	@SuppressWarnings("deprecation")
 	public List<ExperimentType> findByCategoryCodeAndProcessTypeCode(String categoryCode, String processTypeCode){
 		String sql = "SELECT t.code AS code, t.name AS name, t.active as active "+
 				 sqlCommonFrom+
@@ -287,6 +298,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		return this.jdbcTemplate.query(sql, mapper, categoryCode, processTypeCode);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public List<ExperimentType> findByCategoryCodeWithoutOneToVoid(String categoryCode){
 		String sql = "SELECT t.code AS code, t.name AS name, t.display_order AS displayOrder, t.active as active  "
 					+sqlCommonFrom

@@ -99,6 +99,7 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 	}
 
 	// TODO: fix silent error handling
+	@SuppressWarnings("deprecation")
 	@Override
 	public List<T> findAll() throws DAOException {
 		try {
@@ -111,6 +112,7 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public List<ListObject> findAllForList() {
 //		String sql = "SELECT code, name from " + tableName + " ORDER by t.code";
 		String sql = "SELECT code, name from " + tableName + " ORDER by code";
@@ -119,6 +121,7 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 	}
 	
 	// TODO: fix silent error handling	
+	@SuppressWarnings("deprecation")
 	@Override
 	public T findById(Long id) throws DAOException {
 		// if (id == null) throw new DAOIllegalArgumentException("id",id); //("id is mandatory");
@@ -133,6 +136,7 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 	}
 
 	// TODO: fix silent error handling		
+	@SuppressWarnings("deprecation")
 	@Override
 	public T findByCode(String code) throws DAOException {
 		// if (code == null) throw new DAOIllegalArgumentException("code",code); // ("code is mandatory");
@@ -154,6 +158,7 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public List<T> findByCodes(List<String> codes) throws DAOException {
 		// if (codes == null) throw new DAOIllegalArgumentException("codes",codes); // "codes is mandatory");
@@ -179,6 +184,7 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 		return id;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void update(T value) throws DAOException	{
 		// if (null == value) {	throw new DAOException("value is mandatory"); }

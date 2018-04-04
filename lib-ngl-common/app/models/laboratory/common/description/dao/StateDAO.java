@@ -31,6 +31,7 @@ public class StateDAO extends AbstractDAOMapping<State> {
 				"FROM state as t ", true);
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public void remove(State state) throws DAOException	{
 	 	//Remove list state for common_info_type
@@ -62,6 +63,7 @@ public class StateDAO extends AbstractDAOMapping<State> {
 		return state.id;
 	}
 
+	@SuppressWarnings("deprecation")
 	private void insertObjectTypes(List<ObjectType> objectTypes, Long id, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
 			removeObjectTypes(id);
@@ -77,17 +79,20 @@ public class StateDAO extends AbstractDAOMapping<State> {
 		}				
 	}
 
+	@SuppressWarnings("deprecation")
 	private void removeObjectTypes(Long id) {
 		String sql = "DELETE FROM state_object_type WHERE fk_state=?";
 		jdbcTemplate.update(sql, id);
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public void update(State state) throws DAOException {
 		String sql = "UPDATE state SET code=?, name=?, active=?, position=?, fk_state_category=?, display=?, functionnal_group=? WHERE id=?";
 		jdbcTemplate.update(sql, state.code, state.name, state.active, state.position, state.id, state.category.id, state.display, state.functionnalGroup);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public List<ListObject> findAllForContainerList(){
 		String sql = "SELECT t.code, t.name FROM state t"+
 				" inner join state_object_type sot on sot.fk_state = t.id" +

@@ -41,6 +41,7 @@ import models.utils.Model;
  *
  * @param <T> DAO 
  */
+@SuppressWarnings("deprecation")
 @Transactional(readOnly=false, rollbackFor=DAOException.class)
 public abstract class AbstractDAO<T> {
 
@@ -63,6 +64,7 @@ public abstract class AbstractDAO<T> {
 		this.useGeneratedKey = useGeneratedKey;
 	}
 
+//	@SuppressWarnings("deprecation")
 	@Autowired
 	@Qualifier("ngl")
 	public void setDataSource(DataSource dataSource) {
@@ -75,6 +77,7 @@ public abstract class AbstractDAO<T> {
 			jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName(tableName);
 	}
 
+//	@SuppressWarnings("deprecation")
 	public void remove(T value) throws DAOException	{
 		String sql = "DELETE FROM " + tableName + " WHERE id=:id";
 		SqlParameterSource ps = new BeanPropertySqlParameterSource(value);

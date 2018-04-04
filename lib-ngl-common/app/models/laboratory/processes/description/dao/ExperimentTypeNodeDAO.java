@@ -77,6 +77,7 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 		return initializeMapping(sqlCommon + " order by id DESC").execute();
 	}
 
+	@SuppressWarnings("deprecation")
 	public void insertPrevious(
 			List<ExperimentTypeNode> previousExperimentType, Long id, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
@@ -94,6 +95,7 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 
 	}
 
+	@SuppressWarnings("deprecation")
 	private void insertSatellites(
 			List<ExperimentType> experimentTypes, Long id, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
@@ -111,12 +113,14 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 
 	}
 
+	@SuppressWarnings("deprecation")
 	private void removeSatellites(Long id) {
 		String sql = "DELETE FROM satellite_experiment_type WHERE fk_experiment_type_node=?";
 		jdbcTemplate.update(sql, id);
 
 	}
 
+	@SuppressWarnings("deprecation")
 	private void removePrevious(Long id) {
 		String sql = "DELETE FROM previous_nodes WHERE fk_node=?";
 		jdbcTemplate.update(sql, id);
@@ -124,6 +128,7 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 	}
 
 	
+	@SuppressWarnings("deprecation")
 	public void removeAllPrevious(){
 		String sql = "DELETE FROM previous_nodes";
 		jdbcTemplate.update(sql);
