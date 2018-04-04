@@ -3,7 +3,6 @@ package services.description.experiment;
 import static services.description.DescriptionFactory.newExperimentType;
 import static services.description.DescriptionFactory.newExperimentTypeNode;
 import static services.description.DescriptionFactory.newPropertiesDefinition;
-import static services.description.DescriptionFactory.newValues;
 
 import java.awt.Image;
 import java.util.ArrayList;
@@ -13,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
@@ -21,7 +21,6 @@ import models.laboratory.common.description.Value;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.ProtocolCategory;
-import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ExperimentTypeNode;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
@@ -30,10 +29,7 @@ import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 import services.description.common.MeasureService;
-import services.description.experiment.AbstractExperimentService;
 import services.description.declaration.cng.Nanopore;
-
-import com.typesafe.config.ConfigFactory;
 
 public class ExperimentServiceCNG extends AbstractExperimentService{
 	
@@ -70,6 +66,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	 */
 	public void saveExperimentTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 			List<ExperimentType> l = new ArrayList<ExperimentType>();
+			List<Institute> CNG = DescriptionFactory.getInstitutes(Constants.CODE.CNG); // 04/04/2018; puisque tout se refere uniqt au CNG, alleger l'ecriture...
 			
 			/** voidprocess: ext-to-**  display order -1 **/
 			
@@ -78,35 +75,35 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null, 
 					null,
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			l.add(newExperimentType("Ext to prepa flowcell ordered","ext-to-prepa-fc-ordered",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), 
 					null, 
 					null,
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			l.add(newExperimentType("Ext to librairie dénaturée","ext-to-denat-dil-lib",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), 
 					null, 
 					null,
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			l.add(newExperimentType("Ext to X5_WG PCR free","ext-to-x5-wg-pcr-free",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 					null, 
 					null ,
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			l.add(newExperimentType("Ext to X5_norm,FC ord, dépôt","ext-to-norm-fc-ordered-depot",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 					null, 
 					null ,
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			//FDS 10/08/2016 ajout -- JIRA NGL-1047: processus X5_WG NANO;
 			l.add(newExperimentType("Ext to X5_WG NANO","ext-to-x5-wg-nano",null,-1,
@@ -114,7 +111,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null, 
 					null ,
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
+					CNG));		
 			
 			//FDS 12/12/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq ; JIRA NGL-1259 renommage rna-sequencing=> rna-lib-process
 			l.add(newExperimentType("Ext to Prep lib RNASeq","ext-to-rna-lib-process",null,-1,
@@ -122,7 +119,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null, 
 					null ,
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			/*24/10/2017   A  SUPPRIMER remplacé par ext-to-norm-fc-ordered-depot
 			//FDS 12/12/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq 
@@ -131,7 +128,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null, 
 					null ,
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			*/
 				
 			//FDS ajout 12/12/2016 JIRA NGL-1025: nouveau processus court pour RNAseq
@@ -140,7 +137,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null, 
 					null ,
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
+					CNG));	
 
 			//FDS 12/12/2016 JIRA NGL-1164 : pour processus sans transformation
 			l.add(newExperimentType("Ext to QC / TF / purif","ext-to-qc-transfert-purif",null,-1,
@@ -148,7 +145,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null, 
 					null,
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			//FDS 10/10/2017 JIRA NGL-1625 dedoubler
 			l.add(newExperimentType("Ext to  TF / QC / purif","ext-to-transfert-qc-purif",null,-1,
@@ -156,7 +153,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null, 
 					null,
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			
 			//FDS ajout 21/02/2017 NGL-1167: processus Chromium
@@ -165,7 +162,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null, 
 					null,
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
+					CNG));	
 
 			//FDS ajout 10/07/2017 NGL 1201: processus Capture principal (4000/X5 = FC ordonnée)
 			l.add(newExperimentType("Ext to Prep Capture","ext-to-capture-prep-process-fc-ord",null,-1,
@@ -173,7 +170,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null, 
 					null,
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			//FDS ajout 10/07/2017 NGL-1201: processus Capture principal (2000/2500/Miseq/NextSeq)
 			l.add(newExperimentType("Ext to Prep Capture","ext-to-capture-prep-process-fc",null,-1,
@@ -181,7 +178,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null, 
 					null,
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
+					CNG));		
 			
 			//FDS ajout 06/07/2017 NGL 1201: processus Capture reprise (1)(4000/X5 = FC ordonnée)
 			l.add(newExperimentType("Ext to Prep. Capture à partir sample prep sauvgarde","ext-to-pcr-capture-pcr-indexing-fc-ord",null,-1,
@@ -189,7 +186,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null, 
 					null,
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			//FDS ajout 06/07/2017 NGL-1201: processus Capture reprise (1)(2000/2500/Miseq/NextSeq)
 			l.add(newExperimentType("Ext to Prep. Capture à partir sample prep sauvgarde","ext-to-pcr-capture-pcr-indexing-fc",null,-1,
@@ -197,7 +194,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null, 
 					null,
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
+					CNG));		
 			
 			//FDS ajout 06/07/2017 NGL 1201: processus Capture reprise (2)(4000/X5 = FC ordonnée)
 			l.add(newExperimentType("Ext to Prep. Capture à partir pré Capture","ext-to-capture-pcr-indexing-fc-ord",null,-1,
@@ -205,7 +202,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null, 
 					null,
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			//FDS ajout 06/07/2017 NGL-1201: processus Capture reprise (2)(2000/2500/Miseq/NextSeq)
 			l.add(newExperimentType("Ext to Prep. Capture à partir pré Capture","ext-to-capture-pcr-indexing-fc",null,-1,
@@ -213,7 +210,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null, 
 					null,
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			//FDS ajout 06/07/2017 NG-1201: processus Capture reprise (3)(4000/X5 = FC ordonnée)
 			l.add(newExperimentType("Ext to PCR indexing à partir capture sauvgarde","ext-to-pcr-indexing-process-fc-ord",null,-1,
@@ -221,7 +218,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null, 
 					null,
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			//FDS ajout 06/07/2017 NGL-1201: processus Capture reprise (3)(2000/2500/Miseq/NextSeq)
 			l.add(newExperimentType("Ext to PCR indexing à partir capture sauvgarde","ext-to-pcr-indexing-process-fc",null,-1,
@@ -229,7 +226,24 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null, 
 					null,
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));			
+					CNG));	
+			
+			//FDS ajout 04/04/2018  NGL-1727: processus SmallRNASeq
+			l.add(newExperimentType("Ext to Small RNASeq","ext-to-small-rna-seq-process-fc-ord",null,-1,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
+					null, 
+					null,
+					"OneToOne", 
+					CNG));	
+			
+			//FDS ajout 04/04/2018  NGL-1727: processus BisSeq
+			l.add(newExperimentType("Ext to BiSeq","ext-to-bis-seq-process-fc-ord",null,-1,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
+					null, 
+					null,
+					"OneToOne", 
+					CNG));	
+			
 			
 			/** Transformation, ordered by display order **/
 			
@@ -241,10 +255,43 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 							               "covaris-le220-and-sciclone-ngsx",
 							               "covaris-e220-and-sciclone-ngsx"),
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
-			//commun X5_WG NANO et RNAseq; mise prod 01/09/2016
-			//10/07/2017 commun aussi aux processus capture
+		    //FDS dupliquer experience prep-pcr-free en prep-wg-nano; separer les proprietes de celles de prep-pcr-free ...
+		    l.add(newExperimentType("Prep. WG Nano","prep-wg-nano",null,550,
+				   ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+				   getPropertyDefinitionsPrepWgNano(), 
+				   getInstrumentUsedTypes("covaris-le220-and-sciclone-ngsx",
+						                  "covaris-e220-and-sciclone-ngsx"),
+				   "OneToOne", 
+				   CNG));
+		    
+			//FDS 12/12/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq; JIRA NGL-1047: processus X5_WG NANO 	
+			l.add(newExperimentType("Prep. Librairie (sans frg)","library-prep",null,600,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+					getPropertyDefinitionsLibraryPrep(),
+					getInstrumentUsedTypes("sciclone-ngsx","hand"), // 29/11/2017 NGL-1717 ajout main
+					"OneToOne", 
+					CNG));
+			
+			//FDS 04/04/2018 ajout JIRA NGL-1727: pour processus SmallRNASeq
+			l.add(newExperimentType("Small RNAseq lib prep","small-rnaseq-lib-prep",null,650,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+					getPropertyDefinitionsSmallRNASeqLibPrep(), //TODO
+					getInstrumentUsedTypes("hand"), //TODO
+					"OneToOne", 
+					CNG));
+			
+			//FDS 04/04/2018 ajout JIRA NGL-1727: pour processus BisSeq
+			l.add(newExperimentType("BisSeq lib prep","bisseq-lib-prep",null,660,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+					getPropertyDefinitionsBisSeqLibPrep(),//TODO
+					getInstrumentUsedTypes("hand"),  //TODO
+					"OneToOne", 
+					CNG));
+
+	
+			//FDS mise prod 01/09/2016
 			l.add(newExperimentType("PCR+purification","pcr-and-purification",null,700,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 					getPropertyDefinitionsPcrAndPurification(),
@@ -253,39 +300,21 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 							               "mastercycler-ep-gradient",        // 29/11/2017 NGL-1717 ajout 
 							               "mastercycler-nexus-and-bravows"), // 22/02/2018 NGL-1860 ajout
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
-			//FDS 12/12/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq 
-			//FDS 12/12/2016 ajout -- JIRA NGL-1047: processus X5_WG NANO 	
-			l.add(newExperimentType("Prep. Librairie (sans frg)","library-prep",null,600,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
-					getPropertyDefinitionsLibraryPrep(),
-					getInstrumentUsedTypes("sciclone-ngsx","hand"), // 29/11/2017 NGL-1717 ajout main
-					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			l.add(newExperimentType("Normalisation+Pooling","normalization-and-pooling",null,800,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 					getPropertyDefinitionsNormalizationAndPooling(), 
 					getInstrumentUsedTypes("hand","janus","epmotion"),
 					"ManyToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
-		
-		    //FDS dupliquer experience prep-pcr-free en prep-wg-nano; separer les proprietes de celles de prep-pcr-free ...
-		    l.add(newExperimentType("Prep. WG Nano","prep-wg-nano",null,500,
-				   ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
-				   getPropertyDefinitionsPrepWgNano(), 
-				   getInstrumentUsedTypes("covaris-le220-and-sciclone-ngsx",
-						                  "covaris-e220-and-sciclone-ngsx"),
-				   "OneToOne", 
-				   DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));	
 			
 			l.add(newExperimentType("Librairie normalisée","lib-normalization",null,900,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsLibNormalization(),
 					getInstrumentUsedTypes("hand","janus"), 
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));				
+					CNG));				
 			
 			// 04/10/2017 NGL-1589: plaque->plaque, tubes->plaque, plaque-> tube, tube->tube => utiliser robot
 			// 16/10/2017           remplacer janus par EpMotion
@@ -294,14 +323,14 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getPropertyDefinitionsDenatDilLibCNG(),
 					getInstrumentUsedTypes("hand","epmotion"),
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			l.add(newExperimentType("Préparation flowcell","prepa-flowcell",null,1200,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsPrepaflowcellCNG(),
 					getInstrumentUsedTypes("cBotV2","cBot-onboard"),
 					"ManyToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			//FDS modif 23/01/2017 modif janus-and-cBot=>  janus-and-cBotV2, il n'y a plus de Cbot non V2...
 			//FDS 07/12/2017  NGL-1730 ajout "cBot-onboard" pour NovaSeq6000
@@ -310,7 +339,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getPropertyDefinitionsPrepaflowcellOrderedCNG(),
 					getInstrumentUsedTypes("cBotV2","janus-and-cBotV2","cBot-onboard"),
 					"ManyToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 	
 			//FDS 28/10/2015 : ajout "HISEQ4000","HISEQX"
 			//FDS 07/12/2017 NGL-1730: ajout NOVASEQ6000
@@ -319,7 +348,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getPropertyDefinitionsIlluminaDepot(),
 					getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500","HISEQ4000","HISEQX","NOVASEQ6000"), 
 					"OneToVoid", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));			
+					CNG));			
 			
 			//FDS ajout 21/02/2017 NGL-1167: Chromium		
 			l.add(newExperimentType("GEM generation (Chromium)","chromium-gem-generation",null,1500,
@@ -327,7 +356,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getPropertyDefinitionsChromiumGemGeneration(),
 					getInstrumentUsedTypes("chromium-controller"),
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			// 13/03/2017 ne pas encore proposer le Sciclone...getInstrumentUsedTypes("hand","sciclone-ngsx"), 
 			l.add(newExperimentType("Prep Lib & PCR indexing (Chromium)","wg-chromium-lib-prep",null,1600,
@@ -335,7 +364,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getPropertyDefinitionsWGChromiumLibPrep(),
 					getInstrumentUsedTypes("hand"), 
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
+					CNG));	
 
 			//FDS 10/07/2017 NGL-1201: experiences transformation pour Capture
 			l.add(newExperimentType("Fragmentation","fragmentation",null,650,
@@ -345,7 +374,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 							               "covaris-e220","covaris-le220",                                 // ajoutés 29/08/2017
 							               "covaris-e220-and-bravows","covaris-le220-and-bravows"),        // ajoutés 16/11/2017						               
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			//FDS 10/07/2017 NGL-1201: experiences transformation pour Capture (Sure Select implicite)
 			//    09/11/2017 NGL-1691: ajout type Bravo WorkStation
@@ -354,7 +383,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getPropertyDefinitionsSamplePrepCapture(),
 					getInstrumentUsedTypes("sciclone-ngsx","bravo-workstation"),
 					"OneToMany",
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 						
 			//FDS 10/07/2017 NGL-1201: experiences transformation pour Capture (Sure Select implicite)
 			//    09/11/2017 NGL-1691: renommage label ( ajout wash) ; 15/11/2017 ajout "bravows-and-mastercycler-epg"
@@ -366,7 +395,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 							               "bravows-and-mastercycler-epg",
 										   "bravows-and-mastercycler-nexus"),  // 22/02/2018 NGL-1860: ajout
 					"OneToOne",
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			//FDS 10/07/2017 NGL-1201: experiences transformation pour Capture (Sure Select implicite)
 			l.add(newExperimentType("PCR+indexing (post-capture)","pcr-and-indexing",null,720,
@@ -375,7 +404,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getInstrumentUsedTypes("mastercycler-nexus-and-bravows"),
 							               // "mastercycler-epg-and-bravows"),  22/02/2018 NGL-1860 supression
 					"OneToOne",
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
+					CNG));	
 			
 			/** Quality Control, ordered by display order **/
             //NOTE: pas de Node a creer pour experiences type qualitycontrol
@@ -388,7 +417,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getPropertyDefinitionsChipMigration(), 
 					getInstrumentUsedTypes("labChipGX"),
 					"OneToVoid", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 					
 			//FDS 01/02/2016 ajout -- JIRA NGL-894: experiments pour X5
 			l.add(newExperimentType("Quantification qPCR","qpcr-quantification", null, 20,
@@ -396,14 +425,14 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getPropertyDefinitionsQPCR(), 
 					getInstrumentUsedTypes("qpcr-lightcycler-480II"),
 					"OneToVoid", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG))); 
+					CNG)); 
 			
 			l.add(newExperimentType("QC Miseq","miseq-qc", null, 30,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
 					getPropertyDefinitionsQCMiseq(), 
 					getInstrumentUsedTypes("MISEQ-QC-MODE"),
 					"OneToVoid", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			//FDS 21/02/2017 ajout -- JIRA NGL-1167: experiments pour Chromium
 			l.add(newExperimentType("Bioanalyzer","bioanalyzer-migration-profile", null, 40,
@@ -411,7 +440,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getPropertyDefinitionsBioanalyzer(), 
 					getInstrumentUsedTypes("agilent-2100-bioanalyzer"),
 					"OneToVoid", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			//GA pour import; non affichée
 			l.add(newExperimentType("QC Bank","bank-qc", null, null,
@@ -419,7 +448,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getPropertyDefinitionsBankQC(), 
 					getInstrumentUsedTypes("hand"),
 					"OneToVoid", false,
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
+					CNG));	
 
 		    // FDS 21/06/2017 ajout -- JIRA NGL-1472: necessiter d'ajouter QC provenant de collaborateur extérieur; non listée
 		    l.add(newExperimentType("QC Exterieur","external-qc", null, null,
@@ -427,7 +456,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				    getPropertyDefinitionsExternalQC(),
 				    getInstrumentUsedTypes("hand"),
 				    "OneToVoid", false,
-				    DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+				    CNG));
 	    
 			//FDS 27/07/2017 ajout NGL-1201: qc pour process Capture
 			l.add(newExperimentType("Dosage Fluo","fluo-quantification", null, 50,
@@ -436,7 +465,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getInstrumentUsedTypes("spectramax",
 							               "qubit"),  // NGL-1720: ajout qubit
 					"OneToVoid",
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
+					CNG));	
 			
 			/** Purification, ordered by display order **/
                             /*vide*/
@@ -450,7 +479,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getPropertyAliquoting(), 
 					getInstrumentUsedTypes("hand"),
 					"OneToMany", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			// FDS 10/08/2016 NGL-1029;  05/10/2016 ajout EpMotion; 26/10/2016 renommage en "Pool"
 			l.add(newExperimentType("Pool","pool",null,10400,
@@ -458,7 +487,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getPropertyDefinitionPool(),
 					getInstrumentUsedTypes("hand","janus","epmotion"),
 					"ManyToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			// FDS ajout 19/07/2017 NGL-1519: dupliquer "lib-normalization" en experience de type transfert=> meme proprietes	
 			l.add(newExperimentType("Normalisation (supplémentaire)","additional-normalization",null,10500,
@@ -466,33 +495,33 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getPropertyDefinitionsLibNormalization(),
 					getInstrumentUsedTypes("hand","janus"), 
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
+					CNG));	
 			
             // FDS 27/03/2017 renommage "Tubes" en "Tubes ou Strips"
 			l.add(newExperimentType("Tubes ou Strips -> Plaque","tubes-to-plate",null,10600,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
 					getInstrumentUsedTypes("hand"),
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			l.add(newExperimentType("Plaque -> Tubes","plate-to-tubes",null,10700,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
 					getInstrumentUsedTypes("hand"),
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			l.add(newExperimentType("Plaques -> Plaque","plates-to-plate",null,10800,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
 					getInstrumentUsedTypes("hand"),
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 			
 			// FDS renommage "Tubes ou Plaques" en "Tubes + Plaques
 			l.add(newExperimentType("Tubes + Plaques -> Plaque","x-to-plate",null,10900,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
 					getInstrumentUsedTypes("hand"),
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					CNG));
 
 			
 			/** NOTE: toutes les experiences nanopores sont regroupées dans la classe Nanopore.java **/
@@ -692,7 +721,27 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null,
 				null,
 				null
-				).save();		
+				).save();	
+		
+		//FDS ajout 04/04/2018 NGL-1727: processus SmallRNASeq
+		newExperimentTypeNode("ext-to-small-rna-seq-process-fc-ord", getExperimentTypes("ext-to-small-rna-seq-process-fc-ord").get(0), 
+				false, false, false, 
+				null, // no previous nodes
+				null,
+				null,
+				null
+				).save();	
+		
+		//FDS ajout 04/04/2018 NGL-1727: processus BisRNASeq
+		newExperimentTypeNode("ext-to-bis-seq-process-fc-ord", getExperimentTypes("ext-to-bis-seq-process-fc-ord").get(0), 
+				false, false, false, 
+				null, // no previous nodes
+				null,
+				null,
+				null
+				).save();	
+		
+		
 		
 				
 		/** other nodes **/
@@ -797,39 +846,56 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null, // pas purif
 				getExperimentTypes("labchip-migration-profile"), // qc un seul suffit meme s'il y en a plusieurs possibles
 				getExperimentTypes("tubes-to-plate") // transfert 
+				).save();		
+		
+		// FDS ajout 04/04/2018 NGL-1727
+		newExperimentTypeNode("bisseq-lib-prep",getExperimentTypes("bisseq-lib-prep").get(0),
+				false, false,false,
+				getExperimentTypeNodes("ext-to-bis-seq-process-fc-ord"),
+				null,
+				null,
+				null
 				).save();
+		
+		// FDS ajout 04/04/2018 NGL-1727
+		newExperimentTypeNode("small-rnaseq-lib-prep",getExperimentTypes("small-rnaseq-lib-prep").get(0),
+				false, false,false,
+				getExperimentTypeNodes("ext-to-small-rna-seq-process-fc-ord"),
+				null,
+				null,
+				null
+				).save();
+		
 			
-		//FDS 12/12/2016 ajout prep-pcr-free en previous
-		//FDS 13/03/2017 -- JIRA NGL-1167: ajouter wg-chromium-lib-prep en previous 
-		//FDS 20/07/2017 -- JIRA NGL-1201: processs capture => ajouter pcr-and-indexing en previous
+
 		//FDS 24/10/2017 remplacer ext-to-norm-and-pool-fc-ord-depot  par  ext-to-norm-fc-ordered-depot
 		newExperimentTypeNode("normalization-and-pooling",getExperimentTypes("normalization-and-pooling").get(0),
 				false,false,false,
 				getExperimentTypeNodes("ext-to-norm-fc-ordered-depot",
 						               "ext-to-norm-and-pool-denat-fc-depot", // FDS ajout 06/10/2017
 						               "pcr-and-purification",
-						               "prep-pcr-free",
-						               "wg-chromium-lib-prep",
-						               "pcr-and-indexing" ), // previous
+						               "prep-pcr-free",             //FDS 12/12/2016 ajout prep-pcr-free en previous
+						               "wg-chromium-lib-prep",      //FDS 13/03/2017 -- JIRA NGL-1167:
+						               "pcr-and-indexing",          //FDS 20/07/2017 -- JIRA NGL-1201: processs capture
+						               "bisseq-lib-prep",           //FDS 04/04/2018 -- JIRA NGL-1727: processus BisSeq
+						               "small-rnaseq-lib-prep"      //FDS 04/04/2018 -- JIRA NGL-1727: processus SmallRNASeq
+						               ), // previous
 				null, // pas de purif
 				null, // pas de qc
 				null  // pas de transfert
 				).save();	
 		
 		//FDS ...../2016 -- JIRA NGL-894: processus et experiments pour X5
-		//FDS 15/04/2016 -- JIRA NGL-894: processus court pour X5: ajout "ext-to-norm-fc-ordered-depot" dans les previous
-		//FDS 01/09/2016 -- ajout "pcr-and-purification" en previous (fait partie de WG_Nano)
-		//FDS 13/03/2017 -- JIRA NGL-1167: processus chromium=> ajouter wg-chromium-lib-prep en previous 
-		//FDS 20/07/2017 -- JIRA NGL-1201: processs capture => ajouter pcr-and-indexing en previous
-		//FDS 24/10/2017 ajout ext-to-norm-and-pool-denat-fc-depot
 		newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), 
 				false, false, false, 
-				getExperimentTypeNodes("ext-to-norm-fc-ordered-depot", 
-						               "ext-to-norm-and-pool-denat-fc-depot",
+				getExperimentTypeNodes("ext-to-norm-fc-ordered-depot",         //FDS 15/04/2016 -- JIRA NGL-894: processus court pour X5:
+						               "ext-to-norm-and-pool-denat-fc-depot",  //FDS 24/10/2017 ajout ext-to-norm-and-pool-denat-fc-depot
 						               "prep-pcr-free",
-						               "pcr-and-purification",
-						               "wg-chromium-lib-prep",
-						               "pcr-and-indexing" ), // previous nodes
+						               "pcr-and-purification",     //FDS 01/09/2016 -- WG_Nano 
+						               "wg-chromium-lib-prep",     //FDS 13/03/2017 -- JIRA NGL-1167: processus chromium
+						               "pcr-and-indexing",         //FDS 20/07/2017 -- JIRA NGL-1201: processus capture
+						               "bisseq-lib-prep"           //FDS 04/04/2018 -- JIRA NGL-1727: processus BisSeq
+						               ), // previous nodes
 				null, // pas de purif
 				getExperimentTypes("miseq-qc"), // qc 
 				getExperimentTypes("aliquoting","pool") // transfert
@@ -893,7 +959,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null,
 				null,
 				null
-				).save();	
+				).save();
+		
 	}
 
 
@@ -1570,6 +1637,26 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		return propertyDefinitions;
 	}
+	
+	//FDS ajout 04/04/2018NGL-1727
+	private List<PropertyDefinition> getPropertyDefinitionsBisSeqLibPrep() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		//TODO
+		
+		return propertyDefinitions;
+	}
+	
+	//FDS ajout 04/04/2018NGL-1727
+	private List<PropertyDefinition> getPropertyDefinitionsSmallRNASeqLibPrep() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		//TODO
+		
+		return propertyDefinitions;
+	}
+	
+	
 	
 	// FDS ajout 18/07/2017 pour JIRA NGL-1201: processus capture
 	// utilisé par processus getPropertyDefinitionsCapture ET getPropertyDefinitionsCapturePcrIndexing
