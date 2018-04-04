@@ -3211,12 +3211,13 @@ directive("udtTbody", function(){
 directive('udtChange', function() {
 	return {
 	  require: 'ngModel',
-		link: function(scope, element, attr, ngModel) {
-		   scope.$watch(attr.ngModel, function(newValue, oldValue){
+		link: function(scope, element, attr, ngModelController) {
+			
+			scope.$watch(attr.ngModel, function(newValue, oldValue){
 				if(newValue !== oldValue){
 					scope.$evalAsync(attr.udtChange);						
 				}
-			}); 
+			});									
 	  }
 	};	    	
 });;angular.module('ultimateDataTableServices').
@@ -3259,14 +3260,33 @@ directive('udtCompile', ['$compile', function($compile) {
 		}]);;angular.module('ultimateDataTableServices').
 //This directive convert the ngModel value to a view value and then the view value to the ngModel unit value
 //The value passed to the directive must be an object with displayMeasureValue and saveMeasureValue
-directive('udtConvertvalue',['udtConvertValueServices','$filter', function(udtConvertValueServices, $filter) {
+directive('udtConvertvalue',['udtConvertValueServices','$filter', '$parse', function(udtConvertValueServices, $filter, $parse) {
 	return {
                 require: 'ngModel',
-                link: function(scope, element, attr, ngModel) {
+                link: function(scope, element, attrs, ngModelController) {
                 	//init service
                 	var convertValues = udtConvertValueServices();
                 	var property = undefined;
                 	
+                	if(attrs.udtConvertvalue){
+                		property = $parse(attrs.udtConvertvalue)(scope);    					
+    				}
+                	
+                	ngModelController.$formatters.push(function(value) {
+                		var convertedValue = convertValues.convertValue(value, property.saveMeasureValue, property.displayMeasureValue);
+        			    return convertedValue;
+        			}); 
+                	
+                	//view to model
+                	ngModelController.$parsers.push(function(value) {
+                    	value = convertValues.parse(value);
+                    	if(property != undefined){
+	                    	value = convertValues.convertValue(value, property.displayMeasureValue, property.saveMeasureValue);
+                    	}
+                    	return value;
+                    });
+                    
+                	/*
 					var watchModelValue = function(){
 						return scope.$watch(
 									function(){
@@ -3312,6 +3332,7 @@ directive('udtConvertvalue',['udtConvertValueServices','$filter', function(udtCo
                     	}
                     	return value;
                     });
+                    */
                 }
             };
 }]);;angular.module('ultimateDataTableServices').
@@ -3373,7 +3394,7 @@ directive('udtDefaultValue',['$parse', function($parse) {
 	    				}
 	    				
 	    				if(attrs.udtDefaultValue){
-	    					_col = scope[attrs.udtDefaultValue];
+	    					_col = $parse(attrs.udtDefaultValue)(scope);    	
 	    					setDefaultValue();
 	    					if(angular.isFunction(_col.defaultValues)){ //only watch when function to limit watching
     							scope.$watch(attrs.udtDefaultValue+".defaultValues(value.data,col)", function(value){
@@ -3488,7 +3509,7 @@ directive("udtHtmlFilter", function($filter, udtI18n) {
 					    	var convertedData = data;
 					    	   if(attrs.udtHtmlFilter === "number" && null !== convertedData && undefined !== convertedData 
 					    			   && angular.isString(convertedData)){
-					    		   convertedData = convertedData.replace(",",".").replace(/\u00a0/g,"");
+					    		   convertedData = convertedData.replace(",",".").replace(/[\u00a0|\s]/g,"");
 					    		   if(!isNaN(convertedData) && convertedData !== ""){						    			   
 					    			   convertedData = convertedData*1;
 					    		   }else if( isNaN(convertedData) || convertedData === ""){
@@ -4017,13 +4038,12 @@ factory('udtConvertValueServices', [function() {
 					},
 					parse : function(value){
 						var valueToConvert = value;
-						if(!angular.isNumber(valueToConvert)){
+						if(valueToConvert !== null && valueToConvert !== undefined && !angular.isNumber(valueToConvert)){
 							var valueConverted = value.replace(/\s+/g,"").replace(',','.');
 							valueConverted = parseFloat(valueConverted);
 							
 							return valueConverted;
 						}
-						
 						return value;
 					}
 				};
