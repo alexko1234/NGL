@@ -1,5 +1,6 @@
 package models.laboratory.project.instance;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,11 +13,12 @@ import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
-//import models.utils.HelperObjects;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.project.instance.ProjectValidationHelper;
+
+
 
 /**
  * Instance Project is stocked in Collection mongodb Project
@@ -57,4 +59,7 @@ public class Project extends DBObject implements IValidation {
 		ProjectValidationHelper.validateBioformaticParameters(bioinformaticParameters,contextValidation);
 	}
 
+	public Project() {
+		this.properties = new HashMap<>();
+	}
 }

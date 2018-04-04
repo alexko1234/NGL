@@ -6,6 +6,7 @@ import java.util.List;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.project.instance.BioinformaticParameters;
 import models.laboratory.project.instance.Project;
 
@@ -41,7 +42,7 @@ public class TestProjectFactory {
 		project.bioinformaticParameters = params();
 		project.comments = comments(user);
 		project.code = "TEST";
-		
+		project.properties.put("unixGroup", new PropertySingleValue("g_devlis"));
 		project.traceInformation = traceInformation(user);
 		/* TODO add values to these fields
 		public Map<String, PropertyValue> properties;
