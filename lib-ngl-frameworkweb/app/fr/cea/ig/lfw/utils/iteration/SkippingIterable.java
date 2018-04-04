@@ -35,7 +35,7 @@ public class SkippingIterable<A> implements ZenIterable <A> {
 	@Override
 	public Iterator<A> iterator() {
 		Iterator <A> j = i.iterator();
-		Iterator <A> k = new SkippingIterator<A>(j, toSkip);
+		Iterator <A> k = new SkippingIterator<>(j, toSkip);
 		return k;
 	}	
 	

@@ -1,10 +1,5 @@
 package controllers.experiments.api;
 
-// import static play.data.Form.form;
-//import static fr.cea.ig.play.IGGlobals.form;
-import fr.cea.ig.util.Streamer;
-//import static fr.cea.ig.util.Streamer.IStreamer.write;
-
 // import java.io.IOException;
 // import java.io.OutputStream;
 // import java.io.PrintWriter;
@@ -15,9 +10,6 @@ import java.util.function.Function;
 
 import javax.inject.Inject;
 
-import models.laboratory.experiment.instance.Experiment;
-import models.utils.InstanceConstants;
-
 import org.mongojack.Aggregation;
 import org.mongojack.Aggregation.Expression;
 import org.mongojack.Aggregation.Pipeline;
@@ -27,16 +19,9 @@ import org.mongojack.DBProjection.ProjectionBuilder;
 import org.mongojack.DBQuery;
 import org.mongojack.JacksonDBCollection;
 
-// import play.data.Form;
-import play.libs.Json;
-import play.mvc.Result;
-import workflows.experiment.ExpWorkflows;
-
-import com.google.common.collect.Iterators;
 // import com.mongodb.AggregationOutput;
 import com.mongodb.DBObject;
 
-import akka.stream.javadsl.Keep;
 // import akka.actor.ActorRef;
 import akka.stream.javadsl.Source;
 import akka.util.ByteString;
@@ -45,6 +30,16 @@ import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.lfw.utils.Iterables;
 import fr.cea.ig.mongo.MongoStreamer;
 import fr.cea.ig.play.NGLContext;
+// import static play.data.Form.form;
+//import static fr.cea.ig.play.IGGlobals.form;
+import fr.cea.ig.util.Streamer;
+//import static fr.cea.ig.util.Streamer.IStreamer.write;
+import models.laboratory.experiment.instance.Experiment;
+import models.utils.InstanceConstants;
+// import play.data.Form;
+import play.libs.Json;
+import play.mvc.Result;
+import workflows.experiment.ExpWorkflows;
 
 /**
  * 
@@ -81,6 +76,7 @@ public class ExperimentReagents extends Experiments {
 		// experimentSearchForm = ctx.form(ExperimentSearchForm.class);
 	}
 	
+	@Override
 	@Permission(value={"reading"})
 	public Result list() {
 		
@@ -217,7 +213,7 @@ public class ExperimentReagents extends Experiments {
 	 */
 	private Pipeline<Expression<?>> aggregation(DBQuery.Query query){
 
-		List<DBQuery.Query> stages = new ArrayList<DBQuery.Query>();
+		List<DBQuery.Query> stages = new ArrayList<>();
 		stages.add(DBQuery.exists("reagents.0")); // Only reagents	
 		
 		ProjectionBuilder pb = DBProjection.include("code");

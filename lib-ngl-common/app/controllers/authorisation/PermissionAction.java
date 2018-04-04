@@ -1,21 +1,13 @@
 package controllers.authorisation;
 
-import fr.cea.ig.authentication.Authentication;
-import fr.cea.ig.authorization.IAuthorizator;
-
-import java.util.concurrent.CompletionStage;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Supplier;
+import java.util.concurrent.CompletionStage;
 
 import javax.inject.Inject;
 
-import play.Logger;
-// import play.Play;
-import play.libs.F;
-// import play.libs.F.Function0;
-// import play.libs.F.Promise;
+import fr.cea.ig.authentication.Authentication;
+import fr.cea.ig.authorization.IAuthorizator;
 import play.mvc.Action;
-import play.mvc.Http.Context;
 import play.mvc.Result;
 
 /**

@@ -21,10 +21,8 @@ import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
-
-import models.laboratory.processes.description.ExperimentTypeNode;
-
 import models.laboratory.parameter.index.NanoporeIndex;
+import models.laboratory.processes.description.ExperimentTypeNode;
 import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
 import models.utils.InstanceConstants;
@@ -37,8 +35,9 @@ import services.description.declaration.AbstractDeclaration;
 
 public class Nanopore extends AbstractDeclaration{
 
+	@Override
 	protected List<ProcessType> getProcessTypeCommon() {
-		List<ProcessType> l=new ArrayList<ProcessType>();
+		List<ProcessType> l = new ArrayList<>();
 				
 		l.add(DescriptionFactory.newProcessType("Run Nanopore", "nanopore-run", 
 				ProcessCategory.find.findByCode("sequencing"),62 , 
@@ -258,7 +257,7 @@ public class Nanopore extends AbstractDeclaration{
 	@Override
 	protected List<ProcessType> getProcessTypeDEV() {
 		
-		List<ProcessType> l=new ArrayList<ProcessType>();
+		List<ProcessType> l=new ArrayList<>();
 		
 		
 		
@@ -267,7 +266,7 @@ public class Nanopore extends AbstractDeclaration{
 	
 	@Override
 	protected List<ExperimentType> getExperimentTypeCommon() {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		List<ExperimentType> l = new ArrayList<>();
 
 		l.add(newExperimentType("Ext to Frg, Lib ONT, Dépôt","ext-to-nanopore-process-library",null, -1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
@@ -376,7 +375,7 @@ public class Nanopore extends AbstractDeclaration{
 	
 	@Override
 	protected List<ExperimentType> getExperimentTypePROD() {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		List<ExperimentType> l = new ArrayList<>();
 		
 		
 		return l;
@@ -392,7 +391,7 @@ public class Nanopore extends AbstractDeclaration{
 	@Override
 	protected List<ExperimentType> getExperimentTypeDEV() {
 		 
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		List<ExperimentType> l = new ArrayList<>();
 	
 	
 		
@@ -547,7 +546,7 @@ public class Nanopore extends AbstractDeclaration{
 
 	//NE PAS MODIFIER NI SUPPRIMER (historique)
 	private static List<PropertyDefinition> getPropertyFragmentationNanoporeOld() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb fragmentations","fragmentionNumber",LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, true, null
 				, null ,null,null, "single",11));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Qté totale dans frg","inputFrgQuantity",LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content), Double.class, true,  null
@@ -583,7 +582,7 @@ public class Nanopore extends AbstractDeclaration{
 
 
 	private static List<PropertyDefinition> getPropertyFragmentationNanopore() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		//Containers
 		propertyDefinitions.add(newPropertiesDefinition(
 				"Nb fragmentations","fragmentionNumber",LevelService.getLevels(Level.CODE.ContainerIn), Integer.class,
@@ -626,7 +625,7 @@ public class Nanopore extends AbstractDeclaration{
 	
 	
 	private static List<PropertyDefinition> getPropertyReparationNanopore() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		//Containers
 		propertyDefinitions.add(newPropertiesDefinition(
 				"Qté engagée","inputQuantity",LevelService.getLevels(Level.CODE.ContainerIn), Double.class,
@@ -650,7 +649,7 @@ public class Nanopore extends AbstractDeclaration{
 	}
 	
 	private static List<PropertyDefinition> getPropertySizingNanopore() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		//Containers
 
 		propertyDefinitions.add(newPropertiesDefinition(
@@ -690,7 +689,7 @@ public class Nanopore extends AbstractDeclaration{
 
 	}
 	private static List<PropertyDefinition> getPropertyDepotNanopore() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		//Experiments
 		propertyDefinitions.add(newPropertiesDefinition(
 				"Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class,
@@ -783,7 +782,7 @@ public class Nanopore extends AbstractDeclaration{
 
 	
 	private static List<PropertyDefinition> getPropertyLibrairieNanopore() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		//Containers
 		propertyDefinitions.add(newPropertiesDefinition(
 				"Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class,
@@ -870,7 +869,7 @@ public class Nanopore extends AbstractDeclaration{
 //	}
 	
 	private static List<PropertyDefinition> getPropertyEndPrepNanopore(){	
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 				
 		//Container
 			propertyDefinitions.add(newPropertiesDefinition(
@@ -886,7 +885,7 @@ public class Nanopore extends AbstractDeclaration{
 		}
 		
 		private static List<PropertyDefinition> getPropertyLigPrePcrNanopore(){
-			List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+			List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 			
 			//Container
 			propertyDefinitions.add(newPropertiesDefinition(
@@ -902,7 +901,7 @@ public class Nanopore extends AbstractDeclaration{
 		}
 		
 		private static List<PropertyDefinition> getPropertyPcrNanopore(){
-			List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+			List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 			
 			//Container
 			propertyDefinitions.add(newPropertiesDefinition(
@@ -913,7 +912,7 @@ public class Nanopore extends AbstractDeclaration{
 		}
 		
 		private static List<PropertyDefinition> getPropertyLigBarcodeNanopore(){
-				List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+				List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 			
 				//Container
 			propertyDefinitions.add(newPropertiesDefinition(
@@ -940,7 +939,7 @@ public class Nanopore extends AbstractDeclaration{
 		 }
 		 
 		private static List<PropertyDefinition> getPropertyLigFinaleNanopore(){
-			List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+			List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 			
 			//Container
 			propertyDefinitions.add(newPropertiesDefinition(
@@ -973,7 +972,7 @@ public class Nanopore extends AbstractDeclaration{
 
 	private static List<Value> getTagNanopore() {
 		List<NanoporeIndex> indexes = MongoDBDAO.find(InstanceConstants.PARAMETER_COLL_NAME, NanoporeIndex.class, DBQuery.is("typeCode", "index-nanopore-sequencing")).sort("name").toList();
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		indexes.forEach(index -> {
 			values.add(DescriptionFactory.newValue(index.code, index.name));	
 		});
@@ -982,14 +981,14 @@ public class Nanopore extends AbstractDeclaration{
 	}
 
 	private static List<Value> getTagCategoriesNanopore(){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("SINGLE-INDEX", "SINGLE-INDEX"));		
 		return values;	
 	}
 
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsNanoporeFragmentation() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();		
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();		
 		propertyDefinitions.addAll(getPropertyDefinitionsNanoporeLibrary());
 		propertyDefinitions.add(newPropertiesDefinition(
 				"Taille banque souhaitée","librarySize",LevelService.getLevels(Level.CODE.Process, Level.CODE.Content),Integer.class,
@@ -1000,7 +999,7 @@ public class Nanopore extends AbstractDeclaration{
 	}
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsNanoporeLibrary() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition(
 				"Type processus banque","libProcessTypeCode",LevelService.getLevels(Level.CODE.Process,Level.CODE.Content),String.class,
 				true, null,getLibProcessTypeCodeValues(),"single",1, true,"ONT",null));
@@ -1011,7 +1010,7 @@ public class Nanopore extends AbstractDeclaration{
 	}
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsRunNanopore() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		propertyDefinitions.add(
 				newPropertiesDefinition("Dev / Prod ?", "devProdContext", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, 
@@ -1022,7 +1021,7 @@ public class Nanopore extends AbstractDeclaration{
 	}
 
 	private static List<Value> getLibProcessTypeCodeValues(){
-        List<Value> values = new ArrayList<Value>();
+        List<Value> values = new ArrayList<>();
          values.add(DescriptionFactory.newValue("ONT","ONT - Nanopore"));
          return values;
 	}

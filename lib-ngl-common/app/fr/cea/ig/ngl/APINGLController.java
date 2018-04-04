@@ -18,7 +18,7 @@ public interface APINGLController {
 	public abstract Result update(String code) ;
 	
 	default Map<String, List<ValidationError>> mapErrors(List<ValidationError> formErrors) {
-		Map<String, List<ValidationError>> map = new TreeMap<String, List<ValidationError>>(); 
+		Map<String, List<ValidationError>> map = new TreeMap<>(); 
 		formErrors.forEach(ve -> {
 			if(map.containsKey(ve.key())) {
 				map.get(ve.key()).add(ve);
@@ -28,4 +28,5 @@ public interface APINGLController {
 		});
 		return map;
 	}
+	
 }

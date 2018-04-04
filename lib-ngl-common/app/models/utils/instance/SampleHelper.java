@@ -4,31 +4,21 @@ import static fr.cea.ig.play.IGGlobals.configuration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
-import models.laboratory.common.instance.PropertyValue;
+import org.mongojack.DBQuery;
+
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.container.instance.Container;
-import models.laboratory.processes.instance.Process;
 import models.laboratory.run.instance.ReadSet;
-import models.laboratory.run.instance.Run;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
-
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-
 //import play.Logger;
 // import play.Play;
 import rules.services.RulesServices6;
 import validation.ContextValidation;
-import validation.utils.ValidationConstants;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.IGGlobals;
 
 public class SampleHelper {
 	
@@ -115,7 +105,7 @@ public class SampleHelper {
 	*/
 	
 	public static void executeRules(Sample sample,String rulesName){
-		ArrayList<Object> facts = new ArrayList<Object>();
+		ArrayList<Object> facts = new ArrayList<>();
 		facts.add(sample);
 		// List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), rulesName, facts);				
 		RulesServices6.getInstance().callRulesWithGettingFacts(configuration().getString("rules.key"), rulesName, facts);
@@ -123,7 +113,7 @@ public class SampleHelper {
 
 	public static Set<String> getSampleParent(String sampleCode) {
 		Sample sample = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME,Sample.class,DBQuery.is("code", sampleCode));
-		Set<String> sampleCodes=new HashSet<String>();
+		Set<String> sampleCodes=new HashSet<>();
 		sampleCodes.add(sampleCode);
 		if (sample.life != null && sample.life.path != null) {
 			sampleCodes.addAll(Arrays.asList(sample.life.path.substring(1).split(",")));
@@ -132,7 +122,7 @@ public class SampleHelper {
 	}
 
 	public static Set<String> getProjectParent(Set<String> sampleCodes) {
-		Set<String> projectCodes = new HashSet<String>();
+		Set<String> projectCodes = new HashSet<>();
 		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME,Sample.class,DBQuery.in("code", sampleCodes)).toList();
 		for (Sample s : samples) {
 			projectCodes.addAll(s.projectCodes);

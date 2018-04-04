@@ -28,7 +28,7 @@ import services.instance.AbstractImportDataCNG;
 
 public class ContainerImportCNG extends AbstractImportDataCNG {
 
-	private static final play.Logger.ALogger logger = play.Logger.of(ContainerImportCNG.class);
+//	private static final play.Logger.ALogger logger = play.Logger.of(ContainerImportCNG.class);
 	
 	@Inject
 	public ContainerImportCNG (FiniteDuration durationFromStart,

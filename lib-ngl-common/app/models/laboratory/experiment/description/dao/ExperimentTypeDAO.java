@@ -8,13 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.dao.CommonInfoTypeDAO;
-import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.instrument.description.InstrumentUsedType;
-import models.laboratory.sample.description.SampleType;
-import models.utils.dao.AbstractDAOCommonInfoType;
-import models.utils.dao.DAOException;
-
 import org.springframework.asm.Type;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
@@ -22,7 +15,12 @@ import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
 import fr.cea.ig.mongo.MongoDeprecation;
-import play.Logger;
+import models.laboratory.common.description.dao.CommonInfoTypeDAO;
+import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.instrument.description.InstrumentUsedType;
+import models.laboratory.sample.description.SampleType;
+import models.utils.dao.AbstractDAOCommonInfoType;
+import models.utils.dao.DAOException;
 //import play.Logger;
 import play.api.modules.spring.Spring;
 
@@ -56,7 +54,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		experimentType.id = commonInfoTypeDAO.save(experimentType);
 
 		//Create experimentType 
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("id", experimentType.id);
 		parameters.put("fk_common_info_type", experimentType.id);
 		parameters.put("fk_experiment_category", experimentType.category.id);
@@ -175,6 +173,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 				query,
 				new RowMapper<String>() {
 
+					@Override
 					public String mapRow(ResultSet rs, int rowNum) throws SQLException {
 						String listObj = rs.getString("code");
 						return listObj;
@@ -244,7 +243,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 				" JOIN experiment_category as ec  ON c.fk_experiment_category=ec.id "
 				+"where ec.code=? "
 				+"ORDER by t.display_order, t.name";
-		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<ExperimentType>(ExperimentType.class);
+		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<>(ExperimentType.class);
 		return this.jdbcTemplate.query(sql, mapper, categoryCode);
 	}
 	
@@ -254,7 +253,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 				" JOIN experiment_category as ec  ON c.fk_experiment_category=ec.id "
 				+"where ec.code=? and t.active = 1 "
 				+"ORDER by t.display_order, t.name";
-		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<ExperimentType>(ExperimentType.class);
+		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<>(ExperimentType.class);
 		return this.jdbcTemplate.query(sql, mapper, categoryCode);
 	}
 	
@@ -265,7 +264,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 				" JOIN experiment_category as ec  ON c.fk_experiment_category=ec.id "
 				+"where ec.code in (:list) "
 				+"ORDER by t.display_order, t.name";
-		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<ExperimentType>(ExperimentType.class);
+		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<>(ExperimentType.class);
 		return this.jdbcTemplate.query(sql, mapper, Collections.singletonMap("list", categoryCodes));
 	}
 	
@@ -275,7 +274,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 					+" JOIN experiment_category as ec  ON c.fk_experiment_category=ec.id "
 					+"where ec.code in (:list) and c.atomic_transfert_method!='OneToVoid' "
 					+"ORDER by t.display_order, t.name";
-		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<ExperimentType>(ExperimentType.class);
+		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<>(ExperimentType.class);
 		return this.jdbcTemplate.query(sql, mapper,Collections.singletonMap("list", categoryCodes));
 	}
 	
@@ -285,7 +284,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 				" JOIN experiment_category as ec  ON c.fk_experiment_category=ec.id inner join process_experiment_type as p ON p.fk_experiment_type=c.id, process_type as pt " +
 				"inner join common_info_type as cp on pt.fk_common_info_type=cp.id"
 				+" where ec.code=? and p.fk_process_type = pt.id and cp.code=?";
-		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<ExperimentType>(ExperimentType.class);
+		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<>(ExperimentType.class);
 		return this.jdbcTemplate.query(sql, mapper, categoryCode, processTypeCode);
 	}
 	
@@ -295,7 +294,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 					+" JOIN experiment_category as ec  ON c.fk_experiment_category=ec.id "
 					+"where ec.code=? and c.atomic_transfert_method!='OneToVoid' "
 					+"ORDER by t.display_order, t.name";
-		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<ExperimentType>(ExperimentType.class);
+		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<>(ExperimentType.class);
 		return this.jdbcTemplate.query(sql, mapper, categoryCode);
 	}
 	

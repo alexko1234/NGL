@@ -7,7 +7,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import models.Constants;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 import models.LimsCNSDAO;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.parameter.Parameter;
@@ -17,12 +18,9 @@ import models.laboratory.parameter.index.NanoporeIndex;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
-import play.Logger;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.NGLContext;
 
 public class IndexImportCNS extends AbstractImportDataCNS{
 
@@ -77,7 +75,7 @@ public class IndexImportCNS extends AbstractImportDataCNS{
 		index.shortName = code;
 		index.sequence = code;
 		index.categoryCode = "SINGLE-INDEX";
-		index.supplierName = new HashMap<String,String>();
+		index.supplierName = new HashMap<>();
 		index.supplierName.put("oxfordNanopore", code);
 		index.traceInformation=new TraceInformation("ngl-data");
 		return index;
@@ -105,7 +103,7 @@ public class IndexImportCNS extends AbstractImportDataCNS{
 		index.shortName = code;
 		index.sequence = seq ;  //Voir plus tard: il y a 4 sequences pour les POOL-INDEX...Chromium
 		index.categoryCode = "POOL-INDEX";
-		index.supplierName = new HashMap<String,String>();
+		index.supplierName = new HashMap<>();
 		index.supplierName.put("10x Genomics", code);
 		index.traceInformation=new TraceInformation("ngl-data");
 		
@@ -114,7 +112,7 @@ public class IndexImportCNS extends AbstractImportDataCNS{
 	
 	
 	private void createIndexNEBNext(ContextValidation contextValidation) {
-		List<Index> indexes = new ArrayList<Index>();
+		List<Index> indexes = new ArrayList<>();
 		
 		indexes.add(getNEBNextIndex("NEBNext1", "ATCACG", "IND1"));
 		indexes.add(getNEBNextIndex("NEBNext2", "CGATGT", "IND2"));
@@ -182,7 +180,7 @@ public class IndexImportCNS extends AbstractImportDataCNS{
 		index.shortName = shortName;
 		index.sequence = seq ; 
 		index.categoryCode = "SINGLE-INDEX";
-		index.supplierName = new HashMap<String,String>();
+		index.supplierName = new HashMap<>();
 		index.supplierName.put("NEB", code);
 		index.traceInformation=new TraceInformation("ngl-data");
 		

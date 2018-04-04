@@ -6,10 +6,14 @@ package controllers.commons.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.StringUtils;
 
+import controllers.APICommonController;
 //import controllers.CommonController;
 import controllers.authorisation.Permission;
+import fr.cea.ig.play.NGLContext;
 import models.administration.authorisation.User;
 import models.administration.authorisation.description.dao.UserDAO;
 import models.utils.ListObject;
@@ -21,10 +25,6 @@ import play.libs.Json;
 import play.mvc.Result;
 import play.mvc.Results;
 import views.components.datatable.DatatableResponse;
-
-import javax.inject.Inject;
-import fr.cea.ig.play.NGLContext;
-import controllers.APICommonController;
 
 public class Users extends APICommonController<UserSearchForm> { //CommonController{
 
@@ -57,16 +57,16 @@ public class Users extends APICommonController<UserSearchForm> { //CommonControl
 	public Result list() throws DAOException{
 		UserSearchForm form = filledFormQueryString(UserSearchForm.class);
 		try {
-			List<User> users = new ArrayList<User>();
+			List<User> users = new ArrayList<>();
 			if (StringUtils.isNotBlank(form.login)) {
 				users = User.find.findByLikeLogin(toLikeLogin(form.login));
 			} else {
 				users = User.find.findAll();
 			}
 			if (form.datatable) {
-				return ok(Json.toJson(new DatatableResponse<User>(users, users.size()))); 
+				return ok(Json.toJson(new DatatableResponse<>(users, users.size()))); 
 			} else if(form.list) {
-				List<ListObject> lop = new ArrayList<ListObject>();
+				List<ListObject> lop = new ArrayList<>();
 				for(User et : users) {
 					lop.add(new ListObject(et.login, et.login));
 				}

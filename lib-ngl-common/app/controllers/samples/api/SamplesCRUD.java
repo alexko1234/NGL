@@ -52,6 +52,7 @@ public class SamplesCRUD extends AbstractCRUDAPIController<Sample> {
 	
 	// --------- read -----------------
 	// This may fail badly as the expected get method is not the standard read method.
+	@Override
 	@Permission(value={"reading"})
 	public Result get(String code) throws DAOException {
 		return read(code); 
@@ -59,6 +60,7 @@ public class SamplesCRUD extends AbstractCRUDAPIController<Sample> {
 	
 	// --------- update -----------------
 	
+	@Override
 	@Permission(value={"writing"})
 	public Result update(String code) throws DAOException {
 		return super.update(code);
@@ -67,6 +69,7 @@ public class SamplesCRUD extends AbstractCRUDAPIController<Sample> {
 	
 	// ------------ delete ---------------
 	
+	@Override
 	@Permission(value={"writing"})
 	public Result delete(String code) throws DAOException {
 		throw new RuntimeException("not implemented");

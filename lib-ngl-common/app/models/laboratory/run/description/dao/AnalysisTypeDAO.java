@@ -3,13 +3,12 @@ package models.laboratory.run.description.dao;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.run.description.AnalysisType;
 import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.DAOException;
-
-import org.springframework.stereotype.Repository;
-
 import play.api.modules.spring.Spring;
 
 @Repository
@@ -36,7 +35,7 @@ public class AnalysisTypeDAO extends AbstractDAOCommonInfoType<AnalysisType> {
 		analysisType.id = commonInfoTypeDAO.save(analysisType);
 		
 		//Create new runType
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("id", analysisType.id);
 		parameters.put("fk_common_info_type", analysisType.id);
 		

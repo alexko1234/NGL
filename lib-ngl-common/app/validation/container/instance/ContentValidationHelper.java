@@ -5,15 +5,12 @@ import static validation.utils.ValidationHelper.required;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.mongojack.DBQuery;
 
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.run.instance.Run;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;

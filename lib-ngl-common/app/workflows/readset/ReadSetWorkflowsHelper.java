@@ -9,7 +9,6 @@ import javax.inject.Singleton;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-import org.mongojack.WriteResult;
 
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.NGLContext;
@@ -22,7 +21,6 @@ import models.laboratory.run.instance.SampleOnContainer;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
-import rules.services.RulesServices6;
 import validation.ContextValidation;
 
 @Singleton
@@ -86,7 +84,7 @@ public class ReadSetWorkflowsHelper {
 		Sample sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, readSet.sampleCode);
 		if (sample == null && contextValidation.getObject("external") != null && (Boolean)contextValidation.getObject("external")) {
 			//Call rules
-			ArrayList<Object> facts = new ArrayList<Object>();
+			ArrayList<Object> facts = new ArrayList<>();
 			facts.add(readSet);
 			facts.add(contextValidation);
 			ctx.callRulesWithGettingFacts(rules, facts);

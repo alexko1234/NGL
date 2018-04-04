@@ -6,17 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.asm.Type;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.stereotype.Repository;
+
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.DAOException;
-
-import org.springframework.asm.Type;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.stereotype.Repository;
-
 //import play.Logger;
 import play.api.modules.spring.Spring;
 
@@ -80,7 +79,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 		instrumentUsedType.setCommonInfoType(instrumentUsedType);
 		
 		//Create new InstrumentUsedType
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("id", instrumentUsedType.id);
 		parameters.put("fk_common_info_type", instrumentUsedType.id);
 		parameters.put("fk_instrument_category", instrumentUsedType.category.id);

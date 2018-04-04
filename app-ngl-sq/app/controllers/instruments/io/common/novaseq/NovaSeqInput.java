@@ -1,55 +1,51 @@
 package controllers.instruments.io.common.novaseq;
 
+// import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+// import java.io.InputStreamReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+// import java.util.List;
+import java.util.Map;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException; 
-
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory; 
 // import javax.xml.xpath.XPathConstants;
 
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+import org.mongojack.DBQuery;
 // import org.xml.sax.SAXParseException; //ajout pour essai catch
 import org.w3c.dom.Document;
 // import org.w3c.dom.NodeList;
 // import org.w3c.dom.Node;
 import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
-import org.mongojack.DBQuery;
-
-// import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-// import java.io.InputStreamReader;
-import java.io.IOException;
-import java.util.HashMap;
-// import java.util.List;
-import java.util.Map;
-
+// import validation.utils.ValidationHelper;
+import controllers.instruments.io.utils.AbstractInput;
+// import controllers.instruments.io.utils.InputHelper;
+import fr.cea.ig.MongoDBDAO;
 // import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertyFileValue;
 // import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.experiment.instance.Experiment;
-// import models.laboratory.experiment.instance.InputContainerUsed;
-import models.laboratory.reagent.instance.ReagentUsed;
 import models.laboratory.reagent.description.BoxCatalog;
 import models.laboratory.reagent.description.KitCatalog;
 import models.laboratory.reagent.description.ReagentCatalog;
-
+// import models.laboratory.experiment.instance.InputContainerUsed;
+import models.laboratory.reagent.instance.ReagentUsed;
 import models.utils.InstanceConstants;
 // import play.Logger;
 import validation.ContextValidation;
-// import validation.utils.ValidationHelper;
-import controllers.instruments.io.utils.AbstractInput;
-// import controllers.instruments.io.utils.InputHelper;
-
-import fr.cea.ig.MongoDBDAO;
 
 public class NovaSeqInput extends AbstractInput {
 	
-	private static final play.Logger.ALogger logger = play.Logger.of(NovaSeqInput.class);
+//	private static final play.Logger.ALogger logger = play.Logger.of(NovaSeqInput.class);
 	
 	/* F. Dos Santos NGL-1769: Dépôt NovaSeq : import fichier XML
        Description du fichier à traiter:
@@ -224,7 +220,7 @@ public class NovaSeqInput extends AbstractInput {
          */
     	 
     	 // PB on n'a pas le nom des reagents => harcoder relation balise<-->nom reactif/nom boite    	 
-    	 Map<String,String[]> reagentTagMap = new HashMap<String,String[]>(0); 
+    	 Map<String,String[]> reagentTagMap = new HashMap<>(0); 
     	 
     	 // 12/02/2018 !!! 
     	 // il y a 1 boite pour chaque reactif, le nom des reactif n'est pas assez specifique=> trouver d'abord le code de la boite

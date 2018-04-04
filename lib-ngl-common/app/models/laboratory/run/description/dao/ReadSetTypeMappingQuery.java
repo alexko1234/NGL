@@ -2,9 +2,10 @@ package models.laboratory.run.description.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.function.Supplier;
 
 import javax.sql.DataSource;
+
+import org.springframework.jdbc.core.SqlParameter;
 
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
@@ -12,12 +13,7 @@ import models.laboratory.run.description.ReadSetType;
 import models.utils.dao.DAOException;
 import models.utils.dao.MappingSqlQueryFactory;
 import models.utils.dao.NGLMappingSqlQuery;
-
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.object.MappingSqlQuery;
-
 import play.api.modules.spring.Spring;
-
 
 //public class ReadSetTypeMappingQuery extends MappingSqlQuery<ReadSetType> {
 public class ReadSetTypeMappingQuery extends NGLMappingSqlQuery<ReadSetType> {

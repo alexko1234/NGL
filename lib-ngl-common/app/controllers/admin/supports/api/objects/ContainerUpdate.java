@@ -2,27 +2,23 @@ package controllers.admin.supports.api.objects;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Pattern;
-
-import models.laboratory.common.description.Level;
-import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.Content;
-import models.laboratory.run.instance.Analysis;
-import models.utils.InstanceConstants;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-import validation.ContextValidation;
-import validation.utils.ValidationHelper;
 import controllers.admin.supports.api.NGLObject;
 import controllers.admin.supports.api.NGLObjectsSearchForm;
+import models.laboratory.common.description.Level;
+import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.container.instance.Container;
+import models.utils.InstanceConstants;
+import validation.ContextValidation;
+import validation.utils.ValidationHelper;
 
-public class ContainerUpdate extends AbstractUpdate<Container>{
+public class ContainerUpdate extends AbstractUpdate<Container> {
 
 	public ContainerUpdate() {
 		super(InstanceConstants.CONTAINER_COLL_NAME, Container.class);		
@@ -32,35 +28,32 @@ public class ContainerUpdate extends AbstractUpdate<Container>{
 	public Query getQuery(NGLObjectsSearchForm form) {
 		Query query = null;
 		
-		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
+		List<DBQuery.Query> queryElts = new ArrayList<>();
 		queryElts.add(getProjectCodeQuery(form, ""));
 		queryElts.add(getSampleCodeQuery(form, ""));
 		queryElts.addAll(getContentPropertiesQuery(form, ""));
 		query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 		query = DBQuery.elemMatch("contents", query);
 		
-		if(CollectionUtils.isNotEmpty(form.codes)){
+		if (CollectionUtils.isNotEmpty(form.codes)) {
 			query.and(DBQuery.in("code", form.codes));
-		}else if(StringUtils.isNotBlank(form.codeRegex)){
+		} else if(StringUtils.isNotBlank(form.codeRegex)) {
 			query.and(DBQuery.regex("code", Pattern.compile(form.codeRegex)));
 		}
-			
-		
-		
 		return query;
 	}
 
 	@Override
 	public void update(NGLObject input, ContextValidation cv) {
 		Container container = getObject(input.code);
-		if(NGLObject.Action.replace.equals(NGLObject.Action.valueOf(input.action))){
+		if (NGLObject.Action.replace.equals(NGLObject.Action.valueOf(input.action))) {
 			updateContent(container, input);
 			
-		}else{
+		} else {
 			throw new RuntimeException(input.action+" not implemented");
 		}
 		container.validate(cv);
-		if(!cv.hasErrors()){
+		if (!cv.hasErrors()) {
 			updateObject(container);
 		}
 	}

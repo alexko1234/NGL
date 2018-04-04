@@ -1,10 +1,5 @@
 package controllers.admin.supports.api;
 
-// import static play.data.Form.form;
-//import static fr.cea.ig.play.IGGlobals.form;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -13,28 +8,11 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
-import models.laboratory.common.description.Level;
-import models.laboratory.container.instance.Container;
-import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.run.instance.Analysis;
-import models.laboratory.run.instance.ReadSet;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
-
-// import play.Logger;
-import play.data.Form;
-import play.libs.Json;
-import play.mvc.Result;
-import validation.ContextValidation;
 
 import com.mongodb.BasicDBObject;
 
 import controllers.APICommonController;
-import controllers.NGLControllerHelper;
-import controllers.QueryFieldsForm;
 import controllers.admin.supports.api.objects.AbstractUpdate;
 import controllers.admin.supports.api.objects.ContainerUpdate;
 import controllers.admin.supports.api.objects.ExperimentUpdate;
@@ -44,6 +22,10 @@ import controllers.authorisation.Permission;
 import controllers.readsets.api.ReadSets;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.NGLContext;
+import play.data.Form;
+import play.libs.Json;
+import play.mvc.Result;
+import validation.ContextValidation;
 
 public class NGLObjects extends APICommonController<NGLObject> {
 

@@ -57,7 +57,7 @@ public class ReadUpdateReadObjectTest<T extends DBObject> {
 
 	// User friendly (inference) factory method 
 	public static <T extends DBObject> ReadUpdateReadObjectTest<T> build(String url, Class<T> clazz) {
-		return new ReadUpdateReadObjectTest<T>(url,clazz);
+		return new ReadUpdateReadObjectTest<>(url,clazz);
 	}
 	
 	/**

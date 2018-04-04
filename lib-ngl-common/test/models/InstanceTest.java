@@ -8,12 +8,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+
+import fr.cea.ig.DBObject;
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
@@ -24,7 +30,6 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OneToOneContainer;
@@ -43,21 +48,8 @@ import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
-
-import org.jongo.MongoCollection;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-
-import play.data.validation.ValidationError;
-import play.modules.jongo.MongoDBPlugin;
 import utils.AbstractTests;
 import utils.Constants;
-import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBDAO;
-import io.jsonwebtoken.lang.Collections;
 
 public class InstanceTest extends AbstractTests {
 
@@ -111,7 +103,7 @@ public class InstanceTest extends AbstractTests {
 	public void updateProject() throws DAOException {
 		Project project = findObject(Project.class);
 		project.name             = "projectName";
-		project.comments         = new ArrayList<Comment>();
+		project.comments         = new ArrayList<>();
 		project.comments.add(new Comment("comment", "ngl-test"));
 		project.traceInformation = new TraceInformation();
 		project.traceInformation.setTraceInformation("test");
@@ -179,10 +171,10 @@ public class InstanceTest extends AbstractTests {
 		container.support.code = "containerName";
 		container.categoryCode = "containerCategory";
 
-		container.projectCodes = new HashSet<String>();
+		container.projectCodes = new HashSet<>();
 		container.projectCodes.add("ProjectCode");
 
-		container.sampleCodes = new HashSet<String>();
+		container.sampleCodes = new HashSet<>();
 		container.sampleCodes.add("SampleCode");
 
 		container.state = new State(); 
@@ -197,13 +189,13 @@ public class InstanceTest extends AbstractTests {
 		
 		container.contents.add(new Content("SampleCode", "sampleType", "sampleCategory"));
 
-		container.fromTransformationTypeCodes=new HashSet<String>();
+		container.fromTransformationTypeCodes = new HashSet<>();
 		container.fromTransformationTypeCodes.add("experimentType");
 			
 		//public List<QualityControlResult> qualityControlResults; 
 		//public List<Proper> volume;
 		
-		container.comments=new ArrayList<Comment>();
+		container.comments = new ArrayList<>();
 		container.comments.add(new Comment("comment", "ngl-test"));
 		container.traceInformation.setTraceInformation("test"); 
 
@@ -249,10 +241,10 @@ public class InstanceTest extends AbstractTests {
 		experiment.typeCode="experimentType";
 		experiment.categoryCode="experimentCategory";
 
-		experiment.projectCodes = new HashSet<String>();
+		experiment.projectCodes = new HashSet<>();
 		experiment.projectCodes.add("ProjectCode");
 
-		experiment.sampleCodes = new HashSet<String>();
+		experiment.sampleCodes = new HashSet<>();
 		experiment.sampleCodes.add("SampleCode");
 
 		experiment.instrument = new InstrumentUsed();
@@ -261,23 +253,23 @@ public class InstanceTest extends AbstractTests {
 
 		State state=new State("N","test");
 		experiment.state=state;
-		experiment.state.resolutionCodes=new HashSet<String>();
+		experiment.state.resolutionCodes=new HashSet<>();
 		experiment.state.resolutionCodes.add("ResolutionCode");
 
 		//TODO
 		//public Map<String,PropertyValue> experimentProperties;
 		//public Map<String, PropertyValue> instrumentProperties;
 		//		public String protocolCode;
-		experiment.comments=new ArrayList<Comment>();
+		experiment.comments = new ArrayList<>();
 		experiment.comments.add(new Comment("comment", "ngl-test"));
 		experiment.traceInformation.setTraceInformation("test"); 
 
-		experiment.atomicTransfertMethods= new ArrayList<AtomicTransfertMethod>();
+		experiment.atomicTransfertMethods= new ArrayList<>();
 		for (int i=0; i<10; i++) {
-			OneToOneContainer oneToOneContainer =new OneToOneContainer();
-			oneToOneContainer.inputContainerUseds=new ArrayList<InputContainerUsed>();
+			OneToOneContainer oneToOneContainer = new OneToOneContainer();
+			oneToOneContainer.inputContainerUseds = new ArrayList<>();
 			oneToOneContainer.inputContainerUseds.add( new InputContainerUsed("containerInput"+i));
-			oneToOneContainer.outputContainerUseds = new ArrayList<OutputContainerUsed>();
+			oneToOneContainer.outputContainerUseds = new ArrayList<>();
 			oneToOneContainer.outputContainerUseds.add(new OutputContainerUsed("containerOutput"+i));
 			experiment.atomicTransfertMethods.add(i,oneToOneContainer);
 		}
@@ -316,7 +308,7 @@ public class InstanceTest extends AbstractTests {
 		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		assertThat(sdf.format(d)).isEqualTo(sdf.format(sampleOnInputContainer.lastUpdateDate));
 		assertThat(sampleOnInputContainer.properties).isNotEmpty().isNotNull();			
-		assertThat(sampleOnInputContainer.properties.get(InstanceConstants.TAG_PROPERTY_NAME)).isNotNull();;
+		assertThat(sampleOnInputContainer.properties.get(InstanceConstants.TAG_PROPERTY_NAME)).isNotNull();
 	}
 	
 	////@Test

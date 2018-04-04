@@ -17,7 +17,7 @@ public class FilteringIterable <A> implements ZenIterable <A> {
 	
 	@Override
 	public Iterator<A> iterator() {
-		return new FilteringIterator<A>(i.iterator(), function);
+		return new FilteringIterator<>(i.iterator(), function);
 	}
 	
 }

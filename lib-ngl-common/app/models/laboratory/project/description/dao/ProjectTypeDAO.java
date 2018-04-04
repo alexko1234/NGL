@@ -3,13 +3,12 @@ package models.laboratory.project.description.dao;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.project.description.ProjectType;
 import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.DAOException;
-
-import org.springframework.stereotype.Repository;
-
 import play.api.modules.spring.Spring;
 
 @Repository
@@ -42,7 +41,7 @@ public class ProjectTypeDAO extends AbstractDAOCommonInfoType<ProjectType> {
 		projectType.id = commonInfoTypeDAO.save(projectType);
 		
 		//Create new projectType
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("id", projectType.id);
 		parameters.put("fk_common_info_type", projectType.id);
 		parameters.put("fk_project_category", projectType.category.id);

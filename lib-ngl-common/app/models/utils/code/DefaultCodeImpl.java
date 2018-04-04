@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
-import play.Logger;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult.Sort;
 import models.laboratory.common.instance.Comment;
@@ -22,6 +21,8 @@ import models.utils.InstanceConstants;
 
 public class DefaultCodeImpl implements Code {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(DefaultCodeImpl.class);
+	
 	private SimpleDateFormat getSimpleDateFormat(String format) {
 		return new SimpleDateFormat(format);
 	}
@@ -31,7 +32,7 @@ public class DefaultCodeImpl implements Code {
 			Thread.sleep(1);
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
-			Logger.error("Interruption error: "+e1.getMessage(),e1);
+			logger.error("Interruption error: "+e1.getMessage(),e1);
 		}
 		String date = new SimpleDateFormat("yyMMddHHmmssSS").format(new Date());
 		Pattern p = Pattern
@@ -54,21 +55,23 @@ public class DefaultCodeImpl implements Code {
 			return code.toUpperCase();
 		} else {
 			try {
-				Logger.error("Error matches of the date fail"+date);
+				logger.error("Error matches of the date fail"+date);
 				throw new Exception("matches fail " + date);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				Logger.error("Matches error: "+e.getMessage(),e);;
+				logger.error("Matches error: "+e.getMessage(),e);
 				return null;
 			}
 		}
 	}
 	
+	@Override
 	public synchronized String generateContainerSupportCode() {
 		 return generateBarCode();
 	}
 
 	// ProcessusTypeCode-ProjectCode-SampeCode-YYYYMMDDHHMMSSSS
+	@Override
 	public synchronized String generateProcessCode(Process process) {
 		if(process.sampleOnInputContainer != null){
 			return (process.sampleOnInputContainer.sampleCode + "_" + process.typeCode + "_" + generateBarCode()).toUpperCase();
@@ -79,17 +82,19 @@ public class DefaultCodeImpl implements Code {
 		}
 	}
 
+	@Override
 	public synchronized String generateExperimentCode(Experiment exp) {
 		return generateExperimentCode(exp.typeCode);
 	}
 	
 	
+	@Override
 	public synchronized String generateExperimentCode(String typeCode) {
 		try {
 			Thread.sleep(1);
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
-			Logger.error("Interruption error: "+e1.getMessage(),e1);
+			logger.error("Interruption error: "+e1.getMessage(),e1);
 		}
 		
 		String date = getSimpleDateFormat("yyyyMMdd_HHmmssSSS").format(new Date());
@@ -104,21 +109,23 @@ public class DefaultCodeImpl implements Code {
 			return (typeCode + "-" + code).toUpperCase();
 		} else {
 			try {
-				Logger.error("Error matches of the date fail"+date);
+				logger.error("Error matches of the date fail"+date);
 				throw new Exception("matches fail " + date);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				Logger.error("Matches error: "+e.getMessage(),e);;
+				logger.error("Matches error: "+e.getMessage(),e);
 				return null;
 			}
 		}
 	}
 
+	@Override
 	public synchronized String generateExperimentCommentCode(Comment com) {
 		return (com.createUser + getSimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + Math
 				.random()).toUpperCase();
 	}
 	
+	@Override
 	public synchronized String generateSampleCode(String projectCode, boolean updateProject){
 		Project project =MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, projectCode);
 		return generateSampleCode(project, updateProject);
@@ -126,6 +133,7 @@ public class DefaultCodeImpl implements Code {
 	
 	
 	
+	@Override
 	public synchronized String generateSampleCode(Project project, boolean updateProject){
 		String newCode=nextSampleCode(project);
 		if(updateProject){
@@ -178,6 +186,7 @@ public class DefaultCodeImpl implements Code {
 		return project.code+"_"+newCode;
 	}
 	
+	@Override
 	public synchronized void updateProjectSampleCodeIfNeeded(String projectCode, String newSampleCode){
 		Integer nbCharactersInSampleCode = newSampleCode.replace(projectCode+"_", "").length();
 		

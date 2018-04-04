@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.springframework.jdbc.core.SqlParameter;
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
@@ -14,10 +16,6 @@ import models.laboratory.common.description.Value;
 import models.utils.dao.DAOException;
 import models.utils.dao.MappingSqlQueryFactory;
 import models.utils.dao.NGLMappingSqlQuery;
-
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.object.MappingSqlQuery;
-
 import play.api.modules.spring.Spring;
 
 //public class PropertyDefinitionMappingQuery extends MappingSqlQuery<PropertyDefinition> {
@@ -98,7 +96,7 @@ public class PropertyDefinitionMappingQuery extends NGLMappingSqlQuery<PropertyD
 			List<Value> values = valueDAO.findByPropertyDefinition(propertyDefinition.id);
 			//TODO GA convert value to the good type number or string ???
 			propertyDefinition.possibleValues = values;
-		}else{ //pd.code, pd.type, pd.property_value_type, pd.choice_in_list
+		} else { //pd.code, pd.type, pd.property_value_type, pd.choice_in_list
 			propertyDefinition.code = rs.getString("code");
 			propertyDefinition.choiceInList = rs.getBoolean("choice_in_list");
 			propertyDefinition.valueType = rs.getString("type");

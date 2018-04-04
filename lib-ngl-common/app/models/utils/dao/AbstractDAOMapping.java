@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.asm.Type;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
@@ -43,6 +42,7 @@ public abstract class AbstractDAOMapping<T> extends AbstractDAO<T> {
 		this.sqlCommon    = sqlCommon;
 	}
 
+	@Override
 	public T findById(Long id) throws DAOException {
 		if (id == null)
 			throw new DAOException("id is mandatory");
@@ -50,25 +50,26 @@ public abstract class AbstractDAOMapping<T> extends AbstractDAO<T> {
 		return initializeMapping(sql, new SqlParameter("id", Type.LONG)).findObject(id);
 	}
 
+	@Override
 	public List<T> findAll() throws DAOException {
 		return initializeMapping(sqlCommon).execute();
 	}
 		
+	@Override
 	public T findByCode(String code) throws DAOException {
 		// TODO: change exception to IllegalArgument exception ?
 		if (code == null)
 			throw new DAOException("code is mandatory");
 		T o = getObjectInCache(code);
-		if (o != null) {
+		if (o != null) 
 			return o;
-		} else {
-			String sql= sqlCommon+" where t.code = ?";
-			o = initializeMapping(sql, new SqlParameter("code",Types.VARCHAR)).findObject(code);
-			setObjectInCache(o, code);
-			return o;
-		}
+		String sql= sqlCommon+" where t.code = ?";
+		o = initializeMapping(sql, new SqlParameter("code",Types.VARCHAR)).findObject(code);
+		setObjectInCache(o, code);
+		return o;		
 	}
 
+	@Override
 	public List<T> findByCodes(List<String> codes) throws DAOException {
 		if (codes == null)
 			throw new DAOException("codes is mandatory");

@@ -58,8 +58,8 @@ public class User extends Model<User> {
 	@JsonIgnore
 	public  Map<String,List<ValidationError>> validate() {
 		if (!password.equals(confirmpassword)) {
-			Map<String,List<ValidationError>> map = new HashMap<String,List<ValidationError>>();
-			List<ValidationError> listeValidation = new ArrayList<ValidationError>();
+			Map<String,List<ValidationError>> map = new HashMap<>();
+			List<ValidationError> listeValidation = new ArrayList<>();
 			listeValidation.add(new ValidationError("password","Password and confirmation are not the same.",null));
 			map.put("password",listeValidation);
 			map.put("confirmpassword",listeValidation);
@@ -83,6 +83,7 @@ public class User extends Model<User> {
 //		}
 		public UserFinder() { super(UserDAO.class); }
 
+		@Override
 		public List<User> findAll() throws DAOException {
 //			return ((UserDAO)getInstance()).findAll();
 			return getInstance().findAll();

@@ -8,11 +8,8 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
-import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
 
 import controllers.NGLControllerHelper;
 import controllers.samples.api.SamplesSearchForm;
@@ -144,7 +141,7 @@ public class QueryBuilder {
 		Optional<QueryBuilder> qb = Optional.empty();
 		// QueryBuilder qb = null;
 		
-		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
+		List<DBQuery.Query> queryElts = new ArrayList<>();
 		
 		qb = and(qb,firstOf(in   ("code", samplesSearch.codes),
 							is   ("code", samplesSearch.code),

@@ -2,9 +2,13 @@ package controllers.readsets.api;
 
 import javax.inject.Inject;
 
-
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+
+import controllers.authorisation.Permission;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.IGBodyParsers;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.description.Level;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
@@ -14,20 +18,9 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Result;
-import play.mvc.With;
 import validation.ContextValidation;
-import controllers.CommonController;
-import controllers.authorisation.Permission;
-import controllers.history.UserHistory;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.authentication.Authenticated;
-import fr.cea.ig.authorization.Authorized;
-import fr.cea.ig.lfw.Historized;
-import fr.cea.ig.play.IGBodyParsers;
-import fr.cea.ig.play.NGLContext;
 
 // TODO: cleanup
-
 public class ReadSetTreatments extends ReadSetsController {
 
 	private final Form<Treatment> treatmentForm; 

@@ -20,7 +20,6 @@ import com.mongodb.BasicDBObject;
 import controllers.DocumentController;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
-import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.authentication.Authenticated;
@@ -37,7 +36,6 @@ import models.laboratory.common.instance.Valuation;
 import models.laboratory.run.instance.Analysis;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
-import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -50,8 +48,9 @@ import workflows.analyses.AnalysisWorkflows;
 // TODO: use packed construction of query
 public class Analyses extends DocumentController<Analysis> {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(Analyses.class);
+	
 	private final static List<String> authorizedUpdateFields = Arrays.asList("code","masterReadSetCodes","readSetCodes");
-
 	
 	private final Form<Valuation>            valuationForm; 
 	private final Form<State>                stateForm; 
@@ -82,14 +81,13 @@ public class Analyses extends DocumentController<Analysis> {
 		if (form.datatable) {			
 			MongoDBResult<Analysis> results = mongoDBFinder(form, q, keys);	
 			return MongoStreamer.okStreamUDT(results);
-		} else {
-			MongoDBResult<Analysis> results = mongoDBFinder(form, q, keys);							
-			return MongoStreamer.okStream(results);
 		}
+		MongoDBResult<Analysis> results = mongoDBFinder(form, q, keys);							
+		return MongoStreamer.okStream(results);
 	}
 	
 	private Query getQuery(AnalysesSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		Query query = null;
 		
 		if (StringUtils.isNotBlank(form.stateCode)) { //all
@@ -185,10 +183,9 @@ public class Analyses extends DocumentController<Analysis> {
 			input = saveObject(input);
 			// TODO Update ReadSet
 			return ok(Json.toJson(input));
-		} else {
-			// return badRequest(filledForm.errors-AsJson());
-			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
+		// return badRequest(filledForm.errors-AsJson());
+		return badRequest(errorsAsJson(ctxVal.getErrors()));
 	}
 	
 	private void updateAnalysis(Analysis input) {
@@ -220,7 +217,7 @@ public class Analyses extends DocumentController<Analysis> {
 				if (input.traceInformation != null) {
 					input.traceInformation = getUpdateTraceInformation(input.traceInformation);
 				} else {
-					Logger.error("traceInformation is null !!");
+					logger.error("traceInformation is null !!");
 				}
 				if (!objectInDB.state.code.equals(input.state.code)) {
 					return badRequest("you cannot change the state code. Please used the state url ! ");
@@ -233,9 +230,8 @@ public class Analyses extends DocumentController<Analysis> {
 					updateObject(input);
 					//TODO Update READSET
 					return ok(Json.toJson(input));
-				} else {
-					return badRequest(errorsAsJson(ctxVal.getErrors()));
 				}
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			} else {
 				return badRequest("Analysis code are not the same");
 			}
@@ -292,7 +288,7 @@ public class Analyses extends DocumentController<Analysis> {
 	@Authorized.Write
 	public Result stateBatch(){
 		List<Form<AnalysesBatchElement>> filledForms =  getFilledFormList(batchElementForm, AnalysesBatchElement.class);
-		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
+		List<DatatableBatchResponseElement> response = new ArrayList<>(filledForms.size());
 		for (Form<AnalysesBatchElement> filledForm: filledForms) {
 			AnalysesBatchElement element = filledForm.get();
 			Analysis objectInDB = getObject(element.data.code);
@@ -350,7 +346,7 @@ public class Analyses extends DocumentController<Analysis> {
 	@Authorized.Write
 	public Result valuationBatch(){
 		List<Form<AnalysesBatchElement>> filledForms =  getFilledFormList(batchElementForm, AnalysesBatchElement.class);
-		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
+		List<DatatableBatchResponseElement> response = new ArrayList<>(filledForms.size());
 		
 		for(Form<AnalysesBatchElement> filledForm: filledForms){
 			AnalysesBatchElement element = filledForm.get();
@@ -411,7 +407,7 @@ public class Analyses extends DocumentController<Analysis> {
 	@Authorized.Write
 	public Result propertiesBatch() {
 		List<Form<AnalysesBatchElement>> filledForms =  getFilledFormList(batchElementForm, AnalysesBatchElement.class);
-		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
+		List<DatatableBatchResponseElement> response = new ArrayList<>(filledForms.size());
 		
 		for(Form<AnalysesBatchElement> filledForm: filledForms) {
 			AnalysesBatchElement element = filledForm.get();

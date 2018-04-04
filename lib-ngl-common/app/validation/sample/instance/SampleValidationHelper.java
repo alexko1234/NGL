@@ -30,7 +30,7 @@ public class SampleValidationHelper extends CommonValidationHelper {
 										  Map<String, PropertyValue> properties,
 										  ContextValidation contextValidation) {
 
-		List<PropertyDefinition> proDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> proDefinitions = new ArrayList<>();
 		SampleType sampleType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", SampleType.find,true);
 		if (sampleType != null) {
 			proDefinitions.addAll(sampleType.getPropertiesDefinitionDefaultLevel());				
@@ -45,7 +45,7 @@ public class SampleValidationHelper extends CommonValidationHelper {
 	}
 
 	public static void validateRules(Sample sample,ContextValidation contextValidation){
-		ArrayList<Object> validationfacts = new ArrayList<Object>();
+		ArrayList<Object> validationfacts = new ArrayList<>();
 		validationfacts.add(sample);
 		validateRules(validationfacts, contextValidation);
 	}

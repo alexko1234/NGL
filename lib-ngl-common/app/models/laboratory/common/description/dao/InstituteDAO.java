@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.stereotype.Repository;
+
 import models.laboratory.common.description.Institute;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
-
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.stereotype.Repository;
 
 @Repository
 public class InstituteDAO extends AbstractDAOMapping<Institute>{
@@ -40,7 +40,7 @@ public class InstituteDAO extends AbstractDAOMapping<Institute>{
 
 	@Override
 	public long save(Institute institute) throws DAOException {
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("code", institute.code);
 		parameters.put("name", institute.name);
 
@@ -61,7 +61,7 @@ public class InstituteDAO extends AbstractDAOMapping<Institute>{
 				"FROM institute i "+
 				"JOIN common_info_type_institute ci ON ci.fk_institute= i.id "+
 				"WHERE ci.fk_common_info_type=?";
-		BeanPropertyRowMapper<Institute> mapper = new BeanPropertyRowMapper<Institute>(Institute.class);
+		BeanPropertyRowMapper<Institute> mapper = new BeanPropertyRowMapper<>(Institute.class);
 		return this.jdbcTemplate.query(sql, mapper, idCommonInfoType);
 	}
 

@@ -23,7 +23,7 @@ public class Permission extends Model<Permission> {
 	public static final PermissionFinder find = new PermissionFinder();
 	
 	public String label;
-	public String code;
+//	public String code;
 
 	@Override
 	protected Class<? extends AbstractDAO<Permission>> daoClass() {

@@ -1,7 +1,5 @@
 package fr.cea.ig.ngl.utils;
 
-import play.libs.Json;
-
 public interface DeepClonable<T> {
 
 //	@SuppressWarnings("unchecked")

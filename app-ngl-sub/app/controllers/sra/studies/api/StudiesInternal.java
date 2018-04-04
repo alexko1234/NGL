@@ -1,43 +1,21 @@
 package controllers.sra.studies.api;
 
-//import static play.data.Form.form;
-//import static fr.cea.ig.play.IGGlobals.form;
-
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
 
 import controllers.DocumentController;
 import controllers.QueryFieldsForm;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
-import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.TraceInformation;
-import models.sra.submit.common.instance.AbstractStudy;
 import models.sra.submit.common.instance.Study;
-import models.sra.submit.util.SraCodeHelper;
-import models.sra.submit.util.SraException;
-import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
-import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
-import services.SubmissionServices;
 import validation.ContextValidation;
-import views.components.datatable.DatatableResponse;
-
 
 public class StudiesInternal extends DocumentController<Study> {
 	

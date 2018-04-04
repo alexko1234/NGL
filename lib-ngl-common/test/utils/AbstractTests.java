@@ -5,13 +5,11 @@ package utils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
-import play.Application;
-import play.Logger;
-import models.utils.DescriptionHelper;
-import ngl.common.Global;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.test.ApplicationFactory;
+import models.utils.DescriptionHelper;
+import ngl.common.Global;
+import play.Application;
 
 /**
  * Application provider for test classes.

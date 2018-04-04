@@ -201,12 +201,14 @@ public class JsonFacade {
 				child = c;
 			}
 			public String getName() { return name; }
+			@Override
 			public JsonNode apply(JsonNode n) {
 				JsonNode r = n.get(name);	
 				if (r == null)
 					throw new RuntimeException("could not find field " + name + " in " + n);
 				return r;
 			}
+			@Override
 			public String toString() {
 				String s = "{" + name + "}";
 				if (child != null)
@@ -221,12 +223,14 @@ public class JsonFacade {
 				child = p;
 			}
 			public int getIndex() { return index; }
+			@Override
 			public JsonNode apply(JsonNode n) {
 				JsonNode r = n.get(index);
 				if (r == null)
 					throw new RuntimeException("could not find element " + index + " in " + n);
 				return r;
 			}
+			@Override
 			public String toString() {
 				String s = "[" + index + "]";
 				if (child != null)

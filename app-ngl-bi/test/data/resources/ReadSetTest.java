@@ -1,9 +1,6 @@
 package data.resources;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static play.mvc.Http.Status.OK;
-import static play.test.Helpers.contentAsString;
-import static play.test.Helpers.fakeRequest;
 
 import java.util.Date;
 import java.util.List;
@@ -18,20 +15,16 @@ import org.mongojack.DBQuery;
 
 import controllers.readsets.api.ReadSetValuation;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.test.WSHelper;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.Valuation;
-import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import ngl.bi.AbstractBIServerTest;
-//import play.Logger;
 import play.libs.Json;
 import play.libs.ws.WSResponse;
-import play.mvc.Result;
 import utils.RunMockHelper;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)

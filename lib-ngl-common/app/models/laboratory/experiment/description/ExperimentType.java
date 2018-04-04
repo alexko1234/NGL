@@ -3,14 +3,14 @@ package models.laboratory.experiment.description;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Parent class categories not represented by a table in the database
@@ -20,12 +20,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 public class ExperimentType extends CommonInfoType {
  
+	@SuppressWarnings("hiding")
 	@JsonIgnore
 	public static final ExperimentTypeFinder find = new ExperimentTypeFinder();
 	
 	public ExperimentCategory category;
 	//Relationship accessible by the parent table in the database
-	public List<InstrumentUsedType> instrumentUsedTypes = new ArrayList<InstrumentUsedType>();
+	public List<InstrumentUsedType> instrumentUsedTypes = new ArrayList<>();
 	//public List<Protocol> protocols = new ArrayList<Protocol>();
 	public String atomicTransfertMethod;
 	
@@ -33,7 +34,7 @@ public class ExperimentType extends CommonInfoType {
 	
 	public Boolean newSample = Boolean.FALSE;
 	
-	public  List<SampleType> sampleTypes=new ArrayList<SampleType>();
+	public  List<SampleType> sampleTypes=new ArrayList<>();
 	
 	public ExperimentType() {
 		super(ExperimentTypeDAO.class.getName());		

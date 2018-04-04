@@ -31,7 +31,7 @@ public class ContainerSupportsSearchForm extends ListForm {
 	
 	// TODO: suggest fix
 	// @Deprecated
-	public Map<String, List<String>> properties = new HashMap<String, List<String>>();
+	public Map<String, List<String>> properties = new HashMap<>();
 	
 	@Override
 	public String toString() {

@@ -2,15 +2,11 @@ package models.sra.submit.util;
 
 import static fr.cea.ig.play.IGGlobals.configuration;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.util.StringUtil;
 
 import fr.cea.ig.ngl.utils.HashMapBuilder;
-//import play.Configuration;
-//import play.Play;
 
 public abstract class VariableSRA {
 	
@@ -141,7 +137,7 @@ public abstract class VariableSRA {
 		xmlExperiments          = getString("xmlExperiments");
 		xmlRuns                 = getString("xmlRuns");
 	}
-	
-};
+
+}
 
 

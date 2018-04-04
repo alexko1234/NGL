@@ -37,7 +37,7 @@ public class ExperimentsReadSpecs extends DocumentController<Experiment> {
 
 	public Result list()
 	{
-		List<ReadSpec> allReadSpecs = new ArrayList<ReadSpec>();
+		List<ReadSpec> allReadSpecs = new ArrayList<>();
 		Form<ExperimentsSearchForm> form = filledFormQueryString(experimentsSearchForm, ExperimentsSearchForm.class);
 		ExperimentsSearchForm formExp = form.get();
 		Query query = getQuery(formExp);
@@ -51,7 +51,7 @@ public class ExperimentsReadSpecs extends DocumentController<Experiment> {
 	}
 	
 	private Query getQuery(ExperimentsSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		Query query = null;
 		
 		if (StringUtils.isNotBlank(form.submissionCode)) {

@@ -1,17 +1,7 @@
 package models.laboratory.experiment.instance;
 
-import java.util.ArrayList;
-
-import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.description.ContainerSupportCategory;
-import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.utils.CodeHelper;
-import models.utils.dao.DAOException;
-
-import org.apache.commons.lang3.StringUtils;
-
-import play.Logger;
 import validation.ContextValidation;
 import validation.experiment.instance.AtomicTransfertMethodValidationHelper;
 
@@ -20,7 +10,7 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 	public int outputNumber;
 	
 	public OneToManyContainer(){
-		super();
+//		super();
 	}
 	
 	//GA 22/06/2016 gestion des cas ou le locationOnContainerSupport.code n'est pas null

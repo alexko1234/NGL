@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.typesafe.config.ConfigFactory;
-
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
@@ -22,26 +20,29 @@ import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 
-public class RunServiceCNG  extends AbstractRunService{
+public class RunServiceCNG  extends AbstractRunService {
 	
 	// FDS 06/04/2017 NGL-1225: ajout rsnanopore
+	@Override
 	public void saveReadSetType(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<ReadSetType> l = new ArrayList<ReadSetType>();
+		List<ReadSetType> l = new ArrayList<>();
 		l.add(DescriptionFactory.newReadSetType("Readset Illumina","rsillumina",  getReadSetPropertyDefinitions(),  DescriptionFactory.getInstitutes( Constants.CODE.CNG) ));
 		l.add(DescriptionFactory.newReadSetType("Readset Nanopore","rsnanopore", getReadSetPropertyDefinitionsNanopore(),  DescriptionFactory.getInstitutes( Constants.CODE.CNG) ));
 		
 		DAOHelpers.saveModels(ReadSetType.class, l, errors);
 	}
 	
+	@Override
 	public void saveAnalysisType(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<AnalysisType> l = new ArrayList<AnalysisType>();	
+		List<AnalysisType> l = new ArrayList<>();	
 		l.add(DescriptionFactory.newAnalysisType("Whole genome analysis","WG-analysis",  null,  DescriptionFactory.getInstitutes(Constants.CODE.CNG) ));
 		DAOHelpers.saveModels(AnalysisType.class, l, errors);
 	}
 	
 	// FDS 06/04/2017 NGL-1225: ajout nanopore
+	@Override
 	public void saveRunCategories(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<RunCategory> l = new ArrayList<RunCategory>();
+		List<RunCategory> l = new ArrayList<>();
 		l.add(DescriptionFactory.newSimpleCategory(RunCategory.class, "Illumina", "illumina"));
 		l.add(DescriptionFactory.newSimpleCategory(RunCategory.class, "Nanopore", "nanopore"));
 		
@@ -50,8 +51,9 @@ public class RunServiceCNG  extends AbstractRunService{
 	
 	// FDS 06/04/2017 NGL-1225: ajout "nanopore"
 	// FDS 11/12/2017 NGL-1730: ajout "Novaseq 6000"; renommer les runtypes Illumina pour etre homogène avec CNS 
+	@Override
 	public void saveRunType(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<RunType> l = new ArrayList<RunType>();
+		List<RunType> l = new ArrayList<>();
 		l.add(DescriptionFactory.newRunType("HiSeq 2000","RHS2000", 8, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(),  DescriptionFactory.getInstitutes(Constants.CODE.CNG) ));
 		l.add(DescriptionFactory.newRunType("HiSeq 2500","RHS2500", 8, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(),  DescriptionFactory.getInstitutes(Constants.CODE.CNG) ));
 		l.add(DescriptionFactory.newRunType("HiSeq 2500 rapide","RHS2500R", 2, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(),   DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -68,7 +70,7 @@ public class RunServiceCNG  extends AbstractRunService{
 	}
 	
 	private static List<PropertyDefinition> getReadSetPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("asciiEncoding","asciiEncoding",LevelService.getLevels(Level.CODE.File), String.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("label","label",LevelService.getLevels(Level.CODE.File), String.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("md5","md5",LevelService.getLevels(Level.CODE.File), String.class, false, "single"));
@@ -100,7 +102,7 @@ public class RunServiceCNG  extends AbstractRunService{
 	// GA 24/07/2015 ajout des TagCategories
 	// FDS 01/03/2017 ajout POOL-INDEX.... existe aussi dans AbstractExperimentService.java et ImportServiceCNG.java !!!!
 	private static List<Value> getTagCategories(){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("SINGLE-INDEX", "SINGLE-INDEX"));
 		values.add(DescriptionFactory.newValue("DUAL-INDEX", "DUAL-INDEX"));
 		values.add(DescriptionFactory.newValue("MID", "MID"));
@@ -111,7 +113,7 @@ public class RunServiceCNG  extends AbstractRunService{
 	// 12/10/2017: liste pour les run Illumina !!! il y a une autre liste pour Nanopore
 	//             PAS PRIS EN COMPTE POUR LES FILTRES...
 	private static List<Value> getLibProcessTypeCodeValues(){
-        List<Value> values = new ArrayList<Value>();
+        List<Value> values = new ArrayList<>();
         
          // codes for Captures
          // 05/09/2017 mise en coherence avec ProcessServiceCNG getCaptureLibProcessTypeCodeValues(): si meme code => meme label 
@@ -183,10 +185,9 @@ public class RunServiceCNG  extends AbstractRunService{
          values.add(DescriptionFactory.newValue("UN","UN - UKNOWN"));
         return values;
     } 
-	
-	
+		
 	private static List<PropertyDefinition> getRunIlluminaPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType"
 	        		, LevelService.getLevels(Level.CODE.Run),String.class, false, DescriptionFactory.newValues("SR","PE"),"single"));
 		
@@ -195,7 +196,5 @@ public class RunServiceCNG  extends AbstractRunService{
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Codes aliquots","sampleAliquoteCodes",LevelService.getLevels(Level.CODE.Run), String.class, false,"list"));
 	    return propertyDefinitions;
 	}
-	
-	
-	
+
 }

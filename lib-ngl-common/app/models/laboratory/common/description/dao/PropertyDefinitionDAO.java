@@ -19,7 +19,7 @@ import models.utils.dao.DAOHelpers;
 import play.api.modules.spring.Spring;
 
 @Repository
-public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition>{
+public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition> {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(PropertyDefinitionDAO.class);
 	
@@ -113,7 +113,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 			throw new DAOException("level does not exist or level.id is null) !! - "+propertyDefinition.code);
 		}
 		//Create propertyDefinition
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("code", propertyDefinition.code);
 		parameters.put("name", propertyDefinition.name);
 		parameters.put("description", propertyDefinition.description);
@@ -158,8 +158,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		return propertyDefinition;
 	}
 
-
-
+	@Override
 	public void update(PropertyDefinition propertyDefinition) throws DAOException
 	{
 		String sql = "UPDATE property_definition SET name=?, description=?, required=?, editable=?, " +

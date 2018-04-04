@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.stereotype.Repository;
+
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.ObjectType.CODE;
@@ -13,10 +16,6 @@ import models.laboratory.common.description.State;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
-
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.stereotype.Repository;
-
 import play.api.modules.spring.Spring;
 
 @Repository
@@ -36,6 +35,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType> {
 				"JOIN object_type as o ON o.id=t.fk_object_type "+DAOHelpers.getCommonInfoTypeSQLForInstitute("t"), true);			
 	}
 
+	@Override
 	public long save(CommonInfoType cit) throws DAOException {
 		if (cit == null) 
 			throw new DAOException("CommonInfoType is mandatory");
@@ -46,7 +46,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType> {
 		}
 		
 		//Create new cit
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("name", cit.name);
 		parameters.put("code", cit.code);
 		parameters.put("fk_object_type", cit.objectType.id);
@@ -63,6 +63,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType> {
 	}
 
 	
+	@Override
 	public void update(CommonInfoType cit) throws DAOException {
 		if(null == cit || cit.id == null){
 			throw new DAOException("CommonInfoType is mandatory");

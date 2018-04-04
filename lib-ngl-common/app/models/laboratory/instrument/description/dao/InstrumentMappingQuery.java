@@ -6,13 +6,11 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.springframework.jdbc.core.SqlParameter;
+
 import models.laboratory.instrument.description.Instrument;
 import models.utils.dao.MappingSqlQueryFactory;
 import models.utils.dao.NGLMappingSqlQuery;
-
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.object.MappingSqlQuery;
-
 import play.api.modules.spring.Spring;
 
 //public class InstrumentMappingQuery extends MappingSqlQuery<Instrument> {

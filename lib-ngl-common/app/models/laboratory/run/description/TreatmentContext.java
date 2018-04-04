@@ -1,13 +1,11 @@
 package models.laboratory.run.description;
 
-import static fr.cea.ig.lfw.utils.Hashing.hash;
 import static fr.cea.ig.lfw.utils.Equality.objectEquals;
 import static fr.cea.ig.lfw.utils.Equality.typedEquals;
+import static fr.cea.ig.lfw.utils.Hashing.hash;
 
 import models.laboratory.run.description.dao.TreatmentContextDAO;
 import models.utils.Model;
-//TODO: fix doc generation that produces an error with the unqualified name
-import models.utils.Model.Finder;
 import models.utils.dao.AbstractDAO;
 
 public class TreatmentContext extends Model<TreatmentContext> {

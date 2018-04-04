@@ -14,7 +14,6 @@ import fr.cea.ig.play.NGLContext;
 import models.laboratory.project.description.ProjectCategory;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
-import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -23,6 +22,8 @@ import views.components.datatable.DatatableResponse;
 //import controllers.CommonController;
 
 public class ProjectCategories extends APICommonController<ProjectCategoriesSearchForm> { //CommonController{
+
+	private static final play.Logger.ALogger logger = play.Logger.of(ProjectCategories.class);
 	
 	private final /*static*/ Form<ProjectCategoriesSearchForm> projectCategoryForm;// = form(ProjectCategoriesSearchForm.class);
 	
@@ -42,19 +43,19 @@ public class ProjectCategories extends APICommonController<ProjectCategoriesSear
 			projectCategories = ProjectCategory.find.findAll();
 			
 			if(projectCategoriesSearch.datatable){
-				return ok(Json.toJson(new DatatableResponse<ProjectCategory>(projectCategories, projectCategories.size()))); 
+				return ok(Json.toJson(new DatatableResponse<>(projectCategories, projectCategories.size()))); 
 			}else if(projectCategoriesSearch.list){
-				List<ListObject> lop = new ArrayList<ListObject>();
+				List<ListObject> lop = new ArrayList<>();
 				for(ProjectCategory et:projectCategories){
-					Logger.debug(Json.toJson(et).toString());
+					logger.debug(Json.toJson(et).toString());
 					lop.add(new ListObject(et.code, et.name));
 				}
 				return Results.ok(Json.toJson(lop));
 			}else{
 				return Results.ok(Json.toJson(projectCategories));
 			}
-		}catch (DAOException e) {
-			Logger.error("DAO error: "+e.getMessage(),e);
+		} catch (DAOException e) {
+			logger.error("DAO error: "+e.getMessage(),e);
 			return  Results.internalServerError(e.getMessage());
 		}	
 	}

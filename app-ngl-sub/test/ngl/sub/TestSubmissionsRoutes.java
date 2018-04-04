@@ -1,12 +1,5 @@
 package ngl.sub;
 
-// import static ngl.sub.Global.devapp;
-//import static fr.cea.ig.play.test.DevAppTesting.testInServer;
-//import static play.mvc.Http.Status.OK;
-//import static play.mvc.Http.Status.FORBIDDEN;
-//
-import org.junit.Test;
-//
 //import fr.cea.ig.ngl.test.TestAuthConfig;
 //import fr.cea.ig.ngl.test.authentication.Identity;
 //import fr.cea.ig.play.test.WSHelper;

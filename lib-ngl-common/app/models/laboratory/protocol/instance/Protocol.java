@@ -4,15 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import fr.cea.ig.DBObject;
 import models.laboratory.common.instance.PropertyValue;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.protocol.instance.ProtocolValidationHelper;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import fr.cea.ig.DBObject;
 
 public class Protocol extends DBObject implements IValidation {
 	
@@ -26,7 +25,7 @@ public class Protocol extends DBObject implements IValidation {
 	
 	public Protocol() {		
 //		super();
-		this.experimentTypeCodes = new ArrayList<String>();
+		this.experimentTypeCodes = new ArrayList<>();
 	}
 	
 	public Protocol(String code, String name, String filePath, String version, String categoryCode) {

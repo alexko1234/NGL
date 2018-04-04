@@ -2,23 +2,19 @@ package models.laboratory.processes.description.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.springframework.jdbc.core.SqlParameter;
+
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
-import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
 import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
 import models.utils.dao.DAOException;
 import models.utils.dao.MappingSqlQueryFactory;
 import models.utils.dao.NGLMappingSqlQuery;
-
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.object.MappingSqlQuery;
-
 import play.api.modules.spring.Spring;
 
 //public class ProcessTypeMappingQuery extends MappingSqlQuery<ProcessType> {

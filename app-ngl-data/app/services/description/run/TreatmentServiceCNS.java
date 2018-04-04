@@ -20,20 +20,20 @@ import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 
-import com.typesafe.config.ConfigFactory;
-
 public class TreatmentServiceCNS extends AbstractTreatmentService {
 
+	@Override
 	public  void saveTreatmentCategory(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<TreatmentCategory> l = new ArrayList<TreatmentCategory>();
+		List<TreatmentCategory> l = new ArrayList<>();
 		for (TreatmentCategory.CODE code : TreatmentCategory.CODE.values()) {
 			l.add(DescriptionFactory.newSimpleCategory(TreatmentCategory.class, code.name(), code.name()));
 		}
 		DAOHelpers.saveModels(TreatmentCategory.class, l, errors);
 	}
 
+	@Override
 	public  void saveTreatmentContext(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<TreatmentContext> l = new ArrayList<TreatmentContext>();
+		List<TreatmentContext> l = new ArrayList<>();
 		l.add(DescriptionFactory.newTreatmentContext("Default","default"));
 		l.add(DescriptionFactory.newTreatmentContext("Read1","read1"));
 		l.add(DescriptionFactory.newTreatmentContext("Read2","read2"));
@@ -43,8 +43,9 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		DAOHelpers.saveModels(TreatmentContext.class, l, errors);
 	}
 
+	@Override
 	public  void saveTreatmentType(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<TreatmentType> l = new ArrayList<TreatmentType>();
+		List<TreatmentType> l = new ArrayList<>();
 		// common CNS - CNG
 		l.add(DescriptionFactory.newTreatmentType("SAV","sav", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.sequencing.name()), "sav", 
 				getSAVPropertyDefinitionsV2(), 
@@ -201,7 +202,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 
 
 	private static List<TreatmentTypeContext> getTreatmentTypeContexts(String...codes) throws DAOException {
-		List<TreatmentTypeContext> contexts = new ArrayList<TreatmentTypeContext>();
+		List<TreatmentTypeContext> contexts = new ArrayList<>();
 		for(String code : codes){
 			contexts.add(getTreatmentTypeContext(code, Boolean.TRUE));
 		}		
@@ -215,7 +216,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 	}
 
 	public static List<PropertyDefinition> getTaxonomyPropertyDefinitions() throws DAOException{
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Logiciel","software",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Pairs), String.class, false,
 		DescriptionFactory.newValues("kraken","megablast_megan","sortmerna2.1","centrifuge1.0.3.b"),"single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version base de données","databaseVersion",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Pairs), String.class, false, "single"));
@@ -255,9 +256,8 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		return propertyDefinitions;		
 	}
 
-	
 	public static List<PropertyDefinition> getSortingRiboPropertyDefinitions() throws DAOException{
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Reads input","readsInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), Long.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Non-rRNA","no_rRNA",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), Long.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("rRNA","rRNA",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), Long.class, false, "single"));
@@ -278,7 +278,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 	}
 	
 	public static List<PropertyDefinition> getMergingPropertyDefinitions() throws DAOException{
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Sample input","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Merged reads","mergedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% merged reads","mergedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
@@ -293,7 +293,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 	
 
 	public static List<PropertyDefinition> getMergingBAPropertyDefinitions() throws DAOException{
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Reads input (pairs)","readsInput", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Integer.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Merged Reads","mergedReads", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Integer.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% merged reads","mergedReadsPercent", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Double.class, true, "single"));
@@ -306,7 +306,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 
 
 	public static List<PropertyDefinition> getAssemblyBAPropertyDefinitions() throws DAOException{
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();	
 		//new, 09-07-14 : temporary set required=false TO PASS TO TRUE
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Software version","software", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), String.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("N50 size","N50ContigSize", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Integer.class, true, "single"));
@@ -349,7 +349,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 	
 
 	public static List<PropertyDefinition> getScaffoldingBAPropertyDefinitions() throws DAOException{
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
 		//new, 09-07-14 : temporary set required=false TO PASS TO TRUE
 		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Path","path",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), String.class, true, "single"));
@@ -389,7 +389,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 	}
 	
 	public static List<PropertyDefinition> getAssemblyFilterBAPropertyDefinitions() throws DAOException{
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb de bases conservés","preservedBases",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Integer.class, true, "single"));
 		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% bases perdues","lostBasesPercent",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Double.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb contigs/scaffolds conservés","preservedSequences",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Integer.class, true, "single"));
@@ -421,7 +421,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 
 
 	public static List<PropertyDefinition> getGapClosingBAPropertyDefinitions() throws DAOException{
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Actual gap sum","actualGapSum", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Integer.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Extended gap sum","extendGapSum", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Integer.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Actual gap count","actualGapCount", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Integer.class, true, "single"));
@@ -433,7 +433,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 	}
 
 	public static List<PropertyDefinition> getContigFilterBAPropertyDefinitions() throws DAOException{
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases conservées","storedBases", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Integer.class, true, "single"));
 		// temporary set to false (computed by NGL ?)
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% bases perdues","lostBasesPercent", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Double.class, false, "single"));
@@ -441,7 +441,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 	}
 	
 	public static List<PropertyDefinition> getClusterDbAssignationPropertyDefinitions() throws DAOException{
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("cluster","assignationBilan.cluster",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, false, "object_list"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("OTU","assignationBilan.otu",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, false, "object_list"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Abundance","assignationBilan.abundance",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Integer.class, false, "object_list"));
@@ -453,7 +453,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 	}
 	
 	public static List<PropertyDefinition> getAssignationBAPropertyDefinitions() throws DAOException{
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("control name","assignationBilan.controlName",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Read1), String.class, false, "object_list"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("cluster","assignationBilan.cluster",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Read1), String.class, false, "object_list"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("OTU","assignationBilan.otu",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Read1), String.class, false, "object_list"));

@@ -4,7 +4,6 @@ import static fr.cea.ig.lfw.utils.Iterables.filter;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -12,7 +11,7 @@ import java.util.TreeSet;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import play.Logger;
+import fr.cea.ig.DBObject;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -21,11 +20,9 @@ import models.laboratory.common.instance.Valuation;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
-import validation.experiment.instance.ExperimentValidationHelper;
 import validation.run.instance.LaneValidationHelper;
 import validation.run.instance.RunValidationHelper;
 import validation.run.instance.TreatmentValidationHelper;
-import fr.cea.ig.DBObject;
 
 public class Run extends DBObject implements IValidation {
         
@@ -36,13 +33,13 @@ public class Run extends DBObject implements IValidation {
 	public String           containerSupportCode; //id flowcell
     public Boolean          dispatch         = Boolean.FALSE;
     public Valuation        valuation        = new Valuation();
-    public Set<String>      projectCodes     = new TreeSet<String>();
-    public Set<String>      sampleCodes      = new TreeSet<String>();
+    public Set<String>      projectCodes     = new TreeSet<>();
+    public Set<String>      sampleCodes      = new TreeSet<>();
     public Boolean          keep             = Boolean.FALSE;
     public Boolean          deleted          = Boolean.FALSE;
     public TraceInformation traceInformation;
     public InstrumentUsed   instrumentUsed; //Instrument used to obtain the run
-    public Map<String,Treatment> treatments = new HashMap<String,Treatment>();
+    public Map<String,Treatment> treatments = new HashMap<>();
 //    public Map<String, PropertyValue<?>> properties = new HashMap<>(); // <String, PropertyValue>();
 //    public Map<String, PropertyValue> properties = new HashMap<>(); // <String, PropertyValue>();
     public Map<String, PropertyValue> properties = new HashMap<>(); // <String, PropertyValue>();

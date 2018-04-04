@@ -8,11 +8,9 @@ import javax.xml.xpath.XPathExpressionException;
 import org.junit.Assert;
 import org.junit.Test;
 
-// import play.libs.F.Callback;
 import services.ncbi.NCBITaxon;
 import services.ncbi.TaxonomyServices;
 import utils.AbstractTests;
-import workflows.container.ContSupportWorkflows;
 
 public class TaxonomyServicesTest extends AbstractTests {
 
@@ -20,7 +18,6 @@ public class TaxonomyServicesTest extends AbstractTests {
 		// Spring.get BeanOfType(ContSupportWorkflows.class); 
 		return app.injector().instanceOf(TaxonomyServices.class);
 	}
-	
 	
 	/**
 	 * Test with taxonId =1358

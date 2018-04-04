@@ -13,7 +13,6 @@ import org.junit.runners.MethodSorters;
 
 //import controllers.readsets.api.ReadSetValuation;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.test.WSHelper;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.common.instance.property.PropertySingleValue;
@@ -23,13 +22,14 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import ngl.bi.AbstractBIServerTest;
-import play.Logger;
 import play.libs.Json;
 import play.libs.ws.WSResponse;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class AnalysesTest extends AbstractBIServerTest {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(AnalysesTest.class);
+	
 	static Analysis analysis;
 	static String jsonAnalysis;
 	
@@ -100,7 +100,7 @@ public class AnalysesTest extends AbstractBIServerTest {
 	@Test
 	public void test1save()
 	{
-		Logger.debug("save Analysis");
+		logger.debug("save Analysis");
 		// WSHelper.postAsBot(ws, "/api/analyses", jsonAnalysis, 200);
 		wsBot.post("/api/analyses", jsonAnalysis, 200);
 		analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
@@ -110,7 +110,7 @@ public class AnalysesTest extends AbstractBIServerTest {
 	@Test
 	public void test2list()
 	{
-		Logger.debug("list Analysis");
+		logger.debug("list Analysis");
 //		WSResponse response = WSHelper.getAsBot(ws, "/api/analyses", 200);
 		WSResponse response = wsBot.get("/api/analyses", 200);
 		assertThat(response.asJson()).isNotNull();
@@ -119,7 +119,7 @@ public class AnalysesTest extends AbstractBIServerTest {
 	@Test
 	public void test3get()
 	{
-		Logger.debug("get Analysis");
+		logger.debug("get Analysis");
 //		WSResponse response = WSHelper.getAsBot(ws, "/api/analyses/"+analysis.code, 200);
 		WSResponse response = wsBot.get("/api/analyses/" + analysis.code, 200);
 		assertThat(response.asJson()).isNotNull();
@@ -128,7 +128,7 @@ public class AnalysesTest extends AbstractBIServerTest {
 	@Test
 	public void test4head()
 	{
-		Logger.debug("head Analysis");
+		logger.debug("head Analysis");
 //		WSResponse response = WSHelper.headAsBot(ws, "/api/analyses/"+analysis.code, 200);
 		WSResponse response = wsBot.head("/api/analyses/"+analysis.code, 200);
 		assertThat(response).isNotNull();
@@ -137,7 +137,7 @@ public class AnalysesTest extends AbstractBIServerTest {
 	@Test
 	public void test5update()
 	{
-		Logger.debug("update Analyses");
+		logger.debug("update Analyses");
 		analysis.path="test";
 //		WSHelper.putObjectAsBot(ws, "/api/analyses/"+analysis.code,analysis, 200);
 		wsBot.putObject("/api/analyses/"+analysis.code,analysis, 200);
@@ -148,7 +148,7 @@ public class AnalysesTest extends AbstractBIServerTest {
 	@Test
 	public void test6valuation()
 	{
-		Logger.debug("valuation");
+		logger.debug("valuation");
 		//Create valuation
 		
 		Valuation valuation = new Valuation();
@@ -176,7 +176,7 @@ public class AnalysesTest extends AbstractBIServerTest {
 	@Test
 	public void test8delete()
 	{
-		Logger.debug("delete Analysis");
+		logger.debug("delete Analysis");
 //		WSHelper.deleteAsBot(ws,"/api/analyses/"+analysis.code,200);
 		wsBot.delete("/api/analyses/"+analysis.code,200);
 		Analysis analysisDB = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);

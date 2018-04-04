@@ -1,9 +1,5 @@
 package ngl.sq;
 
-import static fr.cea.ig.play.test.DevAppTesting.savage;
-import static fr.cea.ig.play.test.JsonHelper.getJson;
-import static fr.cea.ig.play.test.JsonHelper.remove;
-import static fr.cea.ig.play.test.JsonHelper.set;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
@@ -17,9 +13,7 @@ import fr.cea.ig.play.test.DevAppTesting;
 import fr.cea.ig.play.test.JsonFacade;
 import models.laboratory.container.instance.Container;
 import models.laboratory.sample.instance.Sample;
-import play.libs.Json;
 import play.libs.ws.WSClient;
-import validation.utils.ValidationHelper;
 
 /**
  * Factory methods for Container.
@@ -77,7 +71,7 @@ public class ContainerFactory extends DBObjectFactory {
 		// Should clear the contents and a new one.
 		container.code = DevAppTesting.newCode();
 		container.contents.get(0).sampleCode = sample.code; 
-		container.contents.get(0).projectCode = new ArrayList<String>(sample.projectCodes).get(0);
+		container.contents.get(0).projectCode = new ArrayList<>(sample.projectCodes).get(0);
 		container.contents.get(0).taxonCode = sample.taxonCode;
 		container.contents.get(0).ncbiScientificName = sample.ncbiScientificName;
 		// container.contents.get(0).properties.get("sampleAliquoteCode").value = sample.code;

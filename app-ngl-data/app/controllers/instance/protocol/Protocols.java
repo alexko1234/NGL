@@ -1,27 +1,15 @@
 package controllers.instance.protocol;
 
-import static fr.cea.ig.play.IGGlobals.configuration;
-
 import javax.inject.Inject;
-
-import com.typesafe.config.Config;
 
 import fr.cea.ig.ngl.NGLConfig;
 import models.Constants;
-//import play.Logger;
-//import play.Logger.ALogger;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.instance.protocol.ProtocolServiceCNG;
 import services.instance.protocol.ProtocolServiceCNS;
 import validation.ContextValidation;
-
-//import javax.inject.Inject;
-
-//import controllers.CommonController;
-//import controllers.NGLBaseController;
-//import fr.cea.ig.play.NGLContext;
 
 public class Protocols extends Controller { // NGLBaseController { //CommonController {
 	
@@ -39,7 +27,7 @@ public class Protocols extends Controller { // NGLBaseController { //CommonContr
 		institute = config.getInstitute();
 	}
 	
-	public Result save(){
+	public Result save() {
 		ContextValidation ctx = new ContextValidation(Constants.NGL_DATA_USER);
 		ctx.setCreationMode();
 		try {

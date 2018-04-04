@@ -6,8 +6,12 @@ package controllers.commons.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.StringUtils;
 
+import controllers.CommonController;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.State;
 import models.utils.ListObject;
@@ -16,12 +20,9 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import views.components.datatable.DatatableResponse;
-import controllers.CommonController;
-import fr.cea.ig.play.NGLContext;
-import javax.inject.Inject;
-
 
 public class States extends CommonController {
+	
     private final /*static*/ Form<StatesSearchForm> stateForm; // = form(StatesSearchForm.class);
 
     @Inject
@@ -34,7 +35,7 @@ public class States extends CommonController {
 			stateForm, StatesSearchForm.class);
 		StatesSearchForm statesSearch = stateFilledForm.get();
 	
-		List<State> values = new ArrayList<State>(0);
+		List<State> values = new ArrayList<>(0);
 		if (null != statesSearch.display) {
 		    values = State.find.findByDisplayAndObjectTypeCode(statesSearch.display, ObjectType.CODE
 			    .valueOf(statesSearch.objectTypeCode));
@@ -47,10 +48,10 @@ public class States extends CommonController {
 		}
 	
 		if (statesSearch.datatable) {
-		    return ok(Json.toJson(new DatatableResponse<State>(values, values
+		    return ok(Json.toJson(new DatatableResponse<>(values, values
 			    .size())));
 		} else if (statesSearch.list) {
-		    List<ListObject> valuesListObject = new ArrayList<ListObject>();
+		    List<ListObject> valuesListObject = new ArrayList<>();
 		    for (State s : values) {
 		    	valuesListObject.add(new ListObject(s.code, s.name));
 		    }
@@ -62,11 +63,9 @@ public class States extends CommonController {
 
     public Result get(String code) throws DAOException {
 		State state = State.find.findByCode(code);
-		if (state != null) {
+		if (state != null) 
 		    return ok(Json.toJson(state));
-		} else {
-		    return notFound();
-		}
+		return notFound();
     }
     
 }

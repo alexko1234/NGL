@@ -1,37 +1,37 @@
 package services.instance.protocol;
 
-import static services.instance.InstanceFactory.*;
+import static services.instance.InstanceFactory.newPSV;
+import static services.instance.InstanceFactory.newProtocol;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.mongojack.DBQuery;
 
-import com.typesafe.config.ConfigFactory;
-
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.protocol.instance.Protocol;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
-import play.Logger;
 import services.instance.InstanceFactory;
 import validation.ContextValidation;
 
 public class ProtocolServiceCNG {	
 
+	private static final play.Logger.ALogger logger = play.Logger.of(ProtocolServiceCNG.class);
+	
 	private final static String institute = "CNG";
+	
 	public static void main(ContextValidation ctx) {	
 
-		Logger.info("Start to create protocols collection for "+institute+"...");
-		Logger.info("Remove protocol");
+		logger.info("Start to create protocols collection for "+institute+"...");
+		logger.info("Remove protocol");
 		removeProtocols(ctx);
-		Logger.info("Save protocols ...");
+		logger.info("Save protocols ...");
 		saveProtocols(ctx);
-		Logger.info(institute+" Protocols collection creation is done!");
+		logger.info(institute+" Protocols collection creation is done!");
 	}
 	
 	private static void removeProtocols(ContextValidation ctx) {
@@ -39,7 +39,7 @@ public class ProtocolServiceCNG {
 	}
 
 	public static void saveProtocols(ContextValidation ctx){		
-		List<Protocol> lp = new ArrayList<Protocol>();
+		List<Protocol> lp = new ArrayList<>();
 		
 		//----------Experiences de transformation-------------------------------------
 		lp.add(newProtocol("PrepFC_CBot_ptr_sox139_1","PrepFC_CBot_ptr_sox139_1","","1","production", 
@@ -210,7 +210,7 @@ public class ProtocolServiceCNG {
 		
 		for(Protocol protocole:lp){
 			InstanceHelpers.save(InstanceConstants.PROTOCOL_COLL_NAME, protocole,ctx);
-			Logger.debug("protocol '"+protocole.name + "' saved..." );
+			logger.debug("protocol '"+protocole.name + "' saved..." );
 		}
 	}
 	

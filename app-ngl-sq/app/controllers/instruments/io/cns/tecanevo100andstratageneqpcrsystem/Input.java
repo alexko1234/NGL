@@ -5,20 +5,17 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import models.laboratory.common.instance.property.PropertyFileValue;
-import models.laboratory.common.instance.property.PropertySingleValue;
-import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.InputContainerUsed;
-
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
+import controllers.instruments.io.utils.AbstractInput;
+import models.laboratory.common.instance.property.PropertyFileValue;
+import models.laboratory.common.instance.property.PropertySingleValue;
+import models.laboratory.experiment.instance.Experiment;
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;
-import controllers.instruments.io.utils.AbstractInput;
 
 public class Input extends AbstractInput {
 
@@ -30,7 +27,7 @@ public class Input extends AbstractInput {
 		
 		Workbook wb = WorkbookFactory.create(is);
 		Sheet sheet = wb.getSheetAt(0);
-		Map<String,Data> results = new HashMap<String,Data>(0);
+		Map<String,Data> results = new HashMap<>(0);
 		for(int i = 31; i <= sheet.getLastRowNum(); i=i+4){
 			String test = getStringValue(sheet.getRow(i).getCell(0));
 			if(StringUtils.isNotBlank(test)){

@@ -17,7 +17,6 @@ import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
-import play.Logger;
 import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
@@ -28,7 +27,7 @@ public class SamplePrep extends AbstractDeclaration{
 
 	@Override
 	protected List<ExperimentType> getExperimentTypeCommon() {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		List<ExperimentType> l = new ArrayList<>();
 
 		l.add(newExperimentType("Ext to Extraction ADN / ARN (corail)","ext-to-grinding-and-dna-rna-extraction",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
@@ -93,7 +92,7 @@ public class SamplePrep extends AbstractDeclaration{
 
 	@Override
 	protected List<ExperimentType> getExperimentTypeDEV() {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		List<ExperimentType> l = new ArrayList<>();
 
 		
 		return l;
@@ -107,7 +106,7 @@ public class SamplePrep extends AbstractDeclaration{
 
 	@Override
 	protected List<ProcessType> getProcessTypeCommon() {
-		List<ProcessType> l=new ArrayList<ProcessType>();
+		List<ProcessType> l=new ArrayList<>();
 
 		l.add(DescriptionFactory.newProcessType("Extraction ADN / ARN (plancton ou à partir d'aliquot corail poisson)", "dna-rna-extraction-process", 
 				ProcessCategory.find.findByCode("sample-prep"), 1,
@@ -165,7 +164,7 @@ public class SamplePrep extends AbstractDeclaration{
 	
 	@Override
 	protected List<ProcessType> getProcessTypeDEV() {
-		List<ProcessType> l=new ArrayList<ProcessType>();
+		List<ProcessType> l=new ArrayList<>();
 
 		
 		return l;	
@@ -222,7 +221,7 @@ public class SamplePrep extends AbstractDeclaration{
 	}
 
 	private List<PropertyDefinition> getPropertyDefinitionsExtractionADNARN() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		//InputContainer
 
 		propertyDefinitions.add(newPropertiesDefinition("Sample Type", "sampleTypeCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, "N", null, 
@@ -241,7 +240,7 @@ public class SamplePrep extends AbstractDeclaration{
 
 	
 	private List<PropertyDefinition> getPropertyDefinitionsExtractionARNtotal() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		//InputContainer
 
 		propertyDefinitions.add(newPropertiesDefinition("Sample Type", "sampleTypeCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, "N", 
@@ -255,7 +254,7 @@ public class SamplePrep extends AbstractDeclaration{
 	}
 	
 	private List<PropertyDefinition> getPropertyDefinitionsExtractionARNSmallLarge() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		//InputContainer
 		/*
 		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, false, null,
@@ -275,7 +274,7 @@ public class SamplePrep extends AbstractDeclaration{
 		return propertyDefinitions;
 	}
 	private List<PropertyDefinition> getPropertyDefinitionsWGAAmplification() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, false, null,

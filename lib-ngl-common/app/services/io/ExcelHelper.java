@@ -1,13 +1,8 @@
 package services.io;
 
-import java.text.DecimalFormat;
-import java.util.Locale;
-
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
-
-//import play.Logger;
 
 public class ExcelHelper {
 	

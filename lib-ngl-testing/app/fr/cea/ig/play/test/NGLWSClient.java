@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
@@ -18,7 +17,6 @@ import play.libs.ws.WSResponse;
 import play.mvc.Http.Status;
 
 // Prototype: may not be used
-
 /**
  * Extended WSClient that provides NGL specific methods. It is more or less 
  * a request factory.
@@ -82,6 +80,7 @@ public class NGLWSClient {
 	 * Build a clone.
 	 * @return cloned client
 	 */
+	@Override
 	protected NGLWSClient clone() {
 		return new NGLWSClient(this);
 	}

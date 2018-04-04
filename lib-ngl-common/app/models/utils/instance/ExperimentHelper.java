@@ -9,7 +9,6 @@ import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.ManyToOneContainer;
-import models.laboratory.experiment.instance.OneToOneContainer;
 import models.utils.InstanceHelpers;
 // import play.Play;
 import rules.services.RulesServices6;
@@ -29,7 +28,7 @@ public class ExperimentHelper extends InstanceHelpers {
 	}
 	
 	public static void doCalculations(Experiment exp,String rulesName) {
-		ArrayList<Object> facts = new ArrayList<Object>();
+		ArrayList<Object> facts = new ArrayList<>();
 		facts.add(exp);
 		for(int i=0;i<exp.atomicTransfertMethods.size();i++) {
 			AtomicTransfertMethod atomic = exp.atomicTransfertMethods.get(i);

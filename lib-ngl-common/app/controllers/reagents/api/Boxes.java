@@ -10,27 +10,10 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.reagent.description.AbstractCatalog;
-import models.laboratory.reagent.instance.Box;
-import models.laboratory.reagent.utils.ReagentCodeHelper;
-import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
-import models.utils.ListObject;
-
-import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
-
-import play.Logger;
-import play.data.Form;
-import play.libs.Json;
-import play.mvc.Result;
-import play.mvc.Results;
-import validation.ContextValidation;
-import views.components.datatable.DatatableResponse;
 
 import com.mongodb.BasicDBObject;
 
@@ -38,6 +21,20 @@ import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
+import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.reagent.description.AbstractCatalog;
+import models.laboratory.reagent.instance.Box;
+import models.laboratory.reagent.utils.ReagentCodeHelper;
+import models.utils.InstanceConstants;
+import models.utils.InstanceHelpers;
+import models.utils.ListObject;
+import play.Logger;
+import play.data.Form;
+import play.libs.Json;
+import play.mvc.Result;
+import play.mvc.Results;
+import validation.ContextValidation;
+import views.components.datatable.DatatableResponse;
 
 public class Boxes extends DocumentController<Box> {
 	
@@ -49,6 +46,7 @@ public class Boxes extends DocumentController<Box> {
 
 	private final /*static*/ Form<BoxSearchForm> boxSearchForm;// = form(BoxSearchForm.class);
 
+	@Override
 	public Result get(String code){
 		Box box = getObject(code);
 		if(box != null){
@@ -58,6 +56,7 @@ public class Boxes extends DocumentController<Box> {
 		return badRequest();
 	}
 
+	@Override
 	public Result delete(String code){
 		MongoDBDAO.delete(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, AbstractCatalog.class, DBQuery.or(DBQuery.is("code", code),DBQuery.is("boxCode", code)));
 		return ok();
@@ -86,11 +85,9 @@ public class Boxes extends DocumentController<Box> {
 		
 //		box = (Box)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, box, contextValidation);
 		box = InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, box, contextValidation);
-		if (!contextValidation.hasErrors()) {
+		if (!contextValidation.hasErrors())
 			return ok(Json.toJson(box));
-		} else {
-			return badRequest(errorsAsJson(contextValidation.getErrors()));
-		}
+		return badRequest(errorsAsJson(contextValidation.getErrors()));
 			// legit, should modify source to use contextvlidation
 	}
 
@@ -107,11 +104,9 @@ public class Boxes extends DocumentController<Box> {
 
 //		box = (Box)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, box, contextValidation);
 		box = InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, box, contextValidation);
-		if (!contextValidation.hasErrors()) { 
+		if (!contextValidation.hasErrors()) 
 			return ok(Json.toJson(box));
-		} else {
-			return badRequest(errorsAsJson(contextValidation.getErrors()));
-		}
+		return badRequest(errorsAsJson(contextValidation.getErrors()));
 		// legit, should modify source to use contextvalidation
 	}
 
@@ -124,7 +119,7 @@ public class Boxes extends DocumentController<Box> {
 		if (boxSearch.datatable) {
 			MongoDBResult<Box> results =  mongoDBFinder(boxSearch, query);
 			List<Box> boxs = results.toList();
-			return ok(Json.toJson(new DatatableResponse<Box>(boxs, results.count())));
+			return ok(Json.toJson(new DatatableResponse<>(boxs, results.count())));
 		} else if (boxSearch.list) {
 			keys = new BasicDBObject();
 			keys.put("code", 1);
@@ -134,7 +129,7 @@ public class Boxes extends DocumentController<Box> {
 
 			MongoDBResult<Box> results = mongoDBFinder(boxSearch, query, keys);
 			List<Box> boxs = results.toList();
-			List<ListObject> los = new ArrayList<ListObject>();
+			List<ListObject> los = new ArrayList<>();
 			for (Box p: boxs) {					
 				los.add(new ListObject(p.code, p.code));								
 			}
@@ -149,7 +144,7 @@ public class Boxes extends DocumentController<Box> {
 	}
 
 	public static Query getQuery(BoxSearchForm boxSearch){
-		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
+		List<DBQuery.Query> queryElts = new ArrayList<>();
 		Query query = null;
 		queryElts.add(DBQuery.is("category", "Box"));
 

@@ -5,9 +5,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
-import java.util.function.Consumer;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -64,8 +63,8 @@ public class ContextValidation {
 	 * @param user user name
 	 */
 	public ContextValidation(String user) {
-		errors         = new TreeMap<String, List<ValidationError>>();
-		contextObjects = new TreeMap<String, Object>();
+		errors         = new TreeMap<>();
+		contextObjects = new TreeMap<>();
 		this.user      = user;
 	}
 
@@ -75,8 +74,8 @@ public class ContextValidation {
 	 * @param errors
 	 */
 	public ContextValidation(String user, Map<String,List<ValidationError>> errors) {
-		this.errors    = new TreeMap<String, List<ValidationError>>(errors);
-		contextObjects = new TreeMap<String, Object>();
+		this.errors    = new TreeMap<>(errors);
+		contextObjects = new TreeMap<>();
 		this.user      = user;
 	}
 	
@@ -134,7 +133,7 @@ public class ContextValidation {
 
 
 	public void setContextObjects(Map<String,Object> contextObjects) {
-		this.contextObjects = new TreeMap<String,Object>(contextObjects);
+		this.contextObjects = new TreeMap<>(contextObjects);
 	}
 
 	/*

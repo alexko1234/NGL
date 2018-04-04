@@ -2,12 +2,8 @@ package models.laboratory.common.description;
 
 import java.util.List;
 
-import models.laboratory.common.description.ObjectType.CODE;
-import models.laboratory.common.description.dao.StateDAO;
 import models.laboratory.common.description.dao.ValueDAO;
-import models.utils.ListObject;
 import models.utils.Model;
-import models.utils.Model.Finder;
 import models.utils.dao.AbstractDAO;
 import models.utils.dao.DAOException;
 

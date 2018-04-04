@@ -2,37 +2,24 @@ package sra.scripts;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import models.sra.submit.common.instance.Sample;
-import models.sra.submit.common.instance.Study;
-import models.utils.InstanceConstants;
-
-import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
-
-import sra.scripts.utils.CSVParsing;
-import sra.scripts.utils.DateTools;
-import sra.scripts.utils.Tools;
-
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
 
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.lfw.controllers.AbstractScript;
-
-
+import models.sra.submit.common.instance.Study;
+import models.utils.InstanceConstants;
+import sra.scripts.utils.CSVParsing;
+import sra.scripts.utils.DateTools;
+import sra.scripts.utils.Tools;
 
 public class RepriseHistoStudy_extId extends AbstractScript {
 	

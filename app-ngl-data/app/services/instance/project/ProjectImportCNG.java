@@ -7,14 +7,12 @@ import javax.inject.Inject;
 
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.NGLContext;
-import models.laboratory.parameter.index.Index;
 import models.laboratory.project.instance.Project;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNG;
-import play.Logger;
 
 /**
  * @author dnoisett
@@ -75,4 +73,5 @@ public class ProjectImportCNG extends AbstractImportDataCNG{
 		
 		logger.debug("end update projects");	
 	}
+	
 }

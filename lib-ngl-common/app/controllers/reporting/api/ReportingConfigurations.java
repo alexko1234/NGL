@@ -11,29 +11,25 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.reporting.instance.ReportingConfiguration;
-import models.utils.InstanceConstants;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
+import com.mongodb.BasicDBObject;
+
+import controllers.DocumentController;
+//import controllers.CommonController;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
+import models.laboratory.reporting.instance.ReportingConfiguration;
+import models.utils.InstanceConstants;
 //import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
-
-import com.mongodb.BasicDBObject;
-
-import controllers.APICommonController;
-import controllers.DocumentController;
-//import controllers.CommonController;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.play.NGLContext;
 
 public class ReportingConfigurations extends DocumentController<ReportingConfiguration> {// CommonController {
 
@@ -59,7 +55,7 @@ public class ReportingConfigurations extends DocumentController<ReportingConfigu
 			MongoDBResult<ReportingConfiguration> results = mongoDBFinder(form, q, keys);
 			//MongoDBResult<ReportingConfiguration> results = mongoDBFinder(InstanceConstants.REPORTING_CONFIG_COLL_NAME, form, ReportingConfiguration.class, q, keys);				
 			List<ReportingConfiguration> reportingConfigurations = results.toList();
-			return ok(Json.toJson(new DatatableResponse<ReportingConfiguration>(reportingConfigurations, results.count())));
+			return ok(Json.toJson(new DatatableResponse<>(reportingConfigurations, results.count())));
 		} else {
 			MongoDBResult<ReportingConfiguration> results = mongoDBFinder(form, q, keys);	
 			//MongoDBResult<ReportingConfiguration> results = mongoDBFinder(InstanceConstants.REPORTING_CONFIG_COLL_NAME, form, ReportingConfiguration.class, q, keys);							
@@ -69,7 +65,7 @@ public class ReportingConfigurations extends DocumentController<ReportingConfigu
 	}
 	
 	private static Query getQuery(ConfigurationsSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		Query query = null;
 		
 		if (CollectionUtils.isNotEmpty(form.pageCodes)) { //all
@@ -82,13 +78,12 @@ public class ReportingConfigurations extends DocumentController<ReportingConfigu
 		return query;
 	}
 
+	@Override
 	public /*static*/ Result get(String code) {
 		ReportingConfiguration reportingConfiguration =  getReportingConfiguration(code);		
-		if (reportingConfiguration != null) {
+		if (reportingConfiguration != null) 
 			return ok(Json.toJson(reportingConfiguration));	
-		} else {
-			return notFound();
-		}			
+		return notFound();
 	}
 	
 	public /*static*/ Result save() {
@@ -145,6 +140,7 @@ public class ReportingConfigurations extends DocumentController<ReportingConfigu
 		}				
 	}
 	
+	@Override
 	public /*static*/ Result delete(String code) {
 		ReportingConfiguration reportingConfiguration =  getReportingConfiguration(code);
 		if (reportingConfiguration == null)

@@ -1,18 +1,16 @@
 package models.utils;
 
-import static fr.cea.ig.lfw.utils.Hashing.hash;
 import static fr.cea.ig.lfw.utils.Equality.objectEquals;
 import static fr.cea.ig.lfw.utils.Equality.typedEquals;
+import static fr.cea.ig.lfw.utils.Hashing.hash;
 
 import java.util.List;
 import java.util.function.Supplier;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import fr.cea.ig.lfw.utils.LazyLambdaSupplier;
 import models.utils.dao.AbstractDAO;
 import models.utils.dao.DAOException;
-//import play.Logger;
 import play.api.modules.spring.Spring;
 
 // TODO: fix serialization uid but not serializable

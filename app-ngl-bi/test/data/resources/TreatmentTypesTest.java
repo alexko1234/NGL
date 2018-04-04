@@ -1,15 +1,12 @@
 package data.resources;
 
-import static org.fest.assertions.Assertions.assertThat;
-
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
-
-import fr.cea.ig.play.test.WSHelper;
 //import ngl.bi.AbstractBIServerTest;
 import static ngl.bi.Global.af;
-//import play.Logger;
+import static org.fest.assertions.Assertions.assertThat;
+
+import org.junit.Test;
+
+import fr.cea.ig.play.test.WSHelper;
 import play.libs.ws.WSResponse;
 
 //@FixMethodOrder(MethodSorters.NAME_ASCENDING)

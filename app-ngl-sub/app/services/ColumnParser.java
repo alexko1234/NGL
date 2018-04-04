@@ -1,14 +1,10 @@
 package services;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +21,7 @@ import models.sra.submit.util.SraException;
 public class ColumnParser {
 
 	//private Map<String, String> mapAllowedFields =  new HashMap<String, String>();
-	private List<String> allowedFields =  new ArrayList<String>();
+	private List<String> allowedFields =  new ArrayList<>();
 
 	private String keyField = ""; // champs cle unique du fichier permettant d'identifier l'objet.
 	private String separator= "\\|";
@@ -166,17 +162,16 @@ public class ColumnParser {
 				
 				if (valFieldsInFile.length != nameFieldsInFile.length) {
 					throw new SraException("line no match whith legend, line=: '" + ligne +"' legend='"+ legend);
-				} else {
-					Map<String, String> mapLine =  new HashMap<String, String>();
-					//System.out.println("cle de mapLine='"+mapLine.get(keyField)+"'");
-					for(int i =0; i < nameFieldsInFile.length ; i++) {
-						//System.out.println("nameFieldsInFile = " + nameFieldsInFile[i]);
-						Tools tools = new Tools();
-						mapLine.put(nameFieldsInFile[i], tools.clean(valFieldsInFile[i]));
-						System.out.println("Champ '" + nameFieldsInFile[i] + "' et valeur '" + tools.clean(valFieldsInFile[i]) + "'");
-					} 	
-					userCnsObject.add(factory.create(mapLine));
 				}
+				Map<String, String> mapLine =  new HashMap<>();
+				//System.out.println("cle de mapLine='"+mapLine.get(keyField)+"'");
+				for(int i =0; i < nameFieldsInFile.length ; i++) {
+					//System.out.println("nameFieldsInFile = " + nameFieldsInFile[i]);
+					Tools tools = new Tools();
+					mapLine.put(nameFieldsInFile[i], tools.clean(valFieldsInFile[i]));
+					System.out.println("Champ '" + nameFieldsInFile[i] + "' et valeur '" + tools.clean(valFieldsInFile[i]) + "'");
+				} 	
+				userCnsObject.add(factory.create(mapLine));
 			}	
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -237,16 +232,15 @@ public class ColumnParser {
 				if (valFieldsInFile.length != nameFieldsInFile.length) {
 					//System.out.println("!!!!!!!!!!!!!!!!!ligne  :" + ligne);
 					throw new SraException("no match pour la ligne : '" + ligne + "'");
-				} else {
-					Map<String, String> mapLine =  new HashMap<String, String>();
-					Tools tools = new Tools();
-					for(int i =0; i < nameFieldsInFile.length ; i++) {
-						mapLine.put(nameFieldsInFile[i], tools.clean(valFieldsInFile[i]));
-						//System.out.println("Champ '" + nameFieldsInFile[i] + "' et valeur '"+tools.clean(valFieldsInFile[i])+"'");
-					} 
-					//System.out.println("cle de mapLine='"+mapLine.get(keyField)+"'");
-					mapUserObject.put(mapLine.get(keyField), factory.create(mapLine));
 				}
+				Map<String, String> mapLine =  new HashMap<>();
+				Tools tools = new Tools();
+				for(int i =0; i < nameFieldsInFile.length ; i++) {
+					mapLine.put(nameFieldsInFile[i], tools.clean(valFieldsInFile[i]));
+					//System.out.println("Champ '" + nameFieldsInFile[i] + "' et valeur '"+tools.clean(valFieldsInFile[i])+"'");
+				} 
+				//System.out.println("cle de mapLine='"+mapLine.get(keyField)+"'");
+				mapUserObject.put(mapLine.get(keyField), factory.create(mapLine));				
 			}	
 		} catch (IOException e) {
 			e.printStackTrace();

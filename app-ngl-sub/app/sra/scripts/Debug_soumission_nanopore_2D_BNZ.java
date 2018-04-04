@@ -2,40 +2,28 @@ package sra.scripts;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang.StringUtils;
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-
-import services.FileAcServices;
-import services.SubmissionServices;
-import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.lfw.controllers.AbstractScript;
 import mail.MailServiceException;
-import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.run.instance.InstrumentUsed;
 import models.laboratory.run.instance.ReadSet;
-import models.sra.submit.common.instance.Readset;
-import models.sra.submit.common.instance.Sample;
-import models.sra.submit.common.instance.Study;
 import models.sra.submit.common.instance.Submission;
-import models.sra.submit.sra.instance.Experiment;
 import models.sra.submit.sra.instance.RawData;
 import models.sra.submit.sra.instance.Run;
 import models.sra.submit.util.SraException;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
+import services.FileAcServices;
+import services.SubmissionServices;
+import validation.ContextValidation;
 
 public class Debug_soumission_nanopore_2D_BNZ extends AbstractScript {
-	
+
 	private FileAcServices     fileAcServices;
 //	private SubmissionServices submissionServices;
 	

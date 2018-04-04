@@ -1,24 +1,8 @@
 package controllers.main.tpl;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-
-import models.administration.authorisation.Permission;
-import models.laboratory.common.description.CodeLabel;
-import models.laboratory.common.description.dao.CodeLabelDAO;
-import models.laboratory.resolutions.instance.Resolution;
-import models.laboratory.resolutions.instance.ResolutionConfiguration;
-import models.laboratory.run.instance.ReadSet;
-import models.laboratory.run.instance.Run;
-import models.utils.InstanceConstants;
-import models.laboratory.valuation.instance.ValuationCriteria;
-import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.authentication.Authenticated;
-import fr.cea.ig.authentication.Authentication;
 import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.lfw.utils.JavascriptGeneration.Codes;
@@ -29,16 +13,8 @@ import fr.cea.ig.ngl.support.NGLJavascript;
 import fr.cea.ig.ngl.support.api.CodeLabelAPIHolder;
 import fr.cea.ig.ngl.support.api.ResolutionConfigurationAPIHolder;
 import fr.cea.ig.ngl.support.api.ValuationCriteriaAPIHolder;
-import jsmessages.JsMessages;
-import play.Logger;
-import play.api.modules.spring.Spring;
-import play.i18n.Lang;
-import play.libs.Scala;
-import play.mvc.Controller;
-import play.mvc.Http.Context;
 import play.mvc.Result;
 import views.html.home ;
-
 
 public class Main extends NGLController
                 implements NGLJavascript,
@@ -56,15 +32,12 @@ public class Main extends NGLController
 		this.home = home;
 	}
 
-
 	@Authenticated
 	@Historized
 	@Authorized.Read
 	public Result home() {
 		return ok(home.render());
 	}
-
-
 	
 	public Result jsCodes() {
 		return result(() -> {
@@ -143,6 +116,4 @@ public class Main extends NGLController
 			 .add(tdc, "IntegratedDepth",          "IZZ");
 	}
 	
-
-
 }

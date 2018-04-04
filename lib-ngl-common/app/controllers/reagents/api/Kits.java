@@ -4,20 +4,11 @@ package controllers.reagents.api;
 //import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
-
-import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.reagent.description.AbstractCatalog;
-import models.laboratory.reagent.instance.Kit;
-import models.laboratory.reagent.utils.ReagentCodeHelper;
-import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
-import models.utils.ListObject;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -25,19 +16,25 @@ import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-import play.data.Form;
-import play.libs.Json;
-import play.mvc.Result;
-import play.mvc.Results;
-import validation.ContextValidation;
-import views.components.datatable.DatatableResponse;
-
 import com.mongodb.BasicDBObject;
 
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
+import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.reagent.description.AbstractCatalog;
+import models.laboratory.reagent.instance.Kit;
+import models.laboratory.reagent.utils.ReagentCodeHelper;
+import models.utils.InstanceConstants;
+import models.utils.InstanceHelpers;
+import models.utils.ListObject;
+import play.data.Form;
+import play.libs.Json;
+import play.mvc.Result;
+import play.mvc.Results;
+import validation.ContextValidation;
+import views.components.datatable.DatatableResponse;
 
 public class Kits extends DocumentController<Kit>{
 
@@ -49,14 +46,16 @@ public class Kits extends DocumentController<Kit>{
 		kitSearchForm = ctx.form(KitSearchForm.class);
 	}
 
-	public Result get(String code){
+	@Override
+	public Result get(String code) {
 		Kit kit = getObject(code);
 		if (kit != null)
 			return ok(Json.toJson(kit));
 		return badRequest();
 	}
 
-	public Result delete(String code){
+	@Override
+	public Result delete(String code) {
 		MongoDBDAO.delete(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, AbstractCatalog.class, DBQuery.or(DBQuery.is("code", code),DBQuery.is("kitCode", code)));
 		return ok();
 	}
@@ -114,7 +113,7 @@ public class Kits extends DocumentController<Kit>{
 			MongoDBResult<Kit> results =  mongoDBFinder(kitSearch, query);
 			List<Kit> kits = results.toList();
 
-			return ok(Json.toJson(new DatatableResponse<Kit>(kits, results.count())));
+			return ok(Json.toJson(new DatatableResponse<>(kits, results.count())));
 		} else if (kitSearch.list) {
 			keys = new BasicDBObject();
 			keys.put("code", 1);
@@ -125,7 +124,7 @@ public class Kits extends DocumentController<Kit>{
 
 			MongoDBResult<Kit> results = mongoDBFinder(kitSearch, query, keys);
 			List<Kit> kits = results.toList();
-			List<ListObject> los = new ArrayList<ListObject>();
+			List<ListObject> los = new ArrayList<>();
 			for(Kit p: kits){					
 				los.add(new ListObject(p.code, p.code));								
 			}
@@ -143,7 +142,7 @@ public class Kits extends DocumentController<Kit>{
 	}
 
 	private static Query getQuery(KitSearchForm kitSearch){
-		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
+		List<DBQuery.Query> queryElts = new ArrayList<>();
 		Query query = null;
 		queryElts.add(DBQuery.is("category", "Kit"));
 

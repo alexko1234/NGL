@@ -35,7 +35,7 @@ public class Process extends DBObject implements IValidation {
 	public State state;
 
 	public TraceInformation traceInformation;
-	public List<Comment> comments = new ArrayList<Comment>(0);
+	public List<Comment> comments = new ArrayList<>(0);
 
 	public Map<String,PropertyValue> properties;
 

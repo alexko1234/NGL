@@ -15,7 +15,6 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
 import controllers.DocumentController;
-import controllers.sra.configurations.api.Configurations;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.NGLContext;
 import models.sra.submit.common.instance.AbstractSample;
@@ -44,6 +43,7 @@ public class Samples extends DocumentController<AbstractSample> {
 		sampleForm = ctx.form(AbstractSample.class);
 	}
 
+	@Override
 	public Result get(String code) {
 		return ok(Json.toJson(getSample(code)));
 	}
@@ -67,11 +67,9 @@ public class Samples extends DocumentController<AbstractSample> {
 		//MongoDBResult<AbstractSample> results = mongoDBFinder(form, query);							
 		//List<AbstractSample> list = results.toList();
 		List<AbstractSample> list = MongoDBDAO.find(InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class, query).toList();
-		if(form.datatable){
-			return ok(Json.toJson(new DatatableResponse<AbstractSample>(list, list.size())));
-		}else{
-			return ok(Json.toJson(list));
-			}
+		if (form.datatable)
+			return ok(Json.toJson(new DatatableResponse<>(list, list.size())));
+		return ok(Json.toJson(list));
 	}	
 	
 	
@@ -121,7 +119,7 @@ public class Samples extends DocumentController<AbstractSample> {
 	}
 
 	private Query getQuery(SamplesSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		Query query = null;
 		if (CollectionUtils.isNotEmpty(form.projCodes)) { //
 			queries.add(DBQuery.in("projectCode", form.projCodes)); // doit pas marcher car pour state.code

@@ -2,15 +2,12 @@ package models.administration.authorisation.description.dao;
 
 import java.util.List;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
 import models.administration.authorisation.Permission;
 import models.utils.dao.AbstractDAODefault;
 import models.utils.dao.DAOException;
-import play.Logger;
-import play.mvc.Results;
 
 /**
  * 
@@ -38,7 +35,7 @@ public class PermissionDAO extends AbstractDAODefault<Permission>{
 				+ "INNER JOIN user AS u ON ur.user_id = u.id "
 				+ "WHERE u.login=?";
 		//Logger.debug(sql);
-		BeanPropertyRowMapper<Permission> mapper = new BeanPropertyRowMapper<Permission>(entityClass);
+		BeanPropertyRowMapper<Permission> mapper = new BeanPropertyRowMapper<>(entityClass);
 		return this.jdbcTemplate.query(sql, mapper, aLogin);
 	}
 }

@@ -8,29 +8,26 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import models.laboratory.protocol.instance.Protocol;
-import models.utils.InstanceConstants;
-import models.utils.ListObject;
-import models.utils.dao.DAOException;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
 
 import com.mongodb.BasicDBObject;
 
-import play.data.Form;
-import play.libs.Json;
-import play.mvc.Result;
-import play.mvc.Results;
-import views.components.datatable.DatatableResponse;
-//import controllers.CommonController;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.mongo.DBQueryBuilder;
 import fr.cea.ig.play.NGLContext;
+import models.laboratory.protocol.instance.Protocol;
+import models.utils.InstanceConstants;
+import models.utils.ListObject;
+import models.utils.dao.DAOException;
+import play.data.Form;
+import play.libs.Json;
+import play.mvc.Result;
+import play.mvc.Results;
+import views.components.datatable.DatatableResponse;
 
 //TODO: cleanup implementation
 //@SuppressWarnings("deprecation")
@@ -44,6 +41,7 @@ public class Protocols extends Protocols2 { //extends CommonController{
 		super(ctx);
 	}
 
+	@Override
 	public Result get(String code){
 		return super.get(code);
 	}
@@ -129,6 +127,7 @@ class Protocols2 extends DocumentController<Protocol> {
 	}
 
 	//TODO replace by get method provided by APICommonController
+	@Override
 	public Result get(String code) {
 		Protocol protocol = MongoDBDAO.findByCode(InstanceConstants.PROTOCOL_COLL_NAME, Protocol.class, code);
 		if (protocol == null)
@@ -140,14 +139,14 @@ class Protocols2 extends DocumentController<Protocol> {
 		Form<ProtocolsSearchForm> protocolTypeFilledForm = filledFormQueryString(protocolForm,ProtocolsSearchForm.class);
 		ProtocolsSearchForm protocolsSearch = protocolTypeFilledForm.get();		
 		DBQuery.Query query = getQuery(protocolsSearch);
-		List<Protocol> protocols = new ArrayList<Protocol>();
+		List<Protocol> protocols = new ArrayList<>();
 		protocolsSearch.orderBy="code";				
 
 		if (protocolsSearch.datatable) {
 			MongoDBResult<Protocol> results = mongoDBFinder(protocolsSearch, query);
 			//				MongoDBResult<Protocol> results = mongoDBFinder(InstanceConstants.PROTOCOL_COLL_NAME, protocolsSearch, Protocol.class, query);
 			protocols = results.toList();
-			return ok(Json.toJson(new DatatableResponse<Protocol>(protocols, protocols.size()))); 
+			return ok(Json.toJson(new DatatableResponse<>(protocols, protocols.size()))); 
 		} else if(protocolsSearch.list) {	
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
@@ -156,7 +155,7 @@ class Protocols2 extends DocumentController<Protocol> {
 			MongoDBResult<Protocol> results = mongoDBFinder(protocolsSearch, query);
 			//				MongoDBResult<Protocol> results = mongoDBFinder(InstanceConstants.PROTOCOL_COLL_NAME, protocolsSearch, Protocol.class, query, keys);
 			protocols = results.toList();
-			List<ListObject> lop = new ArrayList<ListObject>();
+			List<ListObject> lop = new ArrayList<>();
 			for(Protocol p:protocols){
 				lop.add(new ListObject(p.code,p.name));
 			}
@@ -175,7 +174,7 @@ class Protocols2 extends DocumentController<Protocol> {
 	 * @throws DAOException 
 	 */
 	public static DBQuery.Query getQuery(ProtocolsSearchForm protocolsSearch){
-		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
+		List<DBQuery.Query> queryElts = new ArrayList<>();
 
 		if (CollectionUtils.isNotEmpty(protocolsSearch.experimentTypeCodes)) {
 			queryElts.add(DBQuery.in("experimentTypeCodes",protocolsSearch.experimentTypeCodes));

@@ -1,9 +1,7 @@
 package models.laboratory.common.description;
 
-// TODO: fix doc generation that produces an error with the unqualified name
-import models.utils.Model.Finder;
-import models.utils.dao.AbstractDAO;
 import models.laboratory.common.description.dao.MeasureCategoryDAO;
+import models.utils.dao.AbstractDAO;
 
 public class MeasureCategory extends AbstractCategory<MeasureCategory> {
 		

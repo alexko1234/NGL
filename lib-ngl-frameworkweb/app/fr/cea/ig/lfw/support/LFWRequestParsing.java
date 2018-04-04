@@ -14,7 +14,6 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bson.BSONObject;
-import org.terracotta.statistics.archive.SampleSink;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mongodb.BasicDBObject;
@@ -37,7 +36,7 @@ public interface LFWRequestParsing extends LFWApplicationHolder {
 	
 	default <T> T objectFromRequestQueryString(Class<T> clazz) {
 		Map<String, String[]> queryString = request().queryString();
-		Map<String, Object> transformMap = new HashMap<String, Object>();
+		Map<String, Object> transformMap = new HashMap<>();
 		for (String key : queryString.keySet()) {
 			try {
 				if (isNotEmpty(queryString.get(key))) {				
@@ -62,7 +61,7 @@ public interface LFWRequestParsing extends LFWApplicationHolder {
 	
 	default <T> List<T> objectListFromRequestBody(Class<T> clazz) {		
 		JsonNode json = request().body().asJson();
-		List<T> results = new ArrayList<T>();
+		List<T> results = new ArrayList<>();
 		json.forEach( n -> results.add(Json.fromJson(n, clazz)));
 		return results;
 	}

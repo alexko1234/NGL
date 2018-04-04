@@ -1,6 +1,5 @@
 package controllers.sra.submissions.api;
 
-import java.io.File;
 import java.util.List;
 
 import views.components.datatable.DatatableForm;

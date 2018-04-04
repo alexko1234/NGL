@@ -8,7 +8,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import models.laboratory.common.instance.PropertyValue;
+import org.mongojack.DBQuery;
+
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.property.PropertySingleValue;
@@ -24,15 +26,11 @@ import models.laboratory.instrument.instance.InstrumentUsed;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
-import models.utils.instance.ExperimentHelper;
-
-import org.mongojack.DBQuery;
-
-import play.Logger;
 import validation.ContextValidation;
-import fr.cea.ig.MongoDBDAO;
 
 public class ExperimentImport {
+
+	private static final play.Logger.ALogger logger = play.Logger.of(ExperimentImport.class);
 	
 	protected static final String  EXPERIMENT_TYPE_CODE_DEFAULT = "illumina-depot"; 
 	
@@ -43,7 +41,7 @@ public class ExperimentImport {
 
 		//define code
 		experiment.code=rs.getString("code_exp");
-		Logger.debug("Experiment code :"+experiment.code);
+		logger.debug("Experiment code :"+experiment.code);
 		
 		//define experimentTypeCode
 		String experimentTypeCode=EXPERIMENT_TYPE_CODE_DEFAULT;
@@ -53,10 +51,10 @@ public class ExperimentImport {
 		try {
 			experimentType = ExperimentType.find.findByCode(experimentTypeCode);
 		} catch (DAOException e) {
-			Logger.error("",e);
+			logger.error("",e);
 			return null;
 		}
-		if (experimentType==null) {
+		if (experimentType == null) {
 			ctxErr.addErrors("code", "error.codeNotExist", experimentTypeCode, experiment.code);
 			return null;
 		}
@@ -94,7 +92,7 @@ public class ExperimentImport {
 		try {
 			instrumentUsedType = InstrumentUsedType.find.findByCode(instrumentUsedTypeCode);
 		} catch (DAOException e) {
-			Logger.error("",e);
+			logger.error("",e);
 			return null;
 		}
 		if (instrumentUsedType==null) {
@@ -128,23 +126,22 @@ public class ExperimentImport {
 		
 		
 		//define atomicTransfertMethods
-		List<AtomicTransfertMethod> hm = new ArrayList<AtomicTransfertMethod>(); 
+		List<AtomicTransfertMethod> hm = new ArrayList<>(); 
 
 		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code",rs.getString("code_flowcell"))).toList();
-		Set<String> projectCodes = new HashSet<String>();
-		Set<String> sampleCodes = new HashSet<String>();
+		Set<String> projectCodes = new HashSet<>();
+		Set<String> sampleCodes = new HashSet<>();
 		
 		if (containers == null || containers.size() == 0) {
-			Logger.error("Containers with support.code =" + rs.getString("code_flowcell") + " non trouvés dans la base !");
-		}
-		else {
+			logger.error("Containers with support.code =" + rs.getString("code_flowcell") + " non trouvés dans la base !");
+		} else {
 			int i = 0;
 			for (Container c : containers) {			
 				//define one atomicTransfertMethod for each container
 				OneToVoidContainer atomicTransfertMethod = new OneToVoidContainer();		
 				atomicTransfertMethod.line = "1";
 				atomicTransfertMethod.column = "1";
-				atomicTransfertMethod.inputContainerUseds = new ArrayList<InputContainerUsed>();
+				atomicTransfertMethod.inputContainerUseds = new ArrayList<>();
 				InputContainerUsed cnt = new InputContainerUsed();
 				cnt.code = c.code;
 				atomicTransfertMethod.inputContainerUseds.add(cnt);

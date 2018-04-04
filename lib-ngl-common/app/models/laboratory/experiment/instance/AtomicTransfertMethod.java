@@ -2,20 +2,16 @@ package models.laboratory.experiment.instance;
 
 import java.util.List;
 
-import models.laboratory.common.instance.Comment;
-import models.laboratory.container.description.ContainerSupportCategory;
-import play.Logger;
-import validation.ContextValidation;
-import validation.IValidation;
-import validation.experiment.instance.AtomicTransfertMethodValidationHelper;
-import validation.utils.ValidationHelper;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
+import models.laboratory.common.instance.Comment;
+import models.laboratory.container.description.ContainerSupportCategory;
+import validation.ContextValidation;
+import validation.IValidation;
+import validation.experiment.instance.AtomicTransfertMethodValidationHelper;
 
 @JsonTypeInfo(use=Id.NAME, include=As.PROPERTY, property="class", defaultImpl= models.laboratory.experiment.instance.OneToOneContainer.class)
 @JsonSubTypes({

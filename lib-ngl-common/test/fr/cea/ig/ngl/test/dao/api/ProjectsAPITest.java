@@ -5,11 +5,9 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.Date;
 import java.util.List;
-import java.util.TreeMap;
 
 import javax.inject.Singleton;
 
@@ -25,11 +23,11 @@ import fr.cea.ig.ngl.test.AbstractAPITests;
 import fr.cea.ig.ngl.test.dao.api.factory.TestProjectFactory;
 import models.laboratory.project.instance.Project;
 import play.Logger.ALogger;
-import play.data.validation.ValidationError;
 import utils.AbstractTests;
 
 /**
  * Test {@link ProjectsAPI} methods
+ * 
  * @author ajosso
  *
  */
@@ -54,7 +52,6 @@ public class ProjectsAPITest extends AbstractTests implements AbstractAPITests {
 		assertNotNull(api);
 		refProject = TestProjectFactory.project(USER);
 	}
-
 
 	@Override
 	public void setUpData() {

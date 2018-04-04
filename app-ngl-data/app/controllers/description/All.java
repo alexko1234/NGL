@@ -41,7 +41,7 @@ public class All extends Controller { // NGLController { // NGLBaseController { 
 	
 	public Result save() {
 		try {
-			Map<String,List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
+			Map<String,List<ValidationError>> errors = new HashMap<>();
 			InstituteService.main(errors);
 			ObjectTypeService.main(errors);
 			StateService.main(errors); 
@@ -57,11 +57,9 @@ public class All extends Controller { // NGLController { // NGLBaseController { 
 			ProjectService.main(errors);
 			RunService.main(errors);
 			TreatmentService.main(errors);
-			if (errors.size() > 0) {
+			if (errors.size() > 0)
 				return badRequest(Json.toJson(errors));
-			} else {
-				return ok();
-			}
+			return ok();
 		} catch (Exception e) {
 			Logger.error(e.getMessage(), e);
 			return internalServerError(e.getMessage());

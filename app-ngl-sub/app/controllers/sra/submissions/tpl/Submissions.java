@@ -1,9 +1,14 @@
 package controllers.sra.submissions.tpl;
 
-// import play.Routes;
-import play.routing.JavaScriptReverseRouter;
-import play.mvc.Result;
+import javax.inject.Inject;
 
+//import controllers.NGLBaseController;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.lfw.Historized;
+import fr.cea.ig.ngl.NGLApplication;
+import fr.cea.ig.ngl.NGLController;
+import fr.cea.ig.ngl.support.NGLJavascript;
+import play.mvc.Result;
 import views.html.submissions.activate;
 import views.html.submissions.consultation;
 import views.html.submissions.create;
@@ -11,20 +16,8 @@ import views.html.submissions.details;
 import views.html.submissions.home;
 import views.html.submissions.validation;
 
-import javax.inject.Inject;
-
-//import controllers.NGLBaseController;
-import fr.cea.ig.authentication.Authenticated;
-import fr.cea.ig.authorization.Authorized;
-import fr.cea.ig.lfw.Historized;
-import fr.cea.ig.ngl.NGLApplication;
-import fr.cea.ig.ngl.NGLController;
-import fr.cea.ig.ngl.support.NGLJavascript;
-import fr.cea.ig.play.NGLContext;
-
 // import controllers.CommonController;                  // done
 //public class Submissions extends -CommonController {   // done
-
 public class Submissions extends NGLController implements NGLJavascript  { // NGLBaseController {
 	
 	private final home         home;

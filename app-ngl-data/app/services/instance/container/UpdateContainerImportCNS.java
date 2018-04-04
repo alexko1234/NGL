@@ -32,14 +32,13 @@ public abstract class UpdateContainerImportCNS extends AbstractImportDataCNS {
 	}
 	
 	public void updateContainer(String sql,ContextValidation contextError,String containerCategoryCode,String experimentTypeCode) throws SQLException {
-		List<Container> containers=	limsServices.findContainersToCreate(sql,contextError, containerCategoryCode,null,experimentTypeCode);
-		List<Container> containerUpdated=new ArrayList<Container>();
+		List<Container> containers = limsServices.findContainersToCreate(sql,contextError, containerCategoryCode,null,experimentTypeCode);
+		List<Container> containerUpdated = new ArrayList<>();
 		for(Container containerUpdate:containers){
 			Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,containerUpdate.code);
-			if (container==null) {
+			if (container == null) {
 				contextError.addErrors("container.code", ValidationConstants.ERROR_CODE_NOTEXISTS_MSG , containerUpdate.code);
-			}
-			else if(container.state.code!=containerUpdate.state.code){
+			} else if(container.state.code!=containerUpdate.state.code){
 				//Update state container
 				ContextValidation contextValidation= new ContextValidation(Constants.NGL_DATA_USER);
 				if(containerUpdate.state.code.equals("IS")&& CollectionUtils.isNotEmpty(container.processCodes)){

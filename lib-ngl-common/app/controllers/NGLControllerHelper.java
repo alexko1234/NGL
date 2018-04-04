@@ -37,7 +37,7 @@ public class NGLControllerHelper {
 	public static List<Query> generateQueriesForProperties(Map<String, List<String>> properties,
 			                                               Level.CODE level, 
 			                                               String prefixPropertyPath) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		try {
 			for (String keyValue : properties.keySet()) {
 				String[] key = keyValue.split("\\|",2);
@@ -107,7 +107,7 @@ public class NGLControllerHelper {
 			                                                        List<String>>> treatmentProperties, 
 																	Level.CODE level, 
 																	String prefixPropertyPath) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		for (String key : treatmentProperties.keySet()) {
 			queries.addAll(generateQueriesForProperties(treatmentProperties.get(key), level, prefixPropertyPath+"."+key));			
 		}
@@ -115,7 +115,7 @@ public class NGLControllerHelper {
 	}
 
 	public static Collection<? extends Query> generateExistsQueriesForFields(Map<String, Boolean> existingFields) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		if (MapUtils.isNotEmpty(existingFields)) { //all
 			for (String field : existingFields.keySet()) {
 				if (Boolean.FALSE.equals(existingFields.get(field))) {
@@ -129,7 +129,7 @@ public class NGLControllerHelper {
 	}
 	
 	public static Collection<? extends Query> generateQueriesForFields(Map<String, String> fieldsQueries) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		if (MapUtils.isNotEmpty(fieldsQueries)) {
 			try {
 				for (String keyValue : fieldsQueries.keySet()) {

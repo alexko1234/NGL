@@ -3,7 +3,6 @@ package fr.cea.ig.play.test;
 import java.io.IOException;
 
 import play.Application;
-import play.libs.ws.WSClient;
 import play.test.TestServer;
 import play.test.WSTestClient;
 

@@ -5,10 +5,7 @@ import java.util.List;
 import models.laboratory.common.description.AbstractCategory;
 import models.laboratory.instrument.description.dao.InstrumentCategoryDAO;
 import models.utils.dao.AbstractDAO;
-// import models.laboratory.instrument.description.dao.InstrumentDAO;
 import models.utils.dao.DAOException;
-//TODO: fix doc generation that produces an error with the unqualified name
-import models.utils.Model.Finder;
 
 public class InstrumentCategory extends AbstractCategory<InstrumentCategory> {
 	

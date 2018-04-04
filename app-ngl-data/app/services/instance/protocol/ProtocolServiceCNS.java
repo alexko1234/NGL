@@ -1,6 +1,7 @@
 package services.instance.protocol;
 
-import static services.instance.InstanceFactory.*;
+import static services.instance.InstanceFactory.newPSV;
+import static services.instance.InstanceFactory.newProtocol;
 
 import java.util.ArrayList;
 //import java.util.Arrays;
@@ -43,7 +44,7 @@ public class ProtocolServiceCNS {
 	}
 
 	public static void saveProtocols(ContextValidation ctx){		
-		List<Protocol> lp = new ArrayList<Protocol>();
+		List<Protocol> lp = new ArrayList<>();
 		
 		lp.add(newProtocol("depot_opgen_ptr_1","Depot_Opgen_prt_1","path7","1","production", InstanceFactory.setExperimentTypeCodes("opgen-depot")));
 		

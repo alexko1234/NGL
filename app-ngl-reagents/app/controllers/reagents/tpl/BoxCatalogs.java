@@ -2,21 +2,14 @@ package controllers.reagents.tpl;
 
 import javax.inject.Inject;
 
-//import controllers.NGLBaseController;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.support.NGLJavascript;
-//import fr.cea.ig.play.NGLContext;
-// import controllers.CommonController;
-//import play.Routes;
 import play.mvc.Result;
 import views.html.catalogs.home;
-import views.html.catalogs.kitCatalogsCreation;
-import views.html.catalogs.kitCatalogsSearch;
-//import play.routing.JavaScriptReverseRouter;
 
 // public class BoxCatalogs extends -CommonController {
 public class BoxCatalogs extends NGLController implements NGLJavascript { // NGLBaseController {

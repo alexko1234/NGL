@@ -6,10 +6,7 @@ import java.util.List;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.dao.ExperimentTypeNodeDAO;
 import models.utils.Model;
-//TODO: fix doc generation that produces an error with the unqualified name
-import models.utils.Model.Finder;
 import models.utils.dao.AbstractDAO;
-import play.api.modules.spring.Spring;
 
 public class ExperimentTypeNode extends Model<ExperimentTypeNode> {
 
@@ -29,11 +26,11 @@ public class ExperimentTypeNode extends Model<ExperimentTypeNode> {
 	public boolean mandatoryTransfert = false; // Boolean.FALSE;
 
 	public ExperimentType experimentType;
-	public List<ExperimentTypeNode> previousExperimentTypeNodes=new ArrayList<ExperimentTypeNode>();
+	public List<ExperimentTypeNode> previousExperimentTypeNodes = new ArrayList<>();
 	public List<ExperimentType> previousExperimentTypes;
-	public List<ExperimentType> possibleQualityControlTypes=new ArrayList<ExperimentType>();
-	public List<ExperimentType> possiblePurificationTypes=new ArrayList<ExperimentType>();
-	public List<ExperimentType> possibleTransferts=new ArrayList<ExperimentType>();
+	public List<ExperimentType> possibleQualityControlTypes     = new ArrayList<>();
+	public List<ExperimentType> possiblePurificationTypes       = new ArrayList<>();
+	public List<ExperimentType> possibleTransferts              = new ArrayList<>();
 	
 	public ExperimentTypeNode() {
 		super(ExperimentTypeNodeDAO.class.getName());

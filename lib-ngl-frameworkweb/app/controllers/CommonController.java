@@ -25,22 +25,6 @@ import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.PropertyAccessorFactory;
 //import org.springframework.core.convert.TypeDescriptor;
 
-//import play.Logger;
-import play.data.DynamicForm;
-import play.data.Form;
-import play.libs.Json;
-import play.modules.jongo.MongoDBPlugin;
-import play.mvc.Controller;
-import play.mvc.Http.Context;
-import play.routing.JavaScriptReverseRouter;
-//import play.mvc.Results.StringChunks;
-//import play.mvc.Results.Chunks.Out;
-import play.mvc.Result;
-import play.mvc.With;
-// import scala.io.Source;
-import validation.ContextValidation;
-import views.components.datatable.DatatableForm;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Iterators;
 import com.mongodb.AggregationOptions;
@@ -53,8 +37,22 @@ import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
-
 import fr.cea.ig.mongo.MongoStreamer;
+//import play.Logger;
+import play.data.DynamicForm;
+import play.data.Form;
+import play.libs.Json;
+import play.modules.jongo.MongoDBPlugin;
+import play.mvc.Controller;
+import play.mvc.Http.Context;
+//import play.mvc.Results.StringChunks;
+//import play.mvc.Results.Chunks.Out;
+import play.mvc.Result;
+import play.mvc.With;
+import play.routing.JavaScriptReverseRouter;
+// import scala.io.Source;
+import validation.ContextValidation;
+import views.components.datatable.DatatableForm;
 
 // New version is probably MongoCommonController<T>
 
@@ -91,7 +89,7 @@ public abstract class CommonController extends Controller {
 	
 	protected static <T> List<Form<T>> getFilledFormList(Form<T> form, Class<T> clazz) {		
 		JsonNode json = request().body().asJson();
-		List<Form<T>> results = new ArrayList<Form<T>>();
+		List<Form<T>> results = new ArrayList<>();
 		Iterator<JsonNode> iterator = json.elements();
 		
 		while(iterator.hasNext()){
@@ -112,7 +110,7 @@ public abstract class CommonController extends Controller {
 	 */
 	protected static <T> Form<T> filledFormQueryString(Form<T> form, Class<T> clazz) {		
 		Map<String, String[]> queryString = request().queryString();
-		Map<String, Object> transformMap = new HashMap<String, Object>();
+		Map<String, Object> transformMap = new HashMap<>();
 		for (String key :queryString.keySet()) {
 			try {
 				if(isNotEmpty(queryString.get(key))){				
@@ -243,7 +241,7 @@ public abstract class CommonController extends Controller {
 	}
 	
 	protected static String getJSONKeys(DatatableForm form) {
-		Set<String> keys = new HashSet<String>();
+		Set<String> keys = new HashSet<>();
 		if(null != form.includes && form.includes.size() > 0 && !form.includes.contains("*")){
 			getIncludeJSONKeys(form.includes.toArray(new String[form.includes.size()]),keys);
 		}else if(null != form.excludes && form.excludes.size() > 0){
@@ -379,7 +377,7 @@ public abstract class CommonController extends Controller {
 			return MongoStreamer.okStream(all);
 		} else if(form.count) {
 			int count = all.count();
-			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			Map<String, Integer> m = new HashMap<>(1);
 			m.put("result", count);
 			return ok(Json.toJson(m));
 		} else {
@@ -398,7 +396,7 @@ public abstract class CommonController extends Controller {
 			return MongoStreamer.okStream(all);
 		} else if(form.count) {
 			int count = all.count();
-			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			Map<String, Integer> m = new HashMap<>(1);
 			m.put("result", count);
 			return ok(Json.toJson(m));
 		} else {
@@ -424,7 +422,7 @@ public abstract class CommonController extends Controller {
 			return MongoStreamer.okStream(all);
 		} else if(form.count) {
 			int count = Iterators.size(all);
-			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			Map<String, Integer> m = new HashMap<>(1);
 			m.put("result", count);
 			return ok(Json.toJson(m));
 		} else {

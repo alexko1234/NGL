@@ -7,6 +7,9 @@ import java.util.Map;
 
 // import junit.framework.Assert;
 import org.junit.Assert;
+import org.junit.Test;
+import org.springframework.dao.EmptyResultDataAccessException;
+
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.MeasureUnit;
@@ -34,10 +37,6 @@ import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
-
-import org.junit.Test;
-import org.springframework.dao.EmptyResultDataAccessException;
-
 //import play.Logger;
 //import play.Logger.ALogger;
 import play.api.modules.spring.Spring;
@@ -322,10 +321,10 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertFalse(InstrumentUsedType.find.isCodeExist(""));
 		Assert.assertNotNull(InstrumentUsedType.find.findByExperimentTypeCode(""));		
 		InstrumentUsedTypeDAO iDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
-		List<InstrumentUsedType> liut = new ArrayList<InstrumentUsedType>();
+		List<InstrumentUsedType> liut = new ArrayList<>();
 		liut = iDAO.findByExperimentId(0);
 		Assert.assertTrue(liut.size() >= 0);
-		Map<String, Object> m = new HashMap<String, Object>();
+		Map<String, Object> m = new HashMap<>();
 		m = iDAO.findTypeCodeAndCatCode(0);
 		Assert.assertTrue(m.size() >= 0);
 	}

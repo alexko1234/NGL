@@ -1,8 +1,6 @@
 package controllers.containers.api;
 
 
-import fr.cea.ig.mongo.MongoStreamer;
-
 import static validation.container.instance.ContainerValidationHelper.validateConcentration;
 import static validation.container.instance.ContainerValidationHelper.validateQuantity;
 import static validation.container.instance.ContainerValidationHelper.validateSize;
@@ -21,6 +19,26 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
+
+import com.mongodb.BasicDBObject;
+
+import controllers.DocumentController;
+import controllers.NGLControllerHelper;
+import controllers.QueryFieldsForm;
+import controllers.authorisation.Permission;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.authorization.Authorized;
+import fr.cea.ig.lfw.Historized;
+import fr.cea.ig.mongo.MongoStreamer;
+import fr.cea.ig.play.IGBodyParsers;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
@@ -34,42 +52,17 @@ import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang.time.DateUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
-
 import play.data.Form;
 import play.i18n.Lang;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
-import play.mvc.With;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableForm;
 import workflows.container.ContWorkflows;
-
-import com.mongodb.BasicDBObject;
-
-import controllers.CommonController;
-import controllers.DocumentController;
-import controllers.NGLControllerHelper;
-import controllers.QueryFieldsForm;
-import controllers.authorisation.Permission;
-import controllers.history.UserHistory;
-import fr.cea.ig.MongoDBDAO;
-
-import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.authentication.Authenticated;
-import fr.cea.ig.authorization.Authorized;
-import fr.cea.ig.lfw.Historized;
-import fr.cea.ig.play.IGBodyParsers;
-import fr.cea.ig.play.NGLContext;
 
 // Indirection so we can swap implementations.
 public class Containers extends Containers2 {
@@ -80,6 +73,7 @@ public class Containers extends Containers2 {
 	}
 	
 	// @Permission(value={"reading"})
+	@Override
 	@Authenticated
 	@Historized
 	@Authorized.Read
@@ -89,6 +83,7 @@ public class Containers extends Containers2 {
 	
 	// @Permission(value={"reading"})
 	
+	@Override
 	@Authenticated
 	@Historized
 	@Authorized.Read
@@ -98,6 +93,7 @@ public class Containers extends Containers2 {
 	
 	
 	// @Permission(value={"reading"})
+	@Override
 	@Authenticated
 	@Historized
 	@Authorized.Read
@@ -106,6 +102,7 @@ public class Containers extends Containers2 {
 	}
 	
 	// @Permission(value={"writing"})
+	@Override
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	@Authenticated
 	@Historized
@@ -115,6 +112,7 @@ public class Containers extends Containers2 {
 	}
 		
 	// @Permission(value={"writing"})
+	@Override
 	@Authenticated
 	@Historized
 	@Authorized.Write
@@ -123,6 +121,7 @@ public class Containers extends Containers2 {
 	}
 	
 	// @Permission(value={"writing"})
+	@Override
 	@Authenticated
 	@Historized
 	@Authorized.Write
@@ -139,7 +138,13 @@ class Containers2 extends DocumentController<Container> {
 	 */
 	private static final play.Logger.ALogger logger = play.Logger.of(Containers.class);
 	
-	private static final List<String> defaultKeys = 
+//	private static final List<String> defaultKeys = 
+//			Arrays.asList("code",   "importTypeCode","categoryCode",
+//					"state","valuation","traceInformation","properties",
+//					"comments","support","contents","volume",
+//					"concentration","quantity","size","projectCodes",
+//					"sampleCodes",  "fromTransformationTypeCodes","processTypeCodes");
+	private static final List<String> DEFAULT_KEYS = 
 			Arrays.asList("code",   "importTypeCode","categoryCode",
 					"state","valuation","traceInformation","properties",
 					"comments","support","contents","volume",
@@ -159,7 +164,7 @@ class Containers2 extends DocumentController<Container> {
 	
 	@Inject
 	public Containers2(NGLContext ctx, ContWorkflows workflows) {
-		super(ctx,InstanceConstants.CONTAINER_COLL_NAME, Container.class, defaultKeys);
+		super(ctx,InstanceConstants.CONTAINER_COLL_NAME, Container.class, DEFAULT_KEYS);
 		updateForm          = getNGLContext().form(QueryFieldsForm.class);
 		containerForm       = getNGLContext().form(Container.class);
 		// containerSearchForm = getNGLContext().form(ContainersSearchForm.class);
@@ -177,6 +182,7 @@ class Containers2 extends DocumentController<Container> {
 
 		return notFound();
 	}*/
+	@Override
 	@Permission(value={"reading"})
 	public Result get(String code) {
 		return super.get(code);
@@ -190,6 +196,7 @@ class Containers2 extends DocumentController<Container> {
 			return notFound();
 		}	
 	}*/
+	@Override
 	@Permission(value={"reading"})
 	public Result head(String code) {
 		return super.head(code);
@@ -217,14 +224,14 @@ class Containers2 extends DocumentController<Container> {
 			// MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
 			MongoDBResult<Container> results = mongoDBFinder(containersSearch,query, keys);
 			int count = results.count();
-			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			Map<String, Integer> m = new HashMap<>(1);
 			m.put("result", count);
 			return ok(Json.toJson(m));
 		} else if (containersSearch.list) {
 			// MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
 			MongoDBResult<Container> results = mongoDBFinder(containersSearch,query, keys);
 			List<Container> containers = results.toList();
-			List<ListObject> los = new ArrayList<ListObject>();
+			List<ListObject> los = new ArrayList<>();
 			for (Container p: containers) {
 				los.add(new ListObject(p.code, p.code));
 			}
@@ -379,7 +386,7 @@ class Containers2 extends DocumentController<Container> {
 			}else {
 				return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
 			}
-		}).collect(Collectors.toList());;
+		}).collect(Collectors.toList());
 		
 		return ok(Json.toJson(response));
 	}
@@ -391,12 +398,12 @@ class Containers2 extends DocumentController<Container> {
 	 * @throws DAOException 
 	 */
 	public static DBQuery.Query getQuery(ContainersSearchForm containersSearch) throws DAOException{		
-		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
+		List<DBQuery.Query> queryElts = new ArrayList<>();
 		Query query = DBQuery.empty();
 
 		
 		if(containersSearch.processProperties.size() > 0){	
-			List<String> processCodes = new ArrayList<String>();
+			List<String> processCodes = new ArrayList<>();
 			List<DBQuery.Query> listProcessQuery = NGLControllerHelper.generateQueriesForProperties(containersSearch.processProperties, Level.CODE.Process, "properties");
 			Query processQuery = DBQuery.and(listProcessQuery.toArray(new DBQuery.Query[queryElts.size()]));
 
@@ -443,8 +450,8 @@ class Containers2 extends DocumentController<Container> {
 				throw new RuntimeException("Missing nextProcessTypeCode to search container if sampleCodesFromIWCProcess");
 			
 			//1 extract all sampleCode from process in IW-C
-			Set<String> sampleCodes = new TreeSet<String>();
-			List<Pattern> samplePathRegex = new ArrayList<Pattern>();
+			Set<String> sampleCodes = new TreeSet<>();
+			List<Pattern> samplePathRegex = new ArrayList<>();
 			MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
 					DBQuery.is("state.code", "IW-C").is("typeCode", containersSearch.nextProcessTypeCode))
 			.cursor.forEach(p ->{
@@ -526,7 +533,7 @@ class Containers2 extends DocumentController<Container> {
 			queryElts.add(DBQuery.is("support.categoryCode", containersSearch.containerSupportCategory));
 		}else if(StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){
 			List<ContainerSupportCategory> containerSupportCategories = ContainerSupportCategory.find.findInputByExperimentTypeCode(containersSearch.nextExperimentTypeCode);
-			List<String> cs = new ArrayList<String>();
+			List<String> cs = new ArrayList<>();
 			for(ContainerSupportCategory c:containerSupportCategories){
 				cs.add(c.code);
 			}
@@ -537,7 +544,7 @@ class Containers2 extends DocumentController<Container> {
 
 
 
-		List<String> listePrevious = new ArrayList<String>();
+		List<String> listePrevious = new ArrayList<>();
 		//used in processes creation
 		if(StringUtils.isNotBlank(containersSearch.nextProcessTypeCode)){					
 					
@@ -574,7 +581,7 @@ class Containers2 extends DocumentController<Container> {
 		//used in experiment creation	
 		}else if(StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){
 			
-			List<DBQuery.Query> subQueryElts = new ArrayList<DBQuery.Query>();
+			List<DBQuery.Query> subQueryElts = new ArrayList<>();
 			List<ProcessType> processTypes=ProcessType.find.findByExperimentTypeCode(containersSearch.nextExperimentTypeCode);
 			if(CollectionUtils.isNotEmpty(processTypes)){
 				for(ProcessType processType:processTypes){
@@ -671,7 +678,7 @@ class Containers2 extends DocumentController<Container> {
 	private static DatatableForm updateForm(ContainersSearchForm form) {
 		if(form.includes.contains("default")){
 			form.includes.remove("default");
-			form.includes.addAll(defaultKeys);
+			form.includes.addAll(DEFAULT_KEYS);
 		}
 		return form;
 	}

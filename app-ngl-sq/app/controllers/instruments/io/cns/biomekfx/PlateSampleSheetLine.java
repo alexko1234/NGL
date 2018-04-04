@@ -1,8 +1,5 @@
 package controllers.instruments.io.cns.biomekfx;
 
-import controllers.instruments.io.cns.tecanevo100.SampleSheetPoolLine;
-
-
 public class PlateSampleSheetLine  implements Comparable<PlateSampleSheetLine>{
 
 	public String inputContainerCode;
@@ -18,8 +15,7 @@ public class PlateSampleSheetLine  implements Comparable<PlateSampleSheetLine>{
 	
 	@Override
 	public int compareTo(PlateSampleSheetLine o) {
-		return this.dwell.compareTo(o.dwell);			
+		return dwell.compareTo(o.dwell);			
 	}
-	
-	
+		
 }

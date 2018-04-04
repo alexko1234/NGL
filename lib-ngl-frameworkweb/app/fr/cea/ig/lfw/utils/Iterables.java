@@ -21,15 +21,15 @@ import fr.cea.ig.lfw.utils.iteration.SkippingIterable;
 public class Iterables {
 	
 	public static <A,B> ZenIterable<B> map(Iterable<A> i, Function<A,B> function) {
-		return new MappingIterable<A,B>(i, function);
+		return new MappingIterable<>(i, function);
 	}
 	
 	public static <A> ZenIterable <A> skip(Iterable<A> i, int cp) {
-		return new SkippingIterable<A>(i, cp);
+		return new SkippingIterable<>(i, cp);
 	}
 	
 	public static <A> ZenIterable <A> filter(Iterable<A> i, Function<A,Boolean> f) {
-		return new FilteringIterable<A>(i, f);
+		return new FilteringIterable<>(i, f);
 	}
 	
 	/**
@@ -78,18 +78,18 @@ public class Iterables {
 				return new Iterator<A>() {
 					
 					private B acc = b;
-					private Iterator<A> i = iterator();
+					private Iterator<A> it = iterator();
 					private boolean append = true;
 					
 					@Override
 					public boolean hasNext() {
-						return i.hasNext() || append;
+						return it.hasNext() || append;
 					}
 
 					@Override
 					public A next() {
-						if (i.hasNext()) {
-							A a = i.next();
+						if (it.hasNext()) {
+							A a = it.next();
 							acc = f.apply(acc,a);
 							return a;
 						}

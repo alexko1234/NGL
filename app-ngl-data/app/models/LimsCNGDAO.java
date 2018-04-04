@@ -13,6 +13,13 @@ import java.util.Set;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -35,14 +42,6 @@ import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
 import models.utils.instance.ContainerSupportHelper;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
-import org.springframework.jdbc.core.ResultSetExtractor;
-
 //import play.Logger;
 import services.instance.experiment.ExperimentImport;
 import validation.ContextValidation;
@@ -111,7 +110,7 @@ public class LimsCNGDAO {
 		
 		project.categoryCode=projectType.category.code;
 		
-		project.properties=new HashMap<String,PropertyValue>();
+		project.properties = new HashMap<>();
 		project.properties.put(PROJECT_PROPERTIES_UNIX_GROUP, new PropertySingleValue(UNIX_GROUP_DEFAULT));
 		
 		project.state = new State(); 
@@ -124,7 +123,7 @@ public class LimsCNGDAO {
 	
 		// just one comment for one project
 		if (rs.getString("comments") != null ) {
-			project.comments = new ArrayList<Comment>(); 
+			project.comments = new ArrayList<>(); 
 			InstanceHelpers.addComment(rs.getString("comments"), project.comments, "ngl-data");
 		}
 		
@@ -174,14 +173,14 @@ public class LimsCNGDAO {
 			sample.taxonCode=rs.getString("taxon_code");
 			sample.importTypeCode=IMPORT_TYPE_CODE_DEFAULT;
 		
-			sample.projectCodes=new HashSet<String>();
+			sample.projectCodes = new HashSet<>();
 			if (rs.getString("project") != null) {
 				sample.projectCodes.add(rs.getString("project"));
 			} else {
 				sample.projectCodes.add(" "); 
 			}
 
-			sample.comments=new ArrayList<Comment>();
+			sample.comments = new ArrayList<>();
 			
 			if (rs.getString("comments") != null) {
 				sample.comments.add(new Comment(rs.getString("comments"), "ngl-data"));
@@ -215,13 +214,13 @@ public class LimsCNGDAO {
 
 		//FDS 20/01/2016 ne pas ajouter des commentaires vides  ""...
 		if ((rs.getString("comment") != null) && (! rs.getString("comment").equals(""))) {
-			container.comments = new ArrayList<Comment>();	
+			container.comments = new ArrayList<>();	
 			container.comments.add(new Comment(rs.getString("comment"), "ngl-data"));
 		}
 		
 		//FDS 20/01/2016 n'ajouter que s'il n'y a qq chose!!
 		if (experimentTypeCode != null) {
-			container.fromTransformationTypeCodes=new HashSet<String>();
+			container.fromTransformationTypeCodes=new HashSet<>();
 			container.fromTransformationTypeCodes.add(experimentTypeCode);
 		}
 		
@@ -246,23 +245,24 @@ public class LimsCNGDAO {
 			//round concentration to 2 decimals using BigDecimal
 			Double concentration = null;
 			BigDecimal d = null;
-			if ((Float) rs.getFloat("concentration") != null) {
+//			if ((Float) rs.getFloat("concentration") != null) 
+			{
 				 d = new BigDecimal(rs.getFloat("concentration"));
 				 BigDecimal d2 = d.setScale(2, BigDecimal.ROUND_HALF_UP); 
 				 concentration = d2.doubleValue();
 			}
 			
 			/* test 15/06/2016 ajouter concentration pour library-well */
-			if ( containerCategoryCode.equals("tube") || containerCategoryCode.equals("library-well") ){
+			if (containerCategoryCode.equals("tube") || containerCategoryCode.equals("library-well")) {
 				container.concentration = new PropertySingleValue(concentration, "nM");
-			}
-			else if ( containerCategoryCode.equals("sample-well")){
+			} else if ( containerCategoryCode.equals("sample-well")) {
 				container.concentration = new PropertySingleValue(concentration, "ng/µl");
 				
 				//FDS dans ce cas on a aussi un volume 
 				Double volume= null;
-				if ((Float) rs.getFloat("volume") != null) {
-					 d = new BigDecimal(rs.getFloat("volume"));
+//				if ((Float) rs.getFloat("volume") != null) {
+				{
+					d = new BigDecimal(rs.getFloat("volume"));
 					 BigDecimal d2 = d.setScale(2, BigDecimal.ROUND_HALF_UP); 
 					 volume = d2.doubleValue();
 				}
@@ -297,7 +297,7 @@ public class LimsCNGDAO {
 		container.properties.put("limsCode",new PropertySingleValue(rs.getInt("lims_code")));
 			
 		if (rs.getString("project")!=null) {
-			container.projectCodes = new HashSet<String>();
+			container.projectCodes = new HashSet<>();
 			container.projectCodes.add(rs.getString("project"));
 		}		
 		
@@ -356,7 +356,7 @@ public class LimsCNGDAO {
 				}
 			}
 			container.contents.add(content);		
-			container.sampleCodes=new HashSet<String>();
+			container.sampleCodes=new HashSet<>();
 			container.sampleCodes.add(rs.getString("sample_code"));	
 			logger.debug("[commonContainerMapRow] container sampleCodes: " + container.sampleCodes);		
 		}
@@ -400,6 +400,7 @@ public class LimsCNGDAO {
 	public List<Project> findProjectToCreate(final ContextValidation contextError) throws SQLException, DAOException {		
 		List<Project> results = this.jdbcTemplate.query("select code, name, comments from v_project_tongl", new Object[]{},  
 			new RowMapper<Project>() {
+				@Override
 				public Project mapRow(ResultSet rs, int rowNum) throws SQLException {								
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
@@ -421,6 +422,7 @@ public class LimsCNGDAO {
 	public List<Project> findProjectToModify(final ContextValidation contextError) throws SQLException, DAOException {	
 		List<Project> results = this.jdbcTemplate.query("select  code, name, comments from v_project_updated_tongl", new Object[]{}, 
 			new RowMapper<Project>() {
+				@Override
 				public Project mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
@@ -451,7 +453,7 @@ public class LimsCNGDAO {
 		
 		String sql = "UPDATE t_project SET " + column + " = ? WHERE name = ?";
 		
-		List<Object[]> parameters = new ArrayList<Object[]>();
+		List<Object[]> parameters = new ArrayList<>();
 		for (Project project : projects) {
 	        parameters.add(new Object[] {new Date(), project.code}); 
 		}
@@ -507,6 +509,7 @@ public class LimsCNGDAO {
 	public List<Sample> findAllSample(final ContextValidation contextError) throws DAOException {
 		List<Sample> results = this.jdbcTemplate.query("select * from v_sample_tongl_reprise order by code, project desc, comments", new Object[]{} 
 		,new RowMapper<Sample>() {
+			@Override
 			public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
 				ResultSet rs0 = rs;
 				int rowNum0 = rowNum;
@@ -556,6 +559,7 @@ public class LimsCNGDAO {
 		
 		results = this.jdbcTemplate.query(sqlQuery, queryObj
 			,new RowMapper<Sample>() {
+				@Override
 				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
@@ -605,6 +609,7 @@ public class LimsCNGDAO {
 		}
 		results = this.jdbcTemplate.query(sqlQuery, queryObj
 			,new RowMapper<Sample>() {
+				@Override
 				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
@@ -714,7 +719,7 @@ public class LimsCNGDAO {
 	 */
 	public static List<Container> defineContainerProjectCodes(List<Container> results) throws DAOException {
 		for (Container r : results) {
-			Set<String> projectCodes = new HashSet<String>();
+			Set<String> projectCodes = new HashSet<>();
 			for (Content c : r.contents) {
 				projectCodes.add(c.projectCode);
 			}
@@ -865,6 +870,7 @@ public class LimsCNGDAO {
 			queryObj = new Object[]{};
 		}
 		results = this.jdbcTemplate.query(sqlQuery, queryObj, new RowMapper<Container>() {
+			@Override
 			public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 				ResultSet rs0 = rs;
 				int rowNum0 = rowNum;
@@ -927,6 +933,7 @@ public class LimsCNGDAO {
 		}
 		List<Container> results = this.jdbcTemplate.query("select * from " + sqlView + sqlOrder , new Object[]{} 
 		,new RowMapper<Container>() {
+			@Override
 			public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 				ResultSet rs0 = rs;
 				int rowNum0 = rowNum;
@@ -1015,6 +1022,7 @@ public class LimsCNGDAO {
 		}
 		results = this.jdbcTemplate.query("select * from " + sqlView + sqlClause + sqlOrder, queryObj 
 			,new RowMapper<Container>() {
+				@Override
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
@@ -1052,6 +1060,7 @@ public class LimsCNGDAO {
 		sqlQuery= "select support_code, seq_program_type from " + sqlView + " order by container_code, project desc, sample_code, tag, exp_short_name";
 		results = this.jdbcTemplate.query(sqlQuery, new Object[]{} 
 		,new RowMapper<ContainerSupport>() {
+			@Override
 			public ContainerSupport mapRow(ResultSet rs, int rowNum) throws SQLException {
 				ResultSet rs0 = rs;
 				int rowNum0 = rowNum;
@@ -1082,6 +1091,7 @@ public class LimsCNGDAO {
 	public List<Experiment> findAllIlluminaDepotExperimentToCreate(final ContextValidation contextError, final String protocoleCode) throws DAOException {
 		List<Experiment> results = this.jdbcTemplate.query("SELECT * FROM v_depotfc_tongl_reprise ORDER BY 1", new Object[]{} 
 		,new RowMapper<Experiment>() {
+			@Override
 			public Experiment mapRow(ResultSet rs, int rowNum) throws SQLException {
 				ResultSet rs0 = rs;
 				int rowNum0 = rowNum;
@@ -1100,6 +1110,7 @@ public class LimsCNGDAO {
 	public List<Experiment> findIlluminaDepotExperiment(final ContextValidation contextError, final String protocoleCode) throws DAOException {
 		List<Experiment> results = this.jdbcTemplate.query("SELECT * FROM v_depotfc_tongl ORDER BY 1", new Object[]{} 
 		,new RowMapper<Experiment>() {
+			@Override
 			public Experiment mapRow(ResultSet rs, int rowNum) throws SQLException {
 				ResultSet rs0 = rs;
 				int rowNum0 = rowNum;
@@ -1119,6 +1130,7 @@ public class LimsCNGDAO {
 		List<Index> results = this.jdbcTemplate.query("select nglbi_code, short_name, cng_name,(CASE WHEN type = 1 THEN 'SINGLE-INDEX'::text WHEN type = 2 THEN 'DUAL-INDEX'::text WHEN type = 3 THEN 'MID'::text ELSE NULL::text END) AS code_category,sequence from t_index order by 1" 
 				,new RowMapper<Index>() {
 //					@SuppressWarnings("rawtypes")
+					@Override
 					public Index mapRow(ResultSet rs, int rowNum) throws SQLException {
 						Index index = new IlluminaIndex();
 						index.code         = rs.getString("nglbi_code");
@@ -1155,14 +1167,14 @@ public class LimsCNGDAO {
 		contextError.addKeyToRootKeyName(key);
 		
 		String sql = "UPDATE t_sample SET " + column + " = ? WHERE stock_barcode = ?";
-		List<Object[]> parameters = new ArrayList<Object[]>();
+		List<Object[]> parameters = new ArrayList<>();
 		for (Sample sample : samples) {
 	        parameters.add(new Object[] {new Date(), sample.code}); 
 		}
 		this.jdbcTemplate.batchUpdate(sql, parameters);  
 		
 		sql = "UPDATE t_individual SET " + column + " = ? WHERE id in (select individual_id from t_sample where stock_barcode = ?)";
-		parameters = new ArrayList<Object[]>();
+		parameters = new ArrayList<>();
 		for (Sample sample : samples) {
 	        parameters.add(new Object[] {new Date(), sample.code}); 
 		}
@@ -1191,7 +1203,7 @@ public class LimsCNGDAO {
 		contextError.addKeyToRootKeyName(key);
 		
 		String sql = "UPDATE t_lane SET " + column + " = ? WHERE id = ?";
-		List<Object[]> parameters = new ArrayList<Object[]>();
+		List<Object[]> parameters = new ArrayList<>();
 		for (Container container : containers) {
 	        parameters.add(new Object[] {new Date(), container.properties.get("limsCode").value}); 
 		}
@@ -1199,7 +1211,7 @@ public class LimsCNGDAO {
 		jdbcTemplate.batchUpdate(sql, parameters);  
 		
 		sql = "UPDATE t_sample_lane SET " + column + " = ? WHERE lane_id = ?";
-		parameters = new ArrayList<Object[]>();
+		parameters = new ArrayList<>();
 		for (Container container : containers) {
 	        parameters.add(new Object[] {new Date(), container.properties.get("limsCode").value}); 
 		}
@@ -1228,7 +1240,7 @@ public class LimsCNGDAO {
 		contextError.addKeyToRootKeyName(key);
 		
 		String sql = "UPDATE t_tube SET " + column + " = ? WHERE id = ?";
-		List<Object[]> parameters = new ArrayList<Object[]>();
+		List<Object[]> parameters = new ArrayList<>();
 		for (Container container : containers) {
 	        parameters.add(new Object[] {new Date(), container.properties.get("limsCode").value}); 
 		}
@@ -1261,7 +1273,7 @@ public class LimsCNGDAO {
 		}
 		contextError.addKeyToRootKeyName(key);
 		String sql = "UPDATE t_group SET " + column + " = ? WHERE name = ? and type=4";
-		List<Object[]> parameters = new ArrayList<Object[]>();
+		List<Object[]> parameters = new ArrayList<>();
 		// ceci va updater une plaque autant de fois qu'elle a de puits ==> A ameliorer !!!!!!
 		for (Container container : containers) {
 	        parameters.add(new Object[] {new Date(), container.support.code}); 
@@ -1293,7 +1305,7 @@ public class LimsCNGDAO {
 		contextError.addKeyToRootKeyName(key);
 		//-1-mise a jour de la plaque ( table t_group avec type=4)
 		String sql = "UPDATE t_group SET " + column + " = ? WHERE name = ? and type=4";
-		List<Object[]> parameters = new ArrayList<Object[]>();
+		List<Object[]> parameters = new ArrayList<>();
 		// ceci va updater une plaque autant de fois qu'elle a de puits ==> A ameliorer !!!!!!
 		for (Container container : containers) {
 	        parameters.add(new Object[] {new Date(), container.support.code}); 
@@ -1307,7 +1319,7 @@ public class LimsCNGDAO {
 		
 		//-2- mise a jour du puits ( table t_tube )
 		sql = "UPDATE t_tube SET " + column + " = ? WHERE id = ?";
-		parameters = new ArrayList<Object[]>();
+		parameters = new ArrayList<>();
 		for (Container container : containers) {
 			      parameters.add(new Object[] {new Date(), container.properties.get("limsCode").value}); 
 		}
@@ -1336,7 +1348,7 @@ public class LimsCNGDAO {
 		contextError.addKeyToRootKeyName(key);
 		
 		String sql = "UPDATE t_workflow SET " + column + " = ? WHERE id = ?";
-		List<Object[]> parameters = new ArrayList<Object[]>();
+		List<Object[]> parameters = new ArrayList<>();
 		for (Experiment experiment : experiments) {
 	        parameters.add(new Object[] {new Date(), experiment.experimentProperties.get("limsCode").value}); 
 		}
@@ -1351,8 +1363,9 @@ public class LimsCNGDAO {
 	// 21/03/2017 TX Nicolas=> il n'y a pas dans jdbctemplate une methode qui retourne map <string,string> donc il faut l'implementer
 	private class MyExtractor implements ResultSetExtractor<Map<String,String>> {
 		
+		@Override
 		public Map<String, String> extractData(ResultSet rs) throws SQLException, org.springframework.dao.DataAccessException {
-			Map<String,String> map = new HashMap<String,String>();
+			Map<String,String> map = new HashMap<>();
 			while (rs.next()) {
 				String key = rs.getString(1);
 				map.put(key, rs.getString(2));

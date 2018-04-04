@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.mongojack.DBQuery;
 
-//import play.Logger;
-//import play.Logger.ALogger;
-import services.description.DescriptionFactory;
+import com.typesafe.config.ConfigFactory;
+
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.Value;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.instrument.description.InstrumentUsedType;
@@ -19,10 +19,9 @@ import models.laboratory.sample.description.SampleType;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
-
-import com.typesafe.config.ConfigFactory;
-
-import fr.cea.ig.MongoDBDAO;
+//import play.Logger;
+//import play.Logger.ALogger;
+import services.description.DescriptionFactory;
 
 public abstract class AbstractDeclaration {
 	
@@ -34,7 +33,7 @@ public abstract class AbstractDeclaration {
 	protected abstract List<ExperimentType> getExperimentTypeUAT();
 
 	public List<ExperimentType> getExperimentType() {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		List<ExperimentType> l = new ArrayList<>();
 		//Logger.debug(this.getClass().getSimpleName()+" getExperimentType");
 		if (getExperimentTypeCommon() != null) {
 			l.addAll(getExperimentTypeCommon());
@@ -63,7 +62,7 @@ public abstract class AbstractDeclaration {
 	protected abstract List<ProcessType> getProcessTypeUAT();
 
 	public List<ProcessType> getProcessType() {
-		List<ProcessType> l = new ArrayList<ProcessType>();
+		List<ProcessType> l = new ArrayList<>();
 		//Logger.debug(this.getClass().getSimpleName()+" getProcessType");
 		if (getProcessTypeCommon()!=null) {
 			l.addAll(getProcessTypeCommon());
@@ -133,7 +132,7 @@ public abstract class AbstractDeclaration {
 	protected List<Value> getTagIllumina() {
 		
 		List<IlluminaIndex> indexes = MongoDBDAO.find(InstanceConstants.PARAMETER_COLL_NAME, IlluminaIndex.class, DBQuery.is("typeCode", "index-illumina-sequencing")).sort("name").toList();
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		indexes.forEach(index -> {
 			values.add(DescriptionFactory.newValue(index.code, index.code));	
 		});
@@ -142,7 +141,7 @@ public abstract class AbstractDeclaration {
 	}
 	
 	public List<Value> getTagCategoriesIllumina(){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("SINGLE-INDEX", "SINGLE-INDEX"));
 		values.add(DescriptionFactory.newValue("MID", "MID"));
 		values.add(DescriptionFactory.newValue("DUAL-INDEX", "DUAL-INDEX"));

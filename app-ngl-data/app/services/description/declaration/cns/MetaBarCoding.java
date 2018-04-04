@@ -16,21 +16,13 @@ import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.parameter.index.IlluminaIndex;
-import models.laboratory.processes.description.ExperimentTypeNode;
 import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
-import models.utils.InstanceConstants;
-
-import org.mongojack.DBQuery;
-
-import play.Logger;
 import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 import services.description.common.MeasureService;
 import services.description.declaration.AbstractDeclaration;
-import fr.cea.ig.MongoDBDAO;
 
 public class MetaBarCoding extends AbstractDeclaration {
 
@@ -42,7 +34,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 	
 	 @Override
      protected List<ExperimentType> getExperimentTypeCommon() {
-             List<ExperimentType> l = new ArrayList<ExperimentType>();
+             List<ExperimentType> l = new ArrayList<>();
 
              l.add(newExperimentType("Ext to MetaBarcoding (sans sizing)","ext-to-tag-pcr-and-dna-library",null,-1,
                              ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne",
@@ -118,7 +110,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 	
     @Override
     protected List<ProcessType> getProcessTypeCommon() {
-            List<ProcessType> l = new ArrayList<ProcessType>();
+            List<ProcessType> l = new ArrayList<>();
 
             l.add(DescriptionFactory.newProcessType("MetaBarcoding avec sizing (gel)", "tag-pcr-and-dna-library-with-sizing", ProcessCategory.find.findByCode("library"), 11,
                             getPropertyMetaBarCodingSizing(),
@@ -244,7 +236,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 		
 	
 	 private List<PropertyDefinition> getPropertyDefinitionsSpriSelect() {
-         List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+         List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
          propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
                          null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 13, true, null,null));
@@ -260,7 +252,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 
 	
 	private List<PropertyDefinition> getPropertyDefinitionsSizingDEV() {
-        List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
         propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
                         null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 13, true, null,null));
@@ -289,7 +281,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 
 
 	private List<PropertyDefinition> getPropertyDefinitionsAmpliPurif() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,null));
@@ -311,7 +303,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 	}
 
 	private List<PropertyDefinition> getPropertyDefinitionsBqDNAIlluminaIndexedLibrary() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,null));
@@ -340,7 +332,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 
 
 	private List<PropertyDefinition> getPropertyDefinitionsTagPCR() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,null));
@@ -384,7 +376,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 	}
 	
 	private List<PropertyDefinition> getPropertyMetaBarCodingDouble() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();	
 		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, getBanqueProcessTypeMetaTC(), 
 				null,null,null,"single", 13, true, "TC", null));
 		propertyDefinitions.add(newPropertiesDefinition("Amorces", "amplificationPrimers", LevelService.getLevels(Level.CODE.Process), String.class, true, null, 
@@ -401,7 +393,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 	}
 	
 	private List<PropertyDefinition> getPropertyMetaBarCodingWithoutSizing() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();	
 		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, getBanqueProcessTypeMetaTA(), 
 				null,null,null,"single", 13, true, null, null));
 		propertyDefinitions.addAll(getPropertyMetaB());
@@ -412,7 +404,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 	}
 
 	private List<PropertyDefinition> getPropertyMetaBarCodingSizing() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, getBanqueProcessTypeMetaTB(), 
 				null,null,null,"single", 13, true, null, null));
 		propertyDefinitions.addAll(getPropertyMetaB());
@@ -429,7 +421,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 	}
 	
 	private List<PropertyDefinition> getPropertyMetaB(){
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Amorces", "amplificationPrimers", LevelService.getLevels(Level.CODE.Process), String.class, true, null, 
 				DescriptionFactory.newValues("Fuhrman primer","V9 primer", "16S primer + Fuhrman primer", "ITS2 primer", "ITSintfor2 / ITS-Reverse", "SYM_VAR_5.8S2 / SYM_VAR_REV", 
 						"ITSD / ITS2REV","CP23S primers","18S_V4 primer","COI primer m1COIintF / jgHCO2198","Sneed2015 27F / 519Rmodbio",
@@ -444,25 +436,25 @@ public class MetaBarCoding extends AbstractDeclaration {
 	}
 		
 	public static  List<Value> getBanqueProcessTypeMetaTB() {
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("TB", "TB - Targeted DNAseq avec sizing"));
 		return values;
 	}
 	
 	public static  List<Value> getBanqueProcessTypeMetaTA(){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("TA", "TA - Targeted DNAseq"));
 		return values;
 	}
 	
 	public static  List<Value> getBanqueProcessTypeMetaTC(){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("TC", "TC - Targeted DNAseq (nested)"));
 		return values;
 	}
 	
 	public static  List<Value> getBanqueProcessTypeN(){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("N", "N - Mate-pair Nextera"));
 		return values;
 	}

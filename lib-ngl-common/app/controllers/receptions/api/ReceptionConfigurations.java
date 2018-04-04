@@ -12,20 +12,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.reception.instance.ReceptionConfiguration;
-import models.utils.InstanceConstants;
-import models.utils.ListObject;
-
 import org.mongojack.DBQuery;
-
-//import play.Logger;
-import play.data.Form;
-import play.libs.Json;
-import play.mvc.Result;
-import play.mvc.Results;
-import validation.ContextValidation;
-import views.components.datatable.DatatableResponse;
 
 import com.mongodb.BasicDBObject;
 
@@ -34,6 +21,17 @@ import controllers.ListForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
+import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.reception.instance.ReceptionConfiguration;
+import models.utils.InstanceConstants;
+import models.utils.ListObject;
+//import play.Logger;
+import play.data.Form;
+import play.libs.Json;
+import play.mvc.Result;
+import play.mvc.Results;
+import validation.ContextValidation;
+import views.components.datatable.DatatableResponse;
 
 public class ReceptionConfigurations extends DocumentController<ReceptionConfiguration> {
 	
@@ -53,7 +51,7 @@ public class ReceptionConfigurations extends DocumentController<ReceptionConfigu
 		if (searchForm.datatable) {
 			MongoDBResult<ReceptionConfiguration> results = mongoDBFinder(searchForm, query);
 			List<ReceptionConfiguration> configurations = results.toList();
-			return ok(Json.toJson(new DatatableResponse<ReceptionConfiguration>(configurations, results.count())));
+			return ok(Json.toJson(new DatatableResponse<>(configurations, results.count())));
 		} else if(searchForm.list) {
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
@@ -62,7 +60,7 @@ public class ReceptionConfigurations extends DocumentController<ReceptionConfigu
 			keys.put("displayOrder", 1);
 			MongoDBResult<ReceptionConfiguration> results = mongoDBFinder(searchForm,query).sort("displayOrder");
 			List<ReceptionConfiguration> configurations = results.toList();
-			List<ListObject> los = new ArrayList<ListObject>();
+			List<ListObject> los = new ArrayList<>();
 			for(ReceptionConfiguration p: configurations)
 				los.add(new ListObject(p.code, p.name));
 			return Results.ok(Json.toJson(los));

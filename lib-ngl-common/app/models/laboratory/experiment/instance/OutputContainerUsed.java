@@ -1,10 +1,7 @@
 package models.laboratory.experiment.instance;
 
-import java.util.List;
-
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.Comment;
-import play.Logger;
 import validation.ContextValidation;
 import validation.container.instance.ContainerValidationHelper;
 import validation.experiment.instance.ContainerUsedValidationHelper;

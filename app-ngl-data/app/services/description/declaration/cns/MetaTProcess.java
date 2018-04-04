@@ -16,7 +16,6 @@ import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.processes.description.ExperimentTypeNode;
 import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
 import models.utils.dao.DAOException;
@@ -32,7 +31,7 @@ public class MetaTProcess extends AbstractDeclaration {
 
 	@Override
 	protected List<ExperimentType> getExperimentTypeCommon() {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		List<ExperimentType> l = new ArrayList<>();
 
 		l.add(newExperimentType("Ext to MetaT cDNA frg","ext-to-cdna-frg-transcriptomic-process",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
@@ -71,7 +70,7 @@ public class MetaTProcess extends AbstractDeclaration {
 	
 	@Override
 	protected List<ExperimentType> getExperimentTypeDEV() {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		List<ExperimentType> l = new ArrayList<>();
 		return l;
 		
 	}
@@ -79,7 +78,7 @@ public class MetaTProcess extends AbstractDeclaration {
 
 	@Override
 	protected List<ExperimentType> getExperimentTypePROD() {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		List<ExperimentType> l = new ArrayList<>();
 		return l;
 	}
 
@@ -91,14 +90,14 @@ public class MetaTProcess extends AbstractDeclaration {
 
 	@Override
 	protected List<ProcessType> getProcessTypeDEV() {
-		List<ProcessType> l = new ArrayList<ProcessType>();
+		List<ProcessType> l = new ArrayList<>();
 		
 		return l;
 	}
 
 	@Override
 	protected List<ProcessType> getProcessTypePROD() {
-		List<ProcessType> l = new ArrayList<ProcessType>();
+		List<ProcessType> l = new ArrayList<>();
 		
 		
 		return l;
@@ -112,7 +111,7 @@ public class MetaTProcess extends AbstractDeclaration {
 
 	@Override
 	protected List<ProcessType> getProcessTypeCommon() {
-		List<ProcessType> l = new ArrayList<ProcessType>();
+		List<ProcessType> l = new ArrayList<>();
 		
 		l.add(DescriptionFactory.newProcessType("MetaT bq RNA", "rna-lib-transcriptomic-process", ProcessCategory.find.findByCode("library"), 21,
 				getPropertiesMetaTRNA(), 
@@ -181,7 +180,7 @@ public class MetaTProcess extends AbstractDeclaration {
 	}
 	
 	private List<PropertyDefinition> getPropertyDefinitionsRNAIlluminaLibrary() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
 		propertyDefinitions.add(newPropertiesDefinition("Qté engagée ds bq RNA","rnaLibInputQuantity", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content),Double.class, false, null,
 			null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",12, true,null,null));
@@ -222,7 +221,7 @@ public class MetaTProcess extends AbstractDeclaration {
 //	}
 
 	private List<PropertyDefinition> getPropertyDefinitionsCdnaSynthesis() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
 		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, false, null,
 				null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",12, true,null,null));
@@ -235,7 +234,7 @@ public class MetaTProcess extends AbstractDeclaration {
 
 	
 	private static List<PropertyDefinition> getPropertyDefinitionFragmentation() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Volume à prélever", "requiredVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",11, false,null, "1"));
 
@@ -257,7 +256,7 @@ public class MetaTProcess extends AbstractDeclaration {
 	
 	
 	private List<PropertyDefinition> getPropertiesMetaTcDNA() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, getBanqueProcessTypeMetaRA(), 
 				null,null,null,"single", 13, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Type de déplétion", "depletionMethod", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("pas de déplétion","déplétion rRNA prok","déplétion rRNA plante"), 
@@ -276,7 +275,7 @@ public class MetaTProcess extends AbstractDeclaration {
 
 
 	private List<PropertyDefinition> getPropertiesMetaTRNA() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, 
 				getBanqueProcessTypeMetaRB(), null,null,null,"single", 13, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Type de déplétion", "depletionMethod", LevelService.getLevels(Level.CODE.Process), String.class, true, null, 
@@ -293,13 +292,13 @@ public class MetaTProcess extends AbstractDeclaration {
 	}
 
 	public static  List<Value> getBanqueProcessTypeMetaRA() {
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("RA", "RA - RNAseq"));
 		return values;
 	}
 	
 	public static List<Value> getBanqueProcessTypeMetaRB() {
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("RB", "RB - RNAseq stranded"));
 		return values;
 	}

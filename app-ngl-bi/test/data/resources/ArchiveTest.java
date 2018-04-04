@@ -13,11 +13,9 @@ import org.junit.runners.MethodSorters;
 import org.mongojack.DBQuery;
 
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.test.WSHelper;
 //import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
-import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
 import ngl.bi.AbstractBIServerTest;
 //import play.Logger;
@@ -44,7 +42,7 @@ public class ArchiveTest extends AbstractBIServerTest {
 		//get JSON Run to insert
 		//List<ReadSet> readSets  = MongoDBDAO.find("ngl_bi.ReadSetIllumina_dataWF", ReadSet.class).toList();
 		readSet = readSets.remove(0);
-		readSet.treatments= new HashMap<String,Treatment>();
+		readSet.treatments= new HashMap<>();
 		MongoDBDAO.save(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSet);
 	}
 	

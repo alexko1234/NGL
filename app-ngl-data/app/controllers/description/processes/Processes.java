@@ -9,10 +9,7 @@ import play.data.validation.ValidationError;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import services.description.experiment.ExperimentService;
-import services.description.instrument.InstrumentService;
 import services.description.process.ProcessService;
-import services.description.project.ProjectService;
 
 // import controllers.CommonController;
 public class Processes extends Controller { // CommonController {
@@ -21,7 +18,7 @@ public class Processes extends Controller { // CommonController {
 	
 	public static Result save() {
 		try {
-			Map<String,List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
+			Map<String,List<ValidationError>> errors = new HashMap<>();
 			ProcessService.main(errors);
 			if (errors.size() > 0) {
 				return badRequest(Json.toJson(errors));

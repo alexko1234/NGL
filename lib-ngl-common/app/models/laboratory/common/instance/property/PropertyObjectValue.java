@@ -1,11 +1,10 @@
 package models.laboratory.common.instance.property;
 
-import static fr.cea.ig.lfw.utils.Hashing.hash;
 import static fr.cea.ig.lfw.utils.Equality.objectEquals;
 import static fr.cea.ig.lfw.utils.Equality.typedEquals;
+import static fr.cea.ig.lfw.utils.Hashing.hash;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map;
 
 import models.laboratory.common.description.PropertyDefinition;

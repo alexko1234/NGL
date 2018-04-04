@@ -8,7 +8,8 @@ import java.util.Set;
 
 import controllers.ListForm;
 
-public class ExperimentSearchForm extends ListForm{
+public class ExperimentSearchForm extends ListForm {
+	
 	public String code;
 	public Set<String> codes;
 	public String typeCode;
@@ -46,10 +47,10 @@ public class ExperimentSearchForm extends ListForm{
 	
 	
 	public Set<String> sampleTypeCodes;
-	public Map<String, List<String>> atomicTransfertMethodsInputContainerUsedsContentsProperties = new HashMap<String, List<String>>();
+	public Map<String, List<String>> atomicTransfertMethodsInputContainerUsedsContentsProperties = new HashMap<>();
 	
-	public Map<String, List<String>> experimentProperties = new HashMap<String, List<String>>();
-	public Map<String, List<String>> instrumentProperties = new HashMap<String, List<String>>();
+	public Map<String, List<String>> experimentProperties = new HashMap<>();
+	public Map<String, List<String>> instrumentProperties = new HashMap<>();
 	
 	
 	// FDS 21/08/2015 pour debug only???  ajouter tags et sampleTypeCodes dans le return 

@@ -1,7 +1,6 @@
 package models.utils.dao;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +43,7 @@ public class DAOHelpers {
 //		return errors;
 //	}
 	public static <T> Map<String,List<ValidationError>> saveModels(Class<T> type, Map<String, Model<T>> models) throws DAOException {
-		Map<String,List<ValidationError>>errors = new HashMap<String, List<ValidationError>>();
+		Map<String,List<ValidationError>>errors = new HashMap<>();
 		for (Entry<String,Model<T>> entry : models.entrySet()) {
 			Model<T> model = entry.getValue();
 //			T samp = new HelperObjects<T>().getObject(type, model.getKey());
@@ -104,7 +103,7 @@ public class DAOHelpers {
 //	}
 	public static <T, U extends Model<T>> List<U> getModelByCodes(Class<U> type, Finder<U,? extends AbstractDAO<U>> finder, String...codes) throws DAOException {
 		//		public static <T extends Model<T>> List<T> getModelByCodes(Class<T> type, Finder<T> finder, String...codes) throws DAOException {
-		List<U> l = new ArrayList<U>();
+		List<U> l = new ArrayList<>();
 		for (String code : codes) {
 			//Logger.debug("Load "+type.getName() + " : "+code);
 			l.add(finder.findByCode(code));

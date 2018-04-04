@@ -25,7 +25,7 @@ public class Opgen extends AbstractDeclaration {
 
 	@Override
 	protected List<ExperimentType> getExperimentTypeCommon() {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		List<ExperimentType> l = new ArrayList<>();
 		//Depot Opgen
 		l.add(newExperimentType("Ext to Run Opgen","ext-to-opgen-run",null, -1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), getPropertyDefinitionExtToOpgenDepot(), null,"OneToOne", 
@@ -57,7 +57,7 @@ public class Opgen extends AbstractDeclaration {
 	
 	@Override
 	protected List<ProcessType> getProcessTypeCommon() {
-		List<ProcessType> l=new ArrayList<ProcessType>();
+		List<ProcessType> l=new ArrayList<>();
 
 		l.add(DescriptionFactory.newProcessType("Run Opgen", "opgen-run", 
 				ProcessCategory.find.findByCode("mapping"),105 , 
@@ -114,13 +114,13 @@ public class Opgen extends AbstractDeclaration {
 	}
 	
 	private static List<PropertyDefinition> getPropertyDefinitionExtToOpgenDepot() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, false, "single"));
 		return propertyDefinitions;
 	}	
 	
 	private static List<PropertyDefinition> getPropertyDefinitionOpgenDepot() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, true, "single"));
 		return propertyDefinitions;
 	}

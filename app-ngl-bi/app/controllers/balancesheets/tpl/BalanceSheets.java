@@ -1,10 +1,5 @@
 package controllers.balancesheets.tpl;
 
-import play.mvc.Result;
-import views.html.balancesheets.*;
-
-import java.util.Calendar;
-
 import javax.inject.Inject;
 
 import fr.cea.ig.authentication.Authenticated;
@@ -13,6 +8,10 @@ import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.support.NGLJavascript;
+import play.mvc.Result;
+import views.html.balancesheets.general;
+import views.html.balancesheets.home;
+import views.html.balancesheets.year;
 
 public class BalanceSheets extends NGLController 
                           implements NGLJavascript {

@@ -1,27 +1,26 @@
 package controllers.instruments.io.cns.brandlhs;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.CollectionUtils;
-
+import controllers.instruments.io.cns.brandlhs.tpl.txt.normalisation_x_to_plate;
+import controllers.instruments.io.cns.brandlhs.tpl.txt.normalisation_x_to_plate_buffer;
+import controllers.instruments.io.cns.brandlhs.tpl.txt.normalisation_x_to_plate_buffer_highVol;
+import controllers.instruments.io.cns.brandlhs.tpl.txt.normalisation_x_to_plate_highVol;
+import controllers.instruments.io.utils.AbstractOutput;
+import controllers.instruments.io.utils.File;
+import controllers.instruments.io.utils.OutputHelper;
 // import play.Logger;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OutputContainerUsed;
 import validation.ContextValidation;
-import views.html.helper.input;
-
-import controllers.instruments.io.cns.brandlhs.PlateSampleSheetLine;
-import controllers.instruments.io.cns.brandlhs.tpl.txt.*;
-import controllers.instruments.io.utils.AbstractOutput;
-import controllers.instruments.io.utils.File;
-import controllers.instruments.io.utils.OutputHelper;
-
-
-import java.util.zip.*;
 
 public class Output extends AbstractOutput {
 	
@@ -154,16 +153,15 @@ public class Output extends AbstractOutput {
 	
 	private List<PlateSampleSheetLine> checkSampleSheetLines (List<PlateSampleSheetLine> psslList, Boolean isPlate){
 
-		List<PlateSampleSheetLine> psslListNew = new LinkedList<PlateSampleSheetLine>();
+		List<PlateSampleSheetLine> psslListNew = new LinkedList<>();
 
-		
 		if (isPlate){
 			List<String> plateLines = Arrays.asList("A","B","C","D","E","F","G","H"); 	
 			List<Integer> colNums = Arrays.asList(1,2,3,4,5,6,7,8,9,10,11,12);
 			sampleNum=0;
 			psslListNew = filledSampleSheetLines(psslList,plateLines,colNums);
 
-		}else{
+		} else {
 			/* on gere finalement les tubes par 4 racks 
 			 */
 
@@ -196,7 +194,7 @@ public class Output extends AbstractOutput {
 	private  List<PlateSampleSheetLine> filledSampleSheetLines (List<PlateSampleSheetLine> psslList, List<String> plateLines, List<Integer> colNums){
 
 		boolean found = false;
-		List<PlateSampleSheetLine> psslListNew = new LinkedList<PlateSampleSheetLine>();
+		List<PlateSampleSheetLine> psslListNew = new LinkedList<>();
 
 		ListIterator<String> LinesItr = plateLines.listIterator();	
 		while (LinesItr.hasNext()) {
@@ -243,7 +241,7 @@ public class Output extends AbstractOutput {
 	}
 	
 	private Map<String, String> getSourceMapping(Experiment experiment) {
-		Map<String, String> sources = new HashMap<String, String>();
+		Map<String, String> sources = new HashMap<>();
 
 		String[] inputContainerSupportCodes = experiment.inputContainerSupportCodes.toArray(new String[0]);
 		Arrays.sort(inputContainerSupportCodes);
@@ -254,7 +252,7 @@ public class Output extends AbstractOutput {
 	}
 
 	private Map<String, String> getDestMapping(Experiment experiment) {
-		Map<String, String> dest = new HashMap<String, String>();
+		Map<String, String> dest = new HashMap<>();
 
 		String[] outputContainerSupportCodes = experiment.outputContainerSupportCodes.toArray(new String[0]);
 		Arrays.sort(outputContainerSupportCodes);

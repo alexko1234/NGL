@@ -11,25 +11,20 @@ import java.util.TreeSet;
 
 import javax.inject.Inject;
 
+import org.mongojack.DBQuery;
+
+import com.mongodb.MongoException;
+
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.container.instance.Container;
-import models.laboratory.processes.instance.Process;
-import models.laboratory.run.instance.ReadSet;
-import models.laboratory.run.instance.Run;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
-
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import play.Logger;
-import play.api.modules.spring.Spring;
 import rules.services.RulesException;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
@@ -37,13 +32,10 @@ import validation.ContextValidation;
 import validation.utils.BusinessValidationHelper;
 import workflows.container.ContentHelper;
 
-import com.mongodb.MongoException;
-
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.NGLContext;
-
 public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 
+	// private static final play.Logger.ALogger logger = play.Logger.of(UpdateSamplePropertiesCNS.class);
+	
 	ContentHelper contentHelper;
 	
 	@Inject
@@ -71,25 +63,25 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 
 	private void updateSampleModifySince(int nbDays,ContextValidation contextError){
 
-				Calendar calendar = Calendar.getInstance();
-				calendar.add(Calendar.DAY_OF_YEAR, nbDays);
-				Date date =  calendar.getTime();
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_YEAR, nbDays);
+		Date date =  calendar.getTime();
 
-				List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.greaterThanEquals("traceInformation.modifyDate", date).notExists("life"))
-						.sort("code").toList();
-				Logger.info("Nb samples to update :"+samples.size());
-				samples.stream().forEach(sample -> {
-					//Logger.debug("Sample "+sample.code);
-					try{
-						updateOneSample(sample,contextError);
-					}catch(Throwable t){
-						logger.error(t.getMessage(),t);	
-						if(null != t.getMessage())
-							contextError.addErrors(sample.code, t.getMessage());
-						else
-							contextError.addErrors(sample.code, "null");
-					}						
-				});
+		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.greaterThanEquals("traceInformation.modifyDate", date).notExists("life"))
+				.sort("code").toList();
+		logger.info("Nb samples to update :"+samples.size());
+		samples.stream().forEach(sample -> {
+			//Logger.debug("Sample "+sample.code);
+			try{
+				updateOneSample(sample,contextError);
+			}catch(Throwable t){
+				logger.error(t.getMessage(),t);	
+				if(null != t.getMessage())
+					contextError.addErrors(sample.code, t.getMessage());
+				else
+					contextError.addErrors(sample.code, "null");
+			}						
+		});
 	}
 
 	public void updateOneSample(Sample sample,ContextValidation contextError) {
@@ -97,7 +89,7 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 		logger.debug("Update sample {}", sample.code);
 
 		Map<String, PropertyValue> updatedProperties = new HashMap<>(); // String, PropertyValue>();
-		Set<String> deletedPropertyCodes = new TreeSet<String>();
+		Set<String> deletedPropertyCodes = new TreeSet<>();
 		SampleType sampleType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.typeCode, "typeCode", SampleType.find,true);
 		ImportType importType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.importTypeCode, "importTypeCode", ImportType.find,true);
 

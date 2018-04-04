@@ -6,6 +6,17 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+
+import akka.actor.ActorRef;
+import akka.actor.Props;
+
+//import static fr.cea.ig.play.IGGlobals.akkaSystem;
+
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
@@ -20,12 +31,6 @@ import models.laboratory.run.instance.SampleOnContainer;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
-
-import org.apache.commons.lang3.StringUtils;
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-import org.mongojack.WriteResult;
-
 // import play.Logger;
 // import play.Play;
 // import play.libs.Akka;
@@ -34,13 +39,6 @@ import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.run.instance.AnalysisValidationHelper;
 import validation.run.instance.RunValidationHelper;
-import akka.actor.ActorRef;
-import akka.actor.Props;
-
-//import static fr.cea.ig.play.IGGlobals.akkaSystem;
-
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.NGLContext;
 
 // This class has to be injected at application start, IGGlobals removal is not correct.
 public class Workflows {
@@ -261,7 +259,7 @@ public class Workflows {
 	
 	private static State updateHistoricalNextState(State previousState, State nextState) {
 		if (null == previousState.historical) {
-			nextState.historical = new HashSet<TransientState>(0);
+			nextState.historical = new HashSet<>(0);
 			nextState.historical.add(new TransientState(previousState, nextState.historical.size()));
 		} else {
 			nextState.historical = previousState.historical;

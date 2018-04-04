@@ -22,7 +22,7 @@ public class ListObject {
 	}
 	
 	public static List<ListObject> from(List<CommonInfoType> values) {
-		List<ListObject> l = new ArrayList<ListObject>(values.size());
+		List<ListObject> l = new ArrayList<>(values.size());
 		for(CommonInfoType value : values){
 			l.add(new ListObject(value.code, value.name));
 		}

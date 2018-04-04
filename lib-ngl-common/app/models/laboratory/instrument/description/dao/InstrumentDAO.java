@@ -5,19 +5,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.Institute;
-import models.laboratory.instrument.description.Instrument;
-import models.laboratory.instrument.description.InstrumentQueryParams;
-import models.laboratory.instrument.description.InstrumentUsedType;
-import models.utils.dao.AbstractDAOMapping;
-import models.utils.dao.DAOException;
-import models.utils.dao.DAOHelpers;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
+
+import models.laboratory.common.description.Institute;
+import models.laboratory.instrument.description.Instrument;
+import models.laboratory.instrument.description.InstrumentQueryParams;
+import models.utils.dao.AbstractDAOMapping;
+import models.utils.dao.DAOException;
+import models.utils.dao.DAOHelpers;
 
 // import play.Logger;
 
@@ -37,7 +36,7 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument> {
 	
 	@Override
 	public long save(Instrument instrument) throws DAOException {
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", instrument.name);
         parameters.put("short_name", instrument.shortName);
         parameters.put("code", instrument.code);
@@ -89,8 +88,9 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument> {
 	}
 	
 	
+	@Override
 	public void remove(Instrument instrument) throws DAOException {
-		if(null == instrument){
+		if (instrument == null) {
 			throw new IllegalArgumentException("instrument is null");
 		}
 		

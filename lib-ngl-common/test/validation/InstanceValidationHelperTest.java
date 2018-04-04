@@ -11,6 +11,11 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
@@ -19,28 +24,18 @@ import models.laboratory.common.instance.Valuation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
-import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.project.instance.Project;
 import models.laboratory.reagent.instance.Reagent;
 import models.laboratory.sample.instance.Sample;
 import models.laboratory.storage.instance.Storage;
 import models.utils.InstanceConstants;
-import ngl.common.Global;
-
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-//import play.Logger;
 import play.data.validation.ValidationError;
 import utils.AbstractSQTests;
-import utils.AbstractTests;
 import utils.Constants;
 import validation.common.instance.CommonValidationHelper;
 import validation.container.instance.ContainerSupportValidationHelper;
 import validation.utils.BusinessValidationHelper;
-import fr.cea.ig.MongoDBDAO;
 
 public class InstanceValidationHelperTest extends AbstractSQTests {
 
@@ -70,7 +65,7 @@ public class InstanceValidationHelperTest extends AbstractSQTests {
 		
 		sample2  = new Sample(); 
 		sample2.code = "SampleCode" + randomInt;
-		Set<String> l = new HashSet<String>();
+		Set<String> l = new HashSet<>();
 		l.add("ProjectCode"); 
 		sample2.projectCodes = l;
 		MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, sample2);
@@ -103,7 +98,7 @@ public class InstanceValidationHelperTest extends AbstractSQTests {
 	@Test
 	public void validationProjectCodesTest() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
-		List<String> projects = new ArrayList<String>();
+		List<String> projects = new ArrayList<>();
 		projects.add(project.code);
 		projects.add(project1.code);
 		CommonValidationHelper.validateProjectCodes(projects,contextValidation );
@@ -113,7 +108,7 @@ public class InstanceValidationHelperTest extends AbstractSQTests {
 	@Test
 	public void validationProjectCodesRequiredTest() {
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		List<String> projects = new ArrayList<String>();
+		List<String> projects = new ArrayList<>();
 		CommonValidationHelper.validateProjectCodes(projects,contextValidation );
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
@@ -121,7 +116,7 @@ public class InstanceValidationHelperTest extends AbstractSQTests {
 	@Test
 	public void validationProjectCodesNotExistTest() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
-		List<String> projects = new ArrayList<String>();
+		List<String> projects = new ArrayList<>();
 		projects.add("notexist");
 		CommonValidationHelper.validateProjectCodes(projects,contextValidation );
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
@@ -151,7 +146,7 @@ public class InstanceValidationHelperTest extends AbstractSQTests {
 	@Test
 	public void validationSampleCodesTest() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
-		List<String> samples = new ArrayList<String>();
+		List<String> samples = new ArrayList<>();
 		samples.add(sample.code);
 		samples.add(sample1.code);
 		CommonValidationHelper.validateSampleCodes(samples,contextValidation );
@@ -161,7 +156,7 @@ public class InstanceValidationHelperTest extends AbstractSQTests {
 	@Test
 	public void validationSampleCodesRequiredTest() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
-		List<String> samples = new ArrayList<String>();
+		List<String> samples = new ArrayList<>();
 		CommonValidationHelper.validateSampleCodes(samples,contextValidation );
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
@@ -169,7 +164,7 @@ public class InstanceValidationHelperTest extends AbstractSQTests {
 	@Test
 	public void validationSampleCodesNotExistTest(){
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
-		List<String> samples = new ArrayList<String>();
+		List<String> samples = new ArrayList<>();
 		samples.add("notexist");
 		CommonValidationHelper.validateSampleCodes(samples,contextValidation );
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
@@ -276,7 +271,7 @@ public class InstanceValidationHelperTest extends AbstractSQTests {
 		
 		c.categoryCode = "lane";
 		
-		Set<String> lp = new HashSet<String>(); 
+		Set<String> lp = new HashSet<>(); 
 		lp.add(project.code);
 		c.projectCodes = lp;
 		
@@ -284,7 +279,7 @@ public class InstanceValidationHelperTest extends AbstractSQTests {
 		m.put("limsCode", new PropertySingleValue(3805));
 		c.properties = m;
 		
-		Set<String> ls = new HashSet<String>(); 
+		Set<String> ls = new HashSet<>(); 
 		ls.add(sample.code);
 		c.sampleCodes = ls;
 		
@@ -311,7 +306,7 @@ public class InstanceValidationHelperTest extends AbstractSQTests {
 		v.valid = TBoolean.UNSET;
 		c.valuation = v;
 		
-		c.contents = new ArrayList<Content>();
+		c.contents = new ArrayList<>();
 				
 		c.validate(contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
@@ -346,7 +341,7 @@ public class InstanceValidationHelperTest extends AbstractSQTests {
 		c.code = "container" + randomInt; 
 		c.categoryCode = "lane";
 		
-		Set<String> lp = new HashSet<String>(); 
+		Set<String> lp = new HashSet<>(); 
 		lp.add(project.code);
 		c.projectCodes = lp;
 		
@@ -354,7 +349,7 @@ public class InstanceValidationHelperTest extends AbstractSQTests {
 		m.put("limsCode", new PropertySingleValue(3805));
 		c.properties = m;
 		
-		Set<String> ls = new HashSet<String>(); 
+		Set<String> ls = new HashSet<>(); 
 		ls.add(sample.code);
 		c.sampleCodes = ls;
 		
@@ -380,7 +375,7 @@ public class InstanceValidationHelperTest extends AbstractSQTests {
 		v.valid = TBoolean.UNSET;
 		c.valuation = v;
 		
-		c.contents = new ArrayList<Content>();
+		c.contents = new ArrayList<>();
 			
 		c.validate(contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(1);

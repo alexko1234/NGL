@@ -4,19 +4,15 @@ import java.sql.SQLException;
 
 import javax.inject.Inject;
 
-import models.Constants;
-import models.utils.dao.DAOException;
-
 import org.slf4j.MDC;
 
 import com.mongodb.MongoException;
 
 import fr.cea.ig.play.NGLContext;
-import play.Logger;
-import play.Logger.ALogger;
+import models.Constants;
+import models.utils.dao.DAOException;
 // import play.libs.Akka;
 //import static fr.cea.ig.play.IGGlobals.akkaSystem;
-
 import rules.services.RulesException;
 import scala.concurrent.duration.FiniteDuration;
 import validation.ContextValidation;
@@ -35,7 +31,7 @@ public abstract class AbstractImportData implements Runnable {
 		this.contextError = new ContextValidation(Constants.NGL_DATA_USER);
 		this.name         = name;
 		this.ctx          = ctx;
-		logger            = Logger.of(this.getClass().getName());
+		logger            = play.Logger.of(this.getClass().getName());
 		logger.info(name+" start in "+durationFromStart.toMinutes()+" minutes and other iterations every "+durationFromNextIteration.toMinutes()+" minutes");
 		
 		//Akka.system()
@@ -46,6 +42,7 @@ public abstract class AbstractImportData implements Runnable {
 				                              ctx.akkaSystem().dispatcher());
 	}
 
+	@Override
 	public void run() {
 		boolean error = false;
 
@@ -54,16 +51,15 @@ public abstract class AbstractImportData implements Runnable {
 		contextError.addKeyToRootKeyName("import");
 		logger.info("ImportData execution :"+name);
 		long t1 = System.currentTimeMillis();
-		try{
+		try {
 			contextError.setCreationMode();
 			runImport();
 			contextError.removeKeyFromRootKeyName("import");
 
-		}catch (Throwable e) {
+		} catch (Throwable e) {
 			logger.error("",e);
 			error=true;
-		}
-		finally{
+		} finally {
 			error=contextError.hasErrors()?true:error;
 			/* Display error messages  */
 			contextError.displayErrors(logger);
@@ -76,8 +72,6 @@ public abstract class AbstractImportData implements Runnable {
 			}
 			MDC.remove("name");
 		}
-	};
-
-
+	}
 
 }

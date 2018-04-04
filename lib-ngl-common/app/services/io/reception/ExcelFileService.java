@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.commons.lang3.StringUtils;
@@ -17,10 +16,10 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import fr.cea.ig.play.NGLContext;
-import play.Logger;
-import services.io.ExcelHelper;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.reception.instance.ReceptionConfiguration;
+import play.Logger;
+import services.io.ExcelHelper;
 import validation.ContextValidation;
 
 public class ExcelFileService extends FileService {
@@ -72,7 +71,7 @@ public class ExcelFileService extends FileService {
 	 */
 	private Map<Integer, String> convertRow(Row row) {
 		Iterator<Cell> iti = row.cellIterator();
-		Map<Integer, String> rowMap = new TreeMap<Integer, String>();
+		Map<Integer, String> rowMap = new TreeMap<>();
 		boolean isBlankLine = true;
 		while(iti.hasNext()){
 			Cell cell = iti.next();

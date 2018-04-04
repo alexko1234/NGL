@@ -1,14 +1,10 @@
 package fr.cea.ig.ngl.domain;
 
-import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.mongojack.DBUpdate;
-// import org.mongojack.DBUpdate.Builder;
-
-// import fr.cea.ig.ngl.daoapi.SampleAPI.Type.Def;
 
 public class Type {
 	
@@ -50,7 +46,9 @@ public class Type {
 		}
 		public Closure<T,A> setup(final A a) {
 			return new Closure<T,A>() {
+				@Override
 				public void accept(final T t) { Def.this.setter.accept(t, a); }
+				@Override
 				public Def<T, A> getDef() { return Def.this; }
 			};
 		}

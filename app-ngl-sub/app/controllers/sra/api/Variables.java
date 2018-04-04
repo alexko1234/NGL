@@ -1,44 +1,17 @@
 package controllers.sra.api;
 
-// import static play.data.Form.form;
-// import static fr.cea.ig.play.IGGlobals.form;
-import static fr.cea.ig.mongo.DBQueryBuilder.*;
-
-// import java.util.ArrayList;
-// import java.util.Collections;
-// import java.util.Comparator;
-// import java.util.List;
-// import java.util.Map;
-
-//import static play.data.Form.form;
-//import static fr.cea.ig.play.IGGlobals.form;
 import javax.inject.Inject;
-
-// import org.apache.commons.lang3.StringUtils;
-// import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
 
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.lfw.Historized;
-// import fr.cea.ig.MongoDBDAO;
-// import fr.cea.ig.lfw.support.LFWForms;
 import fr.cea.ig.lfw.support.LFWRequestParsing;
 import fr.cea.ig.lfw.utils.CodeAndNameList;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
-// import fr.cea.ig.ngl.dao.DAOEntityNotFoundException;
 import fr.cea.ig.ngl.support.Executor;
 import fr.cea.ig.ngl.support.api.SraParameterAPIHolder;
-// import fr.cea.ig.play.NGLContext;
-// import models.laboratory.parameter.Parameter;
 import models.sra.submit.util.SraParameter;
 import models.sra.submit.util.VariableSRA;
-// import models.utils.InstanceConstants;
-// import models.utils.ListObject;
-//import play.Logger;
-// import play.data.Form;
-// import play.libs.Json;
-// import play.mvc.Controller;
 import play.mvc.Result;
 
 // import controllers.CommonController;              // done

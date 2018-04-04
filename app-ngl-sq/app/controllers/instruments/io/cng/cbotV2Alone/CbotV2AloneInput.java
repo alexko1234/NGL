@@ -1,41 +1,26 @@
 package controllers.instruments.io.cng.cbotV2Alone;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory; 
-import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
-import org.w3c.dom.Element;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import models.laboratory.common.instance.PropertyValue;
+import controllers.instruments.io.utils.AbstractInput;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.InputContainerUsed;
-//import models.laboratory.parameter.index.Index;
 import models.laboratory.reagent.instance.ReagentUsed;
-
-//import play.Logger;
 import validation.ContextValidation;
-import validation.utils.ValidationHelper;
-import controllers.instruments.io.utils.AbstractInput;
-import controllers.instruments.io.utils.InputHelper;
 
 public class CbotV2AloneInput extends AbstractInput {
 	

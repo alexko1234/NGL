@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.PropertyDefinition;
@@ -26,9 +28,6 @@ import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.sample.description.ImportType;
 import models.utils.InstanceConstants;
-
-import org.apache.commons.collections4.CollectionUtils;
-
 // import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
@@ -170,7 +169,7 @@ public class ContainerValidationHelper extends CommonValidationHelper {
 	public static void validateImportType(String importTypeCode, Map<String, PropertyValue> properties,	ContextValidation contextValidation) {
 		ImportType importType = BusinessValidationHelper.validateExistDescriptionCode(contextValidation, importTypeCode,"importTypeCode", ImportType.find,true);
 		if (importType != null) {
-			List<PropertyDefinition> proDefinitions=new ArrayList<PropertyDefinition>();
+			List<PropertyDefinition> proDefinitions=new ArrayList<>();
 			proDefinitions.addAll(importType.getPropertiesDefinitionContainerLevel());
 			
 			if(proDefinitions.size() > 0){
@@ -255,7 +254,7 @@ public class ContainerValidationHelper extends CommonValidationHelper {
 	}
 	
 	public static void validateRules(Container container, ContextValidation contextValidation){
-		ArrayList<Object> validationfacts = new ArrayList<Object>();
+		ArrayList<Object> validationfacts = new ArrayList<>();
 		validationfacts.add(container);
 		validationfacts.addAll(container.contents);
 		validateRules(validationfacts, contextValidation);

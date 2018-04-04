@@ -10,6 +10,7 @@ import models.laboratory.sample.description.dao.SampleTypeDAO;
 
 public class SampleType extends CommonInfoType {
 
+	@SuppressWarnings("hiding")
 	public static final CommonInfoType.AbstractCommonInfoTypeFinder<SampleType,SampleTypeDAO> find = 
 			new CommonInfoType.AbstractCommonInfoTypeFinder<>(SampleTypeDAO.class);
 	

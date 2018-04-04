@@ -9,10 +9,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.PropertyAccessorFactory;
+
 import com.fasterxml.jackson.databind.JsonNode;
+
+import controllers.history.UserHistory;
+import fr.cea.ig.play.NGLContext;
 import play.data.DynamicForm;
 import play.data.Form;
 // import play.data.validation.ValidationError;
@@ -22,8 +27,6 @@ import play.libs.Json;
 // import play.mvc.Http.Context;
 // import play.routing.JavaScriptReverseRouter;
 import play.mvc.With;
-import controllers.history.UserHistory;
-import fr.cea.ig.play.NGLContext;
 
 @With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 public abstract class APICommonController<T> extends NGLBaseController {
@@ -35,12 +38,12 @@ public abstract class APICommonController<T> extends NGLBaseController {
 	protected final Class<T> type;
 	private final Form<T> mainForm; 
 	
-	protected NGLContext ctx;
+//	protected NGLContext ctx;
 	
 	public APICommonController(NGLContext ctx, Class<T> type) {
 		super(ctx);
 		this.type = type;
-		this.ctx = ctx;
+//		this.ctx = ctx;
 		listForm = ctx.form();
 		mainForm = ctx.form(type);
 	}
@@ -72,7 +75,7 @@ public abstract class APICommonController<T> extends NGLBaseController {
 	
 	protected <P> List<Form<P>> getFilledFormList(Form<P> form, Class<P> clazz) {		
 		JsonNode json = request().body().asJson();
-		List<Form<P>> results = new ArrayList<Form<P>>();
+		List<Form<P>> results = new ArrayList<>();
 		Iterator<JsonNode> iterator = json.elements();
 		
 		while (iterator.hasNext()) {
@@ -93,7 +96,7 @@ public abstract class APICommonController<T> extends NGLBaseController {
 	 */
 	protected <A> Form<A> filledFormQueryString(Form<A> form, Class<A> clazz) {		
 		Map<String, String[]> queryString =request().queryString();
-		Map<String, Object> transformMap = new HashMap<String, Object>();
+		Map<String, Object> transformMap = new HashMap<>();
 		for (String key :queryString.keySet()) {			
 			try {
 				if (isNotEmpty(queryString.get(key))) {				

@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.mongojack.DBQuery;
+
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.common.instance.State;
 import models.laboratory.run.description.AnalysisType;
 import models.laboratory.run.description.ReadSetType;
 import models.laboratory.run.instance.Analysis;
@@ -14,12 +16,10 @@ import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
-import org.mongojack.DBQuery;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
-import fr.cea.ig.MongoDBDAO;
 
 
 
@@ -28,7 +28,7 @@ public class FileValidationHelper extends CommonValidationHelper {
 	public static void validationFiles(List<File> files, ContextValidation contextValidation) {
 		if (files!= null && files.size() > 0) {
 			int index = 0;
-			List<String> lstFullName = new ArrayList<String>();
+			List<String> lstFullName = new ArrayList<>();
 			for (File file : files) {
 				contextValidation.addKeyToRootKeyName("files[" + index + "]");
 				if (!lstFullName.contains(file.fullname)) {

@@ -6,12 +6,18 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+
+/// TODO : remove application acccess 
+// import play.Play;
+// import scala.io.Codec;
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
@@ -24,15 +30,6 @@ import models.laboratory.instrument.description.Instrument;
 import models.laboratory.parameter.index.Index;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
-
-import org.apache.commons.lang3.StringUtils;
-import org.mongojack.DBQuery;
-
-// import play.Logger;
-// TODO : remove application acccess 
-// import play.Play;
-// import scala.io.Codec;
-import fr.cea.ig.MongoDBDAO;
 
 public class OutputHelper {
 
@@ -89,7 +86,7 @@ public class OutputHelper {
 	}
 	
 	public static List<Container> getInputContainersFromExperiment(Experiment experiment){
-		List<Container> containers = new ArrayList<Container>();
+		List<Container> containers = new ArrayList<>();
 		for(int i=0; i<experiment.atomicTransfertMethods.size();i++){
 			for(InputContainerUsed cu : experiment.atomicTransfertMethods.get(i).inputContainerUseds){
 				containers.add(MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, cu.code));

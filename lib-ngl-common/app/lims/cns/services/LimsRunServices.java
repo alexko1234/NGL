@@ -13,6 +13,20 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.time.DateUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
+import org.mongojack.DBUpdate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.mongodb.BasicDBObject;
+
+//import play.Logger;
+//import play.Logger.ALogger;
+// import play.Play;
+import fr.cea.ig.MongoDBDAO;
 import lims.cns.dao.LimsAbandonDAO;
 import lims.cns.dao.LimsExperiment;
 import lims.cns.dao.LimsLibrary;
@@ -39,21 +53,6 @@ import models.laboratory.run.instance.Run;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang.time.DateUtils;
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-import org.mongojack.DBQuery.Query;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.mongodb.BasicDBObject;
-
-//import play.Logger;
-//import play.Logger.ALogger;
-// import play.Play;
-import fr.cea.ig.MongoDBDAO;
 
 
 @Service
@@ -83,12 +82,12 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 	 */
 
 	public LimsRunServices() {
-		crScoring = new HashMap<String, Integer>();
+		crScoring = new HashMap<>();
 		crScoring.put("TAXO-contaMatOri", 1);
 		crScoring.put("Qlte-duplicat", 2);
 		crScoring.put("Qlte-repartitionBases", 4);
 
-		scoreMapping = new HashMap<Integer, Integer>();
+		scoreMapping = new HashMap<>();
 		scoreMapping.put(1, 9);
 		scoreMapping.put(2, 42);
 		scoreMapping.put(4, 41);
@@ -188,14 +187,14 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 			flowcell = new Flowcell();
 			flowcell.containerSupportCode = supportCode;
 
-			Map<Integer, lims.models.experiment.illumina.Lane> lanes = new HashMap<Integer, lims.models.experiment.illumina.Lane>();
+			Map<Integer, lims.models.experiment.illumina.Lane> lanes = new HashMap<>();
 
 			for (LimsLibrary lrs : limsReadSets) {
 				lims.models.experiment.illumina.Lane currentLane = lanes.get(lrs.laneNumber);
 				if (null == currentLane) {
 					currentLane = new lims.models.experiment.illumina.Lane();
 					currentLane.number = lrs.laneNumber;
-					currentLane.librairies = new ArrayList<Library>();
+					currentLane.librairies = new ArrayList<>();
 					lanes.put(lrs.laneNumber, currentLane);
 				}
 
@@ -309,6 +308,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 		}
 	}
 
+	@Override
 	public synchronized void sendMailFVQC(ReadSet readSet) throws MailServiceException {
 		logger.debug("send mail agirs");
 		if (!MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
@@ -351,7 +351,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 			String alertMailExp  = configuration().getString("validation.mail.from"); 
 			String alertMailDest = configuration().getString("validation.mail.to");    	
 			MailServices mailService = new MailServices();
-			Set<String> destinataires = new HashSet<String>();
+			Set<String> destinataires = new HashSet<>();
 			destinataires.addAll(Arrays.asList(alertMailDest.split(",")));
 			mailService.sendMail(alertMailExp, destinataires, "[NGL-BI] Tous les readsets du run "+readSet.runCode+" ont ete evalues.", message.toString());
 			
@@ -417,7 +417,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 			if (ds == null)
 				ds = insertFlowcellNGL(run);
 			if (ds != null) {
-				Map<String, BanqueSolexa> mapBanques = new HashMap<String, BanqueSolexa>();
+				Map<String, BanqueSolexa> mapBanques = new HashMap<>();
 				for(BanqueSolexa banque:  dao.getBanqueSolexa(run.containerSupportCode)){
 					String key = banque.prsco+"_"+banque.adnnom+"_"+banque.lanenum+"_"+banque.tagkeyseq;
 					//Logger.debug("key banque = "+key);
@@ -430,7 +430,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 						mapBanques.put(key, banque);
 					}
 				}
-				Map<String, ReadSet> mapReadSets = new HashMap<String, ReadSet>();
+				Map<String, ReadSet> mapReadSets = new HashMap<>();
 				for (ReadSet readSet:  readSets) {
 					String index = (readSet.code.contains("."))?readSet.code.split("\\.")[1]:"";
 					String key = readSet.sampleCode+"_"+readSet.laneNumber+"_"+index;
@@ -482,6 +482,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 		}
 	}
 
+	@Override
 	public void updateReadSetEtat(ReadSet readset, int etat){
 		if(dao.isLseqco(readset)){
 			dao.updateReadSetEtat(readset, etat);
@@ -500,6 +501,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 		}
 	}
 	
+	@Override
 	public void linkRunWithMaterielManip() {
 		try {
 			dao.linkRunWithMaterielManip();

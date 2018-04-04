@@ -2,27 +2,23 @@ package controllers.admin.supports.api.objects;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
-
-import models.laboratory.common.description.Level;
-import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.experiment.instance.AbstractContainerUsed;
-import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.InputContainerUsed;
-import models.laboratory.experiment.instance.OutputContainerUsed;
-import models.utils.InstanceConstants;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-import validation.ContextValidation;
-import validation.utils.ValidationHelper;
 import controllers.admin.supports.api.NGLObject;
 import controllers.admin.supports.api.NGLObjectsSearchForm;
+import models.laboratory.common.description.Level;
+import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.OutputContainerUsed;
+import models.utils.InstanceConstants;
+import validation.ContextValidation;
+import validation.utils.ValidationHelper;
 
 public class ExperimentUpdate extends AbstractUpdate<Experiment> {
 
@@ -34,7 +30,7 @@ public class ExperimentUpdate extends AbstractUpdate<Experiment> {
 	public Query getQuery(NGLObjectsSearchForm form) {
 		Query query = null;
 		
-		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
+		List<DBQuery.Query> queryElts = new ArrayList<>();
 		queryElts.add(getProjectCodeQuery(form, ""));
 		queryElts.add(getSampleCodeQuery(form, ""));
 		queryElts.addAll(getContentPropertiesQuery(form, ""));

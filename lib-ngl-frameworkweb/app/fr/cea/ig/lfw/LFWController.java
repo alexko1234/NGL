@@ -16,7 +16,6 @@ import play.Logger.ALogger;
 import play.data.validation.ValidationError;
 import play.i18n.Lang;
 import play.i18n.Messages;
-import play.i18n.MessagesApi;
 import play.inject.Injector;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -34,6 +33,7 @@ public class LFWController extends Controller implements LFWApplicationHolder, L
 		logger = play.Logger.of(getClass());
 	}
 	
+	@Override
 	public LFWApplication getLFWApplication() { 
 		return app; 
 	}

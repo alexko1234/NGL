@@ -1,14 +1,19 @@
 package controllers.instruments.io;
 
-// import static play.data.Form.form;
-//import static fr.cea.ig.play.IGGlobals.form;
-
 import java.lang.reflect.Constructor;
 
+import javax.inject.Inject;
+
+import controllers.TPLCommonController;
+import controllers.authorisation.Permission;
+import controllers.instruments.io.utils.AbstractInput;
+import controllers.instruments.io.utils.AbstractOutput;
+import controllers.instruments.io.utils.File;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.IGBodyParsers;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.instrument.description.dao.InstrumentDAO;
-import models.laboratory.instrument.instance.InstrumentUsed;
 import models.utils.DescriptionHelper;
 import models.utils.InstanceConstants;
 //import play.Logger;
@@ -19,15 +24,6 @@ import play.mvc.BodyParser;
 import play.mvc.Result;
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;
-import controllers.TPLCommonController;
-import controllers.authorisation.Permission;
-import controllers.instruments.io.utils.AbstractInput;
-import controllers.instruments.io.utils.AbstractOutput;
-import controllers.instruments.io.utils.File;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.IGBodyParsers;
-import fr.cea.ig.play.NGLContext;
-import javax.inject.Inject;
 
 public class IO extends TPLCommonController {
 

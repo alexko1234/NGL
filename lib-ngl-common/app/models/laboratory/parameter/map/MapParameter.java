@@ -2,7 +2,6 @@ package models.laboratory.parameter.map;
 
 import java.util.Map;
 
-import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.parameter.Parameter;
 
 public class MapParameter extends Parameter {

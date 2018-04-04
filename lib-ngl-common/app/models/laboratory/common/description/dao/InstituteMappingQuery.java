@@ -5,12 +5,11 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.springframework.jdbc.core.SqlParameter;
+
 import models.laboratory.common.description.Institute;
 import models.utils.dao.MappingSqlQueryFactory;
 import models.utils.dao.NGLMappingSqlQuery;
-
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.object.MappingSqlQuery;
 
 //public class InstituteMappingQuery extends MappingSqlQuery<Institute> {
 public class InstituteMappingQuery extends NGLMappingSqlQuery<Institute> {

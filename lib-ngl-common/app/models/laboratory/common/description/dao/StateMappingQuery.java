@@ -2,16 +2,16 @@ package models.laboratory.common.description.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import javax.sql.DataSource;
+
+import org.springframework.jdbc.core.SqlParameter;
 
 import models.laboratory.common.description.State;
 import models.laboratory.common.description.StateCategory;
 import models.utils.dao.DAOException;
 import models.utils.dao.MappingSqlQueryFactory;
 import models.utils.dao.NGLMappingSqlQuery;
-
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.object.MappingSqlQuery;
 
 //public class StateMappingQuery extends MappingSqlQuery<State> {
 public class StateMappingQuery extends NGLMappingSqlQuery<State> {

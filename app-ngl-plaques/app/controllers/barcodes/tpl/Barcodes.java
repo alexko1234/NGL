@@ -8,11 +8,9 @@ import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.support.NGLJavascript;
-import play.routing.JavaScriptReverseRouter;
 import play.mvc.Result;
-
-import views.html.barcodes.home;
 import views.html.barcodes.create;
+import views.html.barcodes.home;
 import views.html.barcodes.search;
 
 //import controllers.CommonController;

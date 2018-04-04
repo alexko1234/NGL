@@ -2,30 +2,23 @@ package controllers.experiments.api;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
-
-import org.springframework.stereotype.Controller;
-
-import models.laboratory.common.description.Level;
-import models.laboratory.common.instance.Comment;
-import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.experiment.instance.Experiment;
-import models.utils.CodeHelper;
-import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
 
-import play.data.Form;
-import play.mvc.Result;
-import validation.ContextValidation;
 import controllers.SubDocumentController;
 import controllers.authorisation.Permission;
 import fr.cea.ig.play.NGLContext;
+import models.laboratory.common.instance.Comment;
+import models.laboratory.experiment.instance.Experiment;
+import models.utils.CodeHelper;
+import models.utils.InstanceConstants;
+import play.data.Form;
+import play.mvc.Result;
+import validation.ContextValidation;
 
 // @Controller
 public class ExperimentComments extends SubDocumentController<Experiment, Comment> {
@@ -35,15 +28,18 @@ public class ExperimentComments extends SubDocumentController<Experiment, Commen
 		super(ctx,InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, Comment.class);
 	}
 	
-	protected Query getSubObjectQuery(String parentCode, String code){
+	@Override
+	protected Query getSubObjectQuery(String parentCode, String code) {
 		return DBQuery.and(DBQuery.is("code", parentCode), DBQuery.is("comments.code",code));
 	}
 	
-	protected Collection<Comment> getSubObjects(Experiment object){
+	@Override
+	protected Collection<Comment> getSubObjects(Experiment object) {
 		return object.comments;
 	}
 	
-	protected Comment getSubObject(Experiment object, String code){
+	@Override
+	protected Comment getSubObject(Experiment object, String code) {
 		for(Comment c : object.comments){
 			if(code.equals(c.code)){
 				return c;

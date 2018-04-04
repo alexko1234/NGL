@@ -2,8 +2,6 @@ package models.laboratory.common.description;
 
 import models.laboratory.common.description.dao.ObjectTypeDAO;
 import models.utils.Model;
-//TODO: fix doc generation that produces an error with the unqualified name
-import models.utils.Model.Finder;
 import models.utils.dao.AbstractDAO;
 
 /**
@@ -34,7 +32,7 @@ public class ObjectType extends Model<ObjectType> {
 		SRAStudy, 
 		SRASample, 
 		SRAExperiment 
-	}; 
+	} 
 
 	//Set true if type has additional attributes compared to commonInfoType
 	public Boolean generic;
@@ -49,5 +47,4 @@ public class ObjectType extends Model<ObjectType> {
 	}
 
 }
-
 

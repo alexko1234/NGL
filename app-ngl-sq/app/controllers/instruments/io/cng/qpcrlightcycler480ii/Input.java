@@ -4,27 +4,21 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import controllers.instruments.io.utils.AbstractInput;
+import controllers.instruments.io.utils.InputHelper;
 import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
-import models.laboratory.parameter.index.Index;
 //import play.Logger;
 import validation.ContextValidation;
-import validation.utils.ValidationHelper;
-import controllers.instruments.io.utils.AbstractInput;
-import controllers.instruments.io.utils.InputHelper;
 
 public class Input extends AbstractInput {
 	
@@ -85,7 +79,7 @@ public class Input extends AbstractInput {
 		int nbRep=6; // 2 dilutions avec 3 repetition=> 6; chaque puit 96 initial est traité 6 fois dans la plaque 384
 		
 		// hashMap  pour stocker les concentrations du fichier
-		Map<String,Double> data = new HashMap<String,Double>(0);
+		Map<String,Double> data = new HashMap<>(0);
 		
 		// ajout 03/08/2017 charset detection (N. Wiart)
 //		byte[] ibuf = pfv.value;
@@ -162,12 +156,12 @@ public class Input extends AbstractInput {
 		}
 		
 		// nouveau HashMap pour les concentrations calculees en nM
-		Map<String,Double> results = new HashMap<String,Double>(0);
+		Map<String,Double> results = new HashMap<>(0);
 		
 		/* traiter dans l'ordre des positions; 
 		 * 6 lignes successives (1 block) doivent correspondre au meme echantillon avec 3 repetions de 2 dilutions
 		 */
-		SortedSet<String> pos0384 = new TreeSet<String>(data.keySet());
+		SortedSet<String> pos0384 = new TreeSet<>(data.keySet());
 		int nbblock = 0;
 		int rep = 0;
 		double[] listConc = new double[nbRep];

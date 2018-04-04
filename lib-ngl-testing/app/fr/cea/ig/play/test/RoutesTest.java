@@ -14,8 +14,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import play.mvc.Http.Status;
 import play.libs.ws.WSClient;
+import play.mvc.Http.Status;
 
 
 
@@ -27,8 +27,8 @@ public class RoutesTest {
 	private Set<String> ignore;
 	
 	public RoutesTest() {
-		routesList = new ArrayList<Routes>();
-		ignore = new HashSet<String>();
+		routesList = new ArrayList<>();
+		ignore = new HashSet<>();
 	}
 	
 	// Lol ?
@@ -79,7 +79,7 @@ public class RoutesTest {
 			}
 		}
 		
-		public List<Entry> entries = new ArrayList<Entry>();
+		public List<Entry> entries = new ArrayList<>();
 		
 		public void load(String name) throws IOException,java.net.URISyntaxException {
 			URL resource = DevAppTesting.class.getClassLoader().getResource(name);

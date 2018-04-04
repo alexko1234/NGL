@@ -3,9 +3,7 @@ package services.description.instrument;
 import static services.description.DescriptionFactory.newInstrumentCategory;
 import static services.description.DescriptionFactory.newInstrumentUsedType;
 import static services.description.DescriptionFactory.newPropertiesDefinition;
-import static services.description.DescriptionFactory.newValues;
 
-import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +12,6 @@ import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
@@ -26,11 +23,11 @@ import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 import services.description.common.MeasureService;
 
-public class InstrumentServiceTEST extends AbstractInstrumentService{
+public class InstrumentServiceTEST extends AbstractInstrumentService {
 	
-	
+	@Override
 	public void saveInstrumentCategories(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<InstrumentCategory> l = new ArrayList<InstrumentCategory>();
+		List<InstrumentCategory> l = new ArrayList<>();
 		l.add(newInstrumentCategory("Covaris","covaris"));
 		l.add(newInstrumentCategory("Spri","spri"));
 		l.add(newInstrumentCategory("Thermocycleur","thermocycler"));
@@ -55,9 +52,10 @@ public class InstrumentServiceTEST extends AbstractInstrumentService{
 		DAOHelpers.saveModels(InstrumentCategory.class, l, errors);
 	}
 	
+	@Override
 	public void saveInstrumentUsedTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		
-		List<InstrumentUsedType> l = new ArrayList<InstrumentUsedType>();
+		List<InstrumentUsedType> l = new ArrayList<>();
 		
 		//CNS
 		/*
@@ -236,7 +234,7 @@ public class InstrumentServiceTEST extends AbstractInstrumentService{
 	}
 
 	private static List<PropertyDefinition> getTestOneToOneProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
         propertyDefinitions.add(newPropertiesDefinition("Inst. Content 1", "instCont1", LevelService.getLevels(Level.CODE.Instrument),String.class, true,
         		DescriptionFactory.newValues("G-TUBE"), "G-TUBE", null, null, null, "single", 1));
         propertyDefinitions.add(newPropertiesDefinition("Inst. 1", "inst1", LevelService.getLevels(Level.CODE.Instrument),String.class, false,
@@ -248,7 +246,7 @@ public class InstrumentServiceTEST extends AbstractInstrumentService{
 	}
 	
 	private static List<Instrument> getInstrumentTestOneToOne() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments = new ArrayList<>();
 		instruments.add(createInstrument("inst-one-to-one", "One To One", null, true, "path", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		return instruments;
 	}
@@ -399,7 +397,7 @@ public class InstrumentServiceTEST extends AbstractInstrumentService{
 //	}
 			
 	public static List<Instrument> getInstrumentOpgen()throws DAOException{
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		instruments.add( createInstrument("APOLLON", "APOLLON", null, true, "/env/ig/atelier/opgen/cns/APOLLON", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		return instruments;
 	}
@@ -422,7 +420,7 @@ public class InstrumentServiceTEST extends AbstractInstrumentService{
 //	}
 	
 	public static List<Instrument> getInstrumentHiseq2000() throws DAOException{
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		instruments.add(createInstrument("HISEQ2", "HISEQ2", "H2C", false, "/env/ig/atelier/illumina/cng/HISEQ2/", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		instruments.add(createInstrument("HISEQ4", "HISEQ4", "H4C", false, "/env/ig/atelier/illumina/cng/HISEQ4/", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		instruments.add(createInstrument("HISEQ7", "HISEQ7", "H7C", false, "/env/ig/atelier/illumina/cng/HISEQ7/", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
@@ -435,7 +433,7 @@ public class InstrumentServiceTEST extends AbstractInstrumentService{
 	}
 	
 	public static List<Instrument> getInstrumentHiseq2500() throws DAOException{
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		instruments.add( createInstrument("HISEQ9", "HISEQ9", "H9C", false, "/env/ig/atelier/illumina/cng/HISEQ9/", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		instruments.add( createInstrument("HISEQ10", "HISEQ10", "H10C", false, "/env/ig/atelier/illumina/cng/HISEQ10/", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		instruments.add( createInstrument("HISEQ11", "HISEQ11", "H11C", false, "/env/ig/atelier/illumina/cng/HISEQ11/", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));		
@@ -452,7 +450,7 @@ public class InstrumentServiceTEST extends AbstractInstrumentService{
 //	}
 	
 	public static List<Instrument> getInstrumentExtSolexa()throws DAOException{
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		instruments.add( createInstrument("EXTGAIIX", "EXTGAIIX", "G0", true, "/env/atelier", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		instruments.add( createInstrument("EXTHISEQ", "EXTHISEQ", "H0", true, "/env/atelier", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		instruments.add( createInstrument("EXTMISEQ", "EXTMISEQ", "M0", true, "/env/atelier", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));

@@ -40,6 +40,8 @@ import validation.ContextValidation;
 
 public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 
+	// Required because accessed from static method
+	@SuppressWarnings("hiding")
 	private static final play.Logger.ALogger logger = play.Logger.of(ContainerImportCNS.class);
 	
 	@Inject
@@ -53,7 +55,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		Sample newSample =null;
 		String rootKeyName=null;
 	
-		List<Container> containersList = new ArrayList<Container>(containers);
+		List<Container> containersList = new ArrayList<>(containers);
 		for (Container container : containersList) {
 			List<Content> contents;
 			if (sqlContent != null) {	
@@ -120,7 +122,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 	 * @throws SQLException
 	 * @throws DAOException
 	 */
-	public	static void createContainers(ContextValidation contextError, String sqlContainer,String containerCategoryCode,  String containerStateCode, String experimentTypeCode, String sqlContent) throws SQLException, DAOException{
+	public static void createContainers(ContextValidation contextError, String sqlContainer,String containerCategoryCode,  String containerStateCode, String experimentTypeCode, String sqlContent) throws SQLException, DAOException{
 		String rootKeyName = null;
 	
 		List<Container> containers=	limsServices.findContainersToCreate(sqlContainer,contextError, containerCategoryCode,containerStateCode,experimentTypeCode);
@@ -129,8 +131,8 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		
 		ContainerImportCNS.saveSampleFromContainer(contextError,containers,sqlContent);
 		
-		Map<String,PropertyValue> propertiesContainerSupports=new HashMap<String, PropertyValue>();
-		Set<String> supportContainers = new HashSet<String>();
+		Map<String,PropertyValue> propertiesContainerSupports=new HashMap<>();
+		Set<String> supportContainers = new HashSet<>();
 		for (Container container : containers) {
 			if (!propertiesContainerSupports.containsKey(container.support.code) && container.properties.get("sequencingProgramType") != null) {
 				// propertiesContainerSupports.put(container.support.code, container.properties.get("sequencingProgramType"));
@@ -152,7 +154,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 //		List<ContainerSupport> containerSupports=
 				ContainerHelper.createSupportFromContainers(containersSupportContainers,propertiesContainerSupports, contextError);
 	
-		List<Container> newContainers = new ArrayList<Container>();
+		List<Container> newContainers = new ArrayList<>();
 		
 		for (Container container:containers) {
 			//Logger.debug("Container :"+container.code+ "nb sample code"+container.sampleCodes.size());
@@ -243,7 +245,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 			container.categoryCode=containerCategoryCode;
 		}
 
-		container.comments = new ArrayList<Comment>();				
+		container.comments = new ArrayList<>();				
 		container.comments.add(new Comment(rs.getString("comment"), "ngl-test"));
 		
 		container.state = new State(); 
@@ -334,15 +336,15 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		} catch(SQLException e) {
 		}
 		if (experimentTypeCode != null) {
-			container.fromTransformationTypeCodes = new HashSet<String>();
+			container.fromTransformationTypeCodes = new HashSet<>();
 			container.fromTransformationTypeCodes.add(experimentTypeCode);	
 		}
-		container.projectCodes = new HashSet<String>();					
+		container.projectCodes = new HashSet<>();					
 		if (rs.getString("project") != null) 					
 			container.projectCodes.add(rs.getString("project"));
 		if (rs.getString("controlLane") != null)
 			container.properties.put("controlLane",new PropertySingleValue(rs.getBoolean("controlLane")));
-		container.sampleCodes=new HashSet<String>();
+		container.sampleCodes=new HashSet<>();
 		if (rs.getString("sampleCode") != null) {
 			Content sampleUsed = new Content();
 			sampleUsed.percentage = 100.0;

@@ -1,15 +1,14 @@
 package models.laboratory.experiment.instance;
 
-import play.Logger;
 import models.laboratory.container.description.ContainerSupportCategory;
 import validation.ContextValidation;
 import validation.experiment.instance.AtomicTransfertMethodValidationHelper;
 
 public class OneToOneContainer extends AtomicTransfertMethod {
 
-	public OneToOneContainer(){
-		super();
-	}
+//	public OneToOneContainer(){
+//		super();
+//	}
 
 	@Override
 	public void updateOutputCodeIfNeeded(ContainerSupportCategory outputCsc, String supportCode) {

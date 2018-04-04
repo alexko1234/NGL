@@ -12,16 +12,12 @@ import org.junit.runners.MethodSorters;
 import org.mongojack.DBQuery;
 
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.test.WSHelper;
 import models.laboratory.common.instance.property.PropertySingleValue;
-import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.Analysis;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Treatment;
-import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import ngl.bi.AbstractBIServerTest;
-//import play.Logger;
 import play.libs.Json;
 import play.libs.ws.WSResponse;
 

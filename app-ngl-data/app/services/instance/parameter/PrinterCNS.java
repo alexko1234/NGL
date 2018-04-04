@@ -37,7 +37,7 @@ public class PrinterCNS {
 	}	
 	
 	public static void savePrinters(ContextValidation ctx){		
-		List<BBP11> lp = new ArrayList<BBP11>();
+		List<BBP11> lp = new ArrayList<>();
 		if(ConfigFactory.load().getString("ngl.env").equals("UAT") 
 				|| ConfigFactory.load().getString("ngl.env").equals("DEV")){
 			

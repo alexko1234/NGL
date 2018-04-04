@@ -20,7 +20,7 @@ public class ContainerCategoryDAO extends AbstractDAODefault<ContainerCategory> 
 		}
 		String sql = sqlCommon + " inner join container_support_category as c ON c.fk_container_category=t.id" +
 				" WHERE c.code=? order by t.name";
-		BeanPropertyRowMapper<ContainerCategory> mapper = new BeanPropertyRowMapper<ContainerCategory>(entityClass);
+		BeanPropertyRowMapper<ContainerCategory> mapper = new BeanPropertyRowMapper<>(entityClass);
 		return this.jdbcTemplate.queryForObject(sql, mapper, containerSupportCategoryCode);
 	}
 	

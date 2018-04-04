@@ -1,16 +1,14 @@
 package controllers.instruments.io.utils;
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.mongojack.DBQuery;
 
-import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.parameter.index.Index;
 import models.utils.InstanceConstants;
-
-import java.util.List;
-import java.util.ArrayList;
+import validation.ContextValidation;
 
 public class InputHelper {
 	
@@ -84,7 +82,7 @@ public class InputHelper {
 	  int end = 0;
 	  int len = s.length();
 	  boolean inquotes = false;
-	  List<String> fields = new ArrayList<String>();
+	  List<String> fields = new ArrayList<>();
 
 	  for (int i = 0; i < len; i++) {
 	    if (s.charAt(i) == '\"') {

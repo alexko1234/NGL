@@ -105,6 +105,7 @@ public class LimsCNSDAO {
 		new RowMapper<Container>() {
 
 //			@SuppressWarnings("rawtypes")
+			@Override
 			public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 				Container container = null;
@@ -129,6 +130,7 @@ public class LimsCNSDAO {
 		,new RowMapper<Sample>() {
 
 //			@SuppressWarnings("rawtypes")
+			@Override
 			public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 				Sample sample = new Sample();
@@ -164,15 +166,15 @@ public class LimsCNSDAO {
 				logger.debug("Sample Type : {}", sampleTypeCode);
 
 				sample.typeCode        = sampleTypeCode;
-				sample.projectCodes    = new HashSet<String>();
+				sample.projectCodes    = new HashSet<>();
 				sample.projectCodes.add(rs.getString("project"));
 				sample.name            = rs.getString("name");
 				sample.referenceCollab = rs.getString("referenceCollab");
 				sample.taxonCode       = rs.getString("taxonCode");
-				sample.comments        = new ArrayList<Comment>();
+				sample.comments        = new ArrayList<>();
 				sample.comments.add(new Comment(rs.getString("comment"), "ngl-test"));
 				sample.categoryCode    = sampleType.category.code;
-				sample.properties      = new HashMap<String, PropertyValue>();
+				sample.properties      = new HashMap<>();
 				MappingHelper.getPropertiesFromResultSet(rs,sampleType.propertiesDefinitions,sample.properties);
 
 				//Logger.debug("Properties sample "+sample.properties.containsKey("taxonSize"));
@@ -189,7 +191,7 @@ public class LimsCNSDAO {
 					logger.debug("Tara sample {}", sample.code);
 
 					TaraDAO  taraServices = Spring.getBeanOfType(TaraDAO.class);
-					if(sample.properties==null){ sample.properties=new HashMap<String, PropertyValue>();}
+					if(sample.properties==null){ sample.properties=new HashMap<>();}
 
 					Map<String, PropertyValue> map=taraServices.findTaraSampleFromLimsCode(rs.getInt(LIMS_CODE),contextError);
 
@@ -231,13 +233,14 @@ public class LimsCNSDAO {
 		,new RowMapper<Project>() {
 
 //			@SuppressWarnings("rawtypes")
+			@Override
 			public Project mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 
 				Project project = new Project();
 				project.code = rs.getString(2).trim();
 				project.name = rs.getString(1);
-				project.properties=new HashMap<String,PropertyValue>();
+				project.properties=new HashMap<>();
 				
 				String fgGroupe=rs.getString("groupefg");
 				if(fgGroupe==null){
@@ -287,6 +290,7 @@ public class LimsCNSDAO {
 	public List<ListObject> getListObjectFromProcedureLims(String procedure) {
 		List<ListObject> listObjects = this.jdbcTemplate.query(procedure,
 				new RowMapper<ListObject>() {
+			@Override
 			public ListObject mapRow(ResultSet rs, int rowNum)
 					throws SQLException {
 				ListObject value = new ListObject();
@@ -379,13 +383,14 @@ public class LimsCNSDAO {
 		,new RowMapper<Content>() {
 
 //			@SuppressWarnings("rawtypes")
+			@Override
 			public Content mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 				Content sampleUsed = new Content(rs.getString("sampleCode"),null,null);
 				sampleUsed.projectCode = rs.getString("project");
 				//TODO add projectCode
 				// Todo add properties from ExperimentType
-				sampleUsed.properties=new HashMap<String, PropertyValue>();
+				sampleUsed.properties=new HashMap<>();
 				if(rs.getString("percentPerLane")!=null){
 					sampleUsed.properties.put("percentPerLane", new PropertySingleValue(rs.getDouble("percentPerLane")));
 					sampleUsed.percentage=rs.getDouble("percentPerLane");
@@ -420,6 +425,7 @@ public class LimsCNSDAO {
 		List<Run> results = this.jdbcTemplate.query(sqlContent,new RowMapper<Run>() {
 
 //			@SuppressWarnings("rawtypes")
+			@Override
 			public Run mapRow(ResultSet rs, int rowNum) throws SQLException {
 				logger.debug("Begin findRunsToCreate");
 
@@ -456,7 +462,7 @@ public class LimsCNSDAO {
 				run.state.user = NGSRG_CODE;
 				run.state.date = new Date();
 
-				run.state.historical=new HashSet<TransientState>();		
+				run.state.historical=new HashSet<>();		
 				run.state.historical.add(getTransientState(rs.getDate("beginNGSRG"),"IP-RG",0));
 				run.state.historical.add(getTransientState(rs.getDate("endNGSRG"),"F-RG",1));				
 
@@ -465,7 +471,7 @@ public class LimsCNSDAO {
 				run.traceInformation = ti; 
 
 				contextValidation.addKeyToRootKeyName("run["+run.code+"]");
-				run.treatments=new HashMap<String, Treatment>();
+				run.treatments=new HashMap<>();
 				run.treatments.put(NGSRG_CODE,newTreatment(contextValidation,rs, Level.CODE.Run,NGSRG_CODE,NGSRG_CODE,RUN_TYPE_CODE));
 				contextValidation.removeKeyFromRootKeyName("run["+run.code+"]");
 
@@ -505,6 +511,7 @@ public class LimsCNSDAO {
 		List<Lane> results = this.jdbcTemplate.query("pl_LaneUnRunToNGL @runCode=?",new Object[]{run.code} 
 		,new RowMapper<Lane>() {
 //			@SuppressWarnings("rawtypes")
+			@Override
 			public Lane mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 				Lane lane=getLane(run,rs.getInt("lanenum"));
@@ -550,7 +557,7 @@ public class LimsCNSDAO {
 		treatment.categoryCode=categoryCode;
 		treatment.code=code;
 		treatment.typeCode=typeCode;
-		Map<String,PropertyValue> m = new HashMap<String,PropertyValue>();
+		Map<String,PropertyValue> m = new HashMap<>();
 
 		try {
 			TreatmentType treatmentType=TreatmentType.find.findByCode(treatment.typeCode);
@@ -563,7 +570,7 @@ public class LimsCNSDAO {
 		} catch (DAOException e) {
 			logger.error("",e);
 		}
-		treatment.results=new HashMap<String, Map<String,PropertyValue>>();
+		treatment.results=new HashMap<>();
 		treatment.results.put("default",m);
 		return treatment;
 	}
@@ -573,6 +580,7 @@ public class LimsCNSDAO {
 		List<ReadSet> results = this.jdbcTemplate.query("pl_ReadSetUnRunToNGL @runCode=?",new Object[]{run.code} 
 		,new RowMapper<ReadSet>() {
 //			@SuppressWarnings("rawtypes")
+			@Override
 			public ReadSet mapRow(ResultSet rs, int rowNum) throws SQLException {
 				ReadSet readSet=new ReadSet();
 				readSet.code=rs.getString("code");
@@ -590,7 +598,7 @@ public class LimsCNSDAO {
 				readSet.state.date= new Date();
 				readSet.state.user="lims";
 
-				readSet.state.historical=new HashSet<TransientState>();		
+				readSet.state.historical=new HashSet<>();		
 				readSet.state.historical.add(getTransientState(rs.getDate("beginNGSRG"),"IP-RG",0));
 				readSet.state.historical.add(getTransientState(rs.getDate("endNGSRG"),"F-RG",1));
 				readSet.state.historical.add(getTransientState(rs.getDate("endNGSRG"),"IW-QC",2));
@@ -624,6 +632,7 @@ public class LimsCNSDAO {
 		ReadSet results = this.jdbcTemplate.queryForObject("pl_ReadSetUnRunToNGL @readSetCode=?",new Object[]{readSet.code} 
 		,new RowMapper<ReadSet>() {
 //			@SuppressWarnings("rawtypes")
+			@Override
 			public ReadSet mapRow(ResultSet rs, int rowNum) throws SQLException {
 				ReadSet readSet=new ReadSet();
 				readSet.code=rs.getString("code");
@@ -641,7 +650,7 @@ public class LimsCNSDAO {
 				readSet.state.date= new Date();
 				readSet.state.user="lims";
 
-				readSet.state.historical=new HashSet<TransientState>();		
+				readSet.state.historical=new HashSet<>();		
 				readSet.state.historical.add(getTransientState(rs.getDate("beginNGSRG"),"IP-RG",0));
 				readSet.state.historical.add(getTransientState(rs.getDate("endNGSRG"),"F-RG",1));
 				readSet.state.historical.add(getTransientState(rs.getDate("endNGSRG"),"IW-QC",2));
@@ -708,6 +717,7 @@ public class LimsCNSDAO {
 		List<File> results = this.jdbcTemplate.query("pl_FileUnReadSetToNGL @readSetCode=?",new Object[]{readSet.code} 
 		,new RowMapper<File>() {
 //			@SuppressWarnings("rawtypes")
+			@Override
 			public File mapRow(ResultSet rs, int rowNum) throws SQLException {
 				File file=new File();
 				file.extension=rs.getString("extension");
@@ -722,7 +732,7 @@ public class LimsCNSDAO {
 				} catch (DAOException e) {
 					logger.error("",e);
 				}
-				file.properties=new HashMap<String, PropertyValue>();
+				file.properties=new HashMap<>();
 				MappingHelper.getPropertiesFromResultSet(rs,readSetType.getPropertyDefinitionByLevel(Level.CODE.File),file.properties);
 
 				return file;
@@ -737,6 +747,7 @@ public class LimsCNSDAO {
 		List<Index> results = this.jdbcTemplate.query("pl_TagUneEtmanip 13" 
 				,new RowMapper<Index>() {
 //					@SuppressWarnings("rawtypes")
+					@Override
 					public Index mapRow(ResultSet rs, int rowNum) throws SQLException {
 						Index index=new IlluminaIndex();
 						index.code=rs.getString("tagkeyseq");
@@ -744,7 +755,7 @@ public class LimsCNSDAO {
 						index.shortName=rs.getString("tagkeyseq");
 						index.categoryCode=rs.getString("categoryCode");
 						index.sequence=rs.getString("tagseq");
-						index.supplierName=new HashMap<String, String>();
+						index.supplierName=new HashMap<>();
 						index.supplierName.put("illumina",rs.getString("tagnamefour"));
 						index.traceInformation=new TraceInformation();
 						InstanceHelpers.updateTraceInformation(index.traceInformation, "ngl-data");
@@ -772,6 +783,7 @@ public class LimsCNSDAO {
 		List<String> results =  this.jdbcTemplate.query(sql 
 				,new RowMapper<String>() {
 
+			@Override
 			public String mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 				return rs.getString("code");
@@ -792,20 +804,21 @@ public class LimsCNSDAO {
 				results = this.jdbcTemplate.query(sql ,new Object[]{container.code}
 			,new RowMapper<Process>() {
 //				@SuppressWarnings("rawtypes")
+				@Override
 				public Process mapRow(ResultSet rs, int rowNum) throws SQLException {
 					Process process=new Process();
 					process.typeCode=processType.code;
 					process.categoryCode=processType.category.code;
 					process.inputContainerCode=container.code;
-					process.projectCodes=new HashSet<String>();
+					process.projectCodes=new HashSet<>();
 					process.projectCodes.add(rs.getString("projectCode"));
-					process.sampleCodes=new HashSet<String>();
+					process.sampleCodes=new HashSet<>();
 					process.sampleCodes.add(rs.getString("sampleCode"));
 					process.traceInformation=new TraceInformation();
 					process.traceInformation.createUser=contextError.getUser();
 					process.traceInformation.creationDate=new Date();
 					process.state=new State("N",contextError.getUser());
-					process.properties=new HashMap<String, PropertyValue>();
+					process.properties=new HashMap<>();
 					MappingHelper.getPropertiesFromResultSet(rs,processType.getPropertyDefinitionByLevel(Level.CODE.Process),process.properties);
 					process.code=CodeHelper.getInstance().generateProcessCode(process);
 					Content c=null;
@@ -836,6 +849,7 @@ public class LimsCNSDAO {
 		List<ReadSet> results = this.jdbcTemplate.query("pl_LSRunProjUnReadSetToNGL @readSetCode=?", new String[]{readset.code} 
 				,new RowMapper<ReadSet>() {
 //					@SuppressWarnings("rawtypes")
+					@Override
 					public ReadSet mapRow(ResultSet rs, int rowNum) throws SQLException {
 						ReadSet readset = new ReadSet();
 						readset.code = rs.getString("code");
@@ -865,6 +879,7 @@ public class LimsCNSDAO {
 		List<ReadSet> results = this.jdbcTemplate.query("pl_LSRunProjUnReadSetToNGL" 
 				,new RowMapper<ReadSet>() {
 //					@SuppressWarnings("rawtypes")
+					@Override
 					public ReadSet mapRow(ResultSet rs, int rowNum) throws SQLException {
 						ReadSet readset = new ReadSet();
 						readset.code = rs.getString("code");

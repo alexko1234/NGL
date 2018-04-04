@@ -10,10 +10,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
@@ -34,8 +32,6 @@ import models.laboratory.common.instance.State;
 import models.sra.submit.common.instance.Study;
 import models.sra.submit.common.instance.Submission;
 import models.sra.submit.common.instance.UserCloneType;
-import models.sra.submit.common.instance.UserExperimentType;
-import models.sra.submit.common.instance.UserSampleType;
 import models.sra.submit.util.SraCodeHelper;
 import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;
@@ -50,8 +46,6 @@ import services.ReleaseServices;
 import services.SubmissionServices;
 import services.Tools;
 import services.UserCloneTypeParser;
-import services.UserExperimentTypeParser;
-import services.UserSampleTypeParser;
 import services.XmlServices;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
@@ -64,7 +58,7 @@ public class Submissions extends DocumentController<Submission>{
 	private static final play.Logger.ALogger logger = play.Logger.of(Submissions.class);
 	
 	private final static List<String> authorizedUpdateFields = Arrays.asList("accession","submissionDate", "xmlSubmission", "xmlStudys", "xmlSamples", "xmlExperiments", "xmlRuns");
-	private Map<String, UserCloneType>      mapUserClones      = new HashMap<String, UserCloneType>();
+	private Map<String, UserCloneType>      mapUserClones      = new HashMap<>();
 	private final Form<QueryFieldsForm>         updateForm;
 	private final Form<Submission>              submissionForm;
 	private final Form<SubmissionsCreationForm> submissionsCreationForm;
@@ -110,14 +104,14 @@ public class Submissions extends DocumentController<Submission>{
 		MongoDBResult<Submission> results = mongoDBFinder(submissionsSearchForm, query);				
 		List<Submission> submissionsList = results.toList();
 		if (submissionsSearchForm.datatable) {
-			return ok(Json.toJson(new DatatableResponse<Submission>(submissionsList, submissionsList.size())));
+			return ok(Json.toJson(new DatatableResponse<>(submissionsList, submissionsList.size())));
 		} else {
 			return ok(Json.toJson(submissionsList));
 		}
 	}
 
 	private Query getQuery(SubmissionsSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		Query query = null;
 		if (CollectionUtils.isNotEmpty(form.projCodes)) { 
 			queries.add(DBQuery.in("projectCodes", form.projCodes)); // doit pas marcher car pour state.code

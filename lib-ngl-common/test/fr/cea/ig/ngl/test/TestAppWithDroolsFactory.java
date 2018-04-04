@@ -3,7 +3,6 @@ package fr.cea.ig.ngl.test;
 import java.util.function.Function;
 
 import fr.cea.ig.play.test.ApplicationFactory;
-import play.inject.Bindings;
 import play.inject.guice.GuiceApplicationBuilder;
 import rules.services.Rules6Component;
 import rules.services.test.TestRules6Component;
@@ -16,12 +15,10 @@ public class TestAppWithDroolsFactory extends ApplicationFactory {
 
 	public TestAppWithDroolsFactory(String configFileName) {
 		super(configFileName);
-		// TODO Auto-generated constructor stub
 	}
 
 	public TestAppWithDroolsFactory(ApplicationFactory f) {
 		super(f);
-		// TODO Auto-generated constructor stub
 	}
 
 	public TestAppWithDroolsFactory bindRulesComponent() {

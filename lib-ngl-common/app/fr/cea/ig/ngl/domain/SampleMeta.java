@@ -1,12 +1,12 @@
 package fr.cea.ig.ngl.domain;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
+import fr.cea.ig.ngl.domain.Type.Def;
+import fr.cea.ig.ngl.utils.CodeReference;
 import models.laboratory.common.instance.Comment;
-import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.description.ImportType;
@@ -14,8 +14,6 @@ import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import services.ncbi.NCBITaxon;
-import fr.cea.ig.ngl.domain.Type.Def;
-import fr.cea.ig.ngl.utils.CodeReference;
 
 /**
  * Typed definition for an anemic DTO class ({@link models.laboratory.sample.instance.Sample}).

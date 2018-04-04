@@ -13,20 +13,9 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.stats.StatsConfiguration;
-import models.utils.InstanceConstants;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
-
-import play.Logger;
-import play.data.Form;
-import play.libs.Json;
-import play.mvc.Result;
-import validation.ContextValidation;
-import views.components.datatable.DatatableResponse;
 
 import com.mongodb.BasicDBObject;
 
@@ -37,6 +26,13 @@ import controllers.reporting.api.ConfigurationsSearchForm;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
+import models.laboratory.stats.StatsConfiguration;
+import models.utils.InstanceConstants;
+import play.data.Form;
+import play.libs.Json;
+import play.mvc.Result;
+import validation.ContextValidation;
+import views.components.datatable.DatatableResponse;
 
 public class StatsConfigurations extends DocumentController<StatsConfiguration> {// CommonController {
 	
@@ -61,12 +57,12 @@ public class StatsConfigurations extends DocumentController<StatsConfiguration> 
 			MongoDBResult<StatsConfiguration> results = mongoDBFinder(form, q, keys).sort("name");
 //			MongoDBResult<StatsConfiguration> results = mongoDBFinder(InstanceConstants.STATS_CONFIG_COLL_NAME, form, StatsConfiguration.class, q, keys).sort("name");
 			List<StatsConfiguration> statsConfigurations = results.toList();
-			return ok(Json.toJson(new DatatableResponse<StatsConfiguration>(statsConfigurations, results.count())));
+			return ok(Json.toJson(new DatatableResponse<>(statsConfigurations, results.count())));
 		}else if(form.count){
 			MongoDBResult<StatsConfiguration> results = mongoDBFinder(form, q, keys).sort("name");
 //			MongoDBResult<StatsConfiguration> results = mongoDBFinder(InstanceConstants.STATS_CONFIG_COLL_NAME, form, StatsConfiguration.class, q, keys).sort("name");
 			int count = results.count();
-			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			Map<String, Integer> m = new HashMap<>(1);
 			m.put("result", count);
 			return ok(Json.toJson(m));
 		}else{
@@ -78,7 +74,7 @@ public class StatsConfigurations extends DocumentController<StatsConfiguration> 
 	}
 	
 	private static Query getQuery(ConfigurationsSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		Query query = null;
 		
 		if (CollectionUtils.isNotEmpty(form.pageCodes)) { //all
@@ -91,15 +87,13 @@ public class StatsConfigurations extends DocumentController<StatsConfiguration> 
 		return query;
 	}
 
+	@Override
 	@Permission(value={"reading"})
 	public /*static*/ Result get(String code) {
 		StatsConfiguration statsConfiguration =  getStatsConfiguration(code);		
-		if(statsConfiguration != null) {
+		if (statsConfiguration != null)
 			return ok(Json.toJson(statsConfiguration));	
-		} 		
-		else {
-			return notFound();
-		}			
+		return notFound();
 	}
 	
 	@Permission(value={"writing"})
@@ -159,6 +153,7 @@ public class StatsConfigurations extends DocumentController<StatsConfiguration> 
 		}				
 	}
 	
+	@Override
 	@Permission(value={"writing"})
 	public /*static*/ Result delete(String code) {
 		StatsConfiguration statsConfiguration =  getStatsConfiguration(code);

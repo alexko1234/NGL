@@ -9,6 +9,7 @@ import models.laboratory.project.description.dao.ProjectTypeDAO;
 
 public class ProjectType extends CommonInfoType {
 
+	@SuppressWarnings("hiding")
 	public static final CommonInfoType.AbstractCommonInfoTypeFinder<ProjectType,ProjectTypeDAO> find = 
 			new CommonInfoType.AbstractCommonInfoTypeFinder<>(ProjectTypeDAO.class); 
 

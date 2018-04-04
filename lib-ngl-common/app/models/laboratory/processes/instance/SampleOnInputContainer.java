@@ -3,13 +3,12 @@ package models.laboratory.processes.instance;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.run.instance.SampleOnContainer;
 import validation.ContextValidation;
-import validation.IValidation;
 import validation.processes.instance.SampleOnInputContainerValidationHelper;
 
-public class SampleOnInputContainer extends SampleOnContainer implements IValidation {
+public class SampleOnInputContainer extends SampleOnContainer  { // implements IValidation {
 	
 	public PropertySingleValue containerVolume;
-	public PropertySingleValue containerConcentration;
+//	public PropertySingleValue containerConcentration;
 	public PropertySingleValue containerQuantity;
 	
 	@Override

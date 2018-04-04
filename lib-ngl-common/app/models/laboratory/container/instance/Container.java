@@ -8,7 +8,18 @@ import static validation.common.instance.CommonValidationHelper.validateId;
 import static validation.common.instance.CommonValidationHelper.validateProjectCodes;
 import static validation.common.instance.CommonValidationHelper.validateSampleCodes;
 import static validation.common.instance.CommonValidationHelper.validateTraceInformation;
-import static validation.container.instance.ContainerValidationHelper.*;
+import static validation.container.instance.ContainerValidationHelper.validateConcentration;
+import static validation.container.instance.ContainerValidationHelper.validateContainerCategoryCode;
+import static validation.container.instance.ContainerValidationHelper.validateContainerSupport;
+import static validation.container.instance.ContainerValidationHelper.validateContents;
+import static validation.container.instance.ContainerValidationHelper.validateImportType;
+import static validation.container.instance.ContainerValidationHelper.validateInputProcessCodes;
+import static validation.container.instance.ContainerValidationHelper.validateQualityControlResults;
+import static validation.container.instance.ContainerValidationHelper.validateQuantity;
+import static validation.container.instance.ContainerValidationHelper.validateRules;
+import static validation.container.instance.ContainerValidationHelper.validateSize;
+import static validation.container.instance.ContainerValidationHelper.validateState;
+import static validation.container.instance.ContainerValidationHelper.validateVolume;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,6 +27,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import controllers.ICommentable;
+import fr.cea.ig.DBObject;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.ITracingAccess;
 import models.laboratory.common.instance.PropertyValue;
@@ -32,11 +47,6 @@ import validation.ContextValidation;
 import validation.ICRUDValidation;
 import validation.IValidation;
 // import validation.experiment.instance.ContainerUsedValidationHelper;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import controllers.ICommentable;
-import fr.cea.ig.DBObject;
 
 // link to this : {@link models.laboratory.container.instance.Container}
 
@@ -56,6 +66,7 @@ import fr.cea.ig.DBObject;
  *
  */
 // @MongoCollection(name="Container")
+@SuppressWarnings("unused") // IValidation duplicates ICRUDValidation
 public class Container extends DBObject implements IValidation, ITracingAccess, ICommentable, ICRUDValidation<Container> {
 
 	//duplication for input in exp : code, categoryCode, contents, mesured*, //contents just for tag and tagCategory 
@@ -92,7 +103,7 @@ public class Container extends DBObject implements IValidation, ITracingAccess, 
 	/**
 	 * Comments.
 	 */
-	public List<Comment> comments = new ArrayList<Comment>(0);
+	public List<Comment> comments = new ArrayList<>(0);
 
 	/**
 	 * Relation with container support.
@@ -138,10 +149,10 @@ public class Container extends DBObject implements IValidation, ITracingAccess, 
 	
 	public Container() {
 		//properties=new HashMap<String, PropertyValue>();
-		contents          = new ArrayList<Content>();
+		contents          = new ArrayList<>();
 		traceInformation  = new TraceInformation();
-		projectCodes      = new HashSet<String>();
-		sampleCodes       = new HashSet<String>();
+		projectCodes      = new HashSet<>();
+		sampleCodes       = new HashSet<>();
 		//comments = new ArrayList<>();
 		//qualityControlResults = new HashSet<>();
 		fromTransformationTypeCodes = new HashSet<>();
@@ -167,7 +178,7 @@ public class Container extends DBObject implements IValidation, ITracingAccess, 
 		validateExperimentTypeCodes(fromTransformationTypeCodes, contextValidation);
 		validateImportType(importTypeCode, properties ,contextValidation);
 		
-		if(importTypeCode != null){
+		if (importTypeCode != null) {
 			contextValidation.putObject(FIELD_IMPORT_TYPE_CODE , importTypeCode);			
 		}
 		validateContents(contents,contextValidation);

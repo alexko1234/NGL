@@ -1,32 +1,27 @@
 package controllers.instruments.io.cng.covarisandsciclonengsx;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.ss.usermodel.FormulaEvaluator; // BUG: ajout 25/01/2017
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.ss.usermodel.FormulaEvaluator; // BUG: ajout 25/01/2017
 
-import models.laboratory.common.instance.PropertyValue;
+import controllers.instruments.io.utils.AbstractInput;
+import controllers.instruments.io.utils.InputHelper;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
-import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.parameter.index.Index;
 import models.utils.InstanceConstants;
+import play.Logger;
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;
-import controllers.instruments.io.utils.AbstractInput;
-import controllers.instruments.io.utils.InputHelper;
-import controllers.instruments.io.utils.TagModel;
-import play.Logger;
 
 public abstract class CovarisAndScicloneInput extends AbstractInput {
 	
@@ -88,7 +83,7 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 			return experiment;
 		}
 		
-		Map<String,Index> results = new HashMap<String,Index>(0);
+		Map<String,Index> results = new HashMap<>(0);
 		
 		// traiter les 96 lignes
 		for(int i = 3; i < 3+96; i++){

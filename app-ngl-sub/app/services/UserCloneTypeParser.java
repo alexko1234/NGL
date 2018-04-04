@@ -15,7 +15,7 @@ public class UserCloneTypeParser {
 	static final String STUDY_AC = "study_ac";
 	static final String SAMPLE_AC = "sample_ac";
 
-	private List<String> allowedFields = new ArrayList<String>();
+	private List<String> allowedFields = new ArrayList<>();
 	private String keyField;
 	private String separator;
 	
@@ -35,7 +35,7 @@ public class UserCloneTypeParser {
 	
 //	public List<UserCloneType> load(File file) throws SraException {
 	public List<UserCloneType> load(InputStream inputStream) throws SraException {
-		List<UserCloneType> listUserClones = new ArrayList<UserCloneType>();
+		List<UserCloneType> listUserClones = new ArrayList<>();
 		if (inputStream != null) {
 			ColumnParser parser = new ColumnParser(keyField, separator);
 			if (parser.setAllowedFields(allowedFields)) {
@@ -50,7 +50,7 @@ public class UserCloneTypeParser {
 	
 	
 	public Map<String, UserCloneType> loadMap(InputStream inputStream) throws SraException {
-		Map<String, UserCloneType> mapUserClones = new HashMap<String, UserCloneType>();
+		Map<String, UserCloneType> mapUserClones = new HashMap<>();
 		
 		if (inputStream!=null) {
 			ColumnParser parser = new ColumnParser(keyField, separator);

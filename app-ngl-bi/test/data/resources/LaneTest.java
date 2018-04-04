@@ -14,7 +14,6 @@ import org.junit.runners.MethodSorters;
 import org.mongojack.DBQuery;
 
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.test.WSHelper;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.run.instance.Lane;
@@ -48,7 +47,7 @@ public class LaneTest extends AbstractBIServerTest{
 			}
 		}
 		//Get lane 8
-		List<Lane> newLanes =new ArrayList<Lane>();
+		List<Lane> newLanes = new ArrayList<>();
 		for (Lane lane : run.lanes) {
 			if (lane.number == 8)
 				laneJson = Json.toJson(lane).toString();

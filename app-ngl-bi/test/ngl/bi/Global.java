@@ -2,7 +2,6 @@ package ngl.bi;
 
 import fr.cea.ig.ngl.test.TestAppAuthFactory;
 import play.Application;
-import rules.services.Rules6Component;
 
 public class Global {
 	

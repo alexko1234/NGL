@@ -6,25 +6,22 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.mongojack.DBQuery;
+
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.run.description.RunType;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
-import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
-import org.mongojack.DBQuery;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
-import fr.cea.ig.MongoDBDAO;
-
-
 
 public class LaneValidationHelper extends CommonValidationHelper {
 	
@@ -33,7 +30,7 @@ public class LaneValidationHelper extends CommonValidationHelper {
 		//TODO validate lane number
 		if (lanes != null && lanes.size() > 0) {
 			int index = 0;
-			Set<Integer> laneNumbers = new TreeSet<Integer>();
+			Set<Integer> laneNumbers = new TreeSet<>();
 			for (Lane lane : lanes) {
 				if (lane != null) {
 					contextValidation.addKeyToRootKeyName("lanes[" + index + "]");
@@ -68,7 +65,7 @@ public class LaneValidationHelper extends CommonValidationHelper {
 
 	public static void validationLaneReadSetCodes(Integer number, List<String> readSetCodes, ContextValidation contextValidation) {
 		if (readSetCodes != null && readSetCodes.size() > 0) {
-			List<String> readSetCodesTreat = new ArrayList<String>();
+			List<String> readSetCodesTreat = new ArrayList<>();
 			for (int i=0; i< readSetCodes.size(); i++) {
 				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCodes.get(i));
 				if (readSet == null || !number.equals(readSet.laneNumber)){

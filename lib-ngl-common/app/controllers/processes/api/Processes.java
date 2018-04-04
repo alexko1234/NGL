@@ -28,25 +28,17 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.processes.instance.Process;
-import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ProcessHelper;
-import models.utils.instance.SampleHelper;
-// import play.Logger;
-// import play.api.modules.spring.Spring;
 import play.data.DynamicForm;
 import play.data.Form;
-import play.i18n.Lang;
 import play.libs.Json;
-import play.mvc.Http;
 import play.mvc.Result;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.ValidationConstants;
 import views.components.datatable.DatatableBatchResponseElement;
-// import workflows.process.ProcWorkflowHelper;
 import workflows.process.ProcWorkflows;
 
 public class Processes extends DocumentController<Process> {
@@ -85,7 +77,7 @@ public class Processes extends DocumentController<Process> {
 	 * @return                the query
 	 */
 	private DBQuery.Query getQuery(ProcessesSearchForm processesSearch) throws DAOException{
-		List<Query> queryElts = new ArrayList<Query>();
+		List<Query> queryElts = new ArrayList<>();
 		Query query = null;
 
 		logger.info("Process Query : " + processesSearch);
@@ -427,16 +419,17 @@ public class Processes extends DocumentController<Process> {
 		return ok(Json.toJson(response));
 	}
 	
+	@Override
 	@Permission(value={"writing"})
-	public Result delete(String code) throws DAOException{
+	public Result delete(String code) throws DAOException {
 		Process process = getObject(code);
 		if (process == null) {
 			return notFound("Process with code "+code+" does not exist");
 		}
 		Container container = null;
-		if(process.inputContainerCode != null && !process.state.code.equals("IW-C")){
+		if (process.inputContainerCode != null && !process.state.code.equals("IW-C")) {
 			container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,process.inputContainerCode);
-			if(container==null) {
+			if (container == null) {
 				return notFound("Container process "+code+"with code "+process.inputContainerCode+" does not exist");
 			}
 		}
@@ -447,9 +440,10 @@ public class Processes extends DocumentController<Process> {
 			contextValidation.addErrors("process.state.code", ValidationConstants.ERROR_BADSTATE_MSG, container.code);
 		} else if(CollectionUtils.isNotEmpty(process.experimentCodes)) {
 			contextValidation.addErrors("process.experimentCodes", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, process.experimentCodes);
-		} else if(container != null && !process.state.code.equals("IW-C")
-				 && !"IS".equals(container.state.code) && !"UA".equals(container.state.code)
-				 && !"IW-P".equals(container.state.code)) {
+		} else if (container != null && !process.state.code.equals("IW-C")
+				                     && !"IS".equals(container.state.code) 
+				                     && !"UA".equals(container.state.code)
+				                     && !"IW-P".equals(container.state.code)) {
 			contextValidation.addErrors("process.inputContainerCode", ValidationConstants.ERROR_BADSTATE_MSG, container.state.code);
 		}
 		if (!contextValidation.hasErrors()) {

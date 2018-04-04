@@ -5,13 +5,10 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
-import org.junit.Test;
-
 import play.test.TestServer;
 
 // type="text/javascript" attribute on <script> is obsolete in HTML5 as is type="text/css" on <style> and <link rel="stylesheet">.
 // HTMLUNIT emits warnings for those.
-
 // 
 
 public class TestBrowser {

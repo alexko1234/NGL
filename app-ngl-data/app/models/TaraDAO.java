@@ -8,15 +8,14 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.common.instance.property.PropertySingleValue;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.property.PropertySingleValue;
 // import play.Logger;
 import validation.ContextValidation;
 
@@ -60,6 +59,7 @@ public class TaraDAO {
 		List<Map<String,PropertyValue>> results =  this.jdbcTemplate.query(SELECT_MATERIEL_TARA +
 				"  WHERE REF_ID=? ", 
 				new Object[]{limsCode},new RowMapper<Map<String,PropertyValue>>() {
+					@Override
 					public Map<String,PropertyValue> mapRow(ResultSet rs, int rowNum) throws SQLException {
 						return mapRowTara(rs, rowNum);
 					}
@@ -88,6 +88,7 @@ public class TaraDAO {
 		//Logger.debug("Query :"+sql);
 		List<Map<String,PropertyValue>> results =  this.jdbcTemplate.query(sql 
 				,new RowMapper<Map<String,PropertyValue>>() {
+					@Override
 					public Map<String,PropertyValue> mapRow(ResultSet rs, int rowNum) throws SQLException {
 						Map<String,PropertyValue> properMap = mapRowTara(rs, rowNum);
 						properMap.put("limsCode",new PropertySingleValue(rs.getInt("ref_id")));

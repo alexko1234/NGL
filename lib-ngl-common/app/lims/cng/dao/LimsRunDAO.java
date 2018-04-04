@@ -6,15 +6,15 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import lims.models.experiment.Experiment;
-import lims.models.instrument.Instrument;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 //import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import lims.models.experiment.Experiment;
+import lims.models.instrument.Instrument;
 
 
 @Repository
@@ -40,7 +40,7 @@ public class LimsRunDAO {
     	String sql = "SELECT DISTINCT m.pc_name as code, m.run_path as path, mt.name as categoryCode, 1 as active  " +
     			"FROM t_machine m JOIN t_machine_type mt ON m.type_id=mt.id WHERE mt.type in ('HS','H2') AND (m.status=2 OR m.status=1) " +
     			"ORDER BY m.pc_name";
-    	BeanPropertyRowMapper<Instrument> mapper = new BeanPropertyRowMapper<Instrument>(Instrument.class);
+    	BeanPropertyRowMapper<Instrument> mapper = new BeanPropertyRowMapper<>(Instrument.class);
     	return this.jdbcTemplate.query(sql, mapper);
     }
     
@@ -55,13 +55,13 @@ public class LimsRunDAO {
         if(null != experiment.date){
             String sql =" SELECT  code, date, categoryCode,nb_cycles FROM v_get_experiments"
                                +" WHERE barcode=? and date between ? and ?";
-            BeanPropertyRowMapper<LimsExperiment> mapper = new BeanPropertyRowMapper<LimsExperiment>(LimsExperiment.class);
+            BeanPropertyRowMapper<LimsExperiment> mapper = new BeanPropertyRowMapper<>(LimsExperiment.class);
             return this.jdbcTemplate.query(sql, mapper, experiment.containerSupportCode, minus(experiment.date,5), add(experiment.date,5));
 
         }else{
             String sql =" SELECT  code, date, categoryCode, nb_cycles FROM v_get_experiments"
                                +" WHERE barcode=?";
-            BeanPropertyRowMapper<LimsExperiment> mapper = new BeanPropertyRowMapper<LimsExperiment>(LimsExperiment.class);
+            BeanPropertyRowMapper<LimsExperiment> mapper = new BeanPropertyRowMapper<>(LimsExperiment.class);
             return this.jdbcTemplate.query(sql, mapper, experiment.containerSupportCode);
         }
     }
@@ -109,7 +109,7 @@ public class LimsRunDAO {
     			+ " LEFT OUTER JOIN t_index i ON (sl.index=i.cng_name OR sl.index=i.short_name)"
     			+ " WHERE f.barcode=?"
     			+ " ORDER BY l.number";
-    	BeanPropertyRowMapper<LimsLibrary> mapper = new BeanPropertyRowMapper<LimsLibrary>(LimsLibrary.class);
+    	BeanPropertyRowMapper<LimsLibrary> mapper = new BeanPropertyRowMapper<>(LimsLibrary.class);
     	return this.jdbcTemplate.query(sql, mapper, supportCode);    	
     	
     }

@@ -43,7 +43,7 @@ public class ReadSet extends DBObject implements IValidation {
 	public String archiveId;
 	public Date archiveDate;
 	public TraceInformation traceInformation;
-	public Map<String,Treatment> treatments = new HashMap<String,Treatment>();
+	public Map<String,Treatment> treatments = new HashMap<>();
 	public Map<String, PropertyValue> properties = new HashMap<>(); // <String, PropertyValue>();
 	
 	public List<File> files;

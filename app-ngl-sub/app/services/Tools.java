@@ -22,7 +22,7 @@ import models.sra.submit.util.SraException;
 public class Tools {
 	
 	public List<String> loadReadSet(InputStream inputStream) throws SraException {	
-		List<String> listReadSet = new ArrayList<String>();
+		List<String> listReadSet = new ArrayList<>();
 		if (inputStream==null) {
 			return listReadSet;
 		}
@@ -122,7 +122,7 @@ public class Tools {
 	}
 */
 	public Map<String, String> loadMd5File(File md5File) throws SraException {
-		Map<String, String> mapMd5 = new HashMap<String, String>();
+		Map<String, String> mapMd5 = new HashMap<>();
 
 		// Recuperation des signature md5 si le fichier 'md5.txt' existe dans le repertoire courant de soumission :
 		if ( md5File.exists()) {

@@ -8,11 +8,10 @@ import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.dao.ProcessTypeDAO;
 import models.utils.dao.DAOException;
-//TODO: fix doc generation that produces an error with the unqualified name
-import models.utils.Model.Finder;
 
 public class ProcessType extends CommonInfoType {
 
+	@SuppressWarnings("hiding")
 	public static final ProcessTypeFinder find = new ProcessTypeFinder(); 
 	
 	public ProcessCategory             category;

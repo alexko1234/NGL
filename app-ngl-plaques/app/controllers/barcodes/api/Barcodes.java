@@ -1,13 +1,7 @@
 package controllers.barcodes.api;
 
-//import static play.data.Form.form;
-//import static fr.cea.ig.play.IGGlobals.form;
-
-import static validation.utils.ValidationHelper.addErrors;
 import static validation.utils.ValidationHelper.required;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,7 +13,6 @@ import javax.inject.Inject;
 import controllers.CommonController;
 import fr.cea.ig.play.NGLContext;
 import lims.cns.dao.LimsManipDAO;
-import lims.models.Plate;
 import models.utils.CodeHelper;
 //import play.Logger;
 import play.api.modules.spring.Spring;
@@ -45,10 +38,10 @@ public class Barcodes extends CommonController {
 	public /*static*/ Result save() {
 		Form<BarcodesForm> filledForm = getFilledForm(form, BarcodesForm.class);
 		BarcodesForm form = filledForm.get();
-		Map<String, List<ValidationError>> errors    = new TreeMap<String, List<ValidationError>>();
+		Map<String, List<ValidationError>> errors    = new TreeMap<>();
 		validate(form, errors);
 		if (errors.isEmpty()) {
-    	    Set<String> set = new TreeSet<String>();
+    	    Set<String> set = new TreeSet<>();
     	    logger.debug("number = " + form.number);
     	    for(int i = 0 ; i < form.number; i++){
     	    	String newCode = newCode(form.typeCode, form.projectCode);
@@ -57,9 +50,8 @@ public class Barcodes extends CommonController {
     	    	
     	    }
     	    return ok(Json.toJson(set));
-    	} else {
-    	    return badRequest(NGLContext._errorsAsJson(errors));
-    	}
+    	} 
+    	return badRequest(NGLContext._errorsAsJson(errors));
 	}
 	
 	public /*static*/ Result list(){

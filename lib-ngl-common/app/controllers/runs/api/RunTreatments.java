@@ -2,16 +2,11 @@ package controllers.runs.api;
 
 import javax.inject.Inject;
 
-
-
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.authentication.Authenticated;
-import fr.cea.ig.authorization.Authorized;
-import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.play.IGBodyParsers;
 import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.description.Level;
@@ -26,8 +21,7 @@ import play.mvc.Result;
 import validation.ContextValidation;
 
 // TODO: cleanup
-
-public class RunTreatments extends RunsController{
+public class RunTreatments extends RunsController {
 
 	private final Form<Treatment> treatmentForm;
 	
@@ -39,32 +33,26 @@ public class RunTreatments extends RunsController{
 	@Permission(value={"reading"})
 	public Result list(String runCode){
 		Run run  = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code", runCode));
-		if (run != null) {
-			return ok(Json.toJson(run.treatments));
-		} else{
+		if (run == null)
 			return notFound();
-		}		
-	}
+		return ok(Json.toJson(run.treatments));
+	}	
 	
 	@Permission(value={"reading"})
 	public Result get(String runCode, String treatmentCode){
 		Run run  = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), DBQuery.exists("treatments."+treatmentCode)));
-		if (run != null) {
-			return ok(Json.toJson(run.treatments.get(treatmentCode)));
-		} else{
+		if (run == null)
 			return notFound();
-		}		
+		return ok(Json.toJson(run.treatments.get(treatmentCode)));
 	}
 	
 	@Permission(value={"reading"})
-	public Result head(String runCode, String treatmentCode){
+	public Result head(String runCode, String treatmentCode) {
 		if(MongoDBDAO.checkObjectExist(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-				DBQuery.and(DBQuery.is("code", runCode), DBQuery.exists("treatments."+treatmentCode)))){
+				DBQuery.and(DBQuery.is("code", runCode), DBQuery.exists("treatments."+treatmentCode))))
 			return ok();
-		}else{
-			return notFound();
-		}
+		return notFound();
 	}
 
 	@Permission(value={"writing"})	
@@ -83,15 +71,12 @@ public class RunTreatments extends RunsController{
 		ctxVal.putObject("level", Level.CODE.Run);
 		ctxVal.putObject("run", run);
 		treatment.validate(ctxVal);
-		
-		if(!ctxVal.hasErrors()){
-			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-					DBQuery.is("code", runCode),
-					DBUpdate.set("treatments."+treatment.code, treatment).set("traceInformation", getUpdateTraceInformation(run)));						
-			return ok(Json.toJson(treatment));			
-		} else {
+		if (ctxVal.hasErrors())
 			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
-		}
+		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+				DBQuery.is("code", runCode),
+				DBUpdate.set("treatments."+treatment.code, treatment).set("traceInformation", getUpdateTraceInformation(run)));						
+		return ok(Json.toJson(treatment));			
 	}
 
 	@Permission(value={"writing"})	
@@ -107,24 +92,20 @@ public class RunTreatments extends RunsController{
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 		
 		Treatment treatment = filledForm.get();
-		if (treatmentCode.equals(treatment.code)) {
-			ctxVal.setUpdateMode();
-			ctxVal.putObject("level", Level.CODE.Run);
-			ctxVal.putObject("run", run);
-			
-			treatment.validate(ctxVal);
-			
-			if (!ctxVal.hasErrors()) {
-				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-						DBQuery.is("code", runCode),
-						DBUpdate.set("treatments."+treatment.code, treatment).set("traceInformation", getUpdateTraceInformation(run)));			
-				return ok(Json.toJson(treatment));			
-			} else {
-				return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
-			}
-		} else {
+		if (!treatmentCode.equals(treatment.code))
 			return badRequest("treatment code are not the same");
-		}
+		ctxVal.setUpdateMode();
+		ctxVal.putObject("level", Level.CODE.Run);
+		ctxVal.putObject("run", run);
+
+		treatment.validate(ctxVal);
+		if (ctxVal.hasErrors())
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
+		
+		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+				DBQuery.is("code", runCode),
+				DBUpdate.set("treatments."+treatment.code, treatment).set("traceInformation", getUpdateTraceInformation(run)));			
+		return ok(Json.toJson(treatment));			
 	}
 	
 	@Permission(value={"writing"})
@@ -137,5 +118,6 @@ public class RunTreatments extends RunsController{
 		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.is("code", runCode), DBUpdate.unset("treatments."+treatmentCode).set("traceInformation", getUpdateTraceInformation(run)));			
 		return ok();		
-	}		
+	}
+	
 }

@@ -9,7 +9,6 @@ import javax.inject.Singleton;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
-import akka.actor.ActorRef;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.State;
@@ -19,8 +18,6 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import rules.services.LazyRules6Actor;
-import rules.services.RulesMessage;
-import rules.services.RulesServices6;
 import validation.ContextValidation;
 import validation.run.instance.RunValidationHelper;
 import workflows.Workflows;
@@ -141,7 +138,7 @@ public class ReadSetWorkflows extends Workflows<ReadSet> {
 			}
 		} else if("IW-BA".equals(readSet.state.code)) {
 			Project project = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, readSet.projectCode);
-			ArrayList<Object> facts = new ArrayList<Object>();
+			ArrayList<Object> facts = new ArrayList<>();
 			facts.add(nextStep);
 			facts.add(project);
 			facts.add(readSet);
@@ -164,7 +161,7 @@ public class ReadSetWorkflows extends Workflows<ReadSet> {
 				//Call rules for Transfert CCRT
 				//Get project to identify sent to CCRT
 				Project project = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, readSet.projectCode);
-				ArrayList<Object> facts = new ArrayList<Object>();
+				ArrayList<Object> facts = new ArrayList<>();
 				facts.add(nextStep);
 				facts.add(project);
 				facts.add(readSet);
@@ -174,7 +171,7 @@ public class ReadSetWorkflows extends Workflows<ReadSet> {
 			}			
 		} else if("F-TF".equals(readSet.state.code)) {
 			Project project = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, readSet.projectCode);
-			ArrayList<Object> facts = new ArrayList<Object>();
+			ArrayList<Object> facts = new ArrayList<>();
 			facts.add(nextStep);
 			facts.add(project);
 			ctx.callRulesWithGettingFacts(ruleFTF, facts);

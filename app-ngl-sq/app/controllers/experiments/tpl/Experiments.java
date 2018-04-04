@@ -1,28 +1,9 @@
 package controllers.experiments.tpl;
 
-// import static play.data.Form.form;
-//import static fr.cea.ig.play.IGGlobals.form;
-// import play.Routes;
-// import play.routing.JavaScriptReverseRouter;
-
-import static fr.cea.ig.lfw.utils.FunCollections.first;
-
 import java.lang.reflect.Method;
-import java.util.Optional;
 
-import models.laboratory.experiment.description.ExperimentCategory;
-import models.laboratory.experiment.instance.Experiment;
-import models.utils.DescriptionHelper;
-// import play.Logger;
-import play.data.Form;
-import play.mvc.Result;
-import play.twirl.api.Html;
-import views.html.experiments.details;
-import views.html.experiments.graph;
-import views.html.experiments.home;
-import views.html.experiments.listContainers;
-import views.html.experiments.search;
-import views.html.experiments.searchContainers;
+import javax.inject.Inject;
+
 //import controllers.NGLBaseController;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
@@ -31,11 +12,16 @@ import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.support.NGLForms;
 import fr.cea.ig.ngl.support.NGLJavascript;
-// import fr.cea.ig.play.IGGlobals;
-import fr.cea.ig.play.NGLContext;
-import fr.cea.ig.reflect.Renderer;
-
-import javax.inject.Inject;
+import models.laboratory.experiment.description.ExperimentCategory;
+import models.utils.DescriptionHelper;
+import play.mvc.Result;
+import play.twirl.api.Html;
+import views.html.experiments.details;
+import views.html.experiments.graph;
+import views.html.experiments.home;
+import views.html.experiments.listContainers;
+import views.html.experiments.search;
+import views.html.experiments.searchContainers;
 // import javax.inject.Singleton;
 
 // TODO: cleanup, comment
@@ -47,7 +33,7 @@ import javax.inject.Inject;
 public class Experiments extends NGLController 
                         implements NGLJavascript, NGLForms { // NGLBaseController {
 	
-	private static final play.Logger.ALogger logger = play.Logger.of(Experiments.class);
+//	private static final play.Logger.ALogger logger = play.Logger.of(Experiments.class);
 	
 	private final home             home;
 	private final details          details;

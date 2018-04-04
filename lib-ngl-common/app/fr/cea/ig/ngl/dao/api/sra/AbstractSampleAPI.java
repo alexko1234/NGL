@@ -4,14 +4,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-import models.sra.submit.common.instance.AbstractSample;
 import fr.cea.ig.ngl.dao.api.APIException;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.api.GenericAPI;
 import fr.cea.ig.ngl.dao.sra.AbstractSampleDAO;
+import models.sra.submit.common.instance.AbstractSample;
 
 public class AbstractSampleAPI extends GenericAPI<AbstractSampleDAO, AbstractSample> {
 	

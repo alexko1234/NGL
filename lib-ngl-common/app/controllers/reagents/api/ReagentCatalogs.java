@@ -5,29 +5,12 @@ package controllers.reagents.api;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import javax.inject.Inject;
-
-import models.laboratory.reagent.description.AbstractCatalog;
-import models.laboratory.reagent.description.BoxCatalog;
-import models.laboratory.reagent.description.ReagentCatalog;
-import models.laboratory.reagent.utils.ReagentCodeHelper;
-import models.utils.CodeHelper;
-import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
-import models.utils.ListObject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
-
-import play.data.Form;
-import play.libs.Json;
-import play.mvc.Result;
-import play.mvc.Results;
-import validation.ContextValidation;
-import views.components.datatable.DatatableResponse;
 
 import com.mongodb.BasicDBObject;
 
@@ -35,6 +18,18 @@ import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
+import models.laboratory.reagent.description.AbstractCatalog;
+import models.laboratory.reagent.description.ReagentCatalog;
+import models.laboratory.reagent.utils.ReagentCodeHelper;
+import models.utils.InstanceConstants;
+import models.utils.InstanceHelpers;
+import models.utils.ListObject;
+import play.data.Form;
+import play.libs.Json;
+import play.mvc.Result;
+import play.mvc.Results;
+import validation.ContextValidation;
+import views.components.datatable.DatatableResponse;
 
 public class ReagentCatalogs extends DocumentController<ReagentCatalog> {
 	
@@ -80,6 +75,7 @@ public class ReagentCatalogs extends DocumentController<ReagentCatalog> {
 		// legit, spaghetti above
 	}
 	
+	@Override
 	public Result delete(String code) {
 		MongoDBDAO.delete(InstanceConstants.REAGENT_CATALOG_COLL_NAME, AbstractCatalog.class, DBQuery.or(DBQuery.is("code", code)));
 		return ok();
@@ -95,7 +91,7 @@ public class ReagentCatalogs extends DocumentController<ReagentCatalog> {
 			MongoDBResult<ReagentCatalog> results =  mongoDBFinder(reagentCatalogSearch, query);
 			List<ReagentCatalog> ReagentCatalogs = results.toList();
 			
-			return ok(Json.toJson(new DatatableResponse<ReagentCatalog>(ReagentCatalogs, results.count())));
+			return ok(Json.toJson(new DatatableResponse<>(ReagentCatalogs, results.count())));
 		} else if (reagentCatalogSearch.list) {
 			keys = new BasicDBObject();
 			keys.put("code", 1);
@@ -108,7 +104,7 @@ public class ReagentCatalogs extends DocumentController<ReagentCatalog> {
 			
 			MongoDBResult<ReagentCatalog> results = mongoDBFinder(reagentCatalogSearch, query, keys);
 			List<ReagentCatalog> ReagentCatalogs = results.toList();
-			List<ListObject> los = new ArrayList<ListObject>();
+			List<ListObject> los = new ArrayList<>();
 			for (ReagentCatalog p: ReagentCatalogs)
 					los.add(new ListObject(p.code, p.name));								
 			return Results.ok(Json.toJson(los));
@@ -124,7 +120,7 @@ public class ReagentCatalogs extends DocumentController<ReagentCatalog> {
 	}
 	
 	private static Query getQuery(ReagentCatalogSearchForm ReagentCatalogSearch) {
-		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
+		List<DBQuery.Query> queryElts = new ArrayList<>();
 		Query query = null;
 		queryElts.add(DBQuery.is("category", "Reagent"));
 		

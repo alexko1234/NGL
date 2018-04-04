@@ -1,10 +1,13 @@
 package models.laboratory.common.description.dao;
 
-
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.stereotype.Repository;
 
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.ObjectType.CODE;
@@ -13,14 +16,6 @@ import models.utils.ListObject;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
-
-import org.apache.commons.lang.ArrayUtils;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.stereotype.Repository;
-
-import play.Logger;
 
 @Repository
 public class StateDAO extends AbstractDAOMapping<State> {
@@ -50,7 +45,7 @@ public class StateDAO extends AbstractDAOMapping<State> {
 
 	@Override
 	public long save(State state) throws DAOException {
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("code", state.code);
 		parameters.put("name", state.name);
 		parameters.put("active", state.active);
@@ -98,7 +93,7 @@ public class StateDAO extends AbstractDAOMapping<State> {
 				" inner join state_object_type sot on sot.fk_state = t.id" +
 				" inner join object_type o on o.id = sot.fk_object_type WHERE o.code = ? ";
 		
-		BeanPropertyRowMapper<ListObject> mapper = new BeanPropertyRowMapper<ListObject>(ListObject.class);
+		BeanPropertyRowMapper<ListObject> mapper = new BeanPropertyRowMapper<>(ListObject.class);
 		return this.jdbcTemplate.query(sql, mapper, ObjectType.CODE.Container.name());
 	}
 

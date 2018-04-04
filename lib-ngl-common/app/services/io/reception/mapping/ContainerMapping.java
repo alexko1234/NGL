@@ -2,7 +2,6 @@ package services.io.reception.mapping;
 
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
 
@@ -18,7 +17,6 @@ import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.reception.instance.AbstractFieldConfiguration;
 import models.laboratory.reception.instance.ReceptionConfiguration.Action;
 import models.laboratory.sample.description.ImportType;
@@ -45,6 +43,7 @@ public class ContainerMapping extends Mapping<Container> {
 	/**
 	 * Try to find container with code obtain from support (best practice) but if not found try default method with code field.
 	 */
+	@Override
 	protected Container get(Container object, Map<Integer, String> rowMap, boolean errorIsNotFound) {
 		try {
 			AbstractFieldConfiguration supportConfig = configuration.get("support");
@@ -77,6 +76,7 @@ public class ContainerMapping extends Mapping<Container> {
 		return object;
 	}
 	
+	@Override
 	protected void update(Container container) {
 		// TODO: update categoryCode if not a code but a label.
 		if (Action.update.equals(action)) {
@@ -126,8 +126,8 @@ public class ContainerMapping extends Mapping<Container> {
 		if (c.categoryCode == null && c.support.categoryCode != null) {
 			c.categoryCode = ContainerCategory.find.findByContainerSupportCategoryCode(c.support.categoryCode).code;
 		}
-		c.projectCodes = new TreeSet<String>();
-		c.sampleCodes  = new TreeSet<String>();
+		c.projectCodes = new TreeSet<>();
+		c.sampleCodes  = new TreeSet<>();
 		
 		double percentage = (new BigDecimal(100.00/c.contents.size()).setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue());
 		c.contents.forEach(content -> {

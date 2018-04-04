@@ -2,12 +2,13 @@ package models.laboratory.run.description.dao;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.run.description.ReadSetType;
 import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.DAOException;
-import org.springframework.stereotype.Repository;
-
 import play.api.modules.spring.Spring;
 
 @Repository
@@ -34,7 +35,7 @@ public class ReadSetTypeDAO extends AbstractDAOCommonInfoType<ReadSetType>{
 		readSetType.id = commonInfoTypeDAO.save(readSetType);
 		
 		//Create new runType
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("id", readSetType.id);
 		parameters.put("fk_common_info_type", readSetType.id);
 		

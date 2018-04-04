@@ -1,13 +1,11 @@
 package services.description.experiment;
 
-import static services.description.DescriptionFactory.newPropertiesDefinition;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.Level;
-import models.laboratory.common.description.PropertyDefinition;
+import com.typesafe.config.ConfigFactory;
+
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.ProtocolCategory;
@@ -15,10 +13,8 @@ import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
 import services.description.DescriptionFactory;
-import services.description.common.LevelService;
 import services.description.declaration.cns.BanqueIllumina;
 import services.description.declaration.cns.Bionano;
-import services.description.declaration.cns.SamplePrep;
 import services.description.declaration.cns.MetaBarCoding;
 import services.description.declaration.cns.MetaGenomique;
 import services.description.declaration.cns.MetaTProcess;
@@ -27,15 +23,15 @@ import services.description.declaration.cns.Opgen;
 import services.description.declaration.cns.Purif;
 import services.description.declaration.cns.QualityControl;
 import services.description.declaration.cns.RunIllumina;
+import services.description.declaration.cns.SamplePrep;
 import services.description.declaration.cns.Transfert;
-
-import com.typesafe.config.ConfigFactory;
 
 public class ExperimentServiceCNS extends AbstractExperimentService {
 
 	// @SuppressWarnings("unchecked")
+	@Override
 	public  void saveProtocolCategories(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<ProtocolCategory> l = new ArrayList<ProtocolCategory>();
+		List<ProtocolCategory> l = new ArrayList<>();
 		l.add(DescriptionFactory.newSimpleCategory(ProtocolCategory.class, "Developpement", "development"));
 		l.add(DescriptionFactory.newSimpleCategory(ProtocolCategory.class, "Production", "production"));
 		DAOHelpers.saveModels(ProtocolCategory.class, l, errors);
@@ -47,8 +43,9 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 	 * @param errors        error manager
 	 * @throws DAOException DAO problem
 	 */
-	public  void saveExperimentCategories(Map<String,List<ValidationError>> errors) throws DAOException{
-		List<ExperimentCategory> l = new ArrayList<ExperimentCategory>();
+	@Override
+	public  void saveExperimentCategories(Map<String,List<ValidationError>> errors) throws DAOException {
+		List<ExperimentCategory> l = new ArrayList<>();
 		
 		l.add(DescriptionFactory.newSimpleCategory(ExperimentCategory.class, "Purification", ExperimentCategory.CODE.purification.name()));
 		l.add(DescriptionFactory.newSimpleCategory(ExperimentCategory.class, "Control qualité", ExperimentCategory.CODE.qualitycontrol.name()));
@@ -60,9 +57,9 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 	}
 
 
-	public void saveExperimentTypes(
-			Map<String, List<ValidationError>> errors) throws DAOException {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
+	@Override
+	public void saveExperimentTypes(Map<String, List<ValidationError>> errors) throws DAOException {
+		List<ExperimentType> l = new ArrayList<>();
 
 		l.addAll(new Opgen().getExperimentType());
 	//	l.addAll(new Nanopore().getExperimentType());
@@ -111,6 +108,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 
 	}
 
+	@Override
 	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 
 		

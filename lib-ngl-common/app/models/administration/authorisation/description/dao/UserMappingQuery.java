@@ -8,7 +8,6 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.object.MappingSqlQuery;
 
 import models.administration.authorisation.Role;
 import models.administration.authorisation.User;

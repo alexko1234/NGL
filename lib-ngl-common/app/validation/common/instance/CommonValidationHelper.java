@@ -1,13 +1,18 @@
 package validation.common.instance;
 
-import static validation.utils.ValidationHelper.required;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import static fr.cea.ig.play.IGGlobals.configuration;
+import static validation.utils.ValidationHelper.required;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
+
+import fr.cea.ig.DBObject;
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
@@ -18,19 +23,12 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.project.instance.Project;
 import models.laboratory.resolutions.instance.ResolutionConfiguration;
-import models.laboratory.run.instance.SampleOnContainer;
 import models.laboratory.sample.instance.Sample;
 import models.laboratory.valuation.instance.ValuationCriteria;
 import models.utils.InstanceConstants;
 import models.utils.Model.Finder;
 import models.utils.dao.AbstractDAO;
 import models.utils.dao.DAOException;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
-
 // import play.Logger;
 //import play.Play;
 import rules.services.RulesServices6;
@@ -38,9 +36,6 @@ import validation.ContextValidation;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
-import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.IGGlobals;
 
 public class CommonValidationHelper {
 	
@@ -77,16 +72,13 @@ public class CommonValidationHelper {
 			                                                              String code, 
 			                                                              Class<T> type, 
 			                                                              String collectionName) {
-		if (code != null) {
-			if (MongoDBDAO.checkObjectExistByCode(collectionName, type, code)) {
-				contextValidation.addErrors(FIELD_CODE,	ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG, code);
-				return false;
-			} else {
-				return true;
-			}
-		} else {
+		if (code == null)
 			throw new IllegalArgumentException("code is null");
-		}	
+		if (MongoDBDAO.checkObjectExistByCode(collectionName, type, code)) {
+			contextValidation.addErrors(FIELD_CODE,	ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG, code);
+			return false;
+		}
+		return true;
 	}
 	
 	/*
@@ -111,9 +103,8 @@ public class CommonValidationHelper {
 		if (MongoDBDAO.checkObjectExist(collectionName, type, key, keyValue)) {
 			contextValidation.addErrors(key, ValidationConstants.ERROR_NOTUNIQUE_MSG, keyValue);
 			return false;
-		} else {
-			return true;
-		}		
+		}
+		return true;		
 //		if(null != key && null != keyValue){
 //			if(MongoDBDAO.checkObjectExist(collectionName, type, key, keyValue)){
 //				contextValidation.addErrors(key, ValidationConstants.ERROR_NOTUNIQUE_MSG, keyValue);
@@ -275,7 +266,7 @@ public class CommonValidationHelper {
 			List<String> codes, String key, Class<T> type, String collectionName, boolean returnObject) {
 		List<T> l = null;
 		if(null != codes && codes.size() > 0){
-			l = (returnObject)?new ArrayList<T>():null;
+			l = (returnObject)?new ArrayList<>():null;
 
 			for(String code: codes){
 				T o =validateExistInstanceCode(contextValidation, code, key, type, collectionName, returnObject) ;
@@ -303,22 +294,39 @@ public class CommonValidationHelper {
 	 * @return
 	 */
 	public static <T extends DBObject> T validateExistInstanceCode(ContextValidation contextValidation,
-			String code, String key, Class<T> type, String collectionName, boolean returnObject) {
-		if(null != code && null != key){
-			T o = null;
-			if(returnObject){
-				o =  MongoDBDAO.findByCode(collectionName, type, code);
-				if(o == null){
-					contextValidation.addErrors(key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
-				}
-			}else if(!MongoDBDAO.checkObjectExistByCode(collectionName, type, code)){
-				contextValidation.addErrors( key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
-			}
-
-			return o;
-		}else{
-			throw new IllegalArgumentException("key or code is null : "+key+"/"+code);
+			                                                       String code, 
+			                                                       String key, 
+			                                                       Class<T> type, 
+			                                                       String collectionName, 
+			                                                       boolean returnObject) {		
+//		if(null != code && null != key){
+//			T o = null;
+//			if(returnObject){
+//				o =  MongoDBDAO.findByCode(collectionName, type, code);
+//				if(o == null){
+//					contextValidation.addErrors(key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
+//				}
+//			}else if(!MongoDBDAO.checkObjectExistByCode(collectionName, type, code)){
+//				contextValidation.addErrors( key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
+//			}
+//
+//			return o;
+//		}else{
+//			throw new IllegalArgumentException("key or code is null : "+key+"/"+code);
+//		}
+		if (code == null)
+			throw new IllegalArgumentException("code is null");
+		if (key == null)
+			throw new IllegalArgumentException("key is null");
+		T o = null;
+		if (returnObject) {
+			o =  MongoDBDAO.findByCode(collectionName, type, code);
+			if (o == null)
+				contextValidation.addErrors(key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
+		} else if(!MongoDBDAO.checkObjectExistByCode(collectionName, type, code)) {
+			contextValidation.addErrors( key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
 		}
+		return o;
 	}	
 	
 	/*
@@ -465,7 +473,7 @@ public class CommonValidationHelper {
 			int i = 0;
 			for (String resoCode: resoCodes) {
 				
-				List<String> typeCodes = new ArrayList<String>();
+				List<String> typeCodes = new ArrayList<>();
 				typeCodes.add(typeCode);
 				
 				if (! MongoDBDAO.checkObjectExist(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, DBQuery.and(DBQuery.is("resolutions.code", resoCode), DBQuery.in("typeCodes", typeCodes)))) {
@@ -538,7 +546,7 @@ public class CommonValidationHelper {
 	public static void validateProjectCodes(Set<String> projectCodes, ContextValidation contextValidation) {
 		List<String> listProject = null;
 		if (CollectionUtils.isNotEmpty(projectCodes)) {
-			listProject = new ArrayList<String>();
+			listProject = new ArrayList<>();
 			listProject.addAll(projectCodes);
 		}
 		validateProjectCodes(listProject,contextValidation);
@@ -555,7 +563,7 @@ public class CommonValidationHelper {
 	public static void validateSampleCodes(Set<String> sampleCodes,ContextValidation contextValidation){
 		List<String> listSample = null;
 		if (CollectionUtils.isNotEmpty(sampleCodes)) {
-			listSample = new ArrayList<String>();
+			listSample = new ArrayList<>();
 			listSample.addAll(sampleCodes);
 		}
 		validateSampleCodes(listSample,contextValidation);
@@ -583,7 +591,7 @@ public class CommonValidationHelper {
 	}
 		
 	public static void validateRules(List<Object> objects,ContextValidation contextValidation) {
-		ArrayList<Object> facts = new ArrayList<Object>();
+		ArrayList<Object> facts = new ArrayList<>();
 		facts.addAll(objects);
 		ContextValidation validationRules = new ContextValidation(contextValidation.getUser());
 		facts.add(validationRules);
@@ -616,7 +624,7 @@ public class CommonValidationHelper {
 	public static void validateExperimentTypeCodes(Set<String> experimentTypeCodes, ContextValidation contextValidation) {
 		List<String> arrayExperiments=null;
 		if (CollectionUtils.isNotEmpty(experimentTypeCodes)) {
-			arrayExperiments = new ArrayList<String>();
+			arrayExperiments = new ArrayList<>();
 			arrayExperiments.addAll(experimentTypeCodes);
 		}
 		validateExperimentTypeCodes( arrayExperiments,contextValidation); 

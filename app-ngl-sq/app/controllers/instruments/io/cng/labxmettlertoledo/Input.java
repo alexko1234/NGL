@@ -4,11 +4,14 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.mongojack.DBQuery;
+
+import controllers.instruments.io.utils.AbstractInput;
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.reagent.description.BoxCatalog;
@@ -16,13 +19,8 @@ import models.laboratory.reagent.description.KitCatalog;
 import models.laboratory.reagent.description.ReagentCatalog;
 import models.laboratory.reagent.instance.ReagentUsed;
 import models.utils.InstanceConstants;
-
-import org.mongojack.DBQuery;
-
 //import play.Logger;
 import validation.ContextValidation;
-import controllers.instruments.io.utils.AbstractInput;
-import fr.cea.ig.MongoDBDAO;
 
 public class Input extends AbstractInput {
 
@@ -99,10 +97,10 @@ public class Input extends AbstractInput {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is, charset));
 		
 		// HashMap pour les reagentUsed valides au cours du parsing
-		Map<String,ReagentUsed> parsedReagentsMap = new HashMap<String,ReagentUsed>(0);
+		Map<String,ReagentUsed> parsedReagentsMap = new HashMap<>(0);
 		
 		// 30/11/2017 creer un hashMap distinct pour les box permet de ne pas creer les box a la fin
-		Map<String,ReagentUsed> parsedBoxesMap = new HashMap<String,ReagentUsed>(0);
+		Map<String,ReagentUsed> parsedBoxesMap = new HashMap<>(0);
 				
 		int n = 0;
 		boolean lastResult=false;
@@ -310,9 +308,9 @@ public class Input extends AbstractInput {
 	private class ExperimentCatalog {
 		
 		// attributs	
-		private Map<String,BoxCatalog> boxMap = new HashMap<String,BoxCatalog>(0);
-		private Map<String,ReagentCatalog> reagentMap = new HashMap<String,ReagentCatalog>(0);
-		private Map<String,String> boxCodeMap = new HashMap<String,String>(0); // hashmap pour recuperer le code d'une box d'apres son nom..
+		private Map<String,BoxCatalog> boxMap = new HashMap<>(0);
+		private Map<String,ReagentCatalog> reagentMap = new HashMap<>(0);
+		private Map<String,String> boxCodeMap = new HashMap<>(0); // hashmap pour recuperer le code d'une box d'apres son nom..
 		
 		//constructeur 
 		public ExperimentCatalog (String experimentTypeCode) throws CatalogException {

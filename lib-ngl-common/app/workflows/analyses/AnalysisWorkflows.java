@@ -14,7 +14,6 @@ import org.mongojack.DBUpdate;
 // import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.stereotype.Service;
 
-import akka.actor.ActorRef;
 // import akka.actor.Props;
 // import akka.actor.ActorRef;
 // import akka.actor.Props;
@@ -24,12 +23,7 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.run.instance.Analysis;
 import models.utils.InstanceConstants;
-import play.Logger;
 import rules.services.LazyRules6Actor;
-// import play.Play;
-// import play.libs.Akka;
-// import rules.services.RulesActor6;
-import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.run.instance.AnalysisValidationHelper;
 import workflows.Workflows;
@@ -37,7 +31,8 @@ import workflows.Workflows;
 // @Service
 @Singleton
 public class AnalysisWorkflows extends Workflows<Analysis> {
-
+	
+	private static final play.Logger.ALogger logger = play.Logger.of(AnalysisWorkflows.class);
 	
 	// @Autowired
 	// AnalysisWorkflowsHelper analysisWorkflowsHelper;
@@ -45,7 +40,7 @@ public class AnalysisWorkflows extends Workflows<Analysis> {
 	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 	// private static ActorRef rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
 	
-	private static final String ruleFBA="F_BA_1";
+	private static final String ruleFBA ="F_BA_1";
 
 	private final AnalysisWorkflowsHelper analysisWorkflowsHelper;
 	// private final ActorRef                rulesActor;
@@ -112,7 +107,8 @@ public class AnalysisWorkflows extends Workflows<Analysis> {
 		AnalysisValidationHelper.validateState(analysis.typeCode, nextState, contextValidation);
 		if(!contextValidation.hasErrors() && !nextState.code.equals(analysis.state.code)){
 			boolean goBack = goBack(analysis.state, nextState);
-			if(goBack)Logger.debug(analysis.code+" : back to the workflow. "+analysis.state.code +" -> "+nextState.code);		
+			if (goBack)
+				logger.debug(analysis.code+" : back to the workflow. "+analysis.state.code +" -> "+nextState.code);		
 
 			analysis.traceInformation = updateTraceInformation(analysis.traceInformation, nextState); 
 			analysis.state = updateHistoricalNextState(analysis.state, nextState);

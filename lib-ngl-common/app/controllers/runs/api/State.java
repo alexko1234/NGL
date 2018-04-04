@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -13,7 +12,6 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 
-import controllers.authorisation.Permission;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
@@ -85,7 +83,7 @@ public class State extends RunsController {
     public Result updateBatch() {
     	List<Form<RunBatchElement>> filledForms =  getFilledFormList(batchElementForm, RunBatchElement.class);
 		
-		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
+		List<DatatableBatchResponseElement> response = new ArrayList<>(filledForms.size());
 		for(Form<RunBatchElement> filledForm: filledForms){
 			RunBatchElement element = filledForm.get();
 			Run run = getRun(element.data.code);
@@ -124,7 +122,7 @@ public class State extends RunsController {
     }
 
     private static Set<TransientState> getHistorical(Set<TransientState> historical, HistoricalStateSearchForm form) {
-		List<TransientState> values = new ArrayList<TransientState>();
+		List<TransientState> values = new ArrayList<>();
 		if (StringUtils.isNotBlank(form.stateCode)) {
 //			Iterator<TransientState> iterator = historical.iterator();
 //			while (iterator.hasNext()) {

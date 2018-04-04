@@ -2,11 +2,7 @@ package sra.scripts.utils;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-
-import play.libs.ws.WSRequest;
-import play.libs.ws.WSResponse;
 
 public class Tools {
 

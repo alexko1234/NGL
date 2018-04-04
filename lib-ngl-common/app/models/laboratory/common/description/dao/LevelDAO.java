@@ -2,11 +2,11 @@ package models.laboratory.common.description.dao;
 
 import java.util.List;
 
-import models.laboratory.common.description.Level;
-import models.utils.dao.AbstractDAODefault;
-
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
+
+import models.laboratory.common.description.Level;
+import models.utils.dao.AbstractDAODefault;
 
 @Repository
 public class LevelDAO extends AbstractDAODefault<Level>{
@@ -22,8 +22,8 @@ public class LevelDAO extends AbstractDAODefault<Level>{
 				"INNER JOIN property_definition_level as p ON p.fk_level=le.id " +
 				"WHERE p.fk_property_definition = ? ";
 		
-		BeanPropertyRowMapper<Level> mapper = new BeanPropertyRowMapper<Level>(Level.class);
-		return this.jdbcTemplate.query(sql, mapper, id);
+		BeanPropertyRowMapper<Level> mapper = new BeanPropertyRowMapper<>(Level.class);
+		return jdbcTemplate.query(sql, mapper, id);
 		
 	}
 

@@ -3,11 +3,9 @@ package workflows.run;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
-import akka.actor.ActorRef;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.State;
@@ -15,7 +13,6 @@ import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import play.Logger;
 import rules.services.LazyRules6Actor;
-import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.run.instance.RunValidationHelper;
 import workflows.Workflows;
@@ -23,11 +20,9 @@ import workflows.Workflows;
 @Singleton
 public class RunWorkflows extends Workflows<Run> {
 
-	
 	private static final String ruleFRG = "F_RG_1";
 	private static final String ruleIPS = "IP_S_1";
 	private static final String ruleFV  = "F_V_1";
-
 	
 	private final LazyRules6Actor rulesActor;
 	private final RunWorkflowsHelper runWorkflowsHelper;

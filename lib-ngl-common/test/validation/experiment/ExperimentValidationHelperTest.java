@@ -54,10 +54,10 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 		
 		experimentType=ExperimentType.find.findByCode(protocol.experimentTypeCodes.get(0));
 
-		List<String> experimentTypes = new ArrayList<String>();
+		List<String> experimentTypes = new ArrayList<>();
 		experimentTypes.add(experimentType.code);		
 		List<ResolutionConfiguration> resolutionConfigurations = MongoDBDAO.find(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, DBQuery.in("typeCodes", experimentTypes)).toList();
-		resolutionList=new HashSet<String>();
+		resolutionList=new HashSet<>();
 		for (ResolutionConfiguration rc : resolutionConfigurations) {
 			for(Resolution reso: rc.resolutions) {
 				resolutionList.add(reso.code);

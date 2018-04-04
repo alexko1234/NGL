@@ -2,49 +2,29 @@ package models.utils.instance;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-// import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-// import java.util.Collections;
-// import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-// import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.Level;
-import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
-// import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
-// import models.laboratory.experiment.description.ExperimentType;
-// import models.laboratory.experiment.instance.Experiment;
-// import models.laboratory.experiment.instance.InputContainerUsed;
-// import models.laboratory.instrument.description.InstrumentUsedType;
-// import models.laboratory.processes.description.ProcessType;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
-
-// import org.apache.commons.collections.CollectionUtils;
-// import org.mongojack.DBQuery;
-// import org.mongojack.DBUpdate;
-
-// import play.Logger;
-
-// import com.google.common.collect.Multiset.Entry;
-
 import validation.ContextValidation;
 import validation.utils.BusinessValidationHelper;
-import fr.cea.ig.MongoDBDAO;
 
 /**
  * Has to be moved in the ContainerAPI.  
@@ -152,7 +132,7 @@ public class ContainerHelper {
 		finalContent.ncbiScientificName = contents.get(0).ncbiScientificName;
 		finalContent.percentage         = new BigDecimal(contents.stream().mapToDouble((Content c) -> c.percentage).sum()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 		finalContent.processProperties  = new HashMap<>(); // String, PropertyValue>();
-		finalContent.processComments    = new ArrayList<Comment>();
+		finalContent.processComments    = new ArrayList<>();
 				
 		for(Content c : contents){
 			if (c.properties != null) { 
@@ -215,7 +195,7 @@ public class ContainerHelper {
 	 * @return
 	 */
 	public static List<Content> calculPercentageContent(List<Content> contents, Double percentage){
-		List<Content> newContents = new ArrayList<Content>(0);
+		List<Content> newContents = new ArrayList<>(0);
 		for(Content cc:contents){
 			Content newContent = cloneContent(cc);
 			if(percentage!=null && newContent.percentage != null){
@@ -230,7 +210,7 @@ public class ContainerHelper {
 
 	public static List<ContainerSupport> createSupportFromContainers(List<Container> containers, Map<String, PropertyValue> mapSupportsCodeSeq, ContextValidation contextValidation){
 
-		HashMap<String,ContainerSupport> mapSupports = new HashMap<String,ContainerSupport>();
+		HashMap<String,ContainerSupport> mapSupports = new HashMap<>();
 
 		for (Container container : containers) {
 			logger.debug(" createSupportFromContainers; container.code "+ container.code );
@@ -246,13 +226,13 @@ public class ContainerHelper {
 																			(mapSupportsCodeSeq != null ? mapSupportsCodeSeq.get(container.support.code) : null),
 																			container.support.categoryCode, "ngl");
 				
-				newSupport.projectCodes = new  HashSet<String>(container.projectCodes);
-				newSupport.sampleCodes = new  HashSet<String>(container.sampleCodes);
+				newSupport.projectCodes = new  HashSet<>(container.projectCodes);
+				newSupport.sampleCodes = new  HashSet<>(container.sampleCodes);
 				newSupport.state=container.state;
 				newSupport.storageCode=container.support.storageCode; //FDS ajout 14/10/2015
 				
 				if (container.fromTransformationTypeCodes != null) {
-					newSupport.fromTransformationTypeCodes = new  HashSet<String>(container.fromTransformationTypeCodes);
+					newSupport.fromTransformationTypeCodes = new  HashSet<>(container.fromTransformationTypeCodes);
 				}
 				
 				if (!mapSupports.containsKey(newSupport.code)) {
@@ -273,12 +253,12 @@ public class ContainerHelper {
 			}
 		}
 
-		return InstanceHelpers.save(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, new ArrayList<ContainerSupport>(mapSupports.values()), contextValidation, true);
+		return InstanceHelpers.save(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, new ArrayList<>(mapSupports.values()), contextValidation, true);
 	}
 
 	public static void updateSupportFromUpdatedContainers(List<Container> updatedContainers, Map<String, PropertyValue> mapSupportsCodeSeq, ContextValidation contextValidation){
 
-		HashMap<String,ContainerSupport> mapSupports = new HashMap<String,ContainerSupport>();
+		HashMap<String,ContainerSupport> mapSupports = new HashMap<>();
 		//NOTE FDS 16/06/2016 les cas de supression de containers dans un support ne sont pas gerees par ce code...
 
 		for (Container container : updatedContainers) {
@@ -292,9 +272,9 @@ public class ContainerHelper {
 																			(mapSupportsCodeSeq != null ? mapSupportsCodeSeq.get(container.support.code) : null),
 																			container.support.categoryCode, "ngl");
 					
-				newSupport.projectCodes = new  HashSet<String>(container.projectCodes);
-				newSupport.sampleCodes = new  HashSet<String>(container.sampleCodes);		
-				newSupport.fromTransformationTypeCodes = new  HashSet<String>(container.fromTransformationTypeCodes); // FDS ajout 22/01/2016	
+				newSupport.projectCodes = new  HashSet<>(container.projectCodes);
+				newSupport.sampleCodes = new  HashSet<>(container.sampleCodes);		
+				newSupport.fromTransformationTypeCodes = new  HashSet<>(container.fromTransformationTypeCodes); // FDS ajout 22/01/2016	
 				
 				//FDS ajout 14/10/2015
 				if ( container.support.storageCode != null ){
@@ -364,7 +344,7 @@ public class ContainerHelper {
 	}
 
 	public static Set<Content> contentFromSampleCode(List<Content> contents, String sampleCode) {
-		Set<Content> contentsFind=new HashSet<Content>();
+		Set<Content> contentsFind=new HashSet<>();
 		for(Content content:contents){
 			if(content.sampleCode.equals(sampleCode)){
 				contentsFind.add(content);

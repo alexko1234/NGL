@@ -1,33 +1,23 @@
 package controllers.plates.api;
 
-// import static play.data.Form.form;
-//import static fr.cea.ig.play.IGGlobals.form;
 
-import static validation.utils.ValidationHelper.addErrors;
 import static validation.utils.ValidationHelper.required;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import javax.inject.Inject;
 
+import controllers.CommonController;
+import controllers.MaterielManipSearch;
+import fr.cea.ig.play.NGLContext;
 import lims.cns.dao.LimsManipDAO;
 import lims.models.Plate;
 import models.utils.CodeHelper;
-// import play.Logger;
-//import play.api.modules.spring.Spring;
 import play.data.Form;
-import play.data.validation.ValidationError;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
-import controllers.CommonController;
-import controllers.MaterielManipSearch;
-import fr.cea.ig.play.NGLContext;
 
 // TODO: use DI, extends DocumemntController to start with
 public class Plates extends CommonController {

@@ -49,6 +49,7 @@ public class Experiments extends DocumentController<Experiment> {
 		updateForm = ctx.form(QueryFieldsForm.class);
 	}
 
+	@Override
 	public Result get(String code) {
 		Experiment exp  = MongoDBDAO.findOne(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, 
 				                             Experiment.class, 
@@ -73,7 +74,7 @@ public class Experiments extends DocumentController<Experiment> {
 		MongoDBResult<Experiment> results = mongoDBFinder(form, query);							
 		List<Experiment> list = results.toList();
 		if (form.datatable) {
-			return ok(Json.toJson(new DatatableResponse<Experiment>(list, list.size())));
+			return ok(Json.toJson(new DatatableResponse<>(list, list.size())));
 		} else {
 			return ok(Json.toJson(list));
 		}
@@ -159,7 +160,7 @@ public class Experiments extends DocumentController<Experiment> {
 	 */
 
 	private Query getQuery(ExperimentsSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		Query query = null;
 		if (StringUtils.isNotBlank(form.studyCode)) { //all
 			queries.add(DBQuery.in("studyCode", form.studyCode));

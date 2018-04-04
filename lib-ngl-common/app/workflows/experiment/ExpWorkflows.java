@@ -8,21 +8,20 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import models.laboratory.common.instance.State;
-import models.laboratory.experiment.description.ExperimentCategory;
-import models.laboratory.experiment.instance.Experiment;
-import models.utils.InstanceConstants;
-
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
 import controllers.authorisation.PermissionHelper;
+import fr.cea.ig.MongoDBDAO;
+import models.laboratory.common.instance.State;
+import models.laboratory.experiment.description.ExperimentCategory;
+import models.laboratory.experiment.instance.Experiment;
+import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.ValidationConstants;
 import workflows.Workflows;
 import workflows.container.ContWorkflows;
-import fr.cea.ig.MongoDBDAO;
 
 
 @Singleton
@@ -79,6 +78,7 @@ public class ExpWorkflows extends Workflows<Experiment> {
 		}	
 	}
 	
+	@Override
 	public void applyPreStateRules(ContextValidation validation, Experiment exp, State nextState) {		
 		exp.traceInformation = updateTraceInformation(exp.traceInformation, nextState); 			
 		expWorkflowsHelper.updateStatus(exp, validation);
@@ -103,6 +103,7 @@ public class ExpWorkflows extends Workflows<Experiment> {
 		}
 	}
 	
+	@Override
 	public void applySuccessPostStateRules(ContextValidation validation, Experiment exp) {
 		expWorkflowsHelper.linkExperimentWithProcesses(exp, validation);
 		if ("N".equals(exp.state.code)) {
@@ -126,6 +127,7 @@ public class ExpWorkflows extends Workflows<Experiment> {
 		}
 	}
 	
+	@Override
 	public void applyErrorPostStateRules(ContextValidation validation, Experiment exp, State nextState){
 		ContextValidation errorValidation = new ContextValidation(validation.getUser());
 		errorValidation.setContextObjects(validation.getContextObjects());

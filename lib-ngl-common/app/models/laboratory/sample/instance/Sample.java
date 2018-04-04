@@ -6,30 +6,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import models.laboratory.common.instance.Comment;
-import models.laboratory.common.instance.ITracingAccess;
-import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.common.instance.Valuation;
-import models.laboratory.sample.instance.tree.SampleLife;
-import models.utils.InstanceConstants;
-import models.laboratory.sample.instance.reporting.SampleProcess;
-import models.laboratory.sample.instance.reporting.SampleProcessesStatistics;
-
-// import org.mongojack.MongoCollection;
-
-import validation.ContextValidation;
-import validation.ICRUDValidatable;
-import validation.ICRUDValidation;
-import validation.IValidation;
-import validation.sample.instance.SampleValidationHelper;
-
 //import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 //import com.fasterxml.jackson.annotation.JsonValue;
 
 import controllers.ICommentable;
 import fr.cea.ig.DBObject;
+import models.laboratory.common.instance.Comment;
+import models.laboratory.common.instance.ITracingAccess;
+import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.Valuation;
+import models.laboratory.sample.instance.reporting.SampleProcess;
+import models.laboratory.sample.instance.reporting.SampleProcessesStatistics;
+import models.laboratory.sample.instance.tree.SampleLife;
+import models.utils.InstanceConstants;
+
+// import org.mongojack.MongoCollection;
+
+import validation.ContextValidation;
+import validation.ICRUDValidation;
+import validation.IValidation;
+import validation.sample.instance.SampleValidationHelper;
 
 //Link to this : {@link models.laboratory.sample.instance.Sample}
 
@@ -46,6 +44,7 @@ import fr.cea.ig.DBObject;
  * 
  */
 // @MongoCollection(name="Sample")
+@SuppressWarnings("unused") // IValidation duplicates ICRUDValiation
 public class Sample extends DBObject implements IValidation, ICommentable, ITracingAccess, ICRUDValidation<Sample> {
 
 	// @JsonIgnore
@@ -187,7 +186,7 @@ path: ",CO-0000140,BUP_AAAA",
 	public Sample() {
 		// TODO: remove trace information initialization as it is not needed
 		traceInformation = new TraceInformation();
-		comments         = new ArrayList<Comment>(0);
+		comments         = new ArrayList<>(0);
 	}
 
 	@JsonIgnore

@@ -1,30 +1,48 @@
 package services;
 
-//import static fr.cea.ig.play.IGGlobals.ws;
-
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 //import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-//import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import javax.inject.Inject;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
-
-
-//import play.Logger;
-import validation.ContextValidation;
-import workflows.sra.submission.SubmissionWorkflows;
-import workflows.sra.submission.SubmissionWorkflowsHelper;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.ngl.dao.api.sra.AbstractSampleAPI;
+import fr.cea.ig.ngl.dao.api.sra.AbstractStudyAPI;
+import fr.cea.ig.ngl.dao.api.sra.ExperimentAPI;
+import fr.cea.ig.ngl.dao.api.sra.ExternalSampleAPI;
+import fr.cea.ig.ngl.dao.api.sra.ExternalStudyAPI;
+import fr.cea.ig.ngl.dao.api.sra.SampleAPI;
+import fr.cea.ig.ngl.dao.api.sra.StudyAPI;
+import fr.cea.ig.ngl.dao.api.sra.SubmissionAPI;
+import fr.cea.ig.ngl.dao.samples.SamplesAPI;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
@@ -49,59 +67,15 @@ import models.sra.submit.util.SraCodeHelper;
 import models.sra.submit.util.SraException;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.ngl.dao.api.sra.AbstractSampleAPI;
-import fr.cea.ig.ngl.dao.api.sra.AbstractStudyAPI;
-import fr.cea.ig.ngl.dao.api.sra.ExperimentAPI;
-import fr.cea.ig.ngl.dao.api.sra.ExternalSampleAPI;
-import fr.cea.ig.ngl.dao.api.sra.ExternalStudyAPI;
-import fr.cea.ig.ngl.dao.api.sra.SampleAPI;
-import fr.cea.ig.ngl.dao.api.sra.StudyAPI;
-import fr.cea.ig.ngl.dao.api.sra.SubmissionAPI;
-import fr.cea.ig.ngl.dao.samples.SamplesAPI;
-import fr.cea.ig.play.NGLContext;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-import org.apache.commons.lang3.StringUtils;
-
-import javax.inject.Inject;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
-import java.io.StringReader;
-
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-
-
-
-
-
-
-
-
-
-
-
 // import play.api.modules.spring.Spring;
 // import play.libs.F.Promise;
 // import play.libs.ws.WS;
 import play.libs.ws.WSResponse;
 //import specs2.run;
+//import play.Logger;
+import validation.ContextValidation;
+import workflows.sra.submission.SubmissionWorkflows;
+import workflows.sra.submission.SubmissionWorkflowsHelper;
 
 
 
@@ -195,9 +169,9 @@ public class SubmissionServices {
 		Submission submission = createSubmissionEntityforRelease(study, user, study.projectCodes);
 		//System.out.println("AVANT submission.validate="+contextValidation.errors);
 
-		
 		// updater dans base si besoin le study pour le statut 'N-R' 
-		if (study != null && StringUtils.isNotBlank(submission.studyCode)){
+//		if (study != null && StringUtils.isNotBlank(submission.studyCode)){
+		if (StringUtils.isNotBlank(submission.studyCode)){
 			study.state.code = "IW-SUB-R";
 			study.traceInformation.modifyDate = new Date();
 			study.traceInformation.modifyUser = user;
@@ -423,7 +397,7 @@ public class SubmissionServices {
 
 		// Verifier que tous les readSetCode passes en parametres correspondent bien a des objets en base avec
 		// submissionState='NONE' cad des readSets qui n'interviennent dans aucune soumission.
-		List <ReadSet> readSets = new ArrayList<ReadSet>();
+		List <ReadSet> readSets = new ArrayList<>();
 		for (String readSetCode : readSetCodes) {
 			if (StringUtils.isNotBlank(readSetCode)) {
 				//System.out.println("!!!!!!!!!!!!!         readSetCode = " + readSetCode);
@@ -448,9 +422,9 @@ public class SubmissionServices {
 		Submission submission = createSubmissionEntity(config, studyCode, acStudy, user);
 				
 		// Liste des sous-objets utilisés dans submission
-		List <Experiment> listExperiments = new ArrayList<Experiment>(); // liste des experiments utilisés et crees dans soumission avec state.code='N' à sauver dans database
-		List <AbstractSample> listAbstractSamples = new ArrayList<AbstractSample>();//liste des AbstractSample(Sample ou ExternalSample) avec state.code='F-SUB' ou 'N' utilises dans soumission à sauver ou non dans database		
-		List <AbstractStudy> listAbstractStudies = new ArrayList<AbstractStudy>();//liste des AbstractStudy(Study ou ExternalStudy) avec state.code='F-SUB' ou 'N' utilises dans soumission à sauver ou non dans database		
+		List <Experiment> listExperiments = new ArrayList<>(); // liste des experiments utilisés et crees dans soumission avec state.code='N' à sauver dans database
+		List <AbstractSample> listAbstractSamples = new ArrayList<>();//liste des AbstractSample(Sample ou ExternalSample) avec state.code='F-SUB' ou 'N' utilises dans soumission à sauver ou non dans database		
+		List <AbstractStudy> listAbstractStudies = new ArrayList<>();//liste des AbstractStudy(Study ou ExternalStudy) avec state.code='F-SUB' ou 'N' utilises dans soumission à sauver ou non dans database		
 
 		int countError = 0;
 		String errorMessage = "";
@@ -567,14 +541,13 @@ public class SubmissionServices {
 				    
 				} else if (StringUtils.isNotBlank(acSample)) {
 					externalSample = fetchExternalSample(acSample, user);
-					
 				} else {
 					// bug
 				}
 				
 				// Mise a jour de l'objet submission pour les samples references
 				//System.out.println("Mise a jour de l'objet submission pour les samples references");
-				if(!submission.refSampleCodes.contains(externalSample.code)){
+				if (!submission.refSampleCodes.contains(externalSample.code)) {
 					submission.refSampleCodes.add(externalSample.code);
 				}
 				
@@ -1364,7 +1337,7 @@ public class SubmissionServices {
 				// mettre valeur theorique de libraryLayoutNominalLength (valeur a prendre dans readSet.sampleOnContainer.properties.nominalLength) 
 				// voir recup un peu plus bas:
 				//Map<String, PropertyValue> sampleOnContainerProperties = readSet.sampleOnContainer.properties;
-				if (sampleOnContainerProperties != null) {
+//				if (sampleOnContainerProperties != null) {
 					//Set <String> listKeysSampleOnContainerProperties = sampleOnContainerProperties.keySet();  // Obtenir la liste des clés
 
 //					for(String k: listKeysSampleOnContainerProperties){
@@ -1382,7 +1355,7 @@ public class SubmissionServices {
 							System.out.println("valeur theorique libraryLayoutNominalLength  => "  + experiment.libraryLayoutNominalLength);
 						}
 					}
-				}
+//				}
 			}
 		}
 		//System.out.println("valeur de experiment.libLayoutExpLength"+ experiment.libraryLayoutNominalLength);			
@@ -1420,7 +1393,7 @@ public class SubmissionServices {
 			}
 		}
 		
-		if ("rsnanopore".equalsIgnoreCase(readSet.typeCode)){
+		if ("rsnanopore".equalsIgnoreCase(readSet.typeCode)) {
 			// Pas de spot_descriptor
 			experiment.libraryLayout = "SINGLE";
 			experiment.libraryLayoutOrientation = VariableSRA.mapLibraryLayoutOrientation().get("forward");
@@ -1438,11 +1411,11 @@ public class SubmissionServices {
 					if (libraryLayout.equalsIgnoreCase("SR")){
 						experiment.libraryLayout = "SINGLE";
 						experiment.libraryLayoutOrientation = VariableSRA.mapLibraryLayoutOrientation().get("forward");
-					} else if( libraryLayout.equalsIgnoreCase("PE") || libraryLayout.equalsIgnoreCase("MP")){
+					} else if( libraryLayout.equalsIgnoreCase("PE") || libraryLayout.equalsIgnoreCase("MP")) {
 						experiment.libraryLayout = "PAIRED";
 						//Map<String, PropertyValue> sampleOnContainerProperties = readSet.sampleOnContainer.properties;
 
-						if (sampleOnContainerProperties != null) {
+//						if (sampleOnContainerProperties != null) {
 							//Set <String> listKeysSampleOnContainerProperties = sampleOnContainerProperties.keySet();  // Obtenir la liste des clés
 
 							/*for(String k: listKeysSampleOnContainerProperties){
@@ -1476,7 +1449,7 @@ public class SubmissionServices {
 									experiment.libraryLayoutOrientation = mapLibProcessTypeCodeVal_orientation.get(libProcessTypeCodeValue);
 								}
 							}
-						}
+//						}
 					} else {
 						System.out.println("Pour le laboratoryRun " + laboratoryRun.code + " valeur de properties.sequencingProgramType differente de SR ou PE => " + libraryLayout);
 						throw new SraException("Pour le laboratoryRun " + laboratoryRun.code + " valeur de properties.sequencingProgramType differente de SR ou PE => " + libraryLayout);
@@ -1517,7 +1490,7 @@ public class SubmissionServices {
 			}
 		}
 		System.out.println("'"+readSet.code+"'");
-		experiment.readSpecs = new ArrayList<ReadSpec>();
+		experiment.readSpecs = new ArrayList<>();
 		
 		if( ! "rsnanopore".equalsIgnoreCase(readSet.typeCode)){
 			// IF ILLUMINA ET SINGLE  Attention != si nanopore et SINGLE

@@ -1,5 +1,10 @@
 package rules.services;
 
+import static fr.cea.ig.play.IGGlobals.application;
+// import play.Logger;
+// import play.Play;
+import static fr.cea.ig.play.IGGlobals.configuration;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -16,10 +21,6 @@ import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
 import org.drools.io.ResourceFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
-// import play.Logger;
-// import play.Play;
-import static fr.cea.ig.play.IGGlobals.configuration;
-import static fr.cea.ig.play.IGGlobals.application;
 
 public class RulesServices {
 	
@@ -100,7 +101,7 @@ public class RulesServices {
 			kSession.insert(fact);
 		}
 		kSession.fireAllRules(RulesAgendaFilter.getInstance(keyRules, ruleAnnotationName));
-		List<Object> factsAfterRules = new ArrayList<Object>(kSession.getObjects());
+		List<Object> factsAfterRules = new ArrayList<>(kSession.getObjects());
 		//Close session
 		kSession.dispose();
 		return factsAfterRules;

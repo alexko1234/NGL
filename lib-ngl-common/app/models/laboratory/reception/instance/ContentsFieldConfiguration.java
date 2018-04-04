@@ -33,7 +33,7 @@ public class ContentsFieldConfiguration extends ObjectFieldConfiguration<Content
 				@SuppressWarnings("unchecked") // Reflective and recursive code, uncheckable
 				List<Content> contents = (List<Content>)field.get(dbObject);
 				if (contents == null) 
-					contents = new ArrayList<Content>(0);
+					contents = new ArrayList<>(0);
 				contents.add(content);
 				populateField(field, dbObject,contents);	
 				//throw new RuntimeException("Pool not managed for save");

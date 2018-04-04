@@ -111,7 +111,7 @@ public class InstanceFactory {
 
 	// Arrays.toList or so i think
 	public static List<String> setExperimentTypeCodes(String...exp) {
-		List<String> lp = new ArrayList<String>();
+		List<String> lp = new ArrayList<>();
 		for (String s:exp) {
 			lp.add(s);
 		}

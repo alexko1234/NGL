@@ -9,10 +9,20 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.mongojack.DBQuery;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+
+import fr.cea.ig.MongoDBDAO;
 import lims.models.LotSeqValuation;
 import lims.models.experiment.Experiment;
 import lims.models.experiment.illumina.BanqueSolexa;
@@ -32,7 +42,6 @@ import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.InputContainerUsed;
-import models.laboratory.experiment.instance.ManyToOneContainer;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
@@ -43,20 +52,6 @@ import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.mongojack.DBQuery;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
-
-//import play.Logger;
-import play.api.modules.spring.Spring;
-import fr.cea.ig.MongoDBDAO;
 
 
 @Repository
@@ -77,20 +72,20 @@ public class LimsAbandonDAO {
     public List<TacheHD> listTacheHD(String readSetCode) {
     	logger.info("pl_TachehdUnLotseq @lseqnom='"+readSetCode);
         List<TacheHD> results = jdbcTemplate.query("pl_TachehdUnLotseq @lseqnom=?",
-        		new Object[] { readSetCode }, new BeanPropertyRowMapper<TacheHD>(TacheHD.class));
+        		new Object[] { readSetCode }, new BeanPropertyRowMapper<>(TacheHD.class));
         return results;
     }
     
     public List<EtatTacheHD> listEtatTacheHD() {
     	logger.info("pl_Etachehd");
-        List<EtatTacheHD> results = jdbcTemplate.query("pl_Etachehd",new BeanPropertyRowMapper<EtatTacheHD>(EtatTacheHD.class));
+        List<EtatTacheHD> results = jdbcTemplate.query("pl_Etachehd",new BeanPropertyRowMapper<>(EtatTacheHD.class));
         return results;
     }
     
     public LotSeqValuation getLotsequenceValuation(String lseqnom){
     	logger.info("pl_LotsequenceValuationToNGL @lseqnom="+lseqnom);
         LotSeqValuation results = jdbcTemplate.queryForObject("pl_LotsequenceValuationToNGL @lseqnom=?",
-        		new Object[]{ lseqnom }, new BeanPropertyRowMapper<LotSeqValuation>(LotSeqValuation.class));
+        		new Object[]{ lseqnom }, new BeanPropertyRowMapper<>(LotSeqValuation.class));
         return results;
     }
     
@@ -115,7 +110,7 @@ public class LimsAbandonDAO {
     }
 
 	public List<LimsExperiment> getExperiments(Experiment experiment) {
-		BeanPropertyRowMapper<LimsExperiment> mapper = new BeanPropertyRowMapper<LimsExperiment>(LimsExperiment.class);
+		BeanPropertyRowMapper<LimsExperiment> mapper = new BeanPropertyRowMapper<>(LimsExperiment.class);
     	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
 		if (experiment.date != null) {
 			logger.info("pl_DepotsolexaUneFCtoNGL @flowcellid='"+experiment.containerSupportCode+"', @daterun="+ sdf.format(experiment.date));
@@ -526,6 +521,7 @@ public class LimsAbandonDAO {
 																,expPrepaflowcell.atomicTransfertMethods.size()
 																,run.typeCode},
 												new RowMapper<DepotSolexa>() {
+													@Override
 													public DepotSolexa mapRow(ResultSet rs, int rowNum) throws SQLException {
 														DepotSolexa value = new DepotSolexa();
 														value.matmaco = rs.getInt("matmaco");
@@ -579,7 +575,7 @@ public class LimsAbandonDAO {
 				rp.code = rs.getString("code_projet");
 				rp.name = rs.getString("nom_projet");
 				rp.biomanager = rs.getString("nom_bio").toUpperCase()+" "+rs.getString("pren_bio");
-				rp.infomanager = rs.getString("nom_info").toUpperCase()+" "+rs.getString("pren_info");;		
+				rp.infomanager = rs.getString("nom_info").toUpperCase()+" "+rs.getString("pren_info");		
 				return rp;					
 			}
 		};
@@ -590,6 +586,7 @@ public class LimsAbandonDAO {
 		List<Sample> results = jdbcTemplate.query("pl_MaterielToNGLUn @nom_materiel=?",new Object[]{sampleCode} 
 		,new RowMapper<Sample>() {
 			// @SuppressWarnings("rawtypes")
+			@Override
 			public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
 				Sample sample = new Sample();
 				InstanceHelpers.updateTraceInformation(sample.traceInformation, "ngl-bi");
@@ -613,12 +610,12 @@ public class LimsAbandonDAO {
 				}
 				logger.debug("Sample Type :"+sampleTypeCode);
 				sample.typeCode        = sampleTypeCode;
-				sample.projectCodes    = new HashSet<String>();
+				sample.projectCodes    = new HashSet<>();
 				sample.projectCodes.add(rs.getString("project"));
 				sample.name            = rs.getString("name");
 				sample.referenceCollab = rs.getString("referenceCollab");
 				sample.taxonCode       = rs.getString("taxonCode");
-				sample.comments        = new ArrayList<Comment>();
+				sample.comments        = new ArrayList<>();
 				sample.comments.add(new Comment(rs.getString("comment"), "ngl-test"));
 				sample.categoryCode    = sampleType.category.code;
 				sample.properties      = new HashMap<>(); // <String, PropertyValue>();

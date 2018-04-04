@@ -4,7 +4,6 @@ package controllers.reagents.api;
 //import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -14,29 +13,22 @@ import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-import play.data.Form;
-import play.libs.Json;
-import play.mvc.Result;
-import play.mvc.Results;
-import play.Logger;
-import validation.ContextValidation;
-import validation.utils.ValidationHelper;
-import views.components.datatable.DatatableResponse;
-//import akka.event.Logging.Debug;
-import com.mongodb.BasicDBObject;
-
-import models.laboratory.reagent.description.AbstractCatalog;
-import models.laboratory.reagent.description.BoxCatalog;
-import models.laboratory.reagent.description.KitCatalog;
-import models.laboratory.reagent.utils.ReagentCodeHelper;
-import models.utils.CodeHelper;
-import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
-import models.utils.ListObject;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
+import models.laboratory.reagent.description.AbstractCatalog;
+import models.laboratory.reagent.description.BoxCatalog;
+import models.laboratory.reagent.utils.ReagentCodeHelper;
+import models.utils.InstanceConstants;
+import models.utils.InstanceHelpers;
+import play.Logger;
+import play.data.Form;
+import play.libs.Json;
+import play.mvc.Result;
+import validation.ContextValidation;
+import validation.utils.ValidationHelper;
+import views.components.datatable.DatatableResponse;
 
 public class BoxCatalogs extends DocumentController<BoxCatalog> {
 	
@@ -82,9 +74,9 @@ public class BoxCatalogs extends DocumentController<BoxCatalog> {
 		if (contextValidation.hasErrors())
 			return badRequest(errorsAsJson(contextValidation.getErrors()));
 		return ok(Json.toJson(boxCatalog));
-		
 	}
 	
+	@Override
 	public Result delete(String code){
 		MongoDBDAO.delete(InstanceConstants.REAGENT_CATALOG_COLL_NAME, AbstractCatalog.class, DBQuery.or(DBQuery.is("code", code),DBQuery.is("boxCatalogCode", code)));
 		return ok();
@@ -98,11 +90,11 @@ public class BoxCatalogs extends DocumentController<BoxCatalog> {
 		DBQuery.Query query = getQuery(boxCatalogSearch);
 		Logger.debug("query : "+query);
 
-		if(boxCatalogSearch.datatable){
+		if (boxCatalogSearch.datatable) {
 			MongoDBResult<BoxCatalog> results =  mongoDBFinder(boxCatalogSearch, query);
 			List<BoxCatalog> boxCatalogs = results.toList();
 			
-			return ok(Json.toJson(new DatatableResponse<BoxCatalog>(boxCatalogs, results.count())));
+			return ok(Json.toJson(new DatatableResponse<>(boxCatalogs, results.count())));
 		/*}else if (boxCatalogSearch.list){
 			keys = new BasicDBObject();
 			keys.put("code", 1);
@@ -121,20 +113,19 @@ public class BoxCatalogs extends DocumentController<BoxCatalog> {
 			}
 			
 			return Results.ok(Json.toJson(los));*/
-		}else{
-			if(null == boxCatalogSearch.orderBy)boxCatalogSearch.orderBy = "code";
-			if(null == boxCatalogSearch.orderSense)boxCatalogSearch.orderSense = 0;
-			
-			MongoDBResult<BoxCatalog> results = mongoDBFinder(boxCatalogSearch, query);
-			List<BoxCatalog> boxCatalogs = results.toList();
-			
-			return ok(Json.toJson(boxCatalogs));
 		}
+		if (boxCatalogSearch.orderBy    == null) boxCatalogSearch.orderBy = "code";
+		if (boxCatalogSearch.orderSense == null) boxCatalogSearch.orderSense = 0;
+
+		MongoDBResult<BoxCatalog> results = mongoDBFinder(boxCatalogSearch, query);
+		List<BoxCatalog> boxCatalogs = results.toList();
+
+		return ok(Json.toJson(boxCatalogs));
 	}
 	
 	private static Query getQuery(BoxCatalogSearchForm boxCatalogSearch){
 		//List<Query> queries = new ArrayList<Query>();
-		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
+		List<DBQuery.Query> queryElts = new ArrayList<>();
 		Query query = null;
 		queryElts.add(DBQuery.is("category", "Box"));
 		

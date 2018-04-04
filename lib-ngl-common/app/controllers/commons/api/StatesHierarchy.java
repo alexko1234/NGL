@@ -6,8 +6,13 @@ package controllers.commons.api;
 import java.util.ArrayList;
 import java.util.List;
 
+//import controllers.CommonController;
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.StringUtils;
 
+import controllers.APICommonController;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.StateHierarchy;
 import models.utils.ListObject;
@@ -16,12 +21,9 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import views.components.datatable.DatatableResponse;
-//import controllers.CommonController;
-import javax.inject.Inject;
-import fr.cea.ig.play.NGLContext;
-import controllers.APICommonController;
 
 public class StatesHierarchy extends APICommonController<StatesHierarchySearchForm> {// CommonController {
+	
     private final /*static*/ Form<StatesHierarchySearchForm> statesHierarchyForm; // = form(StatesHierarchySearchForm.class);
 
     @Inject
@@ -35,19 +37,17 @@ public class StatesHierarchy extends APICommonController<StatesHierarchySearchFo
 				statesHierarchyForm, StatesHierarchySearchForm.class);
 		StatesHierarchySearchForm statesHierarchySearch = statesHierarchyFilledForm.get();
 	
-		List<StateHierarchy> values = new ArrayList<StateHierarchy>(0);
+		List<StateHierarchy> values = new ArrayList<>(0);
 
 		if (StringUtils.isNotBlank(statesHierarchySearch.objectTypeCode)) 
 		    values = StateHierarchy.find.findByObjectTypeCode(ObjectType.CODE.valueOf(statesHierarchySearch.objectTypeCode));
 		else 
 			return notFound();
 		
-	
 		if (statesHierarchySearch.datatable) {
-		    return ok(Json.toJson(new DatatableResponse<StateHierarchy>(values, values
-			    .size())));
+		    return ok(Json.toJson(new DatatableResponse<>(values, values.size())));
 		} else if (statesHierarchySearch.list) {
-		    List<ListObject> valuesListObject = new ArrayList<ListObject>();
+		    List<ListObject> valuesListObject = new ArrayList<>();
 		    for (StateHierarchy s : values) {
 		    	valuesListObject.add(new ListObject(s.childStateCode, s.parentStateCode));
 		    }
@@ -56,5 +56,6 @@ public class StatesHierarchy extends APICommonController<StatesHierarchySearchFo
 		    return ok(Json.toJson(values));
 		}
     }
+    
 }
 

@@ -4,20 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.dao.CommonInfoTypeDAO;
-import models.laboratory.instrument.description.InstrumentUsedType;
-import models.laboratory.instrument.description.dao.InstrumentUsedTypeMappingQuery;
-import models.laboratory.sample.description.SampleCategory;
-import models.laboratory.sample.description.SampleType;
-import models.utils.DescriptionHelper;
-import models.utils.dao.AbstractDAOCommonInfoType;
-import models.utils.dao.AbstractDAOMapping;
-import models.utils.dao.DAOException;
-
 import org.springframework.asm.Type;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
+import models.laboratory.common.description.dao.CommonInfoTypeDAO;
+import models.laboratory.sample.description.SampleType;
+import models.utils.dao.AbstractDAOCommonInfoType;
+import models.utils.dao.DAOException;
 import play.api.modules.spring.Spring;
 
 @Repository
@@ -46,7 +40,7 @@ public class SampleTypeDAO extends AbstractDAOCommonInfoType<SampleType> {
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		sampleType.id = commonInfoTypeDAO.save(sampleType);
 		//Create sampleType 
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("id", sampleType.id);
 		parameters.put("fk_common_info_type", sampleType.id);
 		parameters.put("fk_sample_category", sampleType.category.id);

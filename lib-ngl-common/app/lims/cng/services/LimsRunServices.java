@@ -6,6 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.time.DateUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import fr.cea.ig.MongoDBDAO;
 import lims.cng.dao.LimsExperiment;
 import lims.cng.dao.LimsLibrary;
 import lims.cng.dao.LimsRunDAO;
@@ -21,14 +28,6 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
-
-import org.apache.commons.lang.time.DateUtils;
-import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import fr.cea.ig.MongoDBDAO;
 import play.Logger;
 
 
@@ -124,14 +123,14 @@ public class LimsRunServices implements ILimsRunServices {
 			flowcell = new Flowcell();
 			flowcell.containerSupportCode = supportCode;
 
-			Map<Integer, Lane> lanes = new HashMap<Integer, Lane>();
+			Map<Integer, Lane> lanes = new HashMap<>();
 
 			for (LimsLibrary lrs : limsReadSets) {
 				Lane currentLane = lanes.get(lrs.laneNumber);
 				if (null == currentLane) {
 					currentLane = new Lane();
 					currentLane.number = lrs.laneNumber;
-					currentLane.librairies = new ArrayList<Library>();
+					currentLane.librairies = new ArrayList<>();
 					lanes.put(lrs.laneNumber, currentLane);
 				}
 

@@ -1,6 +1,5 @@
 package controllers.admin.supports.api;		
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -14,10 +13,8 @@ import fr.cea.ig.ngl.NGLConfig;
 import fr.cea.ig.play.NGLContext;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
-import services.ncbi.TaxonomyServices;
-// import play.Logger;
 import play.mvc.Result;
-import services.instance.sample.UpdateSampleNCBITaxonCNS;
+import services.ncbi.TaxonomyServices;
 
 /**
  * Update SampleOnContainer on ReadSet

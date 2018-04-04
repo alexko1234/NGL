@@ -5,14 +5,13 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.springframework.jdbc.core.SqlParameter;
+
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.utils.dao.DAOException;
 import models.utils.dao.MappingSqlQueryFactory;
 import models.utils.dao.NGLMappingSqlQuery;
-
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.object.MappingSqlQuery;
 
 //public class ContainerSupportCategoryMappingQuery extends MappingSqlQuery<ContainerSupportCategory> {
 public class ContainerSupportCategoryMappingQuery extends NGLMappingSqlQuery<ContainerSupportCategory> {

@@ -4,17 +4,15 @@ import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.TreeMap;
 
-//import play.Logger;
-import validation.ContextValidation;
-import validation.IValidation;
+import fr.cea.ig.DBObject;
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.reception.instance.AbstractFieldConfiguration;
 import models.laboratory.reception.instance.ReceptionConfiguration.Action;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
-import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBDAO;
+import validation.ContextValidation;
+import validation.IValidation;
 
 /**
  * Class to map a line of Excel or CVS file to a DBObject : sample, support, container, etc.
@@ -31,7 +29,7 @@ public abstract class Mapping<T extends DBObject> {
 		sample,
 		support,
 		container
-	};
+	}
 	
 	// Seems that it's supposed to be 3 maps and not 1.
 	protected Map<String, Map<String, DBObject>> objects;

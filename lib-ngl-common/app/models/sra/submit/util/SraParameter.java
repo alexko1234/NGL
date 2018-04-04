@@ -6,9 +6,9 @@ import java.util.Map;
 
 import org.mongojack.DBQuery;
 
-import models.utils.InstanceConstants;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
+import models.utils.InstanceConstants;
 
 public class SraParameter extends DBObject {
 	
@@ -27,7 +27,7 @@ public class SraParameter extends DBObject {
 	}
 	
 	public static Map <String, String> getParameter(String type) {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		List<SraParameter> sraParam = MongoDBDAO.find(InstanceConstants.SRA_PARAMETER_COLL_NAME, SraParameter.class, DBQuery.in("type", type)).toList();
 		if (sraParam.isEmpty()) {
 			logger.error("Absence de données de type '" + type + "' dans la table SraParmeters");

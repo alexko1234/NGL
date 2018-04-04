@@ -3,15 +3,18 @@ package services;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+
+import fr.cea.ig.MongoDBDAO;
 import models.sra.submit.common.instance.Sample;
 import models.sra.submit.common.instance.Study;
 import models.sra.submit.common.instance.Submission;
@@ -20,16 +23,8 @@ import models.sra.submit.sra.instance.RawData;
 import models.sra.submit.sra.instance.ReadSpec;
 import models.sra.submit.sra.instance.Run;
 import models.sra.submit.util.SraException;
-import models.sra.submit.util.SraParameter;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
-
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-
-import fr.cea.ig.MongoDBDAO;
-
-import org.apache.commons.lang3.StringUtils;
 
 //import play.Logger;
 //class ReadSpec_2 extends ReadSpec {
@@ -315,7 +310,7 @@ public class XmlServices {
 //				Exemple sans passer par des lambda:
 //				Comparator< ? extends ReadSpec> x; // n'importe quel type qui etend ReadSpec 
 //				Comparator< ? super ReadSpec> y;// n'importe quel type qui est une super class de ReadSpec 
-				List <ReadSpec> list = new ArrayList<ReadSpec> (experiment.readSpecs);
+				List <ReadSpec> list = new ArrayList<> (experiment.readSpecs);
 				Collections.sort(list, new Comparator <ReadSpec>() {
 					@Override
 					public int compare(ReadSpec o1, ReadSpec o2) {

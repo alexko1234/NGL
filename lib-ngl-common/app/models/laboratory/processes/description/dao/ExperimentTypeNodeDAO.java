@@ -6,13 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ExperimentTypeNode;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
-
-import org.springframework.stereotype.Repository;
-
 import play.Logger;
 @Repository
 public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNode>{
@@ -37,7 +36,7 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 			throw new DAOException("ExperimentType is mandatory");
 		}
 
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("code", value.code);
 		parameters.put("doPurification", value.doPurification);
 		parameters.put("mandatoryPurification", value.mandatoryPurification);
@@ -49,7 +48,7 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 
 		value.id = (Long) jdbcInsert.executeAndReturnKey(parameters);
 
-		List<ExperimentType> experimentTypes = new ArrayList<ExperimentType>();
+		List<ExperimentType> experimentTypes = new ArrayList<>();
 		if(null != value.possibleQualityControlTypes){
 			experimentTypes.addAll(value.possibleQualityControlTypes);
 

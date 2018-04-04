@@ -1,6 +1,5 @@
 package controllers.runs.api;
 
-
 import java.util.Date;
 
 import javax.inject.Inject;
@@ -18,12 +17,8 @@ import models.laboratory.common.instance.Valuation;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
-import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
-//import play.Logger;
 import play.data.Form;
-
-
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;

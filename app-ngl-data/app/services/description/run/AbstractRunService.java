@@ -40,7 +40,7 @@ public abstract class AbstractRunService {
 	public abstract void saveReadSetType(Map<String, List<ValidationError>> errors)throws DAOException;
 
 	public static List<PropertyDefinition> getReadSetPropertyDefinitionsNanopore() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("asciiEncoding","asciiEncoding",LevelService.getLevels(Level.CODE.File), String.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("label","label",LevelService.getLevels(Level.CODE.File), String.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("md5","md5",LevelService.getLevels(Level.CODE.File), String.class, false, "single"));
@@ -50,10 +50,11 @@ public abstract class AbstractRunService {
 	}
 
 	public static List<PropertyDefinition> getRunNanoporePropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Run), String.class, false, null, null, 
 				"single", null, false, null, null));
 
 		return propertyDefinitions;
 	}
+	
 }

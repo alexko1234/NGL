@@ -1,15 +1,7 @@
 package controllers.main.tpl;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
-import models.laboratory.common.description.CodeLabel;
-import models.laboratory.common.description.dao.CodeLabelDAO;
-import models.laboratory.protocol.instance.Protocol;
-import models.utils.InstanceConstants;
-//import controllers.CommonController;
-import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.lfw.utils.JavascriptGeneration.Codes;
@@ -19,16 +11,8 @@ import fr.cea.ig.ngl.support.Executor;
 import fr.cea.ig.ngl.support.NGLJavascript;
 import fr.cea.ig.ngl.support.api.CodeLabelAPIHolder;
 import fr.cea.ig.ngl.support.api.ProtocolAPIHolder;
-//import play.Logger;
-import play.api.modules.spring.Spring;
-import play.data.Form;
-import play.libs.Json;
-import play.libs.Scala;
-import play.mvc.Controller;
 import play.mvc.Result;
-import jsmessages.JsMessages;
 import views.html.home ;
-
 
 // public class Main extends -CommonController {
 public class Main extends NGLController

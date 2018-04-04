@@ -29,7 +29,7 @@ public class Purif extends AbstractDeclaration {
 
 	@Override
 	protected List<ExperimentType> getExperimentTypeCommon() {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		List<ExperimentType> l = new ArrayList<>();
 
 		//purif
 		l.add(newExperimentType("Traitement DNAse","dnase-treatment",null, 30100,
@@ -74,7 +74,7 @@ public class Purif extends AbstractDeclaration {
 	
 	
 	private List<PropertyDefinition> getPropertyDefinitionsWGADebranching() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,"1"));
@@ -94,7 +94,7 @@ public class Purif extends AbstractDeclaration {
 	}
 
 	private List<PropertyDefinition> getPropertyDefinitionsDNAseTreatment() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,"1"));
@@ -104,7 +104,7 @@ public class Purif extends AbstractDeclaration {
 		return propertyDefinitions;
 	}
 	private List<PropertyDefinition> getPropertyDefinitionsRRNADepletion() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,"1"));
@@ -116,7 +116,7 @@ public class Purif extends AbstractDeclaration {
 	
 	
 	private List<PropertyDefinition> getPropertyDefinitionsPostAmpurePCR() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Ratio billes Ampure", "adnBeadVolumeRatio", LevelService.getLevels(Level.CODE.Experiment), String.class, true, null, 
 				null, null, null, null,"single", 2, true, null, null));
 	
@@ -125,7 +125,7 @@ public class Purif extends AbstractDeclaration {
 
 	
 	private List<PropertyDefinition> getPropertyDefinitionsSpinColumnPurification() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,"1"));
@@ -153,7 +153,7 @@ public class Purif extends AbstractDeclaration {
 
 	@Override
 	protected List<ProcessType> getProcessTypeCommon() {
-	List<ProcessType> l = new ArrayList<ProcessType>();
+	List<ProcessType> l = new ArrayList<>();
 		
 		
 		l.add(DescriptionFactory.newProcessType("Purif puis satellites", "purif-qc-transfert", 

@@ -5,36 +5,24 @@ package controllers.reporting.api;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.reporting.instance.FilteringConfiguration;
-import models.laboratory.reporting.instance.ReportingConfiguration;
-import models.laboratory.resolutions.instance.Resolution;
-import models.laboratory.resolutions.instance.ResolutionConfiguration;
-import models.utils.InstanceConstants;
-
+import org.apache.commons.collections4.CollectionUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Controller;
 
-import com.mongodb.BasicDBObject;
-
-//import play.Logger;
+import controllers.DocumentController;
+import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
+import models.laboratory.reporting.instance.FilteringConfiguration;
+import models.utils.InstanceConstants;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
-import controllers.DocumentController;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.play.NGLContext;
 
 /**
  * Controller around ResolutionConfigurations object
@@ -66,7 +54,7 @@ public class FilteringConfigurations extends DocumentController<FilteringConfigu
 	}
 	
 	private Query getQuery(ConfigurationsSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		Query query = null;
 		
 		if (CollectionUtils.isNotEmpty(form.pageCodes)) { //all

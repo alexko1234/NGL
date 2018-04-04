@@ -13,7 +13,6 @@ import org.junit.runners.MethodSorters;
 import org.mongojack.DBQuery;
 
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.test.WSHelper;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.instance.Container;
@@ -24,13 +23,14 @@ import models.laboratory.run.instance.Run;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import ngl.bi.AbstractBIServerTest;
-import play.Logger;
 import play.libs.Json;
 import play.libs.ws.WSResponse;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class RunTest extends AbstractBIServerTest{
+public class RunTest extends AbstractBIServerTest {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(RunTest.class);
+	
 	static Run run;
 	static ContainerSupport containerSupport;
 	static List<ReadSet> readSets;
@@ -52,7 +52,7 @@ public class RunTest extends AbstractBIServerTest{
 		run._id=null;
 		run.state.code="IP-S";
 		jsonRun = Json.toJson(run).toString();
-		Logger.debug("Run code "+run.code);
+		logger.debug("Run code "+run.code);
 		//insert project in collection
 		for(String codeProjet : run.projectCodes){
 			Project project = MongoDBDAO.findByCode("ngl_project.Project_dataWF", Project.class, codeProjet);
@@ -105,18 +105,18 @@ public class RunTest extends AbstractBIServerTest{
 	@Test
 	public void test1saveRun() throws InterruptedException
 	{
-		Logger.debug("save Run");
+		logger.debug("save Run");
 //		WSHelper.postAsBot(ws, "/api/runs", jsonRun, 200);
 		wsBot.post("/api/runs", jsonRun, 200);
 		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
-		Logger.debug("Run "+run.code);
+		logger.debug("Run "+run.code);
 		assertThat(run).isNotNull();	
 	}
 
 	@Test
 	public void test2updateRun()
 	{
-		Logger.debug("save Run");
+		logger.debug("save Run");
 		Date date = new Date();
 		run.sequencingStartDate=date;
 		//run.properties.remove("libProcessTypeCodes");
@@ -130,7 +130,7 @@ public class RunTest extends AbstractBIServerTest{
 	@Test
 	public void test3listRun()
 	{
-		Logger.debug("save Run");
+		logger.debug("save Run");
 //		WSResponse response = WSHelper.getAsBot(ws, "/api/runs", 200);
 		WSResponse response = wsBot.get("/api/runs", 200);
 		assertThat(response.asJson()).isNotNull();
@@ -139,7 +139,7 @@ public class RunTest extends AbstractBIServerTest{
 	@Test
 	public void test4getRun()
 	{
-		Logger.debug("get Run");
+		logger.debug("get Run");
 //		WSResponse response = WSHelper.getAsBot(ws, "/api/runs/"+run.code, 200);
 		WSResponse response = wsBot.get("/api/runs/"+run.code, 200);
 		assertThat(response.asJson()).isNotNull();
@@ -148,7 +148,7 @@ public class RunTest extends AbstractBIServerTest{
 	@Test
 	public void test5headRun()
 	{
-		Logger.debug("head Run");
+		logger.debug("head Run");
 //		WSResponse response = WSHelper.headAsBot(ws, "/api/runs/"+run.code, 200);
 		WSResponse response = wsBot.head("/api/runs/"+run.code, 200);
 		assertThat(response).isNotNull();
@@ -157,7 +157,7 @@ public class RunTest extends AbstractBIServerTest{
 	@Test
 	public void test6GetState()
 	{
-		Logger.debug("get State");
+		logger.debug("get State");
 //		WSResponse response = WSHelper.getAsBot(ws, "/api/runs/"+run.code+"/state", 200);
 		WSResponse response = wsBot.get("/api/runs/"+run.code+"/state", 200);
 		assertThat(response.asJson()).isNotNull();
@@ -166,7 +166,7 @@ public class RunTest extends AbstractBIServerTest{
 	@Test
 	public void test7GetStateHistorical()
 	{
-		Logger.debug("get State historical");
+		logger.debug("get State historical");
 //		WSResponse response = WSHelper.getAsBot(ws, "/api/runs/"+run.code+"/state/historical", 200);
 		WSResponse response = wsBot.get("/api/runs/"+run.code+"/state/historical", 200);
 		assertThat(response.asJson()).isNotNull();
@@ -175,7 +175,7 @@ public class RunTest extends AbstractBIServerTest{
 	@Test
 	public void test8Valuation()
 	{
-		Logger.debug("valuation");
+		logger.debug("valuation");
 		//Create valuation
 		Valuation valuation = new Valuation();
 		valuation.comment="test valuation";
@@ -211,7 +211,7 @@ public class RunTest extends AbstractBIServerTest{
 	@Test
 	public void test9DeleteRun()
 	{
-		Logger.debug("delete Run");
+		logger.debug("delete Run");
 //		WSHelper.deleteAsBot(ws,"/api/runs/"+run.code,200);
 		wsBot.delete("/api/runs/"+run.code,200);
 		Run runDB = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);

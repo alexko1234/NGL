@@ -11,26 +11,28 @@ import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
-import play.Logger;
+//import play.Logger;
 import play.data.validation.ValidationError;
 
 public abstract class AbstractInstrumentService {
 	
+	private static final play.Logger.ALogger logger = play.Logger.of(AbstractInstrumentService.class);
+	
 	public void main(Map<String, List<ValidationError>> errors) throws DAOException{
 		
-		Logger.debug("Begin remove Instrument Used Type");
+		logger.debug("Begin remove Instrument Used Type");
 		DAOHelpers.removeAll(InstrumentUsedType.class, InstrumentUsedType.find);
 		
-		Logger.debug("Begin remove Instrument Category !!!");
+		logger.debug("Begin remove Instrument Category !!!");
 		DAOHelpers.removeAll(InstrumentCategory.class, InstrumentCategory.find);
 		
-		Logger.debug("Begin save categories");
+		logger.debug("Begin save categories");
 		saveInstrumentCategories(errors);
 		
-		Logger.debug("Begin save Instrument Used Type");
+		logger.debug("Begin save Instrument Used Type");
 		saveInstrumentUsedTypes(errors);	
 		
-		Logger.debug("End Instrument service");
+		logger.debug("End Instrument service");
 	}
 
 	public abstract void saveInstrumentUsedTypes(Map<String, List<ValidationError>> errors) throws DAOException;
@@ -50,7 +52,7 @@ public abstract class AbstractInstrumentService {
 	}
 
 	protected static List<Instrument> getInstruments(Instrument...instruments) {
-		List<Instrument> linstruments = new ArrayList<Instrument>(); 
+		List<Instrument> linstruments = new ArrayList<>(); 
 		for (Instrument instrument : instruments) {
 			linstruments.add(instrument); 
 		}

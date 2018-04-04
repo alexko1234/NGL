@@ -26,9 +26,9 @@ import services.description.common.LevelService;
 
 public class SampleServiceCNS extends AbstractSampleService {
 	
-
+	@Override
 	public void saveSampleCategories(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<SampleCategory> l = new ArrayList<SampleCategory>();
+		List<SampleCategory> l = new ArrayList<>();
 		
 		l.add(newSampleCategory("ADN Cloné",                    "cloned-DNA"));
 		l.add(newSampleCategory("Matériel Immunoprécipité",     "IP-sample"));
@@ -57,10 +57,11 @@ public class SampleServiceCNS extends AbstractSampleService {
 		return newSampleType(name,code,SampleCategory.find.findByCode(category),properties,institutes);
 	}
 	
+	@Override
 	public void saveSampleTypes(Map<String, List<ValidationError>> errors) throws DAOException{
 		List<Institute> CNS = getInstitutes(Constants.CODE.CNS);
 		
-		List<SampleType> l = new ArrayList<SampleType>();
+		List<SampleType> l = new ArrayList<>();
 		
 		l.add(makeSampleType("BAC",               "BAC",         "cloned-DNA",            CNS));	
 		l.add(makeSampleType("Plasmide",          "plasmid",     "cloned-DNA",            CNS));	
@@ -150,14 +151,14 @@ public class SampleServiceCNS extends AbstractSampleService {
 	}*/
 	
 	private List<PropertyDefinition> getFishPropertyDefinitions() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Partie de l'anatomie", "fishAnatomy", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null,
 				getFishAnatomyValues(), "single", 2, true, null, null));
 		return propertyDefinitions;
 	}
 	
 	private static List<Value> getFishAnatomyValues() {
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("MUC",   "mucus"));
 		values.add(DescriptionFactory.newValue("GILLS", "gills"));
 		values.add(DescriptionFactory.newValue("GT",    "Gut tractus"));

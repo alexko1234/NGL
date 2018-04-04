@@ -6,12 +6,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.typesafe.config.ConfigFactory;
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
-import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
 import models.utils.dao.DAOException;
@@ -22,13 +23,11 @@ import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 import services.description.common.MeasureService;
 
-import com.typesafe.config.ConfigFactory;
-
 public class ProcessServiceTEST extends AbstractProcessService {
 
-
+	@Override
 	public void saveProcessCategories(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<ProcessCategory> l = new ArrayList<ProcessCategory>();
+		List<ProcessCategory> l = new ArrayList<>();
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Sequencage", "pre-sequencing"));
 			l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Banque", "pre-library"));
@@ -41,8 +40,9 @@ public class ProcessServiceTEST extends AbstractProcessService {
 
 	}
 
+	@Override
 	public void saveProcessTypes(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<ProcessType> l = new ArrayList<ProcessType>();
+		List<ProcessType> l = new ArrayList<>();
 	
 		/*
 		l.add(DescriptionFactory.newProcessType("Frg, Lib ONT, Dépôt", "nanopore-process-library", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanoporeFragmentation() , getExperimentTypes("nanopore-fragmentation","nanopore-library","nanopore-depot"), 
@@ -70,7 +70,7 @@ public class ProcessServiceTEST extends AbstractProcessService {
 		DAOHelpers.saveModels(ProcessType.class, l, errors);
 	}
 	public static List<PropertyDefinition> getTestProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Prop. Content 1","propContent1",LevelService.getLevels(Level.CODE.Process,Level.CODE.Content),String.class, true, getLibProcessTypeCodeValues(), "ONT","single" ,1));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Prop. 1","prop1",LevelService.getLevels(Level.CODE.Process),String.class, true, "single" ,1));
 		
@@ -108,7 +108,7 @@ public class ProcessServiceTEST extends AbstractProcessService {
 	
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsLib300600() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Robot à utiliser","autoVsManuel", LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("MAN","ROBOT"), "single",100));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Quantité à engager", "inputQuantity", LevelService.getLevels(Level.CODE.Process),Double.class, true, DescriptionFactory.newValues("250","500"), "single",200));
@@ -120,13 +120,13 @@ public class ProcessServiceTEST extends AbstractProcessService {
 	}
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsQPCRQuantification() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();				
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();				
 		return propertyDefinitions;
 	}
 	
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsNanoporeFragmentation() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();		
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Type processus banque","libProcessTypeCode",LevelService.getLevels(Level.CODE.Process,Level.CODE.Content),String.class, true, getLibProcessTypeCodeValues(), "ONT","single" ,1));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille banque souhaitée","librarySize",LevelService.getLevels(Level.CODE.Process),Integer.class,true, DescriptionFactory.newValues("8","20")
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "kb"),MeasureUnit.find.findByCode( "kb"), "single",2));
@@ -135,14 +135,14 @@ public class ProcessServiceTEST extends AbstractProcessService {
 	}
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsNanoporeLibrary() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Type processus banque","libProcessTypeCode",LevelService.getLevels(Level.CODE.Process,Level.CODE.Content),String.class, true, getLibProcessTypeCodeValues(), "ONT","single" ,1));
 		
 		return propertyDefinitions;
 	}
 
 	private static List<Value> getLibProcessTypeCodeValues(){
-        List<Value> values = new ArrayList<Value>();
+        List<Value> values = new ArrayList<>();
          values.add(DescriptionFactory.newValue("ONT","ONT - Nanopore"));
          return values;
 	}

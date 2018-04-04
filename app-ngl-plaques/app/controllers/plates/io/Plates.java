@@ -4,24 +4,24 @@ package controllers.plates.io;
 //import static fr.cea.ig.play.IGGlobals.form;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import javax.inject.Inject;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
+import controllers.TPLCommonController;
+import fr.cea.ig.play.NGLContext;
 import lims.cns.dao.LimsManipDAO;
-import lims.models.Plate;
 import lims.models.Well;
 import models.laboratory.common.instance.property.PropertyFileValue;
-import models.laboratory.parameter.index.Index;
 //import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.Form;
@@ -30,10 +30,6 @@ import play.mvc.BodyParser;
 import play.mvc.Result;
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;
-import controllers.TPLCommonController;
-
-import fr.cea.ig.play.NGLContext;
-import javax.inject.Inject;
 
 // TODO: extends DocumentController
 public class Plates extends TPLCommonController {
@@ -91,9 +87,9 @@ public class Plates extends TPLCommonController {
 			contextValidation.addErrors("Erreurs fichier", "Pas d'onglet 0");
 			return null;
 		}
-		List<Well> wells = new ArrayList<Well>(0);
-		Set<String> wellPosition = new TreeSet<String>();
-		Set<String> nomManips = new TreeSet<String>();
+		List<Well> wells = new ArrayList<>(0);
+		Set<String> wellPosition = new TreeSet<>();
+		Set<String> nomManips = new TreeSet<>();
 		for (int i = 1; i <= 97; i++) {
 			if (sheet.getRow(i) != null && sheet.getRow(i).getCell(0) != null && sheet.getRow(i).getCell(0).getCellType()!=Cell.CELL_TYPE_BLANK) {
 				String nomManip = getStringValue(sheet.getRow(i).getCell(0));

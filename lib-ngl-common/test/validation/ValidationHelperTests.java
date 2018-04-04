@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.junit.Test;
+
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
@@ -19,9 +21,6 @@ import models.laboratory.common.instance.property.PropertyListValue;
 import models.laboratory.common.instance.property.PropertyObjectListValue;
 import models.laboratory.common.instance.property.PropertyObjectValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
-
-import org.junit.Test;
-
 import play.data.validation.ValidationError;
 import utils.AbstractTests;
 import utils.Constants;
@@ -66,7 +65,7 @@ public class ValidationHelperTests extends AbstractTests {
 		
 		PropertyDefinition pDef = getPropertyFileDefinition();
 				
-		Map<String, PropertyDefinition> hm= new HashMap<String, PropertyDefinition>();
+		Map<String, PropertyDefinition> hm= new HashMap<>();
 		hm.put("krona", pDef);
 		
 		cv.putObject("propertyDefinitions", hm.values());
@@ -91,7 +90,7 @@ public class ValidationHelperTests extends AbstractTests {
 
 		PropertyDefinition pDef = getPropertyFileDefinition();
 		
-		Map<String, PropertyDefinition> hm= new HashMap<String, PropertyDefinition>();
+		Map<String, PropertyDefinition> hm= new HashMap<>();
 		hm.put("krona", pDef);
 		
 		cv.putObject("propertyDefinitions", hm.values());
@@ -117,7 +116,7 @@ public class ValidationHelperTests extends AbstractTests {
 
 		PropertyDefinition pDef = getPropertyFileDefinition();
 		
-		Map<String, PropertyDefinition> hm= new HashMap<String, PropertyDefinition>();
+		Map<String, PropertyDefinition> hm= new HashMap<>();
 		hm.put("krona", pDef);
 		
 		cv.putObject("propertyDefinitions", hm.values());
@@ -147,7 +146,7 @@ public class ValidationHelperTests extends AbstractTests {
 
 		PropertyDefinition pDef = getPropertyImgDefinition();
 		
-		Map<String, PropertyDefinition> hm= new HashMap<String, PropertyDefinition>();
+		Map<String, PropertyDefinition> hm= new HashMap<>();
 		hm.put("phylogeneticTree2", pDef);
 		
 		cv.putObject("propertyDefinitions", hm.values());
@@ -172,7 +171,7 @@ public class ValidationHelperTests extends AbstractTests {
 
 		PropertyDefinition pDef = getPropertyImgDefinition();
 		
-		Map<String, PropertyDefinition> hm= new HashMap<String, PropertyDefinition>();
+		Map<String, PropertyDefinition> hm= new HashMap<>();
 		hm.put("phylogeneticTree2", pDef);
 		
 		cv.putObject("propertyDefinitions", hm.values());
@@ -241,7 +240,7 @@ public class ValidationHelperTests extends AbstractTests {
 	}
 	
 	private List<PropertyDefinition> getPropertyDefinitionsRequired(){
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("required1-1", "single1-1", PropertySingleValue.class, String.class, true, "single"));
 		propertyDefinitions.add(newPropertiesDefinition("required1-2", "single1-2", PropertySingleValue.class, String.class, true, "single"));
 		propertyDefinitions.add(newPropertiesDefinition("required1-3", "single1-3", PropertySingleValue.class, String.class, true, "single"));
@@ -321,7 +320,7 @@ public class ValidationHelperTests extends AbstractTests {
 	}
 	
 	private List<PropertyDefinition> getPropertyDefinitionsSingle(){
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("String", "String", PropertySingleValue.class, String.class, true, "single"));
 		propertyDefinitions.add(newPropertiesDefinition("Integer", "Integer", PropertySingleValue.class, Integer.class, true, "single"));
 		propertyDefinitions.add(newPropertiesDefinition("Double", "Double", PropertySingleValue.class, Double.class, true, "single"));
@@ -372,7 +371,7 @@ public class ValidationHelperTests extends AbstractTests {
 	}
 	
 	private List<PropertyDefinition> getPropertyDefinitionsList(){
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("String",   "String",   PropertyListValue.class, String.class,   true, "list"));
 		propertyDefinitions.add(newPropertiesDefinition("Integer",  "Integer",  PropertyListValue.class, Integer.class,  true, "list"));
 		propertyDefinitions.add(newPropertiesDefinition("Double",   "Double",   PropertyListValue.class, Double.class,   true, "list"));
@@ -427,7 +426,7 @@ public class ValidationHelperTests extends AbstractTests {
 	}
 	
 	private List<PropertyDefinition> getPropertyDefinitionsObject() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Object.String",  "Object.0", PropertyObjectValue.class, String.class,  true, "object"));
 		propertyDefinitions.add(newPropertiesDefinition("Object.Integer", "Object.1", PropertyObjectValue.class, Integer.class, true, "object"));
 		propertyDefinitions.add(newPropertiesDefinition("Object.Double",  "Object.2", PropertyObjectValue.class, Double.class,  true, "object"));		

@@ -31,9 +31,10 @@ public class RoleDAO extends AbstractDAOMapping<Role> {
 	/*
 	 * findAll()
 	 */
-	public List<Role> findAll() throws DAOException{
+	@Override
+	public List<Role> findAll() throws DAOException {
 		String sql = sqlCommon ;
-		BeanPropertyRowMapper<Role> mapper = new BeanPropertyRowMapper<Role>(entityClass);
+		BeanPropertyRowMapper<Role> mapper = new BeanPropertyRowMapper<>(entityClass);
 		return this.jdbcTemplate.query(sql, mapper);
 	}
 	

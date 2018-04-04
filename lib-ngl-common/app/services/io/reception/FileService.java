@@ -8,13 +8,15 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import fr.cea.ig.DBObject;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 //import play.Logger;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
-import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.project.instance.Project;
 import models.laboratory.reception.instance.AbstractFieldConfiguration;
 import models.laboratory.reception.instance.DoubleExcelFieldConfiguration;
@@ -23,8 +25,8 @@ import models.laboratory.reception.instance.ObjectFieldConfiguration;
 import models.laboratory.reception.instance.PropertiesFieldConfiguration;
 import models.laboratory.reception.instance.PropertyValueFieldConfiguration;
 import models.laboratory.reception.instance.ReceptionConfiguration;
-import models.laboratory.reception.instance.TagExcelFieldConfiguration;
 import models.laboratory.reception.instance.ReceptionConfiguration.Action;
+import models.laboratory.reception.instance.TagExcelFieldConfiguration;
 import models.laboratory.sample.instance.Sample;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
@@ -32,21 +34,18 @@ import services.io.reception.mapping.ContainerMapping;
 import services.io.reception.mapping.SampleMapping;
 import services.io.reception.mapping.SupportMapping;
 import validation.ContextValidation;
-import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.NGLContext;
 
 public abstract class FileService {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(FileService.class);
 	
-	protected Map<Integer, String> headerByIndex = new HashMap<Integer,String>();
+	protected Map<Integer, String> headerByIndex = new HashMap<>();
 	protected ReceptionConfiguration configuration;
 	protected PropertyFileValue fileValue;
 	protected ContextValidation contextValidation;
-	private Map<String, Project> lastSampleCodeForProjects = new HashMap<String, Project>(0);
-	private Map<String, Mapping<? extends DBObject>> mappings = new HashMap<String,Mapping<? extends DBObject>>();
-	private Map<String, Map<String, DBObject>> objects = new HashMap<String,Map<String, DBObject>>();
+	private Map<String, Project> lastSampleCodeForProjects = new HashMap<>(0);
+	private Map<String, Mapping<? extends DBObject>> mappings = new HashMap<>();
+	private Map<String, Map<String, DBObject>> objects = new HashMap<>();
 	
 	private final NGLContext ctx;
 
@@ -92,7 +91,7 @@ public abstract class FileService {
 	protected void treatLine(Map<Integer, String> rowMap) {
 
 		Set<String> objectTypes = configuration.configs.keySet();
-		Map<String, DBObject> objectInLine = new HashMap<String, DBObject>(0);
+		Map<String, DBObject> objectInLine = new HashMap<>(0);
 		objectTypes.stream().forEach(s -> {
 			try {
 				DBObject dbObject = mappings.get(s).convertToDBObject(rowMap);

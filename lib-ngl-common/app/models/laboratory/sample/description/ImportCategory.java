@@ -2,8 +2,6 @@ package models.laboratory.sample.description;
 
 import models.laboratory.common.description.AbstractCategory;
 import models.laboratory.sample.description.dao.ImportCategoryDAO;
-//TODO: fix doc generation that produces an error with the unqualified name
-import models.utils.Model.Finder;
 import models.utils.dao.AbstractDAO;
 
 /**

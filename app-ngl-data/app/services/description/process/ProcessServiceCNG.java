@@ -1,46 +1,36 @@
 package services.description.process;
 
-import static services.description.DescriptionFactory.newExperimentTypeNode;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;// ajout FDS pour getPETForQCTransfertPurif
 
 import models.laboratory.common.description.Level;
-import models.laboratory.common.description.MeasureCategory;
-import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.instrument.description.Instrument;
-import models.laboratory.processes.description.ExperimentTypeNode;
 import models.laboratory.processes.description.ProcessCategory;
-import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.description.ProcessExperimentType;
+import models.laboratory.processes.description.ProcessType;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
 import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
-import services.description.common.MeasureService;
-import services.description.instrument.InstrumentServiceCNG;
 import services.description.declaration.cng.Nanopore;
 
-import com.typesafe.config.ConfigFactory;
-
-public class ProcessServiceCNG  extends AbstractProcessService{
+public class ProcessServiceCNG  extends AbstractProcessService {
 
 	/* *
 	 * Save all Process Categories
 	 * @param errors
 	 * @throws DAOException 
 	 */
+	@Override
 	public void saveProcessCategories(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<ProcessCategory> l = new ArrayList<ProcessCategory>();
+		List<ProcessCategory> l = new ArrayList<>();
 		
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. librairie pr séquençage Illumina", "library"));          // 27/09/2017 fdsantos NGL-1201 renommage label
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. librairie pr séquençage Nanopore", "nanopore-library")); // 27/09/2017 fdsantos NGL-1201 renommage label
@@ -59,8 +49,9 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	 * @throws DAOException 		
 	 * warning "codes" must not have uppercase letters
 	 */
+	@Override
 	public void saveProcessTypes(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<ProcessType> l = new ArrayList<ProcessType>();
+		List<ProcessType> l = new ArrayList<>();
 		// par convention les experimentTypes externes aux processus doivent avoir l'indice (-1) dans la methode getPET
 		// TODO: il faudra renommer les 'ext' en donnant le nom du processus ex: ext-to-denat-dil-lib---> ext-to-illumina-run
 		//       pour distinguer les containers qui arrivent dans le processus sans "fromExperimentType" des containers qui viendraient 
@@ -433,10 +424,10 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	
 	// FDS 09/11/2015  -- JIRA 838 : ajout parametre String pour construire 2 listes differentes
 	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepotCNG(String expType) throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		// FDS 04/11/2015 -- JIRA 838 ajout  des HISEQ4000 et HISEQX; utilisation de listes intermediaires...
-		List<Value> listSequencers =new ArrayList<Value>();
+		List<Value> listSequencers =new ArrayList<>();
 		
 		if ( expType.equals("prepa-flowcell")) {
 			// HISEQ2000
@@ -497,7 +488,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	//FDS ajout 28/01/2016 -- JIRA NGL-894: nouveau processus pour X5
 	//FDS 10/08/2016 renommer  en getX5WgPcrFreeLibProcessTypeCodeValues 
 	private static List<PropertyDefinition> getPropertyDefinitionsX5WgPcrFree() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 	
 		// FDS 21/03/2016 ajout d'une propriete avec liste de choix, de niveau content pour quelle soit propagee
 		propertyDefinitions.add(
@@ -535,7 +526,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 
 	//FDS 10/08/2016 renommer en getX5WgPcrFreeLibProcessTypeCodeValues
 	private static List<Value> getX5WgPcrFreeLibProcessTypeCodeValues(){
-        List<Value> values = new ArrayList<Value>();
+        List<Value> values = new ArrayList<>();
         
         values.add(DescriptionFactory.newValue("DA","DA - DNAseq"));
          
@@ -544,7 +535,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	
 	//FDS ajout 31/05/2016 pour JIRA NGL-1025: processus RNASeq; 18/01/2017 remommer en getPropertyDefinitionsRNAseq=> getPropertyDefinitionsRNAlib
 	private static List<PropertyDefinition> getPropertyDefinitionsRNAlib() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 	
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type processus librairie","libProcessTypeCode"
@@ -573,7 +564,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	}
 	
 	private static List<Value> getRNALibProcessTypeCodeValues(){
-        List<Value> values = new ArrayList<Value>();
+        List<Value> values = new ArrayList<>();
 
         // !! garder les codes et labels en coherence avec  ImportServiceCNG et RunServiceCNG
         values.add(DescriptionFactory.newValue("RD","RD - ssmRNASeq"));       //single stranded messenger RNA sequencing
@@ -587,7 +578,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	
 	//FDS ajout 10/08/2016 pour JIRA NGL-1047: processus X5_WG NANO
 	private static List<PropertyDefinition> getPropertyDefinitionsX5WgNanoDNAseq() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 	
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type processus librairie","libProcessTypeCode"
@@ -618,7 +609,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 
 	
 	private static List<Value> getX5WgNanoLibProcessTypeCodeValues(){
-        List<Value> values = new ArrayList<Value>();
+        List<Value> values = new ArrayList<>();
         
         // !! garder les codes et labels en coherence avec  ImportServiceCNG et RunServiceCNG
         values.add(DescriptionFactory.newValue("DD","DD - PCR-NANO DNASeq"));   
@@ -628,7 +619,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	
 	// FDS ajout 20/02/2017 NGL-1167
 	private static List<PropertyDefinition> getPropertyDefinitionsWgChromium() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		propertyDefinitions.add(
 					DescriptionFactory.newPropertiesDefinition("Type processus librairie","libProcessTypeCode"
@@ -640,7 +631,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	
 	// FDS ajout 20/02/2017 NGL-1167
 	private static List<Value> getWgChromiumLibProcessTypeCodeValues(){
-        List<Value> values = new ArrayList<Value>();
+        List<Value> values = new ArrayList<>();
         
         // !! aussi dans RunServiceCNG
         values.add(DescriptionFactory.newValue("DE","DE - Chromium WG"));   
@@ -666,7 +657,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 
 	// FDS ajout 10/07/2017 pour JIRA NGL-1201: processus capture
 	private static List<PropertyDefinition> getPropertyDefinitionsCapture() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 	
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type processus librairie","libProcessTypeCode",
@@ -706,7 +697,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	
 	// FDS ajout 10/07/2017 pour JIRA NGL-1201: processus capture
 	private static List<PropertyDefinition> getPropertyDefinitionsCapturePcrIndexing() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 	
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type processus librairie","libProcessTypeCode",
@@ -735,7 +726,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	
 	// FDS ajout 19/03/2018 JIRA NGL-1906: ajout propriété "robotRunWorkLabel
 	private static List<PropertyDefinition> getPropertyDefinitionsPrcCapturePcrIndexing() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Nom de travail run (robot)","robotRunWorkLabel",
@@ -749,7 +740,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
     // FDS ajout 10/07/2017 pour JIRA NGL-1201: processus capture
 	// utilisé par process getPropertyDefinitionsCapture ET getPropertyDefinitionsCapturePcrIndexing
 	private static List<Value> getCaptureLibProcessTypeCodeValues(){
-        List<Value> values = new ArrayList<Value>();
+        List<Value> values = new ArrayList<>();
         
         // Liste evolutive !!!! 05/09/2017 mise en coherence avec RunServiceCNG => c-a-d meme code, meme label 
         values.add(DescriptionFactory.newValue("CP","CP - Agilent : V5 (DefCap013_Ex)"));
@@ -768,7 +759,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	// utilisé par processus getPropertyDefinitionsCapture ET getPropertyDefinitionsCapturePcrIndexing
 	// !! code dupliqué dans ExperimentServiceCNG
 	private static List<Value>getCaptureBaitsValues() {
-		 List<Value> values = new ArrayList<Value>();
+		 List<Value> values = new ArrayList<>();
 		 
 		 values.add(DescriptionFactory.newValue("V5",    "V5"));
 		 values.add(DescriptionFactory.newValue("V5+UTR","V5+UTR"));
@@ -783,7 +774,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	// FDS ajout 11/07/2017 pour JIRA NGL-1201: processus capture
 	// utilisé par processus getPropertyDefinitionsCapture ET getPropertyDefinitionsCapturePcrIndexing
 	private static List<Value>getCaptureProtocolValues() {
-		 List<Value> values = new ArrayList<Value>();
+		 List<Value> values = new ArrayList<>();
 		 
 		 // LISTE exacte à nous donner ! sureSelect XT 3µg ; XT 200ng ; XT2 1µg, XT2 100ng
 		 values.add(DescriptionFactory.newValue("sureselect-xt-3µg",   "SureSelect XT 3µg"));

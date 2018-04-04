@@ -3,13 +3,12 @@ package models.laboratory.sample.description.dao;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.sample.description.ImportType;
 import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.DAOException;
-
-import org.springframework.stereotype.Repository;
-
 import play.api.modules.spring.Spring;
 
 @Repository
@@ -41,7 +40,7 @@ public class ImportTypeDAO extends AbstractDAOCommonInfoType<ImportType> {
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		importType.id = commonInfoTypeDAO.save(importType);
 		//Create sampleType 
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("id",                  importType.id);
 		parameters.put("fk_common_info_type", importType.id);
 		parameters.put("fk_import_category",  importType.category.id);

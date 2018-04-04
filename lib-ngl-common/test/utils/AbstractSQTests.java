@@ -1,22 +1,14 @@
 package utils;
 
-import javax.inject.Inject;
-
-// import java.io.File;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
-import play.Application;
-import play.inject.ApplicationLifecycle;
-import rules.services.Rules6Component;
-import rules.services.test.TestRules6Component;
-import models.utils.DescriptionHelper;
-import ngl.common.Global;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.ngl.test.TestAppWithDroolsFactory;
-import fr.cea.ig.play.test.ApplicationFactory;
+import models.utils.DescriptionHelper;
+import ngl.common.Global;
+import play.Application;
+import rules.services.Rules6Component;
 
 //class XXXRules6 extends Rules6Component {
 //	private static final play.Logger.ALogger logger = play.Logger.of(XXXRules6.class);

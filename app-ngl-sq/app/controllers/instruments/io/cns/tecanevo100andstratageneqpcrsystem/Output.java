@@ -1,27 +1,18 @@
 package controllers.instruments.io.cns.tecanevo100andstratageneqpcrsystem;
 
-
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
-import models.laboratory.container.instance.Content;
-import models.laboratory.experiment.instance.AtomicTransfertMethod;
-import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.InputContainerUsed;
-import models.laboratory.experiment.instance.OutputContainerUsed;
-import validation.ContextValidation;
-import controllers.instruments.io.cns.tecanevo100andstratageneqpcrsystem.tpl.txt.*;
+import controllers.instruments.io.cns.tecanevo100andstratageneqpcrsystem.tpl.txt.qpcrquantification;
 import controllers.instruments.io.utils.AbstractOutput;
 import controllers.instruments.io.utils.File;
 import controllers.instruments.io.utils.OutputHelper;
+import models.laboratory.experiment.instance.Experiment;
+import validation.ContextValidation;
 
 public class Output extends AbstractOutput {
 
@@ -48,7 +39,7 @@ public class Output extends AbstractOutput {
 			.filter(icu -> (icu.instrumentProperties != null && icu.instrumentProperties.containsKey("qPCRposition")))
 			.collect(Collectors.toMap(icu -> Integer.valueOf(icu.instrumentProperties.get("qPCRposition").value.toString()), icu -> icu.code));
 		
-		List<SampleSheetStrategeneLine> sampleSheetStrategeneLines = new ArrayList<SampleSheetStrategeneLine>();
+		List<SampleSheetStrategeneLine> sampleSheetStrategeneLines = new ArrayList<>();
 		
 		sampleSheetStrategeneLines.addAll(getSubElt("A", 4, results.get(1)));
 		sampleSheetStrategeneLines.addAll(getSubElt("B", 4, results.get(2)));
@@ -78,7 +69,7 @@ public class Output extends AbstractOutput {
 
 	private List<SampleSheetStrategeneLine> getSubElt(
 			String line, int startIndex, String containerCode) {
-		List<SampleSheetStrategeneLine> sampleSheetStrategeneLines = new ArrayList<SampleSheetStrategeneLine>(0);
+		List<SampleSheetStrategeneLine> sampleSheetStrategeneLines = new ArrayList<>(0);
 		if(null != containerCode){
 			for(int i = 0; i < 4 ; i++){
 				String wellId = line+(startIndex+i);

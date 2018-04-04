@@ -6,19 +6,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.stereotype.Repository;
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.run.description.TreatmentType;
 import models.laboratory.run.description.TreatmentTypeContext;
 import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.DAOException;
-
-import org.apache.commons.lang.ArrayUtils;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.stereotype.Repository;
-
-
 import play.api.modules.spring.Spring;
 
 @Repository
@@ -46,7 +44,7 @@ public class TreatmentTypeDAO extends AbstractDAOCommonInfoType<TreatmentType> {
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		treatmentType.id = commonInfoTypeDAO.save(treatmentType);
 		//Create new treatmentType
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("id", treatmentType.id);
 		parameters.put("names", treatmentType.names);
 		parameters.put("fk_common_info_type", treatmentType.id);
@@ -116,7 +114,7 @@ public class TreatmentTypeDAO extends AbstractDAOCommonInfoType<TreatmentType> {
 	
 	public List<TreatmentType> findByTreatmentCategoryNames(String...categoryNames) throws DataAccessException, DAOException {
 		String sql = sqlCommon+
-				" inner join treatment_category cat on cat.id = c.fk_treatment_category where cat.name in ("+listToParameters(Arrays.asList(categoryNames))+")";;				
+				" inner join treatment_category cat on cat.id = c.fk_treatment_category where cat.name in ("+listToParameters(Arrays.asList(categoryNames))+")";				
 		
 		return initializeMapping(sql, listToSqlParameters(Arrays.asList(categoryNames),"cat.name", Types.VARCHAR)).execute((Object[])categoryNames);
 	}

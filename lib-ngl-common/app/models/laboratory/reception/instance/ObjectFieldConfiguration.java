@@ -1,23 +1,22 @@
 package models.laboratory.reception.instance;
 
 import java.lang.reflect.Field;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import models.laboratory.reception.instance.ReceptionConfiguration.Action;
-import validation.ContextValidation;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import models.laboratory.reception.instance.ReceptionConfiguration.Action;
+import validation.ContextValidation;
+
 
 public class ObjectFieldConfiguration<T> extends AbstractFieldConfiguration {
 	
 	@JsonIgnore
-	public Map<String, AbstractFieldConfiguration> configs = new HashMap<String, AbstractFieldConfiguration>();
+	public Map<String, AbstractFieldConfiguration> configs = new HashMap<>();
 
 	@JsonAnyGetter
     public Map<String, AbstractFieldConfiguration> configs() {

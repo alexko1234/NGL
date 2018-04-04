@@ -38,6 +38,7 @@ public class Role extends Model<Role> {
 //		}
 		public RoleFinder() { super(RoleDAO.class); }
 		
+		@Override
 		public List<Role> findAll() throws DAOException {
 //			return ((RoleDAO)getInstance()).findAll();
 			return getInstance().findAll();

@@ -4,17 +4,19 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.reception.instance.ReceptionConfiguration.Action;
-import validation.ContextValidation;
+
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.reception.instance.ReceptionConfiguration.Action;
+import validation.ContextValidation;
+
 public class PropertiesFieldConfiguration extends AbstractFieldConfiguration {
 	
 	@JsonIgnore
-	public Map<String, PropertyValueFieldConfiguration> configs = new HashMap<String, PropertyValueFieldConfiguration>();
+	public Map<String, PropertyValueFieldConfiguration> configs = new HashMap<>();
 
 	@JsonAnyGetter
     public Map<String, PropertyValueFieldConfiguration> configs() {

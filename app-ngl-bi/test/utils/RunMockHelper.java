@@ -9,7 +9,6 @@ import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
@@ -53,11 +52,6 @@ public class RunMockHelper {
 		return Json.toJson(state);
 	}
 	
-	
-	
-
-	
-	
 	public static Run newRun(String code){
 		Run run = new Run();
 		run.code = code;
@@ -78,7 +72,7 @@ public class RunMockHelper {
 		
 		run.valuation = getValuation(TBoolean.UNSET);
 		
-		List<String> lResos = new ArrayList<String>();
+		List<String> lResos = new ArrayList<>();
 		lResos.add("reso1");
 		lResos.add("reso2");
 		
@@ -93,7 +87,7 @@ public class RunMockHelper {
 		Lane lane = new Lane();
 		lane.number = number;
 		
-		List<String> lResos = new ArrayList<String>();
+		List<String> lResos = new ArrayList<>();
 		lResos.add("reso1");
 		lResos.add("reso2");		
 
@@ -102,7 +96,6 @@ public class RunMockHelper {
 				
 		return lane;
 	}
-	
 	
 	public static Sample newSample(String code) {
 		Sample s = new Sample();
@@ -115,7 +108,7 @@ public class RunMockHelper {
 		s.valuation = new Valuation();
 		s.valuation.valid = TBoolean.UNSET;
 		
-		Set<String> lp = new HashSet<String>();
+		Set<String> lp = new HashSet<>();
 		lp.add("ProjectCode");
 		s.projectCodes = lp;
 		
@@ -161,7 +154,7 @@ public class RunMockHelper {
 		
 		
 		r.state = getState("F-QC");
-		Set<String> lResos = new HashSet<String>();
+		Set<String> lResos = new HashSet<>();
 		lResos.add("Run-abandonLane");
 		lResos.add("Info-testDev");
 		r.state.resolutionCodes=lResos;
@@ -186,11 +179,9 @@ public class RunMockHelper {
 		 //System.out.println("parsed::"+Json.parse("[{\"archiveId\":\""+archiveId+"\"}]"));
 		 return Json.parse("{\"archiveId\":\""+archiveId+"\"}");
 		 
-	 }
-	 
-
-	
-	public static File newFile(String code){
+	}
+	 	
+	public static File newFile(String code) {
 		File file = new File();
 		file.fullname = code;
 		file.extension = ".exe";
@@ -217,5 +208,6 @@ public class RunMockHelper {
 		state.user = "tests";
 		state.date = new Date();
 		return state;
-}
+	}
+	
 }

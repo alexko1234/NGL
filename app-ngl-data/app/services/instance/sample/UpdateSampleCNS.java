@@ -1,32 +1,22 @@
 package services.instance.sample;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
-
-import models.Constants;
-import models.laboratory.common.description.Level;
-import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.sample.description.ImportType;
-import models.laboratory.sample.description.SampleType;
-import models.laboratory.sample.instance.Sample;
-import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
-import models.utils.dao.DAOException;
-import models.utils.instance.SampleHelper;
-import rules.services.RulesException;
-import scala.concurrent.duration.FiniteDuration;
-import services.instance.AbstractImportDataCNS;
-import validation.ContextValidation;
-import validation.utils.BusinessValidationHelper;
 
 import com.mongodb.MongoException;
 
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.NGLContext;
+import models.Constants;
+import models.laboratory.sample.instance.Sample;
+import models.utils.InstanceConstants;
+import models.utils.InstanceHelpers;
+import models.utils.dao.DAOException;
+import rules.services.RulesException;
+import scala.concurrent.duration.FiniteDuration;
+import validation.ContextValidation;
 
 public class UpdateSampleCNS extends UpdateSamplePropertiesCNS{
 

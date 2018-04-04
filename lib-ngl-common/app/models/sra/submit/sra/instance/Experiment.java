@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import fr.cea.ig.DBObject;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
@@ -15,8 +16,6 @@ import validation.ContextValidation;
 import validation.IValidation;
 import validation.sra.SraValidationHelper;
 import validation.utils.ValidationHelper;
-import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBDAO;
 
 // todo : ajouter  libraryName dans la validation
 
@@ -48,7 +47,7 @@ public class Experiment extends DBObject implements IValidation {
 	public String sampleAccession = null;
 	public String studyAccession = null;
 	public String readSetCode = null;
-	public List<ReadSpec> readSpecs = new ArrayList<ReadSpec>();
+	public List<ReadSpec> readSpecs = new ArrayList<>();
 	public Run run = null; // le run est rattache à l'experiment
 	public State state = new State(); // Reference sur "models.laboratory.common.instance.state" 
 							 // pour gerer les differents etats de l'objet.

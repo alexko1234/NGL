@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import models.laboratory.common.description.AbstractCategory;
-import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
@@ -548,7 +547,7 @@ public class DescriptionFactory {
 	 * @return
 	 */
 	public static List<Value> newValues(String...codes) {
-		List<Value> l = new ArrayList<Value>(codes.length);
+		List<Value> l = new ArrayList<>(codes.length);
 		for(String v : codes){
 			Value value = new Value();
 			value.value = v;
@@ -581,7 +580,7 @@ public class DescriptionFactory {
 	 * @return
 	 */
 	public static List<Value> newValuesWithDefault(String defaultValue, String...code) {
-		List<Value> l = new ArrayList<Value>(code.length);
+		List<Value> l = new ArrayList<>(code.length);
 		for(String v : code){
 			Value value = new Value();
 			value.value = v;
@@ -1129,7 +1128,7 @@ public class DescriptionFactory {
 	 * @throws DAOException
 	 */
 	public static List<Institute> getInstitutes(Constants.CODE...codes) throws DAOException {
-		List<Institute> institutes = new ArrayList<Institute>();
+		List<Institute> institutes = new ArrayList<>();
 		for(Constants.CODE code : codes){
 			institutes.add(Institute.find.findByCode(code.name()));
 		}
@@ -1143,7 +1142,7 @@ public class DescriptionFactory {
 	 * @throws DAOException
 	 */
 	public static List<State> getStates(String...codes) throws DAOException {
-		List<State> states = new ArrayList<State>();
+		List<State> states = new ArrayList<>();
 		for(String code: codes){
 			states.add(State.find.findByCode(code));
 		}
@@ -1158,7 +1157,7 @@ public class DescriptionFactory {
 	 * @throws DAOException
 	 */
 	public static List<ObjectType> getObjectTypes(String...codes) throws DAOException {
-		List<ObjectType> objectTypes = new ArrayList<ObjectType>();
+		List<ObjectType> objectTypes = new ArrayList<>();
 		for(String code: codes){
 			objectTypes.add(ObjectType.find.findByCode(code));
 		}
@@ -1167,7 +1166,7 @@ public class DescriptionFactory {
 	
 	
 	public static HashMap<ObjectType, State> getHierarchies(String...hierarchies)  throws DAOException {
-		HashMap<ObjectType, State> hm = new HashMap<ObjectType, State>();
+		HashMap<ObjectType, State> hm = new HashMap<>();
 		for (String hierarchy: hierarchies) {
 			String str[]=hierarchy.split(":");
 			String objectTypeCode = str[0];

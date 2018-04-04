@@ -1,9 +1,6 @@
 package services;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 // import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
@@ -17,16 +14,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-
-//import play.Logger;
-// import play.Play;
-// import play.api.modules.spring.Spring;
-import validation.ContextValidation;
-import workflows.sra.submission.SubmissionWorkflows;
-
 import javax.inject.Inject;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -35,6 +22,10 @@ import javax.xml.parsers.ParserConfigurationException;
 // import javax.xml.xpath.XPathExpressionException;
 // import javax.xml.xpath.XPathFactory;
 // import com.typesafe.config.ConfigFactory;
+
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 
 // import java.util.Date;
 
@@ -53,6 +44,9 @@ import org.xml.sax.SAXException;
 // import java.util.regex.Pattern;
 // import java.util.regex.Matcher;
 
+//import play.Logger;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.ngl.NGLConfig;
 import mail.MailServiceException;
 import mail.MailServices;
 import models.laboratory.common.instance.State;
@@ -65,8 +59,10 @@ import models.sra.submit.util.SraException;
 // import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 //import play.Logger;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.ngl.NGLConfig;
+// import play.Play;
+// import play.api.modules.spring.Spring;
+import validation.ContextValidation;
+import workflows.sra.submission.SubmissionWorkflows;
 
 public class ReleaseServices  {
 
@@ -130,7 +126,7 @@ public class ReleaseServices  {
 		//l.debug("subjectSuccess = "+Play.application().configuration().getString("releaseReporting.email.subject.success"));
 		// String subjectError = Play.application().configuration().getString("releaseReporting.email.subject.error");
 		String subjectError = config.getReleaseReportingEmailSubjectError();
-		Set<String> destinataires = new HashSet<String>();
+		Set<String> destinataires = new HashSet<>();
 		
 		destinataires.addAll(Arrays.asList(dest.split(",")));    		    
 
@@ -228,7 +224,7 @@ public class ReleaseServices  {
 			logger.debug("ok submissionCode = submission.code");
 		}
 		if (StringUtils.isNotBlank(studyAccession)) {
-			if(studyAccession.equals(study.accession)) {
+			if (studyAccession.equals(study.accession)) {
 //				System.out.println("studyAccession :'"+ studyAccession + "' ==  study.accession :'" +  study.accession +"'");
 				logger.debug("studyAccession :'"+ studyAccession + "' ==  study.accession :'" +  study.accession +"'");
 				ebiSuccess = true;

@@ -18,7 +18,7 @@ public class Projects extends Controller { // CommonController {
 	
 	public Result save() {
 		try {
-			Map<String,List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
+			Map<String,List<ValidationError>> errors = new HashMap<>();
 			ProjectService.main(errors);
 			if (errors.size() > 0) {
 				return badRequest(Json.toJson(errors));

@@ -2,10 +2,7 @@ package workflows.sra.submission;
 
 import fr.cea.ig.DBObject;
 import models.laboratory.common.instance.State;
-import models.sra.submit.common.instance.Submission;
 import validation.ContextValidation;
-import workflows.Workflows;
-
 
 public interface Transition <T extends DBObject & TransitionObject> {
 	

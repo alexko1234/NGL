@@ -1,18 +1,17 @@
 package models.laboratory.run.description;
 
-import static fr.cea.ig.lfw.utils.Hashing.hash;
 import static fr.cea.ig.lfw.utils.Equality.objectEquals;
 import static fr.cea.ig.lfw.utils.Equality.typedEquals;
+import static fr.cea.ig.lfw.utils.Hashing.hash;
 
 import java.util.List;
 
 import models.laboratory.run.description.dao.TreatmentTypeContextDAO;
 import models.utils.dao.DAOException;
-//TODO: fix doc generation that produces an error with the unqualified name
-import models.utils.Model.Finder;
 
 public class TreatmentTypeContext extends TreatmentContext {
 
+	@SuppressWarnings("hiding")
 	public static final TreatmentTypeContextFinder find = new TreatmentTypeContextFinder();
 
 	public Boolean required = false; // Boolean.FALSE;

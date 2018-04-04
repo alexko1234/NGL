@@ -6,18 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.stereotype.Repository;
+
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.ObjectType.CODE;
 import models.laboratory.common.description.State;
 import models.laboratory.common.description.StateHierarchy;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
-
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.stereotype.Repository;
-
-import play.Logger;
 
 @Repository
 public class StateHierarchyDAO extends AbstractDAOMapping<StateHierarchy> {
@@ -35,7 +33,7 @@ public class StateHierarchyDAO extends AbstractDAOMapping<StateHierarchy> {
 
 	@Override
 	public long save(StateHierarchy stateHierarchy) throws DAOException {
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("code", stateHierarchy.code);
 		parameters.put("fk_child_state", State.find.findByCode(stateHierarchy.childStateCode).id);
 		parameters.put("fk_object_type", ObjectType.find.findByCode(stateHierarchy.objectTypeCode).id);
@@ -46,7 +44,6 @@ public class StateHierarchyDAO extends AbstractDAOMapping<StateHierarchy> {
 		
 		return stateHierarchy.id;
 	}
-
 
 	@Override
 	public void update(StateHierarchy value) throws DAOException {

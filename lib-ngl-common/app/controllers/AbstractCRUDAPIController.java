@@ -1,39 +1,23 @@
 package controllers;
 
 import java.lang.reflect.Field;
-// import java.util.ArrayList;
-// import java.util.HashMap;
 import java.util.List;
-// import java.util.Map;
 
 import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate.Builder;
 
-// import controllers.samples.api.SamplesSearchForm;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
-// import fr.cea.ig.MongoDBResult;
-// import fr.cea.ig.mongo.MongoStreamer;
 import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.ITracingAccess;
-//import models.laboratory.container.instance.Container;
-// import models.laboratory.common.instance.TraceInformation;
-// import models.laboratory.sample.instance.Sample;
-// import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
-// import models.utils.ListObject;
-// import models.utils.instance.SampleHelper;
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
 import validation.ICRUDValidatable;
-import validation.IValidation;
 import views.components.datatable.DatatableForm;
-
-import org.mongojack.DBUpdate.Builder;
-
-// import com.mongodb.BasicDBObject;
 
 // Aborted prototype implementation.
 

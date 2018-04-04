@@ -1,10 +1,12 @@
 package services.ncbi;
 
-//import static fr.cea.ig.play.IGGlobals.ws;
-//import static fr.cea.ig.play.IGGlobals.cache;
-
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import javax.inject.Inject;
 import javax.xml.parsers.DocumentBuilder;
@@ -18,23 +20,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 import fr.cea.ig.play.NGLContext;
-import models.utils.dao.DAOException;
-// import play.Logger;
-// import play.cache.Cache;
-// import play.libs.ws.WS;
 import play.libs.ws.WSResponse;
-// import scala.concurrent.Future;
-import validation.ContextValidation;
-
-// import play.libs.F.Promise;
-import java.util.concurrent.CompletionStage;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeoutException;
 
 // TODO: cleanup
 public class TaxonomyServices {

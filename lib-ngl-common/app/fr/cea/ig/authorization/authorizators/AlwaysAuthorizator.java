@@ -3,8 +3,6 @@ package fr.cea.ig.authorization.authorizators;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.compress.archivers.dump.DumpArchiveEntry.PERMISSION;
-
 import fr.cea.ig.authorization.IAuthorizator;
 import fr.cea.ig.authorization.Permission;
 

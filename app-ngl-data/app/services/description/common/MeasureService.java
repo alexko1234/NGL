@@ -1,5 +1,7 @@
 package services.description.common;
 
+import static services.description.DescriptionFactory.newMeasureUnit;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +12,6 @@ import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
 import services.description.DescriptionFactory;
-import static services.description.DescriptionFactory.*;
 
 public class MeasureService {
 	
@@ -32,7 +33,7 @@ public class MeasureService {
 	 * @throws DAOException DAO problem
 	 */
 	public static void saveMesureCategories(Map<String,List<ValidationError>> errors) throws DAOException{
-		List<MeasureCategory> l = new ArrayList<MeasureCategory>();
+		List<MeasureCategory> l = new ArrayList<>();
 		l.add(DescriptionFactory.newSimpleCategory(MeasureCategory.class,"Concentration", MEASURE_CAT_CODE_CONCENTRATION));
 		l.add(DescriptionFactory.newSimpleCategory(MeasureCategory.class,"Quantité", MEASURE_CAT_CODE_QUANTITY));
 		l.add(DescriptionFactory.newSimpleCategory(MeasureCategory.class,"Volume", MEASURE_CAT_CODE_VOLUME));
@@ -50,7 +51,7 @@ public class MeasureService {
 	 * @throws DAOException DAO problem
 	 */
 	public static void saveMesureUnits(Map<String,List<ValidationError>> errors) throws DAOException{
-		List<MeasureUnit> l = new ArrayList<MeasureUnit>();
+		List<MeasureUnit> l = new ArrayList<>();
 		l.add(newMeasureUnit("mL","mL", true, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_VOLUME)));
 		l.add(newMeasureUnit("µL","µL", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_VOLUME)));
 		l.add(newMeasureUnit("nL","nL", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_VOLUME)));

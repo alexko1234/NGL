@@ -10,19 +10,6 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
-import models.laboratory.common.instance.property.PropertySingleValue;
-import models.laboratory.container.instance.Container;
-import models.laboratory.run.instance.ReadSet;
-import models.laboratory.sample.instance.Sample;
-import models.utils.InstanceConstants;
-import models.utils.dao.DAOException;
-import models.utils.instance.SampleHelper;
-import play.Logger;
-import play.libs.concurrent.Futures;
-// import play.libs.F.Callback;
-// import play.libs.F.Promise;
-import rules.services.RulesException;
-
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.slf4j.MDC;
@@ -30,16 +17,23 @@ import org.slf4j.MDC;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoException;
 
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
+import models.laboratory.sample.instance.Sample;
+import models.utils.InstanceConstants;
+import models.utils.dao.DAOException;
+import play.libs.concurrent.Futures;
+import rules.services.RulesException;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportData;
 import services.ncbi.NCBITaxon;
 import services.ncbi.TaxonomyServices;
 import validation.ContextValidation;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.NGLContext;
 
-public abstract class AbstractUpdateSampleNCBITaxon extends AbstractImportData{
+public abstract class AbstractUpdateSampleNCBITaxon extends AbstractImportData {
 
+//	private static final play.Logger.ALogger logger = play.Logger.of(AbstractUpdateSampleNCBITaxon.class); 
+	
 	private TaxonomyServices taxonomyServices;
 	
 	@Inject
@@ -49,6 +43,7 @@ public abstract class AbstractUpdateSampleNCBITaxon extends AbstractImportData{
 		this.taxonomyServices = taxonomyServices;
 	}
 
+	@Override
 	public void run() {
 		MDC.put("name", name);
 		contextError.clear();
@@ -64,7 +59,7 @@ public abstract class AbstractUpdateSampleNCBITaxon extends AbstractImportData{
 			logger.error("",e);
 			logger.error("ImportData End Error");
 		}
-	};
+	}
 	
 	public void updateSampleNCBI(ContextValidation contextError,
 			List<String> sampleCodes) {
@@ -76,7 +71,7 @@ public abstract class AbstractUpdateSampleNCBITaxon extends AbstractImportData{
 		
 		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, 
 				DBQuery.notEquals("taxonCode",null).or(DBQuery.is("ncbiScientificName", null),DBQuery.is("ncbiLineage", null)),keys).toList();
-		Logger.info("update sample without ncbi data : "+samples.size());
+		logger.info("update sample without ncbi data : "+samples.size());
 		Map<String, List<Sample>> samplesByTaxon = samples.stream().collect(Collectors.groupingBy(sample -> sample.taxonCode));
 		
 		// List<Promise<NCBITaxon>> promises = samplesByTaxon.keySet()
@@ -127,7 +122,7 @@ public abstract class AbstractUpdateSampleNCBITaxon extends AbstractImportData{
 						});					
 						
 			        });
-			        Logger.debug("finish update");
+			        logger.debug("finish update");
 			        if(contextError.hasErrors()){
 			        	contextError.displayErrors(logger);
 			        	logger.error("ImportData End Error");
@@ -140,14 +135,11 @@ public abstract class AbstractUpdateSampleNCBITaxon extends AbstractImportData{
 						
 	}
 	
-	
-	
 
 	@Override
 	public void runImport() throws SQLException, DAOException, MongoException,
 	RulesException {
 		updateSampleNCBI(contextError, null);
-
 	}
 
 }

@@ -5,13 +5,11 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
 
-import models.laboratory.common.instance.State;
-
 // import org.apache.commons.collections.CollectionUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import utils.AbstractSQTests;
+import models.laboratory.common.instance.State;
 // import play.api.modules.spring.Spring;
 import utils.AbstractTests;
 import workflows.container.ContSupportWorkflows;
@@ -26,7 +24,6 @@ import workflows.container.ContSupportWorkflows;
  */
 public class ContainerSupportWorkflowTests extends AbstractTests {
 
-	
 	private ContSupportWorkflows workflows() {
 		// Spring.get BeanOfType(ContSupportWorkflows.class); 
 		return app.injector().instanceOf(ContSupportWorkflows.class);
@@ -35,7 +32,7 @@ public class ContainerSupportWorkflowTests extends AbstractTests {
 	@Test
 	public void validateGetNextStateFromContainersIWD() {
 		ContSupportWorkflows worflows = workflows();
-		Set<String> containerStates = new TreeSet<String>(Arrays.asList("IU","IW-E","IW-P", "A-TM", "A-TF", "A-PF", "A-QC", "UA", "IS", "N", "IW-D"));
+		Set<String> containerStates = new TreeSet<>(Arrays.asList("IU","IW-E","IW-P", "A-TM", "A-TF", "A-PF", "A-QC", "UA", "IS", "N", "IW-D"));
 		State s = worflows.getNextStateFromContainerStates("ngl-test", containerStates);
 		Assert.assertEquals("IW-D", s.code);
 	}
@@ -43,7 +40,7 @@ public class ContainerSupportWorkflowTests extends AbstractTests {
 	@Test
 	public void validateGetNextStateFromContainersIU() {
 		ContSupportWorkflows worflows = workflows();
-		Set<String> containerStates = new TreeSet<String>(Arrays.asList("IU","IW-E","IW-P", "A-TM", "A-TF", "A-PF", "A-QC", "UA", "IS"));
+		Set<String> containerStates = new TreeSet<>(Arrays.asList("IU","IW-E","IW-P", "A-TM", "A-TF", "A-PF", "A-QC", "UA", "IS"));
 		State s = worflows.getNextStateFromContainerStates("ngl-test", containerStates);
 		Assert.assertEquals("IU", s.code);
 	}
@@ -51,7 +48,7 @@ public class ContainerSupportWorkflowTests extends AbstractTests {
 	@Test
 	public void validateGetNextStateFromContainersIWE() {
 		ContSupportWorkflows worflows = workflows();
-		Set<String> containerStates = new TreeSet<String>(Arrays.asList("IW-E","IW-P", "A-TM", "A-TF", "A-PF", "A-QC", "UA", "IS"));
+		Set<String> containerStates = new TreeSet<>(Arrays.asList("IW-E","IW-P", "A-TM", "A-TF", "A-PF", "A-QC", "UA", "IS"));
 		State s = worflows.getNextStateFromContainerStates("ngl-test", containerStates);
 		Assert.assertEquals("IW-E", s.code);
 	}
@@ -59,7 +56,7 @@ public class ContainerSupportWorkflowTests extends AbstractTests {
 	@Test
 	public void validateGetNextStateFromContainersA() {
 		ContSupportWorkflows worflows = workflows();
-		Set<String> containerStates = new TreeSet<String>(Arrays.asList("A-TM", "A-TF", "A-PF", "A-QC", "UA", "IS"));
+		Set<String> containerStates = new TreeSet<>(Arrays.asList("A-TM", "A-TF", "A-PF", "A-QC", "UA", "IS"));
 		State s = worflows.getNextStateFromContainerStates("ngl-test", containerStates);
 		Assert.assertEquals("A", s.code);
 	}
@@ -67,7 +64,7 @@ public class ContainerSupportWorkflowTests extends AbstractTests {
 	@Test
 	public void validateGetNextStateFromContainersATM(){
 		ContSupportWorkflows worflows = workflows();
-		Set<String> containerStates = new TreeSet<String>(Arrays.asList("IW-P", "A-TM", "UA", "IS"));
+		Set<String> containerStates = new TreeSet<>(Arrays.asList("IW-P", "A-TM", "UA", "IS"));
 		State s = worflows.getNextStateFromContainerStates("ngl-test", containerStates);
 		Assert.assertEquals("A-TM", s.code);
 	}
@@ -75,7 +72,7 @@ public class ContainerSupportWorkflowTests extends AbstractTests {
 	@Test
 	public void validateGetNextStateFromContainersAQC(){
 		ContSupportWorkflows worflows = workflows();
-		Set<String> containerStates = new TreeSet<String>(Arrays.asList("IW-P", "A-QC", "UA", "IS"));
+		Set<String> containerStates = new TreeSet<>(Arrays.asList("IW-P", "A-QC", "UA", "IS"));
 		State s = worflows.getNextStateFromContainerStates("ngl-test", containerStates);
 		Assert.assertEquals("A-QC", s.code);
 	}
@@ -84,7 +81,7 @@ public class ContainerSupportWorkflowTests extends AbstractTests {
 	// @Test
 	public void validateGetNextStateFromContainersAP(){
 		ContSupportWorkflows worflows = workflows();
-		Set<String> containerStates = new TreeSet<String>(Arrays.asList("IW-P", "A-P", "UA", "IS"));
+		Set<String> containerStates = new TreeSet<>(Arrays.asList("IW-P", "A-P", "UA", "IS"));
 		State s = worflows.getNextStateFromContainerStates("ngl-test", containerStates);
 		Assert.assertEquals("A-P", s.code);
 	}
@@ -92,7 +89,7 @@ public class ContainerSupportWorkflowTests extends AbstractTests {
 	@Test
 	public void validateGetNextStateFromContainersATF(){
 		ContSupportWorkflows worflows = workflows();
-		Set<String> containerStates = new TreeSet<String>(Arrays.asList("IW-P", "A-TF", "UA", "IS"));
+		Set<String> containerStates = new TreeSet<>(Arrays.asList("IW-P", "A-TF", "UA", "IS"));
 		State s = worflows.getNextStateFromContainerStates("ngl-test", containerStates);
 		Assert.assertEquals("A-TF", s.code);
 	}
@@ -100,7 +97,7 @@ public class ContainerSupportWorkflowTests extends AbstractTests {
 	@Test
 	public void validateGetNextStateFromContainersIWP(){
 		ContSupportWorkflows worflows = workflows();
-		Set<String> containerStates = new TreeSet<String>(Arrays.asList("IW-P", "UA", "IS"));
+		Set<String> containerStates = new TreeSet<>(Arrays.asList("IW-P", "UA", "IS"));
 		State s = worflows.getNextStateFromContainerStates("ngl-test", containerStates);
 		Assert.assertEquals("IW-P", s.code);
 	}
@@ -108,7 +105,7 @@ public class ContainerSupportWorkflowTests extends AbstractTests {
 	@Test
 	public void validateGetNextStateFromContainersIS(){
 		ContSupportWorkflows worflows = workflows();
-		Set<String> containerStates = new TreeSet<String>(Arrays.asList("UA", "IS"));
+		Set<String> containerStates = new TreeSet<>(Arrays.asList("UA", "IS"));
 		State s = worflows.getNextStateFromContainerStates("ngl-test", containerStates);
 		Assert.assertEquals("IS", s.code);
 	}
@@ -116,7 +113,7 @@ public class ContainerSupportWorkflowTests extends AbstractTests {
 	@Test
 	public void validateGetNextStateFromContainersUA(){
 		ContSupportWorkflows worflows = workflows();
-		Set<String> containerStates = new TreeSet<String>(Arrays.asList("UA"));
+		Set<String> containerStates = new TreeSet<>(Arrays.asList("UA"));
 		State s = worflows.getNextStateFromContainerStates("ngl-test", containerStates);
 		Assert.assertEquals("UA", s.code);
 	}

@@ -9,11 +9,9 @@ import controllers.authorisation.PermissionHelper;
 import fr.cea.ig.authorization.authorizators.UserDAOAuthorizator;
 import fr.cea.ig.ngl.dao.api.APIException;
 import models.administration.authorisation.Permission;
-import models.administration.authorisation.User;
 import models.administration.authorisation.description.dao.UserDAO;
 import models.utils.dao.DAOException;
 import play.api.modules.spring.Spring;
-import play.api.modules.spring.SpringPlugin;
 
 @Singleton
 public class PermissionAPI {

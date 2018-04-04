@@ -51,7 +51,7 @@ public class Resolutions extends DocumentController<ResolutionConfiguration> {
 		MongoDBResult<ResolutionConfiguration> results = mongoDBFinder(form, q);			
 		List<ResolutionConfiguration> resolutionConfigurations = results.toList();
 		if (form.distinct) {
-			Map<String, Resolution> map = new HashMap<String, Resolution>();			
+			Map<String, Resolution> map = new HashMap<>();			
 			for (ResolutionConfiguration rc: resolutionConfigurations) {
 				for (Resolution reso : rc.resolutions) {
 					if (!map.containsKey(reso.code)) {
@@ -65,7 +65,7 @@ public class Resolutions extends DocumentController<ResolutionConfiguration> {
 	}
 
 	private List<Resolution> toListResolutions(List<ResolutionConfiguration> resolutionConfigurations){
-		List<Resolution> resos = new ArrayList<Resolution>();
+		List<Resolution> resos = new ArrayList<>();
 		for(ResolutionConfiguration rc : resolutionConfigurations){
 			for (Resolution reso : rc.resolutions) {
 				resos.add(reso);
@@ -76,7 +76,7 @@ public class Resolutions extends DocumentController<ResolutionConfiguration> {
 	}
 
 	private Query getQuery(ResolutionConfigurationsSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 
 		if (StringUtils.isNotBlank(form.typeCode)) { 
 			queries.add(DBQuery.in("typeCodes", form.typeCode));

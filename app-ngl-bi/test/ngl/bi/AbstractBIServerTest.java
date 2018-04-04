@@ -8,9 +8,12 @@ import fr.cea.ig.play.test.NGLWSClient;
 import play.Application;
 
 class CompleteBITestServer extends CompleteTestServer {
+	
+	@Override
 	public Application createApplication() { 
 		return Global.devapp();
 	}
+	
 }
 
 public class AbstractBIServerTest extends AbstractServerTest {

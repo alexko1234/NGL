@@ -1,6 +1,12 @@
 package validation.utils;
 
 
+import static validation.utils.ValidationConstants.ERROR_BADTYPE_MSG;
+import static validation.utils.ValidationConstants.ERROR_NOTACTIVE;
+import static validation.utils.ValidationConstants.ERROR_NOTDEFINED_MSG;
+import static validation.utils.ValidationConstants.ERROR_REQUIRED_MSG;
+import static validation.utils.ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,6 +18,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.State;
 import models.laboratory.common.description.Value;
@@ -22,18 +35,9 @@ import models.laboratory.common.instance.property.PropertyListValue;
 import models.laboratory.common.instance.property.PropertyObjectListValue;
 import models.laboratory.common.instance.property.PropertyObjectValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
-import org.apache.commons.lang3.StringUtils;
-
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-
 //import play.Logger;
 import play.data.validation.ValidationError;
 import validation.ContextValidation;
-import static validation.utils.ValidationConstants.*;
 
 public class ValidationHelper {
 	
@@ -342,7 +346,7 @@ public class ValidationHelper {
 	public static List<Object> convertStringToType(String type, List<String> values){
 		try {
 			Class<?> valueClass = getClass(type);
-			List<Object> objects = new ArrayList<Object>(values.size());
+			List<Object> objects = new ArrayList<>(values.size());
 			for (String value : values) {
 				objects.add(convertValue(valueClass, value, null));
 			}			
@@ -355,11 +359,9 @@ public class ValidationHelper {
 	
 	
 	public static Object convertValue(Class<?> valueClass, Object value, String inputFormat) {
-		if (Number.class.isAssignableFrom(value.getClass())) {
+		if (Number.class.isAssignableFrom(value.getClass()))
 			return convertValue(valueClass, (Number)value);
-		} else {
-			return convertValue(valueClass, value.toString(), inputFormat);
-		}
+		return convertValue(valueClass, value.toString(), inputFormat);
 	}
 	
 	/*
@@ -540,7 +542,7 @@ public class ValidationHelper {
 		try{
 			Class<?> valueClass = getClass(propertyDefinition.valueType);
 //			List<Object> newList = new ArrayList<Object>(propertyValue.value.size());
-			List<Object> newList = new ArrayList<Object>(propertyValue.listValue().size());
+			List<Object> newList = new ArrayList<>(propertyValue.listValue().size());
 //			for (Object value : propertyValue.value) {
 			for (Object value : propertyValue.listValue()) {
 				if (!valueClass.isInstance(value)) { //transform only if not the good type

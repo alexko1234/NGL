@@ -2,15 +2,14 @@ package models.laboratory.resolutions.instance;
 
 import java.util.List;
 
+import fr.cea.ig.DBObject;
 import models.laboratory.common.instance.TraceInformation;
 import models.utils.InstanceConstants;
-import play.Logger;
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.resolution.instance.ResolutionValidationHelper;
 import validation.utils.ValidationHelper;
-import fr.cea.ig.DBObject;
 
 public class ResolutionConfiguration extends DBObject implements IValidation {
 	

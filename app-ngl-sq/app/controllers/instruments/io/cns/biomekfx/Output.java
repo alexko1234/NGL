@@ -1,12 +1,18 @@
 package controllers.instruments.io.cns.biomekfx;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import controllers.instruments.io.cns.biomekfx.tpl.txt.normalisation_post_pcr_x_to_plate;
+import controllers.instruments.io.cns.biomekfx.tpl.txt.normalisation_x_to_plate;
+import controllers.instruments.io.cns.biomekfx.tpl.txt.x_to_plate;
+//import controllers.instruments.io.cns.tecanevo100.SampleSheetPoolLine;
+import controllers.instruments.io.utils.AbstractOutput;
+import controllers.instruments.io.utils.File;
+import controllers.instruments.io.utils.OutputHelper;
 //import org.apache.commons.collections.CollectionUtils;
 //import play.Logger;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
@@ -14,11 +20,6 @@ import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OutputContainerUsed;
 import validation.ContextValidation;
-import controllers.instruments.io.cns.biomekfx.tpl.txt.*;
-//import controllers.instruments.io.cns.tecanevo100.SampleSheetPoolLine;
-import controllers.instruments.io.utils.AbstractOutput;
-import controllers.instruments.io.utils.File;
-import controllers.instruments.io.utils.OutputHelper;
 
 public class Output extends AbstractOutput {
 
@@ -143,7 +144,7 @@ public class Output extends AbstractOutput {
 	}
 
 	private Map<String, String> getSourceMapping(Experiment experiment) {
-		Map<String, String> sources = new HashMap<String, String>();
+		Map<String, String> sources = new HashMap<>();
 
 		String[] inputContainerSupportCodes = experiment.inputContainerSupportCodes.toArray(new String[0]);
 		Arrays.sort(inputContainerSupportCodes);

@@ -115,15 +115,13 @@ public class Configurations extends DocumentController<Configuration> {
 		Query query = getQuery(configurationsSearchForm);
 		MongoDBResult<Configuration> results = mongoDBFinder(configurationsSearchForm, query);				
 		List<Configuration> configurationsList = results.toList();
-		if (configurationsSearchForm.datatable) {
-			return ok(Json.toJson(new DatatableResponse<Configuration>(configurationsList, configurationsList.size())));
-		} else {
-			return ok(Json.toJson(configurationsList));
-		}
+		if (configurationsSearchForm.datatable)
+			return ok(Json.toJson(new DatatableResponse<>(configurationsList, configurationsList.size())));
+		return ok(Json.toJson(configurationsList));
 	}
 
 	private Query getQuery(ConfigurationsSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 
 		if (CollectionUtils.isNotEmpty(form.projCodes)) { //
 			queries.add(DBQuery.in("projectCodes", form.projCodes)); // doit pas marcher car pour state.code

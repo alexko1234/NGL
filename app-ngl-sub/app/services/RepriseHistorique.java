@@ -10,18 +10,24 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.State;
 import models.sra.submit.common.instance.Sample;
 import models.sra.submit.common.instance.Study;
@@ -31,17 +37,6 @@ import models.sra.submit.sra.instance.ReadSpec;
 import models.sra.submit.sra.instance.Run;
 import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;
-
-import org.mongojack.DBQuery;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-import org.apache.commons.lang3.StringUtils;
-//import com.sun.xml.internal.ws.api.pipe.NextAction;
-import controllers.sra.configurations.api.Configurations;
-import fr.cea.ig.MongoDBDAO;
 //import play.Logger;
 import validation.ContextValidation;
 
@@ -52,7 +47,7 @@ public class RepriseHistorique {
 	public static final String adminComment = "Creation dans le cadre d'une reprise d'historique"; 
 	
 	public static List<Sample> xmlToSample(File xmlFile) {
-		List<Sample> listSamples = new ArrayList<Sample>();
+		List<Sample> listSamples = new ArrayList<>();
 
 		/*
 		 * Etape 1 : récupération d'une instance de la classe "DocumentBuilderFactory"
@@ -168,7 +163,7 @@ public class RepriseHistorique {
 	
 	
 	public static List<Study> xmlToStudy(File xmlFile) {
-		List<Study> listStudies = new ArrayList<Study>();
+		List<Study> listStudies = new ArrayList<>();
 
 		/*
 		 * Etape 1 : récupération d'une instance de la classe "DocumentBuilderFactory"
@@ -288,7 +283,7 @@ public class RepriseHistorique {
 	}	
 	
 	public static List<Experiment> xmlToExperiment(File xmlFile) {
-		List<Experiment> listExperiments = new ArrayList<Experiment>();
+		List<Experiment> listExperiments = new ArrayList<>();
 
 		/*
 		 * Etape 1 : récupération d'une instance de la classe "DocumentBuilderFactory"
@@ -480,7 +475,7 @@ public class RepriseHistorique {
 
 							final NodeList racine_read_spec = eltSpotDecodeSpec.getElementsByTagName("READ_SPEC");
 							final int nb_read_spec = racine_read_spec.getLength();
-							experiment.readSpecs = new ArrayList<ReadSpec>();
+							experiment.readSpecs = new ArrayList<>();
 							String readLabel_1 = "";
 							for (int j = 0; j<nb_read_spec; j++) {
 								ReadSpec readSpec = new ReadSpec();
@@ -658,7 +653,7 @@ public class RepriseHistorique {
 	}	
 
 	public static List<Run> xmlToRun(File xmlFile) {
-		List<Run> listRuns = new ArrayList<Run>();
+		List<Run> listRuns = new ArrayList<>();
 		/*
 		 * Etape 1 : récupération d'une instance de la classe "DocumentBuilderFactory"
 		 */
@@ -813,7 +808,7 @@ public class RepriseHistorique {
 		}
 		String lg = null;
 
-		Map<String, String> mapAC = new HashMap<String, String>();
+		Map<String, String> mapAC = new HashMap<>();
 		
 		boolean reportEbi = false;
 		while ((lg = inputBuffer.readLine()) != null) {

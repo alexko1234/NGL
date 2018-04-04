@@ -4,20 +4,17 @@ import javax.inject.Inject;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 
-import fr.cea.ig.play.IGGlobals;
 import fr.cea.ig.play.NGLContext;
-// import play.Application;
-//import play.GlobalSettings;
-import play.Logger;
-//import play.api.Play;
 import rules.services.RulesServices6;
 import services.instance.ImportDataCNG;
 import services.instance.ImportDataCNS;
 import services.reporting.RunReportingCNS;
 
-//import fr.cea.ig.play.IGGlobals;
-
+// TODO: use proper polymorphism instead of key test
 public class Global { // extends GlobalSettings {
+	
+	private static final play.Logger.ALogger logger = play.Logger.of(Global.class);
+	
 	private NGLContext ctx;
 	
 	@Inject
@@ -26,13 +23,13 @@ public class Global { // extends GlobalSettings {
 	}
 	// @Override
 	public void onStart(play.Application app) {
-		Logger.info("NGL has started");
+		logger.info("NGL has started");
 
 		try {
 			RulesServices6.getInstance();
 		} catch (Throwable e) {
-			Logger.error("Error Load knowledge base");
-			Logger.error("Drools Singleton error: "+e.getMessage(),e);
+			logger.error("Error Load knowledge base");
+			logger.error("Drools Singleton error: "+e.getMessage(),e);
 			//Shutdown application
 			// Play.stop();
 		}
@@ -45,7 +42,7 @@ public class Global { // extends GlobalSettings {
 
 	// @Override
 	public void onStop(play.Application app) {
-		Logger.info("NGL shutdown...");
+		logger.info("NGL shutdown...");
 	}
 
 	public static int nextExecutionInSeconds(int hour, int minute){
@@ -72,26 +69,28 @@ public class Global { // extends GlobalSettings {
 		// if (play.Play.application().configuration().getBoolean("import.data")) {
 //		if (IGGlobals.configuration().getBoolean("import.data",false)) {
 		if (ctx.config().getBoolean("import.data",false)) {
-			Logger.info("NGL import data has started");
+			logger.info("NGL import data has started");
 			try {
 
 				// String institute=play.Play.application().configuration().getString("import.institute");
 				String institute = ctx.config().getString("import.institute");
-				Logger.info("Import institute "+ institute);
+				logger.info("Import institute "+ institute);
 
-				if("CNG".equals(institute)){
+				if ("CNG".equals(institute)) {
 					new ImportDataCNG(ctx);
-				}else if ("CNS".equals(institute)){
+				} else if ("CNS".equals(institute)) {
 					new ImportDataCNS(ctx);
 				} else {
 					throw new RuntimeException("La valeur de l'attribut import.institute dans application.conf n'a pas d'implementation");
 				}
 
-			}catch(Exception e){
+			} catch(Exception e){
 				throw new RuntimeException("L'attribut import.institute dans application.conf n'est pas renseigné",e);
 			}
 
-		} else { Logger.info("No import data"); }
+		} else { 
+			logger.info("No import data"); 
+		}
 	}
 
 	public /*static*/ void generateReporting(){
@@ -100,12 +99,12 @@ public class Global { // extends GlobalSettings {
 //		if (IGGlobals.configuration().getBoolean("reporting.active",false)) {
 
 		if (ctx.config().getBoolean("reporting.active",false)) {
-			Logger.info("NGL reporting has started");
+			logger.info("NGL reporting has started");
 			try {
 
 				// String institute=play.Play.application().configuration().getString("institute");
 				String institute = ctx.config().getString("institute");
-				Logger.info("institute for the reporting : "+ institute);
+				logger.info("institute for the reporting : "+ institute);
 
 				if (institute.equals("CNS")) {
 					new RunReportingCNS(ctx);
@@ -117,8 +116,9 @@ public class Global { // extends GlobalSettings {
 				throw new RuntimeException("L'attribut institute dans application.conf n'est pas renseigné");
 			}
 
-		} else { Logger.info("No reporting"); }
+		} else { 
+			logger.info("No reporting"); 
+		}
 	}
-
 
 }

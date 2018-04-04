@@ -1,6 +1,5 @@
 package controllers.sra.scripts;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import javax.inject.Inject;
@@ -18,7 +17,7 @@ public class ScriptController extends Controller {
 	@Inject
 	// arg pour dire à play de nous fournir un injecteur qui nous permettra d'instancier la classe.
 	public ScriptController(Injector injector) { 
-		this.injector= injector;
+		this.injector = injector;
 	}
 	
 	public Result noRest(String clazz, String method) {

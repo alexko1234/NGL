@@ -2,12 +2,14 @@ package models.laboratory.container.instance;
 
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import fr.cea.ig.DBObject;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
@@ -20,10 +22,6 @@ import validation.IValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.container.instance.ContainerSupportValidationHelper;
 import validation.utils.ValidationHelper;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import fr.cea.ig.DBObject;
 
 // This link : {@link models.laboratory.container.instance.ContainerSupport}
 

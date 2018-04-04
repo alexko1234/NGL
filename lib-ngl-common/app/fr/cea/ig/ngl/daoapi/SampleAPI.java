@@ -1,30 +1,18 @@
 package fr.cea.ig.ngl.daoapi;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 // import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-
-// import org.mongojack.DBQuery;
-
-// import fr.cea.ig.authentication.Authentication;
 import fr.cea.ig.ngl.dao.SampleDAO;
 import fr.cea.ig.ngl.dao.api.APIException;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.domain.SampleMeta;
-import fr.cea.ig.ngl.domain.Type.Def;
 import fr.cea.ig.ngl.domain.Type.Def.Closure;
 import fr.cea.ig.ngl.utils.CodeReference;
 import models.laboratory.common.instance.Comment;
-import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleCategory;
@@ -34,9 +22,8 @@ import models.laboratory.sample.instance.Sample;
 // import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.SampleHelper;
-
-import services.ncbi.NCBITaxon;
 import play.libs.Json;
+import services.ncbi.NCBITaxon;
 import validation.ContextValidation;
 
 abstract class CRUDDAO<T> {

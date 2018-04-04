@@ -1,11 +1,8 @@
 package ngl.sq;
 
-import java.util.HashMap;
 import java.util.ArrayList;
-// import java.util.Map;
+import java.util.HashMap;
 
-import models.laboratory.common.instance.Comment;
-// import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Content;
 import models.laboratory.sample.instance.Sample;
 
@@ -25,7 +22,7 @@ public class ContentFactory {
 		content.ncbiScientificName = sample.ncbiScientificName;
 		content.properties         = new HashMap<>(); // <String,PropertyValue>(); 
 		content.processProperties  = new HashMap<>(); // <String,PropertyValue>();
-		content.processComments    = new ArrayList<Comment>();
+		content.processComments    = new ArrayList<>();
 		return content;
 	}
 	

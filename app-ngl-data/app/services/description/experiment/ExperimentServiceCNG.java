@@ -30,7 +30,6 @@ import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 import services.description.common.MeasureService;
-import services.description.experiment.AbstractExperimentService;
 import services.description.declaration.cng.Nanopore;
 
 // import com.typesafe.config.ConfigFactory;
@@ -38,8 +37,9 @@ import services.description.declaration.cng.Nanopore;
 public class ExperimentServiceCNG extends AbstractExperimentService{
 	
 	// @SuppressWarnings("unchecked")
+	@Override
 	public void saveProtocolCategories(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<ProtocolCategory> l = new ArrayList<ProtocolCategory>();
+		List<ProtocolCategory> l = new ArrayList<>();
 		l.add(DescriptionFactory.newSimpleCategory(ProtocolCategory.class, "Developpement", "development"));
 		l.add(DescriptionFactory.newSimpleCategory(ProtocolCategory.class, "Production", "production"));
 		DAOHelpers.saveModels(ProtocolCategory.class, l, errors);
@@ -50,8 +50,9 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	 * @param errors        error mamanger
 	 * @throws DAOException DAO problem
 	 */
+	@Override
 	public  void saveExperimentCategories(Map<String,List<ValidationError>> errors) throws DAOException{
-		List<ExperimentCategory> l = new ArrayList<ExperimentCategory>();
+		List<ExperimentCategory> l = new ArrayList<>();
 		
 		l.add(DescriptionFactory.newSimpleCategory(ExperimentCategory.class, "Purification", ExperimentCategory.CODE.purification.name()));
 		l.add(DescriptionFactory.newSimpleCategory(ExperimentCategory.class, "Control qualité", ExperimentCategory.CODE.qualitycontrol.name()));
@@ -67,8 +68,9 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	 * @param errors        error manager
 	 * @throws DAOException DAO problem
 	 */
+	@Override
 	public void saveExperimentTypes(Map<String, List<ValidationError>> errors) throws DAOException {
-			List<ExperimentType> l = new ArrayList<ExperimentType>();
+			List<ExperimentType> l = new ArrayList<>();
 			
 			/** voidprocess: ext-to-**  display order -1 **/
 			
@@ -508,6 +510,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	 * @param errors        error manager
 	 * @throws DAOException DAO problem
 	 */
+	@Override
 	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 		//NOTE FDS: les nodes qui apparaissent en previous doivent etre crees avant sinon==>message : experimentTypeNode is mandatory
 
@@ -921,7 +924,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	}
 	
 	private List<PropertyDefinition> getPropertyDefinitionsQPCR() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		// laisser editable au cas ou la valeur calculée ne convient pas...
 		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), 
@@ -939,7 +942,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	}
 	
 	private static List<PropertyDefinition> getPropertyAliquoting() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null,
@@ -952,7 +955,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	}
 	
 	private static List<PropertyDefinition> getPropertyDefinitionsPrepaflowcellCNG() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Conc. chargement", "finalConcentration2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
@@ -977,7 +980,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	
 	//FDS ajout 09/11/2015 -- JIRA NGL-838
 	private List<PropertyDefinition> getPropertyDefinitionsPrepaflowcellOrderedCNG() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		//InputContainer
 		// test NGL-1767: ajout liste de volumes pour les differents types de sequencage ?? 01/02/2018 Non laisser un champ a saisie libre et pas de valeur par defaut
@@ -1044,7 +1047,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	}
 
 	private static List<PropertyDefinition> getPropertyDefinitionsDenatDilLibCNG() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		//FDS 01/02/2016 pourquoi est commenté ???
 		//propertyDefinitions.add(newPropertiesDefinition("Stockage", "storage", LevelService.getLevels(Level.CODE.ContainerOut), String.class, false, null, null, null, null, "single",55,true,null));		
@@ -1054,7 +1057,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsQCMiseq() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		//InputContainer 
 		propertyDefinitions.add(newPropertiesDefinition("Densité de clusters", "clusterDensity", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 
@@ -1106,7 +1109,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	
 	// FDS JIRA NGL-1030 Ajouter la propriété size et rendre les 2 obligatoires au status "F"(Terminé)
 	public static List<PropertyDefinition> getPropertyDefinitionsChipMigration() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
 		//InputContainer (pas d'outputContainer sur une experience QC )
 		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
@@ -1135,7 +1138,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	
 	
 	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepot() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		//Utilisé par import ngl-data CNG de creation des depot-illumina
 		//propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", LevelService.getLevels(Level.CODE.Experiment), Integer.class, false, "single"));	
@@ -1150,7 +1153,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	
 	// FDS ajout 05/02/2016 -- JIRA NGL-894: experiment PrepPcrFree pour le process X5
 	private List<PropertyDefinition> getPropertyDefinitionsPrepPcrFree() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé dans Frag", "inputVolumeFrag", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null,
@@ -1205,7 +1208,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	// FDS ajout 27/09/2016  pour le process WG_NANO
 	// similaire a PrepPcrFree mais : pas de valeurs par defaut, pas de tailles theoriques
 	private List<PropertyDefinition> getPropertyDefinitionsPrepWgNano() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé dans Frag", "inputVolumeFrag", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null,
@@ -1248,7 +1251,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	// FDS ajout 05/02/2016 -- JIRA NGL-894: experiment librairie normalization pour le process X5
 	// FDS 19/07/2017 -- JIRA NGL-1519: egalement utilisees par l'experience de transfert additional-normalization
 	private List<PropertyDefinition> getPropertyDefinitionsLibNormalization() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		//InputContainer
 		// calculé automatiquement en fonction du volume final et concentration final demandés ou saisie libre, non obligatoire
@@ -1275,7 +1278,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	
 	// FDS ajout 02/06/2016 -- JIRA NGL-1028: experiment normalization-and-pooling
 	private List<PropertyDefinition> getPropertyDefinitionsNormalizationAndPooling() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		//InputContainer
 		// calculé automatiquement en fonction du volume final et concentration final demandés ou saisie libre, non obligatoire VERIFIER
@@ -1301,7 +1304,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	
 	// FDS ajout 17/06/2016 -- JIRA NGL-1029: experiment pool en plaque
 	private static List<PropertyDefinition> getPropertyDefinitionPool() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null,
@@ -1327,7 +1330,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	
 	// FDS ajout 01/08/2016 -- JIRA NGL-1027: experiment PCR + purification en plaque	
 	private static List<PropertyDefinition> getPropertyDefinitionsPcrAndPurification() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		//InputContainer
 		// volume engagé editable et obligatoire, qté pas editable calculée en fonction volume engagé et pas sauvegardée
@@ -1346,7 +1349,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	
 	//FDS ajout 03/08/2016 -- JIRA NGL-1026: experiment library prepartion sans fragmentation ( duplication a partir de pcr-free .. et suppression de la fragmentation
 	private List<PropertyDefinition> getPropertyDefinitionsLibraryPrep() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		//InputContainer
 		// valeur par defaut pour volume et qté engagées ?? Pas pour l'instant...
@@ -1378,7 +1381,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	
 	//FDS ajout 21/02/2017 -- JIRA NGL-1167 experiences pour process Chromium
 	private List<PropertyDefinition> getPropertyDefinitionsChromiumGemGeneration() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Conc. dilution","dilutionConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null,
@@ -1392,12 +1395,12 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	
 	//FDS ajout 21/02/2017 -- JIRA NGL-1167 experiences pour process Chromium
 	private List<PropertyDefinition> getPropertyDefinitionsWGChromiumLibPrep() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		//OuputContainer
 		// ces propriétés de containerOut doivent etre propagées au content; propriétés obligatoires a: Finished 
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", 
-				getTagIllumina(new ArrayList<String>( Arrays.asList("POOL-INDEX"))), 
+				getTagIllumina(new ArrayList<>( Arrays.asList("POOL-INDEX"))), 
 				"single", 30, true, null,null));
 		
 		// restreindre tagCategory a POOL-INDEX 
@@ -1410,7 +1413,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	
 	// FDS ajout 21/02/2017 -- JIRA NGL-1167: QC Bioanalyzer pour process Chromium: aucune obligatoire !!
 	public static List<PropertyDefinition> getPropertyDefinitionsBioanalyzer() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
 		//InputContainer (pas d'outputContainer sur une experience QC )
 		propertyDefinitions.add(newPropertiesDefinition("Taille", "size1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false,null, null, 
@@ -1435,7 +1438,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	
 	// GA : stocker dans un pseudo QC les valeurs initales du fichier importé
 	private List<PropertyDefinition> getPropertyDefinitionsBankQC() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		propertyDefinitions.add(newPropertiesDefinition("Volume fourni", "providedVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),
@@ -1458,7 +1461,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 
 	// FDS 21/06/2017 ajout -- JIRA NGL-1472: necessiter d'ajouter QC provenant de collaborateur extérieur.
 	private List<PropertyDefinition> getPropertyDefinitionsExternalQC() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		propertyDefinitions.add(newPropertiesDefinition("Volume fourni", "providedVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),
@@ -1483,7 +1486,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	
 	//FDS ajout 18/07/2017 NGL-1201
 	private List<PropertyDefinition> getPropertyDefinitionsSamplePrepCapture() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		// pas de propriétés pour l'instant..
 		return propertyDefinitions;
@@ -1491,7 +1494,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	
 	//FDS ajout 18/07/2017 NGL-1201
 	private List<PropertyDefinition> getPropertyDefinitionsFragmentation() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		// pas de propriétés pour l'instant...
 		return propertyDefinitions;
@@ -1499,7 +1502,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	
 	//FDS ajout 18/07//2017 NGL-1201
 	private List<PropertyDefinition> getPropertyDefinitionsCapture() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		// FDS 09/11/2017 NGL-1691: ajout propriété de niveau Global (experiment) :Temps d'hybridation==hybridizationTime : saisie libre texte, non obligatoire
 		// que veut dire le parametre "position" pour les propriété de niveau Global ??
@@ -1533,7 +1536,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	
 	//FDS ajout 18/07/2017 NGL-1201
 	private List<PropertyDefinition> getPropertyDefinitionsPcrIndexing() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		//OuputContainer
 		// proprietes de containerOut doivent etre propagees au content
@@ -1556,7 +1559,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	
 	//FDS ajout 27/07/2017 NGL-1201
 	private List<PropertyDefinition> getPropertyDefinitionsQuantIt() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),
@@ -1571,7 +1574,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	// utilisé par processus getPropertyDefinitionsCapture ET getPropertyDefinitionsCapturePcrIndexing
 	// !! code dupliqué dans ProcessServiceCNG
 	private static List<Value>getCaptureBaitsValues() {
-		 List<Value> values = new ArrayList<Value>();
+		 List<Value> values = new ArrayList<>();
 		 
 		 values.add(DescriptionFactory.newValue("V5",    "V5"));
 		 values.add(DescriptionFactory.newValue("V5+UTR","V5+UTR"));

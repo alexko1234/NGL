@@ -31,8 +31,9 @@ import services.description.common.MeasureService;
 public class ExperimentServiceTEST extends AbstractExperimentService {
 	
 	// @SuppressWarnings("unchecked")
+	@Override
 	public  void saveProtocolCategories(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<ProtocolCategory> l = new ArrayList<ProtocolCategory>();
+		List<ProtocolCategory> l = new ArrayList<>();
 		l.add(DescriptionFactory.newSimpleCategory(ProtocolCategory.class, "Developpement", "development"));
 		l.add(DescriptionFactory.newSimpleCategory(ProtocolCategory.class, "Production", "production"));
 		DAOHelpers.saveModels(ProtocolCategory.class, l, errors);
@@ -43,16 +44,18 @@ public class ExperimentServiceTEST extends AbstractExperimentService {
 	 * @param errors        error manager
 	 * @throws DAOException DAO problem
 	 */
+	@Override
 	public  void saveExperimentCategories(Map<String,List<ValidationError>> errors) throws DAOException {
-		List<ExperimentCategory> l = new ArrayList<ExperimentCategory>();
+		List<ExperimentCategory> l = new ArrayList<>();
 		for (ExperimentCategory.CODE code : ExperimentCategory.CODE.values()) {
 			l.add(DescriptionFactory.newSimpleCategory(ExperimentCategory.class, code.name(), code.name()));
 		}
 		DAOHelpers.saveModels(ExperimentCategory.class, l, errors);
 	}
 
+	@Override
 	public void saveExperimentTypes(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		List<ExperimentType> l = new ArrayList<>();
 /*
 		l.add(newExperimentType("Ext to dépôt opgen","ext-to-opgen-depot",null,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), getPropertyDefinitionExtToOpgenDepot(), null,"OneToOne", 
@@ -173,6 +176,7 @@ public class ExperimentServiceTEST extends AbstractExperimentService {
 	
 
 
+	@Override
 	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 		newExperimentTypeNode("ext-to-test-one-to-one", getExperimentTypes("ext-to-test-one-to-one").get(0), false, false, null, null, null).save();
 		newExperimentTypeNode("test-one-to-one",getExperimentTypes("test-one-to-one").get(0),false,false,false,getExperimentTypeNodes("ext-to-test-one-to-one"),null,null,getExperimentTypes("aliquoting","pool-tube")).save();
@@ -213,7 +217,7 @@ public class ExperimentServiceTEST extends AbstractExperimentService {
 	}
 
 	private static List<PropertyDefinition> getPropertyTestOneToOne() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();				
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();				
 		propertyDefinitions.add(newPropertiesDefinition("Exp Content 1", "expContent1", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, false, "single"));
 		propertyDefinitions.add(newPropertiesDefinition("Exp 1", "exp1", LevelService.getLevels(Level.CODE.Experiment), String.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cont. In Content 1","contInContent1",LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content), String.class, true, null, null ,null,null, "single",11));
@@ -224,7 +228,7 @@ public class ExperimentServiceTEST extends AbstractExperimentService {
 	}
 
 	private static List<PropertyDefinition> getPropertyAliquoting() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",10, false));
 		
@@ -495,7 +499,7 @@ public class ExperimentServiceTEST extends AbstractExperimentService {
 //	}
 	
 	private static List<PropertyDefinition> getPropertyDefinitionPoolTube() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",8, false));

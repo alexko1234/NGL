@@ -1,35 +1,23 @@
 package validation.run.instance;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
+import org.mongojack.DBQuery;
+
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.project.instance.Project;
 import models.laboratory.run.description.ReadSetType;
-import models.laboratory.run.instance.File;
-import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.SampleOnContainer;
-import models.laboratory.run.instance.Treatment;
-import models.laboratory.sample.description.SampleType;
-import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
-import org.mongojack.DBQuery;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
-import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
-import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBDAO;
-
-
 
 public class ReadSetValidationHelper extends CommonValidationHelper {
-	
-	
+		
 	public static void validateReadSetCodeInRunLane(String readSetCode, String runCode, Integer laneNumber, ContextValidation contextValidation) {
 		if (contextValidation.isUpdateMode() && !checkReadSetInRun(readSetCode, runCode, laneNumber)) {
 			contextValidation.addErrors("code",ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, readSetCode);

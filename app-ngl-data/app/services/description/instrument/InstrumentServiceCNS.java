@@ -1,6 +1,10 @@
 package services.description.instrument;
 
-import static services.description.DescriptionFactory.*;
+import static services.description.DescriptionFactory.newInstrumentCategory;
+import static services.description.DescriptionFactory.newInstrumentUsedType;
+import static services.description.DescriptionFactory.newPropertiesDefinition;
+import static services.description.DescriptionFactory.newValue;
+import static services.description.DescriptionFactory.newValues;
 
 import java.awt.Image;
 import java.util.ArrayList;
@@ -13,7 +17,6 @@ import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
-import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
@@ -27,9 +30,9 @@ import services.description.common.MeasureService;
 
 public class InstrumentServiceCNS extends AbstractInstrumentService{
 	
-	
+	@Override
 	public void saveInstrumentCategories(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<InstrumentCategory> l = new ArrayList<InstrumentCategory>();
+		List<InstrumentCategory> l = new ArrayList<>();
 		l.add(newInstrumentCategory("Covaris","covaris"));
 		l.add(newInstrumentCategory("Spri","spri"));
 		l.add(newInstrumentCategory("Thermocycleur","thermocycler"));
@@ -67,9 +70,10 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		
 	}
 	
+	@Override
 	public void saveInstrumentUsedTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		
-		List<InstrumentUsedType> l = new ArrayList<InstrumentUsedType>();
+		List<InstrumentUsedType> l = new ArrayList<>();
 		
 		//CNS
 		/* TODO GA : A SUPPRIMER ?
@@ -342,16 +346,9 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
-
-
-
-
-
-
-
 	
 	private List<Instrument> getThermocyclerInstruments() {
-		List<Instrument> instruments = new ArrayList<Instrument>();
+		List<Instrument> instruments = new ArrayList<>();
 		for(int i = 1; i <= 42; i++){
 			if(i < 10){
 				instruments.add(createInstrument("thermo0"+i, "Thermo_0"+i, null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 				
@@ -367,7 +364,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 
 	private List<Instrument> getInstrumentBiomekCovaris() {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		instruments.add(createInstrument("walle-and-covarise220-1","WALL-E / covarisE220_1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add(createInstrument("walle-and-covarise220-cng","WALL-E / covarise220 CNG", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
@@ -381,7 +378,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 
 	private List<PropertyDefinition> getCovarisBiomekProperties() {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		//l.add(newPropertiesDefinition("Programme Biomek", "biomekProgram", LevelService.getLevels(Level.CODE.Instrument), Integer.class, true, null, null, 
 		//		"single", 10, true, null,null));
 		l.add(newPropertiesDefinition("Programme Covaris", "covarisProgram", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null, 
@@ -391,7 +388,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 
 	private List<PropertyDefinition> getThermoBiomekProperties() {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		/*l.add(newPropertiesDefinition("Nb cycles", "nbCycles", LevelService.getLevels(Level.CODE.Instrument), Integer.class, false, null, null, 
 				"single", 10, true, null,null));*/
 		
@@ -408,7 +405,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 
 	private List<Instrument> getInstrumentBiomekFx() {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		instruments.add(createInstrument("thermoX-and-maya","Thermo_X / MAYA", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add(createInstrument("thermoX-and-r2d2","Thermo_X / R2D2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add(createInstrument("thermoX-and-walle","Thermo_X / WALL-E", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -417,20 +414,20 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 
 	
 	private List<Instrument> getInstrumentFastPrep() {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		instruments.add(createInstrument("fast-prep-1","Fast Prep 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return instruments;
 	}
 
 	private List<PropertyDefinition> getFastPrepProperties() {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null, newValues("Programme corail"), 
 				"single", 10, true, null,null));
 		return l;
 	}	
 	
 	private List<Instrument> getInstrumentBluePippin() {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 	//	instruments.add(createInstrument("blue-pippin","Blue Pippin 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		instruments.add(createInstrument("blue-pippin-1", "Blue pippin 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -440,7 +437,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 
 	private List<PropertyDefinition> getBluePippinProperties() {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		l.add(newPropertiesDefinition("Marqueur utilisé", "marker", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null, null, 
 				"single", 10, true, null,null));
 		l.add(newPropertiesDefinition("Cassette", "cassette", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null, null, 
@@ -450,7 +447,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 		
 	private List<Instrument> getInstrumentBionanoHand() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		instruments.add(createInstrument("irys-hand", "Main", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return instruments;
 	}
@@ -458,7 +455,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 
 
 	private List<Instrument> getInstrumentCryobroyeur() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		instruments.add(createInstrument("freezer-mill-1","6770 FREEZER/MILL 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add(createInstrument("large-freezer-mill-1","6870 LARGE FREEZER/MILL 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
@@ -466,14 +463,14 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 
 	private List<PropertyDefinition> getCryobroyeurProperties() {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null, newValues("Programme 1"), 
 				"single", 10, true, null,null));
 		return l;
 	}
 	
 	private static List<PropertyDefinition> getNovaseq6000Properties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		// idem Hiseq4000, HiseqX !!
 		
 		propertyDefinitions.add(newPropertiesDefinition("Position","position", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B"), "single",100));
@@ -491,7 +488,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 	
 	private List<PropertyDefinition> getIrysChipProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
         propertyDefinitions.add(newPropertiesDefinition("Code CHIP", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
 		return propertyDefinitions;
 	}
@@ -503,13 +500,13 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 //	}
 
 	private List<PropertyDefinition> getIrysDepotProperties() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
         propertyDefinitions.add(newPropertiesDefinition("Version Logiciel", "softwareVersion", LevelService.getLevels(Level.CODE.Instrument),String.class, false, "single",100));
 		return propertyDefinitions;
 	}
 
 	private static List<PropertyDefinition> getNanoporeMiniSpinProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
         propertyDefinitions.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument),String.class, true,
         		DescriptionFactory.newValues("G-TUBE"), "G-TUBE", null, null, null, "single", 1));
         propertyDefinitions.add(newPropertiesDefinition("Vitesse", "speed", LevelService.getLevels(Level.CODE.Instrument),String.class, false,
@@ -521,14 +518,14 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 	
 	private List<PropertyDefinition> getNanoporeMegaruptor2Properties() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		 propertyDefinitions.add(newPropertiesDefinition("Taille hydropores", "hydroporeSize", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("short","long"), "single",100));
 		return propertyDefinitions;
 	}
 
 
 	private static List<PropertyDefinition> getNanoporeSequencerProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
         propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
         propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument,Level.CODE.Content),String.class, true, "single",200,"R9.4.1"));
        
@@ -542,7 +539,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 	
 	private static List<PropertyDefinition> getPromethIONProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
         
 		
 		propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.ContainerOut),String.class, true, null, 
@@ -558,7 +555,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 	
 	private static List<Value> getPromethionPosition() {
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(newValue("PH_p-101_0","pl1_A1-D1"));  
 		values.add(newValue("PH_p-101_2","pl1_A2-D2"));  
 		values.add(newValue("PH_p-105_0","pl1_A3-D3"));  
@@ -614,7 +611,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 
 
 	private static List<PropertyDefinition> getCBotProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
         propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType"
         		, LevelService.getLevels(Level.CODE.Instrument,Level.CODE.ContainerSupport),String.class, true,DescriptionFactory.newValues("SR","PE"),"single"));
       //  propertyDefinitions.add(newPropertiesDefinition("Type flowcell","flowcellType"
@@ -627,7 +624,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 
 	
 	private static List<PropertyDefinition> getCBotInterneProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
         propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType"
         		, LevelService.getLevels(Level.CODE.Instrument,Level.CODE.ContainerSupport),String.class, true,DescriptionFactory.newValues("SR","PE"),"single"));
      //   propertyDefinitions.add(newPropertiesDefinition("Type flowcell","flowcellType"
@@ -641,7 +638,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	
 	
 	private static List<PropertyDefinition> getCBotOnBoardNovaSeqProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType"
 				, LevelService.getLevels(Level.CODE.Instrument,Level.CODE.ContainerSupport),String.class, true,DescriptionFactory.newValues("SR","PE"),"single"));
 		propertyDefinitions.add(newPropertiesDefinition("Type flowcell","novaseqFlowcellMode"
@@ -652,7 +649,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 	
 	private List<PropertyDefinition> getHiseq4000Properties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		 propertyDefinitions.add(newPropertiesDefinition("Position","position"
         		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B"), "single",100));
 		
@@ -668,7 +665,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	
 
 	private static List<PropertyDefinition> getHiseq2000Properties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
         propertyDefinitions.add(newPropertiesDefinition("Position","position"
         		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B"), "single",200));
         propertyDefinitions.add(newPropertiesDefinition("Type lectures", "sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE"), "single",300));
@@ -682,7 +679,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 
 	private static List<PropertyDefinition> getMiseqProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Nom cassette Miseq", "miseqReagentCassette",LevelService.getLevels(Level.CODE.Instrument),String.class,true,"single",100));
         propertyDefinitions.add(newPropertiesDefinition("Type lectures", "sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE"), "single",200));
         propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read1", "nbCyclesRead1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",300));
@@ -694,7 +691,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	
 	
 	private static List<PropertyDefinition> getArgusProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
         propertyDefinitions.add(newPropertiesDefinition("Type de MapCard", "mapcardType", LevelService.getLevels(Level.CODE.Instrument),String.class, true, newValues("standard","HD"), "single"));
         propertyDefinitions.add(newPropertiesDefinition("Référence Carte", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
 		propertyDefinitions.add(newPropertiesDefinition("Enzyme de restriction", "restrictionEnzyme", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("AfIII","ApaLI","BamHI","BgIII","EcoRI","HindIII","KpnI","MIuI","Ncol","NdeI","NheI","NotI","PvuII","SpeI","XbaI","XhoI"), "single"));
@@ -715,7 +712,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	
 	
 	private static List<PropertyDefinition> getCovarisProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		//l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("Frag_PE300","Frag_PE400","Frag_PE500","Frag_cDNA_Solexa"), "single"));
 		
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null, 
@@ -726,13 +723,13 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 	
 	private static List<PropertyDefinition> getSpriProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("300-600"), "single"));		
 		return l;
 	}
 	
 	private static List<PropertyDefinition> getThermocyclerProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		/*l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("15","18"), "single"));*/
 		/*l.add(newPropertiesDefinition("Nb cycles", "nbCycle", LevelService.getLevels(Level.CODE.Instrument), Integer.class, false, null, null, 
 				"single", 10, true, null,null));*/
@@ -742,7 +739,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	
 	
 	private static List<PropertyDefinition> getTecanProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null, newValues( 
 				"Normalisation_48tubes",
 				"Normalisation_Plaque_plaque",
@@ -783,7 +780,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 	
 	private static List<PropertyDefinition> getTecanStrategeneProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null, newValues("QPCR_Solexa",
 				"QPCR_Solexa_distrib_ADN_main",
 				"QPCR_Solexa_distrib_plq_qPCR",
@@ -801,7 +798,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 	
 	private static List<PropertyDefinition> getLabChipGXProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		
 		l.add(newPropertiesDefinition("Nom run LabChip", "robotRunCode", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null, null, 
 				"single", 10, true, null,null));
@@ -811,7 +808,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 	
 	private static List<PropertyDefinition> getBioanalyzerProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		
 		l.add(newPropertiesDefinition("Type puce", "chipType", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null, newValues("DNA HS", "DNA 12000", "RNA"), 
 				"single", 10, true, null,null));
@@ -825,7 +822,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 	
 	private static List<PropertyDefinition> getQuBitFluoroskanProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		l.add(newPropertiesDefinition("Gamme", "gamme", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null,  newValues("BR","HS","BR et HS","RNA HS","HS et ssDNA", "DeNovix Ultra HS"), 
 				"single", 10, true, null,null));
 		return l;
@@ -833,13 +830,13 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		
 	
 	public static List<Instrument> getInstrumentOpgen()throws DAOException{
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		instruments.add( createInstrument("APOLLON", "APOLLON", null, true, "/env/ig/atelier/opgen/cns/APOLLON", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return instruments;
 	}
 	
 	private static List<Instrument> getInstrumentNovaseq6000() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		
 		instruments.add( createInstrument("JARVIS", "JARVIS", "V1", true, "/env/ig/atelier/illumina/cns/JARVIS/", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 	
@@ -847,7 +844,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 	
 	private static List<Instrument> getInstrumentGAII() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		instruments.add(createInstrument("BISMUTH", "BISMUTH", "G3", false, "/env/ig/atelier/illumina_BISMUTH", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
 		instruments.add(createInstrument("HELIUM", "HELIUM", "G1", false, "/env/ig/atelier/illumina_HELIUM", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
 		instruments.add(createInstrument("AZOTE", "AZOTE", "G2", false, "/env/ig/atelier/illumina_AZOTE", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
@@ -856,7 +853,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 
 	private static List<Instrument> getInstrumentMiSeq() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		instruments.add(createInstrument("MELISSE", "MELISSE", "M2", true, "/env/ig/atelier/illumina/cns/MELISSE", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
 		instruments.add(createInstrument("MIMOSA", "MIMOSA", "M1", true, "/env/ig/atelier/illumina/cns/MIMOSA", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
 		instruments.add(createInstrument("MISEQ1", "MISEQ1", "M1C", false, "/env/ig/atelier/illumina/cng/MISEQ1", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
@@ -865,7 +862,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 	
 	public static List<Instrument> getInstrumentHiseq2000() throws DAOException{
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		instruments.add(createInstrument("HISEQ2", "HISEQ2", "H2C", false, "/env/ig/atelier/illumina/cng/HISEQ2/", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add(createInstrument("HISEQ4", "HISEQ4", "H4C", false, "/env/ig/atelier/illumina/cng/HISEQ4/", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add(createInstrument("HISEQ7", "HISEQ7", "H7C", false, "/env/ig/atelier/illumina/cng/HISEQ7/", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -879,7 +876,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 	
 	public static List<Instrument> getInstrumentHiseq2500() throws DAOException{
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		instruments.add( createInstrument("HISEQ9", "HISEQ9", "H9C", false, "/env/ig/atelier/illumina/cng/HISEQ9/", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add( createInstrument("HISEQ10", "HISEQ10", "H10C", false, "/env/ig/atelier/illumina/cng/HISEQ10/", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add( createInstrument("HISEQ11", "HISEQ11", "H11C", false, "/env/ig/atelier/illumina/cng/HISEQ11/", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));		
@@ -889,7 +886,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 	
 	private List<Instrument> getInstrumentHiseq4000() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		instruments.add(createInstrument("TORNADE", "TORNADE", "H5", true, "/env/ig/atelier/illumina/cns/TORNADE", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
 		instruments.add(createInstrument("RAFALE", "RAFALE", "H9", true, "/env/ig/atelier/illumina/cns/RAFALE", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
 		return instruments;
@@ -906,7 +903,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	
 	
 	private List<Instrument> getInstrumentMKI() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		instruments.add(createInstrument("MN15456", "MK15456", null, false, "/env/ig/atelier/nanopore/cns/MN15456", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add(createInstrument("MN15302", "MK15302", null, false, "/env/ig/atelier/nanopore/cns/MN15302", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add(createInstrument("MN15382", "MK15382", null, false, "/env/ig/atelier/nanopore/cns/MN15382", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -926,7 +923,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 	
 	private List<Instrument> getInstrumentMKIB() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		instruments.add(createInstrument("MN16823", "MK16823", null, true, "/env/ig/atelier/nanopore/cns/MN16823", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add(createInstrument("MN17490", "MK17490", null, true, "/env/ig/atelier/nanopore/cns/MN17490", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
@@ -946,7 +943,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 	
 	private static List<Instrument> getInstrumentMinIon() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		instruments.add(createInstrument("MN02528", "MN02528", null, false, "/env/ig/atelier/nanopore/cns/MN02528", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add(createInstrument("MN02670", "MN02670", null, false, "/env/ig/atelier/nanopore/cns/MN02670", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add(createInstrument("MN02280", "MN02280", null, false, "/env/ig/atelier/nanopore/cns/MN02280", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -957,7 +954,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 	
 	private static List<Instrument> getInstrumentPromethION () throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		instruments.add(createInstrument("PCA0026", "PCA0026", null, true, "/env/ig/atelier/nanopore/cns/PCA0026", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add(createInstrument("PCA0032", "PCA0032", null, true, "/env/ig/atelier/nanopore/cns/PCA0032", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add(createInstrument("PCT0004", "PCT0004", null, true, "/env/ig/atelier/nanopore/cns/PCT0004", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -965,38 +962,38 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 	
 	private static List<Instrument> getInstrumentEppendorfMiniSpinPlus() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		instruments.add(createInstrument("MiniSpin plus 1", "miniSpinPlus1", null, true, "path", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return instruments;
 	}
 	
 	
 	private List<Instrument> getInstrumentMegaruptor2() {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		instruments.add(createInstrument("megaruptor2-1","Megaruptor2_1", null, true, "path", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return instruments;
 	}
 
 	private List<Instrument> getInstrumentIRYS() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		instruments.add(createInstrument("ODYSSEE", "ODYSSEE", null, true, "/env/ig/atelier/bionano/cns/ODYSSEE", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
 		return instruments;
 	}
 	
 	private List<Instrument> getInstrumentSAPHYR() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		instruments.add(createInstrument("ILIADE", "ILIADE", null, true, "/env/ig/atelier/bionano/cns/ILIADE", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
 		return instruments;
 	}
 	
 	private List<Instrument> getInstrumentNanodrop() {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		instruments.add(createInstrument("nanodrop1","Nanodrop 1", null, true, "path", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
 		return instruments;	}
 	
 	
 	private List<Instrument> getInstrumentPippinPulse() {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		instruments.add(createInstrument("pippin-pulse-1","Pippin Pulse 1", null, true, "path", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
 		return instruments;	}
 	

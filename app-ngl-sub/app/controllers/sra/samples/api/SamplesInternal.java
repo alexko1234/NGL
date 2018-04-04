@@ -35,6 +35,7 @@ public class SamplesInternal extends DocumentController<Sample> {
 		updateForm = ctx.form(QueryFieldsForm.class);
 	}
 
+	@Override
 	public Result get(String code) {
 		return ok(Json.toJson(getSample(code)));
 	}

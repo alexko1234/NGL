@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.stereotype.Repository;
+
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
-
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.stereotype.Repository;
 
 @Repository
 public class ContainerSupportCategoryDAO extends AbstractDAOMapping<ContainerSupportCategory>{
@@ -32,7 +32,7 @@ public class ContainerSupportCategoryDAO extends AbstractDAOMapping<ContainerSup
 		if(containerSupportCategory.containerCategory == null || containerSupportCategory.containerCategory.id == null){
 			throw new IllegalArgumentException("ContainerCategory is not present ");
 		}
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("code", containerSupportCategory.code);
 		parameters.put("name", containerSupportCategory.name);
 		parameters.put("nbColumn", containerSupportCategory.nbColumn);

@@ -6,16 +6,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.mongojack.DBQuery;
 
-import services.XmlServices;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.lfw.controllers.AbstractScript;
 import models.sra.submit.sra.instance.Experiment;
 import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;
+import services.XmlServices;
 
 
 public class UpdateExperimentsEMOSE extends AbstractScript {
@@ -23,7 +21,7 @@ public class UpdateExperimentsEMOSE extends AbstractScript {
 	
 	
 	public List<String> updateInDatabase ( String libraryConstructionProtocol, List<String> experimentAccessions) {
-		List<String> experimentCodes = new ArrayList<String>();
+		List<String> experimentCodes = new ArrayList<>();
 		for (String experimentAC: experimentAccessions) {
 			Experiment experiment = MongoDBDAO
 				.findOne(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, 
@@ -54,7 +52,7 @@ public class UpdateExperimentsEMOSE extends AbstractScript {
 				"Amplicon sequencing after 16S amplification by PCR using 515F/926R primer set. Library were constructed according to Illumina Library protocol without any sizing.";
 		List<String> experimentCodes_3 = updateInDatabase(libraryConstructionProtocol_3, experimentAC_3);
 
-		List<String> experimentCodes = new ArrayList<String>();
+		List<String> experimentCodes = new ArrayList<>();
 		experimentCodes.addAll(experimentCodes_1);
 		experimentCodes.addAll(experimentCodes_2);
 		experimentCodes.addAll(experimentCodes_3);

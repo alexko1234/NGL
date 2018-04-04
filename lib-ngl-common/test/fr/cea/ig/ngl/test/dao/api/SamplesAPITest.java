@@ -1,19 +1,14 @@
 package fr.cea.ig.ngl.test.dao.api;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 import java.util.List;
 
 import javax.inject.Singleton;
-import javax.validation.constraints.AssertTrue;
 
-import org.drools.compiler.lang.dsl.DSLMapParser.statement_return;
-import org.drools.core.command.assertion.AssertEquals;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -21,8 +16,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
-
-import com.google.inject.matcher.Matchers;
 
 import fr.cea.ig.MongoDBResult.Sort;
 import fr.cea.ig.ngl.dao.api.APIException;
@@ -34,14 +27,7 @@ import fr.cea.ig.ngl.test.dao.api.factory.TestProjectFactory;
 import fr.cea.ig.ngl.test.dao.api.factory.TestSampleFactory;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
-import models.utils.DescriptionHelper;
-import models.utils.dao.DAOException;
-import ngl.common.Global;
-import play.Logger.ALogger;
-import rules.services.RulesServices6;
-import rules.services.test.TestRules6Component;
 import utils.AbstractSQTests;
-import utils.AbstractTests;
 
 /**
  * Test {@link SamplesAPI} methods.
@@ -244,7 +230,7 @@ public class SamplesAPITest extends AbstractSQTests implements AbstractAPITests 
 	}
 
 	@Override
-	public ALogger logger() {
+	public play.Logger.ALogger logger() {
 		return logger;
 	}
 

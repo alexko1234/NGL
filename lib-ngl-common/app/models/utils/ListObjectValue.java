@@ -1,9 +1,9 @@
 package models.utils;
 
-import java.util.ArrayList;
+import static fr.cea.ig.lfw.utils.Iterables.map;
+
 import java.util.List;
 
-import static fr.cea.ig.lfw.utils.Iterables.map;
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;

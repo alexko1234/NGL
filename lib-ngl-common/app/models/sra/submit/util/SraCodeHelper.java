@@ -1,10 +1,11 @@
 package models.sra.submit.util;
 
 import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
+
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.run.instance.ReadSet;
-import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.code.DefaultCodeImpl;
 
@@ -71,7 +72,8 @@ public class SraCodeHelper extends DefaultCodeImpl {
 		return ("GSC" + code + "_" + SraCodeHelper.getInstance().generateBarCode()).toUpperCase();
 	}
 	
-	public String generateExperimentCode(String readSetCode) {
+	@Override
+	public synchronized String generateExperimentCode(String readSetCode) {
 		// exp_readSetCode
 		return "exp_" + readSetCode;
 	}

@@ -66,7 +66,7 @@ public abstract class Workflows<T> {
 	
 	protected State updateHistoricalNextState(State previousState, State nextState) {
 		if (null == previousState.historical) {
-			nextState.historical = new HashSet<TransientState>(0);
+			nextState.historical = new HashSet<>(0);
 			nextState.historical.add(new TransientState(previousState, nextState.historical.size()));
 		} else {
 			nextState.historical = previousState.historical;

@@ -99,7 +99,7 @@ public class ReadSets extends ReadSetsController {
 		} else if(form.count) {
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);							
 			int count = results.count();
-			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			Map<String, Integer> m = new HashMap<>(1);
 			m.put("result", count);
 			return ok(Json.toJson(m));
 		} else if(form.list) {
@@ -117,7 +117,7 @@ public class ReadSets extends ReadSetsController {
 	}
 
 	private List<ListObject> toListObjects(List<ReadSet> readSets){
-		List<ListObject> jo = new ArrayList<ListObject>();
+		List<ListObject> jo = new ArrayList<>();
 		for(ReadSet r: readSets){
 			jo.add(new ListObject(r.code, r.code));
 		}
@@ -133,7 +133,7 @@ public class ReadSets extends ReadSetsController {
 	}
 
 	private Query getQuery(ReadSetsSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		Query query = null;
 
 		if (StringUtils.isNotBlank(form.typeCode)) { //all

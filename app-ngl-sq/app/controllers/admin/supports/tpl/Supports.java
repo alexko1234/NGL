@@ -1,11 +1,8 @@
 package controllers.admin.supports.tpl;
 
-//import play.Routes;
-//import play.routing.JavaScriptReverseRouter;
-// import play.mvc.Controller;
-import play.mvc.Result;
-// import play.mvc.With;
-import views.html.admin.supports.*;
+import javax.inject.Inject;
+// TODO: cleanup and comment
+
 // import controllers.APICommonController;
 //import controllers.NGLBaseController;
 // import controllers.history.UserHistory;
@@ -15,11 +12,14 @@ import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.support.NGLJavascript;
-import fr.cea.ig.play.NGLContext;
-
-import javax.inject.Inject;
-
-// TODO: cleanup and comment
+//import play.Routes;
+//import play.routing.JavaScriptReverseRouter;
+// import play.mvc.Controller;
+import play.mvc.Result;
+// import play.mvc.With;
+import views.html.admin.supports.contentUpdate;
+import views.html.admin.supports.home;
+import views.html.admin.supports.searchSwitchIndex;
 
 //import controllers.CommonController;
 // public class Supports extends -CommonController {

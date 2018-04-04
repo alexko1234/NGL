@@ -38,14 +38,14 @@ public class ExperimentImportCNG extends AbstractImportDataCNG{
 		List<Experiment> experiments = limsServices.findIlluminaDepotExperiment(contextError, "sop_depot_1");		
 		List<Experiment> existingExperiments=MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class).toList();
 		
-		List<Experiment> experimentsToUpdate = new ArrayList<Experiment>();
+		List<Experiment> experimentsToUpdate = new ArrayList<>();
 		for (Experiment experiment : experiments) {
 			if (existingExperiments.contains(experiment)) {
 				experimentsToUpdate.add(experiment);
 			}
 		}
 		
-		List<Experiment> experimentsToCreate = new ArrayList<Experiment>();
+		List<Experiment> experimentsToCreate = new ArrayList<>();
 		for (Experiment experiment : experiments) {
 			if (!experimentsToUpdate.contains(experiment)) {
 				experimentsToCreate.add(experiment);

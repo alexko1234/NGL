@@ -1,13 +1,8 @@
 package models.laboratory.run.description.dao;
 
-import java.util.List;
-
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
-import play.Logger;
-import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.run.description.RunCategory;
 import models.utils.dao.AbstractDAODefault;
 import models.utils.dao.DAOException;
@@ -24,7 +19,7 @@ public class RunCategoryDAO extends AbstractDAODefault<RunCategory>{
 				+" inner join common_info_type c on c.id = r.id"
 				+" where c.code = ?";
 		
-		BeanPropertyRowMapper<RunCategory> mapper = new BeanPropertyRowMapper<RunCategory>(entityClass);
+		BeanPropertyRowMapper<RunCategory> mapper = new BeanPropertyRowMapper<>(entityClass);
 		return this.jdbcTemplate.queryForObject(sql, mapper, typeCode);		
 	}
 }

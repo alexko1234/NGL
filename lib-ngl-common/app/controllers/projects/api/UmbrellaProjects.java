@@ -10,29 +10,27 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
+
+import com.mongodb.BasicDBObject;
+
+import controllers.DocumentController;
+import controllers.QueryFieldsForm;
+import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.instance.UmbrellaProject;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
-import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Controller;
-
-import com.mongodb.BasicDBObject;
-
 //import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
-import controllers.DocumentController;
-import controllers.QueryFieldsForm;
-import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.play.NGLContext;
 
 /**
  * Controller around Project object
@@ -64,7 +62,7 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 		if (form.datatable) {			
 			MongoDBResult<UmbrellaProject> results = mongoDBFinder(form, q, keys);			
 			List<UmbrellaProject> umbrellaProjects = results.toList();
-			return ok(Json.toJson(new DatatableResponse<UmbrellaProject>(umbrellaProjects, results.count())));
+			return ok(Json.toJson(new DatatableResponse<>(umbrellaProjects, results.count())));
 		} else if (form.list) {
 			keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
@@ -85,7 +83,7 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 	}
 
 	private List<ListObject> toListObjects(List<UmbrellaProject> proj) {
-		List<ListObject> lo = new ArrayList<ListObject>();
+		List<ListObject> lo = new ArrayList<>();
 		for (UmbrellaProject p : proj) {
 			lo.add(new ListObject(p.code, p.name));
 		}
@@ -93,7 +91,7 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 	}
 	
 	private Query getQuery(UmbrellaProjectsSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		Query query = null;
 		
 		if (CollectionUtils.isNotEmpty(form.projectCodes)) {

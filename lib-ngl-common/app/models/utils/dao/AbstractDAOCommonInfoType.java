@@ -3,17 +3,14 @@ package models.utils.dao;
 // import java.sql.Types;
 import java.util.List;
 
-import models.laboratory.common.description.CommonInfoType;
-import models.utils.ListObject;
-
 // import org.springframework.asm.Type;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-// import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.object.MappingSqlQuery;
 
 import fr.cea.ig.mongo.MongoDeprecation;
+import models.laboratory.common.description.CommonInfoType;
+import models.utils.ListObject;
 
 // import play.Logger;
 
@@ -42,6 +39,7 @@ public abstract class AbstractDAOCommonInfoType<T extends CommonInfoType> extend
 		this.sqlCommonSelect = sqlCommonSelect;		
 	}
 	
+	@Override
 	public Boolean isCodeExist(String code) throws DAOException {
 		if (code == null) 
 			throw new DAOException("code is mandatory");
@@ -51,11 +49,12 @@ public abstract class AbstractDAOCommonInfoType<T extends CommonInfoType> extend
 //				long id =  this.jdbcTemplate.queryForLong(sql, code);
 //				long id =  jdbcTemplate.queryForLong(sql, code);
 				long id = MongoDeprecation.queryForLong(jdbcTemplate, sql, code);
-				if (id > 0) {
-					return Boolean.TRUE;
-				} else {
-					return Boolean.FALSE;
-				}
+//				if (id > 0) {
+//					return Boolean.TRUE;
+//				} else {
+//					return Boolean.FALSE;
+//				}
+				return id > 0;
 			} catch (EmptyResultDataAccessException e) {
 				return Boolean.FALSE;
 			}
@@ -88,7 +87,7 @@ public abstract class AbstractDAOCommonInfoType<T extends CommonInfoType> extend
 
 	public List<ListObject> findAllForList(){
 		String sql = "SELECT t.code, t.name "+sqlCommonFrom;
-		BeanPropertyRowMapper<ListObject> mapper = new BeanPropertyRowMapper<ListObject>(ListObject.class);
+		BeanPropertyRowMapper<ListObject> mapper = new BeanPropertyRowMapper<>(ListObject.class);
 		return this.jdbcTemplate.query(sql, mapper);
 	}
 

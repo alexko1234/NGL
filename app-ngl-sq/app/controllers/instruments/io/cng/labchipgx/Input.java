@@ -5,22 +5,18 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.instance.PropertyValue;
+import controllers.instruments.io.utils.AbstractInput;
+import controllers.instruments.io.utils.InputHelper;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.InputContainerUsed;
-import models.laboratory.parameter.index.Index;
-import play.Logger;
 import validation.ContextValidation;
-import validation.utils.ValidationHelper;
-import controllers.instruments.io.utils.AbstractInput;
-import controllers.instruments.io.utils.InputHelper;
 
 public class Input extends AbstractInput {
+	
+//	private static final play.Logger.ALogger logger = play.Logger.of(Input.class);
 	
    /* Description du fichier a traiter: TXT CSV généré par labchipGX
     * 10/08/2016 NGL-1030 la taille est de nouveau obligatoire !!                
@@ -36,7 +32,7 @@ public class Input extends AbstractInput {
 	public Experiment importFile(Experiment experiment,PropertyFileValue pfv, ContextValidation contextValidation) throws Exception {	
 			
 		// hashMap  pour stocker les concentrations et size du fichier 
-		Map<String,LabChipData> dataMap = new HashMap<String,LabChipData>(0);
+		Map<String,LabChipData> dataMap = new HashMap<>(0);
 		
 //		InputStream is = new ByteArrayInputStream(pfv.value);
 		InputStream is = new ByteArrayInputStream(pfv.byteValue());
@@ -95,7 +91,7 @@ public class Input extends AbstractInput {
 				  //String pos0384=InputHelper.add02pos(pos384);
 				
 				  // Attention en CSV les decimaux sont sous forme xxxx,yy si le fichier vient d'un machine avec LOCALE=FR...
-				  Logger.info ("conc="+fields[1]+" size="+fields[2]);
+				  logger.info ("conc="+fields[1]+" size="+fields[2]);
 				  double conc=Double.parseDouble(fields[1].replace(",","."));
 				  double sz=Double.parseDouble(fields[2].replace(",","."));
 				  int rsz = (int)Math.round(sz); // 19/09/2016: arrondir les sizes a l'entier le plus proche...

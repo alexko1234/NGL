@@ -21,9 +21,6 @@ import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.authentication.Authenticated;
-import fr.cea.ig.authorization.Authorized;
-import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.mongo.MongoStreamer;
 import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.description.Level;
@@ -109,7 +106,7 @@ public class Runs extends RunsController {
 	}
 	
 	private List<ListObject> toListObjects(List<Run> runs){
-		List<ListObject> jo = new ArrayList<ListObject>();
+		List<ListObject> jo = new ArrayList<>();
 		for(Run r: runs){
 			jo.add(new ListObject(r.code, r.code));
 		}
@@ -117,7 +114,7 @@ public class Runs extends RunsController {
 	}
 	
 	private Query getQuery(RunsSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		Query query = null;
 		
 		if(CollectionUtils.isNotEmpty(form.codes)){

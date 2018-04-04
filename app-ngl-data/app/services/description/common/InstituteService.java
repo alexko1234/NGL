@@ -1,7 +1,7 @@
 package services.description.common;
 
-import static services.description.DescriptionFactory.*;
 import static fr.cea.ig.play.IGGlobals.configuration;
+import static services.description.DescriptionFactory.newInstitute;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public class InstituteService {
 	}
 
 	public static void saveInstitutes(Map<String,List<ValidationError>> errors) throws DAOException{
-		List<Institute> l = new ArrayList<Institute>();
+		List<Institute> l = new ArrayList<>();
 //		String institute=play.Play.application().configuration().getString("institute");
 		String institute = configuration().getString("institute");
 		if(institute.equals("CNG")){

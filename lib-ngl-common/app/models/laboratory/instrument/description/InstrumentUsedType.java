@@ -10,8 +10,6 @@ import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.utils.dao.DAOException;
-//TODO: fix doc generation that produces an error with the unqualified name
-import models.utils.Model.Finder;
 
 /**
  * Entity type used to declare properties that will be indicated with the use of the instrument
@@ -21,6 +19,7 @@ import models.utils.Model.Finder;
  */
 public class InstrumentUsedType extends CommonInfoType {
 	
+	@SuppressWarnings("hiding")
 	public static final InstrumentUsedTypeFinder find = new InstrumentUsedTypeFinder(); 
 	
 	public List<Instrument> instruments;

@@ -6,8 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.typesafe.config.ConfigFactory;
-
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.resolutions.instance.Resolution;
@@ -20,7 +19,6 @@ import models.utils.dao.DAOException;
 //import play.Logger.ALogger;
 import services.instance.InstanceFactory;
 import validation.ContextValidation;
-import fr.cea.ig.MongoDBDAO;
 
 /**
  * Create Resolutions : for more flexibility, these data are created in a specific collection (in MongoDB) 
@@ -107,7 +105,7 @@ public class ResolutionService {
 
 	// FDS 20/01 retour aux 2 methodes initiales, mais correction pour CNG: ajout    resoCategories.put("Default",...
 	public static HashMap<String, ResolutionCategory> createResolutionCategoriesCNG(){	
-		HashMap<String, ResolutionCategory> resoCategories = new HashMap<String, ResolutionCategory>();
+		HashMap<String, ResolutionCategory> resoCategories = new HashMap<>();
 		
 		//Run
 		resoCategories.put("SAV", new ResolutionCategory("Problème qualité : SAV", (short) 10)); //10 for CNG only
@@ -138,7 +136,7 @@ public class ResolutionService {
 	}
 
 	public static HashMap<String, ResolutionCategory> createResolutionCategoriesCNS(){	
-		HashMap<String, ResolutionCategory> resoCategories = new HashMap<String, ResolutionCategory>();
+		HashMap<String, ResolutionCategory> resoCategories = new HashMap<>();
 		//Run
 		resoCategories.put("PbM", new ResolutionCategory("Problème machine", (short) 20));
 		resoCategories.put("PbR", new ResolutionCategory("Problème réactifs", (short) 30)); 
@@ -175,7 +173,7 @@ public class ResolutionService {
 	/* sub-methods */
 	
 	public static void createRunResolutionCNG(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		// FDS 16/01: rendre moins verbeux avec variables XXrC
 		
@@ -269,7 +267,7 @@ public class ResolutionService {
 		r.resolutions = l;
 		r.objectTypeCode = "Run";
 		
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("RHS2000");
 		al.add("RHS2500");
 		al.add("RHS2500R");
@@ -285,7 +283,7 @@ public class ResolutionService {
 	}
 	
 	public static void createReadSetResolutionCNG(ContextValidation ctx) {	
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		// FDS 16/01 rendre moins verbeux avec variables XXrC
 
@@ -329,7 +327,7 @@ public class ResolutionService {
 		r.code = "readSetReso";
 		r.resolutions = l;
 		r.objectTypeCode = "ReadSet";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("default-readset");
 		al.add("rsillumina");		
 		r.typeCodes = al;
@@ -339,7 +337,7 @@ public class ResolutionService {
 	}	
 	
 	public static void createRunResolutionCNS(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		// FDS 16/01 rendre moins verbeux avec variables XXrC
 		
@@ -410,7 +408,7 @@ public class ResolutionService {
 		r.code = "runReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Run";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("RHS2000");
 		al.add("RHS2500");
 		al.add("RHS2500R");
@@ -432,7 +430,7 @@ public class ResolutionService {
 	}	
 	
 	public static void createReadSetResolutionCNS(ContextValidation ctx) {	
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 
 		// FDS 16/01 rendre moins verbeux avec variables XXrC
 		
@@ -498,7 +496,7 @@ public class ResolutionService {
 		r.code = "readSetReso";
 		r.resolutions = l;
 		r.objectTypeCode = "ReadSet";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("default-readset");
 		al.add("rsillumina");
 		al.add("rsnanopore");
@@ -510,7 +508,7 @@ public class ResolutionService {
 	}	
 	
 	public static void createAnalysisResolutionCNS(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		// FDS 16/01 rendre moins verbeux avec variables XXrC
 
@@ -554,7 +552,7 @@ public class ResolutionService {
 		r.code = "analysisReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Analysis";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("BPA");
 		r.typeCodes = al;
 		
@@ -569,11 +567,11 @@ public class ResolutionService {
 		r.code = "experimentReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
-		ArrayList<String> al = new ArrayList<String>(); 
+		ArrayList<String> al = new ArrayList<>(); 
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class,r.code);
 		// JacksonDBCollection.distinct return type is a raw List
-		@SuppressWarnings("unchecked")
+//		@SuppressWarnings("unchecked")
 		List<String> typeCodes = 
 				MongoDBDAO.getCollection(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class)
 				          .distinct("typeCodes");
@@ -594,7 +592,7 @@ public class ResolutionService {
 	}	
 
 	public static void createOpgenDepotResolutionCNS(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		l.addAll(getDefaultResolutionCNS());
 		
@@ -606,7 +604,7 @@ public class ResolutionService {
 		r.code = "expODReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("void-opgen-depot");
 		al.add("opgen-depot");		
 		r.typeCodes = al;
@@ -616,7 +614,7 @@ public class ResolutionService {
 	}
 	
 	public static void createIlluminaPrepFCDepotResolutionCNG(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		l.addAll(getDefaultResolutionCNS());
 		
@@ -626,7 +624,7 @@ public class ResolutionService {
 		r.code = "expIPDReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("ext-to-prepa-flowcell");
 		al.add("prepa-flowcell");		
 		al.add("ext-to-prepa-fc-ordered"); //FDS ajout 10/11/2015  -- JIRA NGL-838
@@ -639,7 +637,7 @@ public class ResolutionService {
 	}
 	
 	public static void createIlluminaPrepFCDepotResolutionCNS(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		l.addAll(getDefaultResolutionCNS());
 		
@@ -649,7 +647,7 @@ public class ResolutionService {
 		r.code = "expIPDReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("ext-to-prepa-flowcell");
 		al.add("prepa-flowcell");	
 		al.add("prepa-fc-ordered");	
@@ -661,7 +659,7 @@ public class ResolutionService {
 	}
 	
 	private static void createIryPreparationNLRSResolutionCNS(ContextValidation ctx) {
-	List<Resolution> l = new ArrayList<Resolution>();
+	List<Resolution> l = new ArrayList<>();
 		
 		l.addAll(getDefaultResolutionCNS());
 		
@@ -674,7 +672,7 @@ public class ResolutionService {
 		r.code = "expIrysPrepNLRSReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("irys-nlrs-prep");
 		al.add("bionano-dls-prep");
 		r.typeCodes = al;
@@ -684,7 +682,7 @@ public class ResolutionService {
 	}
 	
 	private static void createDepotBionanoResolutionCNS(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		l.addAll(getDefaultResolutionCNS());
 		
@@ -697,7 +695,7 @@ public class ResolutionService {
 		r.code = "expDepotBionanoReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("bionano-depot");
 		r.typeCodes = al;
 		
@@ -706,7 +704,7 @@ public class ResolutionService {
 	}
 	
 	private static void createSamplePrepResolutionCNS(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		l.addAll(getDefaultResolutionCNS());	
 		l.add(InstanceFactory.newResolution("Tube cassé dans cryobroyeur", "broken-tube-in-freezer-mill", resolutionCategories.get("Default"), (short) 4));
@@ -717,14 +715,14 @@ public class ResolutionService {
 		r.code = "expExtractionDNARNAReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("dna-rna-extraction");
 		r.typeCodes = al;
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
 		
-		l = new ArrayList<Resolution>();
+		l = new ArrayList<>();
 
 		l.addAll(getDefaultResolutionCNS());	
 
@@ -732,7 +730,7 @@ public class ResolutionService {
 		r.code = "expBroyageReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
-		al = new ArrayList<String>();
+		al = new ArrayList<>();
 		al.add("grinding");
 		r.typeCodes = al;
 		
@@ -741,7 +739,7 @@ public class ResolutionService {
 	}
 	
 	private static void createGelMigrationResolutionCNS(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		l.addAll(getDefaultResolutionCNS());	
 		l.add(InstanceFactory.newResolution("Tâche de faible poids moléculaire", "low-molecular-weight-spot", resolutionCategories.get("Default"), (short) 4));
@@ -755,7 +753,7 @@ public class ResolutionService {
 		r.code = "expGelMigrationReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("gel-migration");
 		r.typeCodes = al;
 		
@@ -765,7 +763,7 @@ public class ResolutionService {
 	
 	// FDS 05/02/2016 -- JIRA NGL-894 experience processus X5
 	private static void createPrepPcrFreeResolutionCNG(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		l.addAll(getDefaultResolutionCNS());
 		
@@ -776,7 +774,7 @@ public class ResolutionService {
 		r.code = "expPrepPcrFreeReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("prep-pcr-free"); 
 		r.typeCodes = al;
 		
@@ -785,7 +783,7 @@ public class ResolutionService {
 	}
 	
 	private static void createQCMiseqResolutionCNG(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		l.addAll(getDefaultResolutionCNS());
 
@@ -795,7 +793,7 @@ public class ResolutionService {
 		r.code = "expMiseqQCReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("miseq-qc"); 
 		r.typeCodes = al;
 		
@@ -805,7 +803,7 @@ public class ResolutionService {
 	
 	// FDS 23/11/2016 NGL-1158: renommage pour separation des resolutions de Processus entre CNG et CNS
 	public static void createProcessResolutionCNS(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		l.add(InstanceFactory.newResolution("Déroulement correct","correct", resolutionCategories.get("Default"), (short) 1));
 		l.add(InstanceFactory.newResolution("Standby","standby", resolutionCategories.get("Default"), (short) 2));
@@ -833,7 +831,7 @@ public class ResolutionService {
 		r.code = "processReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Process";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		
 		try {
 			List<ProcessType> processTypes=ProcessType.find.findAll();
@@ -851,7 +849,7 @@ public class ResolutionService {
 	
 	// FDS 23/11/2016 NGL-1158: creation pour separation des resolutions de Processus entre CNG et CNS
 	public static void createProcessResolutionCNG(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 
 		// pour l'instant les 2 premières ne sont pas demandées...
 		//l.add(InstanceFactory.newResolution("Déroulement correct","correct", resolutionCategories.get("Default"), (short) 1));
@@ -870,7 +868,7 @@ public class ResolutionService {
 		r.code = "processReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Process";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		
 		try {
 			List<ProcessType> processTypes=ProcessType.find.findAll();
@@ -888,7 +886,7 @@ public class ResolutionService {
 	}
 	
 	public static List<Resolution> getDefaultResolutionCNS(){
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		l.add(InstanceFactory.newResolution("Déroulement correct",	"correct", resolutionCategories.get("Default"), (short) 1));
 		l.add(InstanceFactory.newResolution("Problème signalé en commentaire", "pb-commentaire", resolutionCategories.get("Default"), (short) 2));
@@ -898,7 +896,7 @@ public class ResolutionService {
 	}
 	
 	public static void createContainerResolutionCNG(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 
 		l.add(InstanceFactory.newResolution("Epuisé","empty", resolutionCategories.get("Default"), (short) 2));
 		l.add(InstanceFactory.newResolution("Renvoyé collaborateur","return-collab", resolutionCategories.get("Default"), (short) 3));
@@ -913,7 +911,7 @@ public class ResolutionService {
 	}
 	
 	public static void createContainerResolutionCNS(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 
 		l.add(InstanceFactory.newResolution("Sauvegarde prod","prod-backup", resolutionCategories.get("Default"), (short) 1));
 		l.add(InstanceFactory.newResolution("Epuisé","empty", resolutionCategories.get("Default"), (short) 2));

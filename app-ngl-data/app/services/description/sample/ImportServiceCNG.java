@@ -1,6 +1,8 @@
 package services.description.sample;
 
-import static services.description.DescriptionFactory.*;
+import static services.description.DescriptionFactory.newImportType;
+import static services.description.DescriptionFactory.newPropertiesDefinition;
+import static services.description.DescriptionFactory.newValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.Level;
-import models.laboratory.common.description.MeasureCategory;
-import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
 import models.laboratory.sample.description.ImportCategory;
@@ -21,19 +21,20 @@ import play.data.validation.ValidationError;
 import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
-import services.description.common.MeasureService;
 
 public class ImportServiceCNG extends AbstractImportService {
 
 
+	@Override
 	public  void saveImportCategories(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<ImportCategory> l = new ArrayList<ImportCategory>();
+		List<ImportCategory> l = new ArrayList<>();
 		l.add(saveImportCategory("Sample Import", "sample-import"));
 		DAOHelpers.saveModels(ImportCategory.class, l, errors);
 	}
 	
+	@Override
 	public void saveImportTypes(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<ImportType> l = new ArrayList<ImportType>();
+		List<ImportType> l = new ArrayList<>();
 		
 		l.add(newImportType("Defaut", "default-import", ImportCategory.find.findByCode("sample-import"), getSampleCNGPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
 		l.add(newImportType("Import aliquots tubes", "tube-from-bank-reception", ImportCategory.find.findByCode("sample-import"), getBankReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
@@ -53,7 +54,7 @@ public class ImportServiceCNG extends AbstractImportService {
 	}
 
 	private static List<PropertyDefinition> getBankReceptionPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Gender", "gender", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				Arrays.asList(newValue("0","unknown"),newValue("1","male"),newValue("2","female")), null,null,null,"single", 17, false, null,null));	
 		
@@ -69,14 +70,14 @@ public class ImportServiceCNG extends AbstractImportService {
 	}
 	
 	private static List<PropertyDefinition> getSampleCNGPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", LevelService.getLevels(Level.CODE.Sample),Integer.class, true, "single"));
 		return propertyDefinitions;
 	}
 	
 	// FDS 20/06/2017 NGL-1472
 	private static List<PropertyDefinition> getLibraryReceptionPropertyDefinitions (boolean isIndexed) throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		// propriétés communes Librairies
 		propertyDefinitions.add(newPropertiesDefinition("Gender", "gender", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
@@ -101,7 +102,7 @@ public class ImportServiceCNG extends AbstractImportService {
 	
 	//FDS 05/03/2018 NGL-1907 cas du projet PALEO: librairie indexees et poolees mais on l'Equipe Joe ne doit pas faire le demultiplexage.
 	private static List<PropertyDefinition> getLibraryNodemultiplexReceptionPropertyDefinitions() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		// propriétés communes Librairies (sauf index)
 		propertyDefinitions.addAll(getLibraryReceptionPropertyDefinitions(false));
@@ -116,7 +117,7 @@ public class ImportServiceCNG extends AbstractImportService {
 	
 	// FDS 20/06/2017 ajouté pour NGL-1472
 	private static List<Value> getTagCategories(){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("SINGLE-INDEX", "SINGLE-INDEX"));
 		values.add(DescriptionFactory.newValue("DUAL-INDEX", "DUAL-INDEX"));
 		values.add(DescriptionFactory.newValue("MID", "MID"));
@@ -126,14 +127,14 @@ public class ImportServiceCNG extends AbstractImportService {
 	
 	// GA/FDS 14/06/2017 (reprise dans RunServiceCNG.java )
 	private static List<PropertyDefinition> getLibProcessTypecodePropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Type processus banque","libProcessTypeCode",LevelService.getLevels(Level.CODE.Content), String.class, false, getLibProcessTypeCodeValues(), "single"));
 	
 		return propertyDefinitions;
 	}
 	
 	private static List<Value> getLibProcessTypeCodeValues(){
-        List<Value> values = new ArrayList<Value>();
+        List<Value> values = new ArrayList<>();
         
          // codes for Captures
          // ajout (DefCapxxx) tant que NGL-1569 pas resolu (stocker le path des fichier definition capture)
@@ -207,7 +208,7 @@ public class ImportServiceCNG extends AbstractImportService {
 	
 	
 	private static List<Value> getExtLibProcessTypecodesValues(){
-        List<Value> values = new ArrayList<Value>();
+        List<Value> values = new ArrayList<>();
         
         // 04/07/2017 restreindre la possibilite d'erreur: autoriser uniquement librariries externes RNA
         values.add(DescriptionFactory.newValue("RA","RA - RNASeq"));

@@ -3,6 +3,7 @@ package fr.cea.ig.ngl.test;
 //import static fr.cea.ig.play.test.DevAppTesting.testInServer;
 //import static play.inject.Bindings.bind;
 import java.util.function.Function;
+
 import fr.cea.ig.authentication.IAuthenticator;
 //import fr.cea.ig.authorization.IAuthorizator;
 import fr.cea.ig.ngl.test.authentication.AuthenticatorAdmin;
@@ -33,11 +34,13 @@ public class TestAppAuthFactory extends ApplicationFactory {
 		super(f);
 	}
 	
+	@Override
 	protected TestAppAuthFactory constructorClone() {
 		return new TestAppAuthFactory(this);
 	}
 	
 	// covariant overrides
+	@Override
 	public TestAppAuthFactory mod(Function<GuiceApplicationBuilder,GuiceApplicationBuilder> mod) {
 		return (TestAppAuthFactory)super.mod(mod);
 	}

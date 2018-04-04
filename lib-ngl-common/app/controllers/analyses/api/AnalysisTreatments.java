@@ -9,7 +9,6 @@ import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
 
 import controllers.SubDocumentController;
-import controllers.authorisation.Permission;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
@@ -36,14 +35,17 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 		super(ctx,InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, Treatment.class);
 	}
 	
+	@Override
 	protected Query getSubObjectQuery(String parentCode, String code){
 		return DBQuery.and(DBQuery.is("code", parentCode), DBQuery.exists("treatments."+code));
 	}
 	
+	@Override
 	protected Collection<Treatment> getSubObjects(Analysis object){
 		return object.treatments.values();
 	}
 	
+	@Override
 	protected Treatment getSubObject(Analysis object, String code){
 		return object.treatments.get(code);
 	}
@@ -57,9 +59,8 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public Result save(String parentCode){
 		Analysis objectInDB = getObject(parentCode);
-		if (objectInDB == null) {
+		if (objectInDB == null)
 			return notFound();
-		}
 		// Supposed to be an exception in 2.5
 		/*else if(request().body().isMaxSizeExceeded()){
 			return badRequest("Max size exceeded");
@@ -78,9 +79,8 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 					DBUpdate.set("treatments."+inputTreatment.code, inputTreatment)
 					.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 			return get(parentCode, inputTreatment.code);
-		} else {
-			return badRequest(errorsAsJson(ctxVal.getErrors()));
-		}		
+		}
+		return badRequest(errorsAsJson(ctxVal.getErrors()));		
 	}
 
 //	@Permission(value={"writing"})
@@ -108,12 +108,10 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 						DBUpdate.set("treatments."+inputTreatment.code, inputTreatment)
 						.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 				return get(parentCode, code);
-			} else {
-				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}
-		} else{
-			return badRequest("treatment code are not the same");
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
+		return badRequest("treatment code are not the same");
 	}
 	
 //	@Permission(value={"writing"})	

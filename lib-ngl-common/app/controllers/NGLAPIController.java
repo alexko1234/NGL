@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
 import fr.cea.ig.DBObject;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
@@ -21,9 +19,8 @@ import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.api.GenericAPI;
 import fr.cea.ig.ngl.support.NGLForms;
 import fr.cea.ig.play.IGBodyParsers;
-import play.mvc.BodyParser;
 import play.data.validation.ValidationError;
-import play.libs.Json;
+import play.mvc.BodyParser;
 import play.mvc.Result;
 
 /**
@@ -139,7 +136,7 @@ public abstract class NGLAPIController<T extends GenericAPI<U,V>, U extends Gene
 	}
 
 	public Map<String, List<ValidationError>> mapErrors(List<ValidationError> formErrors) {
-		Map<String, List<ValidationError>> map = new TreeMap<String, List<ValidationError>>(); 
+		Map<String, List<ValidationError>> map = new TreeMap<>(); 
 		formErrors.forEach(ve -> {
 			if(map.containsKey(ve.key())) {
 				map.get(ve.key()).add(ve);

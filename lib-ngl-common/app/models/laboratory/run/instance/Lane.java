@@ -1,21 +1,15 @@
 package models.laboratory.run.instance;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.Valuation;
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.run.instance.LaneValidationHelper;
-import validation.run.instance.RunValidationHelper;
 import validation.run.instance.TreatmentValidationHelper;
 
 public class Lane implements IValidation {
@@ -26,7 +20,7 @@ public class Lane implements IValidation {
 	// dnoisett, the lane doesn't contain the entire readset anymore, just a code to refer it;
 	public List<String> readSetCodes;
 	public Map<String, PropertyValue> properties = new HashMap<>(); // <String, PropertyValue>();
-	public Map<String,Treatment> treatments = new HashMap<String,Treatment>();
+	public Map<String,Treatment> treatments = new HashMap<>();
 	
 	/*
 	nbCycleRead1

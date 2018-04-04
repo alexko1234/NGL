@@ -1,15 +1,17 @@
 package fr.cea.ig.ngl.dao.api.sra;
 
 import java.util.List;
+
 import javax.inject.Inject;
-import models.sra.submit.common.instance.Sample;
-import org.mongojack.DBQuery;
+
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate.Builder;
+
 import fr.cea.ig.ngl.dao.api.APIException;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.api.GenericAPI;
 import fr.cea.ig.ngl.dao.sra.SampleDAO;
+import models.sra.submit.common.instance.Sample;
 
 public class SampleAPI extends GenericAPI<SampleDAO, Sample> {
 

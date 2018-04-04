@@ -2,13 +2,14 @@ package models.laboratory.common.description.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import javax.sql.DataSource;
+
+import org.springframework.jdbc.core.SqlParameter;
+
 import models.laboratory.common.description.ObjectType;
 import models.utils.dao.MappingSqlQueryFactory;
 import models.utils.dao.NGLMappingSqlQuery;
-
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.object.MappingSqlQuery;
 
 //public class ObjectTypeMappingQuery extends MappingSqlQuery<ObjectType> {
 public class ObjectTypeMappingQuery extends NGLMappingSqlQuery<ObjectType> {

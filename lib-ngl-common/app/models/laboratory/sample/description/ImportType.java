@@ -15,8 +15,9 @@ import models.laboratory.sample.description.dao.ImportTypeDAO;
  */
 public class ImportType extends CommonInfoType {
 
+	@SuppressWarnings("hiding")
 	public static final CommonInfoType.AbstractCommonInfoTypeFinder<ImportType,ImportTypeDAO> find = 
-			new CommonInfoType.AbstractCommonInfoTypeFinder<ImportType,ImportTypeDAO>(ImportTypeDAO.class);
+			new CommonInfoType.AbstractCommonInfoTypeFinder<>(ImportTypeDAO.class);
 	
 	public ImportCategory category;
 	

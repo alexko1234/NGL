@@ -1,14 +1,5 @@
 package controllers.stats.tpl;
 
-import play.routing.JavaScriptReverseRouter;
-import play.mvc.Result;
-import views.html.stats.choice;
-import views.html.stats.configReadSets;
-import views.html.stats.configLanes;
-import views.html.stats.home;
-import views.html.stats.showReadSets;
-import views.html.stats.showLanes;
-
 import javax.inject.Inject;
 
 import fr.cea.ig.authentication.Authenticated;
@@ -17,6 +8,13 @@ import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.support.NGLJavascript;
+import play.mvc.Result;
+import views.html.stats.choice;
+import views.html.stats.configLanes;
+import views.html.stats.configReadSets;
+import views.html.stats.home;
+import views.html.stats.showLanes;
+import views.html.stats.showReadSets;
 
 
 /**

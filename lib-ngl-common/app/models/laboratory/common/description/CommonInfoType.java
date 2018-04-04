@@ -37,13 +37,13 @@ public class CommonInfoType extends Model<CommonInfoType> {
 	
 	public Integer displayOrder; //position on display
 	
-	public List<State> states = new ArrayList<State>();
+	public List<State> states = new ArrayList<>();
 	
-	public List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
+	public List<PropertyDefinition> propertiesDefinitions = new ArrayList<>();
 
 	public ObjectType objectType;
 	
-	public List<Institute> institutes = new ArrayList<Institute>();
+	public List<Institute> institutes = new ArrayList<>();
 
 	public Boolean active = Boolean.TRUE;
 	
@@ -63,7 +63,7 @@ public class CommonInfoType extends Model<CommonInfoType> {
 
 	@JsonIgnore
 	public Map<String, PropertyDefinition> getMapPropertyDefinition() {
-		Map<String, PropertyDefinition> mapProperties = new HashMap<String, PropertyDefinition>();
+		Map<String, PropertyDefinition> mapProperties = new HashMap<>();
 		for (PropertyDefinition propertyDefinition : propertiesDefinitions) {
 			mapProperties.put(propertyDefinition.code, propertyDefinition);
 		}
@@ -89,7 +89,7 @@ public class CommonInfoType extends Model<CommonInfoType> {
 	 * @return
 	 */
 	public List<PropertyDefinition> getPropertyDefinitionByLevel(Level.CODE... levels) {
-		List<PropertyDefinition> proDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> proDefinitions = new ArrayList<>();
 		for (PropertyDefinition propertyDefinition:this.propertiesDefinitions) {
 			boolean containsAll = true;
 			for (int i=0; i<levels.length; i++) {

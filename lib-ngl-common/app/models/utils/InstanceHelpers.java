@@ -9,6 +9,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.collections4.Transformer;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
+import org.mongojack.DBUpdate;
+
+import com.mongodb.BasicDBObject;
+
+import fr.cea.ig.DBObject;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
 // import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.Comment;
@@ -27,28 +40,9 @@ import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.SampleOnContainer;
 import models.laboratory.sample.instance.Sample;
 import models.sra.submit.common.instance.Readset;
-
-import org.apache.commons.collections4.MapUtils;
-import org.apache.commons.collections4.Transformer;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
-import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
-import org.mongojack.DBUpdate;
-
-//import play.Logger;
-import play.api.modules.spring.Spring;
-
-import play.mvc.Http;
 import validation.ContextValidation;
 import validation.IValidation;
 import workflows.container.ContentHelper;
-
-import com.mongodb.BasicDBObject;
-
-import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
 
 public class InstanceHelpers {
 
@@ -59,6 +53,7 @@ public class InstanceHelpers {
 //		return MapUtils.lazyMap(new HashMap<String, PropertyValue<?>>(), new Transformer() {
 		return MapUtils.lazyMap(new HashMap<>(), new Transformer<String, PropertyValue>() {
 //			public PropertyValue<?> transform(Object mapKey) {
+			@Override
 			public PropertyValue transform(String mapKey) {
 				// TODO comment je sais quel est le type on doit mettre
 				return new PropertySingleValue();
@@ -86,7 +81,7 @@ public class InstanceHelpers {
 
 	public static List<Comment> addComment(String comment, List<Comment> comments, String user) {
 		if (comments == null) {
-			comments = new ArrayList<Comment>();
+			comments = new ArrayList<>();
 		}
 
 		Comment newComment = new Comment(comment, user);
@@ -111,7 +106,7 @@ public class InstanceHelpers {
 							}).collect(Collectors.toList());
 			if(comments.size() > 0)return comments;
 		}
-		return new ArrayList<Comment>(0);					
+		return new ArrayList<>(0);					
 	}
 	
 	// TODO: replace by implementing ITracingAccess 
@@ -223,7 +218,7 @@ public class InstanceHelpers {
 	}
 
 	public static <T extends DBObject & IValidation> List<T> save(String collectionName, List<T> objects, ContextValidation contextErrors) {
-		List<T> dbObjects = new ArrayList<T>();
+		List<T> dbObjects = new ArrayList<>();
 //		for (DBObject object : objects) {
 		for (T object : objects) {
 //			@SuppressWarnings("unchecked")
@@ -238,7 +233,7 @@ public class InstanceHelpers {
 	}
 
 	public static <T extends DBObject& IValidation> List<T> save(String collectionName, List<T> objects,	ContextValidation contextErrors, Boolean keepRootKeyName) {
-		List<T> dbObjects = new ArrayList<T>();
+		List<T> dbObjects = new ArrayList<>();
 //		for (DBObject object : objects) {
 		for (T object : objects) {
 //			@SuppressWarnings("unchecked")

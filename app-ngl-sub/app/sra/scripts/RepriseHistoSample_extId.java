@@ -1,50 +1,29 @@
 package sra.scripts;
-import static fr.cea.ig.lfw.utils.Iterables.*;
-
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
 import javax.inject.Inject;
 
-import models.sra.submit.common.instance.Sample;
-import models.utils.InstanceConstants;
-
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
-import play.libs.ws.WSClient;
-import play.libs.ws.WSRequest;
-import play.libs.ws.WSResponse;
-import sra.scripts.utils.CSVParsing;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.lfw.controllers.AbstractScript;
+import fr.cea.ig.lfw.utils.ZenIterable;
+import models.sra.submit.common.instance.Sample;
+import models.utils.InstanceConstants;
 import sra.scripts.utils.DateTools;
 import sra.scripts.utils.EbiAPI;
 import sra.scripts.utils.Tools;
 import sra.scripts.utils.iteration.CSVIterable;
 import sra.scripts.utils.iteration.FileLineIterable;
-import sra.scripts.utils.iteration.FileLineIterator;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.lfw.controllers.AbstractScript;
-import fr.cea.ig.lfw.controllers.AbstractScript.LogLevel;
-import fr.cea.ig.lfw.utils.ZenIterable;
-import fr.cea.ig.lfw.utils.iteration.MappingIterable;
-
-
 
 public class RepriseHistoSample_extId extends AbstractScript {
 	/* version 1 : on demande à play d'instancier la classe avec un objet WSClient et on instantiera 

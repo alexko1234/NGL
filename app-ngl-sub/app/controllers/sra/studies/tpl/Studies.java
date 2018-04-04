@@ -8,18 +8,14 @@ import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.support.NGLJavascript;
-import fr.cea.ig.play.NGLContext;
-//import play.Routes;
-import play.routing.JavaScriptReverseRouter;
 import play.mvc.Result;
-import views.html.studies.home;
-import views.html.studies.create;
 import views.html.studies.consultation;
+import views.html.studies.create;
 import views.html.studies.details;
+import views.html.studies.home;
 
 //import controllers.CommonController;               // done
 // public class Studies extends -CommonController {  // done
-
 public class Studies extends NGLController implements NGLJavascript  { // NGLBaseController {
 	
 	private final home home;

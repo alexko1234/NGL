@@ -13,9 +13,6 @@ import org.mongojack.DBUpdate;
 import controllers.QueryFieldsForm;
 import controllers.SubDocumentController;
 import controllers.authorisation.Permission;
-import fr.cea.ig.authentication.Authenticated;
-import fr.cea.ig.authorization.Authorized;
-import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.play.NGLContext;
 import models.laboratory.run.instance.Analysis;
 import models.laboratory.run.instance.File;
@@ -35,6 +32,7 @@ public class Files extends SubDocumentController<Analysis, File> {
 		super(ctx,InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, File.class);
 		this.updateForm = getNGLContext().form(QueryFieldsForm.class);
 	}
+	
 	@Override
 	protected Object getSubObject(Analysis objectInDB, String fullname) {
 		for (File file : objectInDB.files) {

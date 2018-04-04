@@ -2,6 +2,7 @@ package rules.services;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import org.kie.api.runtime.rule.AgendaFilter;
 import org.kie.api.runtime.rule.Match;
 //import play.Logger;
@@ -11,7 +12,7 @@ public class RulesAgendaFilter6 implements AgendaFilter {
 	private String metadataKey;
 	private String metadataValue;
 
-	private static Map<String, RulesAgendaFilter6> rulesAgendaFilter = new HashMap<String, RulesAgendaFilter6>();
+	private static Map<String, RulesAgendaFilter6> rulesAgendaFilter = new HashMap<>();
 	
 	public static RulesAgendaFilter6 getInstance(String metadataKey, String metadataValue) {
 		if (!rulesAgendaFilter.containsKey(metadataValue)) 

@@ -8,34 +8,21 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
 
-import akka.actor.ActorRef;
-import akka.actor.Props;
+import fr.cea.ig.DBObject;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.container.description.ContainerCategory;
-import models.laboratory.project.instance.Project;
 import models.laboratory.reception.instance.AbstractFieldConfiguration;
 import models.laboratory.reception.instance.ReceptionConfiguration.Action;
-import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.instance.SampleHelper;
-//import play.Logger;
-//import play.Play;
-import play.libs.Akka;
-import rules.services.LazyRules6Actor;
-import rules.services.RulesActor6;
-import rules.services.RulesMessage;
 import services.io.reception.Mapping;
 import validation.ContextValidation;
 import validation.utils.ValidationConstants;
-import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult.Sort;
-import fr.cea.ig.play.NGLContext;
 
 public class SampleMapping extends Mapping<Sample> {
 	
@@ -69,6 +56,7 @@ public class SampleMapping extends Mapping<Sample> {
 	 * @param rowMap
 	 * @return
 	 */
+	@Override
 	public Sample convertToDBObject(Map<Integer, String> rowMap) throws Exception{
 		Sample object = type.newInstance();
 		boolean needPopulate = false;
@@ -99,10 +87,10 @@ public class SampleMapping extends Mapping<Sample> {
 			update(object);
 			
 		}
-		
 		return object;
 	}
 	
+	@Override
 	protected void update(Sample sample) {
 		
 		if (Action.update.equals(action)) {

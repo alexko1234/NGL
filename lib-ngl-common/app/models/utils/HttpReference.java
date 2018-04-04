@@ -9,14 +9,12 @@ import java.util.concurrent.TimeoutException;
 
 import javax.inject.Inject;
 
-import ch.qos.logback.core.util.TimeUtil;
-import fr.cea.ig.play.NGLContext;
-
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import fr.cea.ig.play.NGLContext;
 //import play.libs.ws.WS;
 import play.libs.ws.WSResponse;
 
@@ -70,5 +68,5 @@ public class HttpReference<T> implements IFetch<T> {
 		} 
 		return null;
 	}
-
+	
 }

@@ -11,6 +11,10 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -27,17 +31,12 @@ import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.protocol.instance.Protocol;
 import models.laboratory.reagent.instance.ReagentUsed;
 import models.utils.InstanceConstants;
-
-import org.apache.commons.lang3.StringUtils;
-import org.mongojack.DBQuery;
-
 // import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
-import fr.cea.ig.MongoDBDAO;
 
 public class ExperimentValidationHelper  extends CommonValidationHelper {
 
@@ -176,7 +175,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 
 	
 	private static void validateUniqOutputContainerCodeInsideExperiment(List<AtomicTransfertMethod> atomicTransfertMethods, ContextValidation contextValidation){
-		Set<String> outputContainerCodes = new TreeSet<String>();
+		Set<String> outputContainerCodes = new TreeSet<>();
 		
 		IntStream.range(0, atomicTransfertMethods.size()).forEach(i -> {
 			ContextValidation cv = new ContextValidation(contextValidation.getUser());
@@ -226,7 +225,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 	
 	
 	public static void validateRules(Experiment exp,ContextValidation contextValidation) {
-		ArrayList<Object> validationfacts = new ArrayList<Object>();
+		ArrayList<Object> validationfacts = new ArrayList<>();
 		validationfacts.add(exp);
 		//exp.atomicTransfertMethods.forEach((AtomicTransfertMethod atm) -> validationfacts.add(atm));
 		

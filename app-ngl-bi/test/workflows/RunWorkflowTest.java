@@ -3,15 +3,19 @@ package workflows;
 import static fr.cea.ig.play.test.DevAppTesting.testInServer;
 import static ngl.bi.Global.devapp;
 import static org.fest.assertions.Assertions.assertThat;
+
 //import static play.mvc.Http.Status.OK;
 //import static play.test.Helpers.fakeRequest;
 import java.util.List;
 import java.util.TreeSet;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mongojack.DBQuery;
+
 import com.mongodb.BasicDBObject;
+
 import fr.cea.ig.MongoDBDAO;
 //import fr.cea.ig.play.test.RoutesTest;
 import fr.cea.ig.play.test.WSHelper;
@@ -28,13 +32,14 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 //import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
-import play.Logger;
 //import play.mvc.Result;
 import utils.AbstractTests;
 import utils.RunMockHelper;
 
 public class RunWorkflowTest extends AbstractTests {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(RunWorkflowTest.class);
+	
 	static Run run;
 	static Run runInvalidLane;
 	static ContainerSupport cs;
@@ -49,8 +54,8 @@ public class RunWorkflowTest extends AbstractTests {
 		//Remove libProcessTypeCode for rule IP-S
 		//Remove projectCodes/sampleCodes for rule IP-S
 		run.properties.remove("libProcessTypeCodes");
-		run.sampleCodes= new TreeSet<String>();
-		run.projectCodes = new TreeSet<String>();
+		run.sampleCodes= new TreeSet<>();
+		run.projectCodes = new TreeSet<>();
 
 		//Get one readSet with treatment ngsrg
 		ReadSet readSetNgsrg = MongoDBDAO.find("ngl_bi.ReadSetIllumina_dataWF", ReadSet.class, DBQuery.exists("treatments.ngsrg"), getReadSetKeys()).limit(1).toList().get(0);
@@ -153,13 +158,13 @@ public class RunWorkflowTest extends AbstractTests {
 	{
 		testInServer(devapp(),
 				ws -> {	
-					Logger.debug("setStateIPS");
+					logger.debug("setStateIPS");
 					State state = new State("IP-S","bot");
 					//Result r = callAction(controllers.runs.api.routes.ref.State.update(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
 					WSHelper.putAsBot(ws, "/api/runs/"+run.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 					run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
-					Logger.debug("state code"+run.state.code);
+					logger.debug("state code"+run.state.code);
 					assertThat(run.state.code).isEqualTo("IP-S");
 				});
 	}
@@ -174,7 +179,7 @@ public class RunWorkflowTest extends AbstractTests {
 					//assertThat(status(r)).isEqualTo(OK);
 					WSHelper.putAsBot(ws, "/api/runs/"+run.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 					run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
-					Logger.debug("state code"+run.state.code);
+					logger.debug("state code"+run.state.code);
 					assertThat(run.state.code).isEqualTo("IW-RG");
 				});
 	}
@@ -189,7 +194,7 @@ public class RunWorkflowTest extends AbstractTests {
 					//assertThat(status(r)).isEqualTo(OK);
 					WSHelper.putAsBot(ws, "/api/runs/"+run.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 					run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
-					Logger.debug("state code"+run.state.code);
+					logger.debug("state code"+run.state.code);
 					assertThat(run.state.code).isEqualTo("IW-V");
 					//Check dispatch
 					assertThat(run.dispatch).isEqualTo(true);
@@ -215,15 +220,15 @@ public class RunWorkflowTest extends AbstractTests {
 					//assertThat(status(r)).isEqualTo(OK);
 					WSHelper.putAsBot(ws, "/api/runs/"+runInvalidLane.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 					runInvalidLane = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runInvalidLane.code);
-					Logger.debug("state code"+runInvalidLane.state.code);
+					logger.debug("state code"+runInvalidLane.state.code);
 					for(Lane lane : runInvalidLane.lanes){
 					/*	List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 								DBQuery.and(DBQuery.is("runCode", runInvalidLane.code), DBQuery.is("laneNumber", lane.number)),getReadSetKeys()).toList();*/
 						List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 								DBQuery.in("code", lane.readSetCodes),getReadSetKeys()).toList();
 						for(ReadSet readSet : readSets){
-							Logger.debug("ReadSet "+readSet.code);
-							Logger.debug(readSet.bioinformaticValuation.valid.toString());
+							logger.debug("ReadSet "+readSet.code);
+							logger.debug(readSet.bioinformaticValuation.valid.toString());
 							assertThat(readSet.bioinformaticValuation.valid.toString()).isEqualTo(TBoolean.FALSE.toString());
 							assertThat(readSet.productionValuation.resolutionCodes).contains("Run-abandonLane");
 							assertThat(readSet.bioinformaticValuation.valid.toString()).isEqualTo(TBoolean.FALSE.toString());
@@ -243,7 +248,7 @@ public class RunWorkflowTest extends AbstractTests {
 					//assertThat(status(r)).isEqualTo(OK);
 					WSHelper.putAsBot(ws, "/api/runs/"+runInvalidLane.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 					runInvalidLane = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runInvalidLane.code);
-					Logger.debug("state code"+runInvalidLane.state.code);
+					logger.debug("state code"+runInvalidLane.state.code);
 					for(Lane lane : runInvalidLane.lanes){
 						List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 								DBQuery.and(DBQuery.is("runCode", runInvalidLane.code), DBQuery.is("laneNumber", lane.number)),getReadSetKeys()).toList();

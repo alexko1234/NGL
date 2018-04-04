@@ -2,8 +2,6 @@ package models.laboratory.common.description;
 
 import models.laboratory.common.description.dao.MeasureUnitDAO;
 import models.utils.Model;
-//TODO: fix doc generation that produces an error with the unqualified name
-import models.utils.Model.Finder;
 import models.utils.dao.AbstractDAO;
 import models.utils.dao.DAOException;
 

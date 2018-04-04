@@ -2,33 +2,32 @@ package models.utils.dao;
 
 import static fr.cea.ig.lfw.utils.FunCollections.repeat;
 
-import java.util.List;
-
-import javax.inject.Inject;
-import javax.sql.DataSource;
-
-// import models.laboratory.common.description.State;
-import models.utils.Model;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-//import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.annotation.Transactional;
-
-import fr.cea.ig.mongo.MongoDeprecation;
-
 // import fr.cea.ig.play.NGLContext;
 
 // import play.Logger;
 // import play.cache.Cache;
 import static fr.cea.ig.play.IGGlobals.cache;
+
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
+//import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.transaction.annotation.Transactional;
+
+import fr.cea.ig.mongo.MongoDeprecation;
+// import models.laboratory.common.description.State;
+import models.utils.Model;
 
 /**
  * Common operations between Simple DAO et DAO Using mappingQuery
@@ -161,9 +160,8 @@ public abstract class AbstractDAO<T> {
 //			} catch (DAOException e) {
 //				throw new RuntimeException(e);
 //			}
-		} else {
-			return null;
-		}		
+		}
+		return null;		
 	}
 	
 	protected void setObjectInCache(T o, String code) {

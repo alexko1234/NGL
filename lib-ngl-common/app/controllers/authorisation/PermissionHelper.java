@@ -2,11 +2,10 @@ package controllers.authorisation;
 
 import java.util.List;
 
-import play.mvc.Http.Session;
+import models.administration.authorisation.Permission;
 import models.administration.authorisation.Role;
 import models.administration.authorisation.Team;
 import models.administration.authorisation.User;
-import models.administration.authorisation.Permission;
 import models.utils.dao.DAOException;
 
 /**
@@ -34,7 +33,6 @@ public class PermissionHelper {
 		}
 		return false;
 	}
-	
 	
 	/*
 	 * Method checkRole()
@@ -106,9 +104,9 @@ public class PermissionHelper {
 	 */
 	public static boolean checkTeam(String username, String varteam) throws DAOException {
 		User user = User.find.findByLogin(username);  
-		if(user!=null) {
-			for(Team team:user.teams) {
-				if(team.nom.equals(varteam))
+		if (user != null) {
+			for (Team team:user.teams) {
+				if (team.nom.equals(varteam))
 					return true;
 			}
 		}

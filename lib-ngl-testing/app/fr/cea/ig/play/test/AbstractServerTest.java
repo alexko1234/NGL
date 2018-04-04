@@ -8,7 +8,6 @@ import java.io.IOException;
 import org.junit.AfterClass;
 
 import play.Application;
-import play.libs.ws.WSClient;
 import play.test.TestServer;
 
 /**

@@ -23,7 +23,6 @@ import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
-import play.Logger;
 import rules.services.LazyRules6Actor;
 import validation.ContextValidation;
 import workflows.readset.ReadSetWorkflows;
@@ -31,6 +30,7 @@ import workflows.readset.ReadSetWorkflows;
 @Singleton
 public class RunWorkflowsHelper {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(RunWorkflowsHelper.class);
 	
 	private final LazyRules6Actor  rulesActor;
 	private final ReadSetWorkflows readSetWorkflows;
@@ -53,7 +53,8 @@ public class RunWorkflowsHelper {
 			for(Lane lane : run.lanes){
 				List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 						DBQuery.and(DBQuery.is("runCode", run.code), DBQuery.is("laneNumber", lane.number))).toList();
-				if(readSets.size() != lane.readSetCodes.size())Logger.error("Problem with number of readsets for run = "+run.code+" and lane = "+lane.number+". Nb RS in lane = "+lane.readSetCodes.size()+", nb RS by query = "+readSets.size());
+				if(readSets.size() != lane.readSetCodes.size())
+					logger.error("Problem with number of readsets for run = "+run.code+" and lane = "+lane.number+". Nb RS in lane = "+lane.readSetCodes.size()+", nb RS by query = "+readSets.size());
 				for(ReadSet readSet : readSets){
 					if(lane.valuation.valid.equals(TBoolean.FALSE)){
 						invalidateReadSet(readSet, contextValidation, rules, bioinformaticValuation);
@@ -79,7 +80,8 @@ public class RunWorkflowsHelper {
 			for(Lane lane : run.lanes){
 				List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 						DBQuery.and(DBQuery.is("runCode", run.code), DBQuery.is("laneNumber", lane.number)), getReadSetKeys()).toList();
-				if(readSets.size() != lane.readSetCodes.size())Logger.error("Problem with number of readsets for run = "+run.code+" and lane = "+lane.number+". Nb RS in lane = "+lane.readSetCodes.size()+", nb RS by query = "+readSets.size());
+				if(readSets.size() != lane.readSetCodes.size())
+					logger.error("Problem with number of readsets for run = "+run.code+" and lane = "+lane.number+". Nb RS in lane = "+lane.readSetCodes.size()+", nb RS by query = "+readSets.size());
 				for(ReadSet readSet : readSets){
 					if(lane.valuation.valid.equals(TBoolean.FALSE)){
 						invalidateReadSet(readSet, contextValidation, rules, bioinformaticValuation);
@@ -93,7 +95,7 @@ public class RunWorkflowsHelper {
 		readSet.productionValuation.valid = TBoolean.FALSE;
 		readSet.productionValuation.date = new Date();
 		readSet.productionValuation.user = contextValidation.getUser();
-		if(null == readSet.productionValuation.resolutionCodes)readSet.productionValuation.resolutionCodes = new HashSet<String>(1);
+		if(null == readSet.productionValuation.resolutionCodes)readSet.productionValuation.resolutionCodes = new HashSet<>(1);
 		readSet.productionValuation.resolutionCodes.add("Run-abandonLane");
 
 		if(bioinformaticValuation){

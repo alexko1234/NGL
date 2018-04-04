@@ -6,7 +6,6 @@ import javax.inject.Inject;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
-import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
@@ -25,8 +24,7 @@ import play.mvc.Result;
 import validation.ContextValidation;
 
 // TODO: cleanup
-
-public class LaneTreatments extends RunsController{
+public class LaneTreatments extends RunsController {
 
 	private final Form<Treatment> treatmentForm;
 

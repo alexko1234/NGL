@@ -1,12 +1,9 @@
 package fr.cea.ig.ngl.test;
 
 import org.junit.Assert;
-import org.junit.BeforeClass;
 
 import fr.cea.ig.ngl.dao.api.APIValidationException;
-import play.Logger;
 import play.Logger.ALogger;
-import utils.AbstractTests;
 
 
 /**

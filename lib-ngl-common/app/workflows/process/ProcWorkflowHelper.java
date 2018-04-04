@@ -1,7 +1,10 @@
 package workflows.process;
 
-import java.util.ArrayList;
+import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT;
+import static validation.common.instance.CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE;
+import static validation.common.instance.CommonValidationHelper.OBJECT_IN_DB;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,7 +16,6 @@ import javax.inject.Singleton;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.mongojack.DBQuery;
-
 import org.mongojack.DBUpdate;
 import org.mongojack.DBUpdate.Builder;
 
@@ -24,19 +26,14 @@ import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
-
-import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
-
-import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.instance.SampleHelper;
 import validation.ContextValidation;
 import workflows.container.ContWorkflows;
 import workflows.container.ContentHelper;
-import static validation.common.instance.CommonValidationHelper.*;
 
 
 @Singleton
@@ -104,7 +101,7 @@ public class ProcWorkflowHelper {
 					query,DBUpdate.set("contents.$.processProperties", process.properties));
 			*/
 			//TODO Problem when property disappeared after pool fusion, we had a new property
-			List<String> containerCodes = new ArrayList<String>();
+			List<String> containerCodes = new ArrayList<>();
 			containerCodes.add(process.inputContainerCode);
 			if(null != process.outputContainerCodes){
 				containerCodes.addAll(process.outputContainerCodes);
@@ -136,7 +133,7 @@ public class ProcWorkflowHelper {
 	public Set<String> getTagAssignFromProcessContainers(Process process) {
 		Set<String> tags = null;
 		if(process.sampleOnInputContainer.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)){
-			tags = new TreeSet<String>();
+			tags = new TreeSet<>();
 			tags.add(process.sampleOnInputContainer.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value.toString());			
 		}else if(process.outputContainerCodes != null && process.outputContainerCodes.size() > 0){
 			
@@ -148,7 +145,7 @@ public class ProcWorkflowHelper {
 			
 			MongoDBResult<Container> containersWithTag = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,query).sort("traceInformation.creationDate",Sort.ASC);
 			if(containersWithTag.size() > 0){
-				tags = new TreeSet<String>();
+				tags = new TreeSet<>();
 				tags.add(containersWithTag.cursor.next().contents.get(0).properties.get(InstanceConstants.TAG_PROPERTY_NAME).value.toString());
 			}
 		}

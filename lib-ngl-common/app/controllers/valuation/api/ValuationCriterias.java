@@ -9,18 +9,20 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
 import com.mongodb.BasicDBObject;
 
+import controllers.DocumentController;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.valuation.instance.ValuationCriteria;
 import models.utils.InstanceConstants;
@@ -30,13 +32,6 @@ import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
-import controllers.APICommonController;
-import controllers.DocumentController;
-//import controllers.CommonController;
-import controllers.authorisation.Permission;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.play.NGLContext;
 
 public class ValuationCriterias extends DocumentController<ValuationCriteria> {//CommonController {
 	
@@ -62,7 +57,7 @@ public class ValuationCriterias extends DocumentController<ValuationCriteria> {/
 			MongoDBResult<ValuationCriteria> results = mongoDBFinder(form, q, keys);
 //			MongoDBResult<ValuationCriteria> results = mongoDBFinder(InstanceConstants.VALUATION_CRITERIA_COLL_NAME, form, ValuationCriteria.class, q, keys);
 			List<ValuationCriteria> list = results.toList();
-			return ok(Json.toJson(new DatatableResponse<ValuationCriteria>(list, results.count())));
+			return ok(Json.toJson(new DatatableResponse<>(list, results.count())));
 		}else if(form.list){
 			MongoDBResult<ValuationCriteria> results = mongoDBFinder(form, q, keys);
 //			MongoDBResult<ValuationCriteria> results = mongoDBFinder(InstanceConstants.VALUATION_CRITERIA_COLL_NAME, form, ValuationCriteria.class, q, keys);
@@ -77,7 +72,7 @@ public class ValuationCriterias extends DocumentController<ValuationCriteria> {/
 	}
 	
 	private /*static*/ Query getQuery(ValuationCriteriasSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		Query query = null;
 		
 		if (null != form.objectTypeCode) { //all
@@ -101,6 +96,7 @@ public class ValuationCriterias extends DocumentController<ValuationCriteria> {/
 		return query;
 	}
 
+	@Override
 	public /*static*/ Result get(String code) {
 		ValuationCriteria reportingConfiguration =  getByCode(code);		
 		if (reportingConfiguration != null) {
@@ -165,6 +161,7 @@ public class ValuationCriterias extends DocumentController<ValuationCriteria> {/
 		}				
 	}
 	
+	@Override
 	public /*static*/ Result delete(String code) {
 		ValuationCriteria objectFromDB =  getByCode(code);
 		if(objectFromDB == null) {

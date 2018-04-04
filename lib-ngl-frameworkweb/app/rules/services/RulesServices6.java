@@ -119,7 +119,7 @@ public class RulesServices6 {
 			kSession.insert(fact);
 		}
 		kSession.fireAllRules(RulesAgendaFilter6.getInstance(keyRules,ruleAnnotationName));
-		List<Object> factsAfterRules = new ArrayList<Object>(kSession.getObjects());
+		List<Object> factsAfterRules = new ArrayList<>(kSession.getObjects());
 		// Close session
 		kSession.dispose();
 

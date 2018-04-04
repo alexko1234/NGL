@@ -2,19 +2,18 @@ package controllers.admin.supports.api.objects;
 
 import java.util.List;
 
-import models.laboratory.common.description.Level;
-
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate.Builder;
 
-import validation.ContextValidation;
 import controllers.NGLControllerHelper;
 import controllers.admin.supports.api.NGLObject;
 import controllers.admin.supports.api.NGLObjectsSearchForm;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
+import models.laboratory.common.description.Level;
+import validation.ContextValidation;
 
 public abstract class AbstractUpdate<T extends DBObject> {
 	
@@ -45,19 +44,15 @@ public abstract class AbstractUpdate<T extends DBObject> {
 	}
 		
 	protected Query getSampleCodeQuery(NGLObjectsSearchForm form, String prefix) {
-		if (StringUtils.isNotBlank(form.sampleCode)) {
+		if (StringUtils.isNotBlank(form.sampleCode)) 
 			return DBQuery.in(prefix+"sampleCode", form.sampleCode);
-		} else {
-			return DBQuery.empty();
-		}
+		return DBQuery.empty();
 	}
 
 	protected Query getProjectCodeQuery(NGLObjectsSearchForm form, String prefix) {		
-		if(StringUtils.isNotBlank(form.projectCode)){
+		if (StringUtils.isNotBlank(form.projectCode))
 			return DBQuery.in(prefix+"projectCode", form.projectCode);
-		}else{
-			return DBQuery.empty();
-		}
+		return DBQuery.empty();
 	}
 
 	public abstract void update(NGLObject input, ContextValidation cv) ;

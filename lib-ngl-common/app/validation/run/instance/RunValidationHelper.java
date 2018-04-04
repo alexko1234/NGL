@@ -5,19 +5,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
-
-import org.apache.commons.collections4.CollectionUtils;
-
-import play.Logger;
 
 import org.mongojack.DBQuery;
 
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.container.instance.Container;
-import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.project.instance.Project;
 import models.laboratory.run.description.RunCategory;
 import models.laboratory.run.description.RunType;
@@ -30,8 +23,6 @@ import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
-
-
 
 public class RunValidationHelper extends CommonValidationHelper {
 		
@@ -58,7 +49,7 @@ public class RunValidationHelper extends CommonValidationHelper {
 	
 	public static void validationLaneReadSetCodes(Integer number, List<String> readSetCodes, ContextValidation contextValidation) {
 		if (readSetCodes != null && readSetCodes.size() > 0) {
-			List<String> readSetCodesTreat = new ArrayList<String>();
+			List<String> readSetCodesTreat = new ArrayList<>();
 			for (int i=0; i< readSetCodes.size(); i++) {
 				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCodes.get(i));
 				if (readSet == null || !number.equals(readSet.laneNumber)) {

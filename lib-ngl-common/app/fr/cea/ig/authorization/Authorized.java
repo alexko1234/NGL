@@ -58,8 +58,7 @@ public interface Authorized {
 			// We run the authorizator implementation.
 			if (authorizator.authorize(username, new String[] { getRequiredPermission().getAlias() }))
 				return delegate.call(context);
-			else
-				return CompletableFuture.supplyAsync(() -> forbidden());
+			return CompletableFuture.supplyAsync(() -> forbidden());
 		}
 
 		public abstract Permission getRequiredPermission();

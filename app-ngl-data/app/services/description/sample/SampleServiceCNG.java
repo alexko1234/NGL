@@ -24,8 +24,9 @@ import services.description.Constants;
 public class SampleServiceCNG extends AbstractSampleService {
 	
 	
+	@Override
 	public  void saveSampleCategories(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<SampleCategory> l = new ArrayList<SampleCategory>();
+		List<SampleCategory> l = new ArrayList<>();
 		
 		l.add(newSampleCategory("Défaut", "default"));
 		l.add(newSampleCategory("Inconnu", "unknown"));
@@ -41,8 +42,9 @@ public class SampleServiceCNG extends AbstractSampleService {
 	}
 	
 
+	@Override
 	public void saveSampleTypes(Map<String, List<ValidationError>> errors) throws DAOException{
-		List<SampleType> l = new ArrayList<SampleType>();
+		List<SampleType> l = new ArrayList<>();
 				
 		l.add(newSampleType("ARN", "RNA", SampleCategory.find.findByCode("RNA"),null, getInstitutes(Constants.CODE.CNG)));
 		l.add(newSampleType("ADN", "DNA", SampleCategory.find.findByCode("DNA"),null, getInstitutes(Constants.CODE.CNG)));

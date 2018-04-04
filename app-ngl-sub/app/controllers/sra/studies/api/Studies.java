@@ -17,7 +17,6 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
 import controllers.DocumentController;
-
 // import controllers.sra.configurations.api.Configurations;
 //import models.sra.submit.util.VariableSRA;
 import fr.cea.ig.MongoDBDAO;
@@ -155,15 +154,13 @@ public class Studies extends DocumentController<AbstractStudy> {
 		Query query = getQuery(studiesSearchForm);
 		MongoDBResult<AbstractStudy> results = mongoDBFinder(studiesSearchForm, query);				
 		List<AbstractStudy> studiesList = results.toList();
-		if(studiesSearchForm.datatable){
-			return ok(Json.toJson(new DatatableResponse<AbstractStudy>(studiesList, studiesList.size())));
-		}else{
-			return ok(Json.toJson(studiesList));
-		}
+		if (studiesSearchForm.datatable)
+			return ok(Json.toJson(new DatatableResponse<>(studiesList, studiesList.size())));
+		return ok(Json.toJson(studiesList));
 	}	
 
 	private Query getQuery(StudiesSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		Query query = null;
 
 		if (CollectionUtils.isNotEmpty(form.projCodes)) { //

@@ -1,11 +1,16 @@
 package services.description.instrument;
 
-import static services.description.DescriptionFactory.*;
+import static services.description.DescriptionFactory.newInstrumentCategory;
+import static services.description.DescriptionFactory.newInstrumentUsedType;
+import static services.description.DescriptionFactory.newPropertiesDefinition;
+import static services.description.DescriptionFactory.newValue;
+import static services.description.DescriptionFactory.newValues;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
 // import com.typesafe.config.ConfigFactory;
 // import akka.util.Collections;
 import models.laboratory.common.description.Level;
@@ -25,11 +30,11 @@ import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 import services.description.common.MeasureService;
 
-public class InstrumentServiceCNG extends AbstractInstrumentService{
+public class InstrumentServiceCNG extends AbstractInstrumentService {
 	
-	
+	@Override
 	public void saveInstrumentCategories(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<InstrumentCategory> l = new ArrayList<InstrumentCategory>();
+		List<InstrumentCategory> l = new ArrayList<>();
 		
 		l.add(newInstrumentCategory("Covaris","covaris"));
 		l.add(newInstrumentCategory("Spri","spri"));
@@ -69,9 +74,10 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	}
 	
 	// NOTE FDS 12/07/2017: attention lors de la modification du booleen 'active' sur un instrument il y a un cache de 1Heure
+	@Override
 	public void saveInstrumentUsedTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		
-		List<InstrumentUsedType> l = new ArrayList<InstrumentUsedType>();		
+		List<InstrumentUsedType> l = new ArrayList<>();		
 		
 		// 27/07/2016 la main peut traiter des plaques en entree ET en sortie; 02/03/2017 ajout strip-8
 		l.add(newInstrumentUsedType("Main", "hand", InstrumentCategory.find.findByCode("hand"), null, 
@@ -502,7 +508,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	/*** get properties methods ***/
 
 	private static List<PropertyDefinition> getCBotProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		
 		// 17/01/2017 numérotation des propriétés
         l.add(newPropertiesDefinition("Type lectures","sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument,Level.CODE.ContainerSupport),String.class, true, null, DescriptionFactory.newValues("SR","PE"),"single", 70,true,null,null));
@@ -515,7 +521,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 
 	
 	private static List<PropertyDefinition> getCBotInterneProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		
 		/* 23/01/2017 strictement la meme liste que cBot standard!! simplification...*/    
 		l.addAll(getCBotProperties());
@@ -525,7 +531,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	
 	// 23/01/2017 creation methode distincte...
 	private static List<PropertyDefinition> getCBotV2Properties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		
 		// propriete des V1
 		l.addAll(getCBotProperties());
@@ -541,7 +547,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	
 
 	private static List<PropertyDefinition> getHiseq2000Properties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
         propertyDefinitions.add(newPropertiesDefinition("Position","position"	, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B"), "single",200));
         propertyDefinitions.add(newPropertiesDefinition("Type lectures", "sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE"), "single",300));
@@ -556,7 +562,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	}
 
 	private static List<PropertyDefinition> getMiseqProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		propertyDefinitions.add(newPropertiesDefinition("Nom cassette Miseq", "miseqReagentCassette",LevelService.getLevels(Level.CODE.Instrument),String.class,true,"single",100));
         propertyDefinitions.add(newPropertiesDefinition("Type lectures", "sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE"), "single",200));
@@ -569,7 +575,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	}
 	
 	private static List<PropertyDefinition> getMiseqQCProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		propertyDefinitions.add(newPropertiesDefinition("Nom cassette Miseq", "miseqReagentCassette",LevelService.getLevels(Level.CODE.Instrument),String.class,true,"single",100));
         propertyDefinitions.add(newPropertiesDefinition("Type lectures", "sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE"), "single",200));
@@ -583,7 +589,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	}
 	
 	private static List<PropertyDefinition> getNextseq500Properties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		propertyDefinitions.add(newPropertiesDefinition("Type lectures", "sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE"), "single",100));
         propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read1", "nbCyclesRead1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",200));
@@ -604,7 +610,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	}
 	
 	private static List<PropertyDefinition> getHiseq4000Properties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		propertyDefinitions.add(newPropertiesDefinition("Position","position", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B"), "single",100));
 		propertyDefinitions.add(newPropertiesDefinition("Type lectures", "sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE"), "single",200));
@@ -617,7 +623,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	}
 	
 	private static List<PropertyDefinition> getHiseqXProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		// idem Hiseq4000 !!
 		
 		propertyDefinitions.add(newPropertiesDefinition("Position","position", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B"), "single",100));
@@ -632,7 +638,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	
 	// NGL-1730: ajout Novaseq
 	private static List<PropertyDefinition> getNovaseq6000Properties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		// idem Hiseq4000, HiseqX !!
 		
 		propertyDefinitions.add(newPropertiesDefinition("Position","position", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B"), "single",100));
@@ -652,7 +658,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	//FDS 02/02/2016 modifier 'program' en 'programCovaris' pour pourvoir creer les proprietes de l'instrument mixte
 	//    covaris+Sciclone car sinon doublon de proprietes...
 	private static List<PropertyDefinition> getCovarisProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null,
 										null, "single",null,true, null,null));
@@ -661,7 +667,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	}
 	
 	private static List<PropertyDefinition> getMastercyclerNexusProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
         // 18/07/2017 correction !!! nbCycles => pcrCycleNumber		
 		
 		l.add(newPropertiesDefinition("Nbre Cycles PCR", "pcrCycleNumber", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
@@ -675,7 +681,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	
 	// 18/07/2017 strictement les meme propriétés que Nexus ?? utile de faire 2 méthodes ??
 	private static List<PropertyDefinition> getMastercyclerEPGradientProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 				
 		l.add(newPropertiesDefinition("Nbre Cycles PCR", "pcrCycleNumber", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
                 						null, "single",null,true, null,null));
@@ -689,7 +695,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	
 	
 	private static List<PropertyDefinition> getQuBitProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		
 		// suppression de "Kit" demandée 29/11/2017 	
 		
@@ -699,11 +705,11 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	
 	//FDS 29/01/2016 ajout SicloneNGSX -- JIRA NGL-894
 	private static List<PropertyDefinition> getScicloneNGSXProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		
 		//FDS 25/10/2016 -- NGL-1025 : nouvelle liste (!! pas de contextualisation, tous les programmes seront listés dans toutes les experiences)
 		// => les séparer au moins a la declaration..	
-		ArrayList<String> progList = new ArrayList<String>();
+		ArrayList<String> progList = new ArrayList<>();
 		
 		// RNA 12/12/2016
 		progList.add("Stranded_TotalRNA_Avril2016");
@@ -737,7 +743,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	// 05/08/2016 Il faut une methode distincte pour ajouter la propriété "robotRunCode", et ne pas la mettre directement dans getScicloneNGSXProperties
 	// sinon il y a un doublon pour l'instrument fictif CovarisAndScicloneNGSX
 	private static List<PropertyDefinition> getScicloneNGSXAloneProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		
 		l.addAll(getScicloneNGSXProperties());
 		
@@ -750,7 +756,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	//FDS 29/01/2016 (instrument fictif composé de 2 instruments) -- JIRA NGL-894
 	//    ses propriétés sont la somme des propriétés de chacun (Attention au noms de propriété communs...)
 	private static List<PropertyDefinition> getCovarisAndScicloneNGSXProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		
 		// 18/07/2017 aussi utilise en Fragmentation/capture !!!
 		l.add(newPropertiesDefinition("Programme Covaris", "programCovaris", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
@@ -770,7 +776,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	//  Programme Covaris (obligatoire) : SureSelect96 final (menu déroulant avec juste cette valeur)
 	//  Programme Bravo WS : saisie libre NON obligatoire
 	private static List<PropertyDefinition> getCovarisAndBravoWsProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		
 		l.add(newPropertiesDefinition("Programme Covaris", "programCovaris", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
                 						newValues( "SureSelect96 final"),  
@@ -785,7 +791,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	
 	//FDS 29/01/2016 ajout Janus -- JIRA NGL-894 
 	private static List<PropertyDefinition> getJanusProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		
 		//FDS 05/08/2016 le Janus est utilisé dans certaines experiences ou on ne veut pas tracer le programme => rendre cette propriété non obligatoire !
 		//FDS 25/10/2016 -- NGL-1025 : nouvelle liste (!! pas de contextualisation, tous les programmes seront listés dans toutes les experiences)
@@ -801,7 +807,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	//FDS 22/03/2016 ajout Janus+cbot --JIRA NGL-982
 	//    17/01/2017 numérotation des propriétés;
 	private static List<PropertyDefinition> getJanusAndCBotProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
 				 						newValues("Clusterstripprepworklist"), 
@@ -825,7 +831,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
     //FDS 11/08/2017 attendre feu vert de la prod pour ajout nouveau programme....
 
 	private static List<PropertyDefinition> getJanusAndCBotV2Properties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 			
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
 				 						newValues("Clusterstripprepworklist"), "single", 40, false ,null, null));
@@ -856,7 +862,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	 
 	//FDS 04/10/2016 ajout EpMotion
 	private static List<PropertyDefinition> getEpMotionProperties() throws DAOException {
-			List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+			List<PropertyDefinition> l = new ArrayList<>();
 			// propriete obligatoire ou pas ??????
 			// liste des programmes pas encore definie
 			l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null,
@@ -868,7 +874,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	 
 	//FDS 31/03/2016 ajout proprietes LightCyclers
 	private static List<PropertyDefinition> getLightCyclerProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		
 		l.add(newPropertiesDefinition("Secteur Plaque 96","sector96", LevelService.getLevels(Level.CODE.Instrument),String.class, true, null,
 										newValues("1-48","49-96"), null, null , null, 
@@ -881,7 +887,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	// FDS 29/07/2016 JIRA NGL-1027 ajout propriétés pseudo instrument Masterycler EP-Gradient + Zephyr 
     //  09/11/2017 NGL-1691  suppression valeurs par defaut ( pcrCycleNumber et AdnBeadVolumeRatio )
 	private static List<PropertyDefinition> getMastercyclerEPGAndZephyrProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		//Mastercycler EPG
 		l.add(newPropertiesDefinition("Nbre Cycles PCR","pcrCycleNumber", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, null,
 										null, null, null , null, "single", null, true ,null, null));
@@ -897,7 +903,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	// FDS 17/07/2017 NGL-1201  ajout propriétés pseudo instrument Mastercycler EP-Gradient + Bravo Workstation
 	//     09/11/2017 NGL-1691  suppression valeurs par defaut ( pcrCycleNumber et AdnBeadVolumeRatio )
 	private static List<PropertyDefinition> getMastercyclerEPGAndBravoWsProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		//Mastercycler EPG
 		l.add(newPropertiesDefinition("Nbre Cycles PCR","pcrCycleNumber", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, null,
 										null, null, null , null, "single", null, true ,null, null));
@@ -915,7 +921,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	// FDS 17/07/2017 NGL-1201 Mastercycler Nexus SX-1 + Bravo Workstation
     //     09/11/2017 NGL-1691  suppression valeurs par defaut ( pcrCycleNumber et AdnBeadVolumeRatio )
 	private static List<PropertyDefinition> getMastercyclerNexusAndBravoWsProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		//Mastercycler Nexus
 		l.add(newPropertiesDefinition("Nbre Cycles PCR","pcrCycleNumber", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, null,
 										null, null, null , null, "single", null, true ,null, null));
@@ -933,7 +939,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	
 	// FDS 09/11/2017 ajout pour NGL-1691 dans le cas ou instrument utilisé seul
 	private static List<PropertyDefinition>getBravoWsProperties()throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		
 		// propriété "Programme Bravo WS" en saisie libre, non obligatoire
 		l.add(newPropertiesDefinition("Programme Bravo WS","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),String.class, false, null,
@@ -948,7 +954,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	
 	//FDS 20/02/2017 NGL-1167: Chromium controller
 	private static List<PropertyDefinition> getChromiumControllerProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		
 		//06/03/2017 chipPosition est une propriete d'instrument et pas d'experience...
 		l.add(newPropertiesDefinition("Position sur puce", "chipPosition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null, 
@@ -960,7 +966,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	
 	//FDS 01/03/2017 NGL-1167: QC bioanalyser ajouté pour process Chromium
 	private static List<PropertyDefinition> getBioanalyzerProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		
 		// Production CNG demande de ne pas tracer le type de puce...
 		// l.add(newPropertiesDefinition("Type puce", "chipType", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null, newValues("HS", "1K, 12K"), 
@@ -977,7 +983,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	
 	// FD meme proprietes que minispin ???
 	private static List<PropertyDefinition> getEppendorf5424Properties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
         propertyDefinitions.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument),String.class, true,
         		DescriptionFactory.newValues("G-TUBE"), "G-TUBE", null, null, null, "single", 1));
@@ -998,7 +1004,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	
 	// FDS ajout 30/03/2017 NGL-1225 (Nanopore)
 	private static List<PropertyDefinition> getNanoporeSequencerProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		// propriété CNS.. a adapter !!!!
         propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
@@ -1013,7 +1019,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	/*** get lists methods ***/
 	// FDS 20/07/2016 JIRA SUPSQCNG-392 : ajout short names
 	private static List<Instrument> getInstrumentMiSeq() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		
 		instruments.add(createInstrument("MISEQ1", "MISEQ1", "M1", true,  "/env/ig/atelier/illumina/cng/MISEQ1/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
 		instruments.add(createInstrument("MISEQ2", "MISEQ2", "M2", false, "/env/ig/atelier/illumina/cng/MISEQ2/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
@@ -1021,7 +1027,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	}
 	
 	private static List<Instrument> getInstrumentMiSeqQC() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		
 		instruments.add(createInstrument("MISEQ1-QC", "MISEQ1 QC", null, false, "/env/ig/atelier/illumina/cng/MISEQ1/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
 		instruments.add(createInstrument("MISEQ2-QC", "MISEQ2 QC", null, true,  "/env/ig/atelier/illumina/cng/MISEQ2/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
@@ -1029,14 +1035,14 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	}
 	
 	private static List<Instrument> getInstrumentNextseq500() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		
 		instruments.add(createInstrument("NEXTSEQ1", "NEXTSEQ1", "N1", true, "/env/ig/atelier/illumina/cng/NEXTSEQ1/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
 		return instruments;
 	}
 
 	private static List<Instrument> getInstrumentHiseq4000() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		
 		instruments.add(createInstrument("FALBALA", "FALBALA", "H4", true, "/env/ig/atelier/illumina/cng/FALBALA/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
 		
@@ -1048,7 +1054,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	}
 	
 	private static List<Instrument> getInstrumentHiseqX() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 
 		instruments.add(createInstrument("ASTERIX",   "ASTERIX",    "X1", true, "/env/ig/atelier/illumina/cng/ASTERIX/",    DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );	
 		instruments.add(createInstrument("OBELIX",    "OBELIX",     "X2", true, "/env/ig/atelier/illumina/cng/OBELIX/",     DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );	
@@ -1061,7 +1067,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 
 	// 06/12/2017 FDS : ne sont plus actifs=> booleen a false, pas suffisant pour les désactiver...
 	public static List<Instrument> getInstrumentHiseq2000() throws DAOException{
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		
 		instruments.add(createInstrument("HISEQ1", "HISEQ1", null, false, "/env/ig/atelier/illumina/cng/HISEQ1/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		instruments.add(createInstrument("HISEQ2", "HISEQ2", null, false, "/env/ig/atelier/illumina/cng/HISEQ2/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -1075,7 +1081,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	}
 	
 	public static List<Instrument> getInstrumentHiseq2500() throws DAOException{
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		
 		instruments.add(createInstrument("HISEQ9",  "HISEQ9",  "H1", true, "/env/ig/atelier/illumina/cng/HISEQ9/",  DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		instruments.add(createInstrument("HISEQ10", "HISEQ10", "H2", true, "/env/ig/atelier/illumina/cng/HISEQ10/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -1085,7 +1091,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	
 	// FDS ajout 30/03/2017 NGL-1225 (Nanopore)
 	private static List<Instrument> getInstrumentMKIB() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		
 		instruments.add(createInstrument("MN18834", "MN18834", null, true, "/env/ig/atelier/nanopore/cng/MN18834", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		instruments.add(createInstrument("MN19213", "MN19213", null, true, "/env/ig/atelier/nanopore/cng/MN19213", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -1099,7 +1105,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	
 	// FDS ajout 06/12/2017 NGL-1730 (Novaseq6000) + SUPSQCNG-506 (EXTNOVASEQ)
 	private static List<Instrument> getInstrumentNovaseq6000() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
+		List<Instrument> instruments=new ArrayList<>();
 		
 		instruments.add( createInstrument("MARIECURIX", "MARIECURIX", "V1", true, "/env/ig/atelier/illumina/cng/MARIECURIX/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		instruments.add( createInstrument("EXTNOVASEQ", "EXTNOVASEQ", null, true, "/env/ig/atelier/illumina/cng/EXTNOVASEQ/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));

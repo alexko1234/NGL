@@ -7,6 +7,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import controllers.CommonController;
+import controllers.MaterielManipSearch;
+import fr.cea.ig.play.NGLContext;
 import lims.cns.dao.LimsManipDAO;
 import lims.models.Manip;
 //import play.Logger;
@@ -15,9 +18,6 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import views.components.datatable.DatatableResponse;
-import controllers.CommonController;
-import controllers.MaterielManipSearch;
-import fr.cea.ig.play.NGLContext;
 
 public class Manips extends CommonController {
 
@@ -39,7 +39,7 @@ public class Manips extends CommonController {
 		logger.debug("Manip Form :"+filledForm.toString());
 		List<Manip> manips = limsManipDAO.findManips(filledForm.get().etmanip,filledForm.get().emateriel, filledForm.get().project);
 		logger.debug("Manips nb "+manips.size());
-		return ok(Json.toJson(new DatatableResponse<Manip>(manips, manips.size())));
+		return ok(Json.toJson(new DatatableResponse<>(manips, manips.size())));
 	}
 
 }

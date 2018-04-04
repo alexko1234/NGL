@@ -15,11 +15,11 @@ import fr.cea.ig.lfw.utils.iteration.SkippingIterator;
 public class Iterators {
 	
 	public static <A, B> Iterator<B> map(Iterator<A> i, Function<A,B> function) {
-		return new MappingIterator<A, B>(i, function);
+		return new MappingIterator<>(i, function);
 	}
 	
 	public static <A> Iterator<A> skip (Iterator <A> i, int cp) {
-		return new SkippingIterator<A>(i, cp);
+		return new SkippingIterator<>(i, cp);
 	}
 	
 }
