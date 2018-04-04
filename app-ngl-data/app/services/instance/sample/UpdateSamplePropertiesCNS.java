@@ -71,25 +71,46 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 
 	private void updateSampleModifySince(int nbDays,ContextValidation contextError){
 
-				Calendar calendar = Calendar.getInstance();
-				calendar.add(Calendar.DAY_OF_YEAR, nbDays);
-				Date date =  calendar.getTime();
+		Integer skip = 0;
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_YEAR, nbDays);
+		Date date =  calendar.getTime();
 
-				List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.greaterThanEquals("traceInformation.modifyDate", date).notExists("life"))
-						.sort("code").toList();
-				Logger.info("Nb samples to update :"+samples.size());
-				samples.stream().forEach(sample -> {
-					//Logger.debug("Sample "+sample.code);
+		MongoDBResult<Sample> result = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.greaterThanEquals("traceInformation.modifyDate", date).notExists("life"));
+		Integer nbResult = result.count(); 
+		logger.info("nbResult : "+nbResult);
+		while(skip < nbResult) {
+			try {
+				long t1 = System.currentTimeMillis();
+					List<Sample> cursor = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.greaterThanEquals("traceInformation.modifyDate", date).notExists("life"))
+						.sort("code").skip(skip).limit(1000)
+						.toList();
+
+					cursor.forEach(sample -> {
 					try{
 						updateOneSample(sample,contextError);
-					}catch(Throwable t){
-						logger.error(t.getMessage(),t);	
-						if(null != t.getMessage())
-							contextError.addErrors(sample.code, t.getMessage());
+					}catch(Throwable e){
+						logger.error("Sample : "+sample.code+" - "+e,e);
+						if(null != e.getMessage())
+							contextError.addErrors(sample.code, e.getMessage());
 						else
 							contextError.addErrors(sample.code, "null");
-					}						
+					}
 				});
+					skip = skip+1000;
+					long t2 = System.currentTimeMillis();
+					logger.debug("time "+skip+" - "+((t2-t1)/1000));
+				}catch(Throwable e){
+					logger.error("Error : "+e,e);
+					if(null != e.getMessage())
+						contextError.addErrors("Error", e.getMessage());
+					else
+						contextError.addErrors("Error", "null");
+				}
+		}
+		
+		
+			
 	}
 
 	public void updateOneSample(Sample sample,ContextValidation contextError) {
