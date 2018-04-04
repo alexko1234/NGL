@@ -11,6 +11,7 @@ import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
 
 /**
+ * Factory to create Sample objects
  * @author ajosso
  *
  */

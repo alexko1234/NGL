@@ -9,6 +9,11 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.instance.BioinformaticParameters;
 import models.laboratory.project.instance.Project;
 
+/**
+ * Factory to create Project objects
+ * @author ajosso
+ *
+ */
 public class TestProjectFactory {
 	
 	public static Project project(String user) {
