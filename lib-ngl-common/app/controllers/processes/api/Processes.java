@@ -433,6 +433,7 @@ public class Processes extends DocumentController<Process> {
 				return notFound("Container process "+code+"with code "+process.inputContainerCode+" does not exist");
 			}
 		}
+		// TODO: at this point container can be null but it's used
 		DynamicForm deleteForm = getNGLContext().form();
 //		ContextValidation contextValidation=new ContextValidation(getCurrentUser(),deleteForm.errors());
 		ContextValidation contextValidation = new ContextValidation(getCurrentUser(),deleteForm);		

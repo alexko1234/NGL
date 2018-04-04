@@ -1,5 +1,8 @@
 package fr.cea.ig.ngl.daoapi;
 
+// Prototype, not used.
+// Warnings are suppressed
+
 import java.util.ArrayList;
 // import java.util.Date;
 import java.util.List;
@@ -26,6 +29,7 @@ import play.libs.Json;
 import services.ncbi.NCBITaxon;
 import validation.ContextValidation;
 
+@SuppressWarnings("unused")
 abstract class CRUDDAO<T> {
 	// create
 	// read
@@ -33,6 +37,7 @@ abstract class CRUDDAO<T> {
 	// delete
 }
 
+@SuppressWarnings("unused")
 abstract class CRUDAPI<T> {
 	// create
 	// read
@@ -124,6 +129,7 @@ public class SampleAPI extends CRUDAPI<Sample> {
 		
 	}
 	
+	@SuppressWarnings("unused")
 	public static class Modifiable<T> {}
 	
 	// A request provides a number of fields that are actually allowed to
