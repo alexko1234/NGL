@@ -25,7 +25,7 @@ import play.api.modules.spring.Spring;
 //abstract class M2<T,U extends AbstractDAO<T>> implements IDAOSupplier<T,U> {	
 //}
 
-public abstract class Model<T> {
+public abstract class Model<T> { // implements Serializable {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(Model.class);
 	

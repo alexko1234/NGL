@@ -118,7 +118,6 @@ public class AnalysesWorkflowTest extends AbstractTests {
 				});
 	}
 
-
 	@Test
 	public void setStateFV()
 	{

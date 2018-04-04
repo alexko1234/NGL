@@ -14,7 +14,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
-import fr.cea.ig.mongo.MongoDeprecation;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.instrument.description.InstrumentUsedType;
@@ -157,8 +156,8 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 				
 				+" where cpt.code = ? and pet.position_in_process > -1";
 		
-//		int result = jdbcTemplate.queryForInt(sql, processTypeCode);
-		int result = MongoDeprecation.queryForInt(jdbcTemplate, sql, processTypeCode);		
+		int result = jdbcTemplate.queryForInt(sql, processTypeCode);
+//		int result = MongoDeprecation.queryForInt(jdbcTemplate, sql, processTypeCode);		
 		return Integer.valueOf(result);
 		
 	}

@@ -130,7 +130,7 @@ public class SamplesAPI extends GenericAPI<SamplesDAO, Sample> {
 			ContextValidation ctxVal = new ContextValidation(currentUser);
 			if(input.traceInformation != null){
 				input.traceInformation.modificationStamp(ctxVal, currentUser);
-			}else{
+			} else {
 				logger.error("traceInformation is null !!");
 			}
 			ctxVal.setUpdateMode();
@@ -143,5 +143,6 @@ public class SamplesAPI extends GenericAPI<SamplesDAO, Sample> {
 				throw new APIValidationException("Invalid Sample object", ctxVal.getErrors());
 			}
 		}
-	}	
+	}
+	
 }

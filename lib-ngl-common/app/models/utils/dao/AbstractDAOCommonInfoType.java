@@ -8,7 +8,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 
-import fr.cea.ig.mongo.MongoDeprecation;
 import models.laboratory.common.description.CommonInfoType;
 import models.utils.ListObject;
 
@@ -47,8 +46,8 @@ public abstract class AbstractDAOCommonInfoType<T extends CommonInfoType> extend
 			String	sql = "SELECT t.id FROM common_info_type t " + DAOHelpers.getCommonInfoTypeDefaultSQLForInstitute() + " where t.code=?";
 			try {
 //				long id =  this.jdbcTemplate.queryForLong(sql, code);
-//				long id =  jdbcTemplate.queryForLong(sql, code);
-				long id = MongoDeprecation.queryForLong(jdbcTemplate, sql, code);
+				long id =  jdbcTemplate.queryForLong(sql, code);
+//				long id = MongoDeprecation.queryForLong(jdbcTemplate, sql, code);
 //				if (id > 0) {
 //					return Boolean.TRUE;
 //				} else {
