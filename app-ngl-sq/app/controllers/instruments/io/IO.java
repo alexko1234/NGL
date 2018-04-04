@@ -42,7 +42,7 @@ public class IO extends TPLCommonController {
 		return MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, code);
 	}
 	
-	private AbstractOutput getOutputInstance(Experiment experiment, ContextValidation contextValidation){	
+	private AbstractOutput getOutputInstance(Experiment experiment, ContextValidation contextValidation) {	
 		if (ValidationHelper.required(contextValidation, experiment.instrument, "instrument") 
 				&& ValidationHelper.required(contextValidation, experiment.instrument.typeCode, "instrument.code")) {
 			String className = getClassName(experiment, "Output");
@@ -95,7 +95,7 @@ public class IO extends TPLCommonController {
 		return "controllers.instruments.io." + institute + "." + experiment.instrument.typeCode.toLowerCase().replace("-", "") + "." + type;
 	}
 	
-	public Result generateFile(String experimentCode){
+	public Result generateFile(String experimentCode) {
 		Experiment experiment = getExperiment(experimentCode);
 		if (experiment == null) 
 			return badRequest("experiment not exist");

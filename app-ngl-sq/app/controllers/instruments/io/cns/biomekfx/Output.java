@@ -27,10 +27,10 @@ public class Output extends AbstractOutput {
 	public File generateFile(Experiment experiment,ContextValidation contextValidation) throws Exception {
 		String type = (String)contextValidation.getObject("type");
 		
-		String content=null;
+		String content = null;
 		//tube / 96-well-plate
 		if ("normalisation".equals(type) && "tube".equals(experiment.instrument.inContainerSupportCategoryCode)
-				&& "96-well-plate".equals(experiment.instrument.outContainerSupportCategoryCode)) {
+				                         && "96-well-plate".equals(experiment.instrument.outContainerSupportCategoryCode)) {
 			// feuille de route specifique pour les pools de plaques -> plaque
 			content = OutputHelper.format(normalisation_x_to_plate.render(getPlateSampleSheetLines(experiment, "tube")).body());
 		} else if ("normalisation".equals(type) && "96-well-plate".equals(experiment.instrument.inContainerSupportCategoryCode)
@@ -148,7 +148,7 @@ public class Output extends AbstractOutput {
 
 		String[] inputContainerSupportCodes = experiment.inputContainerSupportCodes.toArray(new String[0]);
 		Arrays.sort(inputContainerSupportCodes);
-		for(int i = 0; i < inputContainerSupportCodes.length ; i++){
+		for (int i = 0; i < inputContainerSupportCodes.length ; i++) {
 			sources.put(inputContainerSupportCodes[i], "Src"+(i+1));
 		}
 		return sources;

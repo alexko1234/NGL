@@ -1,6 +1,6 @@
 package controllers.instruments.io.cns.biomekfx;
 
-public class PlateSampleSheetLine  implements Comparable<PlateSampleSheetLine>{
+public class PlateSampleSheetLine implements Comparable<PlateSampleSheetLine> {
 
 	public String inputContainerCode;
 	public String outputContainerCode;
