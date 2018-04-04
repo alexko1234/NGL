@@ -91,7 +91,7 @@ public class AnalysesWorkflowTest extends AbstractTests {
 					assertThat(analysis.state.code).isEqualTo("F-V");
 					for(String codeReadSet : analysis.masterReadSetCodes){
 						ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, codeReadSet);
-						assertThat(readSet.state.code).isEqualTo("IP-BA");
+						assertThat(readSet.state.code).isEqualTo("A");
 					}
 				});
 	}
@@ -116,7 +116,7 @@ public class AnalysesWorkflowTest extends AbstractTests {
 					assertThat(analysis.state.code).isEqualTo("IW-V");
 					for(String codeReadSet : analysis.masterReadSetCodes){
 						ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, codeReadSet);
-						assertThat(readSet.state.code).isEqualTo("IP-BA");
+						assertThat(readSet.state.code).isEqualTo("IW-VBA");
 					}
 				});
 	}
@@ -142,7 +142,7 @@ public class AnalysesWorkflowTest extends AbstractTests {
 					assertThat(analysis.state.code).isEqualTo("IW-V");
 					for(String codeReadSet : analysis.masterReadSetCodes){
 						ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, codeReadSet);
-						assertThat(readSet.state.code).isEqualTo("IP-BA");
+						assertThat(readSet.state.code).isEqualTo("IW-VBA");
 					}
 				});
 	}
