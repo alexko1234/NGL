@@ -3,28 +3,25 @@ package workflows;
 import static fr.cea.ig.play.test.DevAppTesting.testInServer;
 import static ngl.bi.Global.devapp;
 import static org.fest.assertions.Assertions.assertThat;
-import static play.mvc.Http.Status.OK;
-import static play.test.Helpers.fakeRequest;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.test.RoutesTest;
 import fr.cea.ig.play.test.WSHelper;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.run.instance.Analysis;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
-import play.Logger;
-import play.mvc.Result;
 import utils.AbstractTests;
 import utils.RunMockHelper;
 
 public class AnalysesWorkflowTest extends AbstractTests {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(AnalysesWorkflowTest.class);
+	
 	static Analysis analysis;
 
 	@BeforeClass
@@ -55,13 +52,13 @@ public class AnalysesWorkflowTest extends AbstractTests {
 	{
 		testInServer(devapp(),
 				ws -> {	
-					Logger.debug("setStateIPS");
+					logger.debug("setStateIPS");
 					State state = new State("IP-BA","bot");
 					//Result r = callAction(controllers.analyses.api.routes.ref.Analyses.state(analysis.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
 					WSHelper.putAsBot(ws, "/api/analyses/"+analysis.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 					analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
-					Logger.debug("state code"+analysis.state.code);
+					logger.debug("state code"+analysis.state.code);
 					assertThat(analysis.state.code).isEqualTo("IP-BA");
 					for(String codeReadSet : analysis.masterReadSetCodes){
 						ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, codeReadSet);
@@ -81,13 +78,13 @@ public class AnalysesWorkflowTest extends AbstractTests {
 					analysis.valuation.valid=TBoolean.TRUE;
 					MongoDBDAO.save(InstanceConstants.ANALYSIS_COLL_NAME, analysis);
 
-					Logger.debug("setStateFBA");
+					logger.debug("setStateFBA");
 					State state = new State("F-BA","bot");
 					//Result r = callAction(controllers.analyses.api.routes.ref.Analyses.state(analysis.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
 					WSHelper.putAsBot(ws, "/api/analyses/"+analysis.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 					analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
-					Logger.debug("state code"+analysis.state.code);
+					logger.debug("state code"+analysis.state.code);
 					assertThat(analysis.state.code).isEqualTo("F-V");
 					for(String codeReadSet : analysis.masterReadSetCodes){
 						ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, codeReadSet);
@@ -105,14 +102,14 @@ public class AnalysesWorkflowTest extends AbstractTests {
 					analysis.valuation.valid=TBoolean.UNSET;
 					MongoDBDAO.save(InstanceConstants.ANALYSIS_COLL_NAME, analysis);
 
-					Logger.debug("setStateFBA");
+					logger.debug("setStateFBA");
 					State state = new State("IW-V","bot");
 					//Result r = callAction(controllers.analyses.api.routes.ref.Analyses.state(analysis.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
 					WSHelper.putAsBot(ws, "/api/analyses/"+analysis.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 
 					analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
-					Logger.debug("state code"+analysis.state.code);
+					logger.debug("state code"+analysis.state.code);
 					assertThat(analysis.state.code).isEqualTo("IW-V");
 					for(String codeReadSet : analysis.masterReadSetCodes){
 						ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, codeReadSet);
@@ -131,14 +128,14 @@ public class AnalysesWorkflowTest extends AbstractTests {
 					analysis.valuation.valid=TBoolean.UNSET;
 					MongoDBDAO.save(InstanceConstants.ANALYSIS_COLL_NAME, analysis);
 
-					Logger.debug("setStateFBA");
+					logger.debug("setStateFBA");
 					State state = new State("IW-V","bot");
 					//Result r = callAction(controllers.analyses.api.routes.ref.Analyses.state(analysis.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(state)).withHeader("User-Agent", "bot"));
 					//assertThat(status(r)).isEqualTo(OK);
 					WSHelper.putAsBot(ws, "/api/analyses/"+analysis.code+"/state", RunMockHelper.getJsonState(state).toString(), 200);
 					
 					analysis = MongoDBDAO.findByCode(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, analysis.code);
-					Logger.debug("state code"+analysis.state.code);
+					logger.debug("state code"+analysis.state.code);
 					assertThat(analysis.state.code).isEqualTo("IW-V");
 					for(String codeReadSet : analysis.masterReadSetCodes){
 						ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, codeReadSet);
@@ -146,6 +143,7 @@ public class AnalysesWorkflowTest extends AbstractTests {
 					}
 				});
 	}
+	
 }
 
 
