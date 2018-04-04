@@ -1,7 +1,6 @@
 package fr.cea.ig.ngl.test.dao.api.factory;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
 import models.laboratory.common.instance.Comment;
@@ -22,9 +21,7 @@ public class TestContainerFactory {
 		c.volume = new PropertySingleValue(1.0, "µl");
 		c.quantity = new PropertySingleValue(1.0, "ng");
 		c.comments = comments(user);
-		c.projectCodes = new HashSet<String>();
 		c.projectCodes.add(proj.code);
-		c.sampleCodes = new HashSet<String>();
 		c.sampleCodes.add(s.code);
 		c.traceInformation = new TraceInformation(user);
 		c.contents = contents(s);
