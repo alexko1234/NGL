@@ -184,6 +184,11 @@ public class ImportServiceCNS extends AbstractImportService {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null,
 				null, "single", 1, true, null, null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Code Barre TARA", "taraBarCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true,
+				null, null, "single", 2, true, null, null));
+		
+		
 		/*keep when all data are not migrated*/
 		propertyDefinitions.add(newPropertiesDefinition("Station TARA", "taraStation", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Integer.class, false, null, 
 				null, "single", 2, true, null, null));
