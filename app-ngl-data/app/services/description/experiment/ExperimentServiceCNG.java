@@ -277,8 +277,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			//FDS 04/04/2018 ajout JIRA NGL-1727: pour processus SmallRNASeq
 			l.add(newExperimentType("Small RNAseq lib prep","small-rnaseq-lib-prep",null,650,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
-					getPropertyDefinitionsSmallRNASeqLibPrep(), //TODO
-					getInstrumentUsedTypes("hand"), //TODO
+					getPropertyDefinitionsSmallRNASeqLibPrep(),
+					getInstrumentUsedTypes("sciclone-ngsx","hand"), 
 					"OneToOne", 
 					CNG));
 			
@@ -289,7 +289,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getInstrumentUsedTypes("hand"),  //TODO
 					"OneToOne", 
 					CNG));
-
 	
 			//FDS mise prod 01/09/2016
 			l.add(newExperimentType("PCR+purification","pcr-and-purification",null,700,
@@ -317,11 +316,10 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					CNG));				
 			
 			// 04/10/2017 NGL-1589: plaque->plaque, tubes->plaque, plaque-> tube, tube->tube => utiliser robot
-			// 16/10/2017           remplacer janus par EpMotion
 			l.add(newExperimentType("Dénaturation-dilution","denat-dil-lib",null,1000,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsDenatDilLibCNG(),
-					getInstrumentUsedTypes("hand","epmotion"),
+					getInstrumentUsedTypes("hand","epmotion"),   // 16/10/2017  remplacer janus par EpMotion
 					"OneToOne", 
 					CNG));
 			
@@ -386,13 +384,13 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					CNG));
 						
 			//FDS 10/07/2017 NGL-1201: experiences transformation pour Capture (Sure Select implicite)
-			//    09/11/2017 NGL-1691: renommage label ( ajout wash) ; 15/11/2017 ajout "bravows-and-mastercycler-epg"
+			//    09/11/2017 NGL-1691: renommage label ( ajout wash) ; 
 			//    16/11/2017 NGL-1691: renommage label ( ajout Hybridation)
 			l.add(newExperimentType("Hybridation, capture & wash (post)","capture",null,710,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsCapture(),
 					getInstrumentUsedTypes("bravo-workstation",
-							               "bravows-and-mastercycler-epg",
+							               "bravows-and-mastercycler-epg",     //15/11/2017 ajout "bravows-and-mastercycler-epg"
 										   "bravows-and-mastercycler-nexus"),  // 22/02/2018 NGL-1860: ajout
 					"OneToOne",
 					CNG));
@@ -405,6 +403,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 							               // "mastercycler-epg-and-bravows"),  22/02/2018 NGL-1860 supression
 					"OneToOne",
 					CNG));	
+			
 			
 			/** Quality Control, ordered by display order **/
             //NOTE: pas de Node a creer pour experiences type qualitycontrol
@@ -752,7 +751,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null, // pas de purif
 				getExperimentTypes("qpcr-quantification",
 						           "labchip-migration-profile",
-						           "miseq-qc"), // qc
+						           "miseq-qc"), // qc; est-ce necessaire de les lister ? ou un seul suffit ?
 				getExperimentTypes("aliquoting")  // transfert
 				).save();	
 		
@@ -780,7 +779,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 						               "ext-to-capture-prep-process-fc-ord"), // previous nodes
 				null, // pas de purif
 				getExperimentTypes("bioanalyzer-migration-profile",
-						           "labchip-migration-profile"),   // qc 
+						           "labchip-migration-profile"),   // qc ; est-ce necessaire de les lister ? ou un seul suffit ?
 				null  // pas transfert
 				).save();
 		
@@ -803,7 +802,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 						               "ext-to-pcr-capture-pcr-indexing-fc-ord"), // previous nodes
 				null, // pas de purif
 				getExperimentTypes("labchip-migration-profile",
-				                   "fluo-quantification"),            // qc ajout "fluo-quantification"  pour process Capture ( UTILE ?? voir comment plus bas...)
+				                   "fluo-quantification"),            // qc; ajout "fluo-quantification"  pour process Capture ( UTILE ??)
 				null  // pas de transfert
 				).save();
 
@@ -826,7 +825,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 									   "ext-to-pcr-indexing-process-fc-ord"), // previous nodes
 				null, // pas de purif
 				getExperimentTypes("bioanalyzer-migration-profile",
-						           "labchip-migration-profile"),    // QUELS QC  ??????????????? un seul suffit
+						           "labchip-migration-profile"),    // qc; est-ce necessaire de les lister ? ou un seul suffit ?
 				null  // pas tranfert
 				).save();
 			
@@ -844,7 +843,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				false,false,false,
 				getExperimentTypeNodes("chromium-gem-generation"), // previous nodes
 				null, // pas purif
-				getExperimentTypes("labchip-migration-profile"), // qc un seul suffit meme s'il y en a plusieurs possibles
+				getExperimentTypes("labchip-migration-profile"), // qc; un seul suffit meme s'il y en a plusieurs possibles
 				getExperimentTypes("tubes-to-plate") // transfert 
 				).save();		
 		
@@ -852,20 +851,19 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		newExperimentTypeNode("bisseq-lib-prep",getExperimentTypes("bisseq-lib-prep").get(0),
 				false, false,false,
 				getExperimentTypeNodes("ext-to-bis-seq-process-fc-ord"),
-				null,
-				null,
-				null
+				null, // pas de purif
+				null, // pas de qc ?????????????????????????
+				null  // pas de transfert
 				).save();
 		
 		// FDS ajout 04/04/2018 NGL-1727
 		newExperimentTypeNode("small-rnaseq-lib-prep",getExperimentTypes("small-rnaseq-lib-prep").get(0),
 				false, false,false,
 				getExperimentTypeNodes("ext-to-small-rna-seq-process-fc-ord"),
-				null,
-				null,
-				null
+				null, // pas de purif
+				getExperimentTypes("labchip-migration-profile"), // qc; un seul suffit meme s'il y en a plusieurs possibles
+				null  // pas de transfert
 				).save();
-		
 			
 
 		//FDS 24/10/2017 remplacer ext-to-norm-and-pool-fc-ord-depot  par  ext-to-norm-fc-ordered-depot
@@ -944,6 +942,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null  // pas transfert
 				).save();
 		
+		/* FDS Les noeuds qui ont de nombreux previous nodes doivent etre crees a la fin!!! */
+		
 		// FDS 06/06/2017: NGL-1447 => le noeud "tubes-to-plate" doit etre declaré pour les process commencant par un transfert
 		newExperimentTypeNode("tubes-to-plate",getExperimentTypes("tubes-to-plate").get(0),
 				false,false,false,
@@ -956,9 +956,9 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		newExperimentTypeNode("labchip-migration-profile",getExperimentTypes("labchip-migration-profile").get(0),
 				false, false,false,
 				getETForLabchipMigrationProfile(),  // previous nodes
-				null,
-				null,
-				null
+				null, // pas de purif
+				null, // pas qc
+				null  // pas transfert
 				).save();
 		
 	}
@@ -1604,7 +1604,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		//OuputContainer
 		// proprietes de containerOut doivent etre propagees au content
-		// il faut specifier l'état auquel les propriétés sont obligatoires: ici Finished (F) ??????????????
+		// il faut specifier l'état auquel les propriétés sont obligatoires: ici Finished (F)
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagIllumina(), 
 				"single", 30, true, null,null));
 		
@@ -1638,7 +1638,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		return propertyDefinitions;
 	}
 	
-	//FDS ajout 04/04/2018NGL-1727
+	//FDS ajout 05/04/2018NGL-1727
 	private List<PropertyDefinition> getPropertyDefinitionsBisSeqLibPrep() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
@@ -1647,11 +1647,26 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		return propertyDefinitions;
 	}
 	
-	//FDS ajout 04/04/2018NGL-1727
+	//FDS ajout 05/04/2018NGL-1727
 	private List<PropertyDefinition> getPropertyDefinitionsSmallRNASeqLibPrep() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
-		//TODO
+		// EN COURS................................................................
+		
+		//OuputContainer
+		
+		// A CONFIRMER !!!
+		propertyDefinitions.add(newPropertiesDefinition("Nombre de cycles PCR", "nbCyclesPCR", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, "F", null, 
+				null,null,null,"single", 29, true, "16", null)); 
+		
+		// proprietes de containerOut doivent etre propagees au content
+		// il faut specifier l'état auquel les propriétés sont obligatoires: ici Finished (F) 
+		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagIllumina(), 
+				"single", 30, true, null,null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagCategories(), 
+				"single", 31, true, null,null));	
+		
 		
 		return propertyDefinitions;
 	}

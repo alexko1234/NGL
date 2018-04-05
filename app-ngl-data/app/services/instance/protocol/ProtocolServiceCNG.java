@@ -1,25 +1,24 @@
 package services.instance.protocol;
 
-import static services.instance.InstanceFactory.*;
+import static services.instance.InstanceFactory.newPSV;
+import static services.instance.InstanceFactory.newProtocol;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.mongojack.DBQuery;
-
-import com.typesafe.config.ConfigFactory;
-
-import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.protocol.instance.Protocol;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
+
+import org.mongojack.DBQuery;
+
 import play.Logger;
 import services.instance.InstanceFactory;
 import validation.ContextValidation;
+import fr.cea.ig.MongoDBDAO;
 
 public class ProtocolServiceCNG {	
 
@@ -75,7 +74,9 @@ public class ProtocolServiceCNG {
 													   "tubes-to-plate",
 													   "plate-to-tubes",
 													   "plates-to-plate",
-													   "x-to-plate")));
+													   "x-to-plate",
+													   "small-rnaseq-lib-prep", // en attendant reponse prod
+													   "bisseq-lib-prep")));    // en attendant reponse prod
 
 		// 12/12/2016 protocoles pour RNA
 		lp.add(newProtocol("2a-ill-ssmrna-010616","2A_ILL_ssmRNA_010616","?","1","production", 
