@@ -8,9 +8,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
 
-import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.ngl.dao.api.APIException;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.api.GenericAPI;
@@ -18,9 +16,7 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.StorageHistory;
-import models.utils.InstanceConstants;
 import validation.ContextValidation;
-import validation.container.instance.ContainerSupportValidationHelper;
 
 public class ContainerSupportsAPI extends GenericAPI<ContainerSupportsDAO, ContainerSupport> {
 
@@ -116,20 +112,12 @@ public class ContainerSupportsAPI extends GenericAPI<ContainerSupportsDAO, Conta
 				} else{
 					logger.error("traceInformation is null !!");
 				}
-				
-				// Fields validation
-				if(fields.contains("storageCode")) ContainerSupportValidationHelper.validateStorageCode(input.storageCode, ctxVal);
-				
-				if(!ctxVal.hasErrors()) {
-					dao.updateObject(DBQuery.and(DBQuery.is("code", input.code)), dao.getBuilder(input, fields).set("traceInformation", ti));
-					if(fields.contains("storageCode")) {
-						containerApi.updateStorageCode(input.code, input.storageCode, ti);
-						updateStorages(supportInDb, input, currentUser);
-					}
-					return get(input.code);
-				} else {
-					throw new APIValidationException("Invalid fields", ctxVal.getErrors());
+				dao.updateObject(DBQuery.and(DBQuery.is("code", input.code)), dao.getBuilder(input, fields).set("traceInformation", ti));
+				if(fields.contains("storageCode")) {
+					containerApi.updateStorageCode(input.code, input.storageCode, ti);
+					updateStorages(supportInDb, input, currentUser);
 				}
+				return get(input.code);
 			} else {
 				throw new APIValidationException("Invalid ContainerSupport object", ctxVal.getErrors());
 			}

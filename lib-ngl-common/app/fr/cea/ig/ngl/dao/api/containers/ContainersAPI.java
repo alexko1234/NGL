@@ -94,7 +94,7 @@ public class ContainersAPI extends GenericAPI<ContainersDAO, Container> {
 	public Container update(Container input, String currentUser) throws APIException, APIValidationException {
 		Container containerInDb = get(input.code);
 		if(containerInDb == null) {
-			throw new APIException("Sample with code " + input.code + " not exist");
+			throw new APIException("Container with code " + input.code + " not exist");
 		} else {
 			ContextValidation ctxVal = new ContextValidation(currentUser);
 			if(input.traceInformation != null){
@@ -150,6 +150,15 @@ public class ContainersAPI extends GenericAPI<ContainersDAO, Container> {
 			} else {
 				throw new APIValidationException("Invalid Container object", ctxVal.getErrors());
 			}
+		}
+	}
+	
+	public void updateState(String code, State state, String currentUser) throws APIException {
+		Container containerInDb = get(code);
+		if(containerInDb == null) {
+			throw new APIException("Container with code " + code + " not exist");
+		} else {
+			ContextValidation ctxVal = new ContextValidation(currentUser);
 		}
 	}
 	
