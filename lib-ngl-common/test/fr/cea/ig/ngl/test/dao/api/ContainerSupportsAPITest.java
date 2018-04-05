@@ -4,7 +4,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
-import java.util.Date;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -22,7 +21,6 @@ import fr.cea.ig.ngl.test.TestAppWithDroolsFactory;
 import fr.cea.ig.ngl.test.dao.api.factory.TestContainerFactory;
 import fr.cea.ig.ngl.test.dao.api.factory.TestProjectFactory;
 import fr.cea.ig.ngl.test.dao.api.factory.TestSampleFactory;
-import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.project.instance.Project;
@@ -32,21 +30,21 @@ import play.Logger.ALogger;
 import rules.services.test.TestRules6Component;
 import utils.AbstractTests;
 
-public class ContainersAPITest extends AbstractTests implements AbstractAPITests {
+public class ContainerSupportsAPITest extends AbstractTests implements AbstractAPITests {
 
-	private static final play.Logger.ALogger logger = play.Logger.of(ContainersAPITest.class);
+	private static final play.Logger.ALogger logger = play.Logger.of(ContainerSupportsAPITest.class);
 	private static final TestAppWithDroolsFactory TEST_APP_FACTORY = new TestAppWithDroolsFactory("ngl-sq.test.conf").bindRulesComponent();
 	private static final String USER = "ngsrg";
 	private static final double QUANTITY = 1.0;
 	private static final double VOL = 1.0;
 	
 	//Tested API
-	private static ContainersAPI api;
+	private static ContainerSupportsAPI api;
 
 	// required APIs
 	private static ProjectsAPI projectApi;
 	private static SamplesAPI sampleApi;
-	private static ContainerSupportsAPI csApi;
+	private static ContainersAPI contApi;
 
 	// Reference objects
 	private static Container refContainer;
@@ -54,7 +52,7 @@ public class ContainersAPITest extends AbstractTests implements AbstractAPITests
 	private static Sample refSample;
 	private static Project refProject;
 	
-	private Container data;
+	private ContainerSupport data;
 	private static boolean clean = true;
 
 	@Override
@@ -77,13 +75,13 @@ public class ContainersAPITest extends AbstractTests implements AbstractAPITests
 		assertNotNull(projectApi);
 		sampleApi = app.injector().instanceOf(SamplesAPI.class);
 		Assert.assertNotNull(sampleApi);
-		app.injector().instanceOf(TestRules6Component.class);
-		csApi = app.injector().instanceOf(ContainerSupportsAPI.class);
-		Assert.assertNotNull(csApi);
-		
-		api = app.injector().instanceOf(ContainersAPI.class);
-		Assert.assertNotNull(api);
+		app.injector().instanceOf(TestRules6Component.class);	
+		contApi = app.injector().instanceOf(ContainersAPI.class);
+		Assert.assertNotNull(contApi);
 
+		api = app.injector().instanceOf(ContainerSupportsAPI.class);
+		Assert.assertNotNull(api);
+		
 		logger.debug("define ref objects");
 		refProject = TestProjectFactory.project(USER);
 		refSample = TestSampleFactory.sample(USER, refProject);
@@ -107,8 +105,8 @@ public class ContainersAPITest extends AbstractTests implements AbstractAPITests
 			try {
 				projectApi.create(refProject, USER);
 				sampleApi.create(refSample, USER);
-				csApi.create(refContainerSupport, USER);
-				data = api.create(refContainer, USER);
+				data = api.create(refContainerSupport, USER);
+				contApi.create(refContainer, USER);
 			} catch (APIValidationException e) {
 				logger.error(e.getMessage());
 				logger.error("invalid fields: " + e.getErrors().keySet().toString());
@@ -131,7 +129,7 @@ public class ContainersAPITest extends AbstractTests implements AbstractAPITests
 	public void deleteData() {
 		logger.debug("delete dep objects and test data");
 		try {
-			api.delete(data.code);
+			api.delete(refContainerSupport.code);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			if(logger.isDebugEnabled()) {
@@ -139,7 +137,7 @@ public class ContainersAPITest extends AbstractTests implements AbstractAPITests
 			}
 		} finally {
 			logger.debug("remove dep objects");
-			csApi.delete(refContainerSupport.code);
+			contApi.delete(data.code);
 			sampleApi.delete(refSample.code);
 			projectApi.delete(refProject.code);	
 			clean = true;
@@ -150,12 +148,10 @@ public class ContainersAPITest extends AbstractTests implements AbstractAPITests
 	public void createTest() {
 		logger.debug("Creation test");
 		setUpData();
-		Assert.assertEquals(refContainer.categoryCode, data.categoryCode);
-		Assert.assertEquals(refContainer.code, data.code);
-		Assert.assertEquals(refContainer.concentration, data.concentration);
-		Assert.assertEquals(refContainer.volume, data.volume);
-		Assert.assertEquals(refContainer.quantity, data.quantity);
-		Assert.assertEquals(refContainer.contents.size(), data.contents.size());
+		Assert.assertEquals(refContainerSupport.categoryCode, data.categoryCode);
+		Assert.assertEquals(refContainerSupport.code, data.code);
+		Assert.assertEquals(refContainerSupport.nbContainers, data.nbContainers);
+		Assert.assertEquals(refContainerSupport.nbContents, data.nbContents);
 		deleteData();
 	}
 	
@@ -164,21 +160,14 @@ public class ContainersAPITest extends AbstractTests implements AbstractAPITests
 		logger.debug("Update test");
 		setUpData();
 		try {
-			Container contToUpdate = data;
-			final double newVol = VOL * 2;
-			final double newConcentration = QUANTITY / newVol;
-			contToUpdate.volume.value = newVol;
-			contToUpdate.concentration.value = newConcentration;
-			contToUpdate.traceInformation.modifyUser = USER;
-			contToUpdate.traceInformation.modifyDate = new Date();
-			api.update(contToUpdate, USER);
+			ContainerSupport supportToUpdate = data;
+			supportToUpdate.nbContainers = 3;
+			api.update(supportToUpdate, USER);
 			
-			Container cont = api.get(refContainer.code);
-			Assert.assertEquals(refContainer.categoryCode, cont.categoryCode);
-			Assert.assertNotEquals(refContainer.volume, cont.volume);
-			Assert.assertEquals(contToUpdate.volume, cont.volume);
-			Assert.assertNotEquals(refContainer.concentration, cont.concentration);
-			Assert.assertEquals(contToUpdate.concentration, cont.concentration);
+			ContainerSupport support = api.get(refContainerSupport.code);
+			Assert.assertEquals(refContainerSupport.categoryCode, support.categoryCode);
+			Assert.assertNotEquals(refContainerSupport.nbContainers, support.nbContainers);
+			Assert.assertEquals(supportToUpdate.nbContainers, support.nbContainers);
 		} catch (APIValidationException e) {
 			logger.error(e.getMessage());
 			logValidationErrors(e);
@@ -190,25 +179,21 @@ public class ContainersAPITest extends AbstractTests implements AbstractAPITests
 		deleteData();
 	}
 	
-	@Test
+	@Test 
+	// TODO create a Storage in DB
 	public void updateFieldsTest() {
 		logger.debug("Update only some fields test");
 		setUpData();
 		try {
-			Container contToUpdate = new Container();
-			contToUpdate.code = data.code;
-			final double newVol = VOL * 2;
-			final double newConcentration = QUANTITY / newVol;
-			contToUpdate.volume = new PropertySingleValue(newVol, "µl");
-			contToUpdate.concentration = new PropertySingleValue(newConcentration, "µl");
-			api.update(contToUpdate, USER, Arrays.asList("volume", "concentration"));
+			ContainerSupport supportToUpdate = new ContainerSupport();
+			supportToUpdate.code = data.code;
+			String storageCode = "Bt20_70_A1";
+			supportToUpdate.storageCode = storageCode;
+			api.update(supportToUpdate, USER, Arrays.asList("storageCode"));
 			
-			Container cont = api.get(refContainer.code);
-			Assert.assertEquals(refContainer.categoryCode, cont.categoryCode);
-			Assert.assertNotEquals(refContainer.volume, cont.volume);
-			Assert.assertEquals(contToUpdate.volume, cont.volume);
-			Assert.assertNotEquals(refContainer.concentration, cont.concentration);
-			Assert.assertEquals(contToUpdate.concentration, cont.concentration);
+			ContainerSupport support = api.get(refContainerSupport.code);
+			Assert.assertNotEquals(refContainerSupport.storageCode, support.storageCode);
+			Assert.assertEquals(storageCode, support.storageCode);
 		} catch (APIValidationException e) {
 			logger.error(e.getMessage());
 			logValidationErrors(e);
@@ -224,8 +209,8 @@ public class ContainersAPITest extends AbstractTests implements AbstractAPITests
 	public void deleteTest() throws APIException {
 		logger.debug("Delete test");
 		setUpData();
-		api.delete(refContainer.code);
-		Assert.assertNull(api.get(refContainer.getCode()));
+		contApi.delete(refContainer.code);
+		Assert.assertNull(contApi.get(refContainer.getCode()));
 		deleteData();
 	}
 
@@ -234,10 +219,10 @@ public class ContainersAPITest extends AbstractTests implements AbstractAPITests
 		logger.debug("Get test");
 		setUpData();
 		try {
-			Container cont = api.get(refContainer.code);
-			Assert.assertNotNull(cont);
-			Assert.assertEquals(data.get_id(), cont.get_id());
-			Assert.assertEquals(refContainer.getCode(), cont.getCode());
+			ContainerSupport support = api.get(refContainerSupport.code);
+			Assert.assertNotNull(support);
+			Assert.assertEquals(data.get_id(), support.get_id());
+			Assert.assertEquals(data.getCode(), support.getCode());
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			exit(e.getMessage());
