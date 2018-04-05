@@ -91,7 +91,7 @@ public class Projects extends NGLAPIController<ProjectsAPI, ProjectsDAO, Project
 	@Override
 	@Authenticated
 	@Authorized.Read
-	public Result get(String code) {
+	public Result get(String code) { // Might be replaced by generic get method from NGLAPIController
 		try {
 			Project p = api().get(code);
 			if(p != null) {
@@ -104,32 +104,6 @@ public class Projects extends NGLAPIController<ProjectsAPI, ProjectsDAO, Project
 			return nglGlobalBadRequest();
 		}
 	}
-
-//	@Override
-//	@Authenticated
-//	@Authorized.Write
-//	public Result save() {
-//		Form<Project> filledForm = getFilledForm(projectForm, Project.class);
-//		Project projectInput = filledForm.get();
-//		if(! filledForm.hasErrors()) {
-//			try {
-//				Project p = api().create(projectInput, getCurrentUser());
-//				return ok(Json.toJson(p));
-//			} catch (APIValidationException e) {
-//				getLogger().error(e.getMessage());
-//				if(e.getErrors() != null) {
-//					return badRequest(errorsAsJson(e.getErrors()));
-//				} else {
-//					return badRequest(e.getMessage());
-//				}
-//			} catch (APIException e) {
-//				getLogger().error(e.getMessage());
-//				return badRequest("use PUT method to update the project");
-//			}
-//		} else {
-//			return badRequest(errorsAsJson(mapErrors(filledForm.allErrors())));
-//		}
-//	}
 	
 	@Override
 	public Project saveImpl() throws APIValidationException, APIException {
@@ -137,37 +111,6 @@ public class Projects extends NGLAPIController<ProjectsAPI, ProjectsDAO, Project
 		Project p = api().create(projectInput, getCurrentUser());
 		return p;
 	}
-
-//	@Override
-//	@Authenticated
-//	@Authorized.Write
-//	public Result update(String code) {
-//		Project project = api().get(code);
-//		if (project == null) {
-//			return badRequest("Project with code "+ code + " not exist");
-//		}
-//		Form<Project> filledForm = getFilledForm(projectForm, Project.class);
-//		Project projectInput = filledForm.get();
-//		if(! filledForm.hasErrors()) {
-//			try {
-//				api().update(projectInput, getCurrentUser());
-//			} catch (APIValidationException e) {
-//				getLogger().error(e.getMessage());
-//				if(e.getErrors() != null) {
-//					return badRequest(errorsAsJson(e.getErrors()));
-//				} else {
-//					return badRequest(e.getMessage());
-//				}
-//			} catch (APIException e) {
-//				getLogger().error(e.getMessage());
-//				return badRequest(e.getMessage());
-//			}
-//
-//			return ok(Json.toJson(projectInput));
-//		} else {
-//			return badRequest(errorsAsJson(mapErrors(filledForm.allErrors())));
-//		}
-//	}
 
 	@Override
 	public Project updateImpl(String code) throws Exception, APIException, APIValidationException {
