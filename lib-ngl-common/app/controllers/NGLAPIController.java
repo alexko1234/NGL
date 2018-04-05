@@ -22,6 +22,7 @@ import fr.cea.ig.play.IGBodyParsers;
 import play.data.validation.ValidationError;
 import play.mvc.BodyParser;
 import play.mvc.Result;
+import views.components.datatable.DatatableForm;
 
 /**
  * Contains Generic Methods of API controllers 
@@ -65,7 +66,24 @@ public abstract class NGLAPIController<T extends GenericAPI<U,V>, U extends Gene
 	
 	// Mandatory methods
 	public abstract Result list();
-	public abstract Result get(String code);
+//	public abstract Result get(String code);
+
+	@Authenticated
+	@Authorized.Read
+	public Result get(String code) {
+		try {
+			DatatableForm form = objectFromRequestQueryString(DatatableForm.class);
+			V obj = api().getObject(code, getKeys(form));
+			if (obj == null) {
+				return notFound();
+			} 
+			return okAsJson(obj);
+		} catch (Exception e) {
+			getLogger().error(e.getMessage());
+			return nglGlobalBadRequest();
+		}	
+	}
+	
 	
 	/**
 	 * These method defines the specific creation behavior for each resource. 
