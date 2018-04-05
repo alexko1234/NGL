@@ -51,7 +51,7 @@ class SampleSheet1 extends TextOutput {
 		containers.sort(((a,b) -> a.code.compareTo(b.code)));
 		for (Container c : containers) {
 			for (Content co :c.contents) {
-				String sample_id = c.support.line +"_"+ co.sampleCode+"_"+OutputHelper.getContentProperty(co,"libProcessTypeCode")+"_"+OutputHelper.getContentProperty(co,"tag");				
+				String sample_id = c.support.line + "_" + co.sampleCode+"_"+OutputHelper.getContentProperty(co,"libProcessTypeCode")+"_"+OutputHelper.getContentProperty(co,"tag");				
 				String i7_index_name = OutputHelper.getContentProperty(co,"tag");
 				String i7_index_seq=OutputHelper.getSequence(OutputHelper.getIndex("index-illumina-sequencing",OutputHelper.getContentProperty(co,"tag")));
 				String description=OutputHelper.getContentProperty(co,"tag")+"_"+co.percentage;

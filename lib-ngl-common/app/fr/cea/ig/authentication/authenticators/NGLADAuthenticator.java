@@ -35,8 +35,8 @@ public class NGLADAuthenticator extends ADAuthenticator {
 	 * Custom login form with an error message, null being no error.
 	 */
 	@Override
-	public Html getDefaultLoginForm(String message) { 
-		return views.html.nglLoginPassForm.render(message);
+	public Html getDefaultLoginForm(String redirect, String message) { 
+		return views.html.nglLoginPassForm.render(redirect, message);
 	}
 
 }

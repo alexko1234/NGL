@@ -33,6 +33,8 @@ public abstract class TextOutput {
 		return printf(s,args).println();
 	}
 	
-	public String getContent() { return content.toString(); }
+	public String getContent() {
+		return content.toString(); 
+	}
 	
 }
