@@ -24,7 +24,7 @@ public class TestSampleFactory {
 	
 	public static Sample sample(String user, Project proj) {
 		Sample s = new Sample();
-		s.code = "Test_Sample";
+		s.code = "TEST";
 		s.categoryCode = "default";
 		s.importTypeCode = "default-import";
 		s.name = "Sample de test";
