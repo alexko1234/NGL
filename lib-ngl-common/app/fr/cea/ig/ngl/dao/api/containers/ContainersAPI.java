@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import org.mongojack.DBQuery;
 
 import fr.cea.ig.ngl.dao.api.APIException;
+import fr.cea.ig.ngl.dao.api.APISemanticException;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.api.GenericAPI;
 import models.laboratory.common.instance.State;
@@ -65,7 +66,7 @@ public class ContainersAPI extends GenericAPI<ContainersDAO, Container> {
 	}
 
 	@Override
-	public Container create(Container input, String currentUser) throws APIValidationException, APIException {
+	public Container create(Container input, String currentUser) throws APIValidationException, APISemanticException {
 		ContextValidation ctxVal = new ContextValidation(currentUser); 
 		if (input._id == null) { 
 			input.traceInformation = new TraceInformation();
@@ -79,7 +80,7 @@ public class ContainersAPI extends GenericAPI<ContainersDAO, Container> {
 			input.state.date = new Date();		
 			
 		} else {
-			throw new APIException("create method does not update existing objects"); 
+			throw new APISemanticException("create method does not update existing objects"); 
 		}
 		ctxVal.setCreationMode();
 		input.validate(ctxVal);
@@ -153,6 +154,7 @@ public class ContainersAPI extends GenericAPI<ContainersDAO, Container> {
 		}
 	}
 	
+	//TODO
 	public void updateState(String code, State state, String currentUser) throws APIException {
 		Container containerInDb = get(code);
 		if(containerInDb == null) {

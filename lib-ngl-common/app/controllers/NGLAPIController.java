@@ -19,6 +19,7 @@ import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.api.GenericAPI;
 import fr.cea.ig.ngl.support.NGLForms;
 import fr.cea.ig.play.IGBodyParsers;
+import play.data.Form;
 import play.data.validation.ValidationError;
 import play.mvc.BodyParser;
 import play.mvc.Result;
@@ -37,6 +38,8 @@ import views.components.datatable.DatatableForm;
 public abstract class NGLAPIController<T extends GenericAPI<U,V>, U extends GenericMongoDAO<V>, V extends DBObject> 
 				extends NGLController implements NGLForms, DBObjectConvertor {
 
+	protected final Form<QueryFieldsForm> updateForm;
+	
 	private final T api;
 	
 	public T api() {
@@ -46,6 +49,7 @@ public abstract class NGLAPIController<T extends GenericAPI<U,V>, U extends Gene
 	public NGLAPIController(NGLApplication app, T api) {
 		super(app);
 		this.api = api;
+		this.updateForm = app.formFactory().form(QueryFieldsForm.class);
 	}
 	
 	/**

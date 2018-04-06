@@ -38,7 +38,7 @@ import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.mongo.MongoStreamer;
 import fr.cea.ig.play.IGBodyParsers;
-import fr.cea.ig.play.migration.NGLContext;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
@@ -65,15 +65,14 @@ import views.components.datatable.DatatableForm;
 import workflows.container.ContWorkflows;
 
 // Indirection so we can swap implementations.
-public class Containers extends Containers2 {
+public class ContainersOLD extends ContainersO2 {
 	
 	@Inject
-	public Containers(NGLContext ctx, ContWorkflows workflows) {
+	public ContainersOLD(NGLContext ctx, ContWorkflows workflows) {
 		super(ctx,workflows);
 	}
 	
 	// @Permission(value={"reading"})
-	@Override
 	@Authenticated
 	@Historized
 	@Authorized.Read
@@ -83,7 +82,6 @@ public class Containers extends Containers2 {
 	
 	// @Permission(value={"reading"})
 	
-	@Override
 	@Authenticated
 	@Historized
 	@Authorized.Read
@@ -93,7 +91,6 @@ public class Containers extends Containers2 {
 	
 	
 	// @Permission(value={"reading"})
-	@Override
 	@Authenticated
 	@Historized
 	@Authorized.Read
@@ -102,7 +99,6 @@ public class Containers extends Containers2 {
 	}
 	
 	// @Permission(value={"writing"})
-	@Override
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	@Authenticated
 	@Historized
@@ -112,7 +108,6 @@ public class Containers extends Containers2 {
 	}
 		
 	// @Permission(value={"writing"})
-	@Override
 	@Authenticated
 	@Historized
 	@Authorized.Write
@@ -121,7 +116,6 @@ public class Containers extends Containers2 {
 	}
 	
 	// @Permission(value={"writing"})
-	@Override
 	@Authenticated
 	@Historized
 	@Authorized.Write
@@ -131,12 +125,12 @@ public class Containers extends Containers2 {
 	
 }
 
-class Containers2 extends DocumentController<Container> {
+class ContainersO2 extends DocumentController<Container> {
 	
 	/**
 	 * Logger.
 	 */
-	private static final play.Logger.ALogger logger = play.Logger.of(Containers.class);
+	private static final play.Logger.ALogger logger = play.Logger.of(ContainersOLD.class);
 	
 	private static final List<String> defaultKeys = 
 			Arrays.asList("code",   "importTypeCode","categoryCode",
@@ -157,7 +151,7 @@ class Containers2 extends DocumentController<Container> {
 	private final ContWorkflows               workflows;
 	
 	@Inject
-	public Containers2(NGLContext ctx, ContWorkflows workflows) {
+	public ContainersO2(NGLContext ctx, ContWorkflows workflows) {
 		super(ctx,InstanceConstants.CONTAINER_COLL_NAME, Container.class, defaultKeys);
 		updateForm          = getNGLContext().form(QueryFieldsForm.class);
 		containerForm       = getNGLContext().form(Container.class);
@@ -176,7 +170,6 @@ class Containers2 extends DocumentController<Container> {
 
 		return notFound();
 	}*/
-	@Override
 	@Permission(value={"reading"})
 	public Result get(String code) {
 		return super.get(code);
@@ -190,7 +183,6 @@ class Containers2 extends DocumentController<Container> {
 			return notFound();
 		}	
 	}*/
-	@Override
 	@Permission(value={"reading"})
 	public Result head(String code) {
 		return super.head(code);
@@ -218,14 +210,14 @@ class Containers2 extends DocumentController<Container> {
 			// MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
 			MongoDBResult<Container> results = mongoDBFinder(containersSearch,query, keys);
 			int count = results.count();
-			Map<String, Integer> m = new HashMap<>(1);
+			Map<String, Integer> m = new HashMap<String, Integer>(1);
 			m.put("result", count);
 			return ok(Json.toJson(m));
 		} else if (containersSearch.list) {
 			// MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
 			MongoDBResult<Container> results = mongoDBFinder(containersSearch,query, keys);
 			List<Container> containers = results.toList();
-			List<ListObject> los = new ArrayList<>();
+			List<ListObject> los = new ArrayList<ListObject>();
 			for (Container p: containers) {
 				los.add(new ListObject(p.code, p.code));
 			}
@@ -376,7 +368,7 @@ class Containers2 extends DocumentController<Container> {
 			}else {
 				return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
 			}
-		}).collect(Collectors.toList());
+		}).collect(Collectors.toList());;
 		
 		return ok(Json.toJson(response));
 	}
@@ -388,12 +380,12 @@ class Containers2 extends DocumentController<Container> {
 	 * @throws DAOException 
 	 */
 	public static DBQuery.Query getQuery(ContainersSearchForm containersSearch) throws DAOException{		
-		List<DBQuery.Query> queryElts = new ArrayList<>();
+		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
 		Query query = DBQuery.empty();
 
 		
 		if(containersSearch.processProperties.size() > 0){	
-			List<String> processCodes = new ArrayList<>();
+			List<String> processCodes = new ArrayList<String>();
 			List<DBQuery.Query> listProcessQuery = NGLControllerHelper.generateQueriesForProperties(containersSearch.processProperties, Level.CODE.Process, "properties");
 			Query processQuery = DBQuery.and(listProcessQuery.toArray(new DBQuery.Query[queryElts.size()]));
 
@@ -440,8 +432,8 @@ class Containers2 extends DocumentController<Container> {
 				throw new RuntimeException("Missing nextProcessTypeCode to search container if sampleCodesFromIWCProcess");
 			
 			//1 extract all sampleCode from process in IW-C
-			Set<String> sampleCodes = new TreeSet<>();
-			List<Pattern> samplePathRegex = new ArrayList<>();
+			Set<String> sampleCodes = new TreeSet<String>();
+			List<Pattern> samplePathRegex = new ArrayList<Pattern>();
 			MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
 					DBQuery.is("state.code", "IW-C").is("typeCode", containersSearch.nextProcessTypeCode))
 			.cursor.forEach(p ->{
@@ -523,7 +515,7 @@ class Containers2 extends DocumentController<Container> {
 			queryElts.add(DBQuery.is("support.categoryCode", containersSearch.containerSupportCategory));
 		}else if(StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){
 			List<ContainerSupportCategory> containerSupportCategories = ContainerSupportCategory.find.findInputByExperimentTypeCode(containersSearch.nextExperimentTypeCode);
-			List<String> cs = new ArrayList<>();
+			List<String> cs = new ArrayList<String>();
 			for(ContainerSupportCategory c:containerSupportCategories){
 				cs.add(c.code);
 			}
@@ -534,7 +526,7 @@ class Containers2 extends DocumentController<Container> {
 
 
 
-		List<String> listePrevious = new ArrayList<>();
+		List<String> listePrevious = new ArrayList<String>();
 		//used in processes creation
 		if(StringUtils.isNotBlank(containersSearch.nextProcessTypeCode)){					
 					
@@ -571,7 +563,7 @@ class Containers2 extends DocumentController<Container> {
 		//used in experiment creation	
 		}else if(StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){
 			
-			List<DBQuery.Query> subQueryElts = new ArrayList<>();
+			List<DBQuery.Query> subQueryElts = new ArrayList<DBQuery.Query>();
 			List<ProcessType> processTypes=ProcessType.find.findByExperimentTypeCode(containersSearch.nextExperimentTypeCode);
 			if(CollectionUtils.isNotEmpty(processTypes)){
 				for(ProcessType processType:processTypes){
@@ -580,15 +572,11 @@ class Containers2 extends DocumentController<Container> {
 					Set<String> previousExpTypeCodes = previousExpType.stream().map(et -> et.code).collect(Collectors.toSet());
 					
 					if(CollectionUtils.isNotEmpty(containersSearch.fromTransformationTypeCodes)){
-						previousExpTypeCodes = previousExpTypeCodes
-													.stream()
-													.filter(petc -> (containersSearch.fromTransformationTypeCodes.contains(petc)
-															|| (containersSearch.fromTransformationTypeCodes.contains("none") && petc.startsWith("ext-to-"))))
-													.collect(Collectors.toSet());
+						previousExpTypeCodes.retainAll(containersSearch.fromTransformationTypeCodes);
 					}
 					
 					if(CollectionUtils.isNotEmpty(previousExpTypeCodes)){
-						subQueryElts.add(DBQuery.in("processTypeCodes", processType.code).in("fromTransformationTypeCodes", previousExpTypeCodes));						
+						subQueryElts.add(DBQuery.in("processTypeCodes", processType.code).in("fromTransformationTypeCodes", previousExpTypeCodes));
 					}else{
 						subQueryElts.add(DBQuery.in("processTypeCodes", "-1")); //force to return zero result;
 					}

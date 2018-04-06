@@ -160,17 +160,17 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 		State state = filledForm.get();
 		state.date = new Date();
 		state.user = getCurrentUser();
-//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 		ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
 		ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_STATE, Boolean.TRUE);
 		workflows.setState(ctxVal, support, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getSupport(code)));
+		} else {
+			// return badRequest(filledForm.errors-AsJson());
+			// return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
-		// return badRequest(filledForm.errors-AsJson());
-		// return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
-		return badRequest(errorsAsJson(ctxVal.getErrors()));
 	}
 
 	private ContainerSupport getSupport(String code) {
@@ -192,8 +192,7 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 					State state = element.data.state;
 					state.date = new Date();
 					state.user = user;
-//					ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
-					ContextValidation ctxVal = new ContextValidation(user, filledForm);
+					ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
 					ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
 					ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_STATE, Boolean.TRUE);
 					workflows.setState(ctxVal, support, state);
@@ -245,8 +244,7 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 			// il y a une query string ==> mettre a jour les champs dont le nom est dans la query string:   ?fields=XXXX&fields=YYY
 			if (dbSupport.code.equals(code)) {
 				// on a bien récupéré ce qu'on a demandé....
-//				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 				ctxVal.setUpdateMode();
 				validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);	
 				// verifier si les champs de la query string font partie des champs modifiables
@@ -360,7 +358,7 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("support", 1);
-			Query queryContainer =Containers.getQuery(cs);
+			Query queryContainer =ContainersOLD.getQuery(cs);
 			if (queryContainer != null) {
 				List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, queryContainer, keys).toList();
 				logger.debug("Containers " + containers.size());

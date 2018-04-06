@@ -44,7 +44,6 @@ import views.html.searchForm;
 @Historized
 public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> {
 	
-	private final Form<QueryFieldsForm> updateForm;
 	private final Form<Sample> sampleForm;
 
 
@@ -52,7 +51,6 @@ public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> {
 	public Samples(NGLApplication app, SamplesAPI api) {
 		super(app, api);
 		this.sampleForm = app.formFactory().form(Sample.class);
-		this.updateForm = app.formFactory().form(QueryFieldsForm.class);
 	}
 
 	@Override
