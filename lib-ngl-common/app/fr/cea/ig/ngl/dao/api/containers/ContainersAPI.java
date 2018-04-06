@@ -170,10 +170,10 @@ public class ContainersAPI extends GenericAPI<ContainersDAO, Container> {
 	}
 	
 	protected void updateStorageCode(String containerSupportCode, String storageCode, TraceInformation ti) {
-		List<String> fields = Arrays.asList("support.storageCode");
+		List<String> fields = Arrays.asList("storageCode");
 		Container container = new Container();
 		container.support = new LocationOnContainerSupport();
 		container.support.storageCode = storageCode;
-		dao.updateObject(DBQuery.and(DBQuery.is("support.code", containerSupportCode)), dao.getBuilder(container, fields).set("traceInformation", ti));
+		dao.updateObject(DBQuery.and(DBQuery.is("support.code", containerSupportCode)), dao.getBuilder(container, fields, "support").set("traceInformation", ti));
 	}
 }

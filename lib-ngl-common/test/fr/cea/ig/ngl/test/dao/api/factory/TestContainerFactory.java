@@ -59,6 +59,7 @@ public class TestContainerFactory {
 		cs.sampleCodes.add(s.code);
 		cs.nbContainers = 1;
 		cs.nbContents = 1;
+		//cs.storageCode = "Bt20_70_A1";
 		return cs;
 	}
 }

@@ -6,6 +6,8 @@ import org.jongo.MongoCollection;
 import org.jongo.MongoCursor;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate.Builder;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.PropertyAccessorFactory;
 
 import com.mongodb.BasicDBObject;
 
@@ -189,8 +191,6 @@ public /*abstract*/ class GenericMongoDAO<T extends DBObject> {
 	 * @return      mongo cursor
 	 */
 	public MongoCursor<T> findByQuery(String query) {
-//		MongoCollection collection = MongoDBPlugin.getCollection(this.collectionName);
-//		return (MongoCursor<T>) collection.find(query).as(elementClass);
 		MongoCollection collection = MongoDBPlugin.getCollection(collectionName);
 		return collection.find(query).as(elementClass);
 	}
@@ -211,15 +211,22 @@ public /*abstract*/ class GenericMongoDAO<T extends DBObject> {
 	 * Use to update a mongodb document.
 	 * @param value  DBObject
 	 * @param fields {@literal List<String>}
-	 * @param prefix String
+	 * @param prefix String if you want to access to an encapsulated object
 	 * @return       Builder
 	 */
 	public Builder getBuilder(T value, List<String> fields, String prefix) {
 		Builder builder = new Builder();
 		try {
 			for (String field: fields) {
-				String fieldName = (null != prefix) ? prefix + "." + field : field;
-				builder.set(fieldName, elementClass.getField(field).get(value));
+				if(prefix != null) {
+					String fieldName = prefix + "." + field ;
+					BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(value);
+					Class<?> c = wrapper.getPropertyType(prefix);
+					Object o = wrapper.getPropertyValue(prefix);
+					builder.set(fieldName, wrapper.getPropertyType(prefix).getField(field).get(o));
+				} else {
+					builder.set(field, elementClass.getField(field).get(value));
+				}
 			}
 		} catch(Exception e) {
 			throw new RuntimeException(e);

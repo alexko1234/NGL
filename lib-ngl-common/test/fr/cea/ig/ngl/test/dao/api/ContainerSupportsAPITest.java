@@ -162,6 +162,8 @@ public class ContainerSupportsAPITest extends AbstractTests implements AbstractA
 		try {
 			ContainerSupport supportToUpdate = data;
 			supportToUpdate.nbContainers = 3;
+			String storageCode = "Bt20_70_A1";
+			supportToUpdate.storageCode = storageCode;
 			api.update(supportToUpdate, USER);
 			
 			ContainerSupport support = api.get(refContainerSupport.code);
@@ -180,7 +182,6 @@ public class ContainerSupportsAPITest extends AbstractTests implements AbstractA
 	}
 	
 	@Test 
-	// TODO create a Storage in DB
 	public void updateFieldsTest() {
 		logger.debug("Update only some fields test");
 		setUpData();
