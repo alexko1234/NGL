@@ -51,7 +51,7 @@ object ApplicationBuild extends Build {
 	// Command line definition that allows the compilation 
 	// of a linked authentication library instead of the published one.
 	// It is enabled using sbt command line option -Dembedded.auth=true .
-	val embeddedAuth   = System.getProperty("embedded.auth")   == "true"
+	val embeddedAuth   = System.getProperty("embedded.auth")   == "false"
 	val eclipseLinking = System.getProperty("eclipse.linking") == "true"
 
 	// Workaround for missing properties in test vms. Build the test child

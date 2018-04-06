@@ -495,7 +495,7 @@ angular.module('home').controller('DilutionCtrl',['$scope' ,'$http','$parse', 'a
 				bufferVol : $parse("inputContainerUsed.experimentProperties.bufferVolume.value")(udtData),	
 
 				isReady:function(){
-					return (this.inputVol && "this.bufferVol");
+					return (this.inputVol && this.bufferVol);
 				}
 		};
 

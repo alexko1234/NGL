@@ -369,7 +369,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 						"16SV4V5 Archae","16SV5V6 Prok","18SV1V2 Metazoaire","16SV4 Procaryote","Amp 48-1", "Amp 48-2", "16S FL 27F/1492R", "autre"),null, null, null,"single", 2, true, null,null));
 		*/
 		propertyDefinitions.add(newPropertiesDefinition("Amorces", "amplificationPrimers", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content,Level.CODE.Sample), String.class, true, null, 
-				DescriptionFactory.newValues("16S FL 27F/1492R + Fuhrman primers","16S FL 27F/1492R","16S FL 27F/1390R","16S FL 27F/1390R (LMP)","16S FL 27F/1390R + Fuhrman primers",
+				DescriptionFactory.newValues("16S FL 27F/1492R + Fuhrman primers","16S FL 27F/1492R","16S FL 27F/1390R","16S FL 27F/1390R + Fuhrman primers",
 						"16S V1V2V3 Prok Sneed2015 27F/519Rmodbio","16S V4 Prok 515FF/806R","16S V4V5 Archae 517F/958R","16S V5V6 Prok 784F/1061R",
 						"18S V1V2 Metazoaire SSUF04/SSURmod","18S V4 Euk V4f (TAReukF1)/V4r (TAReukR)","18S V9 1389F/1510R",
 						"COI primers m1COIintF/jgHCO2198","CP23S primers","Fuhrman primers","ITS2/SYM_VAR_5.8S2/SYM_VAR_REV","ITSD/ITS2REV",
@@ -456,7 +456,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 				DescriptionFactory.newValues("16S_V4V5","18S_V9", "16S_Full Length + 16S_V4V5", "ITS2","CP23S","18S_V4","COI","16S_V1V2V3",
 						"16S_V5V6","18S_V1V2","16S_V4","autre"),	null,null,null,"single", 15, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Taille amplicon attendue", "expectedAmpliconSize", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, 
-				DescriptionFactory.newValues("300", "400","170","180","380","313","500","450","250","550", "411/600","280","150-170"),null,null,null,"single", 16, true, null, null));
+				DescriptionFactory.newValues("300", "400","170","180","380","313","500","450","250","550", "411/600","280","150-170", "690-710"),null,null,null,"single", 16, true, null, null));
 		//170 -> 150-170, 500 ??, 270 ?? -> pas utilisé, 250 ?? -> autre, 550 ?? -> autre
 		//manque : 411/600 (400), 280(250), 150-170(170) 
 		//enlever 270

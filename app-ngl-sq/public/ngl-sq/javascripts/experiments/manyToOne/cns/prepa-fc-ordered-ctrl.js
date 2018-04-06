@@ -215,15 +215,6 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
 	$scope.$watch("experiment.experimentProperties.worksheet.value", function(newValue, OldValue){
 			console.log('worksheet changed to :'+ newValue);
 			$scope.atmService.data.atm.forEach(function(atm){
-				atm.inputContainerUseds.forEach(function(icu){					
-					$parse("experimentProperties.inputVolume2.value").assign(icu, undefined);
-					$parse("experimentProperties.NaOHVolume.value").assign(icu, undefined);
-					$parse("experimentProperties.NaOHConcentration.value").assign(icu, undefined);
-					$parse("experimentProperties.trisHCLVolume.value").assign(icu, undefined);
-					$parse("experimentProperties.trisHCLConcentration.value").assign(icu, undefined);
-					$parse("experimentProperties.masterEPXVolume.value").assign(icu, undefined);
-					$parse("experimentProperties.finalConcentration2.value").assign(icu, undefined);										
-				});
 				atm.outputContainerUseds.forEach(function(ocu){					
 					if(newValue && defaultValues[newValue]["outputContainerUsed.experimentProperties.finalVolume.value"]){
 						$parse("experimentProperties.finalVolume.value").assign(ocu, defaultValues[newValue]["outputContainerUsed.experimentProperties.finalVolume.value"]);
@@ -231,7 +222,148 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
 						$parse("experimentProperties.finalVolume.value").assign(ocu, undefined);
 					}																						
 				});
+				atm.inputContainerUseds.forEach(function(icu){					
+					$parse("experimentProperties.inputVolume2.value").assign(icu, undefined);
+					$parse("experimentProperties.NaOHVolume.value").assign(icu, undefined);
+					$parse("experimentProperties.NaOHConcentration.value").assign(icu, undefined);
+					$parse("experimentProperties.trisHCLVolume.value").assign(icu, undefined);
+					$parse("experimentProperties.trisHCLConcentration.value").assign(icu, undefined);
+					$parse("experimentProperties.masterEPXVolume.value").assign(icu, undefined);
+					
+					$parse("experimentProperties.inputVolume.value").assign(icu, undefined);
+					$parse("experimentProperties.phixVolume.value").assign(icu, undefined);
+					$parse("experimentProperties.rsbVolume.value").assign(icu, undefined);
+					$parse("experimentProperties.finalConcentration2.value").assign(icu, undefined);
+					
+				});
+				
 			});
 			$scope.atmService.data.updateDatatable();		
 	});
+	
+	
+	$scope.updatePropertyFromUDT = function(value, col){
+		console.log("update from property : "+col.property);
+		
+		computeInputVolume(value.data);
+		computePhiXVolume(value.data);
+		computeRSBVolume(value.data);
+		computeFinalConcentration2(value.data);
+	}
+	//inputVolume (finalConcentration1*finalVolume1)/concentrationIN;		
+	var computeInputVolume = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.inputVolume.value");
+		var inputVolume = getter(udtData);
+
+		var compute = {
+				finalConcentration1 : $parse("inputContainerUsed.experimentProperties.finalConcentration1.value")(udtData),			
+				finalVolume1 : $parse("inputContainerUsed.experimentProperties.finalVolume1.value")(udtData),	
+				concentrationIN : $parse("inputContainer.concentration.value")(udtData),
+				isReady:function(){
+					return (this.finalConcentration1 && this.finalVolume1 && this.concentrationIN);
+				}
+		};
+
+		if(compute.isReady()){
+			var result = $parse("(finalConcentration1*finalVolume1)/concentrationIN")(compute);
+			if(angular.isNumber(result) && !isNaN(result)){
+				inputVolume =result;				
+			}else{
+				inputVolume = undefined;
+			}	
+			getter.assign(udtData, inputVolume);
+		}else{
+			inputVolume = undefined;
+			getter.assign(udtData, inputVolume);
+			console.log("not ready to computeInputVolume");
+		}
+	};
+	//phiXVolume (phixPercent*finalConcentration1*finalVolume1)/phixConcentration;
+	var computePhiXVolume = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.phixVolume.value");
+		var phixVolume = getter(udtData);
+
+		var compute = {
+				finalConcentration1 : $parse("inputContainerUsed.experimentProperties.finalConcentration1.value")(udtData),			
+				finalVolume1 : $parse("inputContainerUsed.experimentProperties.finalVolume1.value")(udtData),	
+				phixPercent : $parse("outputContainerUsed.experimentProperties.phixPercent.value")(udtData),
+				phixConcentration : $parse("inputContainerUsed.experimentProperties.phixConcentration.value")(udtData),
+				
+				isReady:function(){
+					return (this.finalConcentration1 && this.finalVolume1 && this.phixPercent && this.phixConcentration);
+				}
+		};
+
+		if(compute.isReady()){
+			var result = $parse("(phixPercent*finalConcentration1*finalVolume1/phixConcentration)/100")(compute);
+			if(angular.isNumber(result) && !isNaN(result)){
+				phixVolume =result;				
+			}else{
+				phixVolume = undefined;
+			}	
+			getter.assign(udtData, phixVolume);
+		}else{
+			phixVolume = undefined;
+			getter.assign(udtData, phixVolume);
+			console.log("not ready to computePhiXVolume");
+		}
+	};
+	//rsbVolume (finalVolume1-inputVolume-phixVolume);
+	var computeRSBVolume = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.rsbVolume.value");
+		var rsbVolume = getter(udtData);
+
+		var compute = {
+				inputVolume : $parse("inputContainerUsed.experimentProperties.inputVolume.value")(udtData),			
+				finalVolume1 : $parse("inputContainerUsed.experimentProperties.finalVolume1.value")(udtData),	
+				phixVolume : $parse("inputContainerUsed.experimentProperties.phixVolume.value")(udtData),
+				
+				isReady:function(){
+					return (this.inputVolume && this.finalVolume1 && this.phixVolume);
+				}
+		};
+
+		if(compute.isReady()){
+			var result = $parse("(finalVolume1-inputVolume-phixVolume)")(compute);
+			if(angular.isNumber(result) && !isNaN(result)){
+				rsbVolume =result;				
+			}else{
+				rsbVolume = undefined;
+			}	
+			getter.assign(udtData, rsbVolume);
+		}else{
+			rsbVolume = undefined;
+			getter.assign(udtData, rsbVolume);
+			console.log("not ready to computeRSBVolume");
+		}
+	};
+	//finalConcentration2 (finalConcentration1*inputVolume2)/finalVolume;
+	var computeFinalConcentration2 = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.finalConcentration2.value");
+		var finalConcentration2 = getter(udtData);
+
+		var compute = {
+				inputVolume2 : $parse("inputContainerUsed.experimentProperties.inputVolume2.value")(udtData),			
+				finalConcentration1 : $parse("inputContainerUsed.experimentProperties.finalConcentration1.value")(udtData),			
+				finalVolume : $parse("outputContainerUsed.experimentProperties.finalVolume.value")(udtData),
+				
+				isReady:function(){
+					return (this.inputVolume2 && this.finalConcentration1 && this.finalVolume);
+				}
+		};
+
+		if(compute.isReady()){
+			var result = $parse("(finalConcentration1*inputVolume2)/finalVolume")(compute);
+			if(angular.isNumber(result) && !isNaN(result)){
+				finalConcentration2 =result;				
+			}else{
+				finalConcentration2 = undefined;
+			}	
+			getter.assign(udtData, finalConcentration2);
+		}else{
+			finalConcentration2 = undefined;
+			getter.assign(udtData, finalConcentration2);
+			console.log("not ready to finalConcentration2");
+		}
+	};
 }]);
