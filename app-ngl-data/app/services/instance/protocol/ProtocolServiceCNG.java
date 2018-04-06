@@ -74,9 +74,7 @@ public class ProtocolServiceCNG {
 													   "tubes-to-plate",
 													   "plate-to-tubes",
 													   "plates-to-plate",
-													   "x-to-plate",
-													   "small-rnaseq-lib-prep", // en attendant reponse prod
-													   "bisseq-lib-prep")));    // en attendant reponse prod
+													   "x-to-plate")));
 
 		// 12/12/2016 protocoles pour RNA
 		lp.add(newProtocol("2a-ill-ssmrna-010616","2A_ILL_ssmRNA_010616","?","1","production", 
@@ -184,7 +182,17 @@ public class ProtocolServiceCNG {
 						                               "pcr-and-indexing",
 						                               "fluo-quantification",
 						                               "labchip-migration-profile")));  
+		
+		// 06/04/2018 ajout protocoles pour smallRNA	
+		lp.add(newProtocol("nebnext-small-rna-library-prep","NEBNext Small RNA Library Prep","?","1","production", 
+		InstanceFactory.setExperimentTypeCodes("small-rnaseq-lib-prep")));
+		
+		lp.add(newProtocol("qiaseq-mirna-library","QIAseq miRNA Library","?","1","production", 
+		InstanceFactory.setExperimentTypeCodes("small-rnaseq-lib-prep")));
 
+		
+
+		
 		//------------Experiences de Control Qualité------------------------------
 		lp.add(newProtocol("7-sop-miseq","7_SOP_Miseq","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes("miseq-qc")));

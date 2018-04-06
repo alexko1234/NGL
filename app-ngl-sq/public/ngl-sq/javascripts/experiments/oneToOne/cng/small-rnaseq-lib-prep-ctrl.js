@@ -70,7 +70,16 @@ angular.module('home').controller('SmallRNASeqLibPrepCtrl',['$scope', '$parse', 
 				       "position":8.2,
 				       "extraHeaders":{0:inputExtraHeaders}
 				     }, 
-				     */        
+				     */       
+			         { //Volume 
+			        	 "header":Messages("containers.table.volume") + " (µL)", 
+			        	 "property":"inputContainerUsed.volume.value",
+			        	 "order":true,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":6,
+			        	 "extraHeaders":{0:inputExtraHeaders}
+			         }, 
 			         { // Etat input Container 
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"inputContainer.state.code | codes:'state'",

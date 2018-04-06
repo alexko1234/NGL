@@ -323,6 +323,26 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"96-well-plate"}), 
 				getContainerSupportCategories(new String[]{"96-well-plate"}), 
 				CNG));	
+
+		// FDS 06/04/2018 NGL-1727: Sciclone NGSX + Zephyr
+		l.add(newInstrumentUsedType("Sciclone NGSX + Zephyr", "sciclone-ngsx-and-zephyr", InstrumentCategory.find.findByCode("liquid-handling-robot"), getScicloneNGSXAndZephyrProperties(), 
+				getInstruments(
+						createInstrument("ngs2-and-zephyr1","NGS-2 / Zephyr 1",null, true, null, CNG),
+						createInstrument("ngs3-and-zephyr1","NGS-3 / Zephyr 1",null, true, null, CNG)),
+				getContainerSupportCategories(new String[]{"96-well-plate"}), 
+				getContainerSupportCategories(new String[]{"96-well-plate"}), 
+				CNG));
+		
+		// FDS 06/04/2018 NGL-1727: Tecan EVO150 + Zephyr	
+		l.add(newInstrumentUsedType("Tecan EVO150 + Zephyr", "tecan-evo-150-and-zephyr", InstrumentCategory.find.findByCode("liquid-handling-robot"), getTecanAndZephyrProperties(), 
+				getInstruments(
+						createInstrument("tecan-lee-1-and-zephyr1","Tecan-LEE-1 / Zephyr 1",null, true, null, CNG)),
+				getContainerSupportCategories(new String[]{"96-well-plate"}), 
+				getContainerSupportCategories(new String[]{"96-well-plate"}), 
+				CNG));
+		
+		// NGL 1996: tecan-evo-150 seul pour BisSeq TODO ???
+		
 		
 		// FDS ajout 29/01/2016 JIRA NGL-894 pseudo instruments covaris+Sciclone (plaque input/plaque output) 
 		// FDS 12/07/2017 Covaris E210 plus utilisé=> inactiver les instruments mixtes
@@ -470,7 +490,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"96-well-plate"}), 
 				getContainerSupportCategories(new String[]{"96-well-plate"}), 
 				CNG));
-		
+	
 		
 		// FDS ajout 20/02/2017 NGL-1167 : Chromium controller ( entree tubes / sortie strip-8 )
 		l.add(newInstrumentUsedType("Chromium controller", "chromium-controller", InstrumentCategory.find.findByCode("10x-genomics-instrument"), getChromiumControllerProperties(), 
@@ -1012,6 +1032,29 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
         propertyDefinitions.add(newPropertiesDefinition("Identifiant PC", "pcId", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",300));
 
 		return propertyDefinitions;
+	}
+	
+	// FDS 06/04/2018 NGL:1727
+	private static List<PropertyDefinition>getScicloneNGSXAndZephyrProperties()throws DAOException {
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		
+        //TODO Sciclone
+		l.addAll(getScicloneNGSXProperties());
+		
+		//Zephyr
+		
+		return l;
+	}
+	
+	// FDS 06/04/2018 NGL:1727
+	private static List<PropertyDefinition>getTecanAndZephyrProperties()throws DAOException {
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+
+        //TODO tecan
+		
+		//Zephyr
+		
+		return l;
 	}
 	
 	/*** get lists methods ***/

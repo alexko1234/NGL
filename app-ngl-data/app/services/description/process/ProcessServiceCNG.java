@@ -1,37 +1,26 @@
 package services.description.process;
 
-import static services.description.DescriptionFactory.newExperimentTypeNode;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;// ajout FDS pour getPETForQCTransfertPurif
 
+import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
-import models.laboratory.common.description.MeasureCategory;
-import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
-import models.laboratory.common.description.Institute;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.instrument.description.Instrument;
-import models.laboratory.processes.description.ExperimentTypeNode;
 import models.laboratory.processes.description.ProcessCategory;
-import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.description.ProcessExperimentType;
+import models.laboratory.processes.description.ProcessType;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
 import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
-import services.description.common.MeasureService;
-import services.description.instrument.InstrumentServiceCNG;
 import services.description.declaration.cng.Nanopore;
-
-import com.typesafe.config.ConfigFactory;
 
 public class ProcessServiceCNG  extends AbstractProcessService{
 
@@ -298,19 +287,22 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-pcr-indexing-process-fc").get(0),  //void  experiment type
 				CNG));		
 		
-		// FDS ajout 04/04/2018 NGL-1727: processus SmallRNASeq
-		l.add(DescriptionFactory.newProcessType("Small RNAseq (FC ordonnée)", "small-rna-seq-process-fc-ord", ProcessCategory.find.findByCode("library"),		
+		// FDS ajout 06/04/2018 NGL-1727: processus SmallRNASeq 
+		l.add(DescriptionFactory.newProcessType("Small RNAseq", "small-rna-seq-process", ProcessCategory.find.findByCode("library"),		
 				13,
 				getPropertyDefinitionsSmallRNASeq(),
 				Arrays.asList(
-						getPET("ext-to-small-rna-seq-process-fc-ord",-1), //ordered list of experiment type in process type
+						getPET("ext-to-small-rna-seq-process",-1), //ordered list of experiment type in process type
 						getPET("small-rnaseq-lib-prep",0), 
-						getPET("normalization-and-pooling",1),   // 2 de meme niveau
-						getPET("prepa-fc-ordered",2),
-						getPET("illumina-depot",3)),
-				getExperimentTypes("small-rnaseq-lib-prep").get(0),                //first experiment type    
-				getExperimentTypes("illumina-depot").get(0),                       //last  experiment type
-				getExperimentTypes("ext-to-small-rna-seq-process-fc-ord").get(0),  //void  experiment type
+						getPET("normalization-and-pooling",1),   
+						getPET("prepa-fc-ordered",2), 
+						getPET("denat-dil-lib",2), // 2 de meme niveau
+						getPET("illumina-depot",3),
+						getPET("prepa-flowcell",3),// 2 de meme niveau
+						getPET("illumina-depot",4)), //  defini une deuxiememe fois ???
+				getExperimentTypes("small-rnaseq-lib-prep").get(0),         //first experiment type    
+				getExperimentTypes("illumina-depot").get(0),                //last  experiment type
+				getExperimentTypes("ext-to-small-rna-seq-process").get(0),  //void  experiment type
 				CNG));
 		
 		// FDS ajout 04/04/2018 NGL-1727: processus BisSeq

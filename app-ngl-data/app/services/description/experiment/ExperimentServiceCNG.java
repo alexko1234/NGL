@@ -229,7 +229,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					CNG));	
 			
 			//FDS ajout 04/04/2018  NGL-1727: processus SmallRNASeq
-			l.add(newExperimentType("Ext to Small RNASeq","ext-to-small-rna-seq-process-fc-ord",null,-1,
+			l.add(newExperimentType("Ext to Small RNASeq","ext-to-small-rna-seq-process",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 					null, 
 					null,
@@ -274,19 +274,19 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"OneToOne", 
 					CNG));
 			
-			//FDS 04/04/2018 ajout JIRA NGL-1727: pour processus SmallRNASeq
+			//FDS 06/04/2018 ajout JIRA NGL-1727: pour processus SmallRNASeq
 			l.add(newExperimentType("Small RNAseq lib prep","small-rnaseq-lib-prep",null,650,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 					getPropertyDefinitionsSmallRNASeqLibPrep(),
-					getInstrumentUsedTypes("sciclone-ngsx","hand"), 
+					getInstrumentUsedTypes("sciclone-ngsx-and-zephyr","tecan-evo-150-and-zephyr","hand"), 
 					"OneToOne", 
 					CNG));
 			
-			//FDS 04/04/2018 ajout JIRA NGL-1727: pour processus BisSeq
+			//FDS 04/04/2018 ajout JIRA NGL-1996: pour processus BisSeq
 			l.add(newExperimentType("BisSeq lib prep","bisseq-lib-prep",null,660,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
-					getPropertyDefinitionsBisSeqLibPrep(),//TODO
-					getInstrumentUsedTypes("hand"),  //TODO
+					getPropertyDefinitionsBisSeqLibPrep(),  //TODO
+					getInstrumentUsedTypes("sciclone-ngsx","hand"), // tecan-evo-150 seul ????
 					"OneToOne", 
 					CNG));
 	
@@ -723,7 +723,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				).save();	
 		
 		//FDS ajout 04/04/2018 NGL-1727: processus SmallRNASeq
-		newExperimentTypeNode("ext-to-small-rna-seq-process-fc-ord", getExperimentTypes("ext-to-small-rna-seq-process-fc-ord").get(0), 
+		newExperimentTypeNode("ext-to-small-rna-seq-process", getExperimentTypes("ext-to-small-rna-seq-process").get(0), 
 				false, false, false, 
 				null, // no previous nodes
 				null,
@@ -847,7 +847,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				getExperimentTypes("tubes-to-plate") // transfert 
 				).save();		
 		
-		// FDS ajout 04/04/2018 NGL-1727
+		// FDS ajout 04/04/2018 NGL-1996
 		newExperimentTypeNode("bisseq-lib-prep",getExperimentTypes("bisseq-lib-prep").get(0),
 				false, false,false,
 				getExperimentTypeNodes("ext-to-bis-seq-process-fc-ord"),
@@ -859,7 +859,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		// FDS ajout 04/04/2018 NGL-1727
 		newExperimentTypeNode("small-rnaseq-lib-prep",getExperimentTypes("small-rnaseq-lib-prep").get(0),
 				false, false,false,
-				getExperimentTypeNodes("ext-to-small-rna-seq-process-fc-ord"),
+				getExperimentTypeNodes("ext-to-small-rna-seq-process"),
 				null, // pas de purif
 				getExperimentTypes("labchip-migration-profile"), // qc; un seul suffit meme s'il y en a plusieurs possibles
 				null  // pas de transfert
@@ -875,7 +875,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 						               "prep-pcr-free",             //FDS 12/12/2016 ajout prep-pcr-free en previous
 						               "wg-chromium-lib-prep",      //FDS 13/03/2017 -- JIRA NGL-1167:
 						               "pcr-and-indexing",          //FDS 20/07/2017 -- JIRA NGL-1201: processs capture
-						               "bisseq-lib-prep",           //FDS 04/04/2018 -- JIRA NGL-1727: processus BisSeq
+						               "bisseq-lib-prep",           //FDS 04/04/2018 -- JIRA NGL-1996: processus BisSeq
 						               "small-rnaseq-lib-prep"      //FDS 04/04/2018 -- JIRA NGL-1727: processus SmallRNASeq
 						               ), // previous
 				null, // pas de purif
@@ -1642,21 +1642,30 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	private List<PropertyDefinition> getPropertyDefinitionsBisSeqLibPrep() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
-		//TODO
+		//OuputContainer	
+		// A CONFIRMER !!!
+		propertyDefinitions.add(newPropertiesDefinition("Nbre Cycles PCR", "pcrCycleNumber", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, "F", null, 
+				null,null,null,"single", 29, true, "16", null)); 
+		
+		// proprietes de containerOut doivent etre propagees au content
+		// il faut specifier l'état auquel les propriétés sont obligatoires: ici Finished (F) 
+		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagIllumina(), 
+				"single", 30, true, null,null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagCategories(), 
+				"single", 31, true, null,null));	
+		
 		
 		return propertyDefinitions;
 	}
 	
-	//FDS ajout 05/04/2018NGL-1727
+	//FDS ajout 05/04/2018 NGL-1727
 	private List<PropertyDefinition> getPropertyDefinitionsSmallRNASeqLibPrep() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
-		// EN COURS................................................................
-		
-		//OuputContainer
-		
+		//OuputContainer	
 		// A CONFIRMER !!!
-		propertyDefinitions.add(newPropertiesDefinition("Nombre de cycles PCR", "nbCyclesPCR", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, "F", null, 
+		propertyDefinitions.add(newPropertiesDefinition("Nbre Cycles PCR", "pcrCycleNumber", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, "F", null, 
 				null,null,null,"single", 29, true, "16", null)); 
 		
 		// proprietes de containerOut doivent etre propagees au content
