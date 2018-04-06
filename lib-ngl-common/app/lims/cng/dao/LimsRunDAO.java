@@ -11,23 +11,22 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 //import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import lims.models.experiment.Experiment;
 import lims.models.instrument.Instrument;
 
-
+@SuppressWarnings("deprecation")
 @Repository
 public class LimsRunDAO {
 	
-//	private SimpleJdbcTemplate jdbcTemplate;
-	private JdbcTemplate jdbcTemplate;
+	private SimpleJdbcTemplate jdbcTemplate;
 	
     @Autowired
     @Qualifier("lims")
     public void setDataSource(DataSource dataSource) {
-//        this.jdbcTemplate = new SimpleJdbcTemplate(dataSource);       
-        jdbcTemplate = new JdbcTemplate(dataSource);       
+        this.jdbcTemplate = new SimpleJdbcTemplate(dataSource);       
     }
     /*
      * Return the list of active sequencers.

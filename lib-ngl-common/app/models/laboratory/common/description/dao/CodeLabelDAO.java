@@ -4,28 +4,25 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import models.laboratory.common.description.CodeLabel;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-//import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import models.laboratory.common.description.CodeLabel;
+@SuppressWarnings("deprecation")
 @Repository
 public class CodeLabelDAO {
 
 	protected DataSource dataSource;
-//	protected SimpleJdbcTemplate jdbcTemplate;
-	protected JdbcTemplate jdbcTemplate;
+	protected SimpleJdbcTemplate jdbcTemplate;
 	
 	@Autowired
 	@Qualifier("ngl")
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
-//		jdbcTemplate = new SimpleJdbcTemplate(dataSource);   		
-		jdbcTemplate = new JdbcTemplate(dataSource);   		
+		jdbcTemplate = new SimpleJdbcTemplate(dataSource);   		
 	}
 	
 	public List<CodeLabel> findAll(){
