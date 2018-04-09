@@ -341,7 +341,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"96-well-plate"}), 
 				CNG));
 		
-		// NGL 1996: tecan-evo-150 seul pour BisSeq TODO ???
+		// NGL 1996: tecan-evo-150 seul TODO ???
 		
 		
 		// FDS ajout 29/01/2016 JIRA NGL-894 pseudo instruments covaris+Sciclone (plaque input/plaque output) 

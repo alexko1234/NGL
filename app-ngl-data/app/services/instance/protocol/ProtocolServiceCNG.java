@@ -183,15 +183,18 @@ public class ProtocolServiceCNG {
 						                               "fluo-quantification",
 						                               "labchip-migration-profile")));  
 		
-		// 06/04/2018 ajout protocoles pour smallRNA	
+		// 06/04/2018 ajout protocoles pour smallRNASeq
 		lp.add(newProtocol("nebnext-small-rna-library-prep","NEBNext Small RNA Library Prep","?","1","production", 
-		InstanceFactory.setExperimentTypeCodes("small-rnaseq-lib-prep")));
+				InstanceFactory.setExperimentTypeCodes("small-rnaseq-lib-prep")));
 		
-		lp.add(newProtocol("qiaseq-mirna-library","QIAseq miRNA Library","?","1","production", 
-		InstanceFactory.setExperimentTypeCodes("small-rnaseq-lib-prep")));
-
+		lp.add(newProtocol("qiaseq-mirna-library-prep","QIAseq miRNA Library Prep","?","1","production", 
+				InstanceFactory.setExperimentTypeCodes("small-rnaseq-lib-prep")));
 		
-
+		// 09/04/2018 ajout protocoles pour BisSeq
+		lp.add(newProtocol("nugen-ovation-ultralow-methyl-seq-system-1-96","NUGEN Ovation Ultralow Methyl-Seq System 1-96","?","1","production", 
+				InstanceFactory.setExperimentTypeCodes("bisseq-lib-prep")));
+		
+		
 		
 		//------------Experiences de Control Qualité------------------------------
 		lp.add(newProtocol("7-sop-miseq","7_SOP_Miseq","?","1","production", 

@@ -286,7 +286,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			l.add(newExperimentType("BisSeq lib prep","bisseq-lib-prep",null,660,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 					getPropertyDefinitionsBisSeqLibPrep(),  //TODO
-					getInstrumentUsedTypes("sciclone-ngsx","hand"), // tecan-evo-150 seul ????
+					getInstrumentUsedTypes("sciclone-ngsx-and-zephyr","tecan-evo-150-and-zephyr","hand"), // tecan-evo-150 seul ????
 					"OneToOne", 
 					CNG));
 	
@@ -1638,7 +1638,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		return propertyDefinitions;
 	}
 	
-	//FDS ajout 05/04/2018NGL-1727
+	//FDS ajout 05/04/2018 NGL-1996
 	private List<PropertyDefinition> getPropertyDefinitionsBisSeqLibPrep() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
