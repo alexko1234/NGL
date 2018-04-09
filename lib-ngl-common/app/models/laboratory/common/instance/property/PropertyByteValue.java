@@ -1,12 +1,13 @@
 package models.laboratory.common.instance.property;
 
+import static fr.cea.ig.lfw.utils.Iterables.first;
+
 import java.util.Collection;
 
-import static fr.cea.ig.lfw.utils.Iterables.first;
-import validation.ContextValidation;
-import validation.utils.ValidationHelper;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
+import validation.ContextValidation;
+import validation.utils.ValidationHelper;
 
 
 /**
@@ -27,9 +28,16 @@ public class PropertyByteValue extends PropertyValue {
 	}
 
 	// TODO : activate this method, fails at the moment because the value field holds a String value in some cases.
-//	public byte[] getValue() {
-//		return byteValue();
-//	}
+	@Override
+	public byte[] getValue() {
+		return byteValue();
+	}
+	
+	// This overrides the Object definition in the parent class so the 
+	// type is effectively a byte array when seen by jackson.
+	public void setValue(byte[] b) {
+		value = b;
+	}
 	
 	public byte[] byteValue() {
 		// If the value is a string we could assume that it is in fact a base64
@@ -54,5 +62,35 @@ public class PropertyByteValue extends PropertyValue {
 			ValidationHelper.required(contextValidation, this, propertyDefinition); 
 		}		
 	}
+	
+//	public static class Serializer extends StdSerializer<PropertyByteValue> {
+//
+//	    private static final long serialVersionUID = 1L;
+//
+//	    public Serializer() {
+//	        super(PropertyByteValue.class);
+//	    }
+//
+//	    @Override
+//	    public void serialize(PropertyByteValue value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+//	        gen.writeString(Base64.encode(value.byteValue()));
+//	    }
+//	}
+//	
+//	public static class Deserializer extends StdDeserializer<PropertyByteValue> {
+//
+//	    private static final long serialVersionUID = 1514703510863497028L;
+//
+//	    public Deserializer() {
+//	        super(PropertyByteValue.class);
+//	    }
+//
+//	    @Override
+//	    public PropertyByteValue deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+//	        JsonNode node = p.getCodec().readTree(p);
+//	        String base64 = node.asText();
+//	        return new PropertyByteValue(Base64.decode(base64));
+//	    }
+//	}
 	
 }

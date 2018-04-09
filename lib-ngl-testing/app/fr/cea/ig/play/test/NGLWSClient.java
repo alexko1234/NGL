@@ -55,7 +55,6 @@ public class NGLWSClient {
 	public NGLWSClient(WSClient c) {
 		ws   = c;
 		mods = new ArrayList<>();
-		// mods.add(r -> r.setContentType("application/json;charset=UTF-8"));
 	}
 	
 	/**

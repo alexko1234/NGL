@@ -1,5 +1,9 @@
 package models.laboratory.common.instance;
 
+import static fr.cea.ig.lfw.utils.Equality.objectEquals;
+import static fr.cea.ig.lfw.utils.Equality.typedEquals;
+import static fr.cea.ig.lfw.utils.Hashing.hash;
+
 import java.util.Collection;
 
 import  com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -7,9 +11,6 @@ import  com.fasterxml.jackson.annotation.JsonTypeInfo;
 import  com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import  com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
-import static fr.cea.ig.lfw.utils.Hashing.hash;
-import static fr.cea.ig.lfw.utils.Equality.objectEquals;
-import static fr.cea.ig.lfw.utils.Equality.typedEquals;
 import models.laboratory.common.description.PropertyDefinition;
 import validation.ContextValidation;
 import validation.IValidation;
@@ -44,6 +45,7 @@ public abstract class PropertyValue implements IValidation {
 	public String _type;
 	
 	// TODO: use and abstract getValue accessor so the value field can be moved in subclasses and properly typed.
+	// Could ignore this field and provide adequately typed serializers.
 	public Object value;
 	
 	public PropertyValue(String _type) {

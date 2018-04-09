@@ -1,7 +1,5 @@
 package fr.cea.ig.play.test;
 
-import play.inject.Bindings;
-
 import java.util.ArrayList;
 // import java.util.Arrays;
 import java.util.List;
@@ -11,6 +9,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import play.Application;
+import play.inject.Bindings;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.libs.ws.WSClient;
 
@@ -138,6 +137,10 @@ public class ApplicationFactory {
 		DevAppTesting.testInServer(this.createApplication(), c);
 	}
 	
+//	public void ws(Consumer<NGLWSClient> c) {
+//		DevAppTesting.testInServer(this.createApplication(), ws -> c.accept(new NGLWSClient(ws)));
+//	}
+	
 	/**
 	 * Test the application directly.
 	 * @param c code to execute using the created application
@@ -153,11 +156,16 @@ public class ApplicationFactory {
 	
 	/**
 	 * Test the application using a WS client and the application.
-	 * @param c code to exeute using the created application and WS client.
+	 * @param c code to execute using the created application and WS client.
 	 */
-	public void runWs(BiConsumer<Application,WSClient> c)  {
+//	public void runWs(BiConsumer<Application,WSClient> c)  {
+//		final Application a = createApplication();
+//		DevAppTesting.testInServer(a,ws -> c.accept(a,ws));
+//	}
+
+	public void runWs(BiConsumer<Application,NGLWSClient> c)  {
 		final Application a = createApplication();
-		DevAppTesting.testInServer(a,ws -> c.accept(a,ws));
+		DevAppTesting.testInServer(a,ws -> c.accept(a, new NGLWSClient(ws)));
 	}
 	
 }
