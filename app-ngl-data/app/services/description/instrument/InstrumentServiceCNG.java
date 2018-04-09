@@ -324,6 +324,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"96-well-plate"}), 
 				CNG));	
 
+		/*OOps trop tot... pas pour la 2.1.2 attendre
 		// FDS 06/04/2018 NGL-1727: Sciclone NGSX + Zephyr
 		l.add(newInstrumentUsedType("Sciclone NGSX + Zephyr", "sciclone-ngsx-and-zephyr", InstrumentCategory.find.findByCode("liquid-handling-robot"), getScicloneNGSXAndZephyrProperties(), 
 				getInstruments(
@@ -342,7 +343,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				CNG));
 		
 		// NGL 1996: tecan-evo-150 seul TODO ???
-		
+		*/
 		
 		// FDS ajout 29/01/2016 JIRA NGL-894 pseudo instruments covaris+Sciclone (plaque input/plaque output) 
 		// FDS 12/07/2017 Covaris E210 plus utilisé=> inactiver les instruments mixtes

@@ -287,6 +287,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-pcr-indexing-process-fc").get(0),  //void  experiment type
 				CNG));		
 		
+		/* OOps trop tot... pas pour la 2.1.2 attendre
 		// FDS ajout 06/04/2018 NGL-1727: processus SmallRNASeq 
 		l.add(DescriptionFactory.newProcessType("Small RNAseq", "small-rna-seq-process", ProcessCategory.find.findByCode("library"),		
 				13,
@@ -320,7 +321,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("illumina-depot").get(0),                 //last  experiment type
 				getExperimentTypes("ext-to-bis-seq-process-fc-ord").get(0),  //void  experiment type
 				CNG));		
-		
+		*/
 		
 		
 		/* 04/04/2018 regrouper les processus par categorie 

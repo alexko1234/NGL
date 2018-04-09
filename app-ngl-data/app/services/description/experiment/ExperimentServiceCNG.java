@@ -274,6 +274,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"OneToOne", 
 					CNG));
 			
+			/* OOps trop tot... pas pour la 2.1.2 attendre
 			//FDS 06/04/2018 ajout JIRA NGL-1727: pour processus SmallRNASeq
 			l.add(newExperimentType("Small RNAseq lib prep","small-rnaseq-lib-prep",null,650,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
@@ -289,6 +290,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getInstrumentUsedTypes("sciclone-ngsx-and-zephyr","tecan-evo-150-and-zephyr","hand"), // tecan-evo-150 seul ????
 					"OneToOne", 
 					CNG));
+			*/
 	
 			//FDS mise prod 01/09/2016
 			l.add(newExperimentType("PCR+purification","pcr-and-purification",null,700,
@@ -722,6 +724,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null
 				).save();	
 		
+		/* OOps trop tot... pas pour la 2.1.2 attendre
 		//FDS ajout 04/04/2018 NGL-1727: processus SmallRNASeq
 		newExperimentTypeNode("ext-to-small-rna-seq-process", getExperimentTypes("ext-to-small-rna-seq-process").get(0), 
 				false, false, false, 
@@ -731,7 +734,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null
 				).save();	
 		
-		//FDS ajout 04/04/2018 NGL-1727: processus BisRNASeq
+		//FDS ajout 04/04/2018 NGL-1996: processus BisRNASeq
 		newExperimentTypeNode("ext-to-bis-seq-process-fc-ord", getExperimentTypes("ext-to-bis-seq-process-fc-ord").get(0), 
 				false, false, false, 
 				null, // no previous nodes
@@ -739,7 +742,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null,
 				null
 				).save();	
-		
+		*/
 		
 		
 				
@@ -847,6 +850,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				getExperimentTypes("tubes-to-plate") // transfert 
 				).save();		
 		
+		/* OOps trop tot... pas pour la 2.1.2 attendre
 		// FDS ajout 04/04/2018 NGL-1996
 		newExperimentTypeNode("bisseq-lib-prep",getExperimentTypes("bisseq-lib-prep").get(0),
 				false, false,false,
@@ -864,7 +868,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				getExperimentTypes("labchip-migration-profile"), // qc; un seul suffit meme s'il y en a plusieurs possibles
 				null  // pas de transfert
 				).save();
-			
+		*/	
 
 		//FDS 24/10/2017 remplacer ext-to-norm-and-pool-fc-ord-depot  par  ext-to-norm-fc-ordered-depot
 		newExperimentTypeNode("normalization-and-pooling",getExperimentTypes("normalization-and-pooling").get(0),
@@ -874,9 +878,9 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 						               "pcr-and-purification",
 						               "prep-pcr-free",             //FDS 12/12/2016 ajout prep-pcr-free en previous
 						               "wg-chromium-lib-prep",      //FDS 13/03/2017 -- JIRA NGL-1167:
-						               "pcr-and-indexing",          //FDS 20/07/2017 -- JIRA NGL-1201: processs capture
-						               "bisseq-lib-prep",           //FDS 04/04/2018 -- JIRA NGL-1996: processus BisSeq
-						               "small-rnaseq-lib-prep"      //FDS 04/04/2018 -- JIRA NGL-1727: processus SmallRNASeq
+						               "pcr-and-indexing"          //FDS 20/07/2017 -- JIRA NGL-1201: processs capture
+						               //"bisseq-lib-prep",           //FDS 04/04/2018 -- JIRA NGL-1996: processus BisSeq        oops trop tot
+						               //"small-rnaseq-lib-prep"      //FDS 04/04/2018 -- JIRA NGL-1727: processus SmallRNASeq   oops trop tot
 						               ), // previous
 				null, // pas de purif
 				null, // pas de qc
@@ -891,8 +895,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 						               "prep-pcr-free",
 						               "pcr-and-purification",     //FDS 01/09/2016 -- WG_Nano 
 						               "wg-chromium-lib-prep",     //FDS 13/03/2017 -- JIRA NGL-1167: processus chromium
-						               "pcr-and-indexing",         //FDS 20/07/2017 -- JIRA NGL-1201: processus capture
-						               "bisseq-lib-prep"           //FDS 04/04/2018 -- JIRA NGL-1727: processus BisSeq
+						               "pcr-and-indexing"         //FDS 20/07/2017 -- JIRA NGL-1201: processus capture
+						               /// "bisseq-lib-prep"           //FDS 04/04/2018 -- JIRA NGL-1727: processus BisSeq     oops trop tot
 						               ), // previous nodes
 				null, // pas de purif
 				getExperimentTypes("miseq-qc"), // qc 
@@ -1638,6 +1642,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		return propertyDefinitions;
 	}
 	
+	/*OOps trop tot... pas pour la 2.1.2 attendre
 	//FDS ajout 05/04/2018 NGL-1996
 	private List<PropertyDefinition> getPropertyDefinitionsBisSeqLibPrep() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
@@ -1679,7 +1684,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		return propertyDefinitions;
 	}
-	
+	*/
 	
 	
 	// FDS ajout 18/07/2017 pour JIRA NGL-1201: processus capture
