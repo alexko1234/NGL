@@ -62,35 +62,5 @@ public class PropertyByteValue extends PropertyValue {
 			ValidationHelper.required(contextValidation, this, propertyDefinition); 
 		}		
 	}
-	
-//	public static class Serializer extends StdSerializer<PropertyByteValue> {
-//
-//	    private static final long serialVersionUID = 1L;
-//
-//	    public Serializer() {
-//	        super(PropertyByteValue.class);
-//	    }
-//
-//	    @Override
-//	    public void serialize(PropertyByteValue value, JsonGenerator gen, SerializerProvider provider) throws IOException {
-//	        gen.writeString(Base64.encode(value.byteValue()));
-//	    }
-//	}
-//	
-//	public static class Deserializer extends StdDeserializer<PropertyByteValue> {
-//
-//	    private static final long serialVersionUID = 1514703510863497028L;
-//
-//	    public Deserializer() {
-//	        super(PropertyByteValue.class);
-//	    }
-//
-//	    @Override
-//	    public PropertyByteValue deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-//	        JsonNode node = p.getCodec().readTree(p);
-//	        String base64 = node.asText();
-//	        return new PropertyByteValue(Base64.decode(base64));
-//	    }
-//	}
-	
+		
 }
