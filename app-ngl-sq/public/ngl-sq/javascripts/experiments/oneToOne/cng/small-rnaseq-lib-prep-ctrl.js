@@ -379,13 +379,21 @@ angular.module('home').controller('SmallRNASeqLibPrepCtrl',['$scope', '$parse', 
 	//$scope.plates[0].tags.push(); //colonne 11
 	//$scope.plates[0].tags.push(); //colonne 12
 	
-	// TEST!!!!! les QIA n'existent PAS!!!
-	$scope.plates[1].tags.push("QIA-01", "QIA-02", "QIA-03", "QIA-04", "QIA-05", "QIA-06", "QIA-07", "QIA-08"); //colonne 1
-	$scope.plates[1].tags.push("QIA-09", "QIA-10", "QIA-11", "QIA-12", "QIA-02", "QIA-03", "QIA-04", "QIA-05"); //colonne 2
-	$scope.plates[1].tags.push("QIA-06", "QIA-07", "QIA-08", "QIA-09", "QIA-10", "QIA-11", "QIA-12", "QIA-01"); //colonne 3
-	$scope.plates[1].tags.push("QIA-03", "QIA-04", "QIA-05", "QIA-06", "QIA-07", "QIA-08", "QIA-09", "QIA-10"); //colonne 4
-	$scope.plates[1].tags.push("QIA-11", "QIA-12", "QIA-01", "QIA-02", "QIA-04", "QIA-05", "QIA-06", "QIA-07"); //colonne 5
-	$scope.plates[1].tags.push("QIA-08", "QIA-09", "QIA-10", "QIA-11", "QIA-12", "QIA-01", "QIA-02", "QIA-03"); //colonne 6
+	// l'indice dans le tableau correspond a l'ordre "colonne d'abord" dans la plaque
+	// !! ce sont les codes des index qu'il faut mettre ici !!
+	//                             A         B         C         D         E         F         G         H
+	$scope.plates[1].tags.push("qmr-01", "qmr-13", "qmr-25", "qmr-37", "qmr-49", "qmr-61", "qmr-73", "qmr-85"); //colonne 1
+	$scope.plates[1].tags.push("qmr-02", "qmr-14", "qmr-26", "qmr-38", "qmr-50", "qmr-62", "qmr-74", "qmr-86"); //colonne 2
+	$scope.plates[1].tags.push("qmr-03", "qmr-15", "qmr-27", "qmr-39", "qmr-51", "qmr-63", "qmr-75", "qmr-87"); //colonne 3
+	$scope.plates[1].tags.push("qmr-04", "qmr-16", "qmr-28", "qmr-40", "qmr-52", "qmr-64", "qmr-76", "qmr-88"); //colonne 4
+	$scope.plates[1].tags.push("qmr-05", "qmr-17", "qmr-29", "qmr-41", "qmr-53", "qmr-65", "qmr-77", "qmr-89"); //colonne 5
+	$scope.plates[1].tags.push("qmr-06", "qmr-18", "qmr-30", "qmr-42", "qmr-54", "qmr-66", "qmr-78", "qmr-90"); //colonne 6
+	$scope.plates[1].tags.push("qmr-07", "qmr-19", "qmr-31", "qmr-43", "qmr-55", "qmr-67", "qmr-79", "qmr-91"); //colonne 7	
+	$scope.plates[1].tags.push("qmr-08", "qmr-20", "qmr-32", "qmr-44", "qmr-56", "qmr-68", "qmr-80", "qmr-92"); //colonne 8
+	$scope.plates[1].tags.push("qmr-09", "qmr-21", "qmr-33", "qmr-45", "qmr-57", "qmr-69", "qmr-81", "qmr-93"); //colonne 9
+	$scope.plates[1].tags.push("qmr-10", "qmr-22", "qmr-34", "qmr-46", "qmr-58", "qmr-70", "qmr-82", "qmr-94"); //colonne 10
+	$scope.plates[1].tags.push("qmr-11", "qmr-23", "qmr-35", "qmr-47", "qmr-59", "qmr-71", "qmr-83", "qmr-95"); //colonne 11
+	$scope.plates[1].tags.push("qmr-12", "qmr-24", "qmr-36", "qmr-48", "qmr-60", "qmr-72", "qmr-84", "qmr-96"); //colonne 12
 	
 	
 	$scope.tagPlate = $scope.plates[0]; // defaut du select
