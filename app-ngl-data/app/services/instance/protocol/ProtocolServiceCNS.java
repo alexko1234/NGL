@@ -247,6 +247,9 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("swift-accel-1s","Swift_Accel_1S","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation"), 
 				concatMap(newPSV("libraryProtocol","Bq Swift 1S"))));
 		
+		lp.add(newProtocol("prod_ill_bqadn_bqsags-lcmanuel_164_v1","Prod_ILL_BqADN_BqSAGs-LC Manuel_164_v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation","pcr-amplification-and-purification"), 
+				concatMap(newPSV("libraryProtocol","Bq SAG LC"))));
+		
 		
 		/*
 		lp.add(newProtocol("swift-accel-1s","Swift_Accel_1S","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation","pcr-amplification-and-purification"), 
@@ -354,7 +357,10 @@ public class ProtocolServiceCNS {
 		
 		lp.add(newProtocol("qcard-qc","QC_qcard","path7","1","production", InstanceFactory.setExperimentTypeCodes("qcard")));	
 
-		lp.add(newProtocol("ptr-wga-bq-sags-v3","PTR_WGA_Bq_SAGs_V3","path7","1","production", InstanceFactory.setExperimentTypeCodes("wga-amplification")));	
+		lp.add(newProtocol("ptr-wga-bq-sags-v3","PTR_WGA_Bq_SAGs_V3","path7","1","production", InstanceFactory.setExperimentTypeCodes("wga-amplification"),false));	
+		lp.add(newProtocol("prod_ill_evaladn_wga-sags_163_v4","Prod_ILL_EvalADN_WGA-SAGs_163_v4","path1","1","production", InstanceFactory.setExperimentTypeCodes("wga-amplification")));
+		
+		
 		lp.add(newProtocol("wga-nanopore","WGA_Nanopore","path7","1","production", InstanceFactory.setExperimentTypeCodes("wga-amplification")));	
 		lp.add(newProtocol("qiagen-repli-g-wga","QIAGEN REPLI-g WGA","path7","1","production", InstanceFactory.setExperimentTypeCodes("wga-amplification")));	
 		lp.add(newProtocol("qiagen-repli-g-wta","QIAGEN REPLI-g WTA","path7","1","production", InstanceFactory.setExperimentTypeCodes("wga-amplification")));	
