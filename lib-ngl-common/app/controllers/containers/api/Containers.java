@@ -1,13 +1,7 @@
 package controllers.containers.api;
 
 
-import static validation.container.instance.ContainerValidationHelper.validateConcentration;
-import static validation.container.instance.ContainerValidationHelper.validateQuantity;
-import static validation.container.instance.ContainerValidationHelper.validateSize;
-import static validation.container.instance.ContainerValidationHelper.validateVolume;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -22,26 +16,33 @@ import javax.inject.Inject;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jongo.MongoCursor;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
 import com.mongodb.BasicDBObject;
 
-import controllers.DocumentController;
+import akka.stream.javadsl.Source;
+import akka.util.ByteString;
+import controllers.NGLAPIController;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
-import controllers.authorisation.Permission;
+import controllers.StateController;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.MongoDBResult.Sort;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.mongo.MongoStreamer;
-import fr.cea.ig.play.IGBodyParsers;
-import fr.cea.ig.play.migration.NGLContext;
+import fr.cea.ig.ngl.NGLApplication;
+import fr.cea.ig.ngl.dao.api.APIException;
+import fr.cea.ig.ngl.dao.api.APISemanticException;
+import fr.cea.ig.ngl.dao.api.APIValidationException;
+import fr.cea.ig.ngl.dao.api.containers.ContainersAPI;
+import fr.cea.ig.ngl.dao.api.containers.ContainersDAO;
+import fr.cea.ig.util.Streamer;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.description.ExperimentType;
@@ -49,337 +50,221 @@ import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
-import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import play.data.Form;
 import play.i18n.Lang;
-import play.libs.Json;
-import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
-import views.components.datatable.DatatableForm;
 import workflows.container.ContWorkflows;
 
-// Indirection so we can swap implementations.
-public class Containers extends Containers2 {
+
+@Historized
+public class Containers extends NGLAPIController<ContainersAPI, ContainersDAO, Container> implements StateController {
+	
+	private final Form<Container> form;
+	private final Form<State> stateForm;
+	private final Form<ContainerBatchElement> batchElementForm;
+	private final ContWorkflows workflows;
 	
 	@Inject
-	public Containers(NGLContext ctx, ContWorkflows workflows) {
-		super(ctx,workflows);
-	}
-	
-	// @Permission(value={"reading"})
-	@Override
-	@Authenticated
-	@Historized
-	@Authorized.Read
-	public Result get(String code) {
-		return super.get(code);
-	}
-	
-	// @Permission(value={"reading"})
-	
-	@Override
-	@Authenticated
-	@Historized
-	@Authorized.Read
-	public Result head(String code) {
-		return super.head(code);
-	}
-	
-	
-	// @Permission(value={"reading"})
-	@Override
-	@Authenticated
-	@Historized
-	@Authorized.Read
-	public Result list() throws DAOException {
-		return super.list();
-	}
-	
-	// @Permission(value={"writing"})
-	@Override
-	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
-	@Authenticated
-	@Historized
-	@Authorized.Write
-	public Result update(String code) {
-		return super.update(code);
-	}
-		
-	// @Permission(value={"writing"})
-	@Override
-	@Authenticated
-	@Historized
-	@Authorized.Write
-	public Result updateState(String code) {
-		return super.updateState(code);
-	}
-	
-	// @Permission(value={"writing"})
-	@Override
-	@Authenticated
-	@Historized
-	@Authorized.Write
-	public Result updateStateBatch() {
-		return super.updateStateBatch();
-	}
-	
-}
-
-class Containers2 extends DocumentController<Container> {
-	
-	/**
-	 * Logger.
-	 */
-	private static final play.Logger.ALogger logger = play.Logger.of(Containers.class);
-	
-	private static final List<String> defaultKeys = 
-			Arrays.asList("code",   "importTypeCode","categoryCode",
-					"state","valuation","traceInformation","properties",
-					"comments","support","contents","volume",
-					"concentration","quantity","size","projectCodes",
-					"sampleCodes",  "fromTransformationTypeCodes","processTypeCodes");
-	
-	private static final List<String> authorizedUpdateFields = 
-			Arrays.asList("valuation","state","comments","volume","quantity","size","concentration");
-	
-	private final Form<QueryFieldsForm>       updateForm;          // = form(QueryFieldsForm.class);
-	private final Form<Container>             containerForm;       // = form(Container.class);
-	// private final Form<ContainersSearchForm>  containerSearchForm; // = form(ContainersSearchForm.class);
-	private final Form<ContainerBatchElement> batchElementForm;    // = form(ContainerBatchElement.class);
-	private final Form<State>                 stateForm;           // = form(State.class);
-	// private final static ContWorkflows workflows = Spring.get BeanOfType(ContWorkflows.class);
-	private final ContWorkflows               workflows;
-	
-	@Inject
-	public Containers2(NGLContext ctx, ContWorkflows workflows) {
-		super(ctx,InstanceConstants.CONTAINER_COLL_NAME, Container.class, defaultKeys);
-		updateForm          = getNGLContext().form(QueryFieldsForm.class);
-		containerForm       = getNGLContext().form(Container.class);
-		// containerSearchForm = getNGLContext().form(ContainersSearchForm.class);
-		batchElementForm    = getNGLContext().form(ContainerBatchElement.class);
-		stateForm           = getNGLContext().form(State.class);
-		this.workflows      = workflows;
-	}
-	
-	/*@Permission(value={"reading"})
-	public static Result get(String code){
-		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, code);
-		if(container != null){
-			return ok(Json.toJson(container));
-		}
-
-		return notFound();
-	}*/
-	@Override
-	@Permission(value={"reading"})
-	public Result get(String code) {
-		return super.get(code);
-	}
-	
-	/*@Permission(value={"reading"})
-	public static Result head(String code) {
-		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, code)){			
-			return ok();					
-		}else{
-			return notFound();
-		}	
-	}*/
-	@Override
-	@Permission(value={"reading"})
-	public Result head(String code) {
-		return super.head(code);
-	}
-	
-	private static Container findContainer(String containerCode){
-		return  MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code",containerCode));
+	public Containers(NGLApplication app, ContainersAPI api, ContWorkflows workflows) {
+		super(app, api);
+		form = app.formFactory().form(Container.class);
+		stateForm = app.formFactory().form(State.class);
+		batchElementForm = app.formFactory().form(ContainerBatchElement.class);
+		this.workflows = workflows;
 	}
 
-	@Permission(value={"reading"})
-	public Result list() throws DAOException{
-		ContainersSearchForm containersSearch = filledFormQueryString(ContainersSearchForm.class);
-		DBQuery.Query query = getQuery(containersSearch);
-		BasicDBObject keys = getKeys(updateForm(containersSearch));
-		
-		if (containersSearch.reporting) {
-			return nativeMongoDBQuery(containersSearch);
-		} else if (containersSearch.datatable) {
-			MongoDBResult<Container> results = mongoDBFinder(containersSearch,query, keys);
-			// return ok(MongoStreamer.streamUDT(results)).as("application/json");
-			return MongoStreamer.okStreamUDT(results);
-		} else if (containersSearch.count) {
-			keys.put("_id", 0);//Don't need the _id field
-			keys.put("code", 1);
-			// MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
-			MongoDBResult<Container> results = mongoDBFinder(containersSearch,query, keys);
-			int count = results.count();
-			Map<String, Integer> m = new HashMap<>(1);
-			m.put("result", count);
-			return ok(Json.toJson(m));
-		} else if (containersSearch.list) {
-			// MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
-			MongoDBResult<Container> results = mongoDBFinder(containersSearch,query, keys);
-			List<Container> containers = results.toList();
-			List<ListObject> los = new ArrayList<>();
-			for (Container p: containers) {
-				los.add(new ListObject(p.code, p.code));
-			}
-			return ok(Json.toJson(los));
-		} else {
-			MongoDBResult<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, query, keys);
-			// return ok(new MongoDBResponseChunks<Container>(results)).as("application/json");
-			// return ok(MongoStreamer.stream(results)).as("application/json");
-			return MongoStreamer.okStream(results);
-		}
+	@Override
+	public Container saveImpl() throws APIValidationException, APISemanticException {
+		Container input = getFilledForm(form, Container.class).get();
+		Container c = api().create(input, getCurrentUser());
+		return c;
 	}
 
-	@Permission(value={"writing"})
-	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
-	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
-	public Result update(String code) {
-		logger.debug("udpate " + code);
-		Container container = findContainer(code);
-		// 
-		if (container == null)
-			return badRequest("container with code " + code + " does not exist");
-		
-		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
-		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
-		Form<Container> filledForm = getFilledForm(containerForm, Container.class);
-		Container input = filledForm.get();
-
-		if (queryFieldsForm.fields == null) {
-			if (code.equals(input.code)) {
-				if (null != input.traceInformation) { 
-					input.traceInformation.setTraceInformation(getCurrentUser());
-				} else {
-					logger.error("traceInformation is null !!");
-				}
-				
-				if (!container.state.code.equals(input.state.code)) {
-					return badRequest("You cannot change the state code. Please used the state url ! ");
-				}
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
-				ctxVal.setUpdateMode();
-				input.comments = InstanceHelpers.updateComments(input.comments, ctxVal);
-				cleanProperty(input);
-				input.validate(ctxVal);
-				if (ctxVal.hasErrors())
-					return badRequest(errorsAsJson(ctxVal.getErrors()));
-				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, input);
-				return ok(Json.toJson(input));				
-			} else {
-				// This uses a non json overload and this makes the result unreadable
-				// in the UI.
-				return badRequest("url container code and json container code are not the same");
-			}	
-		} else {
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
-			ctxVal.setUpdateMode();
-			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
-			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
-			if(ctxVal.hasErrors())
-				// return badRequest(filledForm.errors-AsJson());
-				return badRequest(errorsAsJson(ctxVal.getErrors()));
+	@Override
+	public Container updateImpl(String code) throws Exception, APIException, APIValidationException {
+		Container input = getFilledForm(form, Container.class).get();
+		if(code.equals(input.code)) { 
+			Container containerInDB = api().get(code);
+			if (!containerInDB.state.code.equals(input.state.code)) throw new Exception("You can not change the state code. Please use the state url ! ");
 			
-			input.comments = InstanceHelpers.updateComments(input.comments, ctxVal);
-
-			TraceInformation ti = container.traceInformation;
-			ti.setTraceInformation(getCurrentUser());
-
-			if (queryFieldsForm.fields.contains("valuation")) {
-				input.valuation.user = getCurrentUser();
-				input.valuation.date = new Date();
-			}
-
-			if (queryFieldsForm.fields.contains("volume"))        validateVolume(input.volume, ctxVal);					
-			if (queryFieldsForm.fields.contains("quantity"))	  validateQuantity(input.quantity, ctxVal);
-			if (queryFieldsForm.fields.contains("size"))          validateSize(input.size, ctxVal);
-			if (queryFieldsForm.fields.contains("concentration")) validateConcentration(input.concentration, ctxVal);					
-
-			if (ctxVal.hasErrors())
-				return badRequest(errorsAsJson(ctxVal.getErrors()));
-			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
-					DBQuery.and(DBQuery.is("code", code)), getBuilder(input, queryFieldsForm.fields, Container.class).set("traceInformation", ti));
-			return ok(Json.toJson(findContainer(code)));
-		}		
-		
-	}
-	
-	
-	
-	private static void cleanProperty(Container input) {
-		if(null != input.volume && null == input.volume.value){
-			input.volume = null;
-		}
-		
-		if(null != input.concentration && null == input.concentration.value){
-			input.concentration = null;
-		}
-		if(null != input.size && null == input.size.value){
-			input.size = null;
-		}
-		if(null != input.quantity && null == input.quantity.value){
-			input.quantity = null;
-		}
-		
-	}
-
-	@Permission(value={"writing"})
-	public Result updateState(String code) {
-		Container container = findContainer(code);
-		if (container == null)
-			return badRequest("Container with code " + code + " not exist");
-		Form<State> filledForm =  getFilledForm(stateForm, State.class);
-		State state = filledForm.get();
-		state.date = new Date();
-		state.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
-		ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
-		ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE, Boolean.TRUE);		
-		workflows.setState(ctxVal, container, state);
-		if (!ctxVal.hasErrors()) {
-			return ok(Json.toJson(findContainer(code)));
+			QueryFieldsForm queryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class).get();
+			Container c = null;
+				if(queryFieldsForm.fields == null) { 
+					c = api().update(input, getCurrentUser());
+				} else {
+					c = api().update(input, getCurrentUser(), queryFieldsForm.fields);
+				}
+				return c;
 		} else {
-			// return badRequest(filledForm.errors-AsJson());
-			return badRequest(errorsAsJson(ctxVal.getErrors()));
+			throw new Exception("Container codes are not the same");
+		}
+	}
+
+	@Override
+	@Authenticated
+	@Authorized.Read
+	public Result list() { //TODO voir si peut etre remonté dans NGLAPIController
+		try {
+			ContainersSearchForm containersSearch = objectFromRequestQueryString(ContainersSearchForm.class);
+			if (containersSearch.reporting) {
+				MongoCursor<Container> data = api().findByQuery(containersSearch.reportingQuery);
+				if (containersSearch.datatable) {
+					return MongoStreamer.okStreamUDT(data);
+				} else if(containersSearch.list) {
+					return MongoStreamer.okStream(data);
+				} else if(containersSearch.count) {
+					int count = api().count(containersSearch.reportingQuery);
+					Map<String, Integer> map = new HashMap<String, Integer>(1);
+					map.put("result", count);
+					return okAsJson(map);
+				} else {
+					return badRequest();
+				}
+			} else {
+				DBQuery.Query query = getQuery(containersSearch);
+				BasicDBObject keys = null;
+				if(! containersSearch.includes().contains("default")) keys = getKeys(containersSearch); 
+				
+				List<Container> results = null;
+				if (containersSearch.datatable) {
+					Source<ByteString, ?> resultsAsStream = null; 
+					if(containersSearch.isServerPagination()){
+						if(keys == null){
+							resultsAsStream = api().streamUDTWithDefaultKeys(query, 
+																			 containersSearch.orderBy, 
+																			 Sort.valueOf(containersSearch.orderSense), 
+																			 containersSearch.pageNumber, 
+																			 containersSearch.numberRecordsPerPage);
+						} else {
+							resultsAsStream = api().streamUDT(query, 
+															  containersSearch.orderBy, 
+															  Sort.valueOf(containersSearch.orderSense), 
+															  keys, 
+															  containersSearch.pageNumber, 
+															  containersSearch.numberRecordsPerPage);
+						}
+					} else {
+						if(keys == null){
+							resultsAsStream = api().streamUDTWithDefaultKeys(query, 
+																			 containersSearch.orderBy, 
+																			 Sort.valueOf(containersSearch.orderSense), 
+																			 containersSearch.limit);
+						} else {
+							resultsAsStream = api().streamUDT(query, 
+															  containersSearch.orderBy, 
+															  Sort.valueOf(containersSearch.orderSense), 
+															  keys, 
+															  containersSearch.limit);
+						}
+					}
+					return Streamer.okStream(resultsAsStream);
+				} else  {
+					if(containersSearch.orderBy == null) containersSearch.orderBy = "code";
+					if(containersSearch.orderSense == null) containersSearch.orderSense = 0;
+
+					if(containersSearch.list) {
+						keys = new BasicDBObject();
+						keys.put("_id", 0);//Don't need the _id field
+						keys.put("code", 1);
+						results = api().list(query, 
+											 containersSearch.orderBy, 
+											 Sort.valueOf(containersSearch.orderSense), 
+											 keys, 
+											 containersSearch.limit);	
+						return MongoStreamer.okStream(convertToListObject(results, x -> x.code, x -> x.code)); // in place of getLOChunk(MongoDBResult<T> all)
+					} else if(containersSearch.count) {
+						int count = api().count(containersSearch.reportingQuery);
+						Map<String, Integer> m = new HashMap<String, Integer>(1);
+						m.put("result", count);
+						return okAsJson(m);
+					} else {
+						return Streamer.okStream(api().stream(query, 
+															  containersSearch.orderBy, 
+															  Sort.valueOf(containersSearch.orderSense), 
+															  keys, 
+															  containersSearch.limit));
+					}
+				}
+			}
+		} catch (Exception e) {
+			getLogger().error(e.getMessage());
+			return nglGlobalBadRequest();
 		}
 	}
 	
-	@Permission(value={"writing"})
-	public Result updateStateBatch() {
-		List<Form<ContainerBatchElement>> filledForms =  getFilledFormList(batchElementForm, ContainerBatchElement.class);
-		final String user = getCurrentUser();
-		final Lang lang = Http.Context.Implicit.lang();
-		List<DatatableBatchResponseElement> response = filledForms.parallelStream()
-		.map(filledForm -> {
-			ContainerBatchElement element = filledForm.get();
-			Container container = findContainer(element.data.code);
-			if(null != container){
-				State state = element.data.state;
+	//TODO  API ?
+	/*****************************************************************************/
+	@Override
+	@Authenticated
+	@Authorized.Write
+	public Result updateState(String code) {
+		try {
+			Container container = api().get(code);
+			if (container == null) {
+				return badRequestAsJson("Container with code " + code + " not exist");
+			} else {
+				Form<State> filledForm =  getFilledForm(stateForm, State.class);
+				State state = filledForm.get();
 				state.date = new Date();
-				state.user = user;
-				ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+				state.user = getCurrentUser();
+				
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser());
 				ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
-				ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE, Boolean.TRUE);
+				ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE, Boolean.TRUE);		
 				workflows.setState(ctxVal, container, state);
 				if (!ctxVal.hasErrors()) {
-					return new DatatableBatchResponseElement(OK,  findContainer(container.code), element.index);
-				}else {
-					return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);
+					return okAsJson((api().get(code)));
+				} else {
+					return badRequestAsJson(errorsAsJson(ctxVal.getErrors()));
 				}
-			}else {
-				return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
 			}
-		}).collect(Collectors.toList());
-		
-		return ok(Json.toJson(response));
+		} catch (Exception e) {
+			getLogger().error(e.getMessage());
+			return nglGlobalBadRequest();
+		}
 	}
+	
+	@Override
+	@Authenticated
+	@Authorized.Write
+	public Result updateStateBatch() {
+		try {
+			List<Form<ContainerBatchElement>> filledForms =  getFilledFormList(batchElementForm, ContainerBatchElement.class);
+			final Lang lang = Http.Context.Implicit.lang();
+			List<DatatableBatchResponseElement> response = filledForms.parallelStream()
+					.map(filledForm -> {
+						ContainerBatchElement element = filledForm.get();
+						Container container = api().get(element.data.code);
+						if(null != container){
+							State state = element.data.state;
+							state.date = new Date();
+							state.user = getCurrentUser();
+							ContextValidation ctxVal = new ContextValidation(getCurrentUser());
+							ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
+							ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE, Boolean.TRUE);
+							workflows.setState(ctxVal, container, state);
+							if (!ctxVal.hasErrors()) {
+								return new DatatableBatchResponseElement(OK,  api().get(container.code), element.index);
+							}else {
+								return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);
+							}
+						}else {
+							return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
+						}
+					}).collect(Collectors.toList());;
+
+					return okAsJson(response);
+		} catch (Exception e) {
+			getLogger().error(e.getMessage());
+			return nglGlobalBadRequest();
+		}
+	}
+	/*****************************************************************************/
 
 	/*
 	 * Construct the container query
@@ -387,7 +272,7 @@ class Containers2 extends DocumentController<Container> {
 	 * @return
 	 * @throws DAOException 
 	 */
-	public static DBQuery.Query getQuery(ContainersSearchForm containersSearch) throws DAOException{		
+	public DBQuery.Query getQuery(ContainersSearchForm containersSearch) throws DAOException{		
 		List<DBQuery.Query> queryElts = new ArrayList<>();
 		Query query = DBQuery.empty();
 
@@ -668,12 +553,5 @@ class Containers2 extends DocumentController<Container> {
 		
 		return query;
 	}
-	
-	private static DatatableForm updateForm(ContainersSearchForm form) {
-		if(form.includes.contains("default")){
-			form.includes.remove("default");
-			form.includes.addAll(defaultKeys);
-		}
-		return form;
-	}
+
 }
