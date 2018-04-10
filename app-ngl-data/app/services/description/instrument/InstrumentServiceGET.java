@@ -160,7 +160,7 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 				getInstruments(
 				createInstrument("MISEQ", "MiSeq1 M00185", null, true,"/save/devcrgs/src/NGL_Feuille_route/MISEQ", DescriptionFactory.getInstitutes(Constants.CODE.GET)),
 				createInstrument("MISEQ_2","MiSeq2 M02944", null, true,"/save/devcrgs/src/NGL_Feuille_route/MISEQ_2", DescriptionFactory.getInstitutes(Constants.CODE.GET)),
-				createInstrument("MISEQ_4","MiSeq4 M01945", null, true,"/save/devcrgs/src/NGL_Feuille_route/MISEQ_4", DescriptionFactory.getInstitutes(Constants.CODE.GET))),
+				createInstrument("MISEQ_4","MiSeq4 M01945R", null, true,"/save/devcrgs/src/NGL_Feuille_route/MISEQ_4", DescriptionFactory.getInstitutes(Constants.CODE.GET))),
 				getContainerSupportCategories(new String[]{"flowcell-1"}), null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		

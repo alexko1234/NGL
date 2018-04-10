@@ -12,13 +12,13 @@ Application,FASTQ Only
 Assay,PlaGe
 Description,@(e.instrument.typeCode)
 Chemistry,@if(tagModel.tagType == "DUAL-INDEX"){amplicon}else{Default}
-;
+ 
 [Reads]
 @(OutputHelper.getInstrumentProperty(e,"nbCyclesRead1"))
 @if(OutputHelper.getInstrumentProperty(e,"nbCyclesRead2") != 0){@(OutputHelper.getInstrumentProperty(e,"nbCyclesRead2"))}
-;
+ 
 [Settings]
-;
+ 
 [Data]
 Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,@if(tagModel.tagType == "DUAL-INDEX"){I5_Index_ID,index2,}Sample_Project,Description
 
