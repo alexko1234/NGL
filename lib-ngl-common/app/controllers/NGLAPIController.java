@@ -168,12 +168,4 @@ public abstract class NGLAPIController<T extends GenericAPI<U,V>, U extends Gene
 		});
 		return map;
 	}
-
-	/**
-	 * @return badRequest Result with standard message
-	 */
-	protected Result nglGlobalBadRequest() {
-		return badRequestAsJson("Error on server: contact support for more details");
-	}
-
 }
