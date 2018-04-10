@@ -199,11 +199,11 @@ public class ReadSets extends ReadSetsController {
 		}
 		
 		if(null != form.fromEvalDate){
-			queries.add(DBQuery.or(DBQuery.greaterThanEquals("productionValuation.date", getFromDate(form.fromEvalDate).getTime()),DBQuery.greaterThanEquals("bioinformaticValuation.date", getFromDate(form.fromEvalDate).getTime())));
+			queries.add(DBQuery.or(DBQuery.greaterThanEquals("productionValuation.date", form.fromEvalDate),DBQuery.greaterThanEquals("bioinformaticValuation.date", form.fromEvalDate)));
 		}
 		
 		if(null != form.toEvalDate){
-			queries.add(DBQuery.or(DBQuery.lessThanEquals("productionValuation.date", getFromDate(form.toEvalDate).getTime()),DBQuery.lessThanEquals("bioinformaticValuation.date", getFromDate(form.toEvalDate).getTime())));
+			queries.add(DBQuery.or(DBQuery.lessThanEquals("productionValuation.date", form.toEvalDate),DBQuery.lessThanEquals("bioinformaticValuation.date", form.toEvalDate)));
 		}
 		
 		if(StringUtils.isNotBlank(form.location)){
