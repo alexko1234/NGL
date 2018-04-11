@@ -335,6 +335,8 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 		angular.forEach(container.contents, function(content){
 			if(content.properties.tag != undefined && content.sampleCode != undefined){
 				sampleCodeAndTags.push(content.sampleCode+" / "+content.properties.tag.value);
+			}else if(content.sampleCode != undefined){
+				sampleCodeAndTags.push(content.sampleCode);
 			}
 		});
 		return sampleCodeAndTags;
