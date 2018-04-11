@@ -338,7 +338,7 @@
 					if(_form.fromDate)_form.fromDate = moment(_form.fromDate, Messages("date.format").toUpperCase()).valueOf();
 					if(_form.toDate)_form.toDate = moment(_form.toDate, Messages("date.format").toUpperCase()).valueOf();		
 					if(_form.fromEvalDate)_form.fromEvalDate = moment(_form.fromEvalDate, Messages("date.format").toUpperCase()).valueOf();
-					if(_form.toEvalDate)_form.toEvalDate = moment(_form.toEvalDate, Messages("date.format").toUpperCase()).add(23,'hours').valueOf();	
+					if(_form.toEvalDate)_form.toEvalDate = moment(_form.toEvalDate, Messages("date.format").toUpperCase()).valueOf();	
 					return _form
 				},
 				

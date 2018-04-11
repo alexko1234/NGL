@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -198,14 +199,16 @@ public class ReadSets extends ReadSetsController {
 			queries.add(DBQuery.lessThanEquals("runSequencingStartDate", form.toDate));
 		}
 		
-		if(null != form.fromEvalDate){
+		if(null != form.fromEvalDate && null != form.toEvalDate){
+			queries.add(DBQuery.or(
+					DBQuery.and(DBQuery.greaterThanEquals("productionValuation.date", form.fromEvalDate),DBQuery.lessThan("productionValuation.date", (DateUtils.addDays(form.toEvalDate,1)))),
+					DBQuery.and(DBQuery.greaterThanEquals("bioinformaticValuation.date", form.fromEvalDate),DBQuery.lessThan("bioinformaticValuation.date", (DateUtils.addDays(form.toEvalDate,1))))
+			));
+		}else if(null != form.fromEvalDate && null == form.toEvalDate){
 			queries.add(DBQuery.or(DBQuery.greaterThanEquals("productionValuation.date", form.fromEvalDate),DBQuery.greaterThanEquals("bioinformaticValuation.date", form.fromEvalDate)));
+		}else if(null != form.toEvalDate && null == form.fromEvalDate){
+			queries.add(DBQuery.or(DBQuery.lessThan("productionValuation.date", (DateUtils.addDays(form.toEvalDate,1))),DBQuery.lessThan("bioinformaticValuation.date", (DateUtils.addDays(form.toEvalDate,1)))));
 		}
-		
-		if(null != form.toEvalDate){
-			queries.add(DBQuery.or(DBQuery.lessThanEquals("productionValuation.date", form.toEvalDate),DBQuery.lessThanEquals("bioinformaticValuation.date", form.toEvalDate)));
-		}
-		
 		if(StringUtils.isNotBlank(form.location)){
 			queries.add(DBQuery.is("location", form.location));
 		}
