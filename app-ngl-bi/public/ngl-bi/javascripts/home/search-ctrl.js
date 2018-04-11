@@ -68,7 +68,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$http','$httpParamSe
 		form.productionValidCode="UNSET";
 		form.typeCode="rsillumina";
 		//filter for CNG
-		form.fromDate=moment("13/12/2013", Messages("date.format").toUpperCase()).valueOf();
+		form.fromDate=moment("14/12/2013", Messages("date.format").toUpperCase()).valueOf();
 		$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:form}).then(function(result){
 			$scope.runCodes =result.data.map(function(readSet){return readSet.runCode;}).filter((value, index, self) => self.indexOf(value) === index);
 			

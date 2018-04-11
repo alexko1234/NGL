@@ -209,6 +209,7 @@ public class ReadSets extends ReadSetsController {
 		}else if(null != form.toEvalDate && null == form.fromEvalDate){
 			queries.add(DBQuery.or(DBQuery.lessThan("productionValuation.date", (DateUtils.addDays(form.toEvalDate,1))),DBQuery.lessThan("bioinformaticValuation.date", (DateUtils.addDays(form.toEvalDate,1)))));
 		}
+		
 		if(StringUtils.isNotBlank(form.location)){
 			queries.add(DBQuery.is("location", form.location));
 		}
