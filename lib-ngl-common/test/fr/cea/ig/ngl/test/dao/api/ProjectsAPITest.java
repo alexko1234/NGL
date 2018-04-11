@@ -11,6 +11,8 @@ import java.util.List;
 
 import javax.inject.Singleton;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mongojack.DBQuery;
@@ -38,11 +40,13 @@ public class ProjectsAPITest extends AbstractTests implements AbstractAPITests {
 
 	private static ProjectsAPI api;
 
+	private static boolean clean = true;
+
 	private static final String USER = "ngsrg";
 
 	private static Project refProject;
 
-	private Project createdProject;
+	private Project data;
 
 
 	@BeforeClass
@@ -54,9 +58,10 @@ public class ProjectsAPITest extends AbstractTests implements AbstractAPITests {
 	}
 
 	@Override
+	@Before
 	public void setUpData() {
 		try {
-			createdProject = api.create(refProject, USER);
+			data = api.create(refProject, USER);
 		} catch (APIValidationException e) {
 			logger.error(e.getMessage());
 			logger.error("invalid fields: " + e.getErrors().keySet().toString());
@@ -69,45 +74,42 @@ public class ProjectsAPITest extends AbstractTests implements AbstractAPITests {
 	}
 
 	@Override
+	@After
 	public void deleteData() {
-		api.delete(createdProject.code);
+		try {
+			api.delete(data.code);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			if(logger.isDebugEnabled()) {
+				e.printStackTrace();
+			}
+		} finally {
+			clean = true;
+		}
+
 	}
 
 	@Test
 	public void createTest() {
-		try {
-			createdProject = api.create(refProject, USER);
-			assertNotNull(createdProject);
-			logger.debug("Project ID: " + createdProject._id);
-			assertEquals(refProject.code, createdProject.code);
-			assertEquals(refProject.name, createdProject.name);
-			assertEquals(refProject.typeCode, createdProject.typeCode);
-			assertEquals(refProject.categoryCode, createdProject.categoryCode);
-			assertEquals(refProject.description, createdProject.description);
-			assertEquals(refProject.umbrellaProjectCode, createdProject.umbrellaProjectCode);
-			assertEquals(refProject.lastSampleCode, createdProject.lastSampleCode);
-			assertEquals(refProject.nbCharactersInSampleCode, createdProject.nbCharactersInSampleCode);
-			assertEquals(refProject.archive, createdProject.archive);
-			assertEquals(refProject.state.code, createdProject.state.code);
-			assertEquals(refProject.state.user, createdProject.state.user);
-			assertEquals(refProject.authorizedUsers, createdProject.authorizedUsers);
-			assertEquals(refProject.comments.size(), createdProject.comments.size());
-
-		} catch (APIValidationException e) {
-			logger.error(e.getMessage());
-			logger.error("invalid fields: " + e.getErrors().keySet().toString());
-			logValidationErrors(e);
-			exit(e.getMessage());
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			exit(e.getMessage());
-		}
-		deleteData();
+		assertNotNull(data);
+		logger.debug("Project ID: " + data._id);
+		assertEquals(refProject.code, data.code);
+		assertEquals(refProject.name, data.name);
+		assertEquals(refProject.typeCode, data.typeCode);
+		assertEquals(refProject.categoryCode, data.categoryCode);
+		assertEquals(refProject.description, data.description);
+		assertEquals(refProject.umbrellaProjectCode, data.umbrellaProjectCode);
+		assertEquals(refProject.lastSampleCode, data.lastSampleCode);
+		assertEquals(refProject.nbCharactersInSampleCode, data.nbCharactersInSampleCode);
+		assertEquals(refProject.archive, data.archive);
+		assertEquals(refProject.state.code, data.state.code);
+		assertEquals(refProject.state.user, data.state.user);
+		assertEquals(refProject.authorizedUsers, data.authorizedUsers);
+		assertEquals(refProject.comments.size(), data.comments.size());
 	}
 
 	@Test
 	public void deleteTest() {
-		setUpData();
 		try {
 			api.delete(refProject.code);
 			Project proj = api.get(refProject.getCode());
@@ -119,23 +121,20 @@ public class ProjectsAPITest extends AbstractTests implements AbstractAPITests {
 	}
 
 	@Test
-	public void getProjectTest() {
-		setUpData();
+	public void getTest() {
 		try {
 			Project proj = api.get(refProject.code);
 			assertNotNull(proj);
-			assertEquals(createdProject.get_id(), proj.get_id());
+			assertEquals(data.get_id(), proj.get_id());
 			assertEquals(refProject.getCode(), proj.getCode());
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			exit(e.getMessage());
 		}
-		deleteData();
 	}
 
 	@Test
-	public void listProjectTest() {
-		setUpData();
+	public void listTest() {
 		try {
 			Query query = DBQuery.is("code", refProject.code);
 			List<Project> projs = api.list(query, "code", Sort.valueOf(0));
@@ -144,15 +143,13 @@ public class ProjectsAPITest extends AbstractTests implements AbstractAPITests {
 			logger.error(e.getMessage());
 			exit(e.getMessage());
 		}
-		deleteData();
 	}
 
 	@Test
 	public void updateTest() {
-		setUpData();
 		try {
 			Project updatedProj = TestProjectFactory.projectArchived(USER);
-			updatedProj._id = createdProject._id;
+			updatedProj._id = data._id;
 			updatedProj.traceInformation.modifyUser = USER;
 			updatedProj.traceInformation.modifyDate = new Date();
 
@@ -168,7 +165,6 @@ public class ProjectsAPITest extends AbstractTests implements AbstractAPITests {
 			logger.error(e.getMessage());
 			exit(e.getMessage());
 		}
-		deleteData();
 	}
 
 

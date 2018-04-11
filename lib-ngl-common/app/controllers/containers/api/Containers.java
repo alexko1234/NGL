@@ -104,7 +104,7 @@ public class Containers extends NGLAPIController<ContainersAPI, ContainersDAO, C
 	@Override
 	@Authenticated
 	@Authorized.Read
-	public Result list() { //TODO voir si peut etre remonté dans NGLAPIController
+	public Result list() {
 		try {
 			ContainersSearchForm containersSearch = objectFromRequestQueryString(ContainersSearchForm.class);
 			if (containersSearch.reporting) {

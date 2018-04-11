@@ -1,6 +1,8 @@
 package fr.cea.ig.ngl.test;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 
 import fr.cea.ig.ngl.dao.api.APIValidationException;
 import play.Logger.ALogger;
@@ -44,11 +46,13 @@ public interface AbstractAPITests {
 	/**
 	 * Create required Data for test
 	 */
+	@Before
 	public abstract void setUpData();
 	
 	/**
 	 * Delete Data used in test
 	 */
+	@After
 	public abstract void deleteData();
 	
 }

@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -99,6 +100,7 @@ public class ContainerSupportsAPITest extends AbstractTests implements AbstractA
 	}
 
 	@Override
+	@Before
 	public void setUpData() {
 		if(clean) {
 			logger.debug("create dep objects and test data");
@@ -126,6 +128,7 @@ public class ContainerSupportsAPITest extends AbstractTests implements AbstractA
 	}
 
 	@Override
+	@After
 	public void deleteData() {
 		logger.debug("delete dep objects and test data");
 		try {
@@ -147,18 +150,15 @@ public class ContainerSupportsAPITest extends AbstractTests implements AbstractA
 	@Test
 	public void createTest() {
 		logger.debug("Creation test");
-		setUpData();
 		Assert.assertEquals(refContainerSupport.categoryCode, data.categoryCode);
 		Assert.assertEquals(refContainerSupport.code, data.code);
 		Assert.assertEquals(refContainerSupport.nbContainers, data.nbContainers);
 		Assert.assertEquals(refContainerSupport.nbContents, data.nbContents);
-		deleteData();
 	}
 	
 	@Test
 	public void updateTest() {
 		logger.debug("Update test");
-		setUpData();
 		try {
 			ContainerSupport supportToUpdate = data;
 			supportToUpdate.nbContainers = 3;
@@ -178,13 +178,11 @@ public class ContainerSupportsAPITest extends AbstractTests implements AbstractA
 			logger.error(e.getMessage());
 			exit(e.getMessage());
 		}
-		deleteData();
 	}
 	
 	@Test 
 	public void updateFieldsTest() {
 		logger.debug("Update only some fields test");
-		setUpData();
 		try {
 			ContainerSupport supportToUpdate = new ContainerSupport();
 			supportToUpdate.code = data.code;
@@ -203,22 +201,18 @@ public class ContainerSupportsAPITest extends AbstractTests implements AbstractA
 			logger.error(e.getMessage());
 			exit(e.getMessage());
 		}
-		deleteData();
 	}
 	
 	@Test
 	public void deleteTest() throws APIException {
 		logger.debug("Delete test");
-		setUpData();
 		contApi.delete(refContainer.code);
 		Assert.assertNull(contApi.get(refContainer.getCode()));
-		deleteData();
 	}
 
 	@Test
 	public void getTest() {
 		logger.debug("Get test");
-		setUpData();
 		try {
 			ContainerSupport support = api.get(refContainerSupport.code);
 			Assert.assertNotNull(support);
@@ -228,6 +222,5 @@ public class ContainerSupportsAPITest extends AbstractTests implements AbstractA
 			logger.error(e.getMessage());
 			exit(e.getMessage());
 		}
-		deleteData();
 	}
 }

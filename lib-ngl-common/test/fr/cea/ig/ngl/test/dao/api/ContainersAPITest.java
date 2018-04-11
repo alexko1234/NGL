@@ -8,6 +8,7 @@ import java.util.Date;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -101,6 +102,7 @@ public class ContainersAPITest extends AbstractTests implements AbstractAPITests
 	}
 
 	@Override
+	@Before
 	public void setUpData() {
 		if(clean) {
 			logger.debug("create dep objects and test data");
@@ -128,6 +130,7 @@ public class ContainersAPITest extends AbstractTests implements AbstractAPITests
 	}
 
 	@Override
+	@After
 	public void deleteData() {
 		logger.debug("delete dep objects and test data");
 		try {
@@ -149,20 +152,17 @@ public class ContainersAPITest extends AbstractTests implements AbstractAPITests
 	@Test
 	public void createTest() {
 		logger.debug("Creation test");
-		setUpData();
 		Assert.assertEquals(refContainer.categoryCode, data.categoryCode);
 		Assert.assertEquals(refContainer.code, data.code);
 		Assert.assertEquals(refContainer.concentration, data.concentration);
 		Assert.assertEquals(refContainer.volume, data.volume);
 		Assert.assertEquals(refContainer.quantity, data.quantity);
 		Assert.assertEquals(refContainer.contents.size(), data.contents.size());
-		deleteData();
 	}
 	
 	@Test
 	public void updateTest() {
 		logger.debug("Update test");
-		setUpData();
 		try {
 			Container contToUpdate = data;
 			final double newVol = VOL * 2;
@@ -187,13 +187,11 @@ public class ContainersAPITest extends AbstractTests implements AbstractAPITests
 			logger.error(e.getMessage());
 			exit(e.getMessage());
 		}
-		deleteData();
 	}
 	
 	@Test
 	public void updateFieldsTest() {
 		logger.debug("Update only some fields test");
-		setUpData();
 		try {
 			Container contToUpdate = new Container();
 			contToUpdate.code = data.code;
@@ -217,22 +215,18 @@ public class ContainersAPITest extends AbstractTests implements AbstractAPITests
 			logger.error(e.getMessage());
 			exit(e.getMessage());
 		}
-		deleteData();
 	}
 	
 	@Test
 	public void deleteTest() throws APIException {
 		logger.debug("Delete test");
-		setUpData();
 		api.delete(refContainer.code);
 		Assert.assertNull(api.get(refContainer.getCode()));
-		deleteData();
 	}
 
 	@Test
 	public void getTest() {
 		logger.debug("Get test");
-		setUpData();
 		try {
 			Container cont = api.get(refContainer.code);
 			Assert.assertNotNull(cont);
@@ -242,6 +236,5 @@ public class ContainersAPITest extends AbstractTests implements AbstractAPITests
 			logger.error(e.getMessage());
 			exit(e.getMessage());
 		}
-		deleteData();
 	}
 }
