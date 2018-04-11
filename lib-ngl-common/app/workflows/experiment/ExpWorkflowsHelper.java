@@ -1257,7 +1257,7 @@ public class ExpWorkflowsHelper {
 			
 			if(null == c.qualityControlResults)c.qualityControlResults = new ArrayList<QualityControlResult>(0);
 
-			c.qualityControlResults.add(new QualityControlResult(exp.code, exp.typeCode, c.qualityControlResults.size(), icu.experimentProperties, icu.valuation));
+			c.qualityControlResults.add(new QualityControlResult(exp.code, exp.typeCode, c.qualityControlResults.size(), icu.experimentProperties, icu.instrumentProperties, icu.valuation));
 
 			Map<String, PropertyValue> newContentProperties = getCommonPropertiesForALevelWithICU(exp, icu, CODE.Content);
 			c.contents.forEach(content -> {

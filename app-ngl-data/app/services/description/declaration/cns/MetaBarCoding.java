@@ -370,7 +370,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 		*/
 		propertyDefinitions.add(newPropertiesDefinition("Amorces", "amplificationPrimers", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content,Level.CODE.Sample), String.class, true, null, 
 				DescriptionFactory.newValues("16S FL 27F/1492R + Fuhrman primers","16S FL 27F/1492R","16S FL 27F/1390R","16S FL 27F/1390R + Fuhrman primers",
-						"16S V1V2V3 Prok Sneed2015 27F/519Rmodbio","16S V4 Prok 515FF/806R","16S V4V5 Archae 517F/958R","16S V5V6 Prok 784F/1061R",
+						"16S V1V2V3 Prok Sneed2015 27F/519Rmodbio","16S V4 Prok 515FF/806R","16S V4V5 Archae 517F/958R","16S V5V6 Prok 784F/1061R", "16S V3 F342/V4R802",
 						"18S V1V2 Metazoaire SSUF04/SSURmod","18S V4 Euk V4f (TAReukF1)/V4r (TAReukR)","18S V9 1389F/1510R",
 						"COI primers m1COIintF/jgHCO2198","CP23S primers","Fuhrman primers","ITS2/SYM_VAR_5.8S2/SYM_VAR_REV","ITSD/ITS2REV",
 						"ITSintfor2/ITS-Reverse","Amp 48-1","Amp 48-2","autre"),null, null, null,"single", 2, true, null,null));
@@ -378,7 +378,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 		
 		propertyDefinitions.add(newPropertiesDefinition("Région ciblée", "targetedRegion", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content,Level.CODE.Sample), String.class, true, null, 
 				DescriptionFactory.newValues("16S_V4V5","18S_V9", "16S_Full Length + 16S_V4V5", "ITS2","CP23S","18S_V4","COI", "16S_V1V2V3",
-						"16S_V5V6","18S_V1V2","16S_V4", "16SFL", "Multi-Amplicons"), null, null, null,"single", 3, true, null,null));
+						"16S_V3V4", "16S_V5V6","18S_V1V2","16S_V4", "16SFL", "Multi-Amplicons"), null, null, null,"single", 3, true, null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Nb cycles", "nbCycles", LevelService.getLevels(Level.CODE.Experiment), Integer.class, true, null, null, 
 				"single", 4, true, null,null));
@@ -448,12 +448,12 @@ public class MetaBarCoding extends AbstractDeclaration {
 		*/
 		propertyDefinitions.add(newPropertiesDefinition("Amorces", "amplificationPrimers", LevelService.getLevels(Level.CODE.Process), String.class, true, null, 
 				DescriptionFactory.newValues("16S FL + Fuhrman primers","16S V4 Prok 515FF/806R","16S V1V2V3 Prok Sneed2015 27F/519Rmodbio","16S V4V5 Archae 517F/958R",
-						"16S V5V6 Prok 784F/1061R","18S V1V2 Metazoaire SSUF04/SSURmod","18S V4 Euk V4f (TAReukF1)/V4r (TAReukR)","18S V9 1389F/1510R",
+						"16S V5V6 Prok 784F/1061R","16S V3 F342/V4R802","18S V1V2 Metazoaire SSUF04/SSURmod","18S V4 Euk V4f (TAReukF1)/V4r (TAReukR)","18S V9 1389F/1510R",
 						"COI primers m1COIintF/jgHCO2198","CP23S primers","Fuhrman primers","ITS2/SYM_VAR_5.8S2/SYM_VAR_REV","ITSD/ITS2REV",
 						"ITSintfor2/ITS-Reverse","autre"), null,null,null,"single", 14, true, null, null));
 				
 		propertyDefinitions.add(newPropertiesDefinition("Région ciblée", "targetedRegion", LevelService.getLevels(Level.CODE.Process), String.class, true, null,
-				DescriptionFactory.newValues("16S_V4V5","18S_V9", "16S_Full Length + 16S_V4V5", "ITS2","CP23S","18S_V4","COI","16S_V1V2V3",
+				DescriptionFactory.newValues("16S_V4V5","18S_V9", "16S_Full Length + 16S_V4V5", "ITS2","CP23S","18S_V4","COI","16S_V1V2V3","16S_V3V4",
 						"16S_V5V6","18S_V1V2","16S_V4","autre"),	null,null,null,"single", 15, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Taille amplicon attendue", "expectedAmpliconSize", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, 
 				DescriptionFactory.newValues("300", "400","170","180","380","313","500","450","250","550", "411/600","280","150-170", "690-710"),null,null,null,"single", 16, true, null, null));

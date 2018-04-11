@@ -176,7 +176,8 @@ angular.module('home').controller('DnaExtractionCtrl',['$scope', '$parse', '$fil
 			        	 complex:true,
 			        	 template:  ''
 			        		 +$scope.plateUtils.templates.buttonLineMode()
-			        		 +$scope.plateUtils.templates.buttonColumnMode()              	   
+			                 +$scope.plateUtils.templates.buttonColumnMode()     
+			                 +$scope.plateUtils.templates.buttonCopyPosition()             	   
 			         }
 	};	
 

@@ -158,7 +158,7 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("zr-duet-extraction-dev","Extraction ZR Duet DEV","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-rna-extraction")));
 		
 		lp.add(newProtocol("quick-dna-96-plus-prok-v1","Quick-DNA 96 Plus Kit Prok.v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-extraction"),
-		concatMap(newPSV("extractionProtocol","ZR Duet prok."))));
+		concatMap(newPSV("extractionProtocol","Quick-DNA 96 Plus Kit Prok"))));
 		
 		lp.add(newProtocol("fast_prep_grinding","Broyage Fast Prep","path2","1","production",InstanceFactory.setExperimentTypeCodes("grinding")));
 		
@@ -299,7 +299,7 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("prod-ill-bqarn-rna-nebuii-stranded-polya-160-v1","Prod_ILL_BqARN_RNA-NEBUII-Stranded-PolyA_160_v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-library","indexing-and-pcr-amplification"), 
 				concatMap(newPSV("rnaLibProtocol","RNA NEB_U2 Stranded PolyA"),newPSV("strandOrientation","reverse"),newPSV("cDNAsynthesisType","random"))));
 		
-		lp.add(newProtocol("prod_ill_bqarn_truseq-stranded-polya_167_v2","Prod_ILL_BqARN_TruSeq-Stranded-PolyA_167_v2","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library","pcr-amplification-and-purification"), 
+		lp.add(newProtocol("prod_ill_bqarn_truseq-stranded-polya_153_v2","Prod_ILL_BqARN_TruSeq-Stranded-PolyA_153_v2","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library","pcr-amplification-and-purification"), 
 				concatMap(newPSV("rnaLibProtocol","RNA TruSeq Stranded PolyA"))));
 	
 		

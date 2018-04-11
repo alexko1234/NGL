@@ -3,6 +3,9 @@ package models.laboratory.container.instance;
 import java.util.Date;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import validation.ContextValidation;
@@ -29,12 +32,17 @@ public class QualityControlResult implements IValidation {
 		
 	}
 	
-	public QualityControlResult(String code, String typeCode, Integer index, Map<String,PropertyValue> properties, Valuation valuation) {
+	public QualityControlResult(String code, String typeCode, Integer index, Map<String,PropertyValue> expProperties, Map<String,PropertyValue> instProperties, Valuation valuation) {
 		this.index = index;
 		this.code = code;
 		this.typeCode = typeCode;
 		this.date = new Date();
-		this.properties = properties;
+		this.properties = expProperties;
+		if(MapUtils.isNotEmpty(this.properties) && MapUtils.isNotEmpty(instProperties))
+			this.properties.putAll(instProperties); 
+		else if(MapUtils.isNotEmpty(instProperties)){
+			this.properties = instProperties;
+		}
 		this.valuation = valuation;
 		
 	}

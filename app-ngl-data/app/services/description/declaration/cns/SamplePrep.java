@@ -34,7 +34,7 @@ public class SamplePrep extends AbstractDeclaration{
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newExperimentType("Ext to Extraction ADN","ext-to-grinding-and-dna-extraction",null,-1,
+		l.add(newExperimentType("Ext to Extraction ADN (corail CDIV)","ext-to-grinding-and-dna-extraction",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
@@ -48,7 +48,7 @@ public class SamplePrep extends AbstractDeclaration{
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newExperimentType("Ext to Extraction ADN","ext-to-dna-extraction-process",null,-1,
+		l.add(newExperimentType("Ext to Extraction ADN (à partir aliquot corail CDIV)","ext-to-dna-extraction-process",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 

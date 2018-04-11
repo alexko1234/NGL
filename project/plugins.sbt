@@ -29,7 +29,7 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-digest" % "1.0.0")
 // addSbtPlugin("com.typesafe.sbt" % "sbt-mocha" % "1.0.0")
 addSbtPlugin("com.typesafe.sbt" % "sbt-mocha" % "1.1.2")
 // Twirl support maybe needed.
-addSbtPlugin("com.typesafe.sbt" % "sbt-twirl" % "1.3.15")
+//addSbtPlugin("com.typesafe.sbt" % "sbt-twirl" % "1.3.15")
 
 
 libraryDependencies += "org.javassist" % "javassist" % "3.20.0-GA"
