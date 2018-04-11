@@ -14,7 +14,6 @@ import fr.cea.ig.ngl.test.authentication.AuthenticatorWrite;
 import fr.cea.ig.ngl.test.authentication.Identity;
 //import fr.cea.ig.ngl.test.authorization.TestAuthorizator;
 import fr.cea.ig.play.test.ApplicationFactory;
-import fr.cea.ig.play.test.WSHelper;
 //import play.Application;
 //import play.inject.Bindings;
 import play.inject.guice.GuiceApplicationBuilder;
@@ -82,12 +81,15 @@ public class TestAppAuthFactory extends ApplicationFactory {
 	}
 	
 	public void authURL(Identity i, String url) {
-		as(i)     .ws(ws -> WSHelper.get(ws,url,Status.OK));
-		asWorse(i).ws(ws -> WSHelper.get(ws,url,Status.FORBIDDEN));
+//		as(i)     .ws(ws -> WSHelper.get(ws,url,Status.OK));
+//		asWorse(i).ws(ws -> WSHelper.get(ws,url,Status.FORBIDDEN));
+		as(i)     .ws(ws -> ws.get(url,Status.OK));
+		asWorse(i).ws(ws -> ws.get(url,Status.FORBIDDEN));
 	}
 	
 	public void authNobody(String url) {
-		as(Identity.Nobody).ws(ws -> WSHelper.get(ws,url,Status.OK));
+//		as(Identity.Nobody).ws(ws -> WSHelper.get(ws,url,Status.OK));
+		as(Identity.Nobody).ws(ws -> ws.get(url,Status.OK));
 	}
 
 //	public void noAuth(String url)  {

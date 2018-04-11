@@ -11,7 +11,6 @@ import java.util.function.Function;
 import play.Application;
 import play.inject.Bindings;
 import play.inject.guice.GuiceApplicationBuilder;
-import play.libs.ws.WSClient;
 
 // This is work in progress.
 
@@ -133,13 +132,13 @@ public class ApplicationFactory {
 	 * Test the application through a WS client.
 	 * @param c code to execute with the created WS client 
 	 */
-	public void ws(Consumer<WSClient> c) {
-		DevAppTesting.testInServer(this.createApplication(), c);
-	}
-	
-//	public void ws(Consumer<NGLWSClient> c) {
-//		DevAppTesting.testInServer(this.createApplication(), ws -> c.accept(new NGLWSClient(ws)));
+//	public void ws(Consumer<WSClient> c) {
+//		DevAppTesting.testInServer(this.createApplication(), c);
 //	}
+	
+	public void ws(Consumer<NGLWSClient> c) {
+		DevAppTesting.testInServer(this.createApplication(), ws -> c.accept(new NGLWSClient(ws)));
+	}
 	
 	/**
 	 * Test the application directly.

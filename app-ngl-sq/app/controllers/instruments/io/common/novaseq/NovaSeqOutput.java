@@ -18,117 +18,71 @@ import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.instance.Experiment;
 import validation.ContextValidation;
 
-class AbstractNovaSeqSampleSheet extends TextOutput {
+class NovaSeqSampleSheet extends TextOutput {
 	
 	public void header(Experiment experiment, List<Container> containers) {
 		// Header
-		    println("[Header]")
-		   .println("IEMFileVersion,5")
-		   .println("Experiment Name,", experiment.code)
-		   .println("Date,", new SimpleDateFormat("MM/dd/yyyy").format(experiment.traceInformation.creationDate))
-		   .println("Workflow,GenerateFASTQ")
-		   .println("Application,NovaSeq FASTQ Only")
-		   .println("Instrument Type,NovaSeq")
-		   .println("Assay,")
-		   .println("Index Adapters,")
-		   .println("Description,", containers.get(0).support.code)
-		   .println("Chemistry,Default")
-		   .println();
+		println("[Header]");
+		println("IEMFileVersion,5");
+		println("Experiment Name,", experiment.code);
+		println("Date,", new SimpleDateFormat("MM/dd/yyyy").format(experiment.traceInformation.creationDate));
+		println("Workflow,GenerateFASTQ");
+		println("Application,NovaSeq FASTQ Only");
+		println("Instrument Type,NovaSeq");
+		println("Assay,");
+		println("Index Adapters,");
+		println("Description,", containers.get(0).support.code);
+		println("Chemistry,Default");
+		println();
 	}
 	
 	public void reads(Experiment experiment) {
 		// Reads
-		    println("[Reads]")
-		   .println(experiment.instrumentProperties.get("nbCyclesRead1").value.toString())
-		   .println(experiment.instrumentProperties.get("nbCyclesRead2").value.toString())
-		   .println();		
+		println("[Reads]");
+		println(experiment.instrumentProperties.get("nbCyclesRead1").value.toString());
+		println(experiment.instrumentProperties.get("nbCyclesRead2").value.toString());
+		println();		
 	}
 	
 	public void settings() {
 		// Settings
-		    println("[Settings]")
-		   .println("Adapter,AGATCGGAAGAGCACACGTCTGAACTCCAGTCA")
-		   .println("AdapterRead2,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT")
-		   .println();
+		println("[Settings]");
+		println("Adapter,AGATCGGAAGAGCACACGTCTGAACTCCAGTCA");
+		println("AdapterRead2,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT");
+		println();
 	}
 	
-}
-
-class NovaSeqSampleSheetHelper {
-	
-	public static void header(TextOutput out, Experiment experiment, List<Container> containers) {
-		// Header
-		out.println("[Header]")
-		   .println("IEMFileVersion,5")
-		   .println("Experiment Name,", experiment.code)
-		   .println("Date,", new SimpleDateFormat("MM/dd/yyyy").format(experiment.traceInformation.creationDate))
-		   .println("Workflow,GenerateFASTQ")
-		   .println("Application,NovaSeq FASTQ Only")
-		   .println("Instrument Type,NovaSeq")
-		   .println("Assay,")
-		   .println("Index Adapters,")
-		   .println("Description,", containers.get(0).support.code)
-		   .println("Chemistry,Default")
-		   .println();
+	public String sampleId(Container c, Content co) {
+		return c.support.line 
+				+ "_" + co.sampleCode
+				+ "_" + OutputHelper.getContentProperty(co,"libProcessTypeCode")
+				+ "_" + OutputHelper.getContentProperty(co,"tag");
 	}
 	
-	public static void reads(TextOutput out, Experiment experiment) {
-		// Reads
-		out.println("[Reads]")
-		   .println(experiment.instrumentProperties.get("nbCyclesRead1").value.toString())
-		   .println(experiment.instrumentProperties.get("nbCyclesRead2").value.toString())
-		   .println();		
+	public String description(Content co) {
+		return OutputHelper.getContentProperty(co,"tag") + "_" + co.percentage;
 	}
 	
-	public static void settings(TextOutput out) {
-		// Settings
-		out.println("[Settings]")
-		   .println("Adapter,AGATCGGAAGAGCACACGTCTGAACTCCAGTCA")
-		   .println("AdapterRead2,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT")
-		   .println();
-	}
-	
-}
-// sampleSheet_1.scala.txt
-class SampleSheet1 extends TextOutput {
-	
-	public SampleSheet1 render(Experiment experiment, List<Container> containers) {
-//		// Header
-//		println("[Header]");
-//		println("IEMFileVersion,5");
-//		println("Experiment Name,", experiment.code);
-//		println("Date,", new SimpleDateFormat("MM/dd/yyyy").format(experiment.traceInformation.creationDate));
-//		println("Workflow,GenerateFASTQ");
-//		println("Application,NovaSeq FASTQ Only");
-//		println("Instrument Type,NovaSeq");
-//		println("Assay,");
-//		println("Index Adapters,");
-//		println("Description,", containers.get(0).support.code);
-//		println("Chemistry,Default");
-//		println();
-//		// Reads
-//		println("[Reads]");
-//		println(experiment.instrumentProperties.get("nbCyclesRead1").value.toString());
-//		println(experiment.instrumentProperties.get("nbCyclesRead2").value.toString());
-//		println();
-//		// Settings
-//		println("[Settings]");
-//		println("Adapter,AGATCGGAAGAGCACACGTCTGAACTCCAGTCA");
-//		println("AdapterRead2,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT");
-//		println();
-		NovaSeqSampleSheetHelper.header(this, experiment, containers);
-		NovaSeqSampleSheetHelper.reads(this,experiment);
-		NovaSeqSampleSheetHelper.settings(this);
+	public NovaSeqSampleSheet sheet1(Experiment experiment, List<Container> containers) {
+		header(experiment, containers);
+		reads(experiment);
+		settings();
 		// Data
 		println("[Data]");
 		println("Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,Sample_Project,Description");
 		containers.sort(((a,b) -> a.code.compareTo(b.code)));
 		for (Container c : containers) {
-			for (Content co :c.contents) {
-				String sample_id     = c.support.line + "_" + co.sampleCode+"_"+OutputHelper.getContentProperty(co,"libProcessTypeCode")+"_"+OutputHelper.getContentProperty(co,"tag");				
+			for (Content co : c.contents) {
+//				String sample_id     = c.support.line 
+//						+ "_" + co.sampleCode
+//						+ "_" + OutputHelper.getContentProperty(co,"libProcessTypeCode")
+//						+ "_" + OutputHelper.getContentProperty(co,"tag");
+				String sample_id = sampleId(c,co);
+				
 				String i7_index_name = OutputHelper.getContentProperty(co,"tag");
 				String i7_index_seq  = OutputHelper.getSequence(OutputHelper.getIndex("index-illumina-sequencing",OutputHelper.getContentProperty(co,"tag")));
-				String description   = OutputHelper.getContentProperty(co,"tag")+"_"+co.percentage;
+//				String description   = OutputHelper.getContentProperty(co,"tag") + "_" + co.percentage;
+				String description = description(co);
 				// Only one of the two is needed
 				//println(sample_id, ",,,,", i7_index_name, ",", i7_index_seq, ",", co.projectCode, ",", description);
 				printfln("%s,,,,%s,%s,%s,%s", sample_id, i7_index_name, i7_index_seq, co.projectCode, description);
@@ -137,61 +91,178 @@ class SampleSheet1 extends TextOutput {
 		return this;
 	}
 	
-}
-
-//sampleSheet_2.scala.txt
-class SampleSheet2 extends TextOutput {
-		
-	public SampleSheet2 render(Experiment experiment, List<Container> containers) {
-//		// Header
-//		println("[Header]");
-//		println("IEMFileVersion,5");
-//		println("Experiment Name,", experiment.code);
-//		println("Date,", new SimpleDateFormat("MM/dd/yyyy").format(experiment.traceInformation.creationDate));
-//		println("Workflow,GenerateFASTQ");
-//		println("Application,NovaSeq FASTQ Only");
-//		println("Instrument Type,NovaSeq");
-//		println("Assay,");
-//		println("Index Adapters,");
-//		println("Description,", containers.get(0).support.code);
-//		println("Chemistry,Amplicon");
-//		println();
-//		// Reads
-//		println("[Reads]");
-//		println(experiment.instrumentProperties.get("nbCyclesRead1").value.toString());
-//		println(experiment.instrumentProperties.get("nbCyclesRead2").value.toString());
-//		println();
-//		// Settings
-//		println("[Settings]");
-//		println("Adapter,AGATCGGAAGAGCACACGTCTGAACTCCAGTCA");
-//		println("AdapterRead2,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT");
-//		println();
-		NovaSeqSampleSheetHelper.header(this, experiment, containers);
-		NovaSeqSampleSheetHelper.reads(this,experiment);
-		NovaSeqSampleSheetHelper.settings(this);
-		// Data
+	public NovaSeqSampleSheet sheet2(Experiment experiment, List<Container> containers) {
+		header(experiment, containers);
+		reads(experiment);
+		settings();
+		// data
 		println("[Data]");
 		println("Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,I5_Index_ID,index2,Sample_Project,Description");
 		containers.sort((a,b) -> a.code.compareTo(b.code));
 		for(Container c : containers) { 
 			for(Content co : c.contents) {
-				String sample_id=c.support.line +"_"+ co.sampleCode+"_"+OutputHelper.getContentProperty(co,"libProcessTypeCode")+"_"+OutputHelper.getContentProperty(co,"tag");
-				
+//				String sample_id = c.support.line 
+//						+ "_" + co.sampleCode 
+//						+ "_" + OutputHelper.getContentProperty(co,"libProcessTypeCode")
+//						+ "_" + OutputHelper.getContentProperty(co,"tag");
+				String sample_id = sampleId(c,co); 
 //			@*** 13/02/2018ATTENTION tous les noms d'index dual ne suivent pas la nomenclature Illumina <index1>-<index2>=> ne pas splitter, ne pas mettre les noms dans la FDR
 //			@{i7_index_name=OutputHelper.getContentProperty(co,"tag").split("-")(0)}
 //			@{i5_index_name=OutputHelper.getContentProperty(co,"tag").split("-")(1)}
 //			***@
-
-				String i7_index_seq=OutputHelper.getSequence(OutputHelper.getIndex("index-illumina-sequencing",OutputHelper.getContentProperty(co,"tag"))).split("-")[0];
-				String i5_index_seq=OutputHelper.getSequence(OutputHelper.getIndex("index-illumina-sequencing",OutputHelper.getContentProperty(co,"tag"))).split("-")[1];
-				String description=OutputHelper.getContentProperty(co,"tag")+"_"+co.percentage;
-				printfln("%,,,,,%,,%,%s,%s", sample_id, i7_index_seq, i5_index_seq, co.projectCode, description);
+				String[] indexSeq = OutputHelper.getSequence(OutputHelper.getIndex("index-illumina-sequencing",OutputHelper.getContentProperty(co,"tag"))).split("-");
+//				String i7_index_seq = OutputHelper.getSequence(OutputHelper.getIndex("index-illumina-sequencing",OutputHelper.getContentProperty(co,"tag"))).split("-")[0];
+//				String i5_index_seq = OutputHelper.getSequence(OutputHelper.getIndex("index-illumina-sequencing",OutputHelper.getContentProperty(co,"tag"))).split("-")[1];
+				String i7_index_seq = indexSeq[0];
+				String i5_index_seq = indexSeq[1];
+//				String description  = OutputHelper.getContentProperty(co,"tag") + "_" + co.percentage;
+				String description = description(co);
+				printfln("%s,,,,,%s,,%s,%s,%s", sample_id, i7_index_seq, i5_index_seq, co.projectCode, description);
 			}
 		}
-		return this;
+		return this;		
 	}
 	
 }
+
+//class NovaSeqSampleSheetHelper {
+//	
+//	public static void header(TextOutput out, Experiment experiment, List<Container> containers) {
+//		// Header
+//		out.println("[Header]")
+//		   .println("IEMFileVersion,5")
+//		   .println("Experiment Name,", experiment.code)
+//		   .println("Date,", new SimpleDateFormat("MM/dd/yyyy").format(experiment.traceInformation.creationDate))
+//		   .println("Workflow,GenerateFASTQ")
+//		   .println("Application,NovaSeq FASTQ Only")
+//		   .println("Instrument Type,NovaSeq")
+//		   .println("Assay,")
+//		   .println("Index Adapters,")
+//		   .println("Description,", containers.get(0).support.code)
+//		   .println("Chemistry,Default")
+//		   .println();
+//	}
+//	
+//	public static void reads(TextOutput out, Experiment experiment) {
+//		// Reads
+//		out.println("[Reads]")
+//		   .println(experiment.instrumentProperties.get("nbCyclesRead1").value.toString())
+//		   .println(experiment.instrumentProperties.get("nbCyclesRead2").value.toString())
+//		   .println();		
+//	}
+//	
+//	public static void settings(TextOutput out) {
+//		// Settings
+//		out.println("[Settings]")
+//		   .println("Adapter,AGATCGGAAGAGCACACGTCTGAACTCCAGTCA")
+//		   .println("AdapterRead2,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT")
+//		   .println();
+//	}
+//	
+//}
+//// sampleSheet_1.scala.txt
+//class SampleSheet1 extends TextOutput {
+//	
+//	public SampleSheet1 render(Experiment experiment, List<Container> containers) {
+////		// Header
+////		println("[Header]");
+////		println("IEMFileVersion,5");
+////		println("Experiment Name,", experiment.code);
+////		println("Date,", new SimpleDateFormat("MM/dd/yyyy").format(experiment.traceInformation.creationDate));
+////		println("Workflow,GenerateFASTQ");
+////		println("Application,NovaSeq FASTQ Only");
+////		println("Instrument Type,NovaSeq");
+////		println("Assay,");
+////		println("Index Adapters,");
+////		println("Description,", containers.get(0).support.code);
+////		println("Chemistry,Default");
+////		println();
+////		// Reads
+////		println("[Reads]");
+////		println(experiment.instrumentProperties.get("nbCyclesRead1").value.toString());
+////		println(experiment.instrumentProperties.get("nbCyclesRead2").value.toString());
+////		println();
+////		// Settings
+////		println("[Settings]");
+////		println("Adapter,AGATCGGAAGAGCACACGTCTGAACTCCAGTCA");
+////		println("AdapterRead2,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT");
+////		println();
+//		NovaSeqSampleSheetHelper.header(this, experiment, containers);
+//		NovaSeqSampleSheetHelper.reads(this,experiment);
+//		NovaSeqSampleSheetHelper.settings(this);
+//		// Data
+//		println("[Data]");
+//		println("Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,Sample_Project,Description");
+//		containers.sort(((a,b) -> a.code.compareTo(b.code)));
+//		for (Container c : containers) {
+//			for (Content co :c.contents) {
+//				String sample_id     = c.support.line + "_" + co.sampleCode+"_"+OutputHelper.getContentProperty(co,"libProcessTypeCode")+"_"+OutputHelper.getContentProperty(co,"tag");				
+//				String i7_index_name = OutputHelper.getContentProperty(co,"tag");
+//				String i7_index_seq  = OutputHelper.getSequence(OutputHelper.getIndex("index-illumina-sequencing",OutputHelper.getContentProperty(co,"tag")));
+//				String description   = OutputHelper.getContentProperty(co,"tag")+"_"+co.percentage;
+//				// Only one of the two is needed
+//				//println(sample_id, ",,,,", i7_index_name, ",", i7_index_seq, ",", co.projectCode, ",", description);
+//				printfln("%s,,,,%s,%s,%s,%s", sample_id, i7_index_name, i7_index_seq, co.projectCode, description);
+//			}
+//		} 
+//		return this;
+//	}
+//	
+//}
+//
+////sampleSheet_2.scala.txt
+//class SampleSheet2 extends TextOutput {
+//		
+//	public SampleSheet2 render(Experiment experiment, List<Container> containers) {
+////		// Header
+////		println("[Header]");
+////		println("IEMFileVersion,5");
+////		println("Experiment Name,", experiment.code);
+////		println("Date,", new SimpleDateFormat("MM/dd/yyyy").format(experiment.traceInformation.creationDate));
+////		println("Workflow,GenerateFASTQ");
+////		println("Application,NovaSeq FASTQ Only");
+////		println("Instrument Type,NovaSeq");
+////		println("Assay,");
+////		println("Index Adapters,");
+////		println("Description,", containers.get(0).support.code);
+////		println("Chemistry,Amplicon");
+////		println();
+////		// Reads
+////		println("[Reads]");
+////		println(experiment.instrumentProperties.get("nbCyclesRead1").value.toString());
+////		println(experiment.instrumentProperties.get("nbCyclesRead2").value.toString());
+////		println();
+////		// Settings
+////		println("[Settings]");
+////		println("Adapter,AGATCGGAAGAGCACACGTCTGAACTCCAGTCA");
+////		println("AdapterRead2,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT");
+////		println();
+//		NovaSeqSampleSheetHelper.header(this, experiment, containers);
+//		NovaSeqSampleSheetHelper.reads(this,experiment);
+//		NovaSeqSampleSheetHelper.settings(this);
+//		// Data
+//		println("[Data]");
+//		println("Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,I5_Index_ID,index2,Sample_Project,Description");
+//		containers.sort((a,b) -> a.code.compareTo(b.code));
+//		for(Container c : containers) { 
+//			for(Content co : c.contents) {
+//				String sample_id=c.support.line +"_"+ co.sampleCode+"_"+OutputHelper.getContentProperty(co,"libProcessTypeCode")+"_"+OutputHelper.getContentProperty(co,"tag");
+//				
+////			@*** 13/02/2018ATTENTION tous les noms d'index dual ne suivent pas la nomenclature Illumina <index1>-<index2>=> ne pas splitter, ne pas mettre les noms dans la FDR
+////			@{i7_index_name=OutputHelper.getContentProperty(co,"tag").split("-")(0)}
+////			@{i5_index_name=OutputHelper.getContentProperty(co,"tag").split("-")(1)}
+////			***@
+//
+//				String i7_index_seq=OutputHelper.getSequence(OutputHelper.getIndex("index-illumina-sequencing",OutputHelper.getContentProperty(co,"tag"))).split("-")[0];
+//				String i5_index_seq=OutputHelper.getSequence(OutputHelper.getIndex("index-illumina-sequencing",OutputHelper.getContentProperty(co,"tag"))).split("-")[1];
+//				String description=OutputHelper.getContentProperty(co,"tag")+"_"+co.percentage;
+//				printfln("%,,,,,%,,%,%s,%s", sample_id, i7_index_seq, i5_index_seq, co.projectCode, description);
+//			}
+//		}
+//		return this;
+//	}
+//	
+//}
 
 public abstract class NovaSeqOutput extends AbstractOutput {
 
@@ -202,7 +273,6 @@ public abstract class NovaSeqOutput extends AbstractOutput {
 		List<Container> containers = OutputHelper.getInputContainersFromExperiment(experiment);
 		TagModel tagModel = OutputHelper.getTagModel(containers);
 		
-		// TODO: remove default content creation as it is a duplicate of the tag cases. 
 //		String content = OutputHelper.format(sampleSheet_1.render(experiment,containers).body()); 
 		String content = null;
 		
@@ -210,11 +280,11 @@ public abstract class NovaSeqOutput extends AbstractOutput {
 			// content = OutputHelper.format(sampleSheet_1.render(experiment,containers).body());	
 			// content = new SampleSheet1().render(experiment, containers).getContent();
 			content = impl(() -> OutputHelper.format(sampleSheet_1.render(experiment,containers).body()), 
-					       () -> new SampleSheet1().render(experiment, containers).getContent());				
+					       () -> new NovaSeqSampleSheet().sheet1(experiment, containers).getContent());				
 		} else {
 //			content = OutputHelper.format(sampleSheet_2.render(experiment,containers).body());	
 			content = impl(() -> OutputHelper.format(sampleSheet_2.render(experiment,containers).body()),
-					       () -> new SampleSheet2().render(experiment, containers).getContent());	
+					       () -> new NovaSeqSampleSheet().sheet2(experiment, containers).getContent());	
 		}
 		
 		String filename = OutputHelper.getInstrumentPath(experiment.instrument.code)+containers.get(0).support.code+".csv";
