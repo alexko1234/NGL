@@ -17,6 +17,8 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.StorageHistory;
 import validation.ContextValidation;
+import validation.common.instance.CommonValidationHelper;
+import workflows.container.ContSupportWorkflows;
 
 public class ContainerSupportsAPI extends GenericAPI<ContainerSupportsDAO, ContainerSupport> {
 
@@ -25,11 +27,13 @@ public class ContainerSupportsAPI extends GenericAPI<ContainerSupportsDAO, Conta
 	private final static List<String> AUTHORIZED_UPDATE_FIELDS = Arrays.asList("storageCode");
 	
 	private final ContainersAPI containerApi;
+	private final ContSupportWorkflows workflows;
 	
 	@Inject
-	public ContainerSupportsAPI(ContainerSupportsDAO dao, ContainersAPI containerApi) {
+	public ContainerSupportsAPI(ContainerSupportsDAO dao, ContainersAPI containerApi, ContSupportWorkflows workflows) {
 		super(dao);
 		this.containerApi = containerApi;
+		this.workflows = workflows;
 	}
 
 	@Override
@@ -123,6 +127,24 @@ public class ContainerSupportsAPI extends GenericAPI<ContainerSupportsDAO, Conta
 			}
 		}
 	}
+	
+	public ContainerSupport updateState(String code, State state, String currentUser) throws APIException, APIValidationException {
+		ContainerSupport containerSupportInDb = get(code);
+		if(containerSupportInDb == null) {
+			throw new APIException("Container support with code " + code + " not exist");
+		} else {
+			ContextValidation ctxVal = new ContextValidation(currentUser);
+			ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
+			ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_STATE, Boolean.TRUE);		
+			workflows.setState(ctxVal, containerSupportInDb, state);
+			if (!ctxVal.hasErrors()) {
+				return get(code);
+			} else {
+				throw new APIValidationException("Invalid state modification", ctxVal.getErrors());
+			}
+		}
+	} 
+	
 	
 	private void updateStorages(ContainerSupport dbSupport, ContainerSupport formSupport, String currentUser) {
 		if (dbSupport.storages == null) {

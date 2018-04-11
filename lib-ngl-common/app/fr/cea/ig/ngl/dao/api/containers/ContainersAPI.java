@@ -19,7 +19,9 @@ import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.utils.InstanceHelpers;
 import play.Logger.ALogger;
 import validation.ContextValidation;
+import validation.common.instance.CommonValidationHelper;
 import validation.container.instance.ContainerValidationHelper;
+import workflows.container.ContWorkflows;
 
 public class ContainersAPI extends GenericAPI<ContainersDAO, Container> {
 
@@ -49,10 +51,12 @@ public class ContainersAPI extends GenericAPI<ContainersDAO, Container> {
 																   "sampleCodes",
 																   "fromTransformationTypeCodes",
 																   "processTypeCodes");
+	private final ContWorkflows workflows;
 	
 	@Inject
-	public ContainersAPI(ContainersDAO dao) {
+	public ContainersAPI(ContainersDAO dao, ContWorkflows workflows) {
 		super(dao);
+		this.workflows = workflows;
 	}
 
 	@Override
@@ -154,15 +158,23 @@ public class ContainersAPI extends GenericAPI<ContainersDAO, Container> {
 		}
 	}
 	
-	//TODO
-	public void updateState(String code, State state, String currentUser) throws APIException {
+	public Container updateState(String code, State state, String currentUser) throws APIException, APIValidationException {
 		Container containerInDb = get(code);
 		if(containerInDb == null) {
 			throw new APIException("Container with code " + code + " not exist");
 		} else {
 			ContextValidation ctxVal = new ContextValidation(currentUser);
+			ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
+			ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE, Boolean.TRUE);		
+			workflows.setState(ctxVal, containerInDb, state);
+			if (!ctxVal.hasErrors()) {
+				return get(code);
+			} else {
+				throw new APIValidationException("Invalid state modification", ctxVal.getErrors());
+			}
 		}
 	}
+	
 	
 	private void cleanProperties(Container input) {
 		if(input.volume != null && input.volume.value == null) input.volume = null;

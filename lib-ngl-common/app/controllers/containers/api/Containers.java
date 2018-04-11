@@ -55,8 +55,6 @@ import play.data.Form;
 import play.i18n.Lang;
 import play.mvc.Http;
 import play.mvc.Result;
-import validation.ContextValidation;
-import validation.common.instance.CommonValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
 import workflows.container.ContWorkflows;
 
@@ -67,7 +65,6 @@ public class Containers extends NGLAPIController<ContainersAPI, ContainersDAO, C
 	private final Form<Container> form;
 	private final Form<State> stateForm;
 	private final Form<ContainerBatchElement> batchElementForm;
-	private final ContWorkflows workflows;
 	
 	@Inject
 	public Containers(NGLApplication app, ContainersAPI api, ContWorkflows workflows) {
@@ -75,7 +72,6 @@ public class Containers extends NGLAPIController<ContainersAPI, ContainersDAO, C
 		form = app.formFactory().form(Container.class);
 		stateForm = app.formFactory().form(State.class);
 		batchElementForm = app.formFactory().form(ContainerBatchElement.class);
-		this.workflows = workflows;
 	}
 
 	@Override
@@ -197,32 +193,28 @@ public class Containers extends NGLAPIController<ContainersAPI, ContainersDAO, C
 		}
 	}
 	
-	//TODO  API ?
-	/*****************************************************************************/
+
 	@Override
 	@Authenticated
 	@Authorized.Write
 	public Result updateState(String code) {
 		try {
-			Container container = api().get(code);
-			if (container == null) {
-				return badRequestAsJson("Container with code " + code + " not exist");
+			Form<State> filledForm =  getFilledForm(stateForm, State.class);
+			State state = filledForm.get();
+			state.date = new Date();
+			state.user = getCurrentUser();
+			Container container = api().updateState(code, state, getCurrentUser());
+			return okAsJson(container);
+		} catch (APIValidationException e) {
+			getLogger().error(e.getMessage());
+			if(e.getErrors() != null) {
+				return badRequestAsJson(errorsAsJson(e.getErrors()));
 			} else {
-				Form<State> filledForm =  getFilledForm(stateForm, State.class);
-				State state = filledForm.get();
-				state.date = new Date();
-				state.user = getCurrentUser();
-				
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser());
-				ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
-				ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE, Boolean.TRUE);		
-				workflows.setState(ctxVal, container, state);
-				if (!ctxVal.hasErrors()) {
-					return okAsJson((api().get(code)));
-				} else {
-					return badRequestAsJson(errorsAsJson(ctxVal.getErrors()));
-				}
+				return badRequestAsJson(e.getMessage());
 			}
+		} catch (APIException e) {
+			getLogger().error(e.getMessage());
+			return badRequestAsJson(e.getMessage());
 		} catch (Exception e) {
 			getLogger().error(e.getMessage());
 			return nglGlobalBadRequest();
@@ -239,33 +231,25 @@ public class Containers extends NGLAPIController<ContainersAPI, ContainersDAO, C
 			List<DatatableBatchResponseElement> response = filledForms.parallelStream()
 					.map(filledForm -> {
 						ContainerBatchElement element = filledForm.get();
-						Container container = api().get(element.data.code);
-						if(null != container){
-							State state = element.data.state;
-							state.date = new Date();
-							state.user = getCurrentUser();
-							ContextValidation ctxVal = new ContextValidation(getCurrentUser());
-							ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
-							ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE, Boolean.TRUE);
-							workflows.setState(ctxVal, container, state);
-							if (!ctxVal.hasErrors()) {
-								return new DatatableBatchResponseElement(OK,  api().get(container.code), element.index);
-							}else {
-								return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);
-							}
-						}else {
+						State state = element.data.state;
+						state.date = new Date();
+						state.user = getCurrentUser();
+						try {
+							Container container = api().updateState(element.data.code, state, getCurrentUser());
+							return new DatatableBatchResponseElement(OK, container, element.index);
+						} catch (APIValidationException e) {
+							return new DatatableBatchResponseElement(BAD_REQUEST, errorsAsJson(lang, e.getErrors()), element.index);
+						} catch (APIException e) {
 							return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
 						}
-					}).collect(Collectors.toList());;
-
-					return okAsJson(response);
+					}).collect(Collectors.toList());
+			return okAsJson(response);
 		} catch (Exception e) {
 			getLogger().error(e.getMessage());
 			return nglGlobalBadRequest();
 		}
-	}
-	/*****************************************************************************/
-
+	}	
+	
 	/*
 	 * Construct the container query
 	 * @param containersSearch

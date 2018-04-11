@@ -47,8 +47,6 @@ import play.data.Form;
 import play.i18n.Lang;
 import play.mvc.Http;
 import play.mvc.Result;
-import validation.ContextValidation;
-import validation.common.instance.CommonValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
 import workflows.container.ContSupportWorkflows;
 
@@ -61,7 +59,6 @@ public class ContainerSupports extends NGLAPIController<ContainerSupportsAPI, Co
 	private final Form<QueryFieldsForm>              updateForm; 
 	private final Form<ContainerSupportBatchElement> batchElementForm;
 	private final Form<State>                        stateForm; 
-	private final  ContSupportWorkflows              workflows;
 	
 	@Inject
 	public ContainerSupports(NGLApplication app, ContainerSupportsAPI api, ContSupportWorkflows workflows) {
@@ -70,7 +67,6 @@ public class ContainerSupports extends NGLAPIController<ContainerSupportsAPI, Co
 		updateForm                 = app.formFactory().form(QueryFieldsForm.class);
 		batchElementForm           = app.formFactory().form(ContainerSupportBatchElement.class);
 		stateForm                  = app.formFactory().form(State.class);
-		this.workflows             = workflows;
 	}
 	
 	@Override
@@ -78,23 +74,22 @@ public class ContainerSupports extends NGLAPIController<ContainerSupportsAPI, Co
 	@Authorized.Write
 	public Result updateState(String code) {
 		try {
-			ContainerSupport support = api().get(code);
-			if(support == null){
-				return badRequestAsJson("Container support with code " + code + " does not exist");
+			Form<State> filledForm =  getFilledForm(stateForm, State.class);
+			State state = filledForm.get();
+			state.date = new Date();
+			state.user = getCurrentUser();
+			ContainerSupport support = api().updateState(code, state, getCurrentUser());
+			return okAsJson(support);
+		} catch (APIValidationException e) {
+			getLogger().error(e.getMessage());
+			if(e.getErrors() != null) {
+				return badRequestAsJson(errorsAsJson(e.getErrors()));
 			} else {
-				State state = getFilledForm(stateForm, State.class).get();
-				state.date = new Date();
-				state.user = getCurrentUser();
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser());
-				ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
-				ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_STATE, Boolean.TRUE);
-				workflows.setState(ctxVal, support, state);
-				if (!ctxVal.hasErrors()) {
-					return okAsJson(api().get(code));
-				} else {
-					return badRequestAsJson(errorsAsJson(ctxVal.getErrors()));
-				}
+				return badRequestAsJson(e.getMessage());
 			}
+		} catch (APIException e) {
+			getLogger().error(e.getMessage());
+			return badRequestAsJson(e.getMessage());
 		} catch (Exception e) {
 			getLogger().error(e.getMessage());
 			return nglGlobalBadRequest();
@@ -112,21 +107,15 @@ public class ContainerSupports extends NGLAPIController<ContainerSupportsAPI, Co
 			List<DatatableBatchResponseElement> response = filledForms.parallelStream()
 					.map(filledForm -> {
 						ContainerSupportBatchElement element = filledForm.get();
-						ContainerSupport support = api().get(element.data.code);
-						if (null != support) {
-							State state = element.data.state;
-							state.date = new Date();
-							state.user = getCurrentUser();
-							ContextValidation ctxVal = new ContextValidation(getCurrentUser());
-							ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
-							ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_STATE, Boolean.TRUE);
-							workflows.setState(ctxVal, support, state);
-							if (!ctxVal.hasErrors()) {
-								return new DatatableBatchResponseElement(OK,  api().get(support.code), element.index);
-							} else {
-								return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);
-							}
-						} else {
+						State state = element.data.state;
+						state.date = new Date();
+						state.user = getCurrentUser();
+						try {
+							ContainerSupport support = api().updateState(element.data.code, state, getCurrentUser());
+							return new DatatableBatchResponseElement(OK, support, element.index);
+						} catch (APIValidationException e) {
+							return new DatatableBatchResponseElement(BAD_REQUEST, errorsAsJson(lang, e.getErrors()), element.index);
+						} catch (APIException e) {
 							return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
 						}
 					}).collect(Collectors.toList());
