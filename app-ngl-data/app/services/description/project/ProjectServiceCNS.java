@@ -43,7 +43,7 @@ public class ProjectServiceCNS extends AbstractProjectService{
 	
 	private static List<PropertyDefinition> getProjectPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> pds = new ArrayList<PropertyDefinition>();
-		pds.add(DescriptionFactory.newPropertiesDefinition("Groupe unix", "unixGroup", LevelService.getLevels(Level.CODE.Project), String.class, true, "single", "g-extprj"));
+		pds.add(DescriptionFactory.newPropertiesDefinition("Groupe unix", "unixGroup", LevelService.getLevels(Level.CODE.Project), String.class, true, DescriptionFactory.newValues("g-cns","g-tara","g-extprj","g-intprj","g-epgv"), "g-extprj", "single"));
 		return pds;
 	}
 	

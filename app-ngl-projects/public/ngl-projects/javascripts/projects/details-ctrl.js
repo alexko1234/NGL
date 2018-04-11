@@ -41,7 +41,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		$scope.lists.refresh.projectTypes();
 		$scope.lists.refresh.projectCategories();
 		$scope.lists.refresh.umbrellaProjects();
-		
+		$scope.lists.refresh.values({propertyDefinitionCode:"unixGroup"},"values");
 		$scope.mainService = mainService;
 		$scope.mainService.stopEditMode();
 		

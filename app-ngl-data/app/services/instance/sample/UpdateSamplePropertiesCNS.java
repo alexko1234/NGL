@@ -40,6 +40,7 @@ import workflows.container.ContentHelper;
 import com.mongodb.MongoException;
 
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
 
 public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {

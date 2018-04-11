@@ -36,7 +36,7 @@ public class ProjectServiceCNG extends AbstractProjectService{
 
 	private static List<PropertyDefinition> getProjectPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> pds = new ArrayList<PropertyDefinition>();
-		pds.add(DescriptionFactory.newPropertiesDefinition("Groupe unix", "unixGroup", LevelService.getLevels(Level.CODE.Project), String.class, true, "single", "solexa"));
+		pds.add(DescriptionFactory.newPropertiesDefinition("Groupe unix", "unixGroup", LevelService.getLevels(Level.CODE.Project), String.class, true,DescriptionFactory.newValues("solexa","epigen") , "solexa", "single"));
 		return pds;
 	}
 }
