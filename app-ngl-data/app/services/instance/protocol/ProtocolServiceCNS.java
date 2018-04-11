@@ -299,6 +299,10 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("prod-ill-bqarn-rna-nebuii-stranded-polya-160-v1","Prod_ILL_BqARN_RNA-NEBUII-Stranded-PolyA_160_v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-library","indexing-and-pcr-amplification"), 
 				concatMap(newPSV("rnaLibProtocol","RNA NEB_U2 Stranded PolyA"),newPSV("strandOrientation","reverse"),newPSV("cDNAsynthesisType","random"))));
 		
+		lp.add(newProtocol("prod_ill_bqarn_truseq-stranded-polya_167_v2","Prod_ILL_BqARN_TruSeq-Stranded-PolyA_167_v2","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library","pcr-amplification-and-purification"), 
+				concatMap(newPSV("rnaLibProtocol","RNA TruSeq Stranded PolyA"))));
+	
+		
 		lp.add(newProtocol("inda-c_ovation_universal_rna-seq","InDA-C Ovation Universal RNA-Seq","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library","pcr-amplification-and-purification"), 
 				concatMap(newPSV("rnaLibProtocol","InDA-C Ovation Universal RNA-Seq"),newPSV("strandOrientation","reverse"),newPSV("cDNAsynthesisType","random + oligodT"))));
 		
