@@ -1,9 +1,11 @@
 package fr.cea.ig.ngl.test.dao.api.factory;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import models.laboratory.common.instance.Comment;
+import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
@@ -28,9 +30,16 @@ public class TestContainerFactory {
 		c.traceInformation = new TraceInformation(user);
 		c.contents = contents(s, proj.code);
 		c.support = support(containerSupport);
+		c.state = state(user);
 		return c;
 	}
 	
+	private static State state(String user) {
+		State s = new State("IW-P", user);
+		s.date = new Date();
+		return s;
+	}
+
 	private static LocationOnContainerSupport support(ContainerSupport containerSupport) {
 		LocationOnContainerSupport s = new LocationOnContainerSupport();
 		s.code = containerSupport.code;

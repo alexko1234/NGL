@@ -23,6 +23,7 @@ import fr.cea.ig.ngl.test.TestAppWithDroolsFactory;
 import fr.cea.ig.ngl.test.dao.api.factory.TestContainerFactory;
 import fr.cea.ig.ngl.test.dao.api.factory.TestProjectFactory;
 import fr.cea.ig.ngl.test.dao.api.factory.TestSampleFactory;
+import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
@@ -232,6 +233,24 @@ public class ContainersAPITest extends AbstractTests implements AbstractAPITests
 			Assert.assertNotNull(cont);
 			Assert.assertEquals(data.get_id(), cont.get_id());
 			Assert.assertEquals(refContainer.getCode(), cont.getCode());
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			exit(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void updateStateTest() {
+		logger.debug("update state test");
+		try {
+			State state = new State("IS", USER);
+			api.updateState(refContainer.code, state, USER);
+			Container cont = api.get(refContainer.code);
+			Assert.assertEquals(state.code, cont.state.code);
+		} catch (APIValidationException e) {
+			logger.error(e.getMessage());
+			logValidationErrors(e);
+			exit(e.getMessage());
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			exit(e.getMessage());

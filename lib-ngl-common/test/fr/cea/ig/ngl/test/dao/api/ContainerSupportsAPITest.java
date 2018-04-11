@@ -22,6 +22,7 @@ import fr.cea.ig.ngl.test.TestAppWithDroolsFactory;
 import fr.cea.ig.ngl.test.dao.api.factory.TestContainerFactory;
 import fr.cea.ig.ngl.test.dao.api.factory.TestProjectFactory;
 import fr.cea.ig.ngl.test.dao.api.factory.TestSampleFactory;
+import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.project.instance.Project;
@@ -193,6 +194,12 @@ public class ContainerSupportsAPITest extends AbstractTests implements AbstractA
 			ContainerSupport support = api.get(refContainerSupport.code);
 			Assert.assertNotEquals(refContainerSupport.storageCode, support.storageCode);
 			Assert.assertEquals(storageCode, support.storageCode);
+			Assert.assertEquals(storageCode, support.storageCode);
+			Assert.assertEquals(1, support.storages.size());
+			
+			Container cont = contApi.get(refContainer.code);
+			Assert.assertNotEquals(refContainer.support.storageCode, cont.support.storageCode);
+			Assert.assertEquals(support.storageCode, cont.support.storageCode);
 		} catch (APIValidationException e) {
 			logger.error(e.getMessage());
 			logValidationErrors(e);
@@ -218,6 +225,24 @@ public class ContainerSupportsAPITest extends AbstractTests implements AbstractA
 			Assert.assertNotNull(support);
 			Assert.assertEquals(data.get_id(), support.get_id());
 			Assert.assertEquals(data.getCode(), support.getCode());
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			exit(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void updateStateTest() {
+		logger.debug("update state test");
+		try {
+			State state = new State("IS", USER);
+			api.updateState(refContainerSupport.code, state, USER);
+			ContainerSupport cont = api.get(refContainerSupport.code);
+			Assert.assertEquals(state.code, cont.state.code);
+		} catch (APIValidationException e) {
+			logger.error(e.getMessage());
+			logValidationErrors(e);
+			exit(e.getMessage());
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			exit(e.getMessage());
