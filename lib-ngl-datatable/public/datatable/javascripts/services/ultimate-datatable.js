@@ -3262,7 +3262,8 @@ directive('udtCompile', ['$compile', function($compile) {
 //The value passed to the directive must be an object with displayMeasureValue and saveMeasureValue
 directive('udtConvertvalue',['udtConvertValueServices','$filter', '$parse', function(udtConvertValueServices, $filter, $parse) {
 	return {
-                require: 'ngModel',
+				priority:1100,
+		 		require: 'ngModel',
                 link: function(scope, element, attrs, ngModelController) {
                 	//init service
                 	var convertValues = udtConvertValueServices();
@@ -3367,41 +3368,49 @@ directive('udtDateTimestamp', ['$filter', function($filter) {
 //EXAMPLE: <input type="text" default-value="test" ng-model="x">
 directive('udtDefaultValue',['$parse', function($parse) {
 	    		return {
+	    			priority:1200,					 
 	    			require: 'ngModel',
-	    			link: function(scope, element, attrs, ngModel) {
-	    				var _col = null;
+	    			link: function(scope, element, attrs, ngModelController) {
+	    				
+	    				
+	    				var _col = $parse(attrs.udtDefaultValue)(scope);
+	    				
+	    				var currentValue = $parse(attrs.ngModel)(scope);
 	    				
 	    				var setDefaultValue = function(){
-	    					if(_col != null && ngModel.$isEmpty(ngModel.$modelValue)){
+	    					if(_col != null && ngModelController.$isEmpty(currentValue)){
 								if(_col.type === "boolean"){
 									if(_col.defaultValues === "true" || _col.defaultValues === true){
-										ngModel.$setViewValue(true);
-										ngModel.$render();
+										ngModelController.$setViewValue(true);
+										ngModelController.$render();
 									}else if(_col.defaultValues === "false" || _col.defaultValues === false){
-										ngModel.$setViewValue(true); // hack to insert false value 
-										ngModel.$setViewValue(false);
-										ngModel.$render();
+										ngModelController.$setViewValue(true); // hack to insert false value 
+										ngModelController.$setViewValue(false);
+										ngModelController.$render();
 									}											
 								}else if(!angular.isFunction(_col.defaultValues)){
-									ngModel.$setViewValue(_col.defaultValues);
-									ngModel.$render();
+									ngModelController.$setViewValue(_col.defaultValues);
+									ngModelController.$render();
 								}else{
-									ngModel.$setViewValue(_col.defaultValues(scope.value.data, _col));
-									ngModel.$render();
+									var defaultValue = _col.defaultValues(scope.value.data, _col);
+									ngModelController.$setViewValue(defaultValue);
+									ngModelController.$render();
 								}
 			                	
 							}
 	    				}
 	    				
-	    				if(attrs.udtDefaultValue){
-	    					_col = $parse(attrs.udtDefaultValue)(scope);    	
-	    					setDefaultValue();
+	    				if(_col){
+	    					setDefaultValue();	    					
 	    					if(angular.isFunction(_col.defaultValues)){ //only watch when function to limit watching
-    							scope.$watch(attrs.udtDefaultValue+".defaultValues(value.data,col)", function(value){
-    								setDefaultValue();
+    							scope.$watch(attrs.udtDefaultValue+".defaultValues(value.data,col)", function(newValue, oldValue){
+    								if(newValue !== oldValue){
+    									setDefaultValue();
+    								}
 	    						});
-    						}
+    						}    						
 	    				}
+	    				
 	    				/*
 	    				scope.$watch(attrs.udtDefaultValue, function(col){
 	    					if(col !== null && col !== undefined && col.defaultValues !== undefined && col.defaultValues !== null ){
@@ -3418,7 +3427,7 @@ directive('udtDefaultValue',['$parse', function($parse) {
 	    				
 	    				//TODO GA ?? better way with formatter
 						/*
-	    				scope.$watch(ngModel, function(value){
+	    				scope.$watch(ngModelController, function(value){
 							setDefaultValue();
 					    });
 					    */
@@ -3489,6 +3498,7 @@ directive('udtForm', function(){
 });;angular.module('ultimateDataTableServices').
 directive("udtHtmlFilter", function($filter, udtI18n) {
 				return {
+					  priority:1000,
 					  require: 'ngModel',
 					  link: function(scope, element, attrs, ngModelController) {
 						  	var messagesService = udtI18n(navigator.languages || navigator.language || navigator.userLanguage);
