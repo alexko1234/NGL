@@ -702,7 +702,6 @@ public class ResolutionService {
 		r.objectTypeCode = "Experiment";
 		ArrayList<String> al = new ArrayList<String>();
 		al.add("dna-rna-extraction");
-		al.add("dna-extraction");
 		
 		r.typeCodes = al;
 		

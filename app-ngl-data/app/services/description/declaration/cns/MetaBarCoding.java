@@ -456,7 +456,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 				DescriptionFactory.newValues("16S_V4V5","18S_V9", "16S_Full Length + 16S_V4V5", "ITS2","CP23S","18S_V4","COI","16S_V1V2V3","16S_V3V4",
 						"16S_V5V6","18S_V1V2","16S_V4","autre"),	null,null,null,"single", 15, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Taille amplicon attendue", "expectedAmpliconSize", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, 
-				DescriptionFactory.newValues("300", "400","170","180","380","313","500","450","250","550", "411/600","280","150-170", "690-710"),null,null,null,"single", 16, true, null, null));
+				DescriptionFactory.newValues("300", "400","170","180","380","313","500","450","460","250","550", "411/600","280","150-170", "690-710"),null,null,null,"single", 16, true, null, null));
 		//170 -> 150-170, 500 ??, 270 ?? -> pas utilisé, 250 ?? -> autre, 550 ?? -> autre
 		//manque : 411/600 (400), 280(250), 150-170(170) 
 		//enlever 270
