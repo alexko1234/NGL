@@ -15,6 +15,7 @@ import com.mongodb.BasicDBObject;
 import akka.stream.javadsl.Source;
 import akka.util.ByteString;
 import controllers.NGLAPIController;
+import controllers.NGLControllerHelper;
 import fr.cea.ig.MongoDBResult.Sort;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
@@ -27,6 +28,7 @@ import fr.cea.ig.ngl.dao.projects.ProjectsAPI;
 import fr.cea.ig.ngl.dao.projects.ProjectsDAO;
 import fr.cea.ig.ngl.support.NGLForms;
 import fr.cea.ig.util.Streamer;
+import models.laboratory.common.description.Level;
 import models.laboratory.project.instance.Project;
 import play.data.Form;
 import play.libs.Json;
@@ -213,9 +215,14 @@ public class Projects extends NGLAPIController<ProjectsAPI, ProjectsDAO, Project
 			queries.add(DBQuery.in("state.code", form.stateCodes));
 		}
 		
+		if (CollectionUtils.isNotEmpty(form.unixGroups)) {
+			queries.add(DBQuery.in("properties.unixGroup.value", form.unixGroups));
+		}
+		
 		if (CollectionUtils.isNotEmpty(form.typeCodes)) { //all
 			queries.add(DBQuery.in("typeCode", form.typeCodes));
 		}
+		
 		
 		if (CollectionUtils.isNotEmpty(form.existingFields)) { //all
 			for(String field : form.existingFields){

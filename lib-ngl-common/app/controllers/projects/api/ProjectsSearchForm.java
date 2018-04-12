@@ -1,6 +1,8 @@
 package controllers.projects.api;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import controllers.ListForm;
@@ -20,7 +22,10 @@ public class ProjectsSearchForm extends ListForm {
 	
 	public Boolean isFgGroup;
 	
-	 public Set<String> existingFields, notExistingFields;
+	public List<String> unixGroups;
+	
+	
+	public Set<String> existingFields, notExistingFields;
 
 }
 
