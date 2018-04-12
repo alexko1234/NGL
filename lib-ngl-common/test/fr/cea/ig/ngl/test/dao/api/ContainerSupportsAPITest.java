@@ -35,7 +35,6 @@ import utils.AbstractTests;
 public class ContainerSupportsAPITest extends AbstractTests implements AbstractAPITests {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(ContainerSupportsAPITest.class);
-	private static final TestAppWithDroolsFactory TEST_APP_FACTORY = new TestAppWithDroolsFactory("ngl-sq.test.conf").bindRulesComponent();
 	private static final String USER = "ngsrg";
 	private static final double QUANTITY = 1.0;
 	private static final double VOL = 1.0;
@@ -63,21 +62,12 @@ public class ContainerSupportsAPITest extends AbstractTests implements AbstractA
 	}
 	
 	@BeforeClass
-	public static void startTestApplication() {
-		logger.info("Start an app (Test Mode) using NGL-SQ TU config");
-		app = TEST_APP_FACTORY.createApplication();
-		DescriptionHelper.initInstitute();
-		logger.info("test app started");
-	}
-
-	@BeforeClass
 	public static void setUpClass() {
 		assertTrue(app.isDev());
 		projectApi = app.injector().instanceOf(ProjectsAPI.class);
 		assertNotNull(projectApi);
 		sampleApi = app.injector().instanceOf(SamplesAPI.class);
 		Assert.assertNotNull(sampleApi);
-		app.injector().instanceOf(TestRules6Component.class);	
 		contApi = app.injector().instanceOf(ContainersAPI.class);
 		Assert.assertNotNull(contApi);
 

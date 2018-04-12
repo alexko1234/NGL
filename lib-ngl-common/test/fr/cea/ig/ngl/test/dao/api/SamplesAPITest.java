@@ -58,19 +58,6 @@ public class SamplesAPITest extends AbstractSQTests implements AbstractAPITests 
     public ExpectedException exceptions = ExpectedException.none();
 
 	private static boolean clean = true;
-
-//	/**
-//	 * Override default method
-//	 * Initialize test application.
-//	 */
-//	@BeforeClass
-//	public static void startTestApplication() {
-//		logger.info("Start an app (Test Mode) using NGL-SQ TU config");
-//		// app = TEST_APP_FACTORY.bindRulesComponent().createApplication();
-//		app = Global.afSq.createApplication();
-//		DescriptionHelper.initInstitute();
-//		logger.info("test app started");
-//	}
 	
 	@BeforeClass
 	public static void setUpClass() {
@@ -79,7 +66,6 @@ public class SamplesAPITest extends AbstractSQTests implements AbstractAPITests 
 		assertNotNull(projectApi);
 		api = app.injector().instanceOf(SamplesAPI.class);
 		Assert.assertNotNull(api);
-		// app.injector().instanceOf(TestRules6Component.class);
 		logger.debug("define ref objects");
 		refProject = TestProjectFactory.project(USER);
 		refSample = TestSampleFactory.sample(USER, refProject);

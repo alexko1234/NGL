@@ -60,16 +60,21 @@ public class ProjectsAPITest extends AbstractTests implements AbstractAPITests {
 	@Override
 	@Before
 	public void setUpData() {
-		try {
-			data = api.create(refProject, USER);
-		} catch (APIValidationException e) {
-			logger.error(e.getMessage());
-			logger.error("invalid fields: " + e.getErrors().keySet().toString());
-			logValidationErrors(e);
-			exit(e.getMessage());
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			exit(e.getMessage());
+		if(clean) {
+			try {
+				data = api.create(refProject, USER);
+			} catch (APIValidationException e) {
+				logger.error(e.getMessage());
+				logger.error("invalid fields: " + e.getErrors().keySet().toString());
+				logValidationErrors(e);
+				exit(e.getMessage());
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+				exit(e.getMessage());
+			}
+		} else {
+			deleteData();
+			setUpData();
 		}
 	}
 

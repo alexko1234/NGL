@@ -19,7 +19,6 @@ import fr.cea.ig.ngl.dao.api.containers.ContainersAPI;
 import fr.cea.ig.ngl.dao.projects.ProjectsAPI;
 import fr.cea.ig.ngl.dao.samples.SamplesAPI;
 import fr.cea.ig.ngl.test.AbstractAPITests;
-import fr.cea.ig.ngl.test.TestAppWithDroolsFactory;
 import fr.cea.ig.ngl.test.dao.api.factory.TestContainerFactory;
 import fr.cea.ig.ngl.test.dao.api.factory.TestProjectFactory;
 import fr.cea.ig.ngl.test.dao.api.factory.TestSampleFactory;
@@ -29,15 +28,12 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
-import models.utils.DescriptionHelper;
 import play.Logger.ALogger;
-import rules.services.test.TestRules6Component;
-import utils.AbstractTests;
+import utils.AbstractSQTests;
 
-public class ContainersAPITest extends AbstractTests implements AbstractAPITests {
+public class ContainersAPITest extends AbstractSQTests implements AbstractAPITests {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(ContainersAPITest.class);
-	private static final TestAppWithDroolsFactory TEST_APP_FACTORY = new TestAppWithDroolsFactory("ngl-sq.test.conf").bindRulesComponent();
 	private static final String USER = "ngsrg";
 	private static final double QUANTITY = 1.0;
 	private static final double VOL = 1.0;
@@ -63,14 +59,6 @@ public class ContainersAPITest extends AbstractTests implements AbstractAPITests
 	public ALogger logger() {
 		return logger;
 	}
-	
-	@BeforeClass
-	public static void startTestApplication() {
-		logger.info("Start an app (Test Mode) using NGL-SQ TU config");
-		app = TEST_APP_FACTORY.createApplication();
-		DescriptionHelper.initInstitute();
-		logger.info("test app started");
-	}
 
 	@BeforeClass
 	public static void setUpClass() {
@@ -79,7 +67,6 @@ public class ContainersAPITest extends AbstractTests implements AbstractAPITests
 		assertNotNull(projectApi);
 		sampleApi = app.injector().instanceOf(SamplesAPI.class);
 		Assert.assertNotNull(sampleApi);
-		app.injector().instanceOf(TestRules6Component.class);
 		csApi = app.injector().instanceOf(ContainerSupportsAPI.class);
 		Assert.assertNotNull(csApi);
 		
