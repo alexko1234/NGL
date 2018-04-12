@@ -69,12 +69,18 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$http','$httpParamSe
 		form.typeCode="rsillumina";
 		//filter for CNG
 		form.fromDate=moment("14/12/2013", Messages("date.format").toUpperCase()).valueOf();
+		var datatableConfigRunsNoValid = datatableConfig;
+		datatableConfigRunsNoValid.order={by:'sequencingStartDate', reverse:false, mode:'remote'},
+		$scope.runsNoValid = datatable(datatableConfigRunsNoValid);		
+		$scope.runsNoValid.config.spinner.start=true;
+		
+		
 		$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:form}).then(function(result){
 			$scope.runCodes =result.data.map(function(readSet){return readSet.runCode;}).filter((value, index, self) => self.indexOf(value) === index);
-			
-			var datatableConfigRunsNoValid = datatableConfig;
-			datatableConfigRunsNoValid.order={by:'sequencingStartDate', reverse:false, mode:'remote'},
-			$scope.runsNoValid = datatable(datatableConfig);			
+			//var datatableConfigRunsNoValid = datatableConfig;
+			//datatableConfigRunsNoValid.order={by:'sequencingStartDate', reverse:false, mode:'remote'},
+			//$scope.runsNoValid = datatable(datatableConfig);		
+			$scope.runsNoValid.config.spinner.start=false;
 			$scope.runsNoValid.search({codes:$scope.runCodes});
 			$scope.runCodesUrl = $httpParamSerializer({codes:$scope.runCodes});
 		});
