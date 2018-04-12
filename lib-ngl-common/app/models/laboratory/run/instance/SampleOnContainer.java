@@ -41,11 +41,9 @@ public class SampleOnContainer implements IValidation{
 	//NCBI information from Sample
 	public String taxonCode;
 	public String ncbiScientificName;
-
 	//Measured concentration from Container
 	public PropertySingleValue containerConcentration;
 	
-
 	@Override
 	public String toString() {
 		return "SampleOnContainer [lastUpdateDate=" + lastUpdateDate

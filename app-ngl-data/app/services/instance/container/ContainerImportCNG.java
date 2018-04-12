@@ -15,7 +15,7 @@ import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
-import play.Logger;
+//import play.Logger;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNG;
 
@@ -26,8 +26,10 @@ import services.instance.AbstractImportDataCNG;
  * FDS 14/01/2016 desactivation import des lanes (plus necessaire depuis la mise en production NGL-SQ 10/2015)
  */
 
-public class ContainerImportCNG extends AbstractImportDataCNG{
+public class ContainerImportCNG extends AbstractImportDataCNG {
 
+//	private static final play.Logger.ALogger logger = play.Logger.of(ContainerImportCNG.class);
+	
 	@Inject
 	public ContainerImportCNG (FiniteDuration durationFromStart,
 			FiniteDuration durationFromNextIteration, NGLContext ctx) {
@@ -92,7 +94,7 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 	}
 	
 	public void loadSamples() throws SQLException, DAOException {
-		Logger.debug("Start LOADING samples");
+		logger.debug("Start LOADING samples");
 			
 		//-1- chargement depuis la base source Postgresql
 		//Logger.debug("1/3 loading from source database...");
@@ -106,11 +108,11 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		//Logger.debug("3/3 updating source database...");
 		limsServices.updateLimsSamples(samps, contextError, "creation");
 		
-		Logger.debug("End loading samples");
+		logger.debug("End loading samples");
 	}
 	
 	public void updateSamples() throws SQLException, DAOException {
-		Logger.debug("start UPDATING samples");
+		logger.debug("start UPDATING samples");
 		
 		//-1- chargement depuis la base source Postgresql
 		//Logger.debug("1/3 loading from source database...");
@@ -119,32 +121,30 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		//-2a- trouver les samples concernés dans la base mongoDB et les supprimer
 		//Logger.debug("2a/3 delete from dest database...");
 		for (Sample sample : samples) {
-			Sample oldSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sample.code);
-			
-			sample.traceInformation = InstanceHelpers.getUpdateTraceInformation(oldSample.traceInformation, "ngl-data");
-			
+			Sample oldSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sample.code);			
+			sample.traceInformation = InstanceHelpers.getUpdateTraceInformation(oldSample.traceInformation, "ngl-data");			
 			MongoDBDAO.deleteByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sample.code);
 		}
 		
 		//-2b- sauvegarder les samples dans la base cible MongoDb
 		//Logger.debug("2b/3 saving to dest database...");
-		List<Sample> samps=InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME, samples, contextError, true);
+		List<Sample> samps = InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME, samples, contextError, true);
 		
 		//-3- mise a jour dans la base source Postgresql ce qui a été traité
 		//Logger.debug("3/3 updating source database...");
 		limsServices.updateLimsSamples(samps, contextError, "update");
 		
-		Logger.debug("End updating samples");
+		logger.debug("End updating samples");
 	}
 	
 	// 22/10/2015 ajout parametre importState pour la reprise
 	public void loadContainers(String containerCategoryCode, String experimentTypeCode, String importState) throws SQLException, DAOException {
-		Logger.debug("Start loading containers of type:" + containerCategoryCode + " from experiment type: "+ experimentTypeCode);		
+		logger.debug("Start loading containers of type:" + containerCategoryCode + " from experiment type: "+ experimentTypeCode);		
 		
 		//-1- chargement depuis la base source Postgresql
 		List<Container> containers = limsServices.findContainerToCreate(contextError, containerCategoryCode, experimentTypeCode, importState);
 		
-		HashMap<String, PropertyValue<String>> mapCodeSupportSeq = null;
+		HashMap<String, PropertyValue> mapCodeSupportSeq = null;
 		
 		/* 14/01/2016  on n'importe plus de lanes...
 		if (containerCategoryCode.equals("lane")) {
@@ -168,26 +168,23 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		else */
 		if (containerCategoryCode.equals("tube")) {
 			limsServices.updateLimsTubes(ctrs, contextError, "creation");
-		}
-		else if (containerCategoryCode.equals("sample-well")) {
+		} else if (containerCategoryCode.equals("sample-well")) {
 			limsServices.updateLimsSamplePlates(ctrs, contextError, "creation");
-		}
-		else if (containerCategoryCode.equals("library-well")) {
+		} else if (containerCategoryCode.equals("library-well")) {
 			limsServices.updateLimsTubePlates(ctrs, contextError, "creation");
-		}
-		
-		Logger.debug("End loading containers of type " + containerCategoryCode+ " from experiment type: "+ experimentTypeCode);		
+		}	
+		logger.debug("End loading containers of type " + containerCategoryCode+ " from experiment type: "+ experimentTypeCode);		
 	}
 	
 	// FDS 16/06/2016 attention les mises a jours peuvent poser probleme.... utiliser avec précaution...
 	// voir updateSupportFromUpdatedContainers
 	public void updateContainers(String containerCategoryCode, String experimentTypeCode) throws SQLException, DAOException {
-		Logger.debug("Start updating containers of type: " + containerCategoryCode+ " from experiment type: "+ experimentTypeCode);		
+		logger.debug("Start updating containers of type: " + containerCategoryCode+ " from experiment type: "+ experimentTypeCode);		
 		
 		//-1- chargement depuis la base source Postgresql
 		List<Container> containers = limsServices.findContainerToModify(contextError, containerCategoryCode, experimentTypeCode);
 		
-		HashMap<String, PropertyValue<String>> mapCodeSupportSeq = null;
+		HashMap<String, PropertyValue> mapCodeSupportSeq = null;
 		
 		/* 14/01/2016 on n'importe plus les lanes
 		if (containerCategoryCode.equals("lane")) {
@@ -219,14 +216,12 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		else */
 		if  (containerCategoryCode.equals("tube")) {
 			limsServices.updateLimsTubes(ctrs, contextError, "update");
-		}
-		else if (containerCategoryCode.equals("sample-well")) {
+		} else if (containerCategoryCode.equals("sample-well")) {
 			limsServices.updateLimsSamplePlates(ctrs, contextError, "update");
-		}
-		else if (containerCategoryCode.equals("library-well")) {
+		} else if (containerCategoryCode.equals("library-well")) {
 			limsServices.updateLimsTubePlates(ctrs, contextError, "update");
 		}
-		
-		Logger.debug("End updating containers of type: " + containerCategoryCode+ " from experiment type: "+ experimentTypeCode);	
+		logger.debug("End updating containers of type: " + containerCategoryCode+ " from experiment type: "+ experimentTypeCode);	
 	}
+	
 }

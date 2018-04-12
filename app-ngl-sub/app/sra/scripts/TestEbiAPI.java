@@ -2,6 +2,7 @@ package sra.scripts;
 
 import javax.inject.Inject;
 
+import fr.cea.ig.lfw.controllers.AbstractScript;
 import sra.scripts.utils.EbiAPI;
 
 public class TestEbiAPI extends AbstractScript {

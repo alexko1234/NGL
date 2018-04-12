@@ -30,7 +30,7 @@ public class RunIllumina extends AbstractDeclaration {
 
 	@Override
 	protected List<ExperimentType> getExperimentTypeCommon() {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		List<ExperimentType> l = new ArrayList<>();
 
 		l.add(newExperimentType("Ext to Run Illumina","ext-to-illumina-run",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
@@ -68,8 +68,7 @@ public class RunIllumina extends AbstractDeclaration {
 	
 	@Override
 	protected List<ExperimentType> getExperimentTypeDEV() {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
-		
+		List<ExperimentType> l = new ArrayList<>();
 		return l;
 	}
 
@@ -86,7 +85,7 @@ public class RunIllumina extends AbstractDeclaration {
 
 	@Override
 	protected List<ProcessType> getProcessTypeCommon() {
-		List<ProcessType> l=new ArrayList<ProcessType>();
+		List<ProcessType> l=new ArrayList<>();
 
 		l.add(DescriptionFactory.newProcessType("Run Illumina", "illumina-run", 
 				ProcessCategory.find.findByCode("sequencing"),62 , 
@@ -122,7 +121,7 @@ public class RunIllumina extends AbstractDeclaration {
 	@Override
 	protected List<ProcessType> getProcessTypeDEV() {
 		
-		List<ProcessType> l=new ArrayList<ProcessType>();
+		List<ProcessType> l=new ArrayList<>();
 		
 		return l;
 	}
@@ -139,7 +138,7 @@ public class RunIllumina extends AbstractDeclaration {
 	}
 
 	public static List<PropertyDefinition> getIlluminaDepotProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
 		//TO do multi value
 		propertyDefinitions.add(
@@ -197,7 +196,7 @@ public class RunIllumina extends AbstractDeclaration {
 
 
 	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepot() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		//Utiliser par import ngl-data CNG de creation des depot-illumina
 		//propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", LevelService.getLevels(Level.CODE.Experiment), Integer.class, false, "single"));	
 		
@@ -218,7 +217,7 @@ public class RunIllumina extends AbstractDeclaration {
 
 
 	private static List<PropertyDefinition> getPropertyDefinitionSolutionStock() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Volume à engager", "requiredVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, "IP",
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",21, false,null, "1"));
@@ -236,7 +235,7 @@ public class RunIllumina extends AbstractDeclaration {
 	// GA separation getPropertyDefinitionsPrepaflowcellCNS / getPropertyDefinitionsPrepaflowcellCNG pour JIRA 676
 	//  ==> feuille de calcul differentes pour la prepaflowcell entre CNS et CNG
 	private static List<PropertyDefinition> getPropertyDefinitionsPrepaflowcellCNS() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
 		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Volume sol. stock dans dénat.", "requiredVolume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
@@ -288,7 +287,7 @@ public class RunIllumina extends AbstractDeclaration {
 	}
 
 	private List<PropertyDefinition> getPropertyDefinitionsPrepaflowcellOrdered() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
 		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
@@ -334,7 +333,7 @@ public class RunIllumina extends AbstractDeclaration {
 	
 
 	private static List<Value> getSequencingType(){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("Hiseq 2000/2500N", "Hiseq 2000 / 2500 N"));
 		values.add(DescriptionFactory.newValue("Hiseq 2500 Rapide", "Hiseq 2500 Rapide"));
 		values.add(DescriptionFactory.newValue("Miseq", "Miseq"));
@@ -346,7 +345,7 @@ public class RunIllumina extends AbstractDeclaration {
 
 
 	private static List<Value> getReadType(){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("SR", "SR"));
 		values.add(DescriptionFactory.newValue("PE", "PE"));
 		values.add(DescriptionFactory.newValue("undefined","Non déterminé"));
@@ -354,7 +353,7 @@ public class RunIllumina extends AbstractDeclaration {
 	}
 
 	private static List<Value> getReadLenght(){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("50","50"));
 		values.add(DescriptionFactory.newValue("100","100"));
 		values.add(DescriptionFactory.newValue("150","150"));
@@ -367,7 +366,7 @@ public class RunIllumina extends AbstractDeclaration {
 	}
 
 	private static List<Value> getPhixConcentrationCodeValues(){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("0.1","100"));
 		values.add(DescriptionFactory.newValue("0.2","200"));
 		values.add(DescriptionFactory.newValue("0.3","300"));

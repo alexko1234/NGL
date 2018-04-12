@@ -2,35 +2,40 @@ package models.laboratory.run.description.dao;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.run.description.ReadSetType;
 import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.DAOException;
-import org.springframework.stereotype.Repository;
-
 import play.api.modules.spring.Spring;
 
 @Repository
 public class ReadSetTypeDAO extends AbstractDAOCommonInfoType<ReadSetType>{
 
+//	protected ReadSetTypeDAO() {
+//		super("readset_type", ReadSetType.class, ReadSetTypeMappingQuery.class, 
+//				"SELECT distinct c.id, c.fk_common_info_type ", 
+//						"FROM readset_type as c "+sqlCommonInfoType, false);
+//	}
 	protected ReadSetTypeDAO() {
-		super("readset_type", ReadSetType.class, ReadSetTypeMappingQuery.class, 
+		super("readset_type", ReadSetType.class, ReadSetTypeMappingQuery.factory, 
 				"SELECT distinct c.id, c.fk_common_info_type ", 
 						"FROM readset_type as c "+sqlCommonInfoType, false);
 	}
 
 	@Override
 	public long save(ReadSetType readSetType) throws DAOException {
-		if(null == readSetType){
+		if (readSetType == null)
 			throw new DAOException("ReadSetType is mandatory");
-		}
 		
 		//Add commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		readSetType.id = commonInfoTypeDAO.save(readSetType);
 		
 		//Create new runType
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("id", readSetType.id);
 		parameters.put("fk_common_info_type", readSetType.id);
 		

@@ -6,13 +6,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import models.laboratory.common.description.Institute;
 import models.laboratory.instrument.description.dao.InstrumentDAO;
-import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.utils.Model;
-//TODO: fix doc generation that produces an error with the unqualified name
-import models.utils.Model.Finder;
+import models.utils.dao.AbstractDAO;
 import models.utils.dao.DAOException;
 
 public class Instrument extends Model<Instrument> {
+
+	public static final InstrumentFinder find = new InstrumentFinder();
 
 	public String shortName;
 	public String name;
@@ -29,29 +29,37 @@ public class Instrument extends Model<Instrument> {
 	public String typeCode;
 	public String categoryCode;	
 	
-	public static InstrumentFinder find = new InstrumentFinder();
-
 	public Instrument() {
 		super(InstrumentDAO.class.getName());
 	}
 		
-	public static class InstrumentFinder extends Finder<Instrument>{
+	@Override
+	protected Class<? extends AbstractDAO<Instrument>> daoClass() {
+		return InstrumentDAO.class;
+	}
+	
+	public static class InstrumentFinder extends Finder<Instrument,InstrumentDAO> {
 
-		public InstrumentFinder() {
-			super(InstrumentDAO.class.getName());			
-		}
+//		public InstrumentFinder() {
+//			super(InstrumentDAO.class.getName());			
+//		}
+		public InstrumentFinder() { super(InstrumentDAO.class); }
 		
 		public List<Instrument> findByQueryParams(InstrumentQueryParams instrumentsQueryParams) throws DAOException {
-			return ((InstrumentDAO)getInstance()).findByQueryParams(instrumentsQueryParams);
+//			return ((InstrumentDAO)getInstance()).findByQueryParams(instrumentsQueryParams);
+			return getInstance().findByQueryParams(instrumentsQueryParams);
 		}
 		
 		public List<Instrument> findByExperimentTypeQueryParams(InstrumentQueryParams instrumentsQueryParams) throws DAOException {
-			return ((InstrumentDAO)getInstance()).findByExperimentTypeQueryParams(instrumentsQueryParams);
+//			return ((InstrumentDAO)getInstance()).findByExperimentTypeQueryParams(instrumentsQueryParams);
+			return getInstance().findByExperimentTypeQueryParams(instrumentsQueryParams);
 		}
 		
-		public void cleanCache() throws DAOException{
-			 ((InstrumentDAO)getInstance()).cleanCache();
+		public void cleanCache() throws DAOException {
+//			 ((InstrumentDAO)getInstance()).cleanCache();
+			 getInstance().cleanCache();
 		}
+		
 	}
-	
+
 }

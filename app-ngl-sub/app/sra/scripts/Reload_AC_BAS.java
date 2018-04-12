@@ -3,47 +3,31 @@ package sra.scripts;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang.StringUtils;
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.lfw.controllers.AbstractScript;
+import mail.MailServiceException;
+import models.sra.submit.common.instance.Submission;
+import models.sra.submit.util.SraException;
+import models.utils.InstanceConstants;
 import services.FileAcServices;
 import services.SubmissionServices;
 import validation.ContextValidation;
-import fr.cea.ig.MongoDBDAO;
-import mail.MailServiceException;
-import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.run.instance.InstrumentUsed;
-import models.laboratory.run.instance.ReadSet;
-import models.sra.submit.common.instance.Readset;
-import models.sra.submit.common.instance.Sample;
-import models.sra.submit.common.instance.Study;
-import models.sra.submit.common.instance.Submission;
-import models.sra.submit.sra.instance.Experiment;
-import models.sra.submit.sra.instance.RawData;
-import models.sra.submit.sra.instance.Run;
-import models.sra.submit.util.SraException;
-import models.sra.submit.util.VariableSRA;
-import models.utils.InstanceConstants;
-
 
 public class Reload_AC_BAS extends AbstractScript {
 	
 	private FileAcServices fileAcServices;
-	private SubmissionServices submissionServices;
-	private ContextValidation contextValidation; 
+//	private SubmissionServices submissionServices;
+//	private ContextValidation contextValidation; 
 	
 	@Inject
 	public Reload_AC_BAS(FileAcServices fileAcServices, SubmissionServices submissionServices) {
 		super();
 		this.fileAcServices = fileAcServices;
-		this.submissionServices = submissionServices;
+//		this.submissionServices = submissionServices;
 	}
 	
 	@Override
@@ -52,7 +36,7 @@ public class Reload_AC_BAS extends AbstractScript {
 	}
 	
 	public void reloadAC_BAS() throws IOException, SraException, MailServiceException {
-		List<String> submissionCodes = new ArrayList<String>();
+		List<String> submissionCodes = new ArrayList<>();
 		submissionCodes.add("GSC_BAS_339A4VWB4");
 		
 		for (String submissionCode: submissionCodes) {
@@ -66,9 +50,6 @@ public class Reload_AC_BAS extends AbstractScript {
 			submission = this.fileAcServices.traitementFileAC(ctxVal, submissionCode, fileEbi); 
 		}	
 	}
-	
-
-
-	
+		
 }
 

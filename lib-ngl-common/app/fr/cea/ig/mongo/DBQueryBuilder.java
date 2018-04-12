@@ -4,10 +4,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
@@ -63,6 +62,7 @@ public class DBQueryBuilder {
 			return DBQuery.lessThan(key, value);
 		return null;
 	}
+	
 	public static Query notEquals(String key, Object value) {
 		if (value != null)
 			return DBQuery.notEquals(key, value);
@@ -99,9 +99,11 @@ public class DBQueryBuilder {
 				r[j++] = queries[i];
 		return r;		
 	}
+	
 	public static Query[] take(int count, Query... queries) {
 		return takeUnsafe(Math.min(count, count(queries)));
 	}
+	
 	public static Query and(Query... queries) {
 		int count = count(queries);
 		switch (queries.length) {
@@ -110,6 +112,11 @@ public class DBQueryBuilder {
 		default: return DBQuery.and(takeUnsafe(count,queries));
 		}
 	}
+	
+	public static Query and(Collection<Query> queries) {
+		return and(queries.toArray(new Query[queries.size()]));
+	}
+	
 	public static Query first(Query... queries) {
 		for (int i=0;i<queries.length; i++)
 			if (queries[i] != null)

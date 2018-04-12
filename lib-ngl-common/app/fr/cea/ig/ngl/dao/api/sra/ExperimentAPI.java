@@ -4,9 +4,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import models.sra.submit.sra.instance.Experiment;
-
-import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate.Builder;
 
@@ -14,6 +11,7 @@ import fr.cea.ig.ngl.dao.api.APIException;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.api.GenericAPI;
 import fr.cea.ig.ngl.dao.sra.ExperimentDAO;
+import models.sra.submit.sra.instance.Experiment;
 
 public class ExperimentAPI extends GenericAPI<ExperimentDAO, Experiment> {
 

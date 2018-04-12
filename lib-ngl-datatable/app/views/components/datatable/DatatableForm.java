@@ -19,8 +19,8 @@ public class DatatableForm implements IDatatableForm {
 		return "REMOTE".equalsIgnoreCase(paginationMode);
 	}
 	
-	public Set<String> excludes = new TreeSet<String>();
-	public Set<String> includes = new TreeSet<String>();
+	public Set<String> excludes = new TreeSet<>();
+	public Set<String> includes = new TreeSet<>();
 
 	@Override
 	@JsonIgnore

@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -19,24 +19,21 @@ import fr.cea.ig.MongoDBResult.Sort;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
-import fr.cea.ig.mongo.DBObjectConvertor;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.dao.api.APIException;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.projects.ProjectsAPI;
 import fr.cea.ig.ngl.dao.projects.ProjectsDAO;
-import fr.cea.ig.ngl.support.NGLForms;
 import fr.cea.ig.util.Streamer;
 import models.laboratory.project.instance.Project;
 import play.data.Form;
-import play.libs.Json;
 import play.mvc.Result;
 /**
  * Controller around Project object
  *
  */
 @Historized
-public class Projects extends NGLAPIController<ProjectsAPI, ProjectsDAO, Project> implements NGLForms, DBObjectConvertor {
+public class Projects extends NGLAPIController<ProjectsAPI, ProjectsDAO, Project> { // implements NGLForms, DBObjectConvertor {
 
 	private final Form<ProjectsSearchForm> searchForm;
 	private final Form<Project> projectForm;
@@ -134,6 +131,7 @@ public class Projects extends NGLAPIController<ProjectsAPI, ProjectsDAO, Project
 //		}
 //	}
 	
+	@Override
 	public Project saveImpl() throws APIValidationException, APIException {
 		Project projectInput = getFilledForm(projectForm, Project.class).get();
 		Project p = api().create(projectInput, getCurrentUser());
@@ -186,7 +184,7 @@ public class Projects extends NGLAPIController<ProjectsAPI, ProjectsDAO, Project
 	
 	// TODO factoriser avec class fr.cea.ig.mongo.QueryBuilder
 	private Query getQuery(ProjectsSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		Query query = null;
 		
 		if(CollectionUtils.isNotEmpty(form.projectCodes)){

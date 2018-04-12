@@ -6,26 +6,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+//import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+//import com.fasterxml.jackson.annotation.JsonValue;
+
+import controllers.ICommentable;
+import fr.cea.ig.DBObject;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.ITracingAccess;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
-import models.laboratory.sample.instance.tree.SampleLife;
-import models.utils.InstanceConstants;
 import models.laboratory.sample.instance.reporting.SampleProcess;
 import models.laboratory.sample.instance.reporting.SampleProcessesStatistics;
+import models.laboratory.sample.instance.tree.SampleLife;
+import models.utils.InstanceConstants;
 
 // import org.mongojack.MongoCollection;
 
 import validation.ContextValidation;
+import validation.ICRUDValidation;
 import validation.IValidation;
 import validation.sample.instance.SampleValidationHelper;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import controllers.ICommentable;
-import fr.cea.ig.DBObject;
 
 //Link to this : {@link models.laboratory.sample.instance.Sample}
 
@@ -42,7 +44,8 @@ import fr.cea.ig.DBObject;
  * 
  */
 // @MongoCollection(name="Sample")
-public class Sample extends DBObject implements IValidation, ICommentable, ITracingAccess {
+@SuppressWarnings("unused") // IValidation duplicates ICRUDValiation
+public class Sample extends DBObject implements IValidation, ICommentable, ITracingAccess, ICRUDValidation<Sample> {
 
 	// @JsonIgnore
 	// TODO: explain
@@ -53,31 +56,40 @@ public class Sample extends DBObject implements IValidation, ICommentable, ITrac
 	
 	/*
 	 * Type code, defined in ngl-data project {@link services.description.sample.SampleServiceCNS}.
+	 * More probably from : {@link models.laboratory.sample.description.dao.SampleTypeDAO}.
+	 * In the end : {@link models.laboratory.sample.description.SampleType}.
+	 * To be understood as something like: CodeReference<SampleType> type;
+	 * Possibly use some @JsonValue that would allow type annotation.
 	 */
 	public String typeCode;
 	
-	/**
-	 * Import source type (import file type or so).
-	 */
-	public String importTypeCode;
-
 	/*
 	 * Sample type category code, implied by the type definition and defined 
 	 * in ngl-data project {@link services.description.sample.SampleServiceCNS}.
+	 * More probably from: {@link models.laboratory.sample.description.dao.SampleCategoryDAO}.
+	 * In the end: {@link models.laboratory.sample.description.SampleCategory}.
+	 * Would be {@code type.category}.
 	 */
 	public String categoryCode;
+	
+	/*
+	 * Import source type (import file type or so).
+	 * {@link models.laboratory.sample.description.ImportType} linked to some 
+	 * {@link models.laboratory.sample.description.ImportCategory}.
+	 */
+	public String importTypeCode;
 
 	/**
 	 * Set of projects code this sample is used in.
 	 */
 	public Set<String> projectCodes;
 
-	// ?? Wath is difference with code / referenceCollbab => code s'est interne au genoscope
 	/**
 	 * Name = localized code (default:null)
 	 */
 	public String name;
 	
+	// ?? Wath is difference with code / referenceCollbab => code s'est interne au genoscope
 	/**
 	 * Name of the sample in the collab referential
 	 */
@@ -85,7 +97,7 @@ public class Sample extends DBObject implements IValidation, ICommentable, ITrac
 	
 	// TODO: use Map<String,PropertyValue<?>>
 	/**
-	 * Mandatory : meta : false (meta:metagneomnic,metatrucs)
+	 * Mandatory : meta : false (meta:metagenomic,metatrucs)
 	 */
 	public Map<String,PropertyValue> properties;
 	
@@ -174,9 +186,8 @@ path: ",CO-0000140,BUP_AAAA",
 	public Sample() {
 		// TODO: remove trace information initialization as it is not needed
 		traceInformation = new TraceInformation();
-		comments         = new ArrayList<Comment>(0);
+		comments         = new ArrayList<>(0);
 	}
-
 
 	@JsonIgnore
 	@Override
@@ -194,7 +205,6 @@ path: ",CO-0000140,BUP_AAAA",
 		// TODO: validation taxon
 		
 	}
-
 
 	// Interfaces implementations
 	

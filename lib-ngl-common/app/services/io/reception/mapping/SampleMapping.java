@@ -8,40 +8,29 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
 
-import akka.actor.ActorRef;
-import akka.actor.Props;
+import fr.cea.ig.DBObject;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.container.description.ContainerCategory;
-import models.laboratory.project.instance.Project;
 import models.laboratory.reception.instance.AbstractFieldConfiguration;
 import models.laboratory.reception.instance.ReceptionConfiguration.Action;
-import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.instance.SampleHelper;
-import play.Logger;
-import play.Play;
-import play.libs.Akka;
-import rules.services.LazyRules6Actor;
-import rules.services.RulesActor6;
-import rules.services.RulesMessage;
 import services.io.reception.Mapping;
 import validation.ContextValidation;
 import validation.utils.ValidationConstants;
-import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult.Sort;
-import fr.cea.ig.play.NGLContext;
 
 public class SampleMapping extends Mapping<Sample> {
 	
+	private static final play.Logger.ALogger logger = play.Logger.of(SampleMapping.class);
+	
 	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 	// private /*static*/ ActorRef rulesActor;// = akkaSystem().actorOf(Props.create(RulesActor6.class));
-	private final LazyRules6Actor rulesActor;
+//	private final LazyRules6Actor rulesActor;
 	
 	/*
 	 * 
@@ -58,7 +47,7 @@ public class SampleMapping extends Mapping<Sample> {
 						 NGLContext ctx) {
 		super(objects, configuration, action, InstanceConstants.SAMPLE_COLL_NAME, Sample.class, Mapping.Keys.sample, contextValidation);
 		// rulesActor = ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
-		rulesActor = ctx.rules6Actor();
+//		rulesActor = ctx.rules6Actor();
 	}
 	
 	/*
@@ -67,6 +56,7 @@ public class SampleMapping extends Mapping<Sample> {
 	 * @param rowMap
 	 * @return
 	 */
+	@Override
 	public Sample convertToDBObject(Map<Integer, String> rowMap) throws Exception{
 		Sample object = type.newInstance();
 		boolean needPopulate = false;
@@ -97,16 +87,15 @@ public class SampleMapping extends Mapping<Sample> {
 			update(object);
 			
 		}
-		
 		return object;
 	}
 	
-	
+	@Override
 	protected void update(Sample sample) {
 		
-		if(Action.update.equals(action)){
+		if (Action.update.equals(action)) {
 			sample.traceInformation.setTraceInformation(contextValidation.getUser());
-		}else{
+		} else {
 			sample.traceInformation = new TraceInformation(contextValidation.getUser());
 		}
 		//update categoryCode by default.
@@ -142,11 +131,10 @@ public class SampleMapping extends Mapping<Sample> {
 		}
 		
 		//Call rules to add properties to sample
-		Logger.debug("sample "+sample);
+		logger.debug("sample "+sample);
 		SampleHelper.executeRules(sample, "sampleCreation");
-		Logger.debug("sample "+sample);
+		logger.debug("sample "+sample);
 	}
-
 
 	@Override
 	public void consolidate(Sample sample) {
@@ -161,6 +149,7 @@ public class SampleMapping extends Mapping<Sample> {
 		}
 		super.synchronizeMongoDB(c);
 	}
+
 	@Override
 	public void rollbackInMongoDB(DBObject c){
 		if(Action.save.equals(action) && c._id == null){ 
@@ -177,4 +166,5 @@ public class SampleMapping extends Mapping<Sample> {
 			//replace by old version of the object
 		}		
 	}
+	
 }

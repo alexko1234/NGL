@@ -1,13 +1,8 @@
 package controllers;
 
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -19,31 +14,23 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate.Builder;
 
-import play.Logger;
+import com.google.common.collect.Iterators;
+import com.mongodb.AggregationOptions;
+import com.mongodb.BasicDBObject;
+
+import fr.cea.ig.DBObject;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
+// import static fr.cea.ig.util.Streamer.IStreamer.write;
+import fr.cea.ig.MongoDBResult.Sort;
+import fr.cea.ig.mongo.MongoStreamer;
+import fr.cea.ig.play.NGLContext;
 import play.data.Form;
 import play.libs.Json;
 import play.modules.jongo.MongoDBPlugin;
 import play.mvc.Result;
 import validation.ContextValidation;
 import views.components.datatable.DatatableForm;
-
-import com.google.common.collect.Iterators;
-import com.mongodb.AggregationOptions;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCursor;
-
-import akka.actor.ActorRef;
-import akka.stream.javadsl.Source;
-import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.mongo.MongoStreamer;
-import fr.cea.ig.play.NGLContext;
-import fr.cea.ig.util.Streamer;
-// import static fr.cea.ig.util.Streamer.IStreamer.write;
-import fr.cea.ig.MongoDBResult.Sort;
-
-import fr.cea.ig.mongo.MongoStreamer;
 
 // TODO: cleanup, comment
 
@@ -56,6 +43,8 @@ import fr.cea.ig.mongo.MongoStreamer;
  */
 public abstract class MongoCommonController<T extends DBObject> extends APICommonController<T> {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(MongoCommonController.class);
+	
 	/**
 	 * Mongo collection name.
 	 */
@@ -204,7 +193,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 	 * @param clazz
 	 * @return
 	 */
-	protected Builder getBuilder(Object value, List<String> fields, Class clazz) {
+	protected Builder getBuilder(Object value, List<String> fields, Class<?> clazz) {
 		return getBuilder(value, fields, clazz, null);
 	}
 	
@@ -217,7 +206,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 	 * @return
 	 */
 	// moved to GenericMongoDAO<T extends DBObject>
-	protected Builder getBuilder(Object value, List<String> fields, Class clazz, String prefix) {
+	protected Builder getBuilder(Object value, List<String> fields, Class<?> clazz, String prefix) {
 		Builder builder = new Builder();
 		try {
 			for (String field: fields) {
@@ -262,8 +251,8 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 				if(o.getClass().getField(field).get(o) == null){
 					ctxVal.addErrors(field, "error.notdefined");
 				}
-			}catch(Exception e){
-				Logger.error(e.getMessage());
+			} catch(Exception e) {
+				logger.error(e.getMessage());
 			}
 		}	
 		
@@ -300,7 +289,8 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 	//moved to GenericMongoDAO<T extends DBObject>
 	protected Result nativeMongoDBQuery(ListForm form) {
 		MongoCollection collection = MongoDBPlugin.getCollection(collectionName);
-		MongoCursor<T> all = (MongoCursor<T>) collection.find(form.reportingQuery).as(type);
+//		MongoCursor<T> all = (MongoCursor<T>) collection.find(form.reportingQuery).as(type);
+		MongoCursor<T> all = collection.find(form.reportingQuery).as(type);
 		if (form.datatable) {
 			// return ok(getUDTChunk(all)).as("application/json");
 			return MongoStreamer.okStreamUDT(all);
@@ -309,7 +299,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 			return MongoStreamer.okStream(all);
 		} else if(form.count) {
 			int count = all.count();
-			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			Map<String, Integer> m = new HashMap<>(1);
 			m.put("result", count);
 			return ok(Json.toJson(m));
 		} else {
@@ -333,7 +323,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 			return MongoStreamer.okStream(all);
 		} else if(form.count) {
 			int count = Iterators.size(all);
-			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			Map<String, Integer> m = new HashMap<>(1);
 			m.put("result", count);
 			return ok(Json.toJson(m));
 		} else {
@@ -361,7 +351,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 			keys = new BasicDBObject();
 			keys.put("_id", 1);//Don't need the _id field
 			MongoDBResult<T> results =  mongoDBFinder(searchForm, query);
-			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			Map<String, Integer> m = new HashMap<>(1);
 			m.put("result", results.count());
 			return ok(Json.toJson(m));
 		} else {

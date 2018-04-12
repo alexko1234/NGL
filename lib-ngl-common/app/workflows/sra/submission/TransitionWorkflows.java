@@ -7,8 +7,6 @@ import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.TraceInformation;
-import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import workflows.Workflows;
@@ -16,7 +14,6 @@ import workflows.Workflows;
 // TransitionWorkflows sous classe de workflows qui utilise un argument T qui implemente DBObject et TransitionObject
 // ecriture si utilisation generique qui impose extends
 //public class TransitionWorkflows <T extends DBObject implements TransitionObject> extends Workflows<T> {
-
 
 public abstract class TransitionWorkflows <T extends DBObject & TransitionObject> extends Workflows<T> {
 

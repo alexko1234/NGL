@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.stereotype.Repository;
+
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.ObjectType.CODE;
@@ -13,35 +16,37 @@ import models.laboratory.common.description.State;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
-
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.stereotype.Repository;
-
 import play.api.modules.spring.Spring;
 
 @Repository
 public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType> {
 
+//	public CommonInfoTypeDAO() {
+//		super("common_info_type", CommonInfoType.class, CommonInfoTypeMappingQuery.class, 
+//				"SELECT distinct t.id as cId, t.name, t.code as codeSearch, t.display_order as displayOrder, t.active as active, o.id as oId, o.code as codeObject, o.generic "+
+//				"FROM common_info_type as t "+
+//				"JOIN object_type as o ON o.id=t.fk_object_type "+DAOHelpers.getCommonInfoTypeSQLForInstitute("t"), true);
+//				
+//	}
 	public CommonInfoTypeDAO() {
-		super("common_info_type", CommonInfoType.class, CommonInfoTypeMappingQuery.class, 
+		super("common_info_type", CommonInfoType.class, CommonInfoTypeMappingQuery.factory, 
 				"SELECT distinct t.id as cId, t.name, t.code as codeSearch, t.display_order as displayOrder, t.active as active, o.id as oId, o.code as codeObject, o.generic "+
 				"FROM common_info_type as t "+
-				"JOIN object_type as o ON o.id=t.fk_object_type "+DAOHelpers.getCommonInfoTypeSQLForInstitute("t"), true);
-				
+				"JOIN object_type as o ON o.id=t.fk_object_type "+DAOHelpers.getCommonInfoTypeSQLForInstitute("t"), true);			
 	}
 
+	@Override
 	public long save(CommonInfoType cit) throws DAOException {
-		if(null == cit){
+		if (cit == null) 
 			throw new DAOException("CommonInfoType is mandatory");
-		}
 
 		//Check if objectType exist
-		if(cit.objectType == null || cit.objectType.id == null ){
+		if (cit.objectType == null || cit.objectType.id == null) {
 			throw new DAOException("CommonInfoType.objectType is mandatory");
 		}
 		
 		//Create new cit
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("name", cit.name);
 		parameters.put("code", cit.code);
 		parameters.put("fk_object_type", cit.objectType.id);
@@ -58,6 +63,8 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType> {
 	}
 
 	
+	@SuppressWarnings("deprecation")
+	@Override
 	public void update(CommonInfoType cit) throws DAOException {
 		if(null == cit || cit.id == null){
 			throw new DAOException("CommonInfoType is mandatory");
@@ -88,16 +95,19 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType> {
 	}
 
 	
+	@SuppressWarnings("deprecation")
 	private void removeStates(Long citId) {
 		String sqlState = "DELETE FROM common_info_type_state WHERE fk_common_info_type=?";
 		jdbcTemplate.update(sqlState, citId);
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void removeInstitutes( Long citId) {
 		String sqlInstit = "DELETE FROM common_info_type_institute WHERE fk_common_info_type=?";
 		jdbcTemplate.update(sqlInstit, citId);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void removeProperties(Long citId)
 			throws DAOException {
 		String sqlValues = "DELETE FROM value  WHERE fk_property_definition in (select p.id from property_definition p "
@@ -128,6 +138,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType> {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void insertState(List<State> states, Long citId, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
 			removeStates(citId);
@@ -147,6 +158,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType> {
 
 	
 	
+	@SuppressWarnings("deprecation")
 	private void insertInstitutes(List<Institute> institutes, Long citId, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
 			removeInstitutes(citId);
@@ -200,10 +212,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType> {
 		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql, new SqlParameter("code",Types.VARCHAR));
 		return commonInfoTypeMappingQuery.execute(objectTypeCode.name());
 	}
-	
-	
-	
-	
+		
 	public CommonInfoType findByExperimentTypeId(Long id){
 		String sql = sqlCommon +
 				" JOIN experiment_type et ON et.fk_common_info_type = t.id "+
@@ -211,6 +220,5 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType> {
 		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql, new SqlParameter("id",Types.BIGINT));
 		return commonInfoTypeMappingQuery.findObject(id);
 	}
-
 
 }

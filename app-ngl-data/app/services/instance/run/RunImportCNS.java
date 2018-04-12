@@ -43,6 +43,8 @@ import workflows.run.RunWorkflows;
 
 public class RunImportCNS extends AbstractImportDataCNS {
 
+	// Accessed through static methods 
+	@SuppressWarnings("hiding")
 	private static final play.Logger.ALogger logger = play.Logger.of(RunImportCNS.class);
 	
 	// final static RunWorkflows workflows = Spring.get BeanOfType(RunWorkflows.class);
@@ -66,7 +68,7 @@ public class RunImportCNS extends AbstractImportDataCNS {
 		logger.debug("Create Run From Lims CNS");
 		List<Run> runs=limsServices.findRunsToCreate(sql, contextError);
 		//Create Lane
-		List<Run> newRuns=new ArrayList<Run>();
+		List<Run> newRuns=new ArrayList<>();
 		String rootKeyName=null;
 
 		for(Run run:runs){
@@ -77,9 +79,10 @@ public class RunImportCNS extends AbstractImportDataCNS {
 
 				//Save Run du Lims si n'existe pas ou n'est pas transféré dans NGL
 				Run newRun=MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class, run.code);
-				if(newRun==null){
+				if (newRun == null) {
 					logger.debug("Save Run "+run.code + " mode "+contextError.getMode());
-					newRun=(Run) InstanceHelpers.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run, ctx, true);
+//					newRun=(Run) InstanceHelpers.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run, ctx, true);
+					newRun = InstanceHelpers.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run, ctx, true);
 				} else {
 
 					logger.debug("Update Run "+run.code + " mode "+contextError.getMode());	
@@ -88,7 +91,7 @@ public class RunImportCNS extends AbstractImportDataCNS {
 					ctx.putObject("run", run);
 					run.treatments.get("ngsrg").validate(ctx);
 
-					if(!ctx.hasErrors()){
+					if (!ctx.hasErrors()) {
 						
 						run.state = fusionRunStateHistorical(run.state, newRun.state);
 						
@@ -119,7 +122,7 @@ public class RunImportCNS extends AbstractImportDataCNS {
 			}
 		}
 
-		List<Run> updateRuns=new ArrayList<Run>();
+		List<Run> updateRuns=new ArrayList<>();
 
 		for (Run run:newRuns) {
 			ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
@@ -128,7 +131,7 @@ public class RunImportCNS extends AbstractImportDataCNS {
 
 			Run newRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
 			if(!contextValidation.hasErrors()){
-				List<Object> list=new ArrayList<Object>();
+				List<Object> list=new ArrayList<>();
 				list.add(newRun);
 				try {
 					logger.debug("Run Rules from Run "+run.code);
@@ -250,7 +253,7 @@ public class RunImportCNS extends AbstractImportDataCNS {
 
 	public static List<ReadSet> createReadSetFromRun(Run run,ContextValidation contextValidation)throws SQLException, DAOException {
 
-		List<ReadSet> newReadSets = new ArrayList<ReadSet>();
+		List<ReadSet> newReadSets = new ArrayList<>();
 
 		//Delete old readSet from run
 		if(MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", run.code))){

@@ -3,7 +3,7 @@ package validation.experiment.instance;
 import static validation.utils.ValidationHelper.required;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+//import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -11,6 +11,10 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -27,30 +31,24 @@ import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.protocol.instance.Protocol;
 import models.laboratory.reagent.instance.ReagentUsed;
 import models.utils.InstanceConstants;
-
-import org.apache.commons.lang3.StringUtils;
-import org.mongojack.DBQuery;
-
-import play.Logger;
+// import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
-import fr.cea.ig.MongoDBDAO;
 
 public class ExperimentValidationHelper  extends CommonValidationHelper {
 
-	public static void validationProtocoleCode(String typeCode, String protocolCode,
-			ContextValidation contextValidation)  {
+	public static void validationProtocoleCode(String typeCode, String protocolCode, ContextValidation contextValidation)  {
 		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
-		if(!stateCode.equals("N")){
+		if (!stateCode.equals("N")) {
 			if(required(contextValidation, protocolCode, "protocolCode")){				
 				if(!MongoDBDAO.checkObjectExist(InstanceConstants.PROTOCOL_COLL_NAME, Protocol.class, DBQuery.and(DBQuery.is("code",protocolCode), DBQuery.in("experimentTypeCodes", typeCode)))){
 					contextValidation.addErrors("protocolCode", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, protocolCode);
 				}				
 			}
-		}else if(StringUtils.isNotBlank(protocolCode)){
+		} else if(StringUtils.isNotBlank(protocolCode)) {
 			if(!MongoDBDAO.checkObjectExist(InstanceConstants.PROTOCOL_COLL_NAME, Protocol.class, DBQuery.and(DBQuery.is("code",protocolCode), DBQuery.in("experimentTypeCodes", typeCode)))){
 				contextValidation.addErrors("protocolCode", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, protocolCode);
 			}
@@ -59,7 +57,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 	
 	public static void validationExperimentType(String typeCode, Map<String,PropertyValue> properties, ContextValidation contextValidation) {
 		ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ExperimentType.find,true);
-		if(exType!=null){
+		if (exType != null) {
 			String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
 			contextValidation.addKeyToRootKeyName("experimentProperties");
 			ValidationHelper.validateProperties(contextValidation, properties, exType.getPropertiesDefinitionDefaultLevel(), true, true, stateCode, "IP");
@@ -102,17 +100,14 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 
 	
 	public static void validateReagents(List<ReagentUsed> reagentsUsed,ContextValidation contextValidation) {
-		if(reagentsUsed != null){
-			for(ReagentUsed reagentUsed:reagentsUsed){
+		if (reagentsUsed != null) {
+			for (ReagentUsed reagentUsed:reagentsUsed) {
 				reagentUsed.validate(contextValidation);
 			}
 		}
 	}
 
 	public static void validateAtomicTransfertMethods(String expTypeCode, InstrumentUsed instrument, List<AtomicTransfertMethod> atomicTransfertMethods, ContextValidation contextValidation) {
-		
-		
-		
 		IntStream.range(0, atomicTransfertMethods.size()).parallel().forEach(i -> {
 			ContextValidation cv = new ContextValidation(contextValidation.getUser());
 			cv.setMode(contextValidation.getMode());
@@ -180,7 +175,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 
 	
 	private static void validateUniqOutputContainerCodeInsideExperiment(List<AtomicTransfertMethod> atomicTransfertMethods, ContextValidation contextValidation){
-		Set<String> outputContainerCodes = new TreeSet<String>();
+		Set<String> outputContainerCodes = new TreeSet<>();
 		
 		IntStream.range(0, atomicTransfertMethods.size()).forEach(i -> {
 			ContextValidation cv = new ContextValidation(contextValidation.getUser());
@@ -212,12 +207,12 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 		});
 	}
 	
+//	public static void validateInstrumentUsed(InstrumentUsed instrumentUsed, Map<String,PropertyValue<?>> properties, ContextValidation contextValidation) {
 	public static void validateInstrumentUsed(InstrumentUsed instrumentUsed, Map<String,PropertyValue> properties, ContextValidation contextValidation) {
-		if(ValidationHelper.required(contextValidation, instrumentUsed, "instrumentUsed")){
+		if (ValidationHelper.required(contextValidation, instrumentUsed, "instrumentUsed")) {
 			contextValidation.addKeyToRootKeyName("instrumentUsed");
 			instrumentUsed.validate(contextValidation);
 			contextValidation.removeKeyFromRootKeyName("instrumentUsed");
-			
 			InstrumentUsedType instrumentUsedType = BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, instrumentUsed.typeCode, "typeCode", InstrumentUsedType.find,true);
 			if(instrumentUsedType!=null){
 				String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
@@ -229,8 +224,8 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 	}
 	
 	
-	public static void validateRules(Experiment exp,ContextValidation contextValidation){
-		ArrayList<Object> validationfacts = new ArrayList<Object>();
+	public static void validateRules(Experiment exp,ContextValidation contextValidation) {
+		ArrayList<Object> validationfacts = new ArrayList<>();
 		validationfacts.add(exp);
 		//exp.atomicTransfertMethods.forEach((AtomicTransfertMethod atm) -> validationfacts.add(atm));
 		

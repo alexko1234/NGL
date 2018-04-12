@@ -4,12 +4,11 @@ import controllers.CommonController;
 import play.mvc.Result;
 import play.routing.JavaScriptReverseRouter;
 
-
 public class Bookings extends CommonController {
 	
-	public Bookings() {
-		
-	}
+//	public Bookings() {
+//		
+//	}
 	
 	public Result home(String homecode){		
 		return ok(views.html.bookings.home.render(homecode));

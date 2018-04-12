@@ -17,8 +17,6 @@ public class QualityControlResultConfiguration extends ObjectFieldConfiguration<
 		super(AbstractFieldConfiguration.qualityControlResultsType);		
 	}
 
-	
-	
 	@Override
 	public void populateField(Field field, Object dbObject,
 			Map<Integer, String> rowMap, ContextValidation contextValidation,

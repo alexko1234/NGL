@@ -6,9 +6,14 @@ package controllers.experiments.api;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.BooleanUtils;
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.StringUtils;
 
+import controllers.APICommonController;
+//import controllers.CommonController;
+import controllers.authorisation.Permission;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessType;
 import models.utils.ListObject;
@@ -19,14 +24,6 @@ import play.libs.Json;
 import play.mvc.Result;
 import play.mvc.Results;
 import views.components.datatable.DatatableResponse;
-//import controllers.CommonController;
-import controllers.authorisation.Permission;
-import controllers.commons.api.UserSearchForm;
-
-import javax.inject.Inject;
-
-import fr.cea.ig.play.NGLContext;
-import controllers.APICommonController;
 
 public class ExperimentTypes extends APICommonController<ExperimentTypesSearchForm> {
 	
@@ -62,7 +59,7 @@ public class ExperimentTypes extends APICommonController<ExperimentTypesSearchFo
 	public Result list() throws DAOException {
 		Form<ExperimentTypesSearchForm> experimentTypeFilledForm = filledFormQueryString(experimentTypeForm,ExperimentTypesSearchForm.class);
 		ExperimentTypesSearchForm experimentTypesSearch = experimentTypeFilledForm.get();
-		List<ExperimentType> experimentTypes = new ArrayList<ExperimentType>();
+		List<ExperimentType> experimentTypes = new ArrayList<>();
 		
 		try{		
 			
@@ -87,9 +84,9 @@ public class ExperimentTypes extends APICommonController<ExperimentTypesSearchFo
 			}
 			
 			if(experimentTypesSearch.datatable){
-				return ok(Json.toJson(new DatatableResponse<ExperimentType>(experimentTypes, experimentTypes.size()))); 
+				return ok(Json.toJson(new DatatableResponse<>(experimentTypes, experimentTypes.size()))); 
 			}else if(experimentTypesSearch.list){
-				List<ListObject> lop = new ArrayList<ListObject>();
+				List<ListObject> lop = new ArrayList<>();
 				for(ExperimentType et:experimentTypes){
 					if(null == experimentTypesSearch.isActive){
 						lop.add(new ListObject(et.code, et.name));

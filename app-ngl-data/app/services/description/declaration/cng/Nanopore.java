@@ -5,7 +5,6 @@ import static services.description.DescriptionFactory.newExperimentTypeNode;
 import static services.description.DescriptionFactory.newPropertiesDefinition;
 
 import java.awt.Image;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -39,8 +38,9 @@ public class Nanopore extends AbstractDeclaration{
 
 	//////////////// PROCESSUS  /////////////////////////////////////
 	
+	@Override
 	protected List<ProcessType> getProcessTypeCommon() {
-		List<ProcessType> l=new ArrayList<ProcessType>();
+		List<ProcessType> l=new ArrayList<>();
 		
 		 // supression nanopore-fragmentation; ajout de cDNAsynthesis; renumerotation
 
@@ -78,21 +78,21 @@ public class Nanopore extends AbstractDeclaration{
 
 	@Override
 	protected List<ProcessType> getProcessTypePROD() {
-		List<ProcessType> l=new ArrayList<ProcessType>();
+		List<ProcessType> l=new ArrayList<>();
 		
 		return l;
 	}
 	
 	@Override
 	protected List<ProcessType> getProcessTypeUAT() {	
-		List<ProcessType> l=new ArrayList<ProcessType>(); 
+		List<ProcessType> l=new ArrayList<>(); 
 		
 		return l;
 	}	
 
 	@Override
 	protected List<ProcessType> getProcessTypeDEV() {
-		List<ProcessType> l=new ArrayList<ProcessType>();     
+		List<ProcessType> l=new ArrayList<>();     
 
 		return l;
 	}
@@ -101,7 +101,7 @@ public class Nanopore extends AbstractDeclaration{
 	////////////////////////// EXPERIMENTS ////////////////////////////////////////////////
 	@Override
 	protected List<ExperimentType> getExperimentTypeCommon() {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		List<ExperimentType> l = new ArrayList<>();
 		
 		// ext to  
 
@@ -170,14 +170,14 @@ public class Nanopore extends AbstractDeclaration{
 	
 	@Override
 	protected List<ExperimentType> getExperimentTypePROD() {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		List<ExperimentType> l = new ArrayList<>();
 		
 		return l;
 	}
 
 	@Override
 	protected List<ExperimentType> getExperimentTypeUAT() {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		List<ExperimentType> l = new ArrayList<>();
 		
 		return l;
 	}
@@ -185,7 +185,7 @@ public class Nanopore extends AbstractDeclaration{
 	
 	@Override
 	protected List<ExperimentType> getExperimentTypeDEV() {	 
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		List<ExperimentType> l = new ArrayList<>();
 
 		return l;
 	}
@@ -270,7 +270,7 @@ public class Nanopore extends AbstractDeclaration{
 
 	// --1-- Synthèse cDNA 
 	private List<PropertyDefinition> getPropertyCdnaSynthesis() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
 		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, false, null,null,
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),
@@ -289,7 +289,7 @@ public class Nanopore extends AbstractDeclaration{
 	
 	//--2-- Fragmentation Nanopore
 	private static List<PropertyDefinition> getPropertyFragmentationNanopore() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		//Containers IN
 		propertyDefinitions.add(newPropertiesDefinition(
@@ -341,7 +341,7 @@ public class Nanopore extends AbstractDeclaration{
 
 	// --3-- Reparation Nanopore
 	private static List<PropertyDefinition> getPropertyReparationNanopore() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		//Containers IN
 		propertyDefinitions.add(newPropertiesDefinition(
@@ -357,7 +357,7 @@ public class Nanopore extends AbstractDeclaration{
 	
 	// --4-- Librairie Nanopore (ONT)
 	private static List<PropertyDefinition> getPropertyLibrairieNanopore() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		//Containers IN
 		propertyDefinitions.add(newPropertiesDefinition(
@@ -413,7 +413,7 @@ public class Nanopore extends AbstractDeclaration{
 	
 	// --5-- DepotNanopore
 	private static List<PropertyDefinition> getPropertyDepotNanopore() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		//Experiments
 		propertyDefinitions.add(newPropertiesDefinition(
@@ -474,7 +474,7 @@ public class Nanopore extends AbstractDeclaration{
 	
 	// -- SizingNanopore
 	private static List<PropertyDefinition> getPropertySizingNanopore() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		//Containers IN
 // ???? STRING pour une taille ????		
@@ -520,7 +520,7 @@ public class Nanopore extends AbstractDeclaration{
 	/////////// PROCESSUS PROPERTIES /////////////////////////////////////////
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsNanoporeFragmentation() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();		
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();		
 		
 		propertyDefinitions.add(newPropertiesDefinition(
 				"Type processus banque","libProcessTypeCode",LevelService.getLevels(Level.CODE.Process,Level.CODE.Content),String.class,true,null, 
@@ -539,7 +539,7 @@ public class Nanopore extends AbstractDeclaration{
 	
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsNanoporeLibrary() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition(
 				"Type processus banque","libProcessTypeCode",LevelService.getLevels(Level.CODE.Process,Level.CODE.Content),String.class,true, null,
@@ -553,14 +553,14 @@ public class Nanopore extends AbstractDeclaration{
 	/////////////// List values /////////////////////////////////////////////////////////
 	
 	private static List<Value> getLibProcessTypeCodeValues(){
-        List<Value> values = new ArrayList<Value>();
+        List<Value> values = new ArrayList<>();
          values.add(DescriptionFactory.newValue("ONT","ONT - Nanopore"));
          return values;
 	}
 	
 	private static List<Value> getTagNanopore() {
 		List<NanoporeIndex> indexes = MongoDBDAO.find(InstanceConstants.PARAMETER_COLL_NAME, NanoporeIndex.class, DBQuery.is("typeCode", "index-nanopore-sequencing")).sort("name").toList();
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		indexes.forEach(index -> {
 			values.add(DescriptionFactory.newValue(index.code, index.name));	
 		});
@@ -569,7 +569,7 @@ public class Nanopore extends AbstractDeclaration{
 	}
 
 	private static List<Value> getTagCategoriesNanopore(){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("SINGLE-INDEX", "SINGLE-INDEX"));		
 		return values;	
 	}

@@ -4,16 +4,13 @@ package controllers.instruments.io.cng.bravoworkstationAlone;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import play.Logger;
-import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.InputContainerUsed;
-import models.laboratory.experiment.instance.OutputContainerUsed;
-import validation.ContextValidation;
-import controllers.instruments.io.cng.bravoworkstationAlone.tpl.txt.*;
-
+import controllers.instruments.io.cng.bravoworkstationAlone.tpl.txt.sampleSheet_1;
 import controllers.instruments.io.utils.AbstractOutput;
 import controllers.instruments.io.utils.File;
 import controllers.instruments.io.utils.OutputHelper;
+import models.laboratory.experiment.instance.Experiment;
+import play.Logger;
+import validation.ContextValidation;
 
 public class BravoWorkstationOutput extends AbstractOutput {
 
@@ -35,4 +32,5 @@ public class BravoWorkstationOutput extends AbstractOutput {
 		// return experiment.typeCode.toUpperCase()+"_"+experiment.atomicTransfertMethods.get(0).outputContainerUseds.get(0).locationOnContainerSupport.code+"_"+sdf.format(new Date());
 		return experiment.typeCode.toUpperCase()+"_"+experiment.atomicTransfertMethods.get(0).inputContainerUseds.get(0).locationOnContainerSupport.code+"_"+sdf.format(new Date());
 	}
+	
 }

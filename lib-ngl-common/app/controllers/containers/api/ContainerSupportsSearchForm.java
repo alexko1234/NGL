@@ -29,14 +29,15 @@ public class ContainerSupportsSearchForm extends ListForm {
 	public String storageCodeRegex;     //  23/05/2016 FDS ajout
 	public String storageCode;          //  23/05/2016 FDS ajout
 	
-	@Deprecated
-	public Map<String, List<String>> properties = new HashMap<String, List<String>>();
+	// TODO: suggest fix
+	// @Deprecated
+	public Map<String, List<String>> properties = new HashMap<>();
 	
 	@Override
 	public String toString() {
 		// 23/05/2016 FDS NGL-825 ajout storageCode
-		return "SupportsSearchForm ["
-				+ "  code=" + code 
+		return "SupportsSearchForm "
+				+ "[ code=" + code 
 				+ ", categoryCode="+ categoryCode 
 				+ ", stateCode=" + stateCode
 				+ ", nextExperimentTypeCode=" + nextExperimentTypeCode

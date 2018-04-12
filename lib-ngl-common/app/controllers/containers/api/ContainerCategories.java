@@ -6,6 +6,12 @@ package controllers.containers.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import controllers.APICommonController;
+//import controllers.CommonController;
+import controllers.authorisation.Permission;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.container.description.ContainerCategory;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
@@ -15,14 +21,6 @@ import play.libs.Json;
 import play.mvc.Result;
 import play.mvc.Results;
 import views.components.datatable.DatatableResponse;
-//import controllers.CommonController;
-import controllers.authorisation.Permission;
-import controllers.commons.api.UserSearchForm;
-
-import javax.inject.Inject;
-
-import fr.cea.ig.play.NGLContext;
-import controllers.APICommonController;
 
 // Could provide implementation through CRUD base class.
 public class ContainerCategories extends APICommonController<ContainerCategoriesSearchForm> { //CommonController{
@@ -43,9 +41,9 @@ public class ContainerCategories extends APICommonController<ContainerCategories
 			List<ContainerCategory> containerCategories = ContainerCategory.find.findAll();
 			
 			if (containerCategoriesSearch.datatable) {
-				return ok(Json.toJson(new DatatableResponse<ContainerCategory>(containerCategories, containerCategories.size()))); 
+				return ok(Json.toJson(new DatatableResponse<>(containerCategories, containerCategories.size()))); 
 			} else if(containerCategoriesSearch.list) {
-				List<ListObject> lop = new ArrayList<ListObject>();
+				List<ListObject> lop = new ArrayList<>();
 				for(ContainerCategory et:containerCategories){
 					lop.add(new ListObject(et.code, et.name));
 				}

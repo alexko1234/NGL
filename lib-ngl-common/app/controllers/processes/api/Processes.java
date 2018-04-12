@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
@@ -28,25 +28,17 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.processes.instance.Process;
-import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ProcessHelper;
-import models.utils.instance.SampleHelper;
-// import play.Logger;
-// import play.api.modules.spring.Spring;
 import play.data.DynamicForm;
 import play.data.Form;
-import play.i18n.Lang;
 import play.libs.Json;
-import play.mvc.Http;
 import play.mvc.Result;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.ValidationConstants;
 import views.components.datatable.DatatableBatchResponseElement;
-// import workflows.process.ProcWorkflowHelper;
 import workflows.process.ProcWorkflows;
 
 public class Processes extends DocumentController<Process> {
@@ -81,11 +73,11 @@ public class Processes extends DocumentController<Process> {
 
 	/**
 	 * Construct the process query
-	 * @param processesSearch
-	 * @return the query
+	 * @param processesSearch processes search form
+	 * @return                the query
 	 */
 	private DBQuery.Query getQuery(ProcessesSearchForm processesSearch) throws DAOException{
-		List<Query> queryElts = new ArrayList<Query>();
+		List<Query> queryElts = new ArrayList<>();
 		Query query = null;
 
 		logger.info("Process Query : " + processesSearch);
@@ -231,16 +223,14 @@ public class Processes extends DocumentController<Process> {
 		return query;
 	}
 	
-	
 	@Permission(value={"writing"})
 	public Result save(String from){	
 		Form<Process> filledForm = getMainFilledForm();
 		Process input = filledForm.get();		
-		if (null != input._id) {
+		if (input._id != null)
 			return badRequest("use PUT method to update the process");
-		}
-		
-		ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm);
 		List<Process> processes = saveOneElement(contextValidation, input, from);
 		if (!contextValidation.hasErrors())
 			return ok(Json.toJson(processes));
@@ -277,39 +267,37 @@ public class Processes extends DocumentController<Process> {
 		}
 		return null;
 	}
-	
-	
-	
+
 	/**
-	 * 
-	 * @param from : origin of process creation Container or Sample
-	 * @return
+	 * Save a batch of processes.
+	 * @param from origin of process creation Container or Sample
+	 * @return     HTTP result
 	 */
 	@Permission(value={"writing"})
-	public Result saveBatch(String from){	
+	public Result saveBatch(String from) {	
 		List<Form<ProcessesBatchElement>> filledForms =  getFilledFormList(batchElementForm, ProcessesBatchElement.class);
 		final String user = getCurrentUser();
-		final Lang lang = Http.Context.Implicit.lang();
+//		final Lang lang = Http.Context.Implicit.lang();
 		List<DatatableBatchResponseElement> response = filledForms.parallelStream()
 		.map(filledForm -> {
 			ProcessesBatchElement element = filledForm.get();
 			Process process = element.data;
-			if (null == process._id) {
-				ContextValidation contextValidation = new ContextValidation(user, filledForm.errors());
+			if (process._id == null) {
+//				ContextValidation contextValidation = new ContextValidation(user, filledForm.errors());
+				ContextValidation contextValidation = new ContextValidation(user, filledForm);
 				List<Process> processes = saveOneElement(contextValidation, process, from);
-				if(!contextValidation.hasErrors()){
+				if (!contextValidation.hasErrors()) {
 					return new DatatableBatchResponseElement(OK,  processes, element.index);
-				}else {
+				} else {
 					return new DatatableBatchResponseElement(BAD_REQUEST, errorsAsJson(contextValidation.getErrors()), element.index);
 				}
-			}else{
+			} else {
 				return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
 			}
-			
 		}).collect(Collectors.toList());
-		
 		return ok(Json.toJson(response));
 	}
+	
 	@Permission(value={"writing"})
 	public Result update(String code){
 		Process objectInDB = getObject(code);
@@ -320,17 +308,16 @@ public class Processes extends DocumentController<Process> {
 		Form<Process> filledForm = getMainFilledForm();
 		Process input = filledForm.get();
 		if (input.code.equals(code)) {
-			if (null != input.traceInformation) {
+			if (input.traceInformation != null) {
 				input.traceInformation = getUpdateTraceInformation(input.traceInformation);
 			} else {
 				logger.error("traceInformation is null !!");
 			}
-			
 			if (!objectInDB.state.code.equals(input.state.code)) {
 				return badRequest("you cannot change the state code. Please used the state url ! ");
 			}
-
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+//			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 			ctxVal.setUpdateMode();
 			workflows.applyPreValidateCurrentStateRules(ctxVal, input);
 			input.validate(ctxVal);			
@@ -364,9 +351,9 @@ public class Processes extends DocumentController<Process> {
 				
 				if (!process.state.code.equals(input.state.code)) {
 					return new DatatableBatchResponseElement(BAD_REQUEST, "you cannot change the state code. Please used the state url ! ", element.index);					
-				}
-				
-				ContextValidation ctxVal = new ContextValidation(user, filledForm.errors()); 
+				}				
+//				ContextValidation ctxVal = new ContextValidation(user, filledForm.errors()); 
+				ContextValidation ctxVal = new ContextValidation(user, filledForm); 
 				ctxVal.setUpdateMode();
 				workflows.applyPreValidateCurrentStateRules(ctxVal, input);
 				input.validate(ctxVal);			
@@ -388,14 +375,15 @@ public class Processes extends DocumentController<Process> {
 	@Permission(value={"writing"})
 	public Result updateState(String code){
 		Process objectInDB = getObject(code);
-		if(objectInDB == null) {
+		if (objectInDB == null) 
 			return notFound();
-		}
+		
 		Form<State> filledForm =  getFilledForm(stateForm, State.class);
 		State state = filledForm.get();
 		state.date = new Date();
 		state.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		workflows.setState(ctxVal, objectInDB, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getObject(code)));
@@ -403,7 +391,6 @@ public class Processes extends DocumentController<Process> {
 			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
-	
 	
 	@Permission(value={"writing"})
 	public Result updateStateBatch(){
@@ -413,11 +400,12 @@ public class Processes extends DocumentController<Process> {
 		.map(filledForm -> {
 			ProcessesBatchElement element = filledForm.get();
 			Process process = getObject(element.data.code);
-			if (null != process) {
+			if (process != null) {
 				State state = element.data.state;
 				state.date = new Date();
 				state.user = user;
-				ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+//				ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+				ContextValidation ctxVal = new ContextValidation(user, filledForm);
 				workflows.setState(ctxVal, process, state);
 				if (!ctxVal.hasErrors()) {
 					return new DatatableBatchResponseElement(OK,  getObject(process.code), element.index);
@@ -428,42 +416,43 @@ public class Processes extends DocumentController<Process> {
 				return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
 			}
 		}).collect(Collectors.toList());
-		
 		return ok(Json.toJson(response));
 	}
 	
+	@Override
 	@Permission(value={"writing"})
-	public Result delete(String code) throws DAOException{
+	public Result delete(String code) throws DAOException {
 		Process process = getObject(code);
 		if (process == null) {
 			return notFound("Process with code "+code+" does not exist");
 		}
 		Container container = null;
-		if(process.inputContainerCode != null && !process.state.code.equals("IW-C")){
+		if (process.inputContainerCode != null && !process.state.code.equals("IW-C")) {
 			container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,process.inputContainerCode);
-			if(container==null) {
+			if (container == null) {
 				return notFound("Container process "+code+"with code "+process.inputContainerCode+" does not exist");
 			}
 		}
+		// TODO: at this point container can be null but it's used
 		DynamicForm deleteForm = getNGLContext().form();
-		ContextValidation contextValidation=new ContextValidation(getCurrentUser(),deleteForm.errors());
-		
-		if(process.state.code.equals("IP")) {
+//		ContextValidation contextValidation=new ContextValidation(getCurrentUser(),deleteForm.errors());
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(),deleteForm);		
+		if (process.state.code.equals("IP")) {
 			contextValidation.addErrors("process.state.code", ValidationConstants.ERROR_BADSTATE_MSG, container.code);
 		} else if(CollectionUtils.isNotEmpty(process.experimentCodes)) {
 			contextValidation.addErrors("process.experimentCodes", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, process.experimentCodes);
-		} else if(container != null && !process.state.code.equals("IW-C")
-				 && !"IS".equals(container.state.code) && !"UA".equals(container.state.code)
-				 && !"IW-P".equals(container.state.code)) {
+		} else if (container != null && !process.state.code.equals("IW-C")
+				                     && !"IS".equals(container.state.code) 
+				                     && !"UA".equals(container.state.code)
+				                     && !"IW-P".equals(container.state.code)) {
 			contextValidation.addErrors("process.inputContainerCode", ValidationConstants.ERROR_BADSTATE_MSG, container.state.code);
 		}
-
 		if (!contextValidation.hasErrors()) {
 			return super.delete(code);
 		} else {
 			//return badRequest(deleteForm.errors-AsJson());
 			return badRequest(errorsAsJson(contextValidation.getErrors()));
-		}
-		
+		}	
 	}
+	
 }

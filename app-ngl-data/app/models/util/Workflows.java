@@ -1,12 +1,22 @@
 package models.util;
 
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+
+import akka.actor.ActorRef;
+import akka.actor.Props;
+
+//import static fr.cea.ig.play.IGGlobals.akkaSystem;
+
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
@@ -21,38 +31,30 @@ import models.laboratory.run.instance.SampleOnContainer;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
-
-import org.apache.commons.lang3.StringUtils;
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-import org.mongojack.WriteResult;
-
-import play.Logger;
-import play.Play;
+// import play.Logger;
+// import play.Play;
 // import play.libs.Akka;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.run.instance.AnalysisValidationHelper;
 import validation.run.instance.RunValidationHelper;
-import akka.actor.ActorRef;
-import akka.actor.Props;
 
-//import static fr.cea.ig.play.IGGlobals.akkaSystem;
-
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.NGLContext;
-
+// This class has to be injected at application start, IGGlobals removal is not correct.
 public class Workflows {
+	
+	private static play.Logger.ALogger logger = play.Logger.of(Workflows.class);
 	
 	/*private static ActorRef rulesActor = // Akka.system().actorOf(Props.create(RulesActor6.class));
 			akkaSystem().actorOf(Props.create(RulesActor6.class));*/
 	private static ActorRef rulesActor;
 	private static final String ruleStatRG="F_RG_1";
-			
+	private static String rulesKey;
+	
 	@Inject
 	public Workflows(NGLContext ctx) {
 		rulesActor = ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
+		rulesKey = ctx.getRulesKey();
 	}
 	
 	public static void setRunState(ContextValidation contextValidation, Run run, State nextState) {
@@ -62,7 +64,7 @@ public class Workflows {
 		RunValidationHelper.validateState(run.typeCode, nextState, contextValidation);
 		if(!contextValidation.hasErrors() && !nextState.code.equals(run.state.code)){
 			boolean goBack = goBack(run.state, nextState);
-			if(goBack)Logger.debug(run.code+" : back to the workflow. "+run.state.code +" -> "+nextState.code);		
+			if (goBack) logger.debug(run.code+" : back to the workflow. "+run.state.code +" -> "+nextState.code);		
 			
 			run.traceInformation = updateTraceInformation(run.traceInformation, nextState); 
 			run.state = updateHistoricalNextState(run.state, nextState);
@@ -94,36 +96,32 @@ public class Workflows {
 	}
 
 	public static boolean isRunValuationComplete(Run run) {
-
-		if(run.valuation.valid.equals(TBoolean.UNSET)){
+		if (run.valuation.valid.equals(TBoolean.UNSET))
 			return false;
-		}
-		if(run.lanes != null){
-			for(Lane lane : run.lanes){
-				if(lane.valuation.valid.equals(TBoolean.UNSET)){
+		if (run.lanes != null) {
+			for (Lane lane : run.lanes) {
+				if (lane.valuation.valid.equals(TBoolean.UNSET)) {
 					return false;
 				}
 			}
 			return true;
-		}else{
+		} else {
 			return true;
 		}
-		
 	}
 	
 	public static boolean atLeastOneValuation(Run run) {
-
-		if(!run.valuation.valid.equals(TBoolean.UNSET)){
+		if (!run.valuation.valid.equals(TBoolean.UNSET)) {
 			return true;
 		}
-		if(run.lanes != null){
-			for(Lane lane : run.lanes){
+		if (run.lanes != null) {
+			for (Lane lane : run.lanes) {
 				if(!lane.valuation.valid.equals(TBoolean.UNSET)){
 					return true;
 				}
 			}
 			return false;
-		}else{
+		} else {
 			return false;
 		}
 	}
@@ -138,10 +136,10 @@ public class Workflows {
 			for(ReadSet readSet: readSets){
 				State nextReadSetState = cloneState(run.state);
 				setReadSetState(contextValidation, readSet, nextReadSetState);
-			}
-						
-			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleStatRG,run),null);
-		}else if("F-V".equals(run.state.code)){
+			}		
+//			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleStatRG,run),null);
+			rulesActor.tell(new RulesMessage(rulesKey,ruleStatRG,run),null);
+		} else if("F-V".equals(run.state.code)) {
 			//Spring.getBeanOfType(ILimsRunServices.class).valuationRun(run);
 		}
 	}
@@ -153,7 +151,7 @@ public class Workflows {
 		RunValidationHelper.validateState(readSet.typeCode, nextState, contextValidation);
 		if(!contextValidation.hasErrors() && !nextState.code.equals(readSet.state.code)){
 			boolean goBack = goBack(readSet.state, nextState);
-			if(goBack)Logger.debug(readSet.code+" : back to the workflow. "+readSet.state.code +" -> "+nextState.code);		
+			if (goBack) logger.debug(readSet.code+" : back to the workflow. "+readSet.state.code +" -> "+nextState.code);		
 			
 			readSet.traceInformation = updateTraceInformation(readSet.traceInformation, nextState); 
 			readSet.state = updateHistoricalNextState(readSet.state, nextState);
@@ -167,21 +165,21 @@ public class Workflows {
 	}
 	
 	private static void applyReadSetRules(ContextValidation contextValidation, ReadSet readSet) {
-		if("F-RG".equals(readSet.state.code)){
+		if ("F-RG".equals(readSet.state.code)) {
 			//update dispatch
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
 					DBQuery.is("code", readSet.code), DBUpdate.set("dispatch", Boolean.TRUE));	
 			
 			//insert sample container properties at the en of the ngsrg
 			SampleOnContainer sampleOnContainer = InstanceHelpers.getSampleOnContainer(readSet);
-			if(null != sampleOnContainer){
+			if (sampleOnContainer != null) {
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
 						DBQuery.is("code", readSet.code), DBUpdate.set("sampleOnContainer", sampleOnContainer));
-			}else{
-				Logger.error("sampleOnContainer null for "+readSet.code);
+			} else {
+				logger.error("sampleOnContainer null for "+readSet.code);
 			}
 			
-		}else if("F-VQC".equals(readSet.state.code)){
+		} else if("F-VQC".equals(readSet.state.code)) {
 			//Spring.getBeanOfType(ILimsRunServices.class).valuationReadSet(readSet, true);	
 			if(TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)){
 				readSet.bioinformaticValuation.valid = readSet.productionValuation.valid;
@@ -195,22 +193,20 @@ public class Workflows {
 		} else if("A".equals(readSet.state.code) || "UA".equals(readSet.state.code))	{
 			//met les fichier dipo ou non dès que le read set est valider
 			State state = cloneState(readSet.state);
-			if (null != readSet.files) {
-				for(File f : readSet.files){
-					WriteResult<ReadSet, String> r = MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-							DBQuery.and(DBQuery.is("code", readSet.code), DBQuery.is("files.fullname", f.fullname)),
-							DBUpdate.set("files.$.state", state));					
+			if (readSet.files != null) {
+				for (File f : readSet.files) {
+					// WriteResult<ReadSet, String> r = 
+							MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+											  DBQuery.and(DBQuery.is("code", readSet.code), 
+											  DBQuery.is("files.fullname", f.fullname)),
+											  DBUpdate.set("files.$.state", state));					
 				}
-			}
-			else {
-				Logger.error("No files for "+readSet.code);
+			} else {
+				logger.error("No files for "+readSet.code);
 			}
 			
 		}
 	}
-
-	
-
 
 	public static void nextReadSetState(ContextValidation contextValidation, ReadSet readSet) {
 		State nextStep = cloneState(readSet.state);
@@ -251,8 +247,7 @@ public class Workflows {
 		}
 		setReadSetState(contextValidation, readSet, nextStep);
 	}
-	
-	
+		
 	private static boolean isHasBA(ReadSet readSet){
 		Project p = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, readSet.projectCode);
 		if(p.bioinformaticParameters.biologicalAnalysis){
@@ -264,7 +259,7 @@ public class Workflows {
 	
 	private static State updateHistoricalNextState(State previousState, State nextState) {
 		if (null == previousState.historical) {
-			nextState.historical = new HashSet<TransientState>(0);
+			nextState.historical = new HashSet<>(0);
 			nextState.historical.add(new TransientState(previousState, nextState.historical.size()));
 		} else {
 			nextState.historical = previousState.historical;
@@ -313,14 +308,13 @@ public class Workflows {
 		return nextState;
 	}
 
-
 	public static void setAnalysisState(ContextValidation contextValidation, Analysis analysis, State nextState) {
 		//on valide l'état			
 		contextValidation.setUpdateMode();
 		AnalysisValidationHelper.validateState(analysis.typeCode, nextState, contextValidation);
 		if(!contextValidation.hasErrors() && !nextState.code.equals(analysis.state.code)){
 			boolean goBack = goBack(analysis.state, nextState);
-			if(goBack)Logger.debug(analysis.code+" : back to the workflow. "+analysis.state.code +" -> "+nextState.code);		
+			if (goBack) logger.debug(analysis.code+" : back to the workflow. "+analysis.state.code +" -> "+nextState.code);		
 			
 			analysis.traceInformation = updateTraceInformation(analysis.traceInformation, nextState); 
 			analysis.state = updateHistoricalNextState(analysis.state, nextState);
@@ -332,9 +326,7 @@ public class Workflows {
 			applyAnalysisRules(contextValidation, analysis);
 			nextAnalysisState(contextValidation, analysis);
 		}		
-		
 	}
-
 
 	private static void applyAnalysisRules(ContextValidation contextValidation, Analysis analysis) {
 		if("IP-BA".equals(analysis.state.code)){
@@ -366,7 +358,6 @@ public class Workflows {
 			}							
 		}		
 	}
-
 
 	public static void nextAnalysisState(ContextValidation contextValidation, Analysis analysis) {
 		State nextStep = cloneState(analysis.state);

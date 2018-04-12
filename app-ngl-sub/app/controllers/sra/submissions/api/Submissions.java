@@ -10,15 +10,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -34,8 +32,6 @@ import models.laboratory.common.instance.State;
 import models.sra.submit.common.instance.Study;
 import models.sra.submit.common.instance.Submission;
 import models.sra.submit.common.instance.UserCloneType;
-import models.sra.submit.common.instance.UserExperimentType;
-import models.sra.submit.common.instance.UserSampleType;
 import models.sra.submit.util.SraCodeHelper;
 import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;
@@ -50,8 +46,6 @@ import services.ReleaseServices;
 import services.SubmissionServices;
 import services.Tools;
 import services.UserCloneTypeParser;
-import services.UserExperimentTypeParser;
-import services.UserSampleTypeParser;
 import services.XmlServices;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
@@ -64,7 +58,7 @@ public class Submissions extends DocumentController<Submission>{
 	private static final play.Logger.ALogger logger = play.Logger.of(Submissions.class);
 	
 	private final static List<String> authorizedUpdateFields = Arrays.asList("accession","submissionDate", "xmlSubmission", "xmlStudys", "xmlSamples", "xmlExperiments", "xmlRuns");
-	private Map<String, UserCloneType>      mapUserClones      = new HashMap<String, UserCloneType>();
+	private Map<String, UserCloneType>      mapUserClones      = new HashMap<>();
 	private final Form<QueryFieldsForm>         updateForm;
 	private final Form<Submission>              submissionForm;
 	private final Form<SubmissionsCreationForm> submissionsCreationForm;
@@ -110,14 +104,14 @@ public class Submissions extends DocumentController<Submission>{
 		MongoDBResult<Submission> results = mongoDBFinder(submissionsSearchForm, query);				
 		List<Submission> submissionsList = results.toList();
 		if (submissionsSearchForm.datatable) {
-			return ok(Json.toJson(new DatatableResponse<Submission>(submissionsList, submissionsList.size())));
+			return ok(Json.toJson(new DatatableResponse<>(submissionsList, submissionsList.size())));
 		} else {
 			return ok(Json.toJson(submissionsList));
 		}
 	}
 
 	private Query getQuery(SubmissionsSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		Query query = null;
 		if (CollectionUtils.isNotEmpty(form.projCodes)) { 
 			queries.add(DBQuery.in("projectCodes", form.projCodes)); // doit pas marcher car pour state.code
@@ -159,7 +153,8 @@ public class Submissions extends DocumentController<Submission>{
 		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
 		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
 		
-		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser(), filledForm);
 		if (submission == null) {
 			//return badRequest("Submission with code "+code+" not exist");
 			ctxVal.addErrors("submission ", " not exist");
@@ -189,7 +184,8 @@ public class Submissions extends DocumentController<Submission>{
 				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}	
 		} else { //update only some authorized properties
-			ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+//			ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+			ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
@@ -213,7 +209,8 @@ public class Submissions extends DocumentController<Submission>{
 		State state = filledForm.get();
 		state.date = new Date();
 		state.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser(), filledForm);
 		if (submission == null) {
 			//return badRequest("Submission with code "+code+" not exist");
 			ctxVal.addErrors("submission " + code,  " not exist in database");	
@@ -241,25 +238,31 @@ public class Submissions extends DocumentController<Submission>{
 		// Form<Submission> filledForm = /*Form.*/form(Submission.class);
 		// filledForm.fill(submission);
 		Form<Submission> filledForm = getFilledForm(submissionForm, Submission.class);
+		ContextValidation ctx = new ContextValidation(getCurrentUser(),filledForm);
 		if (submission == null) {
 			//return badRequest("Submission with code "+code+" not exist");
-			filledForm.reject("Submission " + code," not exist");  // si solution filledForm.reject
-			return badRequest(filledForm.errorsAsJson( )); // legit
+//			filledForm.reject("Submission " + code," not exist");  // si solution filledForm.reject
+			ctx.addError("Submission " + code," not exist");
+//			return badRequest(filledForm.errorsAsJson( )); // legit
+			return badRequest(errorsAsJson(ctx.getErrors()));
 		}
 		try {
 			submission = XmlServices.writeAllXml(code);
 		} catch (IOException e) {
 			//return badRequest(e.getMessage());
-			filledForm.reject("Submission " + code, e.getMessage());  // si solution filledForm.reject
-			return badRequest(filledForm.errorsAsJson( )); // legit
+//			filledForm.reject("Submission " + code, e.getMessage());  // si solution filledForm.reject
+//			return badRequest(filledForm.errorsAsJson( )); // legit
+			ctx.addError("Submission " + code, e.getMessage());  // si solution filledForm.reject
+			return badRequest(errorsAsJson(ctx.getErrors())); 
 		} catch (SraException e) {
 			//return badRequest(e.getMessage());
-			filledForm.reject("Submission " + code, e.getMessage());  // si solution filledForm.reject
-			return badRequest(filledForm.errorsAsJson( )); // legit
+//			filledForm.reject("Submission " + code, e.getMessage());  // si solution filledForm.reject
+//			return badRequest(filledForm.errorsAsJson( )); // legit
+			ctx.addError("Submission " + code, e.getMessage());  // si solution filledForm.reject
+			return badRequest(errorsAsJson(ctx.getErrors()));
 		}
 		return ok(Json.toJson(submission));
 	}
-
 
 	public Result treatmentAc(String code) {
 		//Get Submission from DB 
@@ -332,7 +335,8 @@ public class Submissions extends DocumentController<Submission>{
 		SubmissionsCreationForm submissionsCreationForm = filledForm.get();
 		logger.debug("readsets "+submissionsCreationForm.readSetCodes);
 		String user = getCurrentUser();
-		ContextValidation contextValidation = new ContextValidation(user, filledForm.errors());
+//		ContextValidation contextValidation = new ContextValidation(user, filledForm.errors());
+		ContextValidation contextValidation = new ContextValidation(user, filledForm);
 		contextValidation.setCreationMode();
 		contextValidation.getContextObjects().put("type", "sra");
 		String submissionCode;
@@ -350,8 +354,8 @@ public class Submissions extends DocumentController<Submission>{
 				submissionsCreationForm.base64UserFileReadSet = "";
 			}
 			logger.debug("Read base64UserFileExperiments");
-			InputStream inputStreamUserFileExperiments = Tools.decodeBase64(submissionsCreationForm.base64UserFileExperiments);
-			UserExperimentTypeParser userExperimentsParser = new UserExperimentTypeParser();
+//			InputStream inputStreamUserFileExperiments = Tools.decodeBase64(submissionsCreationForm.base64UserFileExperiments);
+//			UserExperimentTypeParser userExperimentsParser = new UserExperimentTypeParser();
 			//mapUserExperiments = userExperimentsParser.loadMap(inputStreamUserFileExperiments);		
 			/*for (Iterator<Entry<String, UserExperimentType>> iterator = mapUserExperiments.entrySet().iterator(); iterator.hasNext();) {
 				Entry<String, UserExperimentType> entry = iterator.next();
@@ -362,8 +366,8 @@ public class Submissions extends DocumentController<Submission>{
 				System.out.println("       lib_source : '" + entry.getValue().getLibrarySource()+  "'");
 			}*/
 			logger.debug("Read base64UserFileSamples");
-			InputStream inputStreamUserFileSamples = Tools.decodeBase64(submissionsCreationForm.base64UserFileSamples);
-			UserSampleTypeParser userSamplesParser = new UserSampleTypeParser();		
+//			InputStream inputStreamUserFileSamples = Tools.decodeBase64(submissionsCreationForm.base64UserFileSamples);
+//			UserSampleTypeParser userSamplesParser = new UserSampleTypeParser();		
 			logger.debug("Read base64UserFileClonesToAc");
 			InputStream inputStreamUserFileClonesToAc = Tools.decodeBase64(submissionsCreationForm.base64UserFileClonesToAc);
 			UserCloneTypeParser userClonesParser = new UserCloneTypeParser();
@@ -432,8 +436,8 @@ public class Submissions extends DocumentController<Submission>{
 
 	/**
 	 * Cree une soumission pour la release du study indiqué et active cette soumission en la mettant dans un status IW_SUB_R
-	 * @param studyCode
-	 * @return ok(Json.toJson(submission))
+	 * @param studyCode study code
+	 * @return          ok(Json.toJson(submission))
 	 */           
 	public Result createFromStudy(String studyCode) {
 		logger.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");

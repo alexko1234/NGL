@@ -8,20 +8,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.dao.CommonInfoTypeDAO;
-import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.instrument.description.InstrumentUsedType;
-import models.laboratory.sample.description.SampleType;
-import models.utils.dao.AbstractDAOCommonInfoType;
-import models.utils.dao.DAOException;
-
 import org.springframework.asm.Type;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
-import play.Logger;
+import models.laboratory.common.description.dao.CommonInfoTypeDAO;
+import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.instrument.description.InstrumentUsedType;
+import models.laboratory.sample.description.SampleType;
+import models.utils.dao.AbstractDAOCommonInfoType;
+import models.utils.dao.DAOException;
 //import play.Logger;
 import play.api.modules.spring.Spring;
 
@@ -29,16 +27,20 @@ import play.api.modules.spring.Spring;
 @Repository
 public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType> {
 
+//	public ExperimentTypeDAO() {
+//		super("experiment_type", ExperimentType.class,ExperimentTypeMappingQuery.class,
+//				"SELECT distinct c.id, c.fk_experiment_category, c.fk_common_info_type, c.atomic_transfert_method, c.short_code, c.new_sample ",
+//				"FROM experiment_type as c "+ sqlCommonInfoType, false);
+//	}
 	public ExperimentTypeDAO() {
-		super("experiment_type", ExperimentType.class,ExperimentTypeMappingQuery.class,
+		super("experiment_type", ExperimentType.class,ExperimentTypeMappingQuery.factory,
 				"SELECT distinct c.id, c.fk_experiment_category, c.fk_common_info_type, c.atomic_transfert_method, c.short_code, c.new_sample ",
 				"FROM experiment_type as c "+ sqlCommonInfoType, false);
 	}
 	
 	@Override
 	public long save(ExperimentType experimentType) throws DAOException	{
-
-		if(null == experimentType) {
+		if (experimentType == null) {
 			throw new DAOException("ExperimentType is mandatory");
 		}
 		//Check if category exist
@@ -51,7 +53,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		experimentType.id = commonInfoTypeDAO.save(experimentType);
 
 		//Create experimentType 
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("id", experimentType.id);
 		parameters.put("fk_common_info_type", experimentType.id);
 		parameters.put("fk_experiment_category", experimentType.category.id);
@@ -66,11 +68,12 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		return experimentType.id;
 	}
 
+	@SuppressWarnings("deprecation")
 	private void insertSampleTypes(List<SampleType> sampleTypes, Long id, boolean deleteBefore) {
-		if(deleteBefore){
+		if (deleteBefore) {
 			removeSampleTypes(id);
 		}
-		if(sampleTypes!=null && sampleTypes.size()>0){
+		if (sampleTypes != null && sampleTypes.size() > 0) {
 			String sql = "INSERT INTO experiment_type_sample_type (fk_experiment_type, fk_sample_type) VALUES(?,?)";
 			for(SampleType sampleType:sampleTypes){
 				if(sampleType == null || sampleType.id == null ){
@@ -82,11 +85,13 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void removeSampleTypes(Long id) {
 		String sql = "DELETE FROM experiment_type_sample_type WHERE fk_experiment_type=?";
 		jdbcTemplate.update(sql, id);
 		
 	}
+	@SuppressWarnings("deprecation")
 	private void insertInstrumentUsedTypes(
 			List<InstrumentUsedType> instrumentUsedTypes, Long id, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
@@ -104,17 +109,17 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 	}
 
 
+	@SuppressWarnings("deprecation")
 	private void removeInstrumentUsedTypes(Long id) {
 		String sql = "DELETE FROM experiment_type_instrument_type WHERE fk_experiment_type=?";
 		jdbcTemplate.update(sql, id);
 
 	}
 
-
 	@Override
-	public void update(ExperimentType experimentType) throws DAOException
-	{
-		ExperimentType expTypeDB = findById(experimentType.id);
+	public void update(ExperimentType experimentType) throws DAOException {
+//		ExperimentType expTypeDB = 
+				findById(experimentType.id);
 		//Add list instruments
 		insertInstrumentUsedTypes(experimentType.instrumentUsedTypes, experimentType.id, true);
 		insertSampleTypes(experimentType.sampleTypes, experimentType.id, true);
@@ -155,8 +160,9 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 				
 				+" where cpt.code = ? and pet.position_in_process > -1";
 		
+		@SuppressWarnings("deprecation")
 		int result = jdbcTemplate.queryForInt(sql, processTypeCode);
-		
+//		int result = MongoDeprecation.queryForInt(jdbcTemplate, sql, processTypeCode);		
 		return Integer.valueOf(result);
 		
 	}
@@ -167,10 +173,12 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 				"inner join common_info_type as cp on p.fk_common_info_type=cp.id "+
 				" where cp.code=?";
 
+		@SuppressWarnings("deprecation")
 		List<String> list = jdbcTemplate.query(
 				query,
 				new RowMapper<String>() {
 
+					@Override
 					public String mapRow(ResultSet rs, int rowNum) throws SQLException {
 						String listObj = rs.getString("code");
 						return listObj;
@@ -234,64 +242,70 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		return initializeMapping(sql, new SqlParameter("p.fk_process_type", Type.LONG)).execute(id);
 	}
 
+	@SuppressWarnings("deprecation")
 	public List<ExperimentType> findByCategoryCode(String categoryCode){
 		String sql = "SELECT t.code AS code, t.name AS name , t.display_order AS displayOrder, t.active as active  "+
 				 sqlCommonFrom+
 				" JOIN experiment_category as ec  ON c.fk_experiment_category=ec.id "
 				+"where ec.code=? "
 				+"ORDER by t.display_order, t.name";
-		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<ExperimentType>(ExperimentType.class);
+		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<>(ExperimentType.class);
 		return this.jdbcTemplate.query(sql, mapper, categoryCode);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public List<ExperimentType> findActiveByCategoryCode(String categoryCode){
 		String sql = "SELECT t.code AS code, t.name AS name , t.display_order AS displayOrder, t.active as active  "+
 				 sqlCommonFrom+
 				" JOIN experiment_category as ec  ON c.fk_experiment_category=ec.id "
 				+"where ec.code=? and t.active = 1 "
 				+"ORDER by t.display_order, t.name";
-		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<ExperimentType>(ExperimentType.class);
+		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<>(ExperimentType.class);
 		return this.jdbcTemplate.query(sql, mapper, categoryCode);
 	}
 	
 	
+	@SuppressWarnings("deprecation")
 	public List<ExperimentType> findByCategoryCodes(List<String> categoryCodes){
 		String sql = "SELECT t.code AS code, t.name AS name , t.display_order AS displayOrder, t.active as active  "+
 				 sqlCommonFrom+
 				" JOIN experiment_category as ec  ON c.fk_experiment_category=ec.id "
 				+"where ec.code in (:list) "
 				+"ORDER by t.display_order, t.name";
-		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<ExperimentType>(ExperimentType.class);
+		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<>(ExperimentType.class);
 		return this.jdbcTemplate.query(sql, mapper, Collections.singletonMap("list", categoryCodes));
 	}
 	
+	@SuppressWarnings("deprecation")
 	public List<ExperimentType> findByCategoryCodesWithoutOneToVoid(List<String> categoryCodes){
 		String sql = "SELECT t.code AS code, t.name AS name, t.display_order AS displayOrder, t.active as active  "
 					+sqlCommonFrom
 					+" JOIN experiment_category as ec  ON c.fk_experiment_category=ec.id "
 					+"where ec.code in (:list) and c.atomic_transfert_method!='OneToVoid' "
 					+"ORDER by t.display_order, t.name";
-		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<ExperimentType>(ExperimentType.class);
+		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<>(ExperimentType.class);
 		return this.jdbcTemplate.query(sql, mapper,Collections.singletonMap("list", categoryCodes));
 	}
 	
+	@SuppressWarnings("deprecation")
 	public List<ExperimentType> findByCategoryCodeAndProcessTypeCode(String categoryCode, String processTypeCode){
 		String sql = "SELECT t.code AS code, t.name AS name, t.active as active "+
 				 sqlCommonFrom+
 				" JOIN experiment_category as ec  ON c.fk_experiment_category=ec.id inner join process_experiment_type as p ON p.fk_experiment_type=c.id, process_type as pt " +
 				"inner join common_info_type as cp on pt.fk_common_info_type=cp.id"
 				+" where ec.code=? and p.fk_process_type = pt.id and cp.code=?";
-		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<ExperimentType>(ExperimentType.class);
+		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<>(ExperimentType.class);
 		return this.jdbcTemplate.query(sql, mapper, categoryCode, processTypeCode);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public List<ExperimentType> findByCategoryCodeWithoutOneToVoid(String categoryCode){
 		String sql = "SELECT t.code AS code, t.name AS name, t.display_order AS displayOrder, t.active as active  "
 					+sqlCommonFrom
 					+" JOIN experiment_category as ec  ON c.fk_experiment_category=ec.id "
 					+"where ec.code=? and c.atomic_transfert_method!='OneToVoid' "
 					+"ORDER by t.display_order, t.name";
-		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<ExperimentType>(ExperimentType.class);
+		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<>(ExperimentType.class);
 		return this.jdbcTemplate.query(sql, mapper, categoryCode);
 	}
 	
@@ -304,8 +318,9 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		//Logger.debug(sql);
 		return initializeMapping(sql, new SqlParameter("cp.code", Types.VARCHAR)).execute(previousExperimentTypeCode);
 	}
-	
-	@Deprecated
+
+	// TODO: suggest a fix
+//	@Deprecated
 	public List<ExperimentType> findByPreviousExperimentTypeCodeInProcessTypeContext(String previousExperimentTypeCode, String processTypeCode) throws DAOException{
 		String sql = sqlCommon
 				+" inner join experiment_type_node as n on n.fk_experiment_type = t.id"+

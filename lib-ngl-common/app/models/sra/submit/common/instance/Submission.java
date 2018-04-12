@@ -1,8 +1,5 @@
 package models.sra.submit.common.instance;
 
-import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,38 +8,37 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
+import fr.cea.ig.DBObject;
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.sra.submit.sra.instance.Configuration;
-import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.sra.SraValidationHelper;
 import validation.utils.ValidationHelper;
 import workflows.sra.submission.TransitionObject;
-import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBDAO;
 
 // objet qui decrit ce qu'on soumet à l'EBI à l'instant t.
 public class Submission extends DBObject implements IValidation, TransitionObject {
 
 	//public String alias;         // required mais remplacé par code herité de DBObject, et valeur = CNS_projectCode_date_num
 	//public String projectCode = null;     // required pour nos stats //Reference code de la collection project NGL
-	public List<String> projectCodes = new ArrayList<String>();
+	public List<String> projectCodes = new ArrayList<>();
  	public String accession = null;       // numeros d'accession attribué par ebi */
 	public Date creationDate = null;
 	public Date submissionDate = null;
 	public String creationUser = null;
-	public List<String> refStudyCodes = new ArrayList<String>();  // Liste de tous les codes des AbstractStudy (ExternalStudy et Study) referencés par cette soumission, pas forcement à soumettre à l'EBI.
-	public List<String> refSampleCodes = new ArrayList<String>(); // liste de tous les codes des AbstractSamples (ExternalSample ou Sample) references par cette soumission, pas forcement a soumettre à l'EBI.
+	public List<String> refStudyCodes = new ArrayList<>();  // Liste de tous les codes des AbstractStudy (ExternalStudy et Study) referencés par cette soumission, pas forcement à soumettre à l'EBI.
+	public List<String> refSampleCodes = new ArrayList<>(); // liste de tous les codes des AbstractSamples (ExternalSample ou Sample) references par cette soumission, pas forcement a soumettre à l'EBI.
 	//public List<String> refReadSetCodes = new ArrayList<String>(); // liste des codes des readSet references par cette soumission(pas de soumission).
 	public String studyCode = null;          // study à soumettre à l'ebi si strategy_internal_study ou bien study à rendre public
 	public String analysisCode = null;       // analysis à soumettre à l'ebi
-	public List<String> sampleCodes = new ArrayList<String>(); // liste des codes des sample à soumettre à l'ebi
-	public List<String> experimentCodes = new ArrayList<String>(); // liste des codes des experiments à soumettre à l'ebi
-	public List<String> runCodes = new ArrayList<String>(); // liste des codes des runs à soumettre à l'ebi
+	public List<String> sampleCodes = new ArrayList<>(); // liste des codes des sample à soumettre à l'ebi
+	public List<String> experimentCodes = new ArrayList<>(); // liste des codes des experiments à soumettre à l'ebi
+	public List<String> runCodes = new ArrayList<>(); // liste des codes des runs à soumettre à l'ebi
 	public String configCode = null;
 	public String submissionDirectory = null;
 	//public String submissionTmpDirectory = null;
@@ -58,7 +54,7 @@ public class Submission extends DBObject implements IValidation, TransitionObjec
 	public String resultSendXml = null; // Fichier resultat de la commande curl qui doit contenir les AC attribués par l'EBI
 	//public String userSubmission; // login du bioinfo qui a creer ticket.
 	
-	public Map<String, UserCloneType> mapUserClone = new HashMap<String, UserCloneType>();
+	public Map<String, UserCloneType> mapUserClone = new HashMap<>();
 
 	public State state = new State(); // Reference sur "models.laboratory.common.instance.state" 
 	// pour gerer les differents etats de l'objet en fonction de l'avancement dans le workflow de la soumission
@@ -84,9 +80,9 @@ public class Submission extends DBObject implements IValidation, TransitionObjec
 	}
 
 	public Submission() {
-		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
+//		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
 		Date courantDate = new java.util.Date();
-		String st_my_date = dateFormat.format(courantDate);	
+//		String st_my_date = dateFormat.format(courantDate);	
 		this.creationDate = courantDate;
 	}
 	

@@ -13,9 +13,6 @@ import org.mongojack.DBUpdate;
 import controllers.QueryFieldsForm;
 import controllers.SubDocumentController;
 import controllers.authorisation.Permission;
-import fr.cea.ig.authentication.Authenticated;
-import fr.cea.ig.authorization.Authorized;
-import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.play.NGLContext;
 import models.laboratory.run.instance.Analysis;
 import models.laboratory.run.instance.File;
@@ -35,6 +32,7 @@ public class Files extends SubDocumentController<Analysis, File> {
 		super(ctx,InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, File.class);
 		this.updateForm = getNGLContext().form(QueryFieldsForm.class);
 	}
+	
 	@Override
 	protected Object getSubObject(Analysis objectInDB, String fullname) {
 		for (File file : objectInDB.files) {
@@ -65,7 +63,8 @@ public class Files extends SubDocumentController<Analysis, File> {
 		Form<File> filledForm = getSubFilledForm();
 		File inputFile = filledForm.get();
 				
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		ctxVal.putObject("analysis", objectInDB);
 		ctxVal.putObject("objectClass", objectInDB.getClass());
 		ctxVal.setCreationMode();
@@ -95,7 +94,8 @@ public class Files extends SubDocumentController<Analysis, File> {
 		File fileInput = filledForm.get();
 		if (queryFieldsForm.fields == null) {
 			if (fullname.equals(fileInput.fullname)) {			
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 				ctxVal.putObject("analysis", objectInDB);
 				ctxVal.putObject("objectClass", objectInDB.getClass());
 				ctxVal.setUpdateMode();
@@ -113,7 +113,8 @@ public class Files extends SubDocumentController<Analysis, File> {
 				return badRequest("fullname are not the same");
 			}
 		} else { //update only some authorized properties
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+//			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 			ctxVal.putObject("analysis", objectInDB);
 			ctxVal.putObject("objectClass", objectInDB.getClass());
 			ctxVal.setUpdateMode();
@@ -153,9 +154,8 @@ public class Files extends SubDocumentController<Analysis, File> {
 	@Permission(value={"writing"})
 	public Result deleteByParentCode(String parentCode) {
 		Analysis objectInDB = getObject(parentCode);
-		if (objectInDB == null) {
+		if (objectInDB == null)
 			return notFound();
-		}
 		
 		updateObject(DBQuery.is("code", parentCode), 
 				DBUpdate.unset("files").set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));		

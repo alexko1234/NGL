@@ -1,14 +1,10 @@
 package services;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +21,7 @@ import models.sra.submit.util.SraException;
 public class ColumnParser {
 
 	//private Map<String, String> mapAllowedFields =  new HashMap<String, String>();
-	private List<String> allowedFields =  new ArrayList<String>();
+	private List<String> allowedFields =  new ArrayList<>();
 
 	private String keyField = ""; // champs cle unique du fichier permettant d'identifier l'objet.
 	private String separator= "\\|";
@@ -51,7 +47,7 @@ public class ColumnParser {
 		if (! keyField.matches("\\S+") || keyField.isEmpty() ) {
 			throw new RuntimeException("Text has no visible content", new IllegalArgumentException());
 		}
-		this.keyField = keyField;
+		this.keyField  = keyField;
 		this.separator = separator;
 	}
 	
@@ -115,27 +111,30 @@ public class ColumnParser {
 	
 
 //	public List load(File file, IUserObjectFactory factory) throws SraException {
-	public List load(InputStream inputStream, IUserObjectFactory factory) throws SraException {
-		List<Object> userCnsObject = new ArrayList<Object>();
-		if (inputStream==null) {
+//	public List<Object> load(InputStream inputStream, IUserObjectFactory factory) throws SraException {
+	// Should accept a properly typed IUserObjectFactory<T>
+	public <T> List<T> load(InputStream inputStream, IUserObjectFactory<T> factory) throws SraException {
+//		List<Object> userCnsObject = new ArrayList<Object>();
+		List<T> userCnsObject = new ArrayList<>();
+		if (inputStream == null) {
 			throw new SraException("le flux '" + inputStream + "'n'existe pas ou n'est pas lisible");
 		}
 		try {
 			//BufferedReader input_buffer = new BufferedReader(new FileReader(file));
 			BufferedReader input_buffer = new BufferedReader(new InputStreamReader(inputStream));
 
-			int cp = 1;
+//			int cp = 1;
 			String [] nameFieldsInFile = null;
 			String [] valFieldsInFile = null;
 			String legend = "";
 			String ligne;
 			int cp_no_empty = 0;
 			while ((ligne = input_buffer.readLine()) != null) {
-				cp++;
+//				cp++;
 				ligne = ligne + " "; // pour eviter \nseparator si dernier champs vide
 				Matcher mlv = plv.matcher(ligne);
 				Matcher mlc = plc.matcher(ligne);
-				Matcher mc = pc.matcher(ligne);
+				Matcher mc  = pc.matcher(ligne);
 
 				// Appel de find obligatoire pour pouvoir récupérer $1 ...$n
 				if ( mlv.find() ) { // si ligne vide, ignorer la ligne
@@ -153,7 +152,7 @@ public class ColumnParser {
 					ligne = mc.group(1);
 				}
 				
-				if(cp_no_empty == 1) {
+				if (cp_no_empty == 1) {
 					legend = ligne;
 					nameFieldsInFile = this.validateHeaders(ligne);
 				}
@@ -163,17 +162,16 @@ public class ColumnParser {
 				
 				if (valFieldsInFile.length != nameFieldsInFile.length) {
 					throw new SraException("line no match whith legend, line=: '" + ligne +"' legend='"+ legend);
-				} else {
-					Map<String, String> mapLine =  new HashMap<String, String>();
-					//System.out.println("cle de mapLine='"+mapLine.get(keyField)+"'");
-					for(int i =0; i < nameFieldsInFile.length ; i++) {
-						//System.out.println("nameFieldsInFile = " + nameFieldsInFile[i]);
-						Tools tools = new Tools();
-						mapLine.put(nameFieldsInFile[i], tools.clean(valFieldsInFile[i]));
-						System.out.println("Champ '" + nameFieldsInFile[i] + "' et valeur '"+tools.clean(valFieldsInFile[i])+"'");
-					} 	
-					userCnsObject.add(factory.create(mapLine));
 				}
+				Map<String, String> mapLine =  new HashMap<>();
+				//System.out.println("cle de mapLine='"+mapLine.get(keyField)+"'");
+				for(int i =0; i < nameFieldsInFile.length ; i++) {
+					//System.out.println("nameFieldsInFile = " + nameFieldsInFile[i]);
+					Tools tools = new Tools();
+					mapLine.put(nameFieldsInFile[i], tools.clean(valFieldsInFile[i]));
+					System.out.println("Champ '" + nameFieldsInFile[i] + "' et valeur '" + tools.clean(valFieldsInFile[i]) + "'");
+				} 	
+				userCnsObject.add(factory.create(mapLine));
 			}	
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -184,24 +182,27 @@ public class ColumnParser {
 	
 	//public Map loadMap(File file, IUserObjectFactory factory) throws SraException {
 	
-	public Map loadMap(InputStream inputStream, IUserObjectFactory factory) throws SraException {
-		Map<String, Object> mapUserObject = new HashMap<String, Object>(); 
-		if (inputStream==null) {
+//	public Map loadMap(InputStream inputStream, IUserObjectFactory factory) throws SraException {
+//		Map<String, Object> mapUserObject = new HashMap<String, Object>(); 
+	public <T> Map<String,T> loadMap(InputStream inputStream, IUserObjectFactory<T> factory) throws SraException {
+//		Map<String, Object> mapUserObject = new HashMap<String, Object>(); 
+		if (inputStream == null)
 			throw new SraException("le flux '" + inputStream + "'n'existe pas ou n'est pas lisible");
-		}
-		try {
-			//BufferedReader input_buffer = new BufferedReader(new FileReader(file));
-			BufferedReader input_buffer = new BufferedReader(new InputStreamReader(inputStream));
-			int cp = 1;
+		Map<String, T> mapUserObject = new HashMap<>(); // String, Object>(); 
+//		try {
+//			//BufferedReader input_buffer = new BufferedReader(new FileReader(file));
+//			BufferedReader input_buffer = new BufferedReader(new InputStreamReader(inputStream));
+		try (BufferedReader input_buffer = new BufferedReader(new InputStreamReader(inputStream))) {
+//			int cp = 1;
 			String [] nameFieldsInFile = null;
 			String [] valFieldsInFile = null;
 			
 			String ligne;
-			String legend = "";
+//			String legend = "";
 			int cp_no_empty = 0;
 
 			while ((ligne = input_buffer.readLine()) != null) {
-				cp++;
+//				cp++;
 				ligne = ligne + " ";
 				Matcher mlv = plv.matcher(ligne);
 				Matcher mlc = plc.matcher(ligne);
@@ -222,25 +223,24 @@ public class ColumnParser {
 					ligne = mc.group(1);
 				}
 			
-				if(cp_no_empty == 1) {
-					legend = ligne;
+				if (cp_no_empty == 1) {
+//					legend = ligne;
 					nameFieldsInFile = this.validateHeaders(ligne);
 					continue;
 				}
 				valFieldsInFile = ligne.split(separator);
 				if (valFieldsInFile.length != nameFieldsInFile.length) {
 					//System.out.println("!!!!!!!!!!!!!!!!!ligne  :" + ligne);
-					throw new SraException("no match pour la ligne : '" + ligne+"'");
-				} else {
-					Map<String, String> mapLine =  new HashMap<String, String>();
-					Tools tools = new Tools();
-					for(int i =0; i < nameFieldsInFile.length ; i++) {
-						mapLine.put(nameFieldsInFile[i], tools.clean(valFieldsInFile[i]));
-						//System.out.println("Champ '" + nameFieldsInFile[i] + "' et valeur '"+tools.clean(valFieldsInFile[i])+"'");
-					} 
-					//System.out.println("cle de mapLine='"+mapLine.get(keyField)+"'");
-					mapUserObject.put(mapLine.get(keyField), factory.create(mapLine));
+					throw new SraException("no match pour la ligne : '" + ligne + "'");
 				}
+				Map<String, String> mapLine =  new HashMap<>();
+				Tools tools = new Tools();
+				for(int i =0; i < nameFieldsInFile.length ; i++) {
+					mapLine.put(nameFieldsInFile[i], tools.clean(valFieldsInFile[i]));
+					//System.out.println("Champ '" + nameFieldsInFile[i] + "' et valeur '"+tools.clean(valFieldsInFile[i])+"'");
+				} 
+				//System.out.println("cle de mapLine='"+mapLine.get(keyField)+"'");
+				mapUserObject.put(mapLine.get(keyField), factory.create(mapLine));				
 			}	
 		} catch (IOException e) {
 			e.printStackTrace();

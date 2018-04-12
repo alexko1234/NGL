@@ -1,8 +1,6 @@
 package controllers.samples.api;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +8,7 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jongo.MongoCursor;
@@ -21,50 +19,29 @@ import com.mongodb.BasicDBObject;
 
 import akka.stream.javadsl.Source;
 import akka.util.ByteString;
-
-import controllers.DocumentController;
-import controllers.ListForm;
 import controllers.NGLAPIController;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
-import controllers.authorisation.Permission;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
-import fr.cea.ig.mongo.DBObjectConvertor;
 import fr.cea.ig.mongo.MongoStreamer;
-import fr.cea.ig.ngl.APINGLController;
 import fr.cea.ig.ngl.NGLApplication;
-import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.dao.api.APIException;
 import fr.cea.ig.ngl.dao.api.APISemanticException;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.samples.SamplesAPI;
 import fr.cea.ig.ngl.dao.samples.SamplesDAO;
-import fr.cea.ig.ngl.support.NGLForms;
-import fr.cea.ig.play.IGBodyParsers;
-import fr.cea.ig.play.NGLContext;
 import fr.cea.ig.util.Streamer;
 import models.laboratory.common.description.Level;
-import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.sample.instance.Sample;
-import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
-import models.utils.dao.DAOException;
-import models.utils.instance.SampleHelper;
-import play.Logger;
 import play.data.Form;
-import play.libs.Json;
-import play.mvc.BodyParser;
 import play.mvc.Result;
-import validation.ContextValidation;
 import views.components.datatable.DatatableForm;
 
 @Historized
-public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> implements NGLForms, DBObjectConvertor {
+public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> { // implements NGLForms, DBObjectConvertor {
 	
 	private final Form<QueryFieldsForm> updateForm;
 	private final Form<Sample> sampleForm;
@@ -86,6 +63,7 @@ public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> im
 		try {
 			SamplesSearchForm samplesSearch = objectFromRequestQueryString(SamplesSearchForm.class);
 			if (samplesSearch.reporting) {
+				logger.debug("list : running query {}",samplesSearch.reportingQuery);
 				MongoCursor<Sample> data = api().findByQuery(samplesSearch.reportingQuery);
 				if (samplesSearch.datatable) {
 					return MongoStreamer.okStreamUDT(data);
@@ -93,7 +71,7 @@ public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> im
 					return MongoStreamer.okStream(data);
 				} else if(samplesSearch.count) {
 					int count = api().count(samplesSearch.reportingQuery);
-					Map<String, Integer> map = new HashMap<String, Integer>(1);
+					Map<String, Integer> map = new HashMap<>(1);
 					map.put("result", count);
 					return okAsJson(map);
 				} else {
@@ -134,7 +112,7 @@ public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> im
 						return MongoStreamer.okStream(convertToListObject(results, x -> x.code, x -> x.code)); // in place of getLOChunk(MongoDBResult<T> all)
 					} else if(samplesSearch.count) {
 						int count = api().count(samplesSearch.reportingQuery);
-						Map<String, Integer> m = new HashMap<String, Integer>(1);
+						Map<String, Integer> m = new HashMap<>(1);
 						m.put("result", count);
 						return okAsJson(m);
 					} else {
@@ -194,6 +172,7 @@ public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> im
 	/* (non-Javadoc)
 	 * @see controllers.NGLAPIController#saveImpl()
 	 */
+	@Override
 	public Sample saveImpl() throws APIValidationException, APISemanticException {
 		Sample input = getFilledForm(sampleForm, Sample.class).get();
 		Sample s = api().create(input, getCurrentUser());
@@ -241,6 +220,7 @@ public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> im
 	/* (non-Javadoc)
 	 * @see controllers.NGLAPIController#updateImpl(java.lang.String)
 	 */
+	@Override
 	public Sample updateImpl(String code) throws Exception, APIException, APIValidationException {
 		getLogger().debug("update Sample with code " + code);
 		Form<Sample> filledForm = getFilledForm(sampleForm, Sample.class);
@@ -331,15 +311,15 @@ public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> im
 //	}
 
 	/**
-	 * Construct the sample query
-	 * @param samplesSearch
-	 * @return
+	 * Construct the sample query.
+	 * @param samplesSearch search form
+	 * @return              query
 	 */
 	public DBQuery.Query getQuery(SamplesSearchForm samplesSearch) {
 		// TODO: simply build return value at method end
 		Query query = DBQuery.empty();
 
-		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
+		List<DBQuery.Query> queryElts = new ArrayList<>();
 
 		if(CollectionUtils.isNotEmpty(samplesSearch.codes)){
 			queryElts.add(DBQuery.in("code", samplesSearch.codes));
@@ -665,7 +645,5 @@ public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> im
 //	}*/
 //
 //	}
-
-
 
 }

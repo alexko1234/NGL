@@ -1,23 +1,36 @@
 package controllers.experiments.api;
 
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
+import static validation.experiment.instance.ExperimentValidationHelper.validateReagents;
+import static validation.experiment.instance.ExperimentValidationHelper.validateStatus;
 
-import static validation.experiment.instance.ExperimentValidationHelper.*;
-
-// import static play.data.Form.form;
-//import static fr.cea.ig.play.IGGlobals.form;
-
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 // import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
+
+import com.mongodb.BasicDBObject;
+
+import controllers.DocumentController;
+import controllers.NGLControllerHelper;
+import controllers.QueryFieldsForm;
+import controllers.authorisation.Permission;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.IGBodyParsers;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.description.Level;
 // import models.laboratory.common.instance.Comment;
 // import models.laboratory.common.instance.PropertyValue;
@@ -34,14 +47,6 @@ import models.utils.InstanceConstants;
 // import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ExperimentHelper;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang.time.DateUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
-
 // import play.Logger;
 // import play.api.modules.spring.Spring;
 import play.data.DynamicForm;
@@ -52,25 +57,13 @@ import play.mvc.Result;
 import validation.ContextValidation;
 import workflows.experiment.ExpWorkflows;
 
-import com.mongodb.BasicDBObject;
-
-import controllers.DocumentController;
-import controllers.NGLControllerHelper;
-import controllers.QueryFieldsForm;
-import controllers.authorisation.Permission;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.IGBodyParsers;
-import fr.cea.ig.play.NGLContext;
-
-import javax.inject.Inject;
-
 // TODO: cleanup
 
 public class Experiments extends DocumentController<Experiment> {
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(Experiments.class);
 	
-	final static List<String> defaultKeys =  Arrays.asList("categoryCode","code","inputContainerSupportCodes","instrument","outputContainerSupportCodes","projectCodes","protocolCode","reagents","sampleCodes","state","status","traceInformation","typeCode","atomicTransfertMethods.inputContainerUseds.contents");
+	final static List<String> DEFAULT_KEYS =  Arrays.asList("categoryCode","code","inputContainerSupportCodes","instrument","outputContainerSupportCodes","projectCodes","protocolCode","reagents","sampleCodes","state","status","traceInformation","typeCode","atomicTransfertMethods.inputContainerUseds.contents");
 	final static List<String> authorizedUpdateFields = Arrays.asList("status", "reagents");
 	public static final String calculationsRules = "calculations";
 	
@@ -83,7 +76,7 @@ public class Experiments extends DocumentController<Experiment> {
 	
 	@Inject
 	public Experiments(NGLContext ctx, ExpWorkflows workflows) {
-		super(ctx,InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, defaultKeys);
+		super(ctx,InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DEFAULT_KEYS);
 		stateForm            = ctx.form(State.class);
 		updateForm           = ctx.form(QueryFieldsForm.class);
 		// experimentForm       = ctx.form(Experiment.class);
@@ -108,7 +101,7 @@ public class Experiments extends DocumentController<Experiment> {
 	 * @return the query
 	 */
 	protected DBQuery.Query getQuery(ExperimentSearchForm experimentSearch) {
-		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
+		List<DBQuery.Query> queryElts = new ArrayList<>();
 		Query query=DBQuery.empty();
 		
 		if(CollectionUtils.isNotEmpty(experimentSearch.codes)){
@@ -144,7 +137,7 @@ public class Experiments extends DocumentController<Experiment> {
 		}
 
 		
-		Set<String> containerCodes = new TreeSet<String>();
+		Set<String> containerCodes = new TreeSet<>();
 		if(MapUtils.isNotEmpty(experimentSearch.atomicTransfertMethodsInputContainerUsedsContentsProperties)){
 			List<DBQuery.Query> listContainerQuery = NGLControllerHelper.generateQueriesForProperties(experimentSearch.atomicTransfertMethodsInputContainerUsedsContentsProperties, Level.CODE.Content, "contents.properties");
 			
@@ -169,12 +162,12 @@ public class Experiments extends DocumentController<Experiment> {
 		}
 		
 		if(containerCodes.size() > 0){
-			List<DBQuery.Query> qs = new ArrayList<DBQuery.Query>();
+			List<DBQuery.Query> qs = new ArrayList<>();
 			qs.add(DBQuery.in("inputContainerCodes",containerCodes));
 			qs.add(DBQuery.in("outputContainerCodes",containerCodes));
 			queryElts.add(DBQuery.or(qs.toArray(new DBQuery.Query[qs.size()])));
 		}else if(StringUtils.isNotBlank(experimentSearch.containerCodeRegex)){			
-			List<DBQuery.Query> qs = new ArrayList<DBQuery.Query>();
+			List<DBQuery.Query> qs = new ArrayList<>();
 			qs.add(DBQuery.regex("inputContainerCodes",Pattern.compile(experimentSearch.containerCodeRegex)));
 			qs.add(DBQuery.regex("outputContainerCodes",Pattern.compile(experimentSearch.containerCodeRegex)));
 			queryElts.add(DBQuery.or(qs.toArray(new DBQuery.Query[qs.size()])));
@@ -182,19 +175,19 @@ public class Experiments extends DocumentController<Experiment> {
 		
 		
 		if(StringUtils.isNotBlank(experimentSearch.containerSupportCode)){			
-			List<DBQuery.Query> qs = new ArrayList<DBQuery.Query>();
+			List<DBQuery.Query> qs = new ArrayList<>();
 
 			qs.add(DBQuery.in("inputContainerSupportCodes",experimentSearch.containerSupportCode));
 			qs.add(DBQuery.in("outputContainerSupportCodes",experimentSearch.containerSupportCode));
 			queryElts.add(DBQuery.or(qs.toArray(new DBQuery.Query[qs.size()])));
 		}else if(CollectionUtils.isNotEmpty(experimentSearch.containerSupportCodes)){			
-			List<DBQuery.Query> qs = new ArrayList<DBQuery.Query>();
+			List<DBQuery.Query> qs = new ArrayList<>();
 
 			qs.add(DBQuery.in("inputContainerSupportCodes",experimentSearch.containerSupportCodes));
 			qs.add(DBQuery.in("outputContainerSupportCodes",experimentSearch.containerSupportCodes));
 			queryElts.add(DBQuery.or(qs.toArray(new DBQuery.Query[qs.size()])));
 		}else if(StringUtils.isNotBlank(experimentSearch.containerSupportCodeRegex)){			
-			List<DBQuery.Query> qs = new ArrayList<DBQuery.Query>();
+			List<DBQuery.Query> qs = new ArrayList<>();
 
 			qs.add(DBQuery.regex("inputContainerSupportCodes",Pattern.compile(experimentSearch.containerSupportCodeRegex)));
 			qs.add(DBQuery.regex("outputContainerSupportCodes",Pattern.compile(experimentSearch.containerSupportCodeRegex)));
@@ -277,14 +270,14 @@ public class Experiments extends DocumentController<Experiment> {
 		Form<Experiment> filledForm = getMainFilledForm();
 		Experiment input = filledForm.get();
 		
-		if (null == input._id) {
+		if (input._id == null) {
 			input.code = CodeHelper.getInstance().generateExperimentCode(input);
 			input.traceInformation = new TraceInformation();
 			input.traceInformation.setTraceInformation(getCurrentUser());
 			
-			if(null == input.state){
+			if (input.state == null) 
 				input.state = new State();
-			}
+			
 			input.state.code = "N";
 			input.state.user = getCurrentUser();
 			input.state.date = new Date();	
@@ -292,23 +285,22 @@ public class Experiments extends DocumentController<Experiment> {
 		} else {
 			return badRequest("use PUT method to update the experiment");
 		}
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		ctxVal.setCreationMode();
-		long t1 = System.currentTimeMillis();
+//		long t1 = System.currentTimeMillis();
 		workflows.applyPreStateRules(ctxVal, input, input.state);
-		long t2 = System.currentTimeMillis();
+//		long t2 = System.currentTimeMillis();
 		ExperimentHelper.doCalculations(input, calculationsRules);
-		long t3 = System.currentTimeMillis();
+//		long t3 = System.currentTimeMillis();
 		input.validate(ctxVal);	
 		if (!ctxVal.hasErrors()) {
-			long t4 = System.currentTimeMillis();
+//			long t4 = System.currentTimeMillis();
 			input = saveObject(input);
-			long t5 = System.currentTimeMillis();
+//			long t5 = System.currentTimeMillis();
 			workflows.applySuccessPostStateRules(ctxVal, input);
-			long t6 = System.currentTimeMillis();
-			
+//			long t6 = System.currentTimeMillis();			
 			//Logger.debug((t2-t1)+" - "+(t3-t2)+" - "+(t4-t3)+" - "+(t5-t4)+" - "+(t6-t4));
-			
 			return ok(Json.toJson(input));
 		} else {
 			workflows.applyErrorPostStateRules(ctxVal, input, input.state);
@@ -442,39 +434,39 @@ public class Experiments extends DocumentController<Experiment> {
 	}
 	*/
 	
-	private void findBigInts(Set<Object> done, String path, Object a) {
-		if (a == null) {
-		} else if (done.contains(a)) {
-			// avoid recursion of checked objects
-		} else if (a instanceof java.math.BigInteger) {
-			logger.debug("found bi : " + path + " bigint " + a);
-		} else {
-			// logger.debug("diff " + path + a.getClass() + " " + b.getClass() + " " + a + " / " + b);
-			if (a instanceof String) {
-			} else if (a instanceof List) {
-				List<Object> l0 = (List<Object>)a;
-				done.add(a);
-				for (int i=0; i<l0.size(); i++) 
-					findBigInts(done,path+"["+i+"]",l0.get(i));
-			} else if (a instanceof Set) {
-				Set<Object> s0 = (Set<Object>)a;
-				for (Object o : s0)
-					findBigInts(done,path+"[-]",o);
-			} else if (a instanceof Map) {
-				// throw new RuntimeException("map");
-			} else {
-				for (Field field : a.getClass().getFields()) {
-					done.add(a);
-					try {
-						findBigInts(done,path+"/"+field.getName(),field.get(a));
-					} catch (IllegalAccessException e) {
-						logger.error("field error",e);
-					}
-				}
-			}
-		}
-		// throw new RuntimeException("crash");
-	}
+//	private void findBigInts(Set<Object> done, String path, Object a) {
+//		if (a == null) {
+//		} else if (done.contains(a)) {
+//			// avoid recursion of checked objects
+//		} else if (a instanceof java.math.BigInteger) {
+//			logger.debug("found bi : " + path + " bigint " + a);
+//		} else {
+//			// logger.debug("diff " + path + a.getClass() + " " + b.getClass() + " " + a + " / " + b);
+//			if (a instanceof String) {
+//			} else if (a instanceof List) {
+//				List<Object> l0 = (List<Object>)a;
+//				done.add(a);
+//				for (int i=0; i<l0.size(); i++) 
+//					findBigInts(done,path+"["+i+"]",l0.get(i));
+//			} else if (a instanceof Set) {
+//				Set<Object> s0 = (Set<Object>)a;
+//				for (Object o : s0)
+//					findBigInts(done,path+"[-]",o);
+//			} else if (a instanceof Map) {
+//				// throw new RuntimeException("map");
+//			} else {
+//				for (Field field : a.getClass().getFields()) {
+//					done.add(a);
+//					try {
+//						findBigInts(done,path+"/"+field.getName(),field.get(a));
+//					} catch (IllegalAccessException e) {
+//						logger.error("field error",e);
+//					}
+//				}
+//			}
+//		}
+//		// throw new RuntimeException("crash");
+//	}
 	
 	@Permission(value={"writing"})
 	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 10000 * 1024)
@@ -503,36 +495,36 @@ public class Experiments extends DocumentController<Experiment> {
 				if(!objectInDB.state.code.equals(input.state.code)){
 					return badRequest("you cannot change the state code. Please used the state url ! ");
 				}
-				long t1 = System.currentTimeMillis();
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+//				long t1 = System.currentTimeMillis();
+//				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 				ctxVal.setUpdateMode();
 				//todo update in cascading contentProperties, only for administrator
-				if(queryFieldsForm.fields != null && queryFieldsForm.fields.contains("updateContentProperties")){
+				if (queryFieldsForm.fields != null && queryFieldsForm.fields.contains("updateContentProperties")) {
 					ctxVal.putObject("updateContentProperties", Boolean.TRUE);
 				}
-				
 				ExperimentHelper.doCalculations(input, calculationsRules);
-				long t2 = System.currentTimeMillis();
+//				long t2 = System.currentTimeMillis();
 				workflows.applyPreValidateCurrentStateRules(ctxVal, input);
-				long t3 = System.currentTimeMillis();
+//				long t3 = System.currentTimeMillis();
 				input.validate(ctxVal);			
 				if (!ctxVal.hasErrors()) {	
 					workflows.applyPostValidateCurrentStateRules(ctxVal, input);
-					long t4 = System.currentTimeMillis();
+//					long t4 = System.currentTimeMillis();
 					updateObject(input);	
-					long t5 = System.currentTimeMillis();
-					//Logger.debug((t2-t1)+" - "+(t3-t2)+" - "+(t4-t3)+" - "+(t5-t4));
-					
+//					long t5 = System.currentTimeMillis();
+					//Logger.debug((t2-t1)+" - "+(t3-t2)+" - "+(t4-t3)+" - "+(t5-t4));					
 					return ok(Json.toJson(input));
 				} else {
 					// return badRequest(filledForm.errors-AsJson());
 					return badRequest(errorsAsJson(ctxVal.getErrors()));
 				}
-			}else{
+			} else {
 				return badRequest("Experiment code are not the same");
 			}
 		} else {
-			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+//			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm); 	
 			contextValidation.setUpdateMode();
 			validateAuthorizedUpdateFields(contextValidation, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(contextValidation, queryFieldsForm.fields, filledForm);
@@ -568,14 +560,15 @@ public class Experiments extends DocumentController<Experiment> {
 	@Permission(value={"writing"})
 	public Result updateState(String code){
 		Experiment objectInDB = getObject(code);
-		if (objectInDB == null) {
+		if (objectInDB == null)
 			return notFound();
-		}
+
 		Form<State> filledForm =  getFilledForm(stateForm, State.class);
 		State state = filledForm.get();
 		state.date = new Date();
 		state.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		workflows.setState(ctxVal, objectInDB, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getObject(code)));
@@ -585,14 +578,15 @@ public class Experiments extends DocumentController<Experiment> {
 		}
 	}
 	
+	@Override
 	@Permission(value={"writing"})
 	public Result delete(String code){
 		Experiment objectInDB =  getObject(code);
-		if(objectInDB == null) {
+		if (objectInDB == null)
 			return notFound();
-		}
 		DynamicForm deleteForm = ctx.form();
-		ContextValidation contextValidation=new ContextValidation(getCurrentUser(),deleteForm.errors());
+//		ContextValidation contextValidation = new ContextValidation(getCurrentUser(),deleteForm.errors());
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), deleteForm);
 		workflows.delete(contextValidation, objectInDB);
 		if (!contextValidation.hasErrors()) {
 			return ok();
@@ -600,8 +594,6 @@ public class Experiments extends DocumentController<Experiment> {
 			// return badRequest(deleteForm.errors-AsJson());
 			return badRequest(errorsAsJson(contextValidation.getErrors()));
 		}
-		
-		
 	}
 	
 }

@@ -1,35 +1,30 @@
 package workflows.container;
 
+import static validation.common.instance.CommonValidationHelper.FIELD_PREVIOUS_STATE_CODE;
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
+import static validation.common.instance.CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import static validation.common.instance.CommonValidationHelper.*;
-import models.laboratory.common.instance.State;
-import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.ContainerSupport;
-import models.laboratory.experiment.description.ExperimentCategory;
-import models.utils.InstanceConstants;
-import models.laboratory.processes.instance.Process;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
 import com.google.inject.Provider;
 
-import akka.actor.ActorRef;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
+import models.laboratory.common.instance.State;
+import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.experiment.description.ExperimentCategory;
+import models.laboratory.processes.instance.Process;
+import models.utils.InstanceConstants;
 import rules.services.LazyRules6Actor;
-
 import validation.ContextValidation;
 import validation.container.instance.ContainerValidationHelper;
 import workflows.Workflows;
-
 import workflows.process.ProcWorkflows;
-
-import fr.cea.ig.MongoDBDAO;
-
-import fr.cea.ig.play.NGLContext;
-
 
 @Singleton
 public class ContWorkflows extends Workflows<Container> {

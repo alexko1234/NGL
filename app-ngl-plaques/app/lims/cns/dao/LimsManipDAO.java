@@ -3,12 +3,16 @@ package lims.cns.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import lims.models.Manip;
 import lims.models.Plate;
@@ -17,69 +21,67 @@ import lims.models.Well;
 import models.laboratory.common.instance.TBoolean;
 import models.utils.ListObject;
 
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcCall;
-import org.springframework.stereotype.Repository;
-
-import play.Logger;
-
+// import play.Logger;
 
 @Repository
 public class LimsManipDAO {
-        private JdbcTemplate jdbcTemplate;
 
+	private static final play.Logger.ALogger logger = play.Logger.of(LimsManipDAO.class);
+	
+	private JdbcTemplate jdbcTemplate;
 
     @Autowired
     @Qualifier("lims")
     public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+        jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-
     public List<Manip> findManips(Integer emnco, Integer ematerielco,String prsco){
-    	Logger.info("pl_MaterielmanipChoisi @prsco='"+prsco+"', @emnco="+emnco+", @ematerielco="+ematerielco+", @plaque=1 ");
-        List<Manip> results = this.jdbcTemplate.query("pl_MaterielmanipChoisi @prsco=?, @emnco=?, @ematerielco=?, @plaque=?",
-        		new Object[]{prsco, emnco, ematerielco, 1},new BeanPropertyRowMapper<Manip>(Manip.class));
+    	logger.info("pl_MaterielmanipChoisi @prsco='"+prsco+"', @emnco="+emnco+", @ematerielco="+ematerielco+", @plaque=1 ");
+//        List<Manip> results = this.jdbcTemplate.query("pl_MaterielmanipChoisi @prsco=?, @emnco=?, @ematerielco=?, @plaque=?",
+        List<Manip> results = jdbcTemplate.query("pl_MaterielmanipChoisi @prsco=?, @emnco=?, @ematerielco=?, @plaque=?",
+        		new Object[]{prsco, emnco, ematerielco, 1},new BeanPropertyRowMapper<>(Manip.class));
         return results;
     }
 
     public void createBarcode(String barcode, Integer typeCode, String user){
-    	Logger.info("pc_PlaqueSolexa @plaqueId="+barcode+", @emnco="+typeCode);
-    	this.jdbcTemplate.update("pc_PlaqueSolexa @plaqueId=?, @emnco=?, @perlog=?", new Object[]{barcode, typeCode, user});
-    	
+    	logger.info("pc_PlaqueSolexa @plaqueId="+barcode+", @emnco="+typeCode);
+//    	this.jdbcTemplate.update("pc_PlaqueSolexa @plaqueId=?, @emnco=?, @perlog=?", new Object[]{barcode, typeCode, user});
+    	jdbcTemplate.update("pc_PlaqueSolexa @plaqueId=?, @emnco=?, @perlog=?", new Object[]{barcode, typeCode, user});    	
     }
     
-    public void createPlate(Plate plate, String user){
-    	Logger.info("pc_PlaqueSolexa @plaqueId="+plate.code+", @emnco="+plate.typeCode);
-    	this.jdbcTemplate.update("pc_PlaqueSolexa @plaqueId=?, @emnco=?, @valqc=?, @valrun=?, @plaquecom=?, @perlog=?", new Object[]{plate.code, plate.typeCode, getValValue(plate.validQC), getValValue(plate.validRun), plate.comment, user});
-    	this.jdbcTemplate.update("ps_MaterielmanipPlaque @plaqueId=?", new Object[]{plate.code});
+    public void createPlate(Plate plate, String user) {
+    	logger.info("pc_PlaqueSolexa @plaqueId="+plate.code+", @emnco="+plate.typeCode);
+//    	this.jdbcTemplate.update("pc_PlaqueSolexa @plaqueId=?, @emnco=?, @valqc=?, @valrun=?, @plaquecom=?, @perlog=?", new Object[]{plate.code, plate.typeCode, getValValue(plate.validQC), getValValue(plate.validRun), plate.comment, user});
+//    	this.jdbcTemplate.update("ps_MaterielmanipPlaque @plaqueId=?", new Object[]{plate.code});
+    	jdbcTemplate.update("pc_PlaqueSolexa @plaqueId=?, @emnco=?, @valqc=?, @valrun=?, @plaquecom=?, @perlog=?", new Object[]{plate.code, plate.typeCode, getValValue(plate.validQC), getValValue(plate.validRun), plate.comment, user});
+    	jdbcTemplate.update("ps_MaterielmanipPlaque @plaqueId=?", new Object[]{plate.code});
     	for(Well well: plate.wells){
-    		Logger.info("pm_MaterielmanipPlaque @matmaco="+well.code+", @plaqueId="+plate.code+", @plaqueX="+well.x+", @plaqueY="+well.y+"");
-    		this.jdbcTemplate.update("pm_MaterielmanipPlaque @matmaco=?, @plaqueId=?, @plaqueX=?, @plaqueY=?", well.code, plate.code, well.x.toString(), well.y);
+    		logger.info("pm_MaterielmanipPlaque @matmaco="+well.code+", @plaqueId="+plate.code+", @plaqueX="+well.x+", @plaqueY="+well.y+"");
+//    		this.jdbcTemplate.update("pm_MaterielmanipPlaque @matmaco=?, @plaqueId=?, @plaqueX=?, @plaqueY=?", well.code, plate.code, well.x.toString(), well.y);
+    		jdbcTemplate.update("pm_MaterielmanipPlaque @matmaco=?, @plaqueId=?, @plaqueX=?, @plaqueY=?", well.code, plate.code, well.x.toString(), well.y);
     	}
     }
 
-    public void updatePlate(Plate plate, String user){
-	this.jdbcTemplate.update("pm_PlaqueSolexa @plaqueId=?, @valqc=?, @valrun=?, @plaquecom=?, @perlog=?", new Object[]{plate.code, getValValue(plate.validQC), getValValue(plate.validRun), plate.comment, user});    	
-    	Logger.info("ps_MaterielmanipPlaque @plaqueId="+plate.code);
-    	this.jdbcTemplate.update("ps_MaterielmanipPlaque @plaqueId=?", new Object[]{plate.code});
+    public void updatePlate(Plate plate, String user) {
+//    	this.jdbcTemplate.update("pm_PlaqueSolexa @plaqueId=?, @valqc=?, @valrun=?, @plaquecom=?, @perlog=?", new Object[]{plate.code, getValValue(plate.validQC), getValValue(plate.validRun), plate.comment, user});    	
+    	jdbcTemplate.update("pm_PlaqueSolexa @plaqueId=?, @valqc=?, @valrun=?, @plaquecom=?, @perlog=?", new Object[]{plate.code, getValValue(plate.validQC), getValValue(plate.validRun), plate.comment, user});    	
+    	logger.info("ps_MaterielmanipPlaque @plaqueId="+plate.code);
+//    	this.jdbcTemplate.update("ps_MaterielmanipPlaque @plaqueId=?", new Object[]{plate.code});
+    	jdbcTemplate.update("ps_MaterielmanipPlaque @plaqueId=?", new Object[]{plate.code});
     	for(Well well: plate.wells){
-    		Logger.info("pm_MaterielmanipPlaque @matmaco="+well.code+", @plaqueId="+plate.code+", @plaqueX="+well.x+", @plaqueY="+well.y+"");
-    		this.jdbcTemplate.update("pm_MaterielmanipPlaque @matmaco=?, @plaqueId=?, @plaqueX=?, @plaqueY=?", well.code, plate.code, well.x.toString(), well.y);
+    		logger.info("pm_MaterielmanipPlaque @matmaco="+well.code+", @plaqueId="+plate.code+", @plaqueX="+well.x+", @plaqueY="+well.y+"");
+//    		this.jdbcTemplate.update("pm_MaterielmanipPlaque @matmaco=?, @plaqueId=?, @plaqueX=?, @plaqueY=?", well.code, plate.code, well.x.toString(), well.y);
+    		jdbcTemplate.update("pm_MaterielmanipPlaque @matmaco=?, @plaqueId=?, @plaqueX=?, @plaqueY=?", well.code, plate.code, well.x.toString(), well.y);
     	}
     }
 
     public List<Plate> findPlates(Integer emnco, String projetValue, String plaqueId, String matmanom, Integer percodc, String fromDate, String toDate) {
-    	Logger.info("pl_PlaqueSolexa @prsco="+projetValue+", @emnco="+emnco+", @fromDate="+fromDate+", @toDate="+toDate);
-		List<Plate> plates = this.jdbcTemplate.query("pl_PlaqueSolexa @prsco=?, @emnco=?, @plaqueId=?, @matmanom=?, @percodc=?, @fromDate=?, @toDate=?", new Object[]{projetValue, emnco, plaqueId, matmanom,percodc,fromDate,toDate}, new RowMapper<Plate>() {
-	        public Plate mapRow(ResultSet rs, int rowNum) throws SQLException {
+    	logger.info("pl_PlaqueSolexa @prsco="+projetValue+", @emnco="+emnco+", @fromDate="+fromDate+", @toDate="+toDate);
+//		List<Plate> plates = this.jdbcTemplate.query("pl_PlaqueSolexa @prsco=?, @emnco=?, @plaqueId=?, @matmanom=?, @percodc=?, @fromDate=?, @toDate=?", new Object[]{projetValue, emnco, plaqueId, matmanom,percodc,fromDate,toDate}, new RowMapper<Plate>() {
+		List<Plate> plates = jdbcTemplate.query("pl_PlaqueSolexa @prsco=?, @emnco=?, @plaqueId=?, @matmanom=?, @percodc=?, @fromDate=?, @toDate=?", new Object[]{projetValue, emnco, plaqueId, matmanom,percodc,fromDate,toDate}, new RowMapper<Plate>() {
+	        @Override
+			public Plate mapRow(ResultSet rs, int rowNum) throws SQLException {
 	        	Plate plate = new Plate();
 	        	//well.plateCode = rs.getString("plaqueId");
 	        	plate.code = rs.getString("plaqueId");
@@ -92,56 +94,69 @@ public class LimsManipDAO {
 	        	plate.creationDate = rs.getDate("plaquedc");
 	        	plate.modificationDate = rs.getDate("plaquedm");
 	        	plate.creationUserId = rs.getInt("percodc");
-	        	plate.modificationUserId = rs.getInt("percodm");
-	        	
-	        	
+	        	plate.modificationUserId = rs.getInt("percodm");	
 	            return plate;
 	        }
-
-		
 	    });
 		return plates;
 	}
 
-    
     public List<String> findUnusedBarCodes(){
-    	String query = "pl_PlaqueSolexaUnused";
-    	
-    	List<String> unusedBarcodes = this.jdbcTemplate.queryForList(query, String.class);
+    	String query = "pl_PlaqueSolexaUnused";    	
+//    	List<String> unusedBarcodes = this.jdbcTemplate.queryForList(query, String.class);
+    	List<String> unusedBarcodes = jdbcTemplate.queryForList(query, String.class);
     	return unusedBarcodes;
-    	
     }
     
+//    private TBoolean getTBoolean(int value) {
+//    	TBoolean valid = TBoolean.UNSET;
+//    	if (value == 1) {
+//    		valid = TBoolean.TRUE;
+//    	} else if (value == 0) {
+//    		valid = TBoolean.FALSE;
+//    	}
+//    	return valid;
+//    }
     private TBoolean getTBoolean(int value) {
-	TBoolean valid = TBoolean.UNSET;
-	if (value == 1) {
-	    valid = TBoolean.TRUE;
-	} else if (value == 0) {
-	    valid = TBoolean.FALSE;
-	}
-	return valid;
+    	switch (value) {
+    	case 0  : return TBoolean.FALSE;
+    	case 1  : return TBoolean.TRUE;
+    	default : return TBoolean.UNSET;
+    	}
     }
     
+//    private int getValValue(TBoolean value) {
+//    	int valid = 2;
+//    	if (TBoolean.TRUE.equals(value)) {
+//    		valid = 1;
+//    	} else if (TBoolean.FALSE.equals(value)) {
+//    		valid = 0;
+//    	}
+//    	return valid;
+//    }
+    // This is not consistent with TBoolean.value (0,1,-1). 
     private int getValValue(TBoolean value) {
-	int valid = 2;
-	if (TBoolean.TRUE.equals(value)) {
-	    valid = 1;
-	} else if (TBoolean.FALSE.equals(value)) {
-	    valid = 0;
-	}
-	return valid;
+    	if (value == null)
+    		return 2;
+    	switch (value) {
+    	case TRUE  : return 1;
+    	case FALSE : return 0;
+    	default    : return 2;
+    	}
     }
     
-	/**
+	/* *
 	 * Return a plate with coordinate
 	 * @param code
 	 * @return
 	 */
 	public Plate getPlate(String code) {
-		Logger.info("pl_PlaqueSolexa @plaqueId="+code);
-		List<Plate> plates = this.jdbcTemplate.query("pl_PlaqueSolexa @plaqueId=?", new Object[]{code}, new RowMapper<Plate>() {
-	        public Plate mapRow(ResultSet rs, int rowNum) throws SQLException {
-	            	Plate plate = new Plate();
+		logger.info("pl_PlaqueSolexa @plaqueId="+code);
+//		List<Plate> plates = this.jdbcTemplate.query("pl_PlaqueSolexa @plaqueId=?", new Object[]{code}, new RowMapper<Plate>() {
+		List<Plate> plates = jdbcTemplate.query("pl_PlaqueSolexa @plaqueId=?", new Object[]{code}, new RowMapper<Plate>() {
+	        @Override
+			public Plate mapRow(ResultSet rs, int rowNum) throws SQLException {
+	            Plate plate = new Plate();
 	        	//well.plateCode = rs.getString("plaqueId");
 	        	plate.code = rs.getString("plaqueId");
 	        	plate.typeCode = rs.getInt("emnco");
@@ -156,20 +171,15 @@ public class LimsManipDAO {
 	        	plate.modificationUserId = rs.getInt("percodm");
 	        	plate.creationUser = getUser(plate.creationUserId);
 	        	plate.modificationUser = getUser(plate.modificationUserId);
-	        	
-	        	
 	            return plate;
 	        }
-
-			
 	    });
-
-
-		if(plates.size() == 1){
+		if (plates.size() == 1) {
 			Plate plate = plates.get(0);
-			Logger.info("pl_MaterielmanipPlaque @plaqueId="+plate.code);
+			logger.info("pl_MaterielmanipPlaque @plaqueId="+plate.code);
 			List<Well> wells = this.jdbcTemplate.query("pl_MaterielmanipPlaque @plaqueId=?", new Object[]{code}, new RowMapper<Well>() {
-		        public Well mapRow(ResultSet rs, int rowNum) throws SQLException {
+		        @Override
+				public Well mapRow(ResultSet rs, int rowNum) throws SQLException {
 			    Well well = new Well();
 			    well.name = rs.getString("matmanom");
 			    well.code = rs.getInt("matmaco");
@@ -182,24 +192,25 @@ public class LimsManipDAO {
 			    return well;
 		        }
 		    });
-
 			plate.wells = wells.toArray(new Well[wells.size()]);
 			return plate;
-		}else{
+		} else {
 			return null;
 		}
 	}
 
 	public Well getWell(String nomManip){
 		//Logger.debug("Nom = "+nomManip);
-		List<Well> wells = this.jdbcTemplate.query("pl_MaterielmanipUnNomToPlate @matmanom=?", new Object[]{nomManip}, new RowMapper<Well>() {
-	        public Well mapRow(ResultSet rs, int rowNum) throws SQLException {
+//		List<Well> wells = this.jdbcTemplate.query("pl_MaterielmanipUnNomToPlate @matmanom=?", new Object[]{nomManip}, new RowMapper<Well>() {
+		List<Well> wells = jdbcTemplate.query("pl_MaterielmanipUnNomToPlate @matmanom=?", new Object[]{nomManip}, new RowMapper<Well>() {
+	        @Override
+			public Well mapRow(ResultSet rs, int rowNum) throws SQLException {
 		    Well well = new Well();
 		    well.name = rs.getString("matmanom");
 		    well.code = rs.getInt("matmaco");
 		    
 		    String plaqueX = rs.getString("plaqueX"); 
-		    if(null != plaqueX && !"null".equals(plaqueX)){
+		    if (plaqueX != null && !"null".equals(plaqueX)) {
 		    	well.x = Integer.valueOf(plaqueX);
 		    }
 		    well.y = rs.getString("plaqueY");
@@ -210,37 +221,37 @@ public class LimsManipDAO {
 		    return well;
 	        }
 	    });
-		if(wells.size() == 1){
+		if (wells.size() == 1) {
 			return wells.get(0);
-		}else{
+		} else {
 			return null;
 		}
-		
 	}
 	
 	public User getUser(Integer id) {
-		Logger.info("pl_PerintUn @perco="+id);
-		List<User> users = this.jdbcTemplate.query("pl_PerintUn @perco=?", new Object[]{id}, new RowMapper<User>() {
-	        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+		logger.info("pl_PerintUn @perco="+id);
+//		List<User> users = this.jdbcTemplate.query("pl_PerintUn @perco=?", new Object[]{id}, new RowMapper<User>() {
+		List<User> users = jdbcTemplate.query("pl_PerintUn @perco=?", new Object[]{id}, new RowMapper<User>() {
+	        @Override
+			public User mapRow(ResultSet rs, int rowNum) throws SQLException {
 	        	User user = new User();
 	        	user.perco = rs.getString("perco");
 	        	user.perlog = rs.getString("perlog");
 	            return user;
 	        }
 	    });
-		
-		if(users.size() == 1){
+		if (users.size() == 1) {
 			return users.get(0);
-		}else{
+		} else {
 			return null;
 		}
-		
-		
 	}
 	
 	public List<User> getUsers() {
-		List<User> users = this.jdbcTemplate.query("pl_Perint", new RowMapper<User>() {
-	        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+//		List<User> users = this.jdbcTemplate.query("pl_Perint", new RowMapper<User>() {
+		List<User> users = jdbcTemplate.query("pl_Perint", new RowMapper<User>() {
+	        @Override
+			public User mapRow(ResultSet rs, int rowNum) throws SQLException {
 	        	User user = new User();
 	        	user.perco = rs.getString("perco");
 	        	user.perlog = rs.getString("perlog");
@@ -251,9 +262,11 @@ public class LimsManipDAO {
 	}
 	
 	public boolean isPlateExist(String code) {
-		Logger.info("pl_PlaqueSolexa @plaqueId="+code);
-		List<Plate> plates = this.jdbcTemplate.query("pl_PlaqueSolexa @plaqueId=?", new Object[]{code}, new RowMapper<Plate>() {
-	        public Plate mapRow(ResultSet rs, int rowNum) throws SQLException {
+		logger.info("pl_PlaqueSolexa @plaqueId="+code);
+//		List<Plate> plates = this.jdbcTemplate.query("pl_PlaqueSolexa @plaqueId=?", new Object[]{code}, new RowMapper<Plate>() {
+		List<Plate> plates = jdbcTemplate.query("pl_PlaqueSolexa @plaqueId=?", new Object[]{code}, new RowMapper<Plate>() {
+	        @Override
+			public Plate mapRow(ResultSet rs, int rowNum) throws SQLException {
 	        	Plate plate = new Plate();
 	        	plate.code = rs.getString("plaqueId");
 	            return plate;
@@ -263,10 +276,11 @@ public class LimsManipDAO {
 	}
 
 	public List<ListObject> getListObjectFromProcedureLims(String procedure) {
-		List<ListObject> listObjects = this.jdbcTemplate.query(procedure,
+//		List<ListObject> listObjects = this.jdbcTemplate.query(procedure,
+		List<ListObject> listObjects = jdbcTemplate.query(procedure,
 				new RowMapper<ListObject>() {
-					public ListObject mapRow(ResultSet rs, int rowNum)
-							throws SQLException {
+					@Override
+					public ListObject mapRow(ResultSet rs, int rowNum) throws SQLException {
 						ListObject value = new ListObject();
 						value.name = rs.getString(1);
 						value.code = rs.getString(2);
@@ -276,13 +290,11 @@ public class LimsManipDAO {
 		return listObjects;
 	}
 
-
 	public void deletePlate(String plateCode) {
-		Logger.info("ps_PlaqueSolexa @plaqueId="+plateCode);
-		this.jdbcTemplate.update("ps_PlaqueSolexa @plaqueId=?", new Object[]{plateCode});
+		logger.info("ps_PlaqueSolexa @plaqueId="+plateCode);
+//		this.jdbcTemplate.update("ps_PlaqueSolexa @plaqueId=?", new Object[]{plateCode});
+		jdbcTemplate.update("ps_PlaqueSolexa @plaqueId=?", new Object[]{plateCode});
 	}
-
-
-
+	
 }
 

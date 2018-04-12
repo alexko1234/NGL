@@ -38,7 +38,7 @@ public class Samples extends CommonController {
 	}	
 */
 	public Result javascriptRoutes() {
-		response().setContentType("text/javascript");
+//		response().setContentType("text/javascript");
 	    return ok(  	    		
 	    		// Routes.javascriptRouter("jsRoutes",
 	    		// Routes
@@ -52,7 +52,7 @@ public class Samples extends CommonController {
 	    				controllers.sra.samples.tpl.routes.javascript.Samples.get(),
 	    				controllers.sra.samples.api.routes.javascript.Samples.list()
 	    				)
-	    );
+	    ).as("text/javascript");
 	}
 	
 }

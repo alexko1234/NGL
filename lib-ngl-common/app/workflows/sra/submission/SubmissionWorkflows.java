@@ -1,32 +1,16 @@
 package workflows.sra.submission;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
 import models.sra.submit.common.instance.Submission;
-import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;
-//import play.Logger;
 import validation.ContextValidation;
-import validation.common.instance.CommonValidationHelper;
-import workflows.Workflows;
-
-
-
-
 
 /**
  * 
@@ -79,8 +63,11 @@ public class SubmissionWorkflows extends TransitionWorkflows<Submission> {
 	private DoubleKeyMap<String, String, Transition<Submission>> trs;
 	
 	public class BasicTransition implements SubmissionTransition {
+		@Override
 		public void execute(ContextValidation contextValidation, Submission submission, State nextState) {}
+		@Override
 		public void success(ContextValidation contextValidation, Submission submission, State nextState) {}
+		@Override
 		public void error(ContextValidation contextValidation, Submission object, State nextState) {}		
 	}
 
@@ -175,10 +162,12 @@ public class SubmissionWorkflows extends TransitionWorkflows<Submission> {
 	}
 
 
+	@Override
 	public Transition<Submission> get(String currentStateCode, String nextStateCode) {
 		return trs.get(currentStateCode, nextStateCode);
 	}
 	
+	@Override
 	public ObjectType.CODE getObjectType() {
 		return ObjectType.CODE.SRASubmission;
 	}

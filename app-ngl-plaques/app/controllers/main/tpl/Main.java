@@ -1,7 +1,5 @@
 package controllers.main.tpl;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import fr.cea.ig.authentication.Authenticated;
@@ -11,20 +9,11 @@ import fr.cea.ig.lfw.utils.JavascriptGeneration.Codes;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.support.NGLJavascript;
-import jsmessages.JsMessages;
-
-import lims.models.Manip;
-import models.laboratory.common.description.CodeLabel;
-import models.laboratory.common.description.dao.CodeLabelDAO;
-import play.api.modules.spring.Spring;
-import play.libs.Scala;
-import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.home;
 
 //import controllers.CommonController;
 //public class Main extends CommonController {
-
 public class Main extends NGLController
                  implements NGLJavascript {
 	

@@ -10,27 +10,10 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.reagent.description.AbstractCatalog;
-import models.laboratory.reagent.instance.Box;
-import models.laboratory.reagent.utils.ReagentCodeHelper;
-import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
-import models.utils.ListObject;
-
-import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
-
-import play.Logger;
-import play.data.Form;
-import play.libs.Json;
-import play.mvc.Result;
-import play.mvc.Results;
-import validation.ContextValidation;
-import views.components.datatable.DatatableResponse;
 
 import com.mongodb.BasicDBObject;
 
@@ -38,6 +21,20 @@ import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
+import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.reagent.description.AbstractCatalog;
+import models.laboratory.reagent.instance.Box;
+import models.laboratory.reagent.utils.ReagentCodeHelper;
+import models.utils.InstanceConstants;
+import models.utils.InstanceHelpers;
+import models.utils.ListObject;
+import play.Logger;
+import play.data.Form;
+import play.libs.Json;
+import play.mvc.Result;
+import play.mvc.Results;
+import validation.ContextValidation;
+import views.components.datatable.DatatableResponse;
 
 public class Boxes extends DocumentController<Box> {
 	
@@ -49,6 +46,7 @@ public class Boxes extends DocumentController<Box> {
 
 	private final /*static*/ Form<BoxSearchForm> boxSearchForm;// = form(BoxSearchForm.class);
 
+	@Override
 	public Result get(String code){
 		Box box = getObject(code);
 		if(box != null){
@@ -58,6 +56,7 @@ public class Boxes extends DocumentController<Box> {
 		return badRequest();
 	}
 
+	@Override
 	public Result delete(String code){
 		MongoDBDAO.delete(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, AbstractCatalog.class, DBQuery.or(DBQuery.is("code", code),DBQuery.is("boxCode", code)));
 		return ok();
@@ -69,27 +68,26 @@ public class Boxes extends DocumentController<Box> {
 		Box box = boxFilledForm.get();
 		box.code = ReagentCodeHelper.getInstance().generateBoxCode(box.kitCode);
 		box.code = ReagentCodeHelper.getInstance().generateBoxCode();
-		
-		
+			
 		box.traceInformation = new TraceInformation();
 		box.traceInformation.createUser =  getCurrentUser();
 		box.traceInformation.creationDate = new Date();
 		
-		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), boxFilledForm.errors());
+//		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), boxFilledForm.errors());
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), boxFilledForm);
 		contextValidation.setCreationMode();
 
 		//When the user want to declare the box only, the kitCode = the boxCode
 		//in order to search it in the interface
-		if(box.declarationType.equals("box")){
+		if (box.declarationType.equals("box")) {
 			box.kitCode = box.code;
 		}
 		
-		box = (Box)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, box, contextValidation);
-		if (!contextValidation.hasErrors()) {
+//		box = (Box)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, box, contextValidation);
+		box = InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, box, contextValidation);
+		if (!contextValidation.hasErrors())
 			return ok(Json.toJson(box));
-		} else {
-			return badRequest(errorsAsJson(contextValidation.getErrors()));
-		}
+		return badRequest(errorsAsJson(contextValidation.getErrors()));
 			// legit, should modify source to use contextvlidation
 	}
 
@@ -97,61 +95,56 @@ public class Boxes extends DocumentController<Box> {
 		Form<Box> boxFilledForm = getMainFilledForm();
 		Box box = boxFilledForm.get();
 		
-		box.traceInformation.modifyUser =  getCurrentUser();
+		box.traceInformation.modifyUser = getCurrentUser();
 		box.traceInformation.modifyDate = new Date();
 
-		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), boxFilledForm.errors());
+//		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), boxFilledForm.errors());
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), boxFilledForm);
 		contextValidation.setUpdateMode();
 
-		box = (Box)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, box, contextValidation);
-		if (!contextValidation.hasErrors()) { 
+//		box = (Box)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, box, contextValidation);
+		box = InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, box, contextValidation);
+		if (!contextValidation.hasErrors()) 
 			return ok(Json.toJson(box));
-		} else {
-			return badRequest(errorsAsJson(contextValidation.getErrors()));
-		}
+		return badRequest(errorsAsJson(contextValidation.getErrors()));
 		// legit, should modify source to use contextvalidation
 	}
 
-	public Result list(){
+	public Result list() {
 		Form<BoxSearchForm> boxFilledForm = filledFormQueryString(boxSearchForm,BoxSearchForm.class);
 		BoxSearchForm boxSearch = boxFilledForm.get();
 		BasicDBObject keys = getKeys(boxSearch);
 		DBQuery.Query query = getQuery(boxSearch);
 
-		if(boxSearch.datatable){
+		if (boxSearch.datatable) {
 			MongoDBResult<Box> results =  mongoDBFinder(boxSearch, query);
 			List<Box> boxs = results.toList();
-
-			return ok(Json.toJson(new DatatableResponse<Box>(boxs, results.count())));
-		}else if (boxSearch.list){
+			return ok(Json.toJson(new DatatableResponse<>(boxs, results.count())));
+		} else if (boxSearch.list) {
 			keys = new BasicDBObject();
 			keys.put("code", 1);
 			keys.put("category", 1);
-
-			if(null == boxSearch.orderBy)boxSearch.orderBy = "code";
-			if(null == boxSearch.orderSense)boxSearch.orderSense = 0;				
+			if (boxSearch.orderBy    == null) boxSearch.orderBy    = "code";
+			if (boxSearch.orderSense == null) boxSearch.orderSense = 0;				
 
 			MongoDBResult<Box> results = mongoDBFinder(boxSearch, query, keys);
 			List<Box> boxs = results.toList();
-			List<ListObject> los = new ArrayList<ListObject>();
-			for(Box p: boxs){					
+			List<ListObject> los = new ArrayList<>();
+			for (Box p: boxs) {					
 				los.add(new ListObject(p.code, p.code));								
 			}
-
 			return Results.ok(Json.toJson(los));
-		}else{
-			if(null == boxSearch.orderBy)boxSearch.orderBy = "code";
-			if(null == boxSearch.orderSense)boxSearch.orderSense = 0;
-
+		} else {
+			if (boxSearch.orderBy    == null) boxSearch.orderBy    = "code";
+			if (boxSearch.orderSense == null) boxSearch.orderSense = 0;
 			MongoDBResult<Box> results = mongoDBFinder(boxSearch, query);
 			List<Box> boxs = results.toList();
-
 			return ok(Json.toJson(boxs));
 		}
 	}
 
 	public static Query getQuery(BoxSearchForm boxSearch){
-		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
+		List<DBQuery.Query> queryElts = new ArrayList<>();
 		Query query = null;
 		queryElts.add(DBQuery.is("category", "Box"));
 
@@ -213,4 +206,5 @@ public class Boxes extends DocumentController<Box> {
 
 		return query;
 	}
+	
 }

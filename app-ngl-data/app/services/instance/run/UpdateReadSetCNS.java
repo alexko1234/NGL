@@ -6,23 +6,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import models.Constants;
-import models.LimsCNSDAO;
-import models.laboratory.run.instance.File;
-import models.laboratory.run.instance.ReadSet;
-import models.laboratory.run.instance.Run;
-import models.utils.InstanceConstants;
-import models.utils.dao.DAOException;
-
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-
-import play.Logger;
-import rules.services.RulesException;
-import scala.concurrent.duration.FiniteDuration;
-import services.instance.AbstractImportDataCNS;
-import validation.ContextValidation;
-import validation.utils.ValidationHelper;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoException;
@@ -30,9 +15,20 @@ import com.mongodb.MongoException;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
+import models.Constants;
+import models.laboratory.run.instance.ReadSet;
+import models.utils.InstanceConstants;
+import models.utils.dao.DAOException;
+import rules.services.RulesException;
+import scala.concurrent.duration.FiniteDuration;
+import services.instance.AbstractImportDataCNS;
+import validation.ContextValidation;
+import validation.utils.ValidationHelper;
 
-public class UpdateReadSetCNS extends AbstractImportDataCNS{
+public class UpdateReadSetCNS extends AbstractImportDataCNS {
 
+//	private static final play.Logger.ALogger logger = play.Logger.of(UpdateReadSetCNS.class);
+	
 	@Inject
 	public UpdateReadSetCNS( FiniteDuration durationFromStart,
 			FiniteDuration durationFromNextIteration, NGLContext ctx) {
@@ -59,7 +55,7 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 				DBQuery.or(DBQuery.is("sampleOnContainer.properties.insertSizeGoal",null),
 						DBQuery.and(DBQuery.in("sampleOnContainer.sampleCategoryCode", "RNA", "cDNA"), DBQuery.is("sampleOnContainer.properties.strandOrientation",null))),getReadSetKeys());
 		
-		Logger.info("Start synchro LSRunProjMissingData  : nb ReadSet ="+results.count());
+//		logger.info("Start synchro LSRunProjMissingData  : nb ReadSet ="+results.count());
 		logger.info("Start synchro LSRunProjMissingData  : nb ReadSet ="+results.count());
 		
 		while(results.cursor.hasNext()){
@@ -70,7 +66,7 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 				updateReadSet(contextError, newReadset, readset.sampleOnContainer.sampleCategoryCode);
 			}else if(null == newReadset){
 				if("A".equals(readset.state.code) && !readset.typeCode.equals("rsnanopore")){
-					Logger.warn("not found ReadSet on LIMS : "+readset.code);
+					logger.warn("not found ReadSet on LIMS : "+readset.code);
 				}
 			}
 			contextError.removeKeyFromRootKeyName(readset.code);
@@ -119,7 +115,7 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 	
 	private void updateLSRunProjUpdateData(ContextValidation contextError) {
 		List<ReadSet> readsets = limsServices.findLSRunProjData();
-		Logger.info("Start synchro updateLSRunProjUpdateData  : nb ReadSet ="+readsets.size());
+//		Logger.info("Start synchro updateLSRunProjUpdateData  : nb ReadSet ="+readsets.size());
 		logger.info("Start synchro updateLSRunProjUpdateData  : nb ReadSet ="+readsets.size());
 		
 		for(ReadSet readset : readsets){

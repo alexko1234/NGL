@@ -14,7 +14,6 @@ import models.sra.submit.util.SraParameter;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 
-
 @Singleton
 public class SraParameterDAO {
 	
@@ -40,7 +39,7 @@ public class SraParameterDAO {
 	}
 	
 	public Map<String, String> getParameter(String type) throws DAOException {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		List<SraParameter> sraParam = MongoDBDAO.find(InstanceConstants.SRA_PARAMETER_COLL_NAME, SraParameter.class, DBQuery.in("type", type)).toList();
 		if (sraParam.isEmpty()) {
 			logger.error("Absence de données de type '" + type + "' dans la table SraParmeters");

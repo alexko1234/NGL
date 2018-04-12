@@ -1,21 +1,14 @@
 package controllers.experiments.api;
 
-// import static play.data.Form.form;
-//import static fr.cea.ig.play.IGGlobals.form;
-import fr.cea.ig.util.Streamer;
-//import static fr.cea.ig.util.Streamer.IStreamer.write;
-
 // import java.io.IOException;
 // import java.io.OutputStream;
 // import java.io.PrintWriter;
 import java.util.ArrayList;
 // import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
 
 import javax.inject.Inject;
-
-import models.laboratory.experiment.instance.Experiment;
-import models.utils.InstanceConstants;
 
 import org.mongojack.Aggregation;
 import org.mongojack.Aggregation.Expression;
@@ -26,12 +19,6 @@ import org.mongojack.DBProjection.ProjectionBuilder;
 import org.mongojack.DBQuery;
 import org.mongojack.JacksonDBCollection;
 
-// import play.data.Form;
-import play.libs.Json;
-import play.mvc.Result;
-import workflows.experiment.ExpWorkflows;
-
-import com.google.common.collect.Iterators;
 // import com.mongodb.AggregationOutput;
 import com.mongodb.DBObject;
 
@@ -40,8 +27,19 @@ import akka.stream.javadsl.Source;
 import akka.util.ByteString;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.lfw.utils.Iterables;
 import fr.cea.ig.mongo.MongoStreamer;
 import fr.cea.ig.play.NGLContext;
+// import static play.data.Form.form;
+//import static fr.cea.ig.play.IGGlobals.form;
+import fr.cea.ig.util.Streamer;
+//import static fr.cea.ig.util.Streamer.IStreamer.write;
+import models.laboratory.experiment.instance.Experiment;
+import models.utils.InstanceConstants;
+// import play.data.Form;
+import play.libs.Json;
+import play.mvc.Result;
+import workflows.experiment.ExpWorkflows;
 
 /**
  * 
@@ -55,6 +53,21 @@ import fr.cea.ig.play.NGLContext;
  */
 public class ExperimentReagents extends Experiments {
 	
+	// TODO: migrate MongoStreamer to LFW and this method to MongoStreamer
+	
+	public static final <A> Source<ByteString,?> streamUDT(Iterable<A> i, Function<A,String> f) {
+		Iterable<ByteString> it =
+				Iterables.map(i,f)
+				.intercalate(",")        // max(0, n + n - 1) 
+				.prepend("{\"data\":[")  //  + 1 = max(1,2n)
+				// This is where the count should occur, we count the prepend and the
+				// intercalate so the element count is c/2.
+				.countIn(c -> "],\"recordsNumber\":" + (c/2) + "}")
+				.map(r -> { return ByteString.fromString(r); });
+		// return Streamer.okStream(Source.from(it));
+		return Source.from(it);
+	}
+	
 	// private final Form<ExperimentSearchForm> experimentSearchForm; // = form(ExperimentSearchForm.class);
 	
 	@Inject
@@ -63,6 +76,7 @@ public class ExperimentReagents extends Experiments {
 		// experimentSearchForm = ctx.form(ExperimentSearchForm.class);
 	}
 	
+	@Override
 	@Permission(value={"reading"})
 	public Result list() {
 		
@@ -72,7 +86,7 @@ public class ExperimentReagents extends Experiments {
 		JacksonDBCollection<Experiment, String> collection = MongoDBDAO.getCollection(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class);
 		AggregationResult<Experiment> ar =collection.aggregate(pipeline, Experiment.class);
 		
-		if(experimentsSearch.datatable){
+		if (experimentsSearch.datatable) {
 			/*return ok(
 				new StringChunks() {
 					@Override
@@ -113,14 +127,33 @@ public class ExperimentReagents extends Experiments {
 					write(out,"}");
 				}
 			});*/
+			
+			return Streamer.okStream(streamUDT(ar.getAggregationOutput().results(),
+					                           r -> { Experiment exp = collection.convertFromDbObject(r, Experiment.class);
+                                                      return Json.toJson(exp).toString(); }));
+			
+//			Iterable<ByteString> it =
+//					Iterables.map(ar.getAggregationOutput().results(), 
+//							      r -> { Experiment exp = collection.convertFromDbObject(r, Experiment.class);
+//	                                     return Json.toJson(exp).toString(); })
+//					
+//					// .surround("{\"data\":[", ",", "],\"recordsNumber\":"+count+"}")
+//					.intercalate(",")        // n+n-1
+//					.prepend("{\"data\":[")  // +1 = 2n
+//					// This is where the count should occur, we count the prepend and the
+//					// 
+//					.countIn(c -> "],\"recordsNumber\":" + (c/2) + "}")
+//					.map(r -> { return ByteString.fromString(r); });
+//			return Streamer.okStream(Source.from(it));
+			
 			// WARNING: Check, this iterates twice over the results
-			Iterable<DBObject> results = ar.getAggregationOutput().results();
-			int count = Iterators.size(results.iterator());
-			return Streamer.okStream(Source.from(results)
-					.map(r -> { Experiment exp = collection.convertFromDbObject(r, Experiment.class);
-						        return Json.toJson(exp).toString(); })
-					.intersperse("{\"data\":[", ",", "],\"recordsNumber\":"+count+"}")
-					.map(r -> { return ByteString.fromString(r); }));
+//			Iterable<DBObject> results = ar.getAggregationOutput().results();
+//			int count = Iterators.size(results.iterator());
+//			return Streamer.okStream(Source.from(results)
+//					.map(r -> { Experiment exp = collection.convertFromDbObject(r, Experiment.class);
+//						        return Json.toJson(exp).toString(); })
+//					.intersperse("{\"data\":[", ",", "],\"recordsNumber\":"+count+"}")
+//					.map(r -> { return ByteString.fromString(r); }));
 			
 		} else {
 			/*return ok(
@@ -180,7 +213,7 @@ public class ExperimentReagents extends Experiments {
 	 */
 	private Pipeline<Expression<?>> aggregation(DBQuery.Query query){
 
-		List<DBQuery.Query> stages = new ArrayList<DBQuery.Query>();
+		List<DBQuery.Query> stages = new ArrayList<>();
 		stages.add(DBQuery.exists("reagents.0")); // Only reagents	
 		
 		ProjectionBuilder pb = DBProjection.include("code");

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -99,7 +99,7 @@ public class ReadSets extends ReadSetsController {
 		} else if(form.count) {
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);							
 			int count = results.count();
-			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			Map<String, Integer> m = new HashMap<>(1);
 			m.put("result", count);
 			return ok(Json.toJson(m));
 		} else if(form.list) {
@@ -117,7 +117,7 @@ public class ReadSets extends ReadSetsController {
 	}
 
 	private List<ListObject> toListObjects(List<ReadSet> readSets){
-		List<ListObject> jo = new ArrayList<ListObject>();
+		List<ListObject> jo = new ArrayList<>();
 		for(ReadSet r: readSets){
 			jo.add(new ListObject(r.code, r.code));
 		}
@@ -133,7 +133,7 @@ public class ReadSets extends ReadSetsController {
 	}
 
 	private Query getQuery(ReadSetsSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		Query query = null;
 
 		if (StringUtils.isNotBlank(form.typeCode)) { //all
@@ -326,16 +326,16 @@ public class ReadSets extends ReadSetsController {
 	}
 
 	@Permission(value={"writing"})
-	public Result save(){
+	public Result save() {
 
 		Form<ReadSet> filledForm = getFilledForm(readSetForm, ReadSet.class);
 		ReadSet readSetInput = filledForm.get();
 
-		if (null == readSetInput._id) { 
+		if (readSetInput._id == null) { 
 			readSetInput.traceInformation = new TraceInformation();
 			readSetInput.traceInformation.setTraceInformation(getCurrentUser());
 
-			if(null == readSetInput.state){
+			if (readSetInput.state == null) {
 				readSetInput.state = new State();
 			}
 			readSetInput.state.code = "N";
@@ -344,24 +344,19 @@ public class ReadSets extends ReadSetsController {
 			readSetInput.submissionState = new State("NONE", getCurrentUser());
 			readSetInput.submissionState.date = new Date();	
 
-
 			//hack to simplify ngsrg => move to workflow but workflow not call here !!!
-			if(null != readSetInput.runCode && (null == readSetInput.runSequencingStartDate || null == readSetInput.runTypeCode)){
+			if (readSetInput.runCode != null && (readSetInput.runSequencingStartDate == null || readSetInput.runTypeCode == null)) {
 				updateReadSet(readSetInput);
-
 			}
-
 		} else {
 			return badRequest("use PUT method to update the run");
 		}
 
-
-
-
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		
 		ReadSetsSaveForm readSetsSaveForm = filledFormQueryString(ReadSetsSaveForm.class);
-		if(readSetsSaveForm.external!=null)
+		if (readSetsSaveForm.external != null)
 			ctxVal.putObject("external", readSetsSaveForm.external);
 		else
 			ctxVal.putObject("external", false);
@@ -370,7 +365,7 @@ public class ReadSets extends ReadSetsController {
 		workflows.get().applyPreStateRules(ctxVal, readSetInput, readSetInput.state);
 		
 		ctxVal.setCreationMode();
-		readSetInput.validate(ctxVal);	
+		readSetInput.validate(ctxVal);
 
 		if (!ctxVal.hasErrors()) {
 			readSetInput = MongoDBDAO.save(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSetInput);
@@ -430,7 +425,8 @@ public class ReadSets extends ReadSetsController {
 					return badRequest("you cannot change the state code. Please used the state url ! ");
 				}
 
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+//				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 				ctxVal.setUpdateMode();
 				readSetInput.validate(ctxVal);
 
@@ -452,8 +448,9 @@ public class ReadSets extends ReadSetsController {
 			}else{
 				return badRequest("readset code are not the same");
 			}
-		}else{ //update only some authorized properties
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+		} else { //update only some authorized properties
+//			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
@@ -550,7 +547,8 @@ public class ReadSets extends ReadSetsController {
 		State state = filledForm.get();
 		state.date = new Date();
 		state.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		workflows.get().setState(ctxVal, readSet, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getReadSet(code)));
@@ -575,7 +573,8 @@ public class ReadSets extends ReadSetsController {
 						State state = element.data.state;
 						state.date = new Date();
 						state.user = user;
-						ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+//						ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+						ContextValidation ctxVal = new ContextValidation(user, filledForm);
 						workflows.get().setState(ctxVal, readSet, state);
 						if (!ctxVal.hasErrors()) {
 							return new DatatableBatchResponseElement(OK, getReadSet(readSet.code), element.index);
@@ -598,7 +597,8 @@ public class ReadSets extends ReadSetsController {
 		}
 		Form<ReadSetValuation> filledForm =  getFilledForm(valuationForm, ReadSetValuation.class);
 		ReadSetValuation valuations = filledForm.get();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		ctxVal.setUpdateMode();
 		manageValidation(readSet, valuations.productionValuation, valuations.bioinformaticValuation, ctxVal);
 		if (!ctxVal.hasErrors()) {
@@ -626,8 +626,9 @@ public class ReadSets extends ReadSetsController {
 				.map(filledForm->{
 					ReadSetBatchElement element = filledForm.get();
 					ReadSet readSet = getReadSet(element.data.code);
-					if(null != readSet){
-						ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+					if (readSet != null) {
+//						ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+						ContextValidation ctxVal = new ContextValidation(user, filledForm);
 						ctxVal.setUpdateMode();
 						manageValidation(readSet, element.data.productionValuation, element.data.bioinformaticValuation, ctxVal);				
 						if (!ctxVal.hasErrors()) {
@@ -659,7 +660,8 @@ public class ReadSets extends ReadSetsController {
 		}
 
 		Form<ReadSet> filledForm = getFilledForm(readSetForm, ReadSet.class);
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 
 		Map<String, PropertyValue> properties = filledForm.get().properties;
 		ctxVal.setUpdateMode();
@@ -689,22 +691,23 @@ public class ReadSets extends ReadSetsController {
 				.map(filledForm->{
 					ReadSetBatchElement element = filledForm.get();
 					ReadSet readSet = getReadSet(element.data.code);
-					if(null != readSet){
-						ContextValidation ctxVal = new ContextValidation(user, filledForm.errors()); 
+					if (readSet != null) {
+//						ContextValidation ctxVal = new ContextValidation(user, filledForm.errors()); 
+						ContextValidation ctxVal = new ContextValidation(user, filledForm); 
 						Map<String, PropertyValue> properties = element.data.properties;
 						ctxVal.setUpdateMode();
 						ReadSetValidationHelper.validateReadSetType(readSet.typeCode, properties, ctxVal);
 
-						if(!ctxVal.hasErrors()){
+						if (!ctxVal.hasErrors()) {
 							MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 									DBQuery.and(DBQuery.is("code", readSet.code)),
 									DBUpdate.set("properties", element.data.properties)
 									.set("traceInformation", getUpdateTraceInformation(readSet, user)));								
 							return new DatatableBatchResponseElement(OK, getReadSet(readSet.code), element.index);
-						}else {
+						} else {
 							return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);
 						}
-					}else {
+					} else {
 						return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
 					}
 				}).collect(Collectors.toList());

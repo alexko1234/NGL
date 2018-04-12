@@ -31,6 +31,9 @@ public class RulesServices6 {
 	 */
 	private static final play.Logger.ALogger logger = play.Logger.of(RulesServices6.class);
 
+	/**
+	 * Cache of instances indexed by knowledge base names.
+	 */
 	private static final Map<String,RulesServices6> instances = new HashMap<>();
 	
 	/**
@@ -49,17 +52,21 @@ public class RulesServices6 {
 	
 	// @Inject
 	private RulesServices6(Application app) {
-		kbasename = app.configuration().getString("rules.kbasename");
+//		kbasename = app.configuration().getString("rules.kbasename");
+		kbasename = app.config().getString("rules.kbasename");
 		buildKnowledgeBase(app);
 	}
 	
  
 	public static void initSingleton(Application app) {
 		logger.debug("initializing singleton");
-		String kbasename = app.configuration().getString("rules.kbasename");
+//		String kbasename = app.configuration().getString("rules.kbasename");
+		String kbasename = app.config().getString("rules.kbasename");
+		logger.info("using knowledge base name {}", kbasename);
 		SingletonHolder.instance = instances.get(kbasename);
 		if (SingletonHolder.instance == null) {
 			SingletonHolder.instance = new RulesServices6(app);
+			logger.debug("create instance for {} : {}", kbasename, SingletonHolder.instance);
 			instances.put(kbasename, SingletonHolder.instance);
 		} else {
 			logger.debug("reusing instance for {} : {}", kbasename, SingletonHolder.instance);
@@ -104,8 +111,7 @@ public class RulesServices6 {
 		kSession.dispose();		
 	}
 	
-	public List<Object> callRulesWithGettingFacts(String keyRules,
-			String ruleAnnotationName, List<Object> factsToInsert) {
+	public List<Object> callRulesWithGettingFacts(String keyRules, String ruleAnnotationName, List<Object> factsToInsert) {
 
 		// Create new session
 		KieSession kSession = getKieBase().newKieSession();
@@ -113,7 +119,7 @@ public class RulesServices6 {
 			kSession.insert(fact);
 		}
 		kSession.fireAllRules(RulesAgendaFilter6.getInstance(keyRules,ruleAnnotationName));
-		List<Object> factsAfterRules = new ArrayList<Object>(kSession.getObjects());
+		List<Object> factsAfterRules = new ArrayList<>(kSession.getObjects());
 		// Close session
 		kSession.dispose();
 

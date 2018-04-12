@@ -4,9 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
-import play.Logger;
 import play.data.validation.ValidationError;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -25,13 +22,10 @@ import services.description.process.ProcessService;
 // import services.description.run.TreatmentService;
 import services.description.sample.ImportService;
 import services.description.sample.SampleService;
-import fr.cea.ig.ngl.NGLApplication;
-import fr.cea.ig.ngl.NGLController;
-//import controllers.CommonController;
-// import controllers.NGLBaseController;
-// import fr.cea.ig.play.NGLContext;
 
 public class NGLSeq extends Controller { // NGLController { // NGLBaseController { //CommonController {
+
+	private static final play.Logger.ALogger logger = play.Logger.of(NGLSeq.class);
 	
 //	@Inject
 //	public NGLSeq(NGLApplication app) {
@@ -40,7 +34,7 @@ public class NGLSeq extends Controller { // NGLController { // NGLBaseController
 	
 	public Result save() {
 		try {
-			Map<String,List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
+			Map<String,List<ValidationError>> errors = new HashMap<>();
 			//InstituteService.main(errors);
 			//ObjectTypeService.main(errors);
 			//StateService.main(errors); 
@@ -59,11 +53,11 @@ public class NGLSeq extends Controller { // NGLController { // NGLBaseController
 			if (errors.size() > 0) {
 				return badRequest(Json.toJson(errors));
 			} else {
-				Logger.info("NGLSeq description is loaded!");
+				logger.info("NGLSeq description is loaded!");
 				return ok();
 			}
 		} catch (Exception e) {
-			Logger.error(e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 			return internalServerError(e.getMessage());
 		}				
 	}

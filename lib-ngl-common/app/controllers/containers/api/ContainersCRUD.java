@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
@@ -70,7 +70,7 @@ public class ContainersCRUD extends AbstractCRUDAPIController<Container> {
 	 */
 	private static final play.Logger.ALogger logger = play.Logger.of(Containers.class);
 		
-	private static final List<String> defaultKeys = 
+	private static final List<String> DEFAULT_KEYS = 
 			Arrays.asList("code",   "importTypeCode","categoryCode",
 					"state","valuation","traceInformation","properties",
 					"comments","support","contents","volume",
@@ -90,7 +90,7 @@ public class ContainersCRUD extends AbstractCRUDAPIController<Container> {
 		
 	@Inject
 	public ContainersCRUD(NGLContext ctx, ContWorkflows workflows) {
-		super(ctx,InstanceConstants.CONTAINER_COLL_NAME, Container.class, defaultKeys);
+		super(ctx,InstanceConstants.CONTAINER_COLL_NAME, Container.class, DEFAULT_KEYS);
 		// updateForm          = ctx.form(QueryFieldsForm.class);
 		// containerForm       = ctx.form(Container.class);
 		// containerSearchForm = ctx.form(ContainersSearchForm.class);
@@ -99,10 +99,12 @@ public class ContainersCRUD extends AbstractCRUDAPIController<Container> {
 		this.workflows      = workflows;
 	}
 
+	@Override
 	@Permission(value={"reading"})
 	public Result get(String code) {
 		return super.get(code);
 	}
+	@Override
 	@Permission(value={"reading"})
 	public Result head(String code) {
 		return super.head(code);
@@ -272,14 +274,14 @@ public class ContainersCRUD extends AbstractCRUDAPIController<Container> {
 	@Permission(value={"writing"})
 	public Result updateState(String code) {
 		Container container = findContainer(code);
-		if (container == null) {
+		if (container == null)
 			return badRequest("Container with code " + code + " does not exist");
-		}
 		Form<State> filledForm =  getFilledForm(stateForm, State.class);
 		State state = filledForm.get();
 		state.date = new Date();
 		state.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
 		ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE, Boolean.TRUE);		
 		workflows.setState(ctxVal, container, state);
@@ -299,24 +301,24 @@ public class ContainersCRUD extends AbstractCRUDAPIController<Container> {
 		.map(filledForm -> {
 			ContainerBatchElement element = filledForm.get();
 			Container container = findContainer(element.data.code);
-			if(null != container){
+			if (container != null) {
 				State state = element.data.state;
 				state.date = new Date();
 				state.user = user;
-				ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+//				ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+				ContextValidation ctxVal = new ContextValidation(user, filledForm);
 				ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
 				ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE, Boolean.TRUE);
 				workflows.setState(ctxVal, container, state);
 				if (!ctxVal.hasErrors()) {
 					return new DatatableBatchResponseElement(OK,  findContainer(container.code), element.index);
-				}else {
+				} else {
 					return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);
 				}
-			}else {
+			} else {
 				return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
 			}
 		}).collect(Collectors.toList());
-		
 		return ok(Json.toJson(response));
 	}
 
@@ -327,12 +329,12 @@ public class ContainersCRUD extends AbstractCRUDAPIController<Container> {
 	 * @throws DAOException 
 	 */
 	public DBQuery.Query getQuery(ContainersSearchForm containersSearch) throws DAOException {		
-		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
+		List<DBQuery.Query> queryElts = new ArrayList<>();
 		Query query = DBQuery.empty();
 
 		
 		if(containersSearch.processProperties.size() > 0){	
-			List<String> processCodes = new ArrayList<String>();
+			List<String> processCodes = new ArrayList<>();
 			List<DBQuery.Query> listProcessQuery = NGLControllerHelper.generateQueriesForProperties(containersSearch.processProperties, Level.CODE.Process, "properties");
 			Query processQuery = DBQuery.and(listProcessQuery.toArray(new DBQuery.Query[queryElts.size()]));
 
@@ -423,7 +425,7 @@ public class ContainersCRUD extends AbstractCRUDAPIController<Container> {
 			queryElts.add(DBQuery.is("support.categoryCode", containersSearch.containerSupportCategory));
 		}else if(StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){
 			List<ContainerSupportCategory> containerSupportCategories = ContainerSupportCategory.find.findInputByExperimentTypeCode(containersSearch.nextExperimentTypeCode);
-			List<String> cs = new ArrayList<String>();
+			List<String> cs = new ArrayList<>();
 			for(ContainerSupportCategory c:containerSupportCategories){
 				cs.add(c.code);
 			}
@@ -434,7 +436,7 @@ public class ContainersCRUD extends AbstractCRUDAPIController<Container> {
 
 
 
-		List<String> listePrevious = new ArrayList<String>();
+		List<String> listePrevious = new ArrayList<>();
 		//used in processes creation
 		if(StringUtils.isNotBlank(containersSearch.nextProcessTypeCode)){					
 					
@@ -510,7 +512,7 @@ public class ContainersCRUD extends AbstractCRUDAPIController<Container> {
 			queryElts.add(DBQuery.nor(DBQuery.notExists("processCodes"),DBQuery.size("processCodes", 0)));
 			*/
 			
-			List<DBQuery.Query> subQueryElts = new ArrayList<DBQuery.Query>();
+			List<DBQuery.Query> subQueryElts = new ArrayList<>();
 			List<ProcessType> processTypes=ProcessType.find.findByExperimentTypeCode(containersSearch.nextExperimentTypeCode);
 			if(CollectionUtils.isNotEmpty(processTypes)){
 				for(ProcessType processType:processTypes){

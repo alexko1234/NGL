@@ -16,18 +16,19 @@ import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBResult.Sort;
 import fr.cea.ig.mongo.MongoStreamer;
 import fr.cea.ig.ngl.dao.GenericMongoDAO;
-import play.Logger;
+//import play.Logger;
 import validation.ContextValidation;
 
 public abstract class GenericAPI<O extends GenericMongoDAO<T>, T extends DBObject> {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(GenericAPI.class);
+	
 	protected final O dao; 
 
 	@Inject
 	public GenericAPI(O dao) {
 		this.dao = dao;
 	}
-
 
 	/**
 	 * @return the list of field of DBObject which could be updated
@@ -48,28 +49,28 @@ public abstract class GenericAPI<O extends GenericMongoDAO<T>, T extends DBObjec
 	}
 
 	/**
-	 * Find an object by code in db
-	 * @param code
-	 * @return
+	 * Find an object by code in db.
+	 * @param code code of object to find
+	 * @return     object found in persistent storage
 	 */
 	public T get(String code) {
 		return dao.findByCode(code);
 	}
 
 	/**
-	 * get an object by specifying keys
-	 * @param code
-	 * @param keys
-	 * @return
+	 * Get an object by specifying keys.
+	 * @param code code of object to find
+	 * @param keys restriction keys
+	 * @return     object in persistent storage
 	 */
 	public T getObject(String code, BasicDBObject keys) {
 		return dao.getObject(code, keys);
 	}
 
 	/**
-	 * check if an object exists in db
-	 * @param code
-	 * @return
+	 * Checks if an object exists in DB.
+	 * @param code code of object to find
+	 * @return     true if the object exists in DB, false otherwise
 	 */
 	public boolean isObjectExist(String code) {
 		return dao.isObjectExist(code);
@@ -130,9 +131,9 @@ public abstract class GenericAPI<O extends GenericMongoDAO<T>, T extends DBObjec
 	public Source<ByteString, ?> stream(String reportingQuery){
 		return MongoStreamer.streamUDT(findByQuery(reportingQuery));
 	}
+	
 	/* ------------------------------------------------ */
 
-	
 	/**
 	 * @return BasicDBObject which corresponds to the list of default keys from {@link GenericAPI#defaultKeys()}
 	 */
@@ -143,11 +144,8 @@ public abstract class GenericAPI<O extends GenericMongoDAO<T>, T extends DBObjec
 		// for(String k : defaultKeys()) {
 		//	keys.put(k, 1);
 		// }
-		return keys;
-		
-		
+		return keys;		
 	}
-
 
 	public void checkAuthorizedUpdateFields(ContextValidation ctxVal, List<String> authorizedFields, List<String> fields) {
 		for (String field: fields) {
@@ -157,16 +155,16 @@ public abstract class GenericAPI<O extends GenericMongoDAO<T>, T extends DBObjec
 		}
 	}
 
-
 	protected void checkIfFieldsAreDefined(ContextValidation ctxVal, List<String> fields, T s) {
-		for(String field: fields){
+		for (String field: fields) {
 			try {
-				if(s.getClass().getField(field).get(s) == null){
+				if (s.getClass().getField(field).get(s) == null) {
 					ctxVal.addErrors(field, "error.notdefined");
 				}
-			} catch(Exception e){
-				Logger.error(e.getMessage());
+			} catch(Exception e) {
+				logger.error(e.getMessage());
 			}
 		}
-	}	
+	}
+	
 }

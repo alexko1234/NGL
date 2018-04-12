@@ -1,19 +1,14 @@
 package fr.cea.ig.ngl.test.dao.api;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 import java.util.List;
 
 import javax.inject.Singleton;
-import javax.validation.constraints.AssertTrue;
 
-import org.drools.compiler.lang.dsl.DSLMapParser.statement_return;
-import org.drools.core.command.assertion.AssertEquals;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -22,33 +17,26 @@ import org.junit.rules.ExpectedException;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-import com.google.inject.matcher.Matchers;
-
 import fr.cea.ig.MongoDBResult.Sort;
 import fr.cea.ig.ngl.dao.api.APIException;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.projects.ProjectsAPI;
 import fr.cea.ig.ngl.dao.samples.SamplesAPI;
 import fr.cea.ig.ngl.test.AbstractAPITests;
-import fr.cea.ig.ngl.test.TestAppWithDroolsFactory;
 import fr.cea.ig.ngl.test.dao.api.factory.TestProjectFactory;
 import fr.cea.ig.ngl.test.dao.api.factory.TestSampleFactory;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
-import models.utils.DescriptionHelper;
-import models.utils.dao.DAOException;
-import play.Logger.ALogger;
-import rules.services.RulesServices6;
-import rules.services.test.TestRules6Component;
-import utils.AbstractTests;
+import utils.AbstractSQTests;
 
 /**
- * Test {@link SamplesAPI} methods
+ * Test {@link SamplesAPI} methods.
+ * 
  * @author ajosso
  *
  */
 @Singleton  
-public class SamplesAPITest extends AbstractTests implements AbstractAPITests {
+public class SamplesAPITest extends AbstractSQTests implements AbstractAPITests {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(SamplesAPITest.class);
 
@@ -64,8 +52,6 @@ public class SamplesAPITest extends AbstractTests implements AbstractAPITests {
 	private static Sample refSample;
 	private static Project refProject;
 	
-	private static final TestAppWithDroolsFactory TEST_APP_FACTORY = new TestAppWithDroolsFactory("ngl-sq.test.conf");
-	
 	private Sample data;
 	
 	@Rule
@@ -73,17 +59,18 @@ public class SamplesAPITest extends AbstractTests implements AbstractAPITests {
 
 	private static boolean clean = true;
 
-	/**
-	 * Override default method
-	 * Initialize test application.
-	 */
-	@BeforeClass
-	public static void startTestApplication() {
-		logger.info("Start an app (Test Mode) using NGL-SQ TU config");
-		app = TEST_APP_FACTORY.bindRulesComponent().createApplication();
-		DescriptionHelper.initInstitute();
-		logger.info("test app started");
-	}
+//	/**
+//	 * Override default method
+//	 * Initialize test application.
+//	 */
+//	@BeforeClass
+//	public static void startTestApplication() {
+//		logger.info("Start an app (Test Mode) using NGL-SQ TU config");
+//		// app = TEST_APP_FACTORY.bindRulesComponent().createApplication();
+//		app = Global.afSq.createApplication();
+//		DescriptionHelper.initInstitute();
+//		logger.info("test app started");
+//	}
 	
 	@BeforeClass
 	public static void setUpClass() {
@@ -92,8 +79,7 @@ public class SamplesAPITest extends AbstractTests implements AbstractAPITests {
 		assertNotNull(projectApi);
 		api = app.injector().instanceOf(SamplesAPI.class);
 		Assert.assertNotNull(api);
-		app.injector().instanceOf(TestRules6Component.class);
-		
+		// app.injector().instanceOf(TestRules6Component.class);
 		logger.debug("define ref objects");
 		refProject = TestProjectFactory.project(USER);
 		refSample = TestSampleFactory.sample(USER, refProject);
@@ -107,7 +93,6 @@ public class SamplesAPITest extends AbstractTests implements AbstractAPITests {
 			logger.trace("data already cleaned");
 		}
 	}
-
 
 	@Override
 	public void setUpData() {
@@ -149,7 +134,6 @@ public class SamplesAPITest extends AbstractTests implements AbstractAPITests {
 			projectApi.delete(refProject.code);	
 			clean = true;
 		}
-		
 	}
 
 	@Test
@@ -246,7 +230,7 @@ public class SamplesAPITest extends AbstractTests implements AbstractAPITests {
 	}
 
 	@Override
-	public ALogger logger() {
+	public play.Logger.ALogger logger() {
 		return logger;
 	}
 

@@ -2,29 +2,33 @@ package models.laboratory.run.description.dao;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.run.description.RunType;
 import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.DAOException;
-import org.springframework.stereotype.Repository;
-
-import play.Logger;
 import play.api.modules.spring.Spring;
 
 @Repository
-public class RunTypeDAO extends AbstractDAOCommonInfoType<RunType>{
+public class RunTypeDAO extends AbstractDAOCommonInfoType<RunType> {
 
+//	protected RunTypeDAO() {
+//		super("run_type", RunType.class, RunTypeMappingQuery.class, 
+//				"SELECT distinct c.id, c.nb_lanes, c.fk_common_info_type, c.fk_run_category ",
+//						"FROM run_type as c "+sqlCommonInfoType, false);
+//	}
 	protected RunTypeDAO() {
-		super("run_type", RunType.class, RunTypeMappingQuery.class, 
+		super("run_type", RunType.class, RunTypeMappingQuery.factory, 
 				"SELECT distinct c.id, c.nb_lanes, c.fk_common_info_type, c.fk_run_category ",
 						"FROM run_type as c "+sqlCommonInfoType, false);
 	}
 
 	@Override
 	public long save(RunType runType) throws DAOException {
-		if(null == runType){
+		if (runType == null)
 			throw new DAOException("RunType is mandatory");
-		}
 		
 		//Check if category exist
 		if(runType.category == null || runType.category.id == null){
@@ -36,7 +40,7 @@ public class RunTypeDAO extends AbstractDAOCommonInfoType<RunType>{
 		runType.id = commonInfoTypeDAO.save(runType);
 		
 		//Create new runType
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("id", runType.id);
 		parameters.put("nb_lanes", runType.nbLanes);
 		parameters.put("fk_common_info_type", runType.id);

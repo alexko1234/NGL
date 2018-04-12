@@ -1,6 +1,9 @@
 package services.description.declaration.cns;
 
-import static services.description.DescriptionFactory.*;
+import static services.description.DescriptionFactory.newExperimentType;
+import static services.description.DescriptionFactory.newExperimentTypeNode;
+import static services.description.DescriptionFactory.newPropertiesDefinition;
+import static services.description.DescriptionFactory.newValues;
 
 import java.awt.Image;
 import java.util.ArrayList;
@@ -31,7 +34,7 @@ public class QualityControl extends AbstractDeclaration {
 
 	@Override
 	protected List<ExperimentType> getExperimentTypeCommon() {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		List<ExperimentType> l = new ArrayList<>();
 		
 		l.add(newExperimentType("Dosage fluo (éval échantillons à réception)","reception-fluo-quantification", null,20050,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsDosageFluorometriqueEval(), 
@@ -122,19 +125,17 @@ public class QualityControl extends AbstractDeclaration {
 	
 	@Override
 	protected List<ExperimentType> getExperimentTypeDEV() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
 	protected List<ExperimentType> getExperimentTypePROD() {
-				return null;
+		return null;
 	}
 
 	@Override
 	protected List<ExperimentType> getExperimentTypeUAT() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -143,7 +144,7 @@ public class QualityControl extends AbstractDeclaration {
 	 */
 	@Override
 	protected List<ProcessType> getProcessTypeCommon() {
-		List<ProcessType> l = new ArrayList<ProcessType>();
+		List<ProcessType> l = new ArrayList<>();
 		
 		l.add(DescriptionFactory.newProcessType("QC puis satellites", "qc-transfert-purif", 
 				ProcessCategory.find.findByCode("satellites"), 1020,
@@ -202,7 +203,7 @@ public class QualityControl extends AbstractDeclaration {
 	
 	@Override
 	protected List<ProcessType> getProcessTypeDEV() {
-		List<ProcessType> l = new ArrayList<ProcessType>();
+		List<ProcessType> l = new ArrayList<>();
 		
 		
 		return l;
@@ -210,16 +211,12 @@ public class QualityControl extends AbstractDeclaration {
 
 	@Override
 	protected List<ProcessType> getProcessTypePROD() {
-		// TODO Auto-generated method stub
-		List<ProcessType> l = new ArrayList<ProcessType>();
-		
-		
+//		List<ProcessType> l = new ArrayList<ProcessType>();
 		return null;
 	}
 
 	@Override
 	protected List<ProcessType> getProcessTypeUAT() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -259,37 +256,28 @@ public class QualityControl extends AbstractDeclaration {
 		
 		return pets;		
 	}
-	
-	
-	
+		
 	@Override
 	protected void getExperimentTypeNodeDEV() {
-	
 	}
 
 	@Override
 	protected void getExperimentTypeNodePROD() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	protected void getExperimentTypeNodeUAT() {
-		// TODO Auto-generated method stub
-		
 	}
-	private List<PropertyDefinition> getPropertyDefinitionsEvalAReception() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 	
+	private List<PropertyDefinition> getPropertyDefinitionsEvalAReception() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Type(s) banque(s) à réaliser", "libraryToDo", LevelService.getLevels(Level.CODE.Process), String.class, false, null, 
-				null, null, null, null,"single", 18, true, null,null));
-		
-		return propertyDefinitions;	
-		
+				null, null, null, null,"single", 18, true, null,null));	
+		return propertyDefinitions;
 	}	
 		
 	private List<PropertyDefinition> getPropertyDefinitionsExternalQC() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
 		propertyDefinitions.add(newPropertiesDefinition("Volume fourni", "providedVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 11, true, null,null));
@@ -316,19 +304,13 @@ public class QualityControl extends AbstractDeclaration {
 		//Remplacé par dnaTreatment niveau Sample dans import echantillon bio
 		//propertyDefinitions.add(newPropertiesDefinition("Méthode d'amplification", "amplificationMethod", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null,
 			//	null, null, null, null,"single", 22, true, null,null));
-		
 		propertyDefinitions.add(newPropertiesDefinition("Commentaire", "comment", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, 
 				null, null, null, null,"single", 18, true, null,null));
-
-
 		return propertyDefinitions;
-
 	}
 	
-	
-	
 	private List<PropertyDefinition> getPropertyDefinitionsDosageFluorometrique() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		propertyDefinitions.addAll(getPropertyDefinitionsDosageFluorometriqueEvalCommon());
 		
@@ -344,7 +326,7 @@ public class QualityControl extends AbstractDeclaration {
 	}
 
 	private List<PropertyDefinition> getPropertyDefinitionsDosageFluorometriqueEval() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.addAll(getPropertyDefinitionsDosageFluorometriqueEvalCommon());
 		
 		propertyDefinitions.add(newPropertiesDefinition("Volume mesuré", "preQuantificationVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
@@ -355,7 +337,7 @@ public class QualityControl extends AbstractDeclaration {
 	
 	
 	private List<PropertyDefinition> getPropertyDefinitionsDosageFluorometriqueEvalCommon() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		propertyDefinitions.add(newPropertiesDefinition("Choix visuel", "displayChoice", LevelService.getLevels(Level.CODE.Experiment), String.class, false, null, 
 				DescriptionFactory.newValues("Tout", "BR1 + HS1 + HS2", "HS1 + HS2 + HS3"),null,null,null,"single", 10, true, "Tout", null));
@@ -413,7 +395,7 @@ public class QualityControl extends AbstractDeclaration {
 
 	
 	private List<PropertyDefinition> getPropertyDefinitionsGelMigration() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,null));
 		
@@ -430,15 +412,11 @@ public class QualityControl extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),
 				"single", 17, true, null,null));
-		
-		
-		
 		return propertyDefinitions;
 	}
 
-	
 	private List<PropertyDefinition> getPropertyDefinitionsPCRGel() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,null));
 		
@@ -455,17 +433,13 @@ public class QualityControl extends AbstractDeclaration {
 				null, null, null, null,"single", 2, true, null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Nb cycles", "nbCycles", LevelService.getLevels(Level.CODE.Experiment), Integer.class, true, null, null, 
-				"single", 3, true, null,null));
-		
-		
+				"single", 3, true, null,null));		
 		return propertyDefinitions;
 	}
 
-	
 	public static List<PropertyDefinition> getPropertyDefinitionsChipMigrationARNEvaluation() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		// A supprimer une fois le type de support category sera géré
-		
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
+		// A supprimer une fois le type de support category sera géré		
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode("µL"),
 				"single", 11, true, null, "0"));		
@@ -498,7 +472,7 @@ public class QualityControl extends AbstractDeclaration {
 	
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsChipMigration() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		// A supprimer une fois le type de support category sera géré
 		
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
@@ -541,12 +515,11 @@ public class QualityControl extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Conc. calculée en nM", "nMcalculatedConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "nm"),MeasureUnit.find.findByCode("nm"),"single", 20, false, null,"2"));
 	
-		
 		return propertyDefinitions;
 	}
 	
 	private List<PropertyDefinition> getPropertyDefinitionsQPCR() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode( "nM"), MeasureUnit.find.findByCode("nM"),
@@ -563,7 +536,7 @@ public class QualityControl extends AbstractDeclaration {
 	}
 
 	private List<PropertyDefinition> getPropertyDefinitionsQcard() {
-			List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+			List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 			
 			propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 					null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 15, true, null,null));
@@ -601,7 +574,7 @@ public class QualityControl extends AbstractDeclaration {
 
 	private List<PropertyDefinition> getPropertyDefinitionsUvQuantification() {
 
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
 		propertyDefinitions.add(newPropertiesDefinition("Volume mesuré", "preQuantificationVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 11, true, null,null));
@@ -641,7 +614,7 @@ public class QualityControl extends AbstractDeclaration {
 	
 	private List<PropertyDefinition> getPropertyDefinitionsPulsedFieldElectrophoresis() {
 		
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
 		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée", "inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn), Double.class,
 				false, null,null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode("ng"),

@@ -8,24 +8,22 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import models.laboratory.run.instance.Treatment;
-import models.sra.submit.common.instance.Submission;
-import models.sra.submit.sra.instance.Experiment;
-import models.sra.submit.sra.instance.RawData;
-import models.utils.InstanceConstants;
-
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-import play.data.Form;
-import play.libs.Json;
-import play.mvc.Result;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
+import models.sra.submit.common.instance.Submission;
+import models.sra.submit.sra.instance.Experiment;
+import models.sra.submit.sra.instance.RawData;
+import models.utils.InstanceConstants;
+import play.data.Form;
+import play.libs.Json;
+import play.mvc.Result;
 
 public class ExperimentsRawDatas extends DocumentController<Experiment> {
 
@@ -39,9 +37,8 @@ public class ExperimentsRawDatas extends DocumentController<Experiment> {
 		rawDataForm = ctx.form(RawData.class);
 	}
 
-	public Result list()
-	{
-		List<RawData> allRawDatas = new ArrayList<RawData>();
+	public Result list() {
+		List<RawData> allRawDatas = new ArrayList<>();
 		Form<ExperimentsSearchForm> form = filledFormQueryString(experimentsSearchForm, ExperimentsSearchForm.class);
 		ExperimentsSearchForm formExp = form.get();
 		Query query = getQuery(formExp);
@@ -69,7 +66,7 @@ public class ExperimentsRawDatas extends DocumentController<Experiment> {
 		Form<RawData> filledForm = getFilledForm(rawDataForm, RawData.class);
 		RawData rawData = filledForm.get();
 		Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, code);
-		List<RawData> newRawDatas = new ArrayList<RawData>();
+		List<RawData> newRawDatas = new ArrayList<>();
 		for(RawData rawDataDB : experiment.run.listRawData){
 			if(rawDataDB.relatifName.equals(relatifName))
 				newRawDatas.add(rawData);
@@ -82,7 +79,7 @@ public class ExperimentsRawDatas extends DocumentController<Experiment> {
 	}
 	
 	private Query getQuery(ExperimentsSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		Query query = null;
 		
 		if (StringUtils.isNotBlank(form.submissionCode)) {

@@ -1,7 +1,7 @@
 package rules.services;
 
 import java.util.List;
-import java.util.function.Supplier;
+// import java.util.function.Supplier;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -10,8 +10,8 @@ import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import fr.cea.ig.play.NGLConfig;
-import fr.cea.ig.play.NGLContext;
-import play.inject.Injector;
+// import fr.cea.ig.play.NGLContext;
+// import play.inject.Injector;
 
 import fr.cea.ig.lfw.utils.LazyLambdaSupplier;
 
@@ -38,7 +38,7 @@ public class LazyRules6Actor extends LazyLambdaSupplier<ActorRef> {
 		this.rulesKey = rulesKey;
 	}
 	
-	public void tellMessage(String rulesCode, List objects) {
+	public void tellMessage(String rulesCode, List<Object> objects) {
 		get().tell(new RulesMessage(rulesKey.get(), rulesCode, objects),null);
 	}
 	

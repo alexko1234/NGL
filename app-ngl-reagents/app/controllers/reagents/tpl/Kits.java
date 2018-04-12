@@ -8,15 +8,10 @@ import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.support.NGLJavascript;
-// import controllers.NGLBaseController;
-// import fr.cea.ig.play.NGLContext;
-// import play.Routes;
 import play.mvc.Result;
 import views.html.declarations.home;
 import views.html.declarations.kitsCreation;
-import views.html.declarations.ordersCreation;
 import views.html.declarations.kitsSearch;
-import play.routing.JavaScriptReverseRouter;
 
 //import controllers.CommonController;
 // public class Kits extends -CommonController {

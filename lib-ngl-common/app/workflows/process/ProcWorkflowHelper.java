@@ -1,7 +1,10 @@
 package workflows.process;
 
-import java.util.ArrayList;
+import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT;
+import static validation.common.instance.CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE;
+import static validation.common.instance.CommonValidationHelper.OBJECT_IN_DB;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,7 +16,6 @@ import javax.inject.Singleton;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.mongojack.DBQuery;
-
 import org.mongojack.DBUpdate;
 import org.mongojack.DBUpdate.Builder;
 
@@ -24,19 +26,14 @@ import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
-
-import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
-
-import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.instance.SampleHelper;
 import validation.ContextValidation;
 import workflows.container.ContWorkflows;
 import workflows.container.ContentHelper;
-import static validation.common.instance.CommonValidationHelper.*;
 
 
 @Singleton
@@ -44,12 +41,13 @@ public class ProcWorkflowHelper {
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(ProcWorkflowHelper.class);
 
-
 	public final ContWorkflows contWorkflows;
+	public final ContentHelper contentHelper;
 	
 	@Inject
-	public ProcWorkflowHelper(ContWorkflows contWorkflows) {
-		this.contWorkflows = contWorkflows;		
+	public ProcWorkflowHelper(ContWorkflows contWorkflows, ContentHelper contentHelper) {
+		this.contWorkflows = contWorkflows;
+		this.contentHelper = contentHelper;
 	}
 	
 	public void updateInputContainerToStartProcess(ContextValidation contextValidation, Process process) {
@@ -103,7 +101,7 @@ public class ProcWorkflowHelper {
 					query,DBUpdate.set("contents.$.processProperties", process.properties));
 			*/
 			//TODO Problem when property disappeared after pool fusion, we had a new property
-			List<String> containerCodes = new ArrayList<String>();
+			List<String> containerCodes = new ArrayList<>();
 			containerCodes.add(process.inputContainerCode);
 			if(null != process.outputContainerCodes){
 				containerCodes.addAll(process.outputContainerCodes);
@@ -135,7 +133,7 @@ public class ProcWorkflowHelper {
 	public Set<String> getTagAssignFromProcessContainers(Process process) {
 		Set<String> tags = null;
 		if(process.sampleOnInputContainer.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)){
-			tags = new TreeSet<String>();
+			tags = new TreeSet<>();
 			tags.add(process.sampleOnInputContainer.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value.toString());			
 		}else if(process.outputContainerCodes != null && process.outputContainerCodes.size() > 0){
 			
@@ -147,7 +145,7 @@ public class ProcWorkflowHelper {
 			
 			MongoDBResult<Container> containersWithTag = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,query).sort("traceInformation.creationDate",Sort.ASC);
 			if(containersWithTag.size() > 0){
-				tags = new TreeSet<String>();
+				tags = new TreeSet<>();
 				tags.add(containersWithTag.cursor.next().contents.get(0).properties.get(InstanceConstants.TAG_PROPERTY_NAME).value.toString());
 			}
 		}
@@ -165,8 +163,8 @@ public class ProcWorkflowHelper {
 			Process oldProcess = (Process) validation.getObject(OBJECT_IN_DB);
 			Map<String, Pair<PropertyValue,PropertyValue>> updatedProperties = InstanceHelpers.getUpdatedPropertiesForSomePropertyCodes(propertyCodes, oldProcess.properties, process.properties);
 			Set<String> deletedPropertyCodes = InstanceHelpers.getDeletedPropertiesForSomePropertyCodes(propertyCodes, oldProcess.properties, process.properties);
-			logger.debug("updatedProperties "+updatedProperties);
-			logger.debug("deletedPropertyCodes "+deletedPropertyCodes);
+			logger.debug("updatedProperties " + updatedProperties);
+			logger.debug("deletedPropertyCodes " + deletedPropertyCodes);
 			
 			if(updatedProperties.size() > 0 || deletedPropertyCodes.size() > 0){
 				//1 find tag inside inputContainer and all outputContainer if input does not have a tag
@@ -185,10 +183,6 @@ public class ProcWorkflowHelper {
 		}
 	}
 
-
-	
-	
-	
 	private Set<String> getProcessesPropertyDefinitionCodes(Process process, Level.CODE level) {		
 		ProcessType processType = ProcessType.find.findByCode(process.typeCode);
 		return processType.getPropertyDefinitionByLevel(level)
@@ -196,9 +190,7 @@ public class ProcWorkflowHelper {
 				.map(pd -> pd.code)
 				.collect(Collectors.toSet());		
 	}
-	
-	
-	
+		
 	/*
 	 * Query to retrieve container and content (using tag if exist)
 	 * @param process
@@ -206,19 +198,17 @@ public class ProcWorkflowHelper {
 	 */
 	private DBQuery.Query getInputContainerQuery(Process process) {
 		DBQuery.Query query = DBQuery.is("code",process.inputContainerCode);
-		if(process.sampleOnInputContainer.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)){
+		if (process.sampleOnInputContainer.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)) {
 			query.elemMatch("contents", DBQuery.is("sampleCode", process.sampleOnInputContainer.sampleCode)
 												.is("projectCode",  process.sampleOnInputContainer.projectCode)
 												.is("properties.tag.value", process.sampleOnInputContainer.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value));
 			
-		}else{
+		} else {
 			query.elemMatch("contents", DBQuery.is("sampleCode", process.sampleOnInputContainer.sampleCode).is("projectCode",  process.sampleOnInputContainer.projectCode));
 			
 		}
-		
 		return query;
 	}
-
 
 	public void updateSampleOnContainer(ContextValidation validation, Process process) {
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,process.inputContainerCode);
@@ -235,10 +225,5 @@ public class ProcWorkflowHelper {
 			logger.error("container is a pool, sampleOnInputContainer cannot be updated : "+process.code);
 		}
 	}
-
-
-	
-
-	
 
 }

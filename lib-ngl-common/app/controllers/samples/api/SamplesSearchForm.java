@@ -9,6 +9,7 @@ import java.util.Set;
 import controllers.ListForm;
 
 public class SamplesSearchForm extends ListForm {
+	
 	public String code; 
 	public String codeRegex;
 	public String treeOfLifePathRegex;
@@ -21,7 +22,7 @@ public class SamplesSearchForm extends ListForm {
 	public String createUser; 
 	public List<String> createUsers;
 	public String commentRegex;
-	public Map<String, List<String>> properties = new HashMap<String, List<String>>();
+	public Map<String, List<String>> properties = new HashMap<>();
 	public Map<String, Boolean> existingFields;
 	public String referenceCollabRegex;
 	
@@ -34,15 +35,18 @@ public class SamplesSearchForm extends ListForm {
 	public String ncbiScientificNameRegex;
 	public String taxonCode;
 	
-	public Map<String, List<String>> experimentProperties = new HashMap<String, List<String>>();
+	public Map<String, List<String>> experimentProperties = new HashMap<>();
 	
+	@Override
 	public String toString() {
 		return "SamplesSearchForm [projectCode=" + projectCode
-
-				+ ", projectCodes=" + projectCodes + ",sampleCode=" + ", code=" + code
-				+ ", typeCodes"
-				+ ", createUser=" + createUser 
-				+ ", fromDate=" + fromDate + ", toDate=" + toDate
-				 + "]";
-					}
+					+ ", projectCodes=" + projectCodes
+					+ ", sampleCode=" + ", code=" + code
+					+ ", typeCodes"
+					+ ", createUser=" + createUser 
+					+ ", fromDate=" + fromDate
+					+ ", toDate=" + toDate
+				 	+ "]";
+	}
+	
 }

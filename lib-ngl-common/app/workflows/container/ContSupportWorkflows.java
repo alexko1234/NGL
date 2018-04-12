@@ -1,8 +1,5 @@
 package workflows.container;
 
-// import static fr.cea.ig.play.IGGlobals.akkaSystem;
-// import static fr.cea.ig.play.IGGlobals.configuration;
-
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
 import static validation.common.instance.CommonValidationHelper.FIELD_UPDATE_CONTAINER_STATE;
 
@@ -10,24 +7,20 @@ import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import models.laboratory.common.instance.State;
-import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.ContainerSupport;
-import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
-import akka.actor.ActorRef;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
+import models.laboratory.common.instance.State;
+import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
+import models.utils.InstanceConstants;
 import rules.services.LazyRules6Actor;
-import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.container.instance.ContainerSupportValidationHelper;
 import workflows.Workflows;
-
-import fr.cea.ig.MongoDBDAO;
-
-import fr.cea.ig.play.NGLContext;
 
 @Singleton
 public class ContSupportWorkflows extends Workflows<ContainerSupport> {

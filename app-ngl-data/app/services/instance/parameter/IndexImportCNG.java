@@ -6,21 +6,20 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import play.Logger;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 import models.LimsCNGDAO;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.parameter.Parameter;
+import models.laboratory.parameter.index.IlluminaIndex;
 import models.laboratory.parameter.index.Index;
 import models.laboratory.parameter.index.NanoporeIndex;
-import models.laboratory.parameter.index.IlluminaIndex;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNG;
 import validation.ContextValidation;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.NGLContext;
 
 /**
  * @author dnoisett
@@ -28,7 +27,7 @@ import fr.cea.ig.play.NGLContext;
  * FDS remplacement de l'appel a Logger par logger
  */
 
-public class IndexImportCNG extends AbstractImportDataCNG{
+public class IndexImportCNG extends AbstractImportDataCNG {
 
 	@Inject
 	public IndexImportCNG(FiniteDuration durationFromStart,
@@ -89,7 +88,7 @@ public class IndexImportCNG extends AbstractImportDataCNG{
 		index.shortName = code;
 		index.sequence = seq ;  //Voir plus tard: il y a 4 sequences pour les POOL-INDEX...Chromium
 		index.categoryCode = "POOL-INDEX";
-		index.supplierName = new HashMap<String,String>();
+		index.supplierName = new HashMap<>();
 		index.supplierName.put("10x Genomics", code);
 		index.traceInformation=new TraceInformation("ngl-data");
 		
@@ -116,7 +115,7 @@ public class IndexImportCNG extends AbstractImportDataCNG{
 		index.shortName = code;
 		index.sequence = code;
 		index.categoryCode = "SINGLE-INDEX";
-		index.supplierName = new HashMap<String,String>();
+		index.supplierName = new HashMap<>();
 		index.supplierName.put("oxfordNanopore", code);
 		index.traceInformation=new TraceInformation("ngl-data");
 		return index;

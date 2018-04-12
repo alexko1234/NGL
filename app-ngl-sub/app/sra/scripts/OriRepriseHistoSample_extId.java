@@ -2,39 +2,26 @@ package sra.scripts;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
 
-import models.sra.submit.common.instance.Sample;
-import models.utils.InstanceConstants;
-
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
-import play.libs.ws.WSClient;
-import play.libs.ws.WSRequest;
-import play.libs.ws.WSResponse;
-import sra.scripts.AbstractScript.LogLevel;
-import sra.scripts.utils.CSVParsing;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.lfw.controllers.AbstractScript;
+import models.sra.submit.common.instance.Sample;
+import models.utils.InstanceConstants;
 import sra.scripts.utils.DateTools;
 import sra.scripts.utils.EbiAPI;
 import sra.scripts.utils.Tools;
 import sra.scripts.utils.iteration.CSVIterable;
-import fr.cea.ig.MongoDBDAO;
 
 
 
@@ -50,20 +37,17 @@ public class OriRepriseHistoSample_extId extends AbstractScript {
 	*/
 	
 	// version 2 : On demande à play d'instancier la classe avec un objet EbiAPI
-	private final EbiAPI ebiAPI;	
+//	private final EbiAPI ebiAPI;	
 
 	@Inject
 	public OriRepriseHistoSample_extId(EbiAPI ebiAPI) {
-		this.ebiAPI = ebiAPI;
+//		this.ebiAPI = ebiAPI;
 	}
 	
-	
-	private static class SampleInfos {
-		String accession;
-		String extIdAccession;
-		
-	}
-	
+//	private static class SampleInfos {
+//		String accession;
+//		String extIdAccession;		
+//	}
 	
 	@Override
 	public void execute() throws IOException, ParseException {
@@ -147,9 +131,9 @@ public class OriRepriseHistoSample_extId extends AbstractScript {
 					DBQuery.is("accession", accession),
 					DBUpdate.set("externalId", extId).set("traceInformation.creationDate", date).set("traceInformation.modifyDate", today));
 			
-			if (sample != null) {
+//			if (sample != null) {
 				printfln("update ok  " + cp);
-			}
+//			}
 					
 		}
 		

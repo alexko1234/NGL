@@ -8,20 +8,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import play.Logger;
+// 21/09/2016 expression generique pour toutes les templates feuilles de route
+import controllers.instruments.io.cng.janus.tpl.txt.normalization;
+import controllers.instruments.io.cng.janus.tpl.txt.normalizationPooling_buffer;
+import controllers.instruments.io.cng.janus.tpl.txt.normalizationPooling_samples;
+import controllers.instruments.io.cng.janus.tpl.txt.pool_PlatesToPlate_buffer;
+import controllers.instruments.io.cng.janus.tpl.txt.pool_PlatesToPlate_samples;
+import controllers.instruments.io.utils.AbstractOutput;
+import controllers.instruments.io.utils.File;
+import controllers.instruments.io.utils.OutputHelper;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OutputContainerUsed;
 import validation.ContextValidation;
 
-// 21/09/2016 expression generique pour toutes les templates feuilles de route
-import controllers.instruments.io.cng.janus.tpl.txt.*;
-import controllers.instruments.io.utils.AbstractOutput;
-import controllers.instruments.io.utils.File;
-import controllers.instruments.io.utils.OutputHelper;
-
 public class Output extends AbstractOutput {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(Output.class);
+	
 	@Override
 	 public File generateFile(Experiment experiment,ContextValidation contextValidation) throws Exception {
 		String content=null;
@@ -32,13 +36,13 @@ public class Output extends AbstractOutput {
 			Object ftype =contextValidation.getObject("fdrType");
 			if ("samples".equals(ftype) ){	
 				fdrType="samples";
-				Logger.info("generation feuille de route Janus / exp="+ experiment.typeCode + "/ type="+ fdrType );
+				logger.info("generation feuille de route Janus / exp="+ experiment.typeCode + "/ type="+ fdrType );
 				// 21/09/2016 appeler une methode pour generer la liste des lignes a mettre dans la feuille de route
 				content = OutputHelper.format(normalizationPooling_samples.render(getSampleSheetPoolLines(experiment)).body());
 				
 			} else if ("buffer".equals(ftype)) {
 				fdrType="buffer";
-				Logger.info("generation feuille de route Janus / exp="+ experiment.typeCode + "/ type="+ fdrType );
+				logger.info("generation feuille de route Janus / exp="+ experiment.typeCode + "/ type="+ fdrType );
 				content = OutputHelper.format(normalizationPooling_buffer.render(experiment).body());
 				
 			}else {
@@ -51,13 +55,13 @@ public class Output extends AbstractOutput {
 			Object ftype =contextValidation.getObject("fdrType");
 			if ("samples".equals(ftype) ){	
 				fdrType="samples";
-				Logger.info("generation feuille de route Janus / exp="+ experiment.typeCode + "/ type="+ fdrType );
+				logger.info("generation feuille de route Janus / exp="+ experiment.typeCode + "/ type="+ fdrType );
 				// 21/09/2016 appeler une methode pour generer la liste des lignes a mettre dans la feuille de route
 				content = OutputHelper.format(pool_PlatesToPlate_samples.render(getSampleSheetPoolLines(experiment)).body());
 				
 			} else if ("buffer".equals(ftype)) {
 				fdrType="buffer";
-				Logger.info("generation feuille de route Janus / exp="+ experiment.typeCode + "/ type="+ fdrType );
+				logger.info("generation feuille de route Janus / exp="+ experiment.typeCode + "/ type="+ fdrType );
 				content = OutputHelper.format(pool_PlatesToPlate_buffer.render(experiment).body());	
 				
 			} else {
@@ -65,12 +69,12 @@ public class Output extends AbstractOutput {
 			}
 		
 		} else if ( "lib-normalization".equals(experiment.typeCode) ){
-			Logger.info("generation feuille de route Janus / exp="+ experiment.typeCode );
+			logger.info("generation feuille de route Janus / exp="+ experiment.typeCode );
 			content = OutputHelper.format(normalization.render(experiment).body());	
 			
 		// FDS 19/07/2017 NGL-1519 ajout "additional-normalization"	
 		} else if ( "additional-normalization".equals(experiment.typeCode) ){
-			Logger.info("generation feuille de route Janus / exp="+ experiment.typeCode );
+			logger.info("generation feuille de route Janus / exp="+ experiment.typeCode );
 			content = OutputHelper.format(normalization.render(experiment).body());	
 
 		}else {
@@ -101,7 +105,7 @@ public class Output extends AbstractOutput {
 	private List<SampleSheetPoolLine> getSampleSheetPoolLines(Experiment experiment) {
 		Map<String, String> sourceMapping = getSourceMapping(experiment);
 		
-		List<SampleSheetPoolLine> lines = new ArrayList<SampleSheetPoolLine>();
+		List<SampleSheetPoolLine> lines = new ArrayList<>();
 		
 		experiment.atomicTransfertMethods.forEach(atm -> {
 			
@@ -136,7 +140,7 @@ public class Output extends AbstractOutput {
 
 	
 	private Map<String, String> getSourceMapping(Experiment experiment) {
-		Map<String, String> sources = new HashMap<String, String>();
+		Map<String, String> sources = new HashMap<>();
 		
 		String[] inputContainerSupportCodes = experiment.inputContainerSupportCodes.toArray(new String[0]);
 		Arrays.sort(inputContainerSupportCodes);

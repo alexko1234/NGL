@@ -10,6 +10,7 @@ import scala.concurrent.duration.FiniteDuration;
 public abstract class AbstractImportDataCNG extends AbstractImportData {
 
 	protected static LimsCNGDAO limsServices= Spring.getBeanOfType(LimsCNGDAO.class);
+	
 	@Inject
 	public AbstractImportDataCNG(String name, FiniteDuration durationFromStart,
 			FiniteDuration durationFromNextIteration, NGLContext ctx) {

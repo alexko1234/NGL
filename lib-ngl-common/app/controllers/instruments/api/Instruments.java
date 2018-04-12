@@ -6,24 +6,19 @@ package controllers.instruments.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import controllers.APICommonController;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentUsedType;
-import models.laboratory.run.instance.Run;
-import models.utils.InstanceConstants;
-import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import play.mvc.Results;
-import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
-//import controllers.CommonController;
-import fr.cea.ig.MongoDBDAO;
-import javax.inject.Inject;
-import fr.cea.ig.play.NGLContext;
-import controllers.APICommonController;
 
 public class Instruments extends APICommonController<InstrumentsSearchForm> { //CommonController{
 	private final /*static*/ Form<InstrumentsSearchForm> instrumentSearchForm; // = form(InstrumentsSearchForm.class);
@@ -40,7 +35,7 @@ public class Instruments extends APICommonController<InstrumentsSearchForm> { //
 		Form<InstrumentsSearchForm> instrumentTypeFilledForm = filledFormQueryString(instrumentSearchForm,InstrumentsSearchForm.class);
 		InstrumentsSearchForm instrumentsQueryParams = instrumentTypeFilledForm.get();
 
-		List<Instrument> instruments = new ArrayList<Instrument>();
+		List<Instrument> instruments = new ArrayList<>();
 
 		try{		
 			if(instrumentsQueryParams.experimentType!=null || instrumentsQueryParams.experimentTypes!=null){
@@ -49,11 +44,11 @@ public class Instruments extends APICommonController<InstrumentsSearchForm> { //
 				instruments = Instrument.find.findByQueryParams(instrumentsQueryParams.getInstrumentsQueryParams());
 			}else{
 				
-				instruments = new ArrayList<Instrument>();
+				instruments = new ArrayList<>();
 				//instruments = Instrument.find.findAll();
 			}
 			if(instrumentsQueryParams.datatable){
-				return ok(Json.toJson(new DatatableResponse<Instrument>(instruments, instruments.size()))); 
+				return ok(Json.toJson(new DatatableResponse<>(instruments, instruments.size()))); 
 			}else if(instrumentsQueryParams.list){
 				//not used ListObject because need other information to create list (ex: group by active in bt-select)
 				return ok(Json.toJson(instruments));

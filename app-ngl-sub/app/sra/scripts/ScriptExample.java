@@ -1,5 +1,6 @@
 package sra.scripts;
 
+import fr.cea.ig.lfw.controllers.AbstractScript;
 
 // Script interractif qui ne tourne pas pendant des heures car serveur attend reponse 
 public class ScriptExample extends AbstractScript {
@@ -8,9 +9,10 @@ public class ScriptExample extends AbstractScript {
 	public void execute() {
 		println("toto");
 		println("titi");
-		if (true) throw new RuntimeException("crash");
-		println("tutu");
-		println("tata");
+//		if (true) 
+		throw new RuntimeException("crash");
+//		println("tutu");
+//		println("tata");
 	}
 	
 	@Override

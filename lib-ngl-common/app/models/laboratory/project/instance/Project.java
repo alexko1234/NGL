@@ -3,24 +3,20 @@ package models.laboratory.project.instance;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.Comment;
-import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.project.description.ProjectCategory;
-import models.laboratory.project.description.ProjectType;
-import models.utils.HelperObjects;
-import models.utils.InstanceConstants;
 import org.mongojack.MongoCollection;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import fr.cea.ig.DBObject;
+import models.laboratory.common.instance.Comment;
+import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TraceInformation;
+//import models.utils.HelperObjects;
+import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.project.instance.ProjectValidationHelper;
-import fr.cea.ig.DBObject;
-
-
 
 /**
  * Instance Project is stocked in Collection mongodb Project

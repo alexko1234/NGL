@@ -1,7 +1,6 @@
 package services.description.run;
 
 import java.awt.Image;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,20 +19,20 @@ import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 
-import com.typesafe.config.ConfigFactory;
-
 public class TreatmentServiceCNG extends AbstractTreatmentService {
 
+	@Override
 	public  void saveTreatmentCategory(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<TreatmentCategory> l = new ArrayList<TreatmentCategory>();
+		List<TreatmentCategory> l = new ArrayList<>();
 		for (TreatmentCategory.CODE code : TreatmentCategory.CODE.values()) {
 			l.add(DescriptionFactory.newSimpleCategory(TreatmentCategory.class, code.name(), code.name()));
 		}
 		DAOHelpers.saveModels(TreatmentCategory.class, l, errors);
 	}
 
+	@Override
 	public  void saveTreatmentContext(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<TreatmentContext> l = new ArrayList<TreatmentContext>();
+		List<TreatmentContext> l = new ArrayList<>();
 		l.add(DescriptionFactory.newTreatmentContext("Default","default"));
 		l.add(DescriptionFactory.newTreatmentContext("Read1","read1"));
 		l.add(DescriptionFactory.newTreatmentContext("Read2","read2"));
@@ -43,8 +42,9 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 		DAOHelpers.saveModels(TreatmentContext.class, l, errors);
 	}
 
+	@Override
 	public  void saveTreatmentType(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<TreatmentType> l = new ArrayList<TreatmentType>();
+		List<TreatmentType> l = new ArrayList<>();
 		// common CNS - CNG
 
 		l.add(DescriptionFactory.newTreatmentType("SAV","sav", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.sequencing.name()), "sav", 
@@ -201,7 +201,7 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 	}
 
 	private static List<TreatmentTypeContext> getTreatmentTypeContexts(String...codes) throws DAOException {
-		List<TreatmentTypeContext> contexts = new ArrayList<TreatmentTypeContext>();
+		List<TreatmentTypeContext> contexts = new ArrayList<>();
 		for(String code : codes){
 			contexts.add(getTreatmentTypeContext(code, Boolean.TRUE));
 		}		
@@ -215,7 +215,7 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 	}
 	
 	private static List<PropertyDefinition> getASRBPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Sample input","sampleInput", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of mapped reads","mappedReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent of mapped reads","mappedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Double.class, true, "single"));
@@ -235,9 +235,8 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 		return propertyDefinitions;
 	}
 
-
 	private static List<PropertyDefinition> getASRSPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Sample input","sampleInput", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of mapped reads","mappedReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent of mapped reads","mappedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Double.class, true, "single"));
@@ -249,7 +248,7 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 	}
 
 	private static List<PropertyDefinition> getExomeTreatmentPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb reads","nbReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Mapped reads","mappedReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent Mapped reads","mappedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
@@ -272,28 +271,28 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 		return propertyDefinitions;
 	}
 
-	private static List<PropertyDefinition> getWholeExomeTreatmentPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb reads","nbReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Mapped reads","mappedReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent Mapped reads","mappedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent Pairing","pairingPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Duplicated reads","duplicatedReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent Duplicated Reads","duplicatedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent NT 30X","percentNT30X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent NT 20X","percentNT20X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent NT 10X","percentNT10X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent NT 5X","percentNT5X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb regions 0X","nbRegions0X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent regions 0X","regions0XPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Mean cover","meanCover", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Median cover","medianCover", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("SD cover","sdCover", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
-		return propertyDefinitions;
-	}
+//	private static List<PropertyDefinition> getWholeExomeTreatmentPropertyDefinitions() throws DAOException {
+//		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+//		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb reads","nbReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+//		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Mapped reads","mappedReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+//		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent Mapped reads","mappedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+//		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent Pairing","pairingPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+//		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Duplicated reads","duplicatedReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+//		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent Duplicated Reads","duplicatedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+//		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent NT 30X","percentNT30X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+//		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent NT 20X","percentNT20X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+//		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent NT 10X","percentNT10X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+//		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent NT 5X","percentNT5X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+//		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb regions 0X","nbRegions0X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
+//		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent regions 0X","regions0XPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+//		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Mean cover","meanCover", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+//		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Median cover","medianCover", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
+//		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("SD cover","sdCover", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+//		return propertyDefinitions;
+//	}
 
 	private static List<PropertyDefinition> getRnaSeqTreatmentPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		//echantillonnage
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb reads","sampleInput", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
 		//Nettoyage
@@ -361,7 +360,7 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 
 
 	private static List<PropertyDefinition> getChiPSeqTreatmentPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb reads","sampleInput", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Integer.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% both surviving","storedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Double.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% dropped","rejectedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Double.class, true, "single"));
@@ -377,7 +376,7 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 	}
 
 	private static List<PropertyDefinition> getChiPSeqPETreatmentPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb reads","sampleInput", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% both surviving","storedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% R1 only surviving", "storedForwardReadPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
@@ -399,7 +398,7 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 	}
 
 	private static List<PropertyDefinition> getFaireSeqTreatmentPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb reads","sampleInput", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Integer.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% both surviving","storedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Double.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% dropped","rejectedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Double.class, true, "single"));
@@ -415,7 +414,7 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 	}
 
 	private static List<PropertyDefinition> getSampleControlTreatmentPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		//TODO : Level "pairs" must be confirmed 
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Sample input","sampleInput", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Sample sexe","sampleSexe", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), String.class, true, "single"));
@@ -424,7 +423,7 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 	}
 
 	private static List<PropertyDefinition> getGenderTreatmentPropertyDefinitions(){
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Gender","gender", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, DescriptionFactory.newValues("0", "1", "2"), "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Unaligned","unaligned", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("MQ0-PP","mq0PP", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
@@ -437,7 +436,7 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 	}
 
 	private static List<PropertyDefinition> getWholeGenomePropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 			
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Sex","gender", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), String.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("TailleCouvGenome","coveredGenomeSize", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Double.class, true, "single"));

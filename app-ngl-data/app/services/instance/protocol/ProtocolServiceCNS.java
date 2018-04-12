@@ -1,16 +1,17 @@
 package services.instance.protocol;
 
-import static services.instance.InstanceFactory.*;
+import static services.instance.InstanceFactory.newPSV;
+import static services.instance.InstanceFactory.newProtocol;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+//import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.mongojack.DBQuery;
 
-import com.google.common.collect.Maps;
+//import com.google.common.collect.Maps;
 import com.typesafe.config.ConfigFactory;
 
 import fr.cea.ig.MongoDBDAO;
@@ -18,33 +19,32 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.protocol.instance.Protocol;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
-import play.Logger;
-import scala.collection.script.Remove;
+//import play.Logger;
+//import scala.collection.script.Remove;
 import services.instance.InstanceFactory;
 import validation.ContextValidation;
 
 public class ProtocolServiceCNS {	
 
+	private static final play.Logger.ALogger logger = play.Logger.of(ProtocolServiceCNS.class);
+	
 	private final static String institute = "CNS";
 
 	public static void main(ContextValidation ctx) {	
-
-		Logger.info("Start to create protocols collection for "+institute+"...");
-		Logger.info("Remove protocol");
+		logger.info("Start to create protocols collection for "+institute+"...");
+		logger.info("Remove protocol");
 		removeProtocols(ctx);
-		Logger.info("Save protocols ...");
+		logger.info("Save protocols ...");
 		saveProtocols(ctx);
-		Logger.info(institute+" Protocols collection creation is done!");
+		logger.info(institute+" Protocols collection creation is done!");
 	}
-	
 	
 	private static void removeProtocols(ContextValidation ctx) {
 		MongoDBDAO.delete(InstanceConstants.PROTOCOL_COLL_NAME, Protocol.class, DBQuery.empty());
 	}
 
-
 	public static void saveProtocols(ContextValidation ctx){		
-		List<Protocol> lp = new ArrayList<Protocol>();
+		List<Protocol> lp = new ArrayList<>();
 		
 		lp.add(newProtocol("depot_opgen_ptr_1","Depot_Opgen_prt_1","path7","1","production", InstanceFactory.setExperimentTypeCodes("opgen-depot")));
 		
@@ -199,7 +199,6 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("Tag_ITS2_ITSD","Tag ITS2_ITSD","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
 		lp.add(newProtocol("Tag_CP23S","Tag_CP23S","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
 		lp.add(newProtocol("Tag_COI","Tag COI","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
-		
 		lp.add(newProtocol("Access_Array_48.48","Access Array 48.48","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr","dna-illumina-indexed-library")));
 		lp.add(newProtocol("Protocole_EPGV","Protocole EPGV","path2","1","production",InstanceFactory.setExperimentTypeCodes("solution-stock","chip-migration","reception-fluo-quantification","pool")));
 		
@@ -375,7 +374,7 @@ public class ProtocolServiceCNS {
 		
 		for(Protocol protocole:lp){
 			InstanceHelpers.save(InstanceConstants.PROTOCOL_COLL_NAME, protocole,ctx);
-			Logger.debug(" Protocole "+protocole.code);
+			logger.debug(" Protocole "+protocole.code);
 		}
 	}
 
@@ -386,19 +385,12 @@ strandOrientation	?	?	reverse	reverse	forward	reverse
 cDNAsynthesisType	?	?	?	?	?	?
  */
 	@SafeVarargs
-	private static Map<String, PropertyValue> concatMap(
-			Map<String, PropertyValue>...map) {
-		Map<String, PropertyValue> mapFinal = new HashMap<String, PropertyValue>(map.length);
-		for(int i = 0 ; i < map.length; i++){
+	private static Map<String, PropertyValue> concatMap(Map<String, PropertyValue>... map) {
+		Map<String, PropertyValue> mapFinal = new HashMap<>(map.length); // <String, PropertyValue>(map.length);
+		for (int i = 0 ; i < map.length; i++) {
 			mapFinal.putAll(map[i]);
 		}
 		return mapFinal;
 	}
-	
-	
-
-
-
-
 
 }

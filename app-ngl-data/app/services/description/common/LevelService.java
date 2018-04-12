@@ -17,7 +17,7 @@ public class LevelService {
 	}
 	
 	public static void saveLevels(Map<String,List<ValidationError>> errors) throws DAOException{
-		List<Level> l = new ArrayList<Level>();
+		List<Level> l = new ArrayList<>();
 		for (Level.CODE code : Level.CODE.values()) {
 			l.add(newLevel(code.name(), code.name()));
 		}
@@ -26,7 +26,7 @@ public class LevelService {
 	
 	
 	public static List<Level> getLevels(Level.CODE...codes) throws DAOException {
-		List<Level> levels = new ArrayList<Level>();
+		List<Level> levels = new ArrayList<>();
 		for(Level.CODE code: codes){
 			levels.add(Level.find.findByCode(code.name()));
 		}

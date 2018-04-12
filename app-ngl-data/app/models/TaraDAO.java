@@ -8,16 +8,15 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.common.instance.property.PropertySingleValue;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import play.Logger;
+import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.property.PropertySingleValue;
+// import play.Logger;
 import validation.ContextValidation;
 
 @Repository
@@ -55,81 +54,64 @@ public class TaraDAO {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);              
 	}
 
-	@SuppressWarnings("rawtypes")
-	public Map<String,PropertyValue> findTaraSampleFromLimsCode(Integer limsCode,ContextValidation contextValidation){
-
+	// @SuppressWarnings("rawtypes")
+	public Map<String,PropertyValue> findTaraSampleFromLimsCode(Integer limsCode,ContextValidation contextValidation) {
 		List<Map<String,PropertyValue>> results =  this.jdbcTemplate.query(SELECT_MATERIEL_TARA +
 				"  WHERE REF_ID=? ", 
 				new Object[]{limsCode},new RowMapper<Map<String,PropertyValue>>() {
-
-			public Map<String,PropertyValue> mapRow(ResultSet rs, int rowNum) throws SQLException {
-				
-				return mapRowTara(rs, rowNum);
-			}
-
-		});     
-		
-		if(results.size()==1){
+					@Override
+					public Map<String,PropertyValue> mapRow(ResultSet rs, int rowNum) throws SQLException {
+						return mapRowTara(rs, rowNum);
+					}
+			});     
+		if (results.size() == 1) {
 			return results.get(0);
 		} else {
 			contextValidation.addErrors("taraRefId","error.propertyNotExist","Tara Reference Id", limsCode);
 			return null;
 		}
-
-
 	}
 	
-	@SuppressWarnings("rawtypes")
-	public List<Map<String,PropertyValue>> findTaraSampleUpdated(List<String> limsCodes){
-
-		String sql=null;
-		if(limsCodes==null){
-			sql=SELECT_MATERIEL_TARA+" WHERE TO_DAYS(NOW()) - TO_DAYS(LAST_UPD_TARA_DB) <= 10";
-		}else {
+	// @SuppressWarnings("rawtypes")
+	public List<Map<String,PropertyValue>> findTaraSampleUpdated(List<String> limsCodes) {
+		String sql = null;
+		if (limsCodes == null) {
+			sql = SELECT_MATERIEL_TARA + " WHERE TO_DAYS(NOW()) - TO_DAYS(LAST_UPD_TARA_DB) <= 10";
+		} else {
 			//Pour les tests unitaires
-			sql=SELECT_MATERIEL_TARA+" WHERE REF_ID in (";
-			for(String code:limsCodes){
-				sql=sql+"'"+code+"',";
+			sql = SELECT_MATERIEL_TARA + " WHERE REF_ID in (";
+			for (String code : limsCodes) {
+				sql = sql + "'" + code + "',";
 			}
-			sql=sql+"'')";
+			sql = sql + "'')";
 		}
 		//Logger.debug("Query :"+sql);
 		List<Map<String,PropertyValue>> results =  this.jdbcTemplate.query(sql 
 				,new RowMapper<Map<String,PropertyValue>>() {
-
-			public Map<String,PropertyValue> mapRow(ResultSet rs, int rowNum) throws SQLException {
-				
-				Map<String,PropertyValue> properMap= mapRowTara(rs, rowNum);
-				properMap.put("limsCode",new PropertySingleValue(rs.getInt("ref_id")));
-				return properMap;
-			}
-
-		});     
-		
+					@Override
+					public Map<String,PropertyValue> mapRow(ResultSet rs, int rowNum) throws SQLException {
+						Map<String,PropertyValue> properMap = mapRowTara(rs, rowNum);
+						properMap.put("limsCode",new PropertySingleValue(rs.getInt("ref_id")));
+						return properMap;
+					}
+			});
 		return results;
-		
 	}
-	
 	
 	public Map<String,PropertyValue> mapRowTara(ResultSet rs, int rowNum) throws SQLException {
-		
 		//Logger.debug("Tara :"+rs.getInt("ref_id"));
-		
-		Map<String,PropertyValue> properMap=new HashMap<String, PropertyValue>();
-		properMap.put("taraStation", new PropertySingleValue(rs.getInt("station")));
-		properMap.put("taraDepth", new PropertySingleValue(rs.getString("profondeur")));
-		properMap.put("taraFilter", new PropertySingleValue(rs.getString("filtre")));
-		properMap.put("taraIteration", new PropertySingleValue(rs.getString("iteration")));
-		properMap.put("taraSample", new PropertySingleValue(rs.getString("materiel")));
-		if(rs.getString("codebarre")!=null){
+		Map<String,PropertyValue> properMap = new HashMap<>(); // <String, PropertyValue<?>>();
+		properMap.put("taraStation",    new PropertySingleValue(rs.getInt("station")));
+		properMap.put("taraDepth",      new PropertySingleValue(rs.getString("profondeur")));
+		properMap.put("taraFilter",     new PropertySingleValue(rs.getString("filtre")));
+		properMap.put("taraIteration",  new PropertySingleValue(rs.getString("iteration")));
+		properMap.put("taraSample",     new PropertySingleValue(rs.getString("materiel")));
+		if (rs.getString("codebarre") != null) {
 			properMap.put("taraBarCode", new PropertySingleValue(rs.getString("codebarre")));
 		}
-		properMap.put("taraDepthCode", new PropertySingleValue(rs.getString("profondeurCode")));
+		properMap.put("taraDepthCode",  new PropertySingleValue(rs.getString("profondeurCode")));
 		properMap.put("taraFilterCode", new PropertySingleValue(rs.getString("filtreCode")));
-		
 		return properMap;
 	}
-	
-	
 
 }

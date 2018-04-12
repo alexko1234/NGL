@@ -7,9 +7,12 @@ import fr.cea.ig.play.test.CompleteTestServer;
 import play.Application;
 
 class CompleteSQTestServer extends CompleteTestServer {
+	
+	@Override
 	public Application createApplication() { 
 		return Global.devapp();
 	}
+	
 }
 
 public class AbstractSQServerTest extends AbstractServerTest {

@@ -1,8 +1,6 @@
 package controllers.archives.api;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -15,14 +13,12 @@ import controllers.CommonController;
 import controllers.authorisation.Permission;
 import controllers.history.UserHistory;
 import fr.cea.ig.MongoDBDAO;
-// import fr.cea.ig.MongoDBDatatableResponseChunks;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.mongo.MongoStreamer;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
-import play.Logger;
 import play.mvc.Result;
 import play.mvc.With;
-import fr.cea.ig.mongo.MongoStreamer;
 
 /**
  * Controller that manage the readset archive
@@ -31,6 +27,8 @@ import fr.cea.ig.mongo.MongoStreamer;
  *
  */
 public class ReadSets extends CommonController {
+	
+	private static final play.Logger.ALogger logger = play.Logger.of(ReadSets.class);
 	
 	/*
 	 * @param archive default 2
@@ -41,10 +39,9 @@ public class ReadSets extends CommonController {
 	public Result list(){
 
 		BasicDBObject keys = new BasicDBObject();
-		keys.put("treatments", 0);
-		
+		keys.put("treatments", 0);		
 		Integer archive = getArchiveValue();
-		List<Archive> archives = new ArrayList<Archive>();
+//		List<Archive> archives = new ArrayList<Archive>();
 		MongoDBResult<ReadSet> results =  MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, getQuery(archive), keys);		
 		return MongoStreamer.okStreamUDT(results, r -> { return convertToArchive(archive, r); });
 	}
@@ -63,9 +60,8 @@ public class ReadSets extends CommonController {
 	private Integer getArchiveValue() {
 		try {
 			return Integer.valueOf(request().queryString().get("archive")[0]);
-
-		} catch(Exception e) {
-			Logger.error(e.getMessage());
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 			return 2; // default value;
 		}
 	}

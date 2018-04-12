@@ -6,6 +6,11 @@ package controllers.instruments.api;
 import java.util.ArrayList;
 import java.util.List;
 
+//import controllers.CommonController;
+import javax.inject.Inject;
+
+import controllers.APICommonController;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.utils.ListObject;
@@ -17,10 +22,6 @@ import play.libs.Json;
 import play.mvc.Result;
 import play.mvc.Results;
 import views.components.datatable.DatatableResponse;
-//import controllers.CommonController;
-import javax.inject.Inject;
-import fr.cea.ig.play.NGLContext;
-import controllers.APICommonController;
 
 public class InstrumentUsedTypes extends APICommonController<InstrumentUsedTypesSearchForm> { // CommonController{
 
@@ -32,8 +33,7 @@ public class InstrumentUsedTypes extends APICommonController<InstrumentUsedTypes
 		instrumentUsedTypeForm = ctx.form(InstrumentUsedTypesSearchForm.class);
 	}
 	
-	
-	public /*static*/ Result list() throws DAOException{
+	public /*static*/ Result list() throws DAOException {
 		Form<InstrumentUsedTypesSearchForm> processTypeFilledForm = filledFormQueryString(instrumentUsedTypeForm,InstrumentUsedTypesSearchForm.class);
 		InstrumentUsedTypesSearchForm instrumentUsedsSearch = processTypeFilledForm.get();
 
@@ -46,9 +46,9 @@ public class InstrumentUsedTypes extends APICommonController<InstrumentUsedTypes
 				instrumentUseds = InstrumentUsedType.find.findAll();
 			}
 			if(instrumentUsedsSearch.datatable){
-				return ok(Json.toJson(new DatatableResponse<InstrumentUsedType>(instrumentUseds, instrumentUseds.size()))); 
+				return ok(Json.toJson(new DatatableResponse<>(instrumentUseds, instrumentUseds.size()))); 
 			}else if(instrumentUsedsSearch.list){
-				List<ListObject> lop = new ArrayList<ListObject>();
+				List<ListObject> lop = new ArrayList<>();
 				for(InstrumentUsedType et:instrumentUseds){
 					lop.add(new ListObject(et.code, et.name));
 				}

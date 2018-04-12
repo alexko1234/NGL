@@ -29,12 +29,13 @@ public class Receptions extends TPLCommonController {
 
 	final Form<PropertyFileValue> fileForm;// = form(PropertyFileValue.class);
 	
-	private final NGLContext ctx;
+//	private final NGLContext ctx;
 	private final ReceptionFileService receptionFileService;
+
 	@Inject
 	public Receptions(NGLContext ctx, ReceptionFileService receptionFileService) {
 		fileForm = ctx.form(PropertyFileValue.class);
-		this.ctx = ctx;
+//		this.ctx = ctx;
 		this.receptionFileService = receptionFileService;
 	}
 	
@@ -47,13 +48,13 @@ public class Receptions extends TPLCommonController {
 	@Permission(value={"writing"})
 	public Result importFile(String receptionConfigCode){
 		ReceptionConfiguration configuration = getReceptionConfig(receptionConfigCode);
-		if(null == configuration)return badRequest("ReceptionConfiguration not exist");
-		
+		if (configuration == null)
+			return badRequest("ReceptionConfiguration not exist");
 		Form<PropertyFileValue> filledForm = getFilledForm(fileForm,PropertyFileValue.class);
 		PropertyFileValue pfv = filledForm.get();
-		if(null != pfv){
-			
-			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
+		if (pfv != null) {
+//			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
+			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm);
 			try {				
 				FileService fileService = receptionFileService.getFileService(configuration, pfv, contextValidation);
 				fileService.analyse();
@@ -67,9 +68,9 @@ public class Receptions extends TPLCommonController {
 			} else {
 				return ok();
 			}
-			
-		}else{
+		} else {
 			return badRequest("missing file");
 		}		
 	}
+	
 }

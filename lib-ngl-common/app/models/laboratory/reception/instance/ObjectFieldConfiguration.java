@@ -1,23 +1,23 @@
 package models.laboratory.reception.instance;
 
 import java.lang.reflect.Field;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import models.laboratory.reception.instance.ReceptionConfiguration.Action;
-import validation.ContextValidation;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import models.laboratory.reception.instance.ReceptionConfiguration.Action;
+import validation.ContextValidation;
 
+
+@SuppressWarnings("unused") // TODO: T seems to only be informative, check for removal
 public class ObjectFieldConfiguration<T> extends AbstractFieldConfiguration {
 	
 	@JsonIgnore
-	public Map<String, AbstractFieldConfiguration> configs = new HashMap<String, AbstractFieldConfiguration>();
+	public Map<String, AbstractFieldConfiguration> configs = new HashMap<>();
 
 	@JsonAnyGetter
     public Map<String, AbstractFieldConfiguration> configs() {
@@ -56,16 +56,14 @@ public class ObjectFieldConfiguration<T> extends AbstractFieldConfiguration {
 	}
 
 	@Override
-	public void populateField(Field field, Object dbObject,
-			Map<Integer, String> rowMap, ContextValidation contextValidation, Action action)
-			throws Exception {
+	public void populateField(Field field, Object dbObject,	Map<Integer, String> rowMap, ContextValidation contextValidation, Action action) throws Exception {
 		
 		Object object = field.get(dbObject);
-		if(null == object)object = field.getType().newInstance();
+		if (object == null)
+			object = field.getType().newInstance();
 		
 		populateSubFields(object, rowMap, contextValidation, action);
 		populateField(field, dbObject, object);	
 	}
 
-	
 }

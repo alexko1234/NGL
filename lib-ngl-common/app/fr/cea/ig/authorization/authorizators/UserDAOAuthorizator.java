@@ -1,5 +1,10 @@
 package fr.cea.ig.authorization.authorizators;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
+import java.util.HashSet;
+import java.util.Set;
+
 //import java.util.concurrent.CompletableFuture;
 //import java.util.concurrent.CompletionStage;
 //import java.util.function.Supplier;
@@ -9,29 +14,12 @@ import javax.inject.Singleton;
 
 import com.google.inject.Provider;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import models.administration.authorisation.Permission;
-import controllers.authorisation.PermissionHelper;
 import fr.cea.ig.authorization.IAuthorizator;
 import fr.cea.ig.ngl.dao.api.APIException;
 import fr.cea.ig.ngl.dao.permissions.PermissionAPI;
 import fr.cea.ig.play.IGConfig;
-import models.administration.authorisation.User;
-import models.administration.authorisation.description.dao.UserDAO;
-// import play.Logger;
-// import play.api.modules.spring.Spring;
-// import play.Play;
-//  import play.mvc.Action;
-// import play.mvc.Http.Context;
-// import play.mvc.Result;
-// import static play.mvc.Results.unauthorized;
+import models.administration.authorisation.Permission;
 import models.utils.dao.DAOException;
-
-// TODO: use a UserAPI object
 
 /**
  * IAuhtorization implementation on top of UserDAO.
@@ -118,7 +106,8 @@ public class UserDAOAuthorizator implements IAuthorizator {
 
     /**
      * DI constructor.
-     * @param config configuration to use
+     * @param config        configuration to use
+     * @param permissionAPI permission API
      */
     @Inject
     public UserDAOAuthorizator(IGConfig config, Provider<PermissionAPI> permissionAPI) {
@@ -194,6 +183,7 @@ public class UserDAOAuthorizator implements IAuthorizator {
         } 
         return permissions;
     }
+    
     /**
      * Can the user access the given application by name .
      * @param login user login
@@ -216,3 +206,4 @@ public class UserDAOAuthorizator implements IAuthorizator {
     }
    
 }
+

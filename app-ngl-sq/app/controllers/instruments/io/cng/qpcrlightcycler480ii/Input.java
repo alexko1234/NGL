@@ -4,30 +4,25 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import controllers.instruments.io.utils.AbstractInput;
+import controllers.instruments.io.utils.InputHelper;
 import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
-import models.laboratory.parameter.index.Index;
-import play.Logger;
+//import play.Logger;
 import validation.ContextValidation;
-import validation.utils.ValidationHelper;
-import controllers.instruments.io.utils.AbstractInput;
-import controllers.instruments.io.utils.InputHelper;
 
 public class Input extends AbstractInput {
 	
+//	private static final play.Logger.ALogger logger = play.Logger.of(Input.class);
 	
    /* Description du fichier a traiter: TXT TAB délimité généré par LightCycler
 	*
@@ -45,25 +40,23 @@ public class Input extends AbstractInput {
 	*/
 	
 	@Override
-	public Experiment importFile(Experiment experiment,PropertyFileValue pfv, ContextValidation contextValidation) throws Exception {	
+	public Experiment importFile(Experiment experiment, PropertyFileValue pfv, ContextValidation contextValidation) throws Exception {	
 		
-		int sector=0;
+		int sector = 0;
 		
 		ExperimentType experimentType = ExperimentType.find.findByCode(experiment.typeCode);
 		PropertyDefinition correctionFactorLibrarySizeDefault = experimentType.getMapPropertyDefinition().get("correctionFactorLibrarySize"); 
-		
-		
+
 		if (experiment.instrumentProperties.containsKey("sector96")){
 			PropertySingleValue psv = (PropertySingleValue) experiment.instrumentProperties.get("sector96");
-			Logger.info( "sector96="+ psv.value.toString() );
-			
-			if ( psv.value.toString().equals("1-48") ){ 
-				sector=0; 
-			}else { 
-				sector=1;
+			logger.info( "sector96=" + psv.value.toString());			
+			if ( psv.value.toString().equals("1-48") ) { 
+				sector = 0; 
+			} else { 
+				sector = 1;
 			}
-			Logger.info( "sector="+sector);
-		}else {
+			logger.info( "sector=" + sector);
+		} else {
 			contextValidation.addErrors("Erreur","valeur de 'sector96' non supportée");
 			return experiment;
 		}
@@ -74,14 +67,23 @@ public class Input extends AbstractInput {
 		 */
 		
 		//tableau des facteurs de dilution et leur repetition sur la plaque 384
-		double[] fDilution={5000,5000,5000,   50000,50000,50000};
+		// TODO: extract as static final
+		double[] fDilution = { 
+				 5000, 
+				 5000, 
+				 5000, 
+				50000,
+				50000,
+				50000
+			};
 		int nbRep=6; // 2 dilutions avec 3 repetition=> 6; chaque puit 96 initial est traité 6 fois dans la plaque 384
 		
 		// hashMap  pour stocker les concentrations du fichier
-		Map<String,Double> data = new HashMap<String,Double>(0);
+		Map<String,Double> data = new HashMap<>(0);
 		
 		// ajout 03/08/2017 charset detection (N. Wiart)
-		byte[] ibuf = pfv.value;
+//		byte[] ibuf = pfv.value;
+		byte[] ibuf = pfv.byteValue();
 		String charset = "UTF-8"; //par defaut, convient aussi pour de l'ASCII pur
 		
 		// si le fichier commence par les 2 bytes ff/fe  alors le fichier est encodé en UTF-16 little endian
@@ -154,15 +156,15 @@ public class Input extends AbstractInput {
 		}
 		
 		// nouveau HashMap pour les concentrations calculees en nM
-		Map<String,Double> results = new HashMap<String,Double>(0);
+		Map<String,Double> results = new HashMap<>(0);
 		
 		/* traiter dans l'ordre des positions; 
 		 * 6 lignes successives (1 block) doivent correspondre au meme echantillon avec 3 repetions de 2 dilutions
 		 */
-		SortedSet<String> pos0384 = new TreeSet<String>(data.keySet());
-		int nbblock=0;
-		int rep=0;;
-		double[] listConc= new double[nbRep];
+		SortedSet<String> pos0384 = new TreeSet<>(data.keySet());
+		int nbblock = 0;
+		int rep = 0;
+		double[] listConc = new double[nbRep];
 		// 07/04 Voir commentaire plus haut...double rocheFactor= (double)( 452 / correctionFactorLibrarySize); //calculé une seule fois
 		
 		for (String key : pos0384) { 
@@ -170,21 +172,21 @@ public class Input extends AbstractInput {
 			// conc_nM= conc_pM * ( fact_dilution/1000 ) * ( 452 / correctionFactorLibrarySize ) 
 			    // 07/04 reporter la correction  plus loin, qd on a la valeur de correctionFactorLibrarySize.....
 			    // double concentration_nM =  data.get(key) * (double)( fDilution[rep] / 1000 ) * rocheFactor;
-			double concentration_nM =  data.get(key) * (double)( fDilution[rep] / 1000 );
+//			double concentration_nM =  data.get(key) * (double)( fDilution[rep] / 1000 );
+			double concentration_nM =  data.get(key) * fDilution[rep] / 1000 ;
 			
 			// stocker concentration pour faire moyenne plus tard...
-			listConc[rep]=concentration_nM;
+			listConc[rep] = concentration_nM;
 			//Logger.info ("pos0384="+key+" CONC (pM)="+  data.get(key) );
-			
 			nbblock++;
 			rep++;
-			if ((nbblock % nbRep ) == 0 ) {	
+			if ((nbblock % nbRep ) == 0) {	
 				//nbblock est multiple de 6 => fin d'un block de lignes
 				//17/05/2016 calcul de la moyenne des 6 concentrations en ne tenant pas compte des concentrations a 0
-				double moyConc_nM= meanNo0(listConc) ;
+				double moyConc_nM = meanNo0(listConc) ;
 
 				// remapper en 96
-				String pos96=remapPosition (key, sector, contextValidation );
+				String pos96 = remapPosition (key, sector, contextValidation );
 				results.put(pos96,moyConc_nM );
 				
 				//Logger.info ("FIN DE BLOCK...pos384="+key+" > pos96="+ pos96+"| MOY CONC="+moyConc_nM);
@@ -302,7 +304,8 @@ public class Input extends AbstractInput {
 		int col96=0;
 		
 		//recuperer le code ASCII du premier caractere de la position
-		int asciiRow384=(int)pos384.charAt(0);
+//		int asciiRow384=(int)pos384.charAt(0);
+		int asciiRow384 = pos384.charAt(0);
 		//recuper la colonne
 		int col384 = Integer.parseInt(pos384.substring(1));
 		

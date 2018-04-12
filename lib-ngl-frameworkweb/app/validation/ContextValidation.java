@@ -1,17 +1,21 @@
 package validation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+// import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.apache.commons.lang3.StringUtils;
 
+//import com.sun.org.apache.xerces.internal.impl.dv.ValidationContext;
+
 import play.Logger.ALogger;
+import play.data.Form;
 import play.data.validation.ValidationError;
+
 
 // TODO: change name to ValidationContext
 
@@ -47,8 +51,10 @@ public class ContextValidation {
 		
 	//
 	private String rootKeyName = "";
+	
 	//
 	public Map<String,List<ValidationError>> errors;
+	
 	//
 	private Map<String,Object> contextObjects;
 
@@ -57,8 +63,8 @@ public class ContextValidation {
 	 * @param user user name
 	 */
 	public ContextValidation(String user) {
-		errors         = new TreeMap<String, List<ValidationError>>();
-		contextObjects = new TreeMap<String, Object>();
+		errors         = new TreeMap<>();
+		contextObjects = new TreeMap<>();
 		this.user      = user;
 	}
 
@@ -68,11 +74,19 @@ public class ContextValidation {
 	 * @param errors
 	 */
 	public ContextValidation(String user, Map<String,List<ValidationError>> errors) {
-		this.errors    = new TreeMap<String, List<ValidationError>>(errors);
-		contextObjects = new TreeMap<String, Object>();
+		this.errors    = new TreeMap<>(errors);
+		contextObjects = new TreeMap<>();
 		this.user      = user;
 	}
-
+	
+	protected ContextValidation() {}
+	
+	// TODO: provide a proper initialization
+	@SuppressWarnings("deprecation")
+	public ContextValidation(String user, Form<?> form) {
+		this(user,form.errors());
+	}
+	
 	/**
 	 * User running the validation.
 	 * @return user running the validation. 
@@ -93,6 +107,25 @@ public class ContextValidation {
 			return null;
 		}
 	}
+	
+	/**
+	 * Get a typed object from this context, this does nothing else than
+	 * moving the cast problem in a single place.
+	 * @param key object name
+	 * @param <T> expected object type
+	 * @return    typed object
+	 */
+//	@SuppressWarnings("unchecked")
+	public <T> T getTypedObject(String key){
+		if (contextObjects.containsKey(key)) {
+//			return (T)contextObjects.get(key);
+			@SuppressWarnings("unchecked") // No way to type from context objects
+			T t = (T)contextObjects.get(key);
+			return t;
+		} else {
+			return null;
+		}
+	}
 
 	public Map<String,Object> getContextObjects() {
 		return this.contextObjects;
@@ -100,7 +133,7 @@ public class ContextValidation {
 
 
 	public void setContextObjects(Map<String,Object> contextObjects) {
-		this.contextObjects = new TreeMap<String,Object>(contextObjects);
+		this.contextObjects = new TreeMap<>(contextObjects);
 	}
 
 	/*

@@ -1,14 +1,21 @@
 package services.description.common;
 
+import static services.description.DescriptionFactory.getObjectTypes;
+import static services.description.DescriptionFactory.newState;
+import static services.description.DescriptionFactory.newStateHierarchy;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import models.laboratory.common.description.*;
+
+import models.laboratory.common.description.ObjectType;
+import models.laboratory.common.description.State;
+import models.laboratory.common.description.StateCategory;
+import models.laboratory.common.description.StateHierarchy;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
 import services.description.DescriptionFactory;
-import static services.description.DescriptionFactory.*;
 
 public class StateService {
 	
@@ -27,12 +34,12 @@ public class StateService {
 	
 	
 	/**
-	 * Creates state categories
-	 * @param errors
-	 * @throws DAOException
+	 * Creates state categories.
+	 * @param errors        error manager
+	 * @throws DAOException DAO problem
 	 */
 	public static void saveStateCategories(Map<String,List<ValidationError>> errors) throws DAOException{
-		List<StateCategory> l = new ArrayList<StateCategory>();			
+		List<StateCategory> l = new ArrayList<>();			
 		for (StateCategory.CODE code : StateCategory.CODE.values()) {
 			l.add(DescriptionFactory.newSimpleCategory(StateCategory.class, code.name(), code.name()));
 		}
@@ -41,12 +48,12 @@ public class StateService {
 
 
 	/**
-	 * Create states (in the database objects description)
-	 * @param errors
-	 * @throws DAOException
+	 * Create states (in the database objects description).
+	 * @param errors        error manager
+	 * @throws DAOException DAO problem
 	 */
 	public static void saveStates(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<State> l = new ArrayList<State>();
+		List<State> l = new ArrayList<>();
 
 		//l.add(newState("Not Defined", "ND", true, 0, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Project.name(), ObjectType.CODE.Experiment.name(), ObjectType.CODE.Process.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name(), ObjectType.CODE.Sample.name(), ObjectType.CODE.Instrument.name(), ObjectType.CODE.Reagent.name(), ObjectType.CODE.Import.name(), ObjectType.CODE.Treatment.name(),ObjectType.CODE.Container.name(),ObjectType.CODE.Analysis.name()), false, "N"));		
 		
@@ -117,12 +124,12 @@ public class StateService {
 	
 	/**
 	 * Creates hierarchical relation between states in order to draw states flow (directive workflowChart)
-	 * Graphic representation is made by the directive "workflowChart"
-	 * @param errors
-	 * @throws DAOException
+	 * Graphic representation is made by the directive "workflowChart".
+	 * @param errors        error manager
+	 * @throws DAOException DAO problem
 	 */
 	public static void saveStatesHierarchy(Map<String, List<ValidationError>> errors) throws DAOException{
-		List<StateHierarchy> l = new ArrayList<StateHierarchy>();
+		List<StateHierarchy> l = new ArrayList<>();
 		
 		//ReadSet
 		l.add(newStateHierarchy("IP-RG","IP-RG", ObjectType.CODE.ReadSet.name()));

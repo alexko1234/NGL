@@ -1,16 +1,14 @@
 package fr.cea.ig.ngl.test;
 
 import org.junit.Assert;
-import org.junit.BeforeClass;
 
 import fr.cea.ig.ngl.dao.api.APIValidationException;
-import play.Logger;
 import play.Logger.ALogger;
-import utils.AbstractTests;
 
 
 /**
- * normalization of DAO/API tests
+ * Normalization of DAO/API tests.
+ * 
  * @author ajosso
  *
  */
@@ -28,7 +26,7 @@ public interface AbstractAPITests {
 	}
 
 	/**
-	 * Log Validation Errors only if logger level is DEBUG or less
+	 * Log Validation Errors only if logger level is DEBUG or less.
 	 * @param e
 	 */
 	default void logValidationErrors(APIValidationException e) {

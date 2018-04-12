@@ -1,58 +1,47 @@
 package controllers.plates.api;
 
-// import static play.data.Form.form;
-//import static fr.cea.ig.play.IGGlobals.form;
 
-import static validation.utils.ValidationHelper.addErrors;
 import static validation.utils.ValidationHelper.required;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import javax.inject.Inject;
 
-import lims.cns.dao.LimsManipDAO;
-import lims.models.Plate;
-import models.utils.CodeHelper;
-// import play.Logger;
-import play.api.modules.spring.Spring;
-import play.data.Form;
-import play.data.validation.ValidationError;
-import play.libs.Json;
-import play.mvc.Result;
-import views.components.datatable.DatatableResponse;
 import controllers.CommonController;
 import controllers.MaterielManipSearch;
 import fr.cea.ig.play.NGLContext;
+import lims.cns.dao.LimsManipDAO;
+import lims.models.Plate;
+import models.utils.CodeHelper;
+import play.data.Form;
+import play.libs.Json;
+import play.mvc.Result;
+import validation.ContextValidation;
+import views.components.datatable.DatatableResponse;
 
 // TODO: use DI, extends DocumemntController to start with
 public class Plates extends CommonController {
-	
-	private final NGLContext ctx;
-	
-	@Inject
-	public Plates(NGLContext ctx) {
-		this.ctx = ctx;
-		wellsForm = ctx.form(Plate.class);
-		manipForm = ctx.form(MaterielManipSearch.class);
-	}
 	
 	/**
 	 * Logger.
 	 */
 	private static final play.Logger.ALogger logger = play.Logger.of(Plates.class);
-	
-	
+		
 	final /*static*/ Form<Plate> wellsForm;// = form(Plate.class);
 	
 	final /*static*/ Form<MaterielManipSearch> manipForm;// = form(MaterielManipSearch.class);
 	
+//	private final NGLContext ctx;
+	
+	@Inject
+	public Plates(NGLContext ctx) {
+//		this.ctx = ctx;
+		wellsForm = ctx.form(Plate.class);
+		manipForm = ctx.form(MaterielManipSearch.class);
+	}
+	
 	public /*static*/ Result save() {
 		Form<Plate> filledForm = getFilledForm(wellsForm, Plate.class);
-
 		Plate plate = filledForm.get();
 		boolean isUpdate = true;
 		logger.info("SAVE Plate : " + plate);
@@ -64,77 +53,119 @@ public class Plates extends CommonController {
 			}
 			isUpdate = false;
 		}
-		Map<String, List<ValidationError>> errors    = new TreeMap<String, List<ValidationError>>();
-		
-		validatePlate(plate, errors, isUpdate);
-		if (errors.isEmpty()) {
+//		Map<String, List<ValidationError>> errors    = new TreeMap<String, List<ValidationError>>();
+		ContextValidation ctx = new ContextValidation(getCurrentUser());
+//		validatePlate(plate, errors, isUpdate);
+		validatePlate(plate, ctx, isUpdate);
+//		if (errors.isEmpty()) {
+		if (!ctx.hasErrors()) {
 			logger.debug(plate.toString());
 			if (!isUpdate) {
-				Spring.getBeanOfType(LimsManipDAO.class).createPlate(plate,getCurrentUser());
+//				Spring.getBeanOfType(LimsManipDAO.class).createPlate(plate,getCurrentUser());
+				limsManipDAO().createPlate(plate,getCurrentUser());
 			} else {
-				Spring.getBeanOfType(LimsManipDAO.class).updatePlate(plate,getCurrentUser());
+//				Spring.getBeanOfType(LimsManipDAO.class).updatePlate(plate,getCurrentUser());
+				limsManipDAO().updatePlate(plate,getCurrentUser());
 			}
-			plate = Spring.getBeanOfType(LimsManipDAO.class).getPlate(plate.code);  
+//			plate = Spring.getBeanOfType(LimsManipDAO.class).getPlate(plate.code);  
+			plate = limsManipDAO().getPlate(plate.code);  
 			return ok(Json.toJson(plate));
 		} else {
-			return badRequest(NGLContext._errorsAsJson(errors)); 
+//			return badRequest(NGLContext._errorsAsJson(errors)); 
+			return badRequest(NGLContext._errorsAsJson(ctx.getErrors())); 
 		}
 	}
 	
 	public /*static*/ Result list(){
 		Form<MaterielManipSearch> filledForm =  manipForm.bindFromRequest();
-		LimsManipDAO  limsManipDAO = Spring.getBeanOfType(LimsManipDAO.class);
+//		LimsManipDAO  limsManipDAO = Spring.getBeanOfType(LimsManipDAO.class);
 		logger.info("Manip Form :"+filledForm.toString());		
-		List<Plate> plates = limsManipDAO.findPlates(filledForm.get().etmanip,filledForm.get().project, filledForm.get().plaqueId, 
+		List<Plate> plates = limsManipDAO().findPlates(filledForm.get().etmanip,filledForm.get().project, filledForm.get().plaqueId, 
 				filledForm.get().matmanom, filledForm.get().percodc, filledForm.get().fromDate, filledForm.get().toDate);		
-		return ok(Json.toJson(new DatatableResponse(plates, plates.size())));
+		return ok(Json.toJson(new DatatableResponse<>(plates, plates.size())));
 	}
 	
 	public /*static*/ Result get(String code){
 		logger.info("GET Plate : "+code);
-		LimsManipDAO  limsManipDAO = Spring.getBeanOfType(LimsManipDAO.class);
-		Plate plate = limsManipDAO.getPlate(code);
-		if(plate != null){			
+//		LimsManipDAO  limsManipDAO = Spring.getBeanOfType(LimsManipDAO.class);
+//		Plate plate = limsManipDAO.getPlate(code);
+		Plate plate = limsManipDAO().getPlate(code);
+		if (plate != null) {			
 			return ok(Json.toJson(plate));					
-		}else{
+		} else {
 			return notFound();
 		}
 	}
 	
 	public /*static*/ Result remove(String code){
 		logger.info("DELETE Plate : "+code);
-		LimsManipDAO  limsManipDAO = Spring.getBeanOfType(LimsManipDAO.class);
-		limsManipDAO.deletePlate(code);
+//		LimsManipDAO  limsManipDAO = Spring.getBeanOfType(LimsManipDAO.class);
+//		limsManipDAO.deletePlate(code);
+		limsManipDAO().deletePlate(code);
 		return ok();
 	}
 	
+//	private /*static*/ void validatePlate(Plate plate, Map<String, List<ValidationError>> errors, boolean isUpdate) {
+//		if(required(errors, plate, "plate")){
+//			required(errors, plate.code, "code");
+//			required(errors, plate.typeCode, "typeCode");
+//			if(required(errors, plate.wells, "wells")){
+//				for(int i = 0 ; i < plate.wells.length ; i++){
+//					required(errors, plate.wells[i].x, "wells["+i+"]"+".x");
+//					required(errors, plate.wells[i].y, "wells["+i+"]"+".y");
+//					required(errors, plate.wells[i].code, "wells["+i+"]"+".code");
+//					if(!plate.wells[i].typeCode.equals(plate.typeCode)){
+//						addErrors(errors, "wells["+i+"]"+".typeName", "plates.error.typecode.different", plate.typeName, plate.wells[i].typeName);
+//					}
+//				}
+//				if(!isUpdate){
+//					validatePlateCode(plate, errors); 
+//				}
+//				
+//				for(int i = 0 ; i < plate.wells.length ; i++){
+//					for(int j = 0 ; j < plate.wells.length ; j++){
+//						if(i != j){
+//							if(plate.wells[i].code.equals(plate.wells[j].code)){
+//								addErrors(errors, "wells["+i+"]"+".name", "plates.error.severalsamewellcode", plate.wells[i].name);
+//							}
+//							
+//							if(plate.wells[i].x != null && plate.wells[i].y != null && plate.wells[i].x.equals(plate.wells[j].x) && plate.wells[i].y.equals(plate.wells[j].y)){
+//								addErrors(errors, "wells["+i+"]", "plates.error.wellwithsamecoord", plate.wells[i].x, plate.wells[i].y);
+//							}							
+//						}
+//					}
+//				}
+//			}
+//		}
+//	}
 	
-	private /*static*/ void validatePlate(Plate plate, Map<String, List<ValidationError>> errors, boolean isUpdate) {
-		if(required(errors, plate, "plate")){
-			required(errors, plate.code, "code");
-			required(errors, plate.typeCode, "typeCode");
-			if(required(errors, plate.wells, "wells")){
-				for(int i = 0 ; i < plate.wells.length ; i++){
-					required(errors, plate.wells[i].x, "wells["+i+"]"+".x");
-					required(errors, plate.wells[i].y, "wells["+i+"]"+".y");
-					required(errors, plate.wells[i].code, "wells["+i+"]"+".code");
+	private void validatePlate(Plate plate, ContextValidation ctx, boolean isUpdate) {
+		if (required(ctx, plate, "plate")) {
+			required(ctx, plate.code, "code");
+			required(ctx, plate.typeCode, "typeCode");
+			if (required(ctx, plate.wells, "wells")) {
+				for (int i = 0 ; i < plate.wells.length ; i++) {
+					required(ctx, plate.wells[i].x, "wells["+i+"]"+".x");
+					required(ctx, plate.wells[i].y, "wells["+i+"]"+".y");
+					required(ctx, plate.wells[i].code, "wells["+i+"]"+".code");
 					if(!plate.wells[i].typeCode.equals(plate.typeCode)){
-						addErrors(errors, "wells["+i+"]"+".typeName", "plates.error.typecode.different", plate.typeName, plate.wells[i].typeName);
+//						addErrors(ctx, "wells["+i+"]"+".typeName", "plates.error.typecode.different", plate.typeName, plate.wells[i].typeName);
+						ctx.addErrors("wells["+i+"]"+".typeName", "plates.error.typecode.different", plate.typeName, plate.wells[i].typeName);
 					}
 				}
-				if(!isUpdate){
-					validatePlateCode(plate, errors); 
+				if (!isUpdate) {
+					validatePlateCode(plate, ctx); 
 				}
-				
-				for(int i = 0 ; i < plate.wells.length ; i++){
-					for(int j = 0 ; j < plate.wells.length ; j++){
+				for (int i = 0 ; i < plate.wells.length ; i++) {
+					for (int j = 0 ; j < plate.wells.length ; j++) {
 						if(i != j){
 							if(plate.wells[i].code.equals(plate.wells[j].code)){
-								addErrors(errors, "wells["+i+"]"+".name", "plates.error.severalsamewellcode", plate.wells[i].name);
+//								addErrors(errors, "wells["+i+"]"+".name", "plates.error.severalsamewellcode", plate.wells[i].name);
+								ctx.addErrors("wells["+i+"]"+".name", "plates.error.severalsamewellcode", plate.wells[i].name);
 							}
-							
 							if(plate.wells[i].x != null && plate.wells[i].y != null && plate.wells[i].x.equals(plate.wells[j].x) && plate.wells[i].y.equals(plate.wells[j].y)){
-								addErrors(errors, "wells["+i+"]", "plates.error.wellwithsamecoord", plate.wells[i].x, plate.wells[i].y);
+//								addErrors(errors, "wells["+i+"]", "plates.error.wellwithsamecoord", plate.wells[i].x, plate.wells[i].y);
+								ctx.addErrors("wells["+i+"]", "plates.error.wellwithsamecoord", plate.wells[i].x, plate.wells[i].y);
 							}							
 						}
 					}
@@ -143,30 +174,48 @@ public class Plates extends CommonController {
 		}
 	}
 
+//	private /*static*/ void validatePlateCode(Plate plate, Map<String, List<ValidationError>> errors) {
+//		if (Spring.getBeanOfType(LimsManipDAO.class).isPlateExist(plate.code)) {
+//			addErrors(errors, "code", "plates.error.code.exist");
+//		}
+//	}
 
-	private /*static*/ void validatePlateCode(Plate plate,
-			Map<String, List<ValidationError>> errors) {
-		if(Spring.getBeanOfType(LimsManipDAO.class).isPlateExist(plate.code)){
-			addErrors(errors, "code", "plates.error.code.exist");
-		}
+	private void validatePlateCode(Plate plate, ContextValidation ctx) {
+//		if (Spring.getBeanOfType(LimsManipDAO.class).isPlateExist(plate.code)) {
+		if (limsManipDAO().isPlateExist(plate.code))
+			ctx.addErrors("code", "plates.error.code.exist");
 	}
 
-	private /*static*/ String newCode(Integer typeCode) {
+//	private /*static*/ String newCode(Integer typeCode) {
+//		String code = CodeHelper.getInstance().generateContainerSupportCode();
+//		if(Integer.valueOf(12).equals(typeCode)){
+//		    code = "FRG_"+code;
+//		}else if(Integer.valueOf(13).equals(typeCode)){
+//		    code = "LIB_"+code;
+//		}else if(Integer.valueOf(18).equals(typeCode)){
+//		    code = "PCR_"+code;
+//		}else if(Integer.valueOf(14).equals(typeCode)){
+//		    code = "STK_"+code;
+//		}else{
+//		    code = "PL_"+code;
+//		}
+//		return code;
+//	}
+	
+	private String newCode(Integer typeCode) {
 		String code = CodeHelper.getInstance().generateContainerSupportCode();
-		if(Integer.valueOf(12).equals(typeCode)){
-		    code = "FRG_"+code;
-		}else if(Integer.valueOf(13).equals(typeCode)){
-		    code = "LIB_"+code;
-		}else if(Integer.valueOf(18).equals(typeCode)){
-		    code = "PCR_"+code;
-		}else if(Integer.valueOf(14).equals(typeCode)){
-		    code = "STK_"+code;
-		}else{
-		    code = "PL_"+code;
+		switch (typeCode) {
+		case 12 : code = "FRG_" + code; break;
+		case 13 : code = "LIB_" + code; break;
+		case 18 : code = "PCR_" + code; break;
+		case 14 : code = "STK_" + code; break;
+		default : code = "PL_"  + code;
 		}
-		
 		return code;
 	}
 
-		
+	public static LimsManipDAO limsManipDAO() {
+		return play.api.modules.spring.Spring.getBeanOfType(LimsManipDAO.class);
+	}
+	
 }

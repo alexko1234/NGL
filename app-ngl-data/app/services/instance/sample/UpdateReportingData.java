@@ -16,12 +16,10 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
-import org.mongojack.DBCursor;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.Bytes;
 import com.mongodb.MongoException;
 
 import controllers.migration.OneToVoidContainer;
@@ -37,7 +35,6 @@ import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.run.instance.ReadSet;
-import models.laboratory.run.instance.Treatment;
 import models.laboratory.sample.instance.Sample;
 import models.laboratory.sample.instance.reporting.SampleExperiment;
 import models.laboratory.sample.instance.reporting.SampleProcess;
@@ -54,10 +51,10 @@ import workflows.process.ProcWorkflowHelper;
 
 public class UpdateReportingData extends AbstractImportData {
 	
-	private static final play.Logger.ALogger logger = play.Logger.of(UpdateReportingData.class);
+//	private static final play.Logger.ALogger logger = play.Logger.of(UpdateReportingData.class);
 	
-	private Map<String, List<String>> transformationCodesByProcessTypeCode = new HashMap<String, List<String>>();
-	private Map<String, Integer> nbExpPositionInProcessType = new HashMap<String, Integer>(); 
+	private Map<String, List<String>> transformationCodesByProcessTypeCode = new HashMap<>();
+	private Map<String, Integer> nbExpPositionInProcessType = new HashMap<>(); 
 
 	private final ProcWorkflowHelper procWorkflowHelper;
 	
@@ -201,7 +198,7 @@ public class UpdateReportingData extends AbstractImportData {
 	}
 
 	private List<SampleExperiment> updateExperiments(Process process) {		
-		List<SampleExperiment> sampleExperiments = new ArrayList<SampleExperiment>();
+		List<SampleExperiment> sampleExperiments = new ArrayList<>();
 		MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.in("code", process.experimentCodes))
 			.cursor.forEach(experiment -> {
 				sampleExperiments.addAll(convertToSampleExperiments(process, experiment));
@@ -213,8 +210,8 @@ public class UpdateReportingData extends AbstractImportData {
 	
 	//map key = expCode-processCode
 	private List<SampleExperiment> convertToSampleExperiments(Process process, Experiment experiment) {
-		List<SampleExperiment> sampleExperiments = new ArrayList<SampleExperiment>();
-		Set<String> containerCodes = new TreeSet<String>();
+		List<SampleExperiment> sampleExperiments = new ArrayList<>();
+		Set<String> containerCodes = new TreeSet<>();
 		containerCodes.add(process.inputContainerCode);
 		
 		if(null != process.outputContainerCodes){
@@ -294,23 +291,23 @@ public class UpdateReportingData extends AbstractImportData {
 		return sampleExperiments;
 	}
 
-	private Map<String, PropertyValue> computeExperimentProperties(Experiment experiment, InputContainerUsed icu,
-			OutputContainerUsed ocu) {
-		Map<String, PropertyValue> finalProperties = new HashMap<String, PropertyValue>();
-		if(null != experiment.experimentProperties)finalProperties.putAll(filterProperties(experiment.experimentProperties));
-		if(null != experiment.instrumentProperties)finalProperties.putAll(filterProperties(experiment.instrumentProperties));
-		if(null != icu.experimentProperties)finalProperties.putAll(filterProperties(icu.experimentProperties));
-		if(null != icu.instrumentProperties)finalProperties.putAll(filterProperties(icu.instrumentProperties));
-		if(null != ocu){
-			if(null != ocu.experimentProperties)finalProperties.putAll(filterProperties(ocu.experimentProperties));
-			if(null != ocu.instrumentProperties)finalProperties.putAll(filterProperties(ocu.instrumentProperties));
+	private Map<String, PropertyValue> computeExperimentProperties(Experiment experiment, 
+			                                                          InputContainerUsed icu,
+			                                                          OutputContainerUsed ocu) {
+		Map<String, PropertyValue> finalProperties = new HashMap<>(); // <String, PropertyValue>();
+		if (null != experiment.experimentProperties) finalProperties.putAll(filterProperties(experiment.experimentProperties));
+		if (null != experiment.instrumentProperties) finalProperties.putAll(filterProperties(experiment.instrumentProperties));
+		if (null != icu.experimentProperties)        finalProperties.putAll(filterProperties(icu.experimentProperties));
+		if (null != icu.instrumentProperties)        finalProperties.putAll(filterProperties(icu.instrumentProperties));
+		if (null != ocu){
+			if(null != ocu.experimentProperties) finalProperties.putAll(filterProperties(ocu.experimentProperties));
+			if(null != ocu.instrumentProperties) finalProperties.putAll(filterProperties(ocu.instrumentProperties));
 		}
 		
 		return finalProperties;
 	}
 
-	private Map<String, PropertyValue> filterProperties(
-			Map<String, PropertyValue> properties) {
+	private Map<String, PropertyValue> filterProperties(Map<String, PropertyValue> properties) {
 		return properties.entrySet().parallelStream()
 				.filter(entry -> entry.getValue() != null && !entry.getValue()._type.equals(PropertyValue.imgType)
 						&& !entry.getValue()._type.equals(PropertyValue.fileType))
@@ -318,7 +315,7 @@ public class UpdateReportingData extends AbstractImportData {
 	}
 	
 	private List<SampleReadSet> getSampleReadSets(Sample sample, Process process) {
-		List<SampleReadSet> sampleReadSets = new ArrayList<SampleReadSet>();
+		List<SampleReadSet> sampleReadSets = new ArrayList<>();
 		Set<String> tags = procWorkflowHelper.getTagAssignFromProcessContainers(process);
 		
 		BasicDBObject keys = new BasicDBObject();
@@ -365,16 +362,16 @@ public class UpdateReportingData extends AbstractImportData {
 		return sampleReadSet;
 	}
 
-	private Map<String, Treatment> filterTreaments(Map<String, Treatment> treatments) {
-		treatments.values()
-			.parallelStream()
-			.forEach(treament ->{
-				treament.results.entrySet().forEach(entry -> {
-					entry.setValue(filterProperties(entry.getValue()));
-				});
-			});
-		return treatments;
-	}
+//	private Map<String, Treatment> filterTreaments(Map<String, Treatment> treatments) {
+//		treatments.values()
+//			.parallelStream()
+//			.forEach(treament ->{
+//				treament.results.entrySet().forEach(entry -> {
+//					entry.setValue(filterProperties(entry.getValue()));
+//				});
+//			});
+//		return treatments;
+//	}
 	
 	/**
 	 * Extract ReadSet before the beginning of ngl-sq used.
@@ -386,7 +383,7 @@ public class UpdateReportingData extends AbstractImportData {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 			Date date = sdf.parse("2015/03/30");
 		
-			List<SampleReadSet> sampleReadSets = new ArrayList<SampleReadSet>();
+			List<SampleReadSet> sampleReadSets = new ArrayList<>();
 			
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("treatments", 0);

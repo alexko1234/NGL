@@ -1,7 +1,6 @@
 package models.laboratory.sample.instance.reporting;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 import models.laboratory.common.instance.State;

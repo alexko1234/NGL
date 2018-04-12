@@ -12,7 +12,6 @@ import org.mongojack.DBQuery;
 
 import controllers.DocumentController;
 import controllers.QueryFieldsForm;
-import controllers.sra.configurations.api.Configurations;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.NGLContext;
 import models.sra.submit.sra.instance.Experiment;
@@ -24,6 +23,7 @@ import play.mvc.Result;
 import validation.ContextValidation;
 
 public class ExperimentsRuns extends DocumentController<Experiment> {
+	
 	private static final play.Logger.ALogger logger = play.Logger.of(ExperimentsRuns.class);
 
 	final /*static*/ Form<Experiment> experimentForm;// = form(Experiment.class);
@@ -37,25 +37,25 @@ public class ExperimentsRuns extends DocumentController<Experiment> {
 		updateForm = ctx.form(QueryFieldsForm.class);
 	}
 
-	public Result get(String code)
-	{
+	@Override
+	public Result get(String code) {
 		Experiment exp  = getExperiment(code);
 		if (exp != null) {
 			return ok(Json.toJson(exp.run));
-		} else{
+		} else {
 			return notFound();
 		}		
 	}
 	
-	public Result update(String code)
-	{
+	public Result update(String code) {
 		Form<Experiment> filledForm = getFilledForm(experimentForm, Experiment.class);
 		Experiment userExperiment = filledForm.get();
 		
 		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
 		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
 		logger.debug("" + queryFieldsForm.fields);
-		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser(), filledForm);
 		Experiment experiment = getExperiment(code);
 		if (experiment == null) {
 			//return badRequest("Submission with code "+code+" not exist");
@@ -63,15 +63,12 @@ public class ExperimentsRuns extends DocumentController<Experiment> {
 			//return badRequest(filledForm.errors-AsJson());
 			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
-
-		if(queryFieldsForm.fields != null){
-			ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
-
+		if (queryFieldsForm.fields != null) {
+//			ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
-
-			if(!ctxVal.hasErrors()){
+			if (!ctxVal.hasErrors()) {
 				updateObject(DBQuery.and(DBQuery.is("run.code", code)), 
 						getBuilder(userExperiment, queryFieldsForm.fields, Experiment.class, "run").set("traceInformation", getUpdateTraceInformation(experiment.traceInformation)));
 
@@ -84,10 +81,11 @@ public class ExperimentsRuns extends DocumentController<Experiment> {
 		return ok();
 	}
 	
-	private Experiment getExperiment(String code)
-	{
-		Experiment exp  = MongoDBDAO.findOne(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, 
-				DBQuery.is("run.code", code));
+	private Experiment getExperiment(String code) {
+		Experiment exp  = MongoDBDAO.findOne(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, 
+				                             Experiment.class, 
+				                             DBQuery.is("run.code", code));
 		return exp;
 	}
+	
 }

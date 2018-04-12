@@ -1,14 +1,5 @@
 package controllers;
 
-
-//import java.beans.PropertyDescriptor;
-//import java.io.DataOutputStream;
-//import java.io.IOException;
-//import java.io.InputStream;
-//import java.io.OutputStream;
-//import java.io.PipedInputStream;
-//import java.io.PipedOutputStream;
-//import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,7 +29,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Iterators;
 import com.mongodb.AggregationOptions;
 import com.mongodb.BasicDBObject;
-import com.mongodb.util.JSON;
 
 //import akka.stream.javadsl.Source;
 //import akka.util.ByteString;
@@ -66,7 +56,8 @@ import views.components.datatable.DatatableForm;
 
 // New version is probably MongoCommonController<T>
 
-@Deprecated
+// TODO: suggest a fix
+// @Deprecated
 @With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 public abstract class CommonController extends Controller {
 // abstract class UNUSED_CommonController extends Controller {
@@ -98,7 +89,7 @@ public abstract class CommonController extends Controller {
 	
 	protected static <T> List<Form<T>> getFilledFormList(Form<T> form, Class<T> clazz) {		
 		JsonNode json = request().body().asJson();
-		List<Form<T>> results = new ArrayList<Form<T>>();
+		List<Form<T>> results = new ArrayList<>();
 		Iterator<JsonNode> iterator = json.elements();
 		
 		while(iterator.hasNext()){
@@ -119,24 +110,22 @@ public abstract class CommonController extends Controller {
 	 */
 	protected static <T> Form<T> filledFormQueryString(Form<T> form, Class<T> clazz) {		
 		Map<String, String[]> queryString = request().queryString();
-		Map<String, Object> transformMap = new HashMap<String, Object>();
-		for(String key :queryString.keySet()){
+		Map<String, Object> transformMap = new HashMap<>();
+		for (String key :queryString.keySet()) {
 			try {
 				if(isNotEmpty(queryString.get(key))){				
 					Field field = clazz.getField(key);
-					Class type = field.getType();
-					if(type.isArray() || Collection.class.isAssignableFrom(type)){
+					Class<?> type = field.getType();
+					if (type.isArray() || Collection.class.isAssignableFrom(type)) {
 						transformMap.put(key, queryString.get(key));						
-					}else{
+					} else {
 						transformMap.put(key, queryString.get(key)[0]);						
 					}
 				}
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			} 
-
 		}
-
 		JsonNode json = Json.toJson(transformMap);
 		T input = Json.fromJson(json, clazz);
 		Form<T> filledForm = form.fill(input); 
@@ -151,22 +140,22 @@ public abstract class CommonController extends Controller {
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
 	 */
+//	@SuppressWarnings("unchecked")
 	protected static <T> T filledFormQueryString(Class<T> clazz) {		
-		try{
+		try {
 			Map<String, String[]> queryString = request().queryString();
-			
-			BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(clazz.newInstance());
+//			BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(clazz.newInstance());
+			T wrapped = clazz.newInstance();
+			BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(wrapped);
 			wrapper.setAutoGrowNestedPaths(true);
-			
-			for(String key :queryString.keySet()){
-				
+			for (String key : queryString.keySet()) {
 				try {
-					if(isNotEmpty(queryString.get(key))){
+					if (isNotEmpty(queryString.get(key))) {
 						Object value = queryString.get(key);
-						if(wrapper.isWritableProperty(key)){
-							Class c = wrapper.getPropertyType(key);
+						if (wrapper.isWritableProperty(key)) {
+							Class<?> c = wrapper.getPropertyType(key);
 							//TODO used conversion spring system
-							if(null != c && Date.class.isAssignableFrom(c)){
+							if (c != null && Date.class.isAssignableFrom(c)) {
 								//wrapper.setPropertyValue(key, new Date(Long.valueOf(value[0])));
 								value = new Date(Long.valueOf(((String[])value)[0]));
 							}							
@@ -179,18 +168,17 @@ public abstract class CommonController extends Controller {
 				} 
 	
 			}
-			return (T)wrapper.getWrappedInstance();
+//			return (T)wrapper.getWrappedInstance();
+			return wrapped;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} 
-
 	}
 	
-	
 	private static boolean isNotEmpty(String[] strings) {
-		if(null == strings)return false;
-		if(strings.length == 0)return false;
-		if(strings.length == 1 && StringUtils.isBlank(strings[0]))return false;
+		if (strings == null) return false;
+		if (strings.length == 0) return false;
+		if (strings.length == 1 && StringUtils.isBlank(strings[0])) return false;
 		return true;
 	}
 
@@ -211,56 +199,49 @@ public abstract class CommonController extends Controller {
 	 */
 	protected static <T extends DBObject> MongoDBResult<T> mongoDBFinder(String collection, ListForm form, Class<T> type, DBQuery.Query query){
 		MongoDBResult<T> results = null;
-		if(form.datatable){
-			results = MongoDBDAO.find(collection, type, query) 
-					.sort(form.orderBy, Sort.valueOf(form.orderSense));
-			if(form.isServerPagination()){
+		if (form.datatable) {
+			results = MongoDBDAO.find(collection, type, query).sort(form.orderBy, Sort.valueOf(form.orderSense));
+			if (form.isServerPagination()) {
 				results.page(form.pageNumber,form.numberRecordsPerPage); 
-			}
-					
-		}else{
+			}	
+		} else {
 			results = MongoDBDAO.find(collection, type, query) 
 					.sort(form.orderBy, Sort.valueOf(form.orderSense));
-			if(form.limit != -1){
+			if (form.limit != -1) {
 				results.limit(form.limit);
 			}
 		}
-		
 		return results;
 	}
 
 	protected static <T extends DBObject> MongoDBResult<T> mongoDBFinder(String collection, ListForm form, Class<T> type, DBQuery.Query query, BasicDBObject keys){
 		MongoDBResult<T> results = null;
-		if(form.datatable){
-			results = MongoDBDAO.find(collection, type, query, keys) 
-					.sort(form.orderBy, Sort.valueOf(form.orderSense));
-			if(form.isServerPagination()){
+		if (form.datatable) {
+			results = MongoDBDAO.find(collection, type, query, keys).sort(form.orderBy, Sort.valueOf(form.orderSense));
+			if (form.isServerPagination()) {
 				results.page(form.pageNumber,form.numberRecordsPerPage); 
 			}
-		}else{
-			results = MongoDBDAO.find(collection, type, query, keys) 
-					.sort(form.orderBy, Sort.valueOf(form.orderSense));
-			if(form.limit != -1){
+		} else {
+			results = MongoDBDAO.find(collection, type, query, keys).sort(form.orderBy, Sort.valueOf(form.orderSense));
+			if (form.limit != -1) {
 				results.limit(form.limit);
 			}
 		}
-		
-		
 		return results;
 	}
 	
 	protected static BasicDBObject getKeys(DatatableForm form) {
 		BasicDBObject keys = new BasicDBObject();
-		if(null != form.includes && form.includes.size() > 0 && !form.includes.contains("*")){
+		if (form.includes != null && form.includes.size() > 0 && !form.includes.contains("*")) {
 			keys.putAll((BSONObject)getIncludeKeys(form.includes.toArray(new String[form.includes.size()])));			
-		}else if(null != form.excludes && form.excludes.size() > 0){
+		} else if(null != form.excludes && form.excludes.size() > 0) {
 			keys.putAll((BSONObject)getExcludeKeys(form.excludes.toArray(new String[form.excludes.size()])));					
 		}
 		return keys;
 	}
 	
 	protected static String getJSONKeys(DatatableForm form) {
-		Set<String> keys = new HashSet<String>();
+		Set<String> keys = new HashSet<>();
 		if(null != form.includes && form.includes.size() > 0 && !form.includes.contains("*")){
 			getIncludeJSONKeys(form.includes.toArray(new String[form.includes.size()]),keys);
 		}else if(null != form.excludes && form.excludes.size() > 0){
@@ -273,7 +254,7 @@ public abstract class CommonController extends Controller {
 	protected static BasicDBObject getIncludeKeys(String[] keys) {
 		Arrays.sort(keys, Collections.reverseOrder());
 		BasicDBObject values = new BasicDBObject();
-		for(String key : keys){
+		for (String key : keys) {
 		    values.put(key, 1);
 		}
 		return values;
@@ -287,18 +268,15 @@ public abstract class CommonController extends Controller {
 		
     }
 	
-	
-	
 	protected static BasicDBObject getExcludeKeys(String[] keys) {
 		Arrays.sort(keys, Collections.reverseOrder());
 		BasicDBObject values = new BasicDBObject();
-		for(String key : keys){
+		for (String key : keys) {
 		    values.put(key, 0);
 		}
 		return values;
     }
 	
-
 	protected static void getExcludeJSONKeys(String[] excludes, Set<String> keys) {
 		Arrays.sort(excludes, Collections.reverseOrder());
 		for(int i=0;i<excludes.length;i++){
@@ -314,7 +292,7 @@ public abstract class CommonController extends Controller {
 	 * @param clazz
 	 * @return
 	 */
-	protected static Builder getBuilder(Object value, List<String> fields, Class clazz) {
+	protected static Builder getBuilder(Object value, List<String> fields, Class<?> clazz) {
 		return getBuilder(value, fields, clazz, null);
 	}
 	
@@ -326,17 +304,16 @@ public abstract class CommonController extends Controller {
 	 * @param clazz
 	 * @return
 	 */
-	protected static Builder getBuilder(Object value, List<String> fields, Class clazz, String prefix) {
+	protected static Builder getBuilder(Object value, List<String> fields, Class<?> clazz, String prefix) {
 		Builder builder = new Builder();
 		try {
-			for(String field: fields){
+			for (String field: fields) {
 				String fieldName = (null != prefix)?prefix+"."+field:field;
 				builder.set(fieldName, clazz.getField(field).get(value));
 			}
-		}catch(Exception e){
+		} catch(Exception e) {
 			throw new RuntimeException(e);
 		}
-		
 		return builder;
 	}
 	
@@ -346,13 +323,10 @@ public abstract class CommonController extends Controller {
 	 * @param fields
 	 * @param authorizedUpdateFields
 	 */
-	protected static void validateAuthorizedUpdateFields(ContextValidation ctxVal, List<String> fields,
-			List<String> authorizedUpdateFields) {
-		for(String field: fields){
-			if(!authorizedUpdateFields.contains(field)){
-				ctxVal.addErrors("fields", "error.valuenotauthorized", field);
-			}
-		}				
+	protected static void validateAuthorizedUpdateFields(ContextValidation ctxVal, List<String> fields,	List<String> authorizedUpdateFields) {
+		for(String field: fields)
+			if (!authorizedUpdateFields.contains(field))
+				ctxVal.addErrors("fields", "error.valuenotauthorized", field);		
 	}
 	
 	/*
@@ -361,14 +335,17 @@ public abstract class CommonController extends Controller {
 	 * @param fields
 	 * @param filledForm
 	 */
-	protected static void validateIfFieldsArePresentInForm(
-			ContextValidation ctxVal, List<String> fields, Form<?> filledForm) {
-		for(String field: fields){
-			if(filledForm.field(field).value() == null){
+//	protected static void validateIfFieldsArePresentInForm(ContextValidation ctxVal, List<String> fields, Form<?> filledForm) {
+//		for(String field: fields) {
+//			if (filledForm.field(field).value() == null) {
+//				ctxVal.addErrors(field, "error.notdefined");
+//			}
+//		}	
+//	}
+	protected static void validateIfFieldsArePresentInForm(ContextValidation ctxVal, List<String> fields, Form<?> filledForm) {
+		for (String field : fields)
+			if (filledForm.field(field).getValue() == null) 
 				ctxVal.addErrors(field, "error.notdefined");
-			}
-		}	
-		
 	}
 	
 	protected static Calendar getToDate(Date date) {
@@ -400,7 +377,7 @@ public abstract class CommonController extends Controller {
 			return MongoStreamer.okStream(all);
 		} else if(form.count) {
 			int count = all.count();
-			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			Map<String, Integer> m = new HashMap<>(1);
 			m.put("result", count);
 			return ok(Json.toJson(m));
 		} else {
@@ -419,7 +396,7 @@ public abstract class CommonController extends Controller {
 			return MongoStreamer.okStream(all);
 		} else if(form.count) {
 			int count = all.count();
-			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			Map<String, Integer> m = new HashMap<>(1);
 			m.put("result", count);
 			return ok(Json.toJson(m));
 		} else {
@@ -445,7 +422,7 @@ public abstract class CommonController extends Controller {
 			return MongoStreamer.okStream(all);
 		} else if(form.count) {
 			int count = Iterators.size(all);
-			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			Map<String, Integer> m = new HashMap<>(1);
 			m.put("result", count);
 			return ok(Json.toJson(m));
 		} else {

@@ -4,13 +4,17 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+
+import fr.cea.ig.MongoDBDAO;
 import models.sra.submit.common.instance.Sample;
 import models.sra.submit.common.instance.Study;
 import models.sra.submit.common.instance.Submission;
@@ -19,16 +23,8 @@ import models.sra.submit.sra.instance.RawData;
 import models.sra.submit.sra.instance.ReadSpec;
 import models.sra.submit.sra.instance.Run;
 import models.sra.submit.util.SraException;
-import models.sra.submit.util.SraParameter;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
-
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-
-import fr.cea.ig.MongoDBDAO;
-
-import org.apache.commons.lang3.StringUtils;
 
 //import play.Logger;
 //class ReadSpec_2 extends ReadSpec {
@@ -37,13 +33,13 @@ import org.apache.commons.lang3.StringUtils;
 
 public class XmlServices {
 
-	
 	private static final play.Logger.ALogger logger = play.Logger.of(XmlServices.class);
 
 	public static Submission writeAllXml(String submissionCode) throws IOException, SraException {
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
 		String resultDirectory = submission.submissionDirectory;
-		System.out.println("resultDirectory = " + resultDirectory);
+//		System.out.println("resultDirectory = " + resultDirectory);
+		logger.debug("resultDirectory = " + resultDirectory);
 		return writeAllXml(submissionCode, resultDirectory);
 	}
 
@@ -92,7 +88,6 @@ public class XmlServices {
 	
 		return submission;
 	}
-	
 
 	public static void writeStudyXml (Submission submission, File outputFile) throws IOException, SraException {	
 		if (submission == null) {
@@ -105,7 +100,6 @@ public class XmlServices {
 		if (StringUtils.isNotBlank(submission.studyCode)) {	
 			System.out.println("Creation du fichier " + outputFile);
 			// ouvrir fichier en ecriture
-			BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile));
 			String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
 			chaine = chaine + "<STUDY_SET>\n";
 			String studyCode = submission.studyCode;
@@ -144,18 +138,21 @@ public class XmlServices {
 			chaine = chaine + "    </DESCRIPTOR>\n";
 			chaine = chaine + "  </STUDY>\n";
 			chaine = chaine + "</STUDY_SET>\n";
-			output_buffer.write(chaine);
-			output_buffer.close();
+			
+			try (BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile))) {
+				output_buffer.write(chaine);
+			}
+			
+			// output_buffer.close();
 			submission.xmlStudys = outputFile.getName();
 		} // end if		
 	} // end writeStudyXml
 	   
 	
 	public static void writeSampleXml (Submission submission, File outputFile) throws IOException, SraException {
-		System.out.println("sample = "  + submission.sampleCodes.get(0));
-		if (submission == null) {
+		if (submission == null)
 			return;
-		}
+		System.out.println("sample = "  + submission.sampleCodes.get(0));
 		// Si demande de release pas d'ecriture de sample.
 		if (submission.release) {
 			return;
@@ -163,7 +160,6 @@ public class XmlServices {
 		if (! submission.sampleCodes.isEmpty()) {	
 			// ouvrir fichier en ecriture
 			System.out.println("Creation du fichier " + outputFile);
-			BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile));
 
 			String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
 			chaine = chaine + "<SAMPLE_SET>\n";
@@ -212,8 +208,11 @@ public class XmlServices {
 				chaine = chaine + "  </SAMPLE>\n";
 			}
 			chaine = chaine + "</SAMPLE_SET>\n";
-			output_buffer.write(chaine);
-			output_buffer.close();
+			
+			try (BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile))) {
+				output_buffer.write(chaine);
+			} 
+			
 			submission.xmlSamples = outputFile.getName();
 		}
 	}
@@ -238,7 +237,6 @@ public class XmlServices {
 	public static void writeSimpleExperimentXml (List<String> experimentsCodes, File outputFile) throws IOException, SraException {
 		// ouvrir fichier en ecriture
 		System.out.println("Creation du fichier " + outputFile);
-		BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile));
 		String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
 		chaine = chaine + "<EXPERIMENT_SET>\n";
 		for (String experimentCode : experimentsCodes){
@@ -310,9 +308,9 @@ public class XmlServices {
 				//for (ReadSpec readSpec: experiment.readSpecs) {
 
 //				Exemple sans passer par des lambda:
-				Comparator< ? extends ReadSpec> x; // n'importe quel type qui etend ReadSpec 
-				Comparator< ? super ReadSpec> y;// n'importe quel type qui est une super class de ReadSpec 
-				List <ReadSpec> list = new ArrayList<ReadSpec> (experiment.readSpecs);
+//				Comparator< ? extends ReadSpec> x; // n'importe quel type qui etend ReadSpec 
+//				Comparator< ? super ReadSpec> y;// n'importe quel type qui est une super class de ReadSpec 
+				List <ReadSpec> list = new ArrayList<> (experiment.readSpecs);
 				Collections.sort(list, new Comparator <ReadSpec>() {
 					@Override
 					public int compare(ReadSpec o1, ReadSpec o2) {
@@ -353,8 +351,11 @@ public class XmlServices {
 			chaine = chaine + "  </EXPERIMENT>\n";
 		}
 		chaine = chaine + "</EXPERIMENT_SET>\n";
-		output_buffer.write(chaine);
-		output_buffer.close();
+		
+		try (BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile))) {
+			output_buffer.write(chaine);
+		}
+		//output_buffer.close();
 	}
 	
 	public static void writeRunXml (Submission submission, File outputFile) throws IOException, SraException {
@@ -371,7 +372,6 @@ public class XmlServices {
 		if (! submission.experimentCodes.isEmpty()) {	
 			// ouvrir fichier en ecriture
 			System.out.println("Creation du fichier " + outputFile);
-			BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile));
 			String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
 			chaine = chaine + "<RUN_SET>\n";
 			for (String experimentCode : submission.experimentCodes){
@@ -415,8 +415,12 @@ public class XmlServices {
 				chaine = chaine + "  </RUN>\n";
 				}
 				chaine = chaine + "</RUN_SET>\n";
-				output_buffer.write(chaine);
-				output_buffer.close();
+				
+				try (BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile))) {
+					output_buffer.write(chaine);
+				}
+				// output_buffer.close();
+				
 				submission.xmlRuns = outputFile.getName();
 			}
 		}

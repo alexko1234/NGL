@@ -2,18 +2,13 @@ package models.laboratory.run.description.dao;
 
 import java.util.List;
 
-import models.laboratory.run.description.TreatmentContext;
-import models.laboratory.run.description.TreatmentType;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.stereotype.Repository;
+
 import models.laboratory.run.description.TreatmentTypeContext;
 import models.utils.ListObject;
 import models.utils.dao.AbstractDAODefault;
-import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
-
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.stereotype.Repository;
 
 @Repository
 public class TreatmentTypeContextDAO extends AbstractDAODefault<TreatmentTypeContext>{
@@ -22,13 +17,14 @@ public class TreatmentTypeContextDAO extends AbstractDAODefault<TreatmentTypeCon
 		super("treatment_context", TreatmentTypeContext.class, true);	
 	}
 	
+	@SuppressWarnings("deprecation")
 	public List<TreatmentTypeContext> findByTreatmentTypeId(Long id) throws DAOException {
 		
 		String sql ="SELECT t.id, t.code, t.name, ttc.required "+
 				"FROM treatment_context as t "+
 				"JOIN treatment_type_context as ttc ON ttc.fk_treatment_context=t.id "+
 				"WHERE ttc.fk_treatment_type = ? ";
-		BeanPropertyRowMapper<TreatmentTypeContext> mapper = new BeanPropertyRowMapper<TreatmentTypeContext>(TreatmentTypeContext.class);
+		BeanPropertyRowMapper<TreatmentTypeContext> mapper = new BeanPropertyRowMapper<>(TreatmentTypeContext.class);
 		return this.jdbcTemplate.query(sql, mapper, id);
 		
 	}
@@ -40,7 +36,8 @@ public class TreatmentTypeContextDAO extends AbstractDAODefault<TreatmentTypeCon
 				"JOIN treatment_type_context as ttc ON ttc.fk_treatment_context=t.id "+
 				"WHERE ttc.fk_treatment_type = ? and t.code = ?";
 		
-		BeanPropertyRowMapper<TreatmentTypeContext> mapper = new BeanPropertyRowMapper<TreatmentTypeContext>(TreatmentTypeContext.class);
+		BeanPropertyRowMapper<TreatmentTypeContext> mapper = new BeanPropertyRowMapper<>(TreatmentTypeContext.class);
+		@SuppressWarnings("deprecation")
 		List<TreatmentTypeContext> result = this.jdbcTemplate.query(sql, mapper, id, code);
 		if(result != null && result.size() == 1){
 			return result.get(0);

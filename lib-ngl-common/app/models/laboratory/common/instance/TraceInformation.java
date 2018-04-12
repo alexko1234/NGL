@@ -58,10 +58,10 @@ public class TraceInformation implements IValidation {
 	}
 
 	/**
-	 * @deprecated bogus behavior when the creation user has not been properly set, replaced by {@link #creationStamp(ContextValidation,String)} {@link #modificationStamp(ContextValidation,String)}
+	 * {@literal deprecated} bogus behavior when the creation user has not been properly set, replaced by {@link #creationStamp(ContextValidation,String)} {@link #modificationStamp(ContextValidation,String)}
 	 * @param user user name
 	 */
-	@Deprecated 
+	// @Deprecated 
 	@JsonIgnore
 	public void setTraceInformation(String user) {
 		if (createUser == null) {
@@ -89,16 +89,6 @@ public class TraceInformation implements IValidation {
 	}
 	
 	/**
-	 * Set the update information using the the provided user and the current date.
-	 * @param ctx  validation context
-	 * @param user user name for the update
-	 */
-	public void modificationStamp(ContextValidation ctx, String user) {
-		Date date = new Date();
-		forceModificationStamp(user,date);
-	}
-	
-	/**
 	 * Force this trace creation information.
 	 * @param user creation user
 	 * @param date creation date
@@ -114,6 +104,16 @@ public class TraceInformation implements IValidation {
 	 */
 	public void forceCreationStamp(String user) {
 		forceCreationStamp(user, new Date());
+	}
+	
+	/**
+	 * Set the update information using the the provided user and the current date.
+	 * @param ctx  validation context
+	 * @param user user name for the update
+	 */
+	public void modificationStamp(ContextValidation ctx, String user) {
+		Date date = new Date();
+		forceModificationStamp(user,date);
 	}
 	
 	/**

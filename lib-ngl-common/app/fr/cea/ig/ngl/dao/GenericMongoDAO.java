@@ -28,9 +28,9 @@ public /*abstract*/ class GenericMongoDAO<T extends DBObject> {
 	}
 	
 	/**
-	 * Throw exception if no instance is found
-	 * @param q Query
-	 * @return T the DBObject
+	 * Throw exception if no instance is found.
+	 * @param  q            Query
+	 * @return              T the DBObject
 	 * @throws DAOException if no instance is found
 	 */
 	public T findOne(Query q) throws DAOException {
@@ -93,12 +93,12 @@ public /*abstract*/ class GenericMongoDAO<T extends DBObject> {
 	}
 	
 	/**
-	 * A finder for mongoDB
-	 * @param query Query
-	 * @param orderBy String
+	 * A finder for mongoDB.
+	 * @param query      Query
+	 * @param orderBy    String
 	 * @param orderSense how to sort the results
-	 * @param limit if it is set to -1 then results are unlimited  
-	 * @return a MongoDBResult
+	 * @param limit      if it is set to -1 then results are unlimited  
+	 * @return           a MongoDBResult
 	 * @throws DAOException exception
 	 */
 	public MongoDBResult<T> mongoDBFinder(Query query, String orderBy, Sort orderSense, Integer limit) throws DAOException {
@@ -110,29 +110,29 @@ public /*abstract*/ class GenericMongoDAO<T extends DBObject> {
 	}
 	
 	/**
-	 * A finder for mongoDB
-	 * @param query Query
-	 * @param orderBy String
+	 * A finder for mongoDB.
+	 * @param query      Query
+	 * @param orderBy    String
 	 * @param orderSense how to sort the results
-	 * @param limit if it is set to -1 then results are unlimited  
-	 * @param keys map to restrict keys of object
-	 * @return a MongoDBResult
+	 * @param limit      if it is set to -1 then results are unlimited  
+	 * @param keys       map to restrict keys of object
+	 * @return           a MongoDBResult
 	 * @throws DAOException exception
 	 */
 	public MongoDBResult<T> mongoDBFinder(Query query, String orderBy, Sort orderSense, Integer limit, BasicDBObject keys) throws DAOException {
 		MongoDBResult<T> results = MongoDBDAO.find(collectionName, elementClass, query, keys).sort(orderBy, orderSense);
-		if(limit != -1){
+		if (limit != -1) {
 			results.limit(limit);
 		}
 		return results;
 	}
 
 	/**
-	 * A finder for mongoDB without size limit of elements
-	 * @param query Query
-	 * @param orderBy String
+	 * A finder for mongoDB without size limit of elements.
+	 * @param query      Query
+	 * @param orderBy    String
 	 * @param orderSense how to sort the results
-	 * @return a MongoDBResult
+	 * @return           a MongoDBResult
 	 * @throws DAOException exception
 	 */
 	public MongoDBResult<T> mongoDBFinder(Query query, String orderBy, Sort orderSense) throws DAOException {
@@ -140,12 +140,12 @@ public /*abstract*/ class GenericMongoDAO<T extends DBObject> {
 	}
 	
 	/**
-	 * A finder for mongoDB without size limit of elements
-	 * @param query Query
-	 * @param orderBy String
+	 * A finder for mongoDB without size limit of elements.
+	 * @param query      Query
+	 * @param orderBy    String
 	 * @param orderSense how to sort the results
-	 * @param keys map to restrict keys of object
-	 * @return a MongoDBResult
+	 * @param keys       map to restrict keys of object
+	 * @return           a MongoDBResult
 	 * @throws DAOException exception
 	 */
 	public MongoDBResult<T> mongoDBFinder(Query query, String orderBy, Sort orderSense, BasicDBObject keys) throws DAOException {
@@ -168,14 +168,14 @@ public /*abstract*/ class GenericMongoDAO<T extends DBObject> {
 	}
 	
 	/**
-	 * A finder for mongoDB with pagination of results
-	 * @param query Query
-	 * @param orderBy String
-	 * @param orderSense how to sort the results
-	 * @param pageNumber Integer
+	 * A finder for mongoDB with pagination of results.
+	 * @param query                Query
+	 * @param orderBy              String
+	 * @param orderSense           how to sort the results
+	 * @param pageNumber           Integer
 	 * @param numberRecordsPerPage Integer
-	 * @param keys map to restrict keys of object
-	 * @return a MongoDBResult
+	 * @param keys                 map to restrict keys of object
+	 * @return                     a MongoDBResult
 	 * @throws DAOException exception
 	 */
 	public MongoDBResult<T> mongoDBFinderWithPagination(Query query, String orderBy, Sort orderSense, 
@@ -183,36 +183,36 @@ public /*abstract*/ class GenericMongoDAO<T extends DBObject> {
 		return mongoDBFinder(query, orderBy, orderSense, keys).page(pageNumber, numberRecordsPerPage);
 	}
 
-	
 	/**
-	 * use to replace controllers.MongoCommonController.nativeMongoDBQuery(ListForm form)
+	 * use to replace controllers.MongoCommonController.nativeMongoDBQuery(ListForm form).
 	 * @param query String
-	 * @return
+	 * @return      mongo cursor
 	 */
-	public MongoCursor<T> findByQuery(String query){
-		MongoCollection collection = MongoDBPlugin.getCollection(this.collectionName);
-		return (MongoCursor<T>) collection.find(query).as(elementClass);
+	public MongoCursor<T> findByQuery(String query) {
+//		MongoCollection collection = MongoDBPlugin.getCollection(this.collectionName);
+//		return (MongoCursor<T>) collection.find(query).as(elementClass);
+		MongoCollection collection = MongoDBPlugin.getCollection(collectionName);
+		return collection.find(query).as(elementClass);
 	}
 	
 	/**
-	 * Construct a builder from some fields
-	 * Use to update a mongodb document
-	 * @param value DBObject
-	 * @param fields List<String>
-	 * @return Builder
+	 * Construct a builder from some fields.
+	 * Use to update a mongodb document.
+	 * @param value  DBObject
+	 * @param fields {@literal List<String>}
+	 * @return       Builder
 	 */
 	public Builder getBuilder(T value, List<String> fields) {
 		return getBuilder(value, fields, null);
 	}
 	
-
 	/**
-	 * Construct a builder from some fields
-	 * Use to update a mongodb document
-	 * @param value DBObject
-	 * @param fields List<String>
+	 * Construct a builder from some fields.
+	 * Use to update a mongodb document.
+	 * @param value  DBObject
+	 * @param fields {@literal List<String>}
 	 * @param prefix String
-	 * @return Builder
+	 * @return       Builder
 	 */
 	public Builder getBuilder(T value, List<String> fields, String prefix) {
 		Builder builder = new Builder();
@@ -226,6 +226,7 @@ public /*abstract*/ class GenericMongoDAO<T extends DBObject> {
 		}
 		return builder;
 	}
+	
 	
 	/// ---- Recablage iso 
 	

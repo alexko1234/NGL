@@ -25,7 +25,7 @@ public class DescriptionHelper {
 			if (StringUtils.isNotBlank(appInstitute)) {
 				institute = Arrays.asList(appInstitute.split("\\s*,\\s*"));
 			} else {
-				institute = new ArrayList<String>();
+				institute = new ArrayList<>();
 			}			
 		}
 		return institute;

@@ -45,12 +45,10 @@ public class SamplesAPI extends GenericAPI<SamplesDAO, Sample> {
 		super(dao);
 	}
 	
-
 	@Override
 	protected List<String> authorizedUpdateFields() {
 		return this.AUTHORIZED_UPDATE_FIELDS;
 	}
-
 
 	@Override
 	protected List<String> defaultKeys() {
@@ -80,16 +78,15 @@ public class SamplesAPI extends GenericAPI<SamplesDAO, Sample> {
 	}
 	
 	/**
-	 * define only some fields to update (not the entire object) <br>
-	 * list of editable field list is defined in {@link #AUTHORIZED_UPDATE_FIELDS}  constant
+	 * Define only some fields to update (not the entire object) <br>
+	 * list of editable field list is defined in {@link #AUTHORIZED_UPDATE_FIELDS} constant
 	 * @see SamplesAPI#AUTHORIZED_UPDATE_FIELDS
-	 * @param code
-	 * @param input
-	 * @param currentUser
-	 * @param fields
-	 * @return
+	 * @param input       input sample       
+	 * @param currentUser current user
+	 * @param fields      fields
+	 * @return            updated sample
 	 * @throws APIException if the code doesn't correspond to a sample 
-	 * @throws APIValidationException
+	 * @throws APIValidationException validation failure
 	 */
 	@Override
 	public Sample update(Sample input, String currentUser, List<String> fields) throws APIException, APIValidationException {
@@ -133,7 +130,7 @@ public class SamplesAPI extends GenericAPI<SamplesDAO, Sample> {
 			ContextValidation ctxVal = new ContextValidation(currentUser);
 			if(input.traceInformation != null){
 				input.traceInformation.modificationStamp(ctxVal, currentUser);
-			}else{
+			} else {
 				logger.error("traceInformation is null !!");
 			}
 			ctxVal.setUpdateMode();
@@ -146,5 +143,6 @@ public class SamplesAPI extends GenericAPI<SamplesDAO, Sample> {
 				throw new APIValidationException("Invalid Sample object", ctxVal.getErrors());
 			}
 		}
-	}	
+	}
+	
 }

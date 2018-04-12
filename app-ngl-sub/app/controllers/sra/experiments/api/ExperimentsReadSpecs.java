@@ -8,7 +8,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -37,7 +37,7 @@ public class ExperimentsReadSpecs extends DocumentController<Experiment> {
 
 	public Result list()
 	{
-		List<ReadSpec> allReadSpecs = new ArrayList<ReadSpec>();
+		List<ReadSpec> allReadSpecs = new ArrayList<>();
 		Form<ExperimentsSearchForm> form = filledFormQueryString(experimentsSearchForm, ExperimentsSearchForm.class);
 		ExperimentsSearchForm formExp = form.get();
 		Query query = getQuery(formExp);
@@ -51,7 +51,7 @@ public class ExperimentsReadSpecs extends DocumentController<Experiment> {
 	}
 	
 	private Query getQuery(ExperimentsSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		Query query = null;
 		
 		if (StringUtils.isNotBlank(form.submissionCode)) {

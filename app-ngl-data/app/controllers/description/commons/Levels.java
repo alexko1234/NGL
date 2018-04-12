@@ -10,7 +10,6 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.description.common.LevelService;
-import services.description.common.MeasureService;
 
 // import controllers.CommonController;
 public class Levels extends Controller { // CommonController {
@@ -19,7 +18,7 @@ public class Levels extends Controller { // CommonController {
 	
 	public static Result save() {
 		try {
-			Map<String,List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
+			Map<String,List<ValidationError>> errors = new HashMap<>();
 			LevelService.main(errors);			
 			if (errors.size() > 0) {
 				return badRequest(Json.toJson(errors));

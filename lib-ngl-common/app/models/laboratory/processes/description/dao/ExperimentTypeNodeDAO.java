@@ -6,19 +6,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ExperimentTypeNode;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
-
-import org.springframework.stereotype.Repository;
-
 import play.Logger;
 @Repository
 public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNode>{
 
+//	public ExperimentTypeNodeDAO() {
+//		super("experiment_type_node", ExperimentTypeNode.class, ExperimentTypeNodeMappingQuery.class,
+//				"SELECT t.id, t.code, t.doPurification, t.mandatoryPurification, t.doQualityControl, t.mandatoryQualityControl,t.doTransfert, t.mandatoryTransfert, " +
+//				"t.fk_experiment_type FROM experiment_type_node as t", true);
+//	}
 	public ExperimentTypeNodeDAO() {
-		super("experiment_type_node", ExperimentTypeNode.class, ExperimentTypeNodeMappingQuery.class,
+		super("experiment_type_node", ExperimentTypeNode.class, ExperimentTypeNodeMappingQuery.factory,
 				"SELECT t.id, t.code, t.doPurification, t.mandatoryPurification, t.doQualityControl, t.mandatoryQualityControl,t.doTransfert, t.mandatoryTransfert, " +
 				"t.fk_experiment_type FROM experiment_type_node as t", true);
 	}
@@ -32,7 +36,7 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 			throw new DAOException("ExperimentType is mandatory");
 		}
 
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("code", value.code);
 		parameters.put("doPurification", value.doPurification);
 		parameters.put("mandatoryPurification", value.mandatoryPurification);
@@ -44,7 +48,7 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 
 		value.id = (Long) jdbcInsert.executeAndReturnKey(parameters);
 
-		List<ExperimentType> experimentTypes = new ArrayList<ExperimentType>();
+		List<ExperimentType> experimentTypes = new ArrayList<>();
 		if(null != value.possibleQualityControlTypes){
 			experimentTypes.addAll(value.possibleQualityControlTypes);
 
@@ -73,6 +77,7 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 		return initializeMapping(sqlCommon + " order by id DESC").execute();
 	}
 
+	@SuppressWarnings("deprecation")
 	public void insertPrevious(
 			List<ExperimentTypeNode> previousExperimentType, Long id, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
@@ -90,6 +95,7 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 
 	}
 
+	@SuppressWarnings("deprecation")
 	private void insertSatellites(
 			List<ExperimentType> experimentTypes, Long id, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
@@ -107,12 +113,14 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 
 	}
 
+	@SuppressWarnings("deprecation")
 	private void removeSatellites(Long id) {
 		String sql = "DELETE FROM satellite_experiment_type WHERE fk_experiment_type_node=?";
 		jdbcTemplate.update(sql, id);
 
 	}
 
+	@SuppressWarnings("deprecation")
 	private void removePrevious(Long id) {
 		String sql = "DELETE FROM previous_nodes WHERE fk_node=?";
 		jdbcTemplate.update(sql, id);
@@ -120,6 +128,7 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 	}
 
 	
+	@SuppressWarnings("deprecation")
 	public void removeAllPrevious(){
 		String sql = "DELETE FROM previous_nodes";
 		jdbcTemplate.update(sql);

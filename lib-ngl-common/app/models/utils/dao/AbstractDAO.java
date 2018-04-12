@@ -1,12 +1,17 @@
 package models.utils.dao;
 
+import static fr.cea.ig.lfw.utils.FunCollections.repeat;
+
+// import fr.cea.ig.play.NGLContext;
+
+// import play.Logger;
+// import play.cache.Cache;
+import static fr.cea.ig.play.IGGlobals.cache;
+
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;
-
-// import models.laboratory.common.description.State;
-import models.utils.Model;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,11 +24,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
-import fr.cea.ig.play.NGLContext;
-
-// import play.Logger;
-// import play.cache.Cache;
-import static fr.cea.ig.play.IGGlobals.cache;
+// import models.laboratory.common.description.State;
+import models.utils.Model;
 
 /**
  * Common operations between Simple DAO et DAO Using mappingQuery
@@ -39,15 +41,17 @@ import static fr.cea.ig.play.IGGlobals.cache;
  *
  * @param <T> DAO 
  */
+@SuppressWarnings("deprecation")
 @Transactional(readOnly=false, rollbackFor=DAOException.class)
 public abstract class AbstractDAO<T> {
 
-
-	protected String tableName;
-	protected DataSource dataSource;
+	protected String             tableName;
+	protected DataSource         dataSource;
 	protected SimpleJdbcTemplate jdbcTemplate;
-	protected SimpleJdbcInsert jdbcInsert;
-	protected Class<T> entityClass;
+//	protected JdbcTemplate       jdbcTemplate;
+	protected SimpleJdbcInsert   jdbcInsert;
+	protected Class<T>           entityClass;
+	
 	//Use automatic key id generation 
 	//False for type because id provided by commonInfoType
 	protected boolean useGeneratedKey;
@@ -60,17 +64,20 @@ public abstract class AbstractDAO<T> {
 		this.useGeneratedKey = useGeneratedKey;
 	}
 
+//	@SuppressWarnings("deprecation")
 	@Autowired
 	@Qualifier("ngl")
 	public void setDataSource(DataSource dataSource) {
-		this.dataSource=dataSource;
+		this.dataSource = dataSource;
 		jdbcTemplate = new SimpleJdbcTemplate(dataSource);   
+//		jdbcTemplate = new JdbcTemplate(dataSource);   
 		if(useGeneratedKey)
 			jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName(tableName).usingGeneratedKeyColumns("id");
 		else
 			jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName(tableName);
 	}
 
+//	@SuppressWarnings("deprecation")
 	public void remove(T value) throws DAOException	{
 		String sql = "DELETE FROM " + tableName + " WHERE id=:id";
 		SqlParameterSource ps = new BeanPropertySqlParameterSource(value);
@@ -89,14 +96,15 @@ public abstract class AbstractDAO<T> {
 
 	public abstract void update(T value) throws DAOException;
 
+	// findByCode(code) != null ?
 	public Boolean isCodeExist(String code) throws DAOException	{
-		if (code == null) {
+		if (code == null)
 			throw new DAOException("code is mandatory");
-		}
 		try {
 			try {
 				String sql = "select id from " + tableName + " WHERE code=?";
-				long id =  this.jdbcTemplate.queryForLong(sql, code);
+				long id = jdbcTemplate.queryForLong(sql, code);
+//				long id = MongoDeprecation.queryForLong(jdbcTemplate, sql, code);				
 				/*if (id > 0) {
 					return Boolean.TRUE;
 				} else {
@@ -108,8 +116,13 @@ public abstract class AbstractDAO<T> {
 				return false;
 			}
 		} catch (DataAccessException e) {
+			// TODO: throw a DAOException
 			throw new RuntimeException(e);
 		}
+	}
+	
+	protected String listToParameters(int count) {
+		return String.join(",", repeat("?",count));
 	}
 	
 	protected String listToParameters(List<?> parameters) {
@@ -131,34 +144,47 @@ public abstract class AbstractDAO<T> {
 		return params;
 	}
 	
-	@SuppressWarnings("unchecked")
+	private String key(String code) {
+		return entityClass.toString() + "." + code;
+	}
+	
+//	@SuppressWarnings("unchecked")
 	protected T getObjectInCache(String code) {
 		if (code != null) {
-			try {
-				String key = entityClass.toString()+"."+code;
+//			try {
+//				String key = entityClass.toString() + "." + code;
 				// return (T) Cache.get(key);
-				return (T)cache().get(key);
-			} catch (DAOException e) {
-				throw new RuntimeException(e);
-			}
-		} else {
-			return null;
-		}		
+//				@SuppressWarnings("unchecked") // Uncheckable cache access
+//				T t = (T)cache().get(key);
+				T t = cache().<T>get(key(code));
+				return t;
+//			} catch (DAOException e) {
+//				throw new RuntimeException(e);
+//			}
+		}
+		return null;		
 	}
 	
 	protected void setObjectInCache(T o, String code) {
 		if (o != null && code != null) {
 			// Cache.set(entityClass.toString()+"."+code, o, 60 * 60);
-			cache().set(entityClass.toString() + "." + code, o, 60 * 60);
+//			cache().set(entityClass.toString() + "." + code, o, 60 * 60);
+			cache().set(key(code), o, 60 * 60);
 		}		
 	}
 	
 	public void cleanCache() {
-		List<T> l = this.findAll();
+//		List<T> l = this.findAll();
+		List<T> l = findAll();
 		l.forEach(o -> {
 			// Cache.remove(entityClass.toString()+"."+((Model)o).code);
-			cache().remove(entityClass.toString() + "." + ((Model)o).code);
+//			cache().remove(entityClass.toString() + "." + ((Model)o).code);
+			cache().remove(key(((Model<?>)o).code));
 		});
 	}
+	
+//	public static long queryForLong(SimpleJdbcTemplate t, String sql, Object... args) {
+//		return t.queryForLong(sql, args);
+//	}
 	
 }

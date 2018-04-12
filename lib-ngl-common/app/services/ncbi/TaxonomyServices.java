@@ -1,10 +1,12 @@
 package services.ncbi;
 
-//import static fr.cea.ig.play.IGGlobals.ws;
-//import static fr.cea.ig.play.IGGlobals.cache;
-
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import javax.inject.Inject;
 import javax.xml.parsers.DocumentBuilder;
@@ -18,28 +20,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 import fr.cea.ig.play.NGLContext;
-import models.utils.dao.DAOException;
-// import play.Logger;
-// import play.cache.Cache;
-// import play.libs.ws.WS;
 import play.libs.ws.WSResponse;
-// import scala.concurrent.Future;
-import validation.ContextValidation;
-
-// import play.libs.F.Promise;
-import java.util.concurrent.CompletionStage;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeoutException;
 
 // TODO: cleanup
 public class TaxonomyServices {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(TaxonomyServices.class);
+	
 	private final NGLContext ctx;
 	
 	@Inject
@@ -92,32 +81,39 @@ public class TaxonomyServices {
 		return CompletableFuture.completedFuture(new NCBITaxon());
 	}
 	
-	@SuppressWarnings("unchecked")
-	private /*static*/ NCBITaxon getObjectInCache(String code){
-		if (null != code) {
-			try {
-				String key = NCBITaxon.class.toString()+"."+code;
+	private static String key(String code) {
+		return NCBITaxon.class.toString() + "." + code;
+	}
+	
+//	@SuppressWarnings("unchecked")
+	private /*static*/ NCBITaxon getObjectInCache(String code) {
+		if (code != null) {
+//			try {
+//				String key = NCBITaxon.class.toString() + "." + code;
 				// return (NCBITaxon) Cache.get(key);
-				return (NCBITaxon) ctx.cache().get(key);
-			} catch (DAOException e) {
-				throw new RuntimeException(e);
-			}
+//				return (NCBITaxon) ctx.cache().get(key);
+//				return ctx.cache().<NCBITaxon>get(key);
+				return ctx.cache().<NCBITaxon>get(key(code));
+//			} catch (DAOException e) {
+//				throw new RuntimeException(e);
+//			}
 		} else {
 			return null;
 		}		
 	}
 	
 	private /*static*/ void setObjectInCache(NCBITaxon o, String code) {
-		if (null != o && null != code) {
+		if (o != null && code != null) {
 			// Cache.set(NCBITaxon.class.toString()+"."+code, o, 60 * 60 * 24);
-			ctx.cache().set(NCBITaxon.class.toString()+"."+code, o, 60 * 60 * 24);
+//			ctx.cache().set(NCBITaxon.class.toString()+"."+code, o, 60 * 60 * 24);
+			ctx.cache().set(key(code), o, 60 * 60 * 24);
 		}		
 	}
 	
 	@Deprecated
 	public /*static*/ String getTaxonomyInfo(String taxonCode, String expression) throws XPathExpressionException {
 		if (taxonCode != null && expression != null) {
-			logger.debug("Get taxo info for "+expression+" for taxon "+taxonCode);
+			logger.debug("Get taxon info for "+expression+" for taxon "+taxonCode);
 			/*Promise<WSResponse> homePage = WS.url(URLNCBI+"&id="+taxonCode).get();
 			Promise<Document> xml = homePage.map(response -> {
 				DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -165,16 +161,17 @@ public class TaxonomyServices {
 			return null;
 	}
 	
-	@Deprecated
+	// TODO: suggest fix
+	// @Deprecated
 	// public static String getValue(Promise<Document> xml, String expression) throws XPathExpressionException, RuntimeException, TimeoutException	{
 	public static String getValue(CompletionStage<Document> xml, String expression) throws XPathExpressionException, RuntimeException, TimeoutException	{
 		// TODO: possibly fix time unit original is get(10000), assumed to be milliseconds.
 		try {
-		Document doc = xml.toCompletableFuture().get(10000,TimeUnit.MILLISECONDS);
-		XPath xPath =  XPathFactory.newInstance().newXPath();
-		//String expression = "/TaxaSet/Taxon/ScientificName";
-		//read a string value
-		return xPath.compile(expression).evaluate(doc);
+			Document doc = xml.toCompletableFuture().get(10000,TimeUnit.MILLISECONDS);
+			XPath xPath =  XPathFactory.newInstance().newXPath();
+			//String expression = "/TaxaSet/Taxon/ScientificName";
+			//read a string value
+			return xPath.compile(expression).evaluate(doc);
 		} catch (ExecutionException e) {
 			throw new RuntimeException("wrapped exception",e);
 		} catch (InterruptedException e) {
@@ -182,7 +179,8 @@ public class TaxonomyServices {
 		}
 	}
 	
-	@Deprecated
+	// TODO: suggest fix
+	// @Deprecated
 	public /*static*/ String getScientificName(String taxonCode) {
 		try {
 			return getTaxonomyInfo(taxonCode, "/TaxaSet/Taxon/ScientificName");
@@ -192,7 +190,8 @@ public class TaxonomyServices {
 		return null;
 	}
 	
-	@Deprecated
+	// TODO: suggest fix 
+	// @Deprecated
 	public /*static*/ String getLineage(String taxonCode) {
 		try {
 			return getTaxonomyInfo(taxonCode, "/TaxaSet/Taxon/Lineage");

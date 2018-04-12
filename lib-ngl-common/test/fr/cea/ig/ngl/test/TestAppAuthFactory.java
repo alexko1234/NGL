@@ -1,23 +1,21 @@
 package fr.cea.ig.ngl.test;
 
-import static fr.cea.ig.play.test.DevAppTesting.testInServer;
-import static play.inject.Bindings.bind;
-
+//import static fr.cea.ig.play.test.DevAppTesting.testInServer;
+//import static play.inject.Bindings.bind;
 import java.util.function.Function;
 
 import fr.cea.ig.authentication.IAuthenticator;
-import fr.cea.ig.authorization.IAuthorizator;
+//import fr.cea.ig.authorization.IAuthorizator;
 import fr.cea.ig.ngl.test.authentication.AuthenticatorAdmin;
 import fr.cea.ig.ngl.test.authentication.AuthenticatorNobody;
 import fr.cea.ig.ngl.test.authentication.AuthenticatorRead;
 import fr.cea.ig.ngl.test.authentication.AuthenticatorReadWrite;
 import fr.cea.ig.ngl.test.authentication.AuthenticatorWrite;
 import fr.cea.ig.ngl.test.authentication.Identity;
-import fr.cea.ig.ngl.test.authorization.TestAuthorizator;
+//import fr.cea.ig.ngl.test.authorization.TestAuthorizator;
 import fr.cea.ig.play.test.ApplicationFactory;
-import fr.cea.ig.play.test.WSHelper;
-import play.Application;
-import play.inject.Bindings;
+//import play.Application;
+//import play.inject.Bindings;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.Http.Status;
 
@@ -35,27 +33,29 @@ public class TestAppAuthFactory extends ApplicationFactory {
 		super(f);
 	}
 	
+	@Override
 	protected TestAppAuthFactory constructorClone() {
 		return new TestAppAuthFactory(this);
 	}
 	
 	// covariant overrides
+	@Override
 	public TestAppAuthFactory mod(Function<GuiceApplicationBuilder,GuiceApplicationBuilder> mod) {
 		return (TestAppAuthFactory)super.mod(mod);
 	}
 	
 	@Override
-	public <T,U extends T> TestAppAuthFactory bind(Class<T> t, Class<U> u) {
-		return (TestAppAuthFactory)super.bind(t,u);
+	public <T,U extends T> TestAppAuthFactory override(Class<T> t, Class<U> u) {
+		return (TestAppAuthFactory)super.override(t,u);
 	}
 
 	public TestAppAuthFactory as(Identity i) {
 		switch (i) {
-		case Nobody   : return bind(IAuthenticator.class,AuthenticatorNobody.class);
-		case Read     : return bind(IAuthenticator.class,AuthenticatorRead.class);
-		case Write    : return bind(IAuthenticator.class,AuthenticatorWrite.class);
-		case ReadWrite: return bind(IAuthenticator.class,AuthenticatorReadWrite.class);
-		case Admin    : return bind(IAuthenticator.class,AuthenticatorAdmin.class);
+		case Nobody   : return override(IAuthenticator.class, AuthenticatorNobody.class);
+		case Read     : return override(IAuthenticator.class, AuthenticatorRead.class);
+		case Write    : return override(IAuthenticator.class, AuthenticatorWrite.class);
+		case ReadWrite: return override(IAuthenticator.class, AuthenticatorReadWrite.class);
+		case Admin    : return override(IAuthenticator.class, AuthenticatorAdmin.class);
 		default       : throw new RuntimeException("unhandled identity " + i); 
 		}
 	}
@@ -81,12 +81,15 @@ public class TestAppAuthFactory extends ApplicationFactory {
 	}
 	
 	public void authURL(Identity i, String url) {
-		as(i)     .ws(ws -> WSHelper.get(ws,url,Status.OK));
-		asWorse(i).ws(ws -> WSHelper.get(ws,url,Status.FORBIDDEN));
+//		as(i)     .ws(ws -> WSHelper.get(ws,url,Status.OK));
+//		asWorse(i).ws(ws -> WSHelper.get(ws,url,Status.FORBIDDEN));
+		as(i)     .ws(ws -> ws.get(url,Status.OK));
+		asWorse(i).ws(ws -> ws.get(url,Status.FORBIDDEN));
 	}
 	
 	public void authNobody(String url) {
-		as(Identity.Nobody).ws(ws -> WSHelper.get(ws,url,Status.OK));
+//		as(Identity.Nobody).ws(ws -> WSHelper.get(ws,url,Status.OK));
+		as(Identity.Nobody).ws(ws -> ws.get(url,Status.OK));
 	}
 
 //	public void noAuth(String url)  {

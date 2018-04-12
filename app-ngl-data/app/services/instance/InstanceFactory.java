@@ -15,16 +15,13 @@ import models.laboratory.resolutions.instance.ResolutionCategory;
 
 public class InstanceFactory {
 	
-	
 	public static Map<String,PropertyValue> newPSV(String key, Object value){
 		PropertySingleValue psv = new PropertySingleValue();
 		psv.value = value;
-		
-		Map<String,PropertyValue> map = new HashMap<String,PropertyValue>(1);
+		Map<String,PropertyValue> map = new HashMap<>(1); // <String,PropertyValue>(1);
 		map.put(key, psv);
 		return map;
 	}
-	
 	
 	/*
 	 * 
@@ -35,24 +32,42 @@ public class InstanceFactory {
 	 * @param cat
 	 * @return
 	 */
-	public static Protocol newProtocol( String code,String name,
-			String path, String version, String cat, List<String> exp) {
-		return newProtocol(code, name, path, version, cat, exp, null,true	);
+	public static Protocol newProtocol(String code,
+				                       String name,
+				                       String path, 
+				                       String version, 
+				                       String cat, 
+				                       List<String> exp) {
+		return newProtocol(code, name, path, version, cat, exp, null, true);
 	}
 
-	public static Protocol newProtocol( String code,String name,
-			String path, String version, String cat, List<String> exp,  Map<String, PropertyValue> properties) {
+	public static Protocol newProtocol(String code,
+			                           String name,
+			                           String path, 
+			                           String version, 
+			                           String cat, 
+			                           List<String> exp,  
+			                           Map<String, PropertyValue> properties) {
 		return newProtocol(code, name, path, version, cat, exp, properties, true);
 	}
 
-	public static Protocol newProtocol( String code,String name,
-			String path, String version, String cat, List<String> exp,  Boolean active) {
+	public static Protocol newProtocol(String code,
+			                           String name,
+				                       String path, 
+				                       String version, 
+				                       String cat, 
+				                       List<String> exp,  
+				                       Boolean active) {
 		return newProtocol(code, name, path, version, cat, exp, null, active);
 	}
-
 	
-	public static Protocol newProtocol( String code,String name,
-			String path, String version, String cat, List<String> exp,  Map<String, PropertyValue> properties, Boolean active) {
+	public static Protocol newProtocol(String code,
+			                           String name,
+			                           String path, 
+			                           String version, 
+			                           String cat, 
+			                           List<String> exp,  
+			                           Map<String, PropertyValue> properties, Boolean active) {
 		Protocol p = new Protocol();
 		p.code = code.toLowerCase().replace("\\s+", "-");
 		p.name = name;
@@ -94,16 +109,14 @@ public class InstanceFactory {
 		return barcodePosition;
 	}
 
-	
-	public static List<String> setExperimentTypeCodes(String...exp){
-		List<String> lp = new ArrayList<String>();
-		for(String s:exp){
+	// Arrays.toList or so i think
+	public static List<String> setExperimentTypeCodes(String...exp) {
+		List<String> lp = new ArrayList<>();
+		for (String s:exp) {
 			lp.add(s);
 		}
-		
 		return lp;
 	}
-	
 
 	/*
 	 * define a resolution in MongoDB (with specific level) 

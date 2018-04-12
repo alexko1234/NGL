@@ -11,5 +11,5 @@ public class MapParameter extends Parameter {
 	}
 
 	public Map<String, String> map;
-	
+
 }

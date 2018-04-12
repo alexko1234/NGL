@@ -19,26 +19,28 @@ import services.description.common.LevelService;
 public class ProjectServiceCNG extends AbstractProjectService{
 
 
+	@Override
 	public void saveProjectCategories(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<ProjectCategory> l = new ArrayList<ProjectCategory>();
+		List<ProjectCategory> l = new ArrayList<>();
 		l.add(DescriptionFactory.newSimpleCategory(ProjectCategory.class,"defaut", "default"));
 		DAOHelpers.saveModels(ProjectCategory.class, l, errors);
 	}
 
+	@Override
 	public void saveProjectTypes(Map<String, List<ValidationError>> errors) throws DAOException{
-		List<ProjectType> l = new ArrayList<ProjectType>();
+		List<ProjectType> l = new ArrayList<>();
 
 		l.add(DescriptionFactory.newProjectType("Defaut", "default-project", ProjectCategory.find.findByCode("default"), getProjectPropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
 		DAOHelpers.saveModels(ProjectType.class, l, errors);
-
 	}
 
 	private static List<PropertyDefinition> getProjectPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> pds = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> pds = new ArrayList<>();
 		pds.add(DescriptionFactory.newPropertiesDefinition("Groupe unix", "unixGroup", LevelService.getLevels(Level.CODE.Project), String.class, true, "single", "solexa"));
 		return pds;
 	}
+	
 }
 
 

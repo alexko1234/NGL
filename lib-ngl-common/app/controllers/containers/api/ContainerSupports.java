@@ -14,6 +14,24 @@ import java.util.stream.IntStream;
 
 import javax.inject.Inject;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.time.DateUtils;
+// import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
+import org.mongojack.DBUpdate;
+
+// import com.fasterxml.jackson.databind.deser.impl.ExternalTypeHandler.Builder;
+import com.mongodb.BasicDBObject;
+
+import controllers.DocumentController;
+import controllers.QueryFieldsForm;
+import controllers.authorisation.Permission;
+// import controllers.history.UserHistory;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
@@ -24,15 +42,6 @@ import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.time.DateUtils;
-// import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-import org.mongojack.DBQuery.Query;
-
 // import play.Logger;
 // import play.api.modules.spring.Spring;
 import play.data.Form;
@@ -48,18 +57,6 @@ import validation.common.instance.CommonValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableResponse;
 import workflows.container.ContSupportWorkflows;
-
-// import com.fasterxml.jackson.databind.deser.impl.ExternalTypeHandler.Builder;
-import com.mongodb.BasicDBObject;
-
-import controllers.CommonController;
-import controllers.DocumentController;
-import controllers.QueryFieldsForm;
-import controllers.authorisation.Permission;
-// import controllers.history.UserHistory;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.play.NGLContext;
 
 //@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 // public class ContainerSupports extends CommonController {
@@ -98,6 +95,7 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 		}
 		return notFound();
 	}*/
+	@Override
 	@Permission(value={"reading"})
 	public Result get(String code) { return super.get(code); } 
 	
@@ -110,6 +108,7 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 		}	
 	}*/
 	
+	@Override
 	@Permission(value={"reading"})
 	public Result head(String code) { return super.head(code); }
 	
@@ -126,7 +125,7 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 						mongoDBFinder(supportsSearch, query, keys); 
 				List<ContainerSupport> supports = results.toList();
 
-				return ok(Json.toJson(new DatatableResponse<ContainerSupport>(supports, results.count())));
+				return ok(Json.toJson(new DatatableResponse<>(supports, results.count())));
 			} else if(supportsSearch.list) {
 				keys.put("_id", 0);//Don't need the _id field
 				keys.put("code", 1);
@@ -135,7 +134,7 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 						mongoDBFinder(supportsSearch, query, keys); 
 				List<ContainerSupport> supports = results.toList();
 
-				List<ListObject> los = new ArrayList<ListObject>();
+				List<ListObject> los = new ArrayList<>();
 				for (ContainerSupport s: supports) {
 					los.add(new ListObject(s.code, s.code));
 				}
@@ -154,24 +153,24 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 	@Permission(value={"writing"})	
 	public Result updateState(String code){
 		ContainerSupport support = getSupport(code);
-		if(support == null){
+		if (support == null) 
 			return badRequest();
-		}
+
 		Form<State> filledForm =  getFilledForm(stateForm, State.class);
 		State state = filledForm.get();
 		state.date = new Date();
 		state.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
 		ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_STATE, Boolean.TRUE);
 		workflows.setState(ctxVal, support, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getSupport(code)));
-		} else {
-			// return badRequest(filledForm.errors-AsJson());
-			// return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
-			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
+		// return badRequest(filledForm.errors-AsJson());
+		// return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
+		return badRequest(errorsAsJson(ctxVal.getErrors()));
 	}
 
 	private ContainerSupport getSupport(String code) {
@@ -189,11 +188,12 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 			.map(filledForm -> {
 				ContainerSupportBatchElement element = filledForm.get();
 				ContainerSupport support = getSupport(element.data.code);
-				if (null != support) {
+				if (support != null) {
 					State state = element.data.state;
 					state.date = new Date();
 					state.user = user;
-					ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+//					ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+					ContextValidation ctxVal = new ContextValidation(user, filledForm);
 					ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
 					ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_STATE, Boolean.TRUE);
 					workflows.setState(ctxVal, support, state);
@@ -245,14 +245,15 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 			// il y a une query string ==> mettre a jour les champs dont le nom est dans la query string:   ?fields=XXXX&fields=YYY
 			if (dbSupport.code.equals(code)) {
 				// on a bien récupéré ce qu'on a demandé....
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+//				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 				ctxVal.setUpdateMode();
 				validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);	
 				// verifier si les champs de la query string font partie des champs modifiables
 				validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm); 
 				// if (!filledForm.hasErrors()) {
 				if (!ctxVal.hasErrors()) {
-					if (null != dbSupport.traceInformation) {
+					if (dbSupport.traceInformation != null) {
 						dbSupport.traceInformation.setTraceInformation(getCurrentUser());
 					} else {
 						logger.error("traceInformation is null for Container support " + code);	
@@ -281,11 +282,10 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 		}
 	}
 
-	private void updateStorages(ContainerSupport dbSupport,
-			ContainerSupport formSupport) {
+	private void updateStorages(ContainerSupport dbSupport, ContainerSupport formSupport) {
 		if (dbSupport.storages == null) {
-			dbSupport.storages = new ArrayList<StorageHistory>();
-			if (null != dbSupport.storageCode) {
+			dbSupport.storages = new ArrayList<>();
+			if (dbSupport.storageCode != null) {
 				StorageHistory sh = getStorageHistory(dbSupport.storageCode, dbSupport.storages.size());
 				dbSupport.storages.add(sh);
 			}
@@ -313,7 +313,7 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 	 * @throws DAOException 
 	 */
 	private static DBQuery.Query getQuery(ContainerSupportsSearchForm supportsSearch) throws DAOException {
-		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
+		List<DBQuery.Query> queryElts = new ArrayList<>();
 		queryElts.add(DBQuery.exists("_id"));
 		if (StringUtils.isNotBlank(supportsSearch.categoryCode)) {
 			queryElts.add(DBQuery.is("categoryCode", supportsSearch.categoryCode));
@@ -364,7 +364,7 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 			if (queryContainer != null) {
 				List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, queryContainer, keys).toList();
 				logger.debug("Containers " + containers.size());
-				List<String> supports  =new ArrayList<String>();
+				List<String> supports  =new ArrayList<>();
 				for(Container c: containers){
 					supports.add(c.support.code);
 				}
@@ -434,11 +434,10 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 	
 	@Permission(value={"writing"})
 	public Result saveCode(Integer numberOfCode) {
-		List<String> codes = new ArrayList<String>(numberOfCode);
+		List<String> codes = new ArrayList<>(numberOfCode);
 		IntStream.range(0, numberOfCode).forEach(i -> {
 			codes.add(CodeHelper.getInstance().generateContainerSupportCode());
 		});
-		
 		return ok(Json.toJson(codes));
 	}
 	

@@ -16,19 +16,17 @@ import org.springframework.jdbc.support.MetaDataAccessException;
 public class ColumnMetaDataCallback implements DatabaseMetaDataCallback{
 
 	private String tableName;
-	
-	
+		
 	public ColumnMetaDataCallback(String tableName) {
 		super();
 		this.tableName = tableName;
 	}
 
-
 	@Override
 	public Object processMetaData(DatabaseMetaData dbmd) throws SQLException,
 	MetaDataAccessException {
 		ResultSet rs = null ;
-		ArrayList<String> colNames = new ArrayList<String>();
+		ArrayList<String> colNames = new ArrayList<>();
 		try {
 			// u can specify table name instead of %
 			rs = dbmd.getColumns(null,null,tableName,"%");
@@ -44,6 +42,7 @@ public class ColumnMetaDataCallback implements DatabaseMetaDataCallback{
 		}
 		return colNames;
 	}
+
 }
 
 

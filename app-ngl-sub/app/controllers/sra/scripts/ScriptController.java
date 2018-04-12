@@ -1,14 +1,13 @@
 package controllers.sra.scripts;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import javax.inject.Inject;
 
+import fr.cea.ig.lfw.controllers.AbstractScript;
 import play.inject.Injector;
 import play.mvc.Controller;
 import play.mvc.Result;
-import sra.scripts.AbstractScript;
 
 public class ScriptController extends Controller {
 	//public static final String LILI = "lili";
@@ -18,7 +17,7 @@ public class ScriptController extends Controller {
 	@Inject
 	// arg pour dire à play de nous fournir un injecteur qui nous permettra d'instancier la classe.
 	public ScriptController(Injector injector) { 
-		this.injector= injector;
+		this.injector = injector;
 	}
 	
 	public Result noRest(String clazz, String method) {

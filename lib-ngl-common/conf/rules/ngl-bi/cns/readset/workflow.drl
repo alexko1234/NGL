@@ -71,9 +71,13 @@ rule "Find Pattern Krona for taxonomy treatment"
 		//Get krona from read1 or pairs value
 		String krona = null;
 		if($treatmentTaxo.results.get("read1")!=null){
-			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).value);
+//			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).value);
+//			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).getValue());
+			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).byteValue());
 		}else if($treatmentTaxo.results.get("pairs")!=null){
-			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("pairs").get("krona")).value);
+//			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("pairs").get("krona")).value);
+//			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("pairs").get("krona")).getValue());
+			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("pairs").get("krona")).byteValue());
 		}
 		if(krona!=null){
 			Pattern p1 = Pattern.compile(".*<node name=\"all\">\\s+<magnitude><val>(\\d+)</val></magnitude>.*", Pattern.DOTALL);
@@ -118,25 +122,33 @@ rule "Find Fungi for taxonomy treatment"
 		Logger.debug("Find Fungi in taxonomy krona "+$readset.code);	
 			
 		String krona = null;
-		List<Map<String, ?>> keywordBilan = new ArrayList<Map<String, ?>>();
+//		List<Map<String, ?>> keywordBilan = new ArrayList<Map<String, ?>>();
+		List<Map<String, Object>> keywordBilan = new ArrayList<Map<String, Object>>();
 		boolean createPropKeywordBilan = true;
 		if($treatmentTaxo.results.get("read1")!=null){
 			Logger.debug("Get from read1");
-			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).value);
+//			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).value);
+//			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).getValue());
+			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).byteValue());
 			if($treatmentTaxo.results.get("read1").get("keywordBilan")!=null){
-				keywordBilan = ((PropertyObjectListValue)$treatmentTaxo.results.get("read1").get("keywordBilan")).value;
+//				keywordBilan = ((PropertyObjectListValue)$treatmentTaxo.results.get("read1").get("keywordBilan")).value;
+				keywordBilan = ((PropertyObjectListValue)$treatmentTaxo.results.get("read1").get("keywordBilan")).getValue();
 				createPropKeywordBilan=false;
 			}
 		}else if($treatmentTaxo.results.get("pairs")!=null){
 			Logger.debug("Get from pairs");
-			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("pairs").get("krona")).value);
+//			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("pairs").get("krona")).value);
+//			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("pairs").get("krona")).getValue());
+			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("pairs").get("krona")).byteValue());
 			if($treatmentTaxo.results.get("pairs").get("keywordBilan")!=null){
-				keywordBilan = ((PropertyObjectListValue)$treatmentTaxo.results.get("pairs").get("keywordBilan")).value;
+//				keywordBilan = ((PropertyObjectListValue)$treatmentTaxo.results.get("pairs").get("keywordBilan")).value;
+				keywordBilan = ((PropertyObjectListValue)$treatmentTaxo.results.get("pairs").get("keywordBilan")).getValue();
 				createPropKeywordBilan=false;
 			}
 		}
 		if(createPropKeywordBilan){
-				PropertyObjectListValue pol = new PropertyObjectListValue(new ArrayList<Map<String, ?>>());
+//				PropertyObjectListValue pol = new PropertyObjectListValue(new ArrayList<Map<String, ?>>());
+				PropertyObjectListValue pol = new PropertyObjectListValue(new ArrayList<Map<String, Object>>());
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 					DBQuery.is("code", $readset.code),
 					DBUpdate.set("treatments.taxonomy.pairs.keywordBilan", pol));
@@ -165,10 +177,12 @@ rule "Find Fungi for taxonomy treatment"
 				Logger.debug("Match Group Fungi = "+fungiPercentValue);
 			}
 			
-			//List<Map<String, ?>> keywordBilan = ((PropertyObjectListValue)$treatmentTaxo.results.get("read1").get("keywordBilan")).value;
-			
-			List<Map<String, ?>> keywordBRemove = new ArrayList<Map<String, ?>>(); 
-			for(Map<String, ?> keywordOne : keywordBilan){
+//			List<Map<String, ?>> keywordBilan = ((PropertyObjectListValue)$treatmentTaxo.results.get("read1").get("keywordBilan")).value;
+
+//			List<Map<String, ?>> keywordBRemove = new ArrayList<Map<String, ?>>(); 
+//			for(Map<String, ?> keywordOne : keywordBilan){
+			List<Map<String, Object>> keywordBRemove = new ArrayList<Map<String, Object>>(); 
+			for(Map<String, Object> keywordOne : keywordBilan){
 				String keywordValue = (String)keywordOne.get("keyword");
 				if(keywordValue.equals("Fungi")){
 					Logger.debug("keywordValue = "+keywordValue);

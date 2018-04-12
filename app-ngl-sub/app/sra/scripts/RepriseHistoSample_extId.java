@@ -1,49 +1,29 @@
 package sra.scripts;
-import static sra.scripts.utils.Iterables.*;
-
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
 import javax.inject.Inject;
 
-import models.sra.submit.common.instance.Sample;
-import models.utils.InstanceConstants;
-
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
-import play.libs.ws.WSClient;
-import play.libs.ws.WSRequest;
-import play.libs.ws.WSResponse;
-import sra.scripts.AbstractScript.LogLevel;
-import sra.scripts.utils.CSVParsing;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.lfw.controllers.AbstractScript;
+import fr.cea.ig.lfw.utils.ZenIterable;
+import models.sra.submit.common.instance.Sample;
+import models.utils.InstanceConstants;
 import sra.scripts.utils.DateTools;
 import sra.scripts.utils.EbiAPI;
 import sra.scripts.utils.Tools;
-import sra.scripts.utils.ZenIterable;
 import sra.scripts.utils.iteration.CSVIterable;
 import sra.scripts.utils.iteration.FileLineIterable;
-import sra.scripts.utils.iteration.FileLineIterator;
-import sra.scripts.utils.iteration.MappingIterable;
-import fr.cea.ig.MongoDBDAO;
-
-
 
 public class RepriseHistoSample_extId extends AbstractScript {
 	/* version 1 : on demande à play d'instancier la classe avec un objet WSClient et on instantiera 
@@ -55,11 +35,11 @@ public class RepriseHistoSample_extId extends AbstractScript {
 	}
 	*/
 	// version 2 : On demande à play d'instancier la classe avec un objet EbiAPI
-	private final EbiAPI ebiAPI;	
+//	private final EbiAPI ebiAPI;	
 
 	@Inject
 	public RepriseHistoSample_extId(EbiAPI ebiAPI) {
-		this.ebiAPI = ebiAPI;
+//		this.ebiAPI = ebiAPI;
 	}
 	
 	/**
@@ -95,15 +75,15 @@ public class RepriseHistoSample_extId extends AbstractScript {
 		private SampleInfos(String accession, String externalId) {
 			this(accession, externalId, null, null);
 		}
-		public String getAccession()    {return accession;}
-		public String getExternalId()   {return externalId;}
-		public String getCode()         {return optionalCode;}
+//		public String getAccession()    {return accession;}
+//		public String getExternalId()   {return externalId;}
+//		public String getCode()         {return optionalCode;}
 //		public Date getCreationDate() {return optionalCreationDate;}
-		public Optional<Date> getCreationDate() {
-			if (optionalCreationDate==null)
-				return Optional.empty();
-			return Optional.of(optionalCreationDate);
-		}
+//		public Optional<Date> getCreationDate() {
+//			if (optionalCreationDate==null)
+//				return Optional.empty();
+//			return Optional.of(optionalCreationDate);
+//		}
 	
 	}
 	
@@ -179,27 +159,26 @@ public class RepriseHistoSample_extId extends AbstractScript {
 			}	
 		};
 		
-		Function <SampleInfos, Boolean> taraFilter_lambda = 
-				sampleInfo -> sampleInfo.optionalCode == null || !sampleInfo.optionalCode.matches("^TARA_[a-zA-Z0-9]{10,11}$");
+//		Function <SampleInfos, Boolean> taraFilter_lambda = 
+//				sampleInfo -> sampleInfo.optionalCode == null || !sampleInfo.optionalCode.matches("^TARA_[a-zA-Z0-9]{10,11}$");
 				
 //		Iterable <List<String>> titi_A = ebi_1;
 //		Iterable <List<String>> titi_B = skip  (titi_A, 1);
 //		Iterable <SampleInfos>  titi_C = map   (titi_B, function_1);
 //		Iterable <SampleInfos>  titi_D = filter(titi_C, taraFilter);
 //		Iterable <SampleInfos> sampleInfos_1 = titi_D;
-				
-				
+								
 		ZenIterable <SampleInfos> sampleInfos_1 = ebi_1.skip(1).map(function_1).filter(taraFilter);
 		// si on part d'un Iterable :
 		//ZenIterable <SampleInfos> sampleInfos_1 = skip(ebi_1,1).map(function_1).filter(taraFilter);
 		//ZenIterable <SampleInfos> sampleInfos_1 = zen(ebi_1).skip(1).map(function_1).filter(taraFilter);
-		int cp = 0;				
+//		int cp = 0;				
 		for (SampleInfos sampleInfo : sampleInfos_1) {
 //			if (sampleInfo == null) {
 //				continue;
 //			}
 			sampleAcs.add(sampleInfo.accession);
-			cp++;
+//			cp++;
 			updateDB(sampleInfo);
 		}
 		sampleInfos_1.each(sampleInfo -> {
@@ -209,7 +188,6 @@ public class RepriseHistoSample_extId extends AbstractScript {
 			updateDB(sampleInfo);
 		});
 
-		
 		//----------------------------------------------------
 		// Parsing fichier 2
 		File ebiFile2 = new File("/env/cns/home/sgas/repriseHistoExtId/ebi_2_repriseHistoSample.txt");
@@ -219,7 +197,7 @@ public class RepriseHistoSample_extId extends AbstractScript {
 		
 		Function<List<String>, SampleInfos> function_2 =
 				new Function<List<String>, SampleInfos>() {
-					boolean first = true;
+//					boolean first = true;
 					@Override
 					public SampleInfos apply(List<String> record) {
 						String accession = record.get(0);
@@ -239,11 +217,9 @@ public class RepriseHistoSample_extId extends AbstractScript {
 			}
 			sampleAcs.add(sampleInfo.accession);
 			printfln("%s  |  %s  ", sampleInfo.externalId, sampleInfo.accession);
-			cp++;
+//			cp++;
 			updateDB(sampleInfo);
 		}
-		
-		
 		
 		// Controle coherence :
 		Set<String> absentFichier = Tools.subtract(dbSampleAcs, sampleAcs);
@@ -257,7 +233,6 @@ public class RepriseHistoSample_extId extends AbstractScript {
 		for (String sampleAc : absentBase) {
 			printfln("%s",sampleAc);
 		}
-		
 	
 	}
 		

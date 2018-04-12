@@ -9,7 +9,7 @@ import rules.services.Rules6Component;
 
 public class TestRules6Component extends Rules6Component {
 
-private static final Logger.ALogger logger = Logger.of(Rules6Component.class);
+	private static final Logger.ALogger logger = Logger.of(Rules6Component.class);
 	
 	@Inject
 	public TestRules6Component(Application app, ApplicationLifecycle lifecycle) {
@@ -17,9 +17,9 @@ private static final Logger.ALogger logger = Logger.of(Rules6Component.class);
 		logger.debug("Enable drools for Tests");
 	}
 
-	@Override
-	public void onStart(Application app, ApplicationLifecycle lifecycle) {
-		super.onStart(app, lifecycle);
-	}
+//	@Override
+//	public void onStart(Application app, ApplicationLifecycle lifecycle) {
+//		super.onStart(app, lifecycle);
+//	}
 
 }

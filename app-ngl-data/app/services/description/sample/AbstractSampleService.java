@@ -27,14 +27,13 @@ public abstract class AbstractSampleService {
 
 	public abstract void saveSampleCategories(Map<String, List<ValidationError>> errors) throws DAOException;
 	
-	
 	public static SampleCategory newSampleCategory(String name, String code) {
 		SampleCategory sc = DescriptionFactory.newSimpleCategory(SampleCategory.class,name, code);
 		return sc;
 	}
 	
-	public static List<Institute> getInstitutes(Constants.CODE...codes) throws DAOException {
-		List<Institute> institutes = new ArrayList<Institute>();
+	public static List<Institute> getInstitutes(Constants.CODE... codes) throws DAOException {
+		List<Institute> institutes = new ArrayList<>();
 		for(Constants.CODE code : codes){
 			institutes.add(Institute.find.findByCode(code.name()));
 		}

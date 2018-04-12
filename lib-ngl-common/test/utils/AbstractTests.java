@@ -1,16 +1,15 @@
 package utils;
 
-import java.io.File;
+// import java.io.File;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
-import play.Application;
-
-import models.utils.DescriptionHelper;
-
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
+import models.utils.DescriptionHelper;
+import ngl.common.Global;
+import play.Application;
 
 /**
  * Application provider for test classes.
@@ -50,7 +49,9 @@ public abstract class AbstractTests {
 	 * @return
 	 */
 	private static Application getFakeApplication() {
-		return fr.cea.ig.play.test.DevAppTesting.devapp("ngl-common.test.conf");
+//		System.out.println("************ USING COMMON FACTORY ***********");
+		// return fr.cea.ig.play.test.DevAppTesting.devapp("ngl-common.test.conf");
+		return Global.af.createApplication();
 	}
 	
 	/**

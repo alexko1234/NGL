@@ -2,7 +2,7 @@ package services.description.sample;
 
 import static services.description.DescriptionFactory.newPropertiesDefinition;
 import static services.description.DescriptionFactory.newSampleType;
-import static services.description.DescriptionFactory.newValues;
+// import static services.description.DescriptionFactory.newValues;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +10,8 @@ import java.util.Map;
 
 import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
-import models.laboratory.common.description.MeasureCategory;
-import models.laboratory.common.description.MeasureUnit;
+//import models.laboratory.common.description.MeasureCategory;
+//import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
 import models.laboratory.sample.description.SampleCategory;
@@ -22,13 +22,13 @@ import play.data.validation.ValidationError;
 import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
-import services.description.common.MeasureService;
+//import services.description.common.MeasureService;
 
 public class SampleServiceCNS extends AbstractSampleService {
 	
-
+	@Override
 	public void saveSampleCategories(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<SampleCategory> l = new ArrayList<SampleCategory>();
+		List<SampleCategory> l = new ArrayList<>();
 		
 		l.add(newSampleCategory("ADN Cloné",                    "cloned-DNA"));
 		l.add(newSampleCategory("Matériel Immunoprécipité",     "IP-sample"));
@@ -57,10 +57,11 @@ public class SampleServiceCNS extends AbstractSampleService {
 		return newSampleType(name,code,SampleCategory.find.findByCode(category),properties,institutes);
 	}
 	
+	@Override
 	public void saveSampleTypes(Map<String, List<ValidationError>> errors) throws DAOException{
 		List<Institute> CNS = getInstitutes(Constants.CODE.CNS);
 		
-		List<SampleType> l = new ArrayList<SampleType>();
+		List<SampleType> l = new ArrayList<>();
 		
 		l.add(makeSampleType("BAC",               "BAC",         "cloned-DNA",            CNS));	
 		l.add(makeSampleType("Plasmide",          "plasmid",     "cloned-DNA",            CNS));	
@@ -150,14 +151,14 @@ public class SampleServiceCNS extends AbstractSampleService {
 	}*/
 	
 	private List<PropertyDefinition> getFishPropertyDefinitions() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Partie de l'anatomie", "fishAnatomy", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null,
 				getFishAnatomyValues(), "single", 2, true, null, null));
 		return propertyDefinitions;
 	}
 	
 	private static List<Value> getFishAnatomyValues() {
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("MUC",   "mucus"));
 		values.add(DescriptionFactory.newValue("GILLS", "gills"));
 		values.add(DescriptionFactory.newValue("GT",    "Gut tractus"));
@@ -166,5 +167,4 @@ public class SampleServiceCNS extends AbstractSampleService {
 		return values;	
 	}
 	
-
 }

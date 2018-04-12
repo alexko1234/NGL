@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
 import fr.cea.ig.DBObject;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
@@ -21,9 +19,8 @@ import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.api.GenericAPI;
 import fr.cea.ig.ngl.support.NGLForms;
 import fr.cea.ig.play.IGBodyParsers;
-import play.mvc.BodyParser;
 import play.data.validation.ValidationError;
-import play.libs.Json;
+import play.mvc.BodyParser;
 import play.mvc.Result;
 
 /**
@@ -40,6 +37,7 @@ public abstract class NGLAPIController<T extends GenericAPI<U,V>, U extends Gene
 				extends NGLController implements NGLForms, DBObjectConvertor {
 
 	private final T api;
+	
 	public T api() {
 		return api;
 	}
@@ -50,10 +48,10 @@ public abstract class NGLAPIController<T extends GenericAPI<U,V>, U extends Gene
 	}
 	
 	/**
-	 * if object exists returns Status 200 OK <br>
-	 * else returns Status 404 NOT FOUND
+	 * If object exists returns Status 200 OK <br>
+	 * else returns Status 404 NOT FOUND.
 	 * @param code String 
-	 * @return Result HTTP result (200 or 404)
+	 * @return     Result HTTP result (200 or 404)
 	 */
 	@Authenticated
 	@Authorized.Read
@@ -87,7 +85,7 @@ public abstract class NGLAPIController<T extends GenericAPI<U,V>, U extends Gene
 			return okAsJson(object);
 		} catch (APIValidationException e) {
 			getLogger().error(e.getMessage());
-			if(e.getErrors() != null) {
+			if (e.getErrors() != null) {
 				return badRequestAsJson(errorsAsJson(e.getErrors()));
 			} else {
 				return badRequestAsJson(e.getMessage());
@@ -103,13 +101,13 @@ public abstract class NGLAPIController<T extends GenericAPI<U,V>, U extends Gene
 	
 	/**
 	 * These method defines the specific update behavior for each resource. 
-	 * {@link NGLAPIController#update()} wraps the call of this method. <br>
+	 * {@link #update(String)} wraps the call of this method. <br>
 	 * We do not check here if form has errors because the API validates data. 
 	 * 
 	 * @param code String
-	 * @return V the DBObject created
-	 * @throws Exception global exception
-	 * @throws APIException exception from API
+	 * @return     V the DBObject created
+	 * @throws Exception              global exception
+	 * @throws APIException           exception from API
 	 * @throws APIValidationException exception from API
 	 */
 	public abstract V updateImpl(String code) throws Exception, APIException, APIValidationException;
@@ -138,7 +136,7 @@ public abstract class NGLAPIController<T extends GenericAPI<U,V>, U extends Gene
 	}
 
 	public Map<String, List<ValidationError>> mapErrors(List<ValidationError> formErrors) {
-		Map<String, List<ValidationError>> map = new TreeMap<String, List<ValidationError>>(); 
+		Map<String, List<ValidationError>> map = new TreeMap<>(); 
 		formErrors.forEach(ve -> {
 			if(map.containsKey(ve.key())) {
 				map.get(ve.key()).add(ve);

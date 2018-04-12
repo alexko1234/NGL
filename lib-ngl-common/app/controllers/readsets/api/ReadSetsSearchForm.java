@@ -6,12 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import play.data.format.Formats.DateTime;
 import controllers.ListForm;
 
-
-
-public class ReadSetsSearchForm extends ListForm{
+public class ReadSetsSearchForm extends ListForm {
 	
 	public String typeCode;
 	public Set<String> typeCodes;
@@ -75,8 +72,8 @@ public class ReadSetsSearchForm extends ListForm{
     
     //public String isSentCCRT, isSentCollaborator;
 
-    public Map<String, List<String>> properties = new HashMap<String, List<String>>();
-    public Map<String, List<String>> sampleOnContainerProperties = new HashMap<String, List<String>>();
-    public Map<String, Map<String, List<String>>> treatmentProperties = new HashMap<String, Map<String, List<String>>>();
+    public Map<String, List<String>> properties = new HashMap<>();
+    public Map<String, List<String>> sampleOnContainerProperties = new HashMap<>();
+    public Map<String, Map<String, List<String>>> treatmentProperties = new HashMap<>();
     
 }

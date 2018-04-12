@@ -1,51 +1,48 @@
 package models.laboratory.processes.description.dao;
 
-import java.sql.Types;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import models.administration.authorisation.User;
-import models.laboratory.common.description.dao.CommonInfoTypeDAO;
-import models.laboratory.experiment.description.ExperimentCategory;
-import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.processes.description.ProcessExperimentType;
-import models.laboratory.processes.description.ProcessType;
-import models.utils.ListObject;
-import models.utils.dao.AbstractDAOCommonInfoType;
-import models.utils.dao.DAOException;
-
-import org.apache.commons.lang.ArrayUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.object.MappingSqlQuery;
 import org.springframework.stereotype.Repository;
 
-import play.Logger;
+import models.laboratory.common.description.dao.CommonInfoTypeDAO;
+import models.laboratory.processes.description.ProcessExperimentType;
+import models.laboratory.processes.description.ProcessType;
+import models.utils.dao.AbstractDAOCommonInfoType;
+import models.utils.dao.DAOException;
 import play.api.modules.spring.Spring;
 
 @Repository
-public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType>{
+public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType> {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(ProcessTypeDAO.class);
+	
+//	protected ProcessTypeDAO() {
+//		super("process_type", ProcessType.class, ProcessTypeMappingQuery.class, 
+//				"SELECT distinct c.id, c.fk_common_info_type, c.fk_process_category, c.fk_void_experiment_type, c.fk_first_experiment_type, c.fk_last_experiment_type, t.active as active ",
+//				"FROM process_type as c  "+sqlCommonInfoType, false);
+//	}
 	protected ProcessTypeDAO() {
-		super("process_type", ProcessType.class, ProcessTypeMappingQuery.class, 
+		super("process_type", ProcessType.class, ProcessTypeMappingQuery.factory, 
 				"SELECT distinct c.id, c.fk_common_info_type, c.fk_process_category, c.fk_void_experiment_type, c.fk_first_experiment_type, c.fk_last_experiment_type, t.active as active ",
 				"FROM process_type as c  "+sqlCommonInfoType, false);
 	}
 
+	@SuppressWarnings("deprecation")
 	public List<ProcessType> findByProcessCategoryCodes(String...processCategoryCodes){	
 		try {
 			String sql = sqlCommonSelect + ",t.name, t.code " + sqlCommonFrom + ", process_category as pc WHERE c.fk_process_category=pc.id "
 						+"AND pc.code in ("+listToParameters(Arrays.asList(processCategoryCodes))+") order by display_order";
 			
 			//Logger.debug(sql);
-			BeanPropertyRowMapper<ProcessType> mapper = new BeanPropertyRowMapper<ProcessType>(entityClass);
+			BeanPropertyRowMapper<ProcessType> mapper = new BeanPropertyRowMapper<>(entityClass);
 			return this.jdbcTemplate.query(sql, mapper, (Object[])processCategoryCodes);
 		} catch (DataAccessException e) {
-			Logger.warn(e.getMessage());
+			logger.warn(e.getMessage());
 			return null;
 		}
 	}
@@ -65,7 +62,7 @@ public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType>{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		processType.id = commonInfoTypeDAO.save(processType);		
 		//Create new processType
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("id", processType.id);
 		parameters.put("fk_common_info_type", processType.id);
 		parameters.put("fk_process_category", processType.category.id);
@@ -100,6 +97,7 @@ public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType>{
 		return processType.id;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void update(ProcessType processType) throws DAOException
 	{
@@ -127,6 +125,7 @@ public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType>{
 		insertExperimentTypes(processType.experimentTypes, processType.id, true);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void insertExperimentTypes(
 			List<ProcessExperimentType> experimentTypes, Long id, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
@@ -144,16 +143,18 @@ public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType>{
 		}		
 	}
 
+	@SuppressWarnings("deprecation")
 	private void removeExperimentTypes(Long id) {
 		String sql = "DELETE FROM process_experiment_type WHERE fk_process_type=?";
 		jdbcTemplate.update(sql, id);
 
 	}
 	
+	@SuppressWarnings("deprecation")
 	public List<ProcessExperimentType> getProcessExperimentType(Long processId){
 		String sql = "SELECT pet.position_in_process, et.code as experimentTypeCode "+
 				"FROM process_experiment_type as pet inner join common_info_type as et on et.id = pet.fk_experiment_type WHERE pet.fk_process_type = ? ";
-		BeanPropertyRowMapper<ProcessExperimentType> mapper = new BeanPropertyRowMapper<ProcessExperimentType>(ProcessExperimentType.class);
+		BeanPropertyRowMapper<ProcessExperimentType> mapper = new BeanPropertyRowMapper<>(ProcessExperimentType.class);
 		return this.jdbcTemplate.query(sql, mapper, processId);		
 	}
 	
@@ -169,13 +170,14 @@ public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType>{
 		commonInfoTypeDAO.remove(processType);
 	}
 
+	@SuppressWarnings("deprecation")
 	public List<ProcessType> findByExperimentCode(String experimentTypeCode) {
 		try {
 			String sql = sqlCommonSelect + ",t.name, t.code " + sqlCommonFrom + ", process_experiment_type as pe, common_info_type ce WHERE pe.fk_process_type=t.id and pe.fk_experiment_type=ce.id AND ce.code=?";
-			BeanPropertyRowMapper<ProcessType> mapper = new BeanPropertyRowMapper<ProcessType>(entityClass);
+			BeanPropertyRowMapper<ProcessType> mapper = new BeanPropertyRowMapper<>(entityClass);
 			return this.jdbcTemplate.query(sql, mapper, experimentTypeCode);
 		} catch (DataAccessException e) {
-			Logger.warn(e.getMessage());
+			logger.warn(e.getMessage());
 			return null;
 		}
 	}

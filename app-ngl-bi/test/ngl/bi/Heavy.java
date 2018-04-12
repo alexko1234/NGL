@@ -1,12 +1,11 @@
 package ngl.bi;
 
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
 import static fr.cea.ig.play.test.DevAppTesting.testInServer;
-import fr.cea.ig.play.test.RoutesTest;
-
-import play.Application;
 import static ngl.bi.Global.devapp;
+
+import org.junit.Test;
+
+import fr.cea.ig.play.test.RoutesTest;
 
 public class Heavy {
 	

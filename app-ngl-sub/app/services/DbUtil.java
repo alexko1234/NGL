@@ -1,19 +1,12 @@
 package services;
 
-import java.util.List;
-
+import fr.cea.ig.MongoDBDAO;
 import models.sra.submit.common.instance.Sample;
 import models.sra.submit.common.instance.Study;
 import models.sra.submit.common.instance.Submission;
 import models.sra.submit.sra.instance.Experiment;
-import models.sra.submit.sra.instance.Run;
 import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;
-
-import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
-
-import fr.cea.ig.MongoDBDAO;
 
 public class DbUtil {
 	

@@ -1,27 +1,19 @@
 package controllers.main.tpl;
 
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
-import fr.cea.ig.ngl.utils.NGLJavascriptGeneration.Codes;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.support.Executor;
 import fr.cea.ig.ngl.support.NGLJavascript;
 import fr.cea.ig.ngl.support.api.CodeLabelAPIHolder;
-import models.laboratory.common.description.CodeLabel;
-import models.laboratory.common.description.dao.CodeLabelDAO;
-import jsmessages.JsMessages;
-import play.api.modules.spring.Spring;
-import play.libs.Scala;
+import fr.cea.ig.ngl.utils.NGLJavascriptGeneration.Codes;
 import play.mvc.Result;
 import views.html.home ;
-
 
 // import controllers.CommonController;
 // public class Main extends CommonController {

@@ -26,7 +26,8 @@ public class ProjectImportCNS extends AbstractImportDataCNS{
 
 	@Inject
 	public ProjectImportCNS(FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+			                FiniteDuration durationFromNextIteration, 
+			                NGLContext ctx) {
 		super("Project CNS",durationFromStart, durationFromNextIteration, ctx);
 	}
 
@@ -46,28 +47,25 @@ public class ProjectImportCNS extends AbstractImportDataCNS{
 				.stream()
 				.map(p -> p.code)
 				.collect(Collectors.toList());
-		
-		MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).getCursor().forEach(p -> {
-			
+		// MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).getCursor().forEach(p -> {
+		MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).cursor.forEach(p -> {
 			if(!availableProjectCodes.contains(p.code)){
 				logger.info("delete project : "+p.code);
 				int nbSample = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("projectCodes", p.code)).count();
-				if(nbSample == 0){
+				if (nbSample == 0) {
 					MongoDBDAO.deleteByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, p.code);
-				}else{
+				} else {
 					logger.error("Try to delete project : "+p.code+" but sample exists :"+nbSample);
 				}
 			}
-			
-		});;
-		
+		});
 	}
 
 	public static void createProject(ContextValidation contextValidation) throws SQLException, DAOException{
 		
 	List<Project> projects = limsServices.findProjectToCreate(contextValidation) ;
 		
-		for(Project limsProject:projects){
+		for (Project limsProject:projects) {
 	
 			Project nglProject = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, limsProject.code);
 			if(nglProject != null){
@@ -97,36 +95,36 @@ public class ProjectImportCNS extends AbstractImportDataCNS{
 		
 	}
 
+//	private void lastNGLSampleCode(ContextValidation contextError) {
+//		// MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).getCursor().forEach(p -> {
+//		MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).cursor.forEach(p -> {
+//				String lastNGLSampleCode = getLastSample(p.code);
+//				if(null != lastNGLSampleCode){
+//					p.lastSampleCode = lastNGLSampleCode;
+//					p.nbCharactersInSampleCode = lastNGLSampleCode.replace(p.code+"_","").length();
+//					MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, p);
+//				}else{
+//					p.lastSampleCode = null;
+//					p.nbCharactersInSampleCode = null;
+//					MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, p);
+//				}
+//			
+//		});;
+//		
+//	}
 	
-	private void lastNGLSampleCode(ContextValidation contextError) {
-		MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).getCursor().forEach(p -> {
-				String lastNGLSampleCode = getLastSample(p.code);
-				if(null != lastNGLSampleCode){
-					p.lastSampleCode = lastNGLSampleCode;
-					p.nbCharactersInSampleCode = lastNGLSampleCode.replace(p.code+"_","").length();
-					MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, p);
-				}else{
-					p.lastSampleCode = null;
-					p.nbCharactersInSampleCode = null;
-					MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, p);
-				}
-			
-		});;
-		
-	}
-
+//	private static String getLastSample(String code) {
+//		String[] last = new String[]{null};
+//		// MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("projectCodes", code)).sort("code").getCursor().forEach(s -> {
+//		MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("projectCodes", code)).sort("code").cursor.forEach(s -> {	
+//			if(last[0] == null || s.code.length() > last[0].length()){
+//					last[0] = s.code;
+//				}else if(s.code.length() == last[0].length() && s.code.compareTo(last[0]) > 0){
+//					last[0] = s.code;
+//				}
+//				
+//			});
+//		return last[0];
+//	}
 	
-	private static String getLastSample(String code) {
-		String[] last = new String[]{null};
-		MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("projectCodes", code))
-			.sort("code").getCursor().forEach(s -> {
-				if(last[0] == null || s.code.length() > last[0].length()){
-					last[0] = s.code;
-				}else if(s.code.length() == last[0].length() && s.code.compareTo(last[0]) > 0){
-					last[0] = s.code;
-				}
-				
-			});
-		return last[0];
-	}
 }

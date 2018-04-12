@@ -4,11 +4,9 @@ import static play.mvc.Results.ok;
 
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authentication.Authentication;
-// import fr.cea.ig.authentication.Authentication;
 import fr.cea.ig.lfw.support.LFWJavascript;
 import fr.cea.ig.ngl.NGLApplicationHolder;
 import fr.cea.ig.ngl.NGLConfig;
-import fr.cea.ig.ngl.support.api.PermissionAPIHolder;
 import play.mvc.Result;
 
 public interface NGLJavascript extends LFWJavascript, NGLApplicationHolder {

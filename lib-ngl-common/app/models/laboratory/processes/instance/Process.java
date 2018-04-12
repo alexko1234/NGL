@@ -27,7 +27,7 @@ import fr.cea.ig.DBObject;
 
 
 @MongoCollection(name="Process")
-public class Process extends DBObject implements IValidation{
+public class Process extends DBObject implements IValidation {
 
 	public String typeCode;
 	public String categoryCode;
@@ -35,7 +35,7 @@ public class Process extends DBObject implements IValidation{
 	public State state;
 
 	public TraceInformation traceInformation;
-	public List<Comment> comments = new ArrayList<Comment>(0);
+	public List<Comment> comments = new ArrayList<>(0);
 
 	public Map<String,PropertyValue> properties;
 
@@ -60,7 +60,7 @@ public class Process extends DBObject implements IValidation{
 		if(contextValidation.getObject(FIELD_STATE_CODE) == null && state != null){
 			contextValidation.putObject(FIELD_STATE_CODE , state.code);			
 		}
-		if(contextValidation.isCreationMode() 
+		if (contextValidation.isCreationMode() 
 				&& contextValidation.getObject(CommonValidationHelper.FIELD_PROCESS_CREATION_CONTEXT).equals(CommonValidationHelper.VALUE_PROCESS_CREATION_CONTEXT_COMMON)){
 			ProcessValidationHelper.validateProcessType(typeCode,properties,contextValidation);
 			ProcessValidationHelper.validateProcessCategory(categoryCode,contextValidation);
@@ -95,19 +95,17 @@ public class Process extends DBObject implements IValidation{
 			ProcessValidationHelper.validateSampleOnInputContainer(sampleOnInputContainer, contextValidation);
 
 		}
-		
-		
-
 		//ProcessValidationHelper.validateExperimentCodes(experimentCodes, contextValidation);
 	}
+	
 	@JsonIgnore
 	public Process cloneCommon() {
 		Process p = new Process();
-		p.typeCode = this.typeCode;
+		p.typeCode     = this.typeCode;
 		p.categoryCode = this.categoryCode;
-		
-		if(null != this.properties && this.properties.size() > 0){
-			p.properties = new HashMap<String, PropertyValue>(this.properties);
+		if (this.properties != null && this.properties.size() > 0) {
+//			p.properties = new HashMap<String, PropertyValue<?>>(this.properties);
+			p.properties = new HashMap<>(this.properties);
 		}
 		p.sampleCodes = this.sampleCodes;
 		p.projectCodes = this.projectCodes;

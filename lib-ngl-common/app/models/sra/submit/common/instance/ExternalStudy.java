@@ -1,17 +1,17 @@
 package models.sra.submit.common.instance;
 
 
+import models.laboratory.common.description.ObjectType;
+import models.laboratory.common.instance.State;
+//import workflows.sra.submission.SubmissionWorkflows;
+// import models.sra.submit.util.VariableSRA;
+import models.utils.InstanceConstants;
+
 // import org.apache.commons.lang3.StringUtils;
 
 // import play.api.modules.spring.Spring;
 import validation.ContextValidation;
 import validation.sra.SraValidationHelper;
-//import workflows.sra.submission.SubmissionWorkflows;
-// import models.sra.submit.util.VariableSRA;
-import models.utils.InstanceConstants;
-import fr.cea.ig.play.IGGlobals;
-import models.laboratory.common.description.ObjectType;
-import models.laboratory.common.instance.State;
 
 
 public class ExternalStudy extends AbstractStudy {
@@ -23,7 +23,6 @@ public class ExternalStudy extends AbstractStudy {
 		state = new State("F-SUB", null); // Reference sur "models.laboratory.common.instance.state"
 	}
 	
-
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		contextValidation.addKeyToRootKeyName("externalStudy");

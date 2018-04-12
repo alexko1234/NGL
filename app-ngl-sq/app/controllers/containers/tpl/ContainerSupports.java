@@ -1,14 +1,5 @@
 package controllers.containers.tpl;
 
-// import play.Routes;
-//import play.routing.JavaScriptReverseRouter;
-
-import play.mvc.Result;
-import views.html.containerSupports.details;
-import views.html.containerSupports.home;
-import views.html.containerSupports.homeScanner;
-import views.html.containerSupports.search;
-
 import javax.inject.Inject;
 
 import fr.cea.ig.authentication.Authenticated;
@@ -17,8 +8,11 @@ import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.support.NGLJavascript;
-// import controllers.NGLBaseController;
-import fr.cea.ig.play.NGLContext;
+import play.mvc.Result;
+import views.html.containerSupports.details;
+import views.html.containerSupports.home;
+import views.html.containerSupports.homeScanner;
+import views.html.containerSupports.search;
 
 // TODO: cleanup and comment
 

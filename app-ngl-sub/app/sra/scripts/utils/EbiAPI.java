@@ -7,7 +7,6 @@ import javax.inject.Inject;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSRequest;
 import play.libs.ws.WSResponse;
-import sra.scripts.AbstractScript;
 
 public class EbiAPI {
 	

@@ -29,12 +29,12 @@ public class CommonInfoTypes extends CommonController {
 	public /*static*/ Result list() throws DAOException {
 //		DynamicForm filledForm =  listForm().bindFromRequest();
 		DynamicForm filledForm =  ctx.form().bindFromRequest();
-		List<CommonInfoType> values = new ArrayList<CommonInfoType>(0);
-		if(null != filledForm.get("objectTypeCode")){
+		List<CommonInfoType> values = new ArrayList<>(0);
+		if (filledForm.get("objectTypeCode") != null) {
 			values = CommonInfoType.find.findByObjectTypeCode(ObjectType.CODE.valueOf(filledForm.get("objectTypeCode")));
 		}
 		if (filledForm.get("datatable") != null) {
-			return ok(Json.toJson(new DatatableResponse<CommonInfoType>(values, values.size())));
+			return ok(Json.toJson(new DatatableResponse<>(values, values.size())));
 		} else if(filledForm.get("list") != null) {
 			return ok(Json.toJson(ListObject.from(values)));
 		} else {

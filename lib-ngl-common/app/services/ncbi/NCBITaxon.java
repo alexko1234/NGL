@@ -14,87 +14,100 @@ public class NCBITaxon {
 	private static final play.Logger.ALogger logger = play.Logger.of(NCBITaxon.class);
 	
 	private Document doc;
-	public  String code;
-	public Boolean error; 
-	public Boolean exists; 
+	public  String   code;
+	public  boolean  error; 
+	public  boolean  exists; 
 	
 	public NCBITaxon() {
 	}
 	
 	public NCBITaxon(String code, Document doc) {
-		this.code = code;
-		this.doc = doc;
-		this.error = getIsError();
+		this.code   = code;
+		this.doc    = doc;
+		this.error  = getIsError();
 		this.exists = getIsTaxon();
 	}
 	
-
-	private String getValue(String expression) throws XPathExpressionException 
-	{
+	private String getValue(String expression) throws XPathExpressionException {
 		XPath xPath =  XPathFactory.newInstance().newXPath();
 		//String expression = "/TaxaSet/Taxon/ScientificName";
 		//read a string value
-		if(null != doc){
+		if (doc != null) {
 			String value = xPath.compile(expression).evaluate(doc);
-			if(StringUtils.isNotBlank(value)){
+			if (StringUtils.isNotBlank(value)) {
 				return value;
 			}
 		}
 		return null;				
 	}
+		
+//	private Boolean getIsTaxon() {
+//		try {
+//			String value = getValue("/TaxaSet/Taxon");
+//			if (StringUtils.isNotBlank(value)) {
+//				return Boolean.TRUE;
+//			}
+//		} catch (XPathExpressionException e) {
+//			logger.error("Error Xpath /TaxaSet/Taxon "+e.getMessage());
+//		}
+//		return Boolean.FALSE;
+//	}
 	
-	
-	private Boolean getIsTaxon() {
+	private boolean getIsTaxon() {
 		try {
 			String value = getValue("/TaxaSet/Taxon");
-			if(StringUtils.isNotBlank(value)){
-				return Boolean.TRUE;
-			}
+			return StringUtils.isNotBlank(value);
 		} catch (XPathExpressionException e) {
 			logger.error("Error Xpath /TaxaSet/Taxon "+e.getMessage());
 		}
-		return Boolean.FALSE;
-		
+		return false;
 	}
 
-	private Boolean getIsError() {
+//	private Boolean getIsError() {
+//		try {
+//			String value = getValue("/eFetchResult/ERROR");
+//			if (StringUtils.isNotBlank(value)) {
+//				return Boolean.TRUE;
+//			}
+//		} catch (XPathExpressionException e) {
+//			logger.error("Error Xpath /eFetchResult/ERROR "+e.getMessage());
+//		}
+//		return Boolean.FALSE;
+//	}
+
+	private boolean getIsError() {
 		try {
 			String value = getValue("/eFetchResult/ERROR");
-			if(StringUtils.isNotBlank(value)){
-				return Boolean.TRUE;
-			}
+			return StringUtils.isNotBlank(value);
 		} catch (XPathExpressionException e) {
-			logger.error("Error Xpath /eFetchResult/ERROR "+e.getMessage());
+			logger.error("Error Xpath /eFetchResult/ERROR " + e.getMessage());
 		}
-		return Boolean.FALSE;
-		
+		return false;
 	}
 
-	public String getScientificName(){
+	public String getScientificName() {
 		return getResult("/TaxaSet/Taxon/ScientificName");
-		
 	}
 
-	public String getLineage(){
+	public String getLineage() {
 		return getResult("/TaxaSet/Taxon/Lineage");
-		
 	}
-
 
 	private String getResult(String xpath)  {
 		try {
-			if (!this.error && this.exists) {
+			if (!error && exists) {
 				return getValue(xpath);
-			}else if(!this.error && !this.exists){
-				return "Taxon code " + this.code + " does not exists";
-			}else if(this.error){
-				return "Taxon code " + this.code + " is in error";
-			}else{
+			} else if (!error && !exists) {
+				return "Taxon code " + code + " does not exist";
+			} else if (error) {
+				return "Taxon code " + code + " is in error";
+			} else {
 				return null;
 			}
 		} catch (XPathExpressionException e) {
-			logger.error("Error Xpath"+xpath+" "+e.getMessage());
+			logger.error("Error Xpath " + xpath + " " + e.getMessage());
 		}
 		return null;
 	}
+	
 }

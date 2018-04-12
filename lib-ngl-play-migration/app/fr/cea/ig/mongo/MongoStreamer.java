@@ -58,6 +58,8 @@ public class MongoStreamer {
 	/**
 	 * Cursor to JSON formatted list, applying the given transformation to each
 	 * collection element.
+	 * @param <T>       Mongo collection element type
+	 * @param <R>       transformed element type
 	 * @param cursor    Mongo cursor to get elements from
 	 * @param transform transformation to apply to elements
 	 * @return          JSON array formatted source 
@@ -94,6 +96,8 @@ public class MongoStreamer {
 	/**
 	 * MongoDBResult to full JSON formated source applying a transform
 	 * to the result elements. 
+	 * @param <T>       source element type
+	 * @param <R>       transformed element type
 	 * @param result    result to get elements from
 	 * @param transform element transformation
 	 * @return          JSON formatted array 
@@ -115,6 +119,7 @@ public class MongoStreamer {
 	/**
 	 * MongoDBResult are applied a given transform and streamed as UDT json list.
  	 * @param <T>       mongo collection element type
+ 	 * @param <R>       transformed element type
 	 * @param data      cursor for the full collection
 	 * @param transform transform to apply to result elements
 	 * @return          input stream that provide a json list of transformed collection objects
@@ -129,8 +134,9 @@ public class MongoStreamer {
 	
 	/**
 	 * Source conversion from a source of JSON ready objects to a stream ready source.
-	 * @param  source source to build output from
-	 * @return JSON source
+	 * @param <T>    source element type    
+	 * @param source source to build output from
+	 * @return       JSON source
 	 */
 	public static <T> Source<ByteString, ?> stream(Source<T,?> source) {
 		return source
@@ -147,6 +153,8 @@ public class MongoStreamer {
 	 *   stream(source,transform)
 	 *   stream(source.map(transform))
 	 * </code> 
+	 * @param <T>       source element type
+	 * @param <R>       result element type
 	 * @param source    source to create JSON output from
 	 * @param transform source element transformation
 	 * @return          JSON formatted source
@@ -157,6 +165,7 @@ public class MongoStreamer {
 
 	/**
 	 * Already counted source to UDT conversion.
+	 * @param <T>    source element type
 	 * @param count  collection size
 	 * @param source collection as source
 	 * @return       UDT JSON source 
@@ -170,6 +179,8 @@ public class MongoStreamer {
 
 	/**
  	 * Already counted source to UDT conversion using a transformed source.
+ 	 * @param <T>       source element type
+ 	 * @param <R>       transformed element type
 	 * @param count     element count
 	 * @param source    element source
 	 * @param transform element transform
@@ -178,8 +189,7 @@ public class MongoStreamer {
 	public static <T,R> Source<ByteString, ?> streamUDT(int count, Source<T, ?> source, Function<T,R> transform) {
 		return streamUDT(count, source.map(x -> { return transform.apply(x); }));
 	}
-	
-	
+		
 	// Iterator/iterable overloads
 	public static <T> Source<ByteString, ?> stream(Iterable<T> all) {
 		return stream(Source.from(all));

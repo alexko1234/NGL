@@ -8,11 +8,9 @@ import javax.xml.xpath.XPathExpressionException;
 import org.junit.Assert;
 import org.junit.Test;
 
-// import play.libs.F.Callback;
 import services.ncbi.NCBITaxon;
 import services.ncbi.TaxonomyServices;
 import utils.AbstractTests;
-import workflows.container.ContSupportWorkflows;
 
 public class TaxonomyServicesTest extends AbstractTests {
 
@@ -20,7 +18,6 @@ public class TaxonomyServicesTest extends AbstractTests {
 		// Spring.get BeanOfType(ContSupportWorkflows.class); 
 		return app.injector().instanceOf(TaxonomyServices.class);
 	}
-	
 	
 	/**
 	 * Test with taxonId =1358
@@ -105,9 +102,9 @@ public class TaxonomyServicesTest extends AbstractTests {
 		taxonTest("135",
 				taxon -> {
 					String scientificName = taxon.getScientificName();
-					Assert.assertEquals("Taxon code 135 is not exists", scientificName);
+					Assert.assertEquals("Taxon code 135 does not exist", scientificName);
 					String lineage = taxon.getLineage();
-					Assert.assertEquals("Taxon code 135 is not exists", lineage);
+					Assert.assertEquals("Taxon code 135 does not exist", lineage);
 				});
 	}
 
@@ -154,9 +151,9 @@ public class TaxonomyServicesTest extends AbstractTests {
 		taxonTest("0",
 				taxon -> {
 					String scientificName = taxon.getScientificName();
-					Assert.assertEquals("Taxon code 0 is on error",scientificName);
+					Assert.assertEquals("Taxon code 0 is in error",scientificName);
 					String lineage = taxon.getLineage();
-					Assert.assertEquals("Taxon code 0 is on error",lineage);
+					Assert.assertEquals("Taxon code 0 is in error",lineage);
 				});
 	}
 	

@@ -1,11 +1,5 @@
 package controllers.reagents.tpl;
 
-// import play.Routes;
-import play.mvc.Result;
-import views.html.catalogs.home;
-import views.html.catalogs.kitCatalogsCreation;
-import views.html.catalogs.kitCatalogsSearch;
-
 import javax.inject.Inject;
 
 import fr.cea.ig.authentication.Authenticated;
@@ -14,11 +8,10 @@ import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.support.NGLJavascript;
-// import controllers.NGLBaseController;
-import fr.cea.ig.play.NGLContext;
-
-// import controllers.CommonController;
-// import play.routing.JavaScriptReverseRouter;
+import play.mvc.Result;
+import views.html.catalogs.home;
+import views.html.catalogs.kitCatalogsCreation;
+import views.html.catalogs.kitCatalogsSearch;
 
 //public class KitCatalogs extends -CommonController{
 public class KitCatalogs extends NGLController implements NGLJavascript { // NGLBaseController {

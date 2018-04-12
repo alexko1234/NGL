@@ -6,14 +6,12 @@ import static validation.utils.ValidationHelper.required;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
-import models.utils.Model.Finder;
-import models.utils.dao.DAOException;
-
-import validation.ContextValidation;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
+import models.utils.Model.Finder;
+import models.utils.dao.AbstractDAO;
+import models.utils.dao.DAOException;
+import validation.ContextValidation;
 
 /**
  * Helper to validate MongoDB Object Used before insert or update a MongoDB
@@ -34,18 +32,17 @@ public class BusinessValidationHelper {
 	 * @param type
 	 * @return collectionName
 	 */
-	public static <T extends DBObject> boolean validateUniqueInstanceCode(ContextValidation contextValidation,
-			String code, Class<T> type, String collectionName){
-		if (null != code) {
-			if (MongoDBDAO.checkObjectExistByCode(collectionName, type, code)) {
-				contextValidation.addErrors(FIELD_CODE,	ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG, code);
-				return false;
-			} else {
-				return true;
-			}
-		} else {
-			throw new IllegalArgumentException("code is null");
-		}	
+	public static <T extends DBObject> boolean validateUniqueInstanceCode(ContextValidation contextValidation, 
+			                                                              String code, 
+			                                                              Class<T> type, 
+			                                                              String collectionName) {
+		if (code == null)
+			throw new IllegalArgumentException("code is null");	
+		if (MongoDBDAO.checkObjectExistByCode(collectionName, type, code)) {
+			contextValidation.addErrors(FIELD_CODE,	ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG, code);
+			return false;
+		}
+		return true;
 	}
 	
 	
@@ -61,18 +58,19 @@ public class BusinessValidationHelper {
 	 */
 	
 	public static <T extends DBObject> boolean validateUniqueFieldValue(ContextValidation contextValidation,
-			String key, String keyValue, Class<T> type, String collectionName){
-		if(null != key && null != keyValue){
-			if(MongoDBDAO.checkObjectExist(collectionName, type, key, keyValue)){
-				contextValidation.addErrors(key, ValidationConstants.ERROR_NOTUNIQUE_MSG, keyValue);
-				return false;
-			}else {
-				return true;
-			}
-		} else {
-			throw new IllegalArgumentException(key+" is null");
+			                                                            String key, 
+			                                                            String keyValue, 
+			                                                            Class<T> type, 
+			                                                            String collectionName) {
+		if (key == null)
+			throw new IllegalArgumentException("key is null");
+		if (keyValue == null)
+			throw new IllegalArgumentException("keyValue is null");
+		if (MongoDBDAO.checkObjectExist(collectionName, type, key, keyValue)) {
+			contextValidation.addErrors(key, ValidationConstants.ERROR_NOTUNIQUE_MSG, keyValue);
+			return false;
 		}
-
+		return true;
 	}
 	
 	/*
@@ -83,7 +81,7 @@ public class BusinessValidationHelper {
 	 * @param find
 	 */
 	public static <T> void validateRequiredDescriptionCode(ContextValidation contextValidation, String code, String key,
-			Finder<T> find) {
+			Finder<T,? extends AbstractDAO<T>> find) {
 		 validateRequiredDescriptionCode(contextValidation, code, key, find,false);
 	}
 
@@ -97,7 +95,7 @@ public class BusinessValidationHelper {
 	 * @return object de T or null if returnObject is false
 	 */
 	public static <T> T validateRequiredDescriptionCode(ContextValidation contextValidation, String code, String key,
-			Finder<T> find, boolean returnObject) {
+			Finder<T,? extends AbstractDAO<T>> find, boolean returnObject) {
 		T o = null;
 		if(required(contextValidation, code, key)){
 			o = validateExistDescriptionCode(contextValidation, code, key, find, returnObject);
@@ -117,7 +115,7 @@ public class BusinessValidationHelper {
 	 */
 	public static <T> void validateExistDescriptionCode(
 			ContextValidation contextValidation, String code, String key,
-			Finder<T> find) {
+			Finder<T,? extends AbstractDAO<T>> find) {
 		 validateExistDescriptionCode(contextValidation, code, key, find, false);
 	}
 
@@ -132,7 +130,7 @@ public class BusinessValidationHelper {
 	 */
 	public static <T> T validateExistDescriptionCode(
 			ContextValidation contextValidation, String code, String key,
-			Finder<T> find, boolean returnObject) {
+			Finder<T,? extends AbstractDAO<T>> find, boolean returnObject) {
 		T o = null;
 		try {
 			if(code != "" && null != code && returnObject){
@@ -207,8 +205,6 @@ public class BusinessValidationHelper {
 		
 	}
 	
-	
-	
 	/*
 	 * Validate a code of a MongoDB Collection
 	 * @param errors
@@ -219,23 +215,42 @@ public class BusinessValidationHelper {
 	 * @param returnObject
 	 * @return
 	 */
+//	public static <T extends DBObject> List<T> validateExistInstanceCodes(ContextValidation contextValidation,
+//			                                                              List<String> codes, 
+//			                                                              String key, 
+//			                                                              Class<T> type, 
+//			                                                              String collectionName, 
+//			                                                              boolean returnObject) {
+//		List<T> l = null;
+//		if (codes != null && codes.size() > 0) {
+//			l = returnObject ? new ArrayList<T>() : null;
+//			for (String code: codes) {
+//				T o = validateExistInstanceCode(contextValidation, code, key, type, collectionName, returnObject);
+//				if (returnObject)
+//					l.add(o);
+//			}			
+//		}
+//		return l;
+//	}
 	public static <T extends DBObject> List<T> validateExistInstanceCodes(ContextValidation contextValidation,
-			List<String> codes, String key, Class<T> type, String collectionName, boolean returnObject) {
+			                                                              List<String> codes, 
+			                                                              String key, 
+			                                                              Class<T> type, 
+			                                                              String collectionName, 
+			                                                              boolean returnObject) {
 		List<T> l = null;
-		if(null != codes && codes.size() > 0){
-			l = (returnObject)?new ArrayList<T>():null;
-
-			for(String code: codes){
-				T o =validateExistInstanceCode(contextValidation, code, key, type, collectionName, returnObject) ;
-				if(returnObject){
+		if (codes != null && codes.size() > 0) {
+			if (returnObject)
+				l = new ArrayList<>();
+			for (String code: codes) {
+				T o = validateExistInstanceCode(contextValidation, code, key, type, collectionName, returnObject);
+				if (l != null)
 					l.add(o);
-				}
 			}			
 		}
 		return l;
 	}
 
-	
 	/*
 	 * 
 	 * @param contextValidation
@@ -260,24 +275,42 @@ public class BusinessValidationHelper {
 	 * @return
 	 */
 	public static <T extends DBObject> T validateExistInstanceCode(ContextValidation contextValidation,
-			String code, String key, Class<T> type, String collectionName, boolean returnObject) {
-		if(code!=null) {
-			if(null != key) {
-				T o = null;
-				if(returnObject){
-					o =  MongoDBDAO.findByCode(collectionName, type, code);
-					if(o == null){
-						contextValidation.addErrors(key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
-					}
-				}else if(!MongoDBDAO.checkObjectExistByCode(collectionName, type, code)){
-					contextValidation.addErrors( key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
-				}
-				return o;
-			}else {
-				throw new IllegalArgumentException("key is null for "+code);
+			                                                       String code, 
+			                                                       String key, 
+			                                                       Class<T> type, 
+			                                                       String collectionName, 
+			                                                       boolean returnObject) {
+//		if(code!=null) {
+//			if(null != key) {
+//				T o = null;
+//				if(returnObject){
+//					o =  MongoDBDAO.findByCode(collectionName, type, code);
+//					if(o == null){
+//						contextValidation.addErrors(key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
+//					}
+//				}else if(!MongoDBDAO.checkObjectExistByCode(collectionName, type, code)){
+//					contextValidation.addErrors( key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
+//				}
+//				return o;
+//			}else {
+//				throw new IllegalArgumentException("key is null for "+code);
+//			}
+//		}
+//		return null;
+		if (code == null)
+			return null;
+		if (key == null)
+			throw new IllegalArgumentException("key is null for "+code);
+		T o = null;
+		if (returnObject) {
+			o =  MongoDBDAO.findByCode(collectionName, type, code);
+			if (o == null) {
+				contextValidation.addErrors(key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
 			}
+		} else if(!MongoDBDAO.checkObjectExistByCode(collectionName, type, code)) {
+			contextValidation.addErrors( key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
 		}
-		return null;
+		return o;
 	}	
 		
 	/*

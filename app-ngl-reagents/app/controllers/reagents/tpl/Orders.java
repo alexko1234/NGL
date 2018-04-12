@@ -6,12 +6,10 @@ import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
 import play.mvc.Controller;
-//import play.Routes;
 import play.mvc.Result;
 import views.html.declarations.home;
-import views.html.declarations.kitsCreation;
-import views.html.declarations.ordersCreation;
 import views.html.declarations.kitsSearch;
+import views.html.declarations.ordersCreation;
 
 //import controllers.CommonController;
 public class Orders extends Controller { // -CommonController {

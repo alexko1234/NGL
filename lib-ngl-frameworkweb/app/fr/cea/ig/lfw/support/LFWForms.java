@@ -1,9 +1,8 @@
 package fr.cea.ig.lfw.support;
 
-import java.util.List;
-
-import fr.cea.ig.lfw.LFWApplicationHolder;
 import static fr.cea.ig.lfw.utils.FunCollections.map;
+
+import java.util.List;
 
 import play.data.Form;
 
@@ -13,7 +12,7 @@ import play.data.Form;
  * @author vrd
  *
  */
-public interface LFWForms extends LFWApplicationHolder, LFWRequestParsing {
+public interface LFWForms extends /*LFWApplicationHolder,*/ LFWRequestParsing {
 
 	default <T> Form<T> form(Class<T> c) {
 		return getLFWApplication().formFactory().form(c);

@@ -22,9 +22,9 @@ import services.description.common.LevelService;
 
 public class RunServiceCNS extends AbstractRunService {
 	
-	
+	@Override
 	public void saveReadSetType(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<ReadSetType> l = new ArrayList<ReadSetType>();
+		List<ReadSetType> l = new ArrayList<>();
 		l.add(DescriptionFactory.newReadSetType("Readset Illumina","rsillumina",  getReadSetPropertyDefinitions(),  DescriptionFactory.getInstitutes( Constants.CODE.CNS) ));
 		l.add(DescriptionFactory.newReadSetType("Readset Nanopore","rsnanopore", getReadSetPropertyDefinitionsNanopore(),  DescriptionFactory.getInstitutes( Constants.CODE.CNS) ));
 		l.add(DescriptionFactory.newReadSetType("Dataset Opgen","RSARGUS",  null,  DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
@@ -32,8 +32,9 @@ public class RunServiceCNS extends AbstractRunService {
 		DAOHelpers.saveModels(ReadSetType.class, l, errors);
 	}
 	
+	@Override
 	public void saveAnalysisType(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<AnalysisType> l = new ArrayList<AnalysisType>();
+		List<AnalysisType> l = new ArrayList<>();
 		l.add(DescriptionFactory.newAnalysisType("BAC pool assembly","BPA",  null,  DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 		l.add(DescriptionFactory.newAnalysisType("Dietetic Assembly","dietetic-assembly",  null,  DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 		l.add(DescriptionFactory.newAnalysisType("Mopad Assembly","mopad-assembly",  null,  DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
@@ -42,16 +43,18 @@ public class RunServiceCNS extends AbstractRunService {
 		DAOHelpers.saveModels(AnalysisType.class, l, errors);
 	}
 
+	@Override
 	public void saveRunCategories(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<RunCategory> l = new ArrayList<RunCategory>();
+		List<RunCategory> l = new ArrayList<>();
 		l.add(DescriptionFactory.newSimpleCategory(RunCategory.class, "Illumina", "illumina"));
 		l.add(DescriptionFactory.newSimpleCategory(RunCategory.class, "Opgen", "opgen"));
 		l.add(DescriptionFactory.newSimpleCategory(RunCategory.class, "Nanopore", "nanopore"));
 		DAOHelpers.saveModels(RunCategory.class, l, errors);
 	}
 	
+	@Override
 	public void saveRunType(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<RunType> l = new ArrayList<RunType>();
+		List<RunType> l = new ArrayList<>();
 		l.add(DescriptionFactory.newRunType("HiSeq 2000","RHS2000", 8, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(),  DescriptionFactory.getInstitutes( Constants.CODE.CNS) ));
 		l.add(DescriptionFactory.newRunType("HiSeq 2500","RHS2500", 8, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(),  DescriptionFactory.getInstitutes( Constants.CODE.CNS) ));
 		l.add(DescriptionFactory.newRunType("HiSeq 2500 rapide","RHS2500R", 2, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(),  DescriptionFactory.getInstitutes( Constants.CODE.CNS)));
@@ -71,7 +74,7 @@ public class RunServiceCNS extends AbstractRunService {
 	}
 	
 	private static List<PropertyDefinition> getReadSetPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("asciiEncoding","asciiEncoding",LevelService.getLevels(Level.CODE.File), String.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("label","label",LevelService.getLevels(Level.CODE.File), String.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("md5","md5",LevelService.getLevels(Level.CODE.File), String.class, false, "single"));
@@ -108,7 +111,7 @@ public class RunServiceCNS extends AbstractRunService {
 	
 	//GA 24/07/2015 ajout des TagCategories
 	private static List<Value> getTagCategories(){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("SINGLE-INDEX", "SINGLE-INDEX"));
 		values.add(DescriptionFactory.newValue("DUAL-INDEX", "DUAL-INDEX"));
 		values.add(DescriptionFactory.newValue("MID", "MID"));
@@ -118,7 +121,7 @@ public class RunServiceCNS extends AbstractRunService {
 	
 	
 	private static List<Value> getLibProcessTypeCodeValues(){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("A", "A - Mate-pair"));
 		values.add(DescriptionFactory.newValue("B", "B - Multiplex-pairee"));
 		values.add(DescriptionFactory.newValue("C", "C - Multiplex-mate-pair"));
@@ -142,7 +145,7 @@ public class RunServiceCNS extends AbstractRunService {
 	} 
 	
 	private static List<PropertyDefinition> getRunIlluminaPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType"
 	        		, LevelService.getLevels(Level.CODE.Run),String.class, false, DescriptionFactory.newValues("SR","PE"),"single"));
 		

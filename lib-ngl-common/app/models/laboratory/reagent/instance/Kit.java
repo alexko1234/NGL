@@ -2,7 +2,6 @@ package models.laboratory.reagent.instance;
 
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
-import validation.common.instance.CommonValidationHelper;
 import validation.reagent.instance.KitValidationHelper;
 import validation.utils.ValidationHelper;
 

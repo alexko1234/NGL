@@ -1,6 +1,10 @@
 
+import java.util.List;
+
+import controllers.instruments.io.common.novaseq.OutputImplementationSwitch;
 import play.api.Configuration;
 import play.api.Environment;
+import play.api.inject.Binding;
 
 /**
  * NGL SQ application start module.
@@ -22,6 +26,14 @@ public class NGLSQStarterModule extends NGLCommonStarterModule {
 		enableDrools();
 	}
 
+	@Override
+	public List<Binding<?>> nglCustomBindings(Environment environment, Configuration configuration) {
+		List<Binding<?>> l = super.nglCustomBindings(environment,configuration);
+		// Default implementation selection for controller output (old/current implementation).
+		l.add(bind(OutputImplementationSwitch.class).to(OutputImplementationSwitch.Old.class));
+		return l;
+	}
+	
 }
 
 // TODO: remove dead code

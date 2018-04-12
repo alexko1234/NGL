@@ -5,16 +5,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import models.laboratory.run.description.TreatmentType;
-import models.utils.dao.DAOException;
-
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-
 import controllers.APICommonController;
 import fr.cea.ig.play.NGLContext;
+import models.laboratory.run.description.TreatmentType;
+import models.utils.dao.DAOException;
 import play.Logger;
-
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -44,7 +39,7 @@ public class TreatmentTypes extends APICommonController<TreatmentTypesSearchForm
 				treatments = TreatmentType.find.findAll();
 			}
 			if(searchForm.datatable){
-				return ok(Json.toJson(new DatatableResponse<TreatmentType>(treatments, treatments.size()))); 
+				return ok(Json.toJson(new DatatableResponse<>(treatments, treatments.size()))); 
 			}else{
 				return ok(Json.toJson(treatments));
 			}

@@ -2,13 +2,13 @@ package controllers.containers.api;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Set;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import controllers.ListForm;
 
-public class ContainersSearchForm extends ListForm{
+public class ContainersSearchForm extends ListForm {
 	
 	public String code; 
 	public String codeRegex;
@@ -47,11 +47,11 @@ public class ContainersSearchForm extends ListForm{
 	
 	public String commentRegex;
 	
-	public Map<String, List<String>> properties = new HashMap<String, List<String>>();
+	public Map<String, List<String>> properties = new HashMap<>();
 	
-	public Map<String, List<String>> processProperties = new HashMap<String, List<String>>();
+	public Map<String, List<String>> processProperties = new HashMap<>();
 	
-	public Map<String, List<String>> contentsProperties = new HashMap<String, List<String>>();
+	public Map<String, List<String>> contentsProperties = new HashMap<>();
 	
 	public Map<String, Boolean> existingFields;
 	public Map<String, String> queryFields;

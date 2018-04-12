@@ -1,28 +1,7 @@
 package controllers.main.tpl;
 
-// import java.util.List;
-
 import javax.inject.Inject;
 
-// import jsmessages.JsMessages;
-// import models.laboratory.common.description.CodeLabel;
-// import models.laboratory.common.description.dao.CodeLabelDAO;
-// import models.laboratory.reagent.description.BoxCatalog;
-// import models.laboratory.reagent.description.KitCatalog;
-// import models.laboratory.reagent.description.ReagentCatalog;
-// import models.utils.InstanceConstants;
-
-// import org.mongojack.DBQuery;
-
-// import play.Logger;
-// import play.Routes;
-// import play.routing.JavaScriptReverseRouter;
-// import play.api.modules.spring.Spring;
-// import play.libs.Scala;
-import play.mvc.Result;
-import views.html.home;
-// import controllers.NGLBaseController;
-import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
@@ -33,7 +12,8 @@ import fr.cea.ig.ngl.support.Executor;
 import fr.cea.ig.ngl.support.NGLJavascript;
 import fr.cea.ig.ngl.support.api.CodeLabelAPIHolder;
 import fr.cea.ig.ngl.support.api.ReagentCatalogAPIHolder;
-// import fr.cea.ig.play.NGLContext;
+import play.mvc.Result;
+import views.html.home;
 
 //import controllers.CommonController;
 // public class Main extends -CommonController {
@@ -43,7 +23,7 @@ public class Main extends NGLController
                             CodeLabelAPIHolder,
                             ReagentCatalogAPIHolder { // NGLBaseController {
 
-	private static final play.Logger.ALogger logger = play.Logger.of(Main.class);
+//	private static final play.Logger.ALogger logger = play.Logger.of(Main.class);
 	
 	// final static JsMessages messages = JsMessages.create(play.Play.application());
 

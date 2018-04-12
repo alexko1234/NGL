@@ -29,22 +29,22 @@ public class PropertyDefinitions extends APICommonController<PropertyDefinition>
 	public  Result list() throws DAOException {
 		DynamicForm filledForm =  listForm.bindFromRequest();
 		
-		List<PropertyDefinition> values = new ArrayList<PropertyDefinition>(0);
-		if(null != filledForm.get("levelCode")){
+		List<PropertyDefinition> values = new ArrayList<>(0);
+		if (filledForm.get("levelCode") != null) {
 			values = PropertyDefinition.find.findUnique(Level.CODE.valueOf(filledForm.get("levelCode")));
-		}else{
+		} else {
 			values = PropertyDefinition.find.findUnique();
 		}
 		
-		if(filledForm.get("datatable") != null){
-			return ok(Json.toJson(new DatatableResponse<PropertyDefinition>(values, values.size())));
-		}else if(filledForm.get("list") != null){
+		if (filledForm.get("datatable") != null) {
+			return ok(Json.toJson(new DatatableResponse<>(values, values.size())));
+		} else if(filledForm.get("list") != null) {
 			return ok(Json.toJson(values.parallelStream().map(pd -> new ListObject(pd.code,pd.code)).collect(Collectors.toList())));
-		}else if(filledForm.get("count") != null){
-			Map<String, Integer> m = new HashMap<String, Integer>(1);
+		} else if(filledForm.get("count") != null) {
+			Map<String, Integer> m = new HashMap<>(1);
 			m.put("result", values.size());
 			return ok(Json.toJson(m));
-		}else{
+		} else {
 			return ok(Json.toJson(values));
 		}				
 	}

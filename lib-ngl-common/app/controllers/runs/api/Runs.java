@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -21,9 +21,6 @@ import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.authentication.Authenticated;
-import fr.cea.ig.authorization.Authorized;
-import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.mongo.MongoStreamer;
 import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.description.Level;
@@ -109,7 +106,7 @@ public class Runs extends RunsController {
 	}
 	
 	private List<ListObject> toListObjects(List<Run> runs){
-		List<ListObject> jo = new ArrayList<ListObject>();
+		List<ListObject> jo = new ArrayList<>();
 		for(Run r: runs){
 			jo.add(new ListObject(r.code, r.code));
 		}
@@ -117,7 +114,7 @@ public class Runs extends RunsController {
 	}
 	
 	private Query getQuery(RunsSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		Query query = null;
 		
 		if(CollectionUtils.isNotEmpty(form.codes)){
@@ -293,9 +290,10 @@ public class Runs extends RunsController {
 
 		RunsSaveForm runSaveForm = filledFormQueryString(RunsSaveForm.class);
 		
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 		ctxVal.setCreationMode();
-		if(runSaveForm.external!=null)
+		if (runSaveForm.external != null)
 			ctxVal.putObject("external", runSaveForm.external);
 		else
 			ctxVal.putObject("external", false);
@@ -332,7 +330,8 @@ public class Runs extends RunsController {
 				if(!run.state.code.equals(runInput.state.code)){
 					return badRequest("You cannot change the state code. Please used the state url ! ");
 				}
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+//				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 				ctxVal.setUpdateMode();
 				runInput.validate(ctxVal);
 				if (!ctxVal.hasErrors()) {
@@ -345,9 +344,10 @@ public class Runs extends RunsController {
 			}else{
 				return badRequest("run code are not the same");
 			}	
-		}else{
-			//warning no validation !!!
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+		} else {
+			// warning no validation !!!
+//			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
@@ -382,17 +382,17 @@ public class Runs extends RunsController {
 	@Permission(value={"writing"})	
 	public Result valuation(String code){
 		Run run = getRun(code);
-		if(run == null){
+		if (run == null)
 			return badRequest();
-		}
 		Form<Valuation> filledForm =  getFilledForm(valuationForm, Valuation.class);
 		Valuation valuation = filledForm.get();
 		valuation.date = new Date();
 		valuation.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		ctxVal.setUpdateMode();
 		RunValidationHelper.validateValuation(run.typeCode, valuation, ctxVal);
-		if(!ctxVal.hasErrors()) {			
+		if (!ctxVal.hasErrors()) {			
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.and(DBQuery.is("code", code)),
 					DBUpdate.set("valuation", valuation).set("traceInformation", getUpdateTraceInformation(run)));			

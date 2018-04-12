@@ -1,12 +1,5 @@
 package controllers.processes.tpl;
 
-import play.mvc.Result;
-import views.html.processes.home;
-import views.html.processes.newProcesses;
-import views.html.processes.assignProcesses;
-import views.html.processes.search;
-import views.html.processes.searchContainers;
-import views.html.processes.searchSamples;
 import javax.inject.Inject;
 
 import fr.cea.ig.authentication.Authenticated;
@@ -15,9 +8,15 @@ import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.support.NGLJavascript;
-import fr.cea.ig.play.NGLContext;
+import play.mvc.Result;
+import views.html.processes.assignProcesses;
+import views.html.processes.home;
+import views.html.processes.newProcesses;
+import views.html.processes.search;
+import views.html.processes.searchContainers;
+import views.html.processes.searchSamples;
 
-public class Processes extends NGLController implements NGLJavascript { // NGLBaseController {
+public class Processes extends NGLController implements NGLJavascript { 
 	
 	private final home home;
 	private final searchContainers searchContainers;

@@ -1,6 +1,7 @@
 package workflows.process;
 
-import static validation.common.instance.CommonValidationHelper.*;
+import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
+import static validation.common.instance.CommonValidationHelper.OBJECT_IN_DB;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -14,8 +15,6 @@ import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.State;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
-import play.Logger;
 import validation.ContextValidation;
 import validation.processes.instance.ProcessValidationHelper;
 import workflows.Workflows;
@@ -67,8 +66,6 @@ public class ProcWorkflows extends Workflows<Process> {
 
 	@Override
 	public void applyErrorPostStateRules(ContextValidation validation, Process process, State nextState) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

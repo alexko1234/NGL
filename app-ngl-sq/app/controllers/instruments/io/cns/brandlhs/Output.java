@@ -1,49 +1,52 @@
 package controllers.instruments.io.cns.brandlhs;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections.CollectionUtils;
-
-import play.Logger;
+import controllers.instruments.io.cns.brandlhs.tpl.txt.normalisation_x_to_plate;
+import controllers.instruments.io.cns.brandlhs.tpl.txt.normalisation_x_to_plate_buffer;
+import controllers.instruments.io.cns.brandlhs.tpl.txt.normalisation_x_to_plate_buffer_highVol;
+import controllers.instruments.io.cns.brandlhs.tpl.txt.normalisation_x_to_plate_highVol;
+import controllers.instruments.io.utils.AbstractOutput;
+import controllers.instruments.io.utils.File;
+import controllers.instruments.io.utils.OutputHelper;
+// import play.Logger;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OutputContainerUsed;
 import validation.ContextValidation;
-import views.html.helper.input;
-
-import controllers.instruments.io.cns.brandlhs.PlateSampleSheetLine;
-import controllers.instruments.io.cns.brandlhs.tpl.txt.*;
-import controllers.instruments.io.utils.AbstractOutput;
-import controllers.instruments.io.utils.File;
-import controllers.instruments.io.utils.OutputHelper;
-
-
-import java.util.zip.*;
 
 public class Output extends AbstractOutput {
-//vol seuil pour petit vol
-	private int treshold= 20;
-	private String name1="pipette_P50";
-	private String name2="pipette_P200";
+	
+	private static final play.Logger.ALogger logger = play.Logger.of(Output.class);
+	
 	private static int sampleNum;
 	private static Boolean isBuffer;
+	// vol seuil pour petit vol
+	private int treshold = 20;
+	private String name1 = "pipette_P50";
+	private String name2 = "pipette_P200";
 	
 	@Override
 	public File generateFile(Experiment experiment,ContextValidation contextValidation) throws Exception {
 		String type = (String)contextValidation.getObject("type");
 
-		String adnContent=null;
-		String bufferContent=null;
+		String adnContent    = null;
+		String bufferContent = null;
 		File file;
 		Boolean isPlaque = "96-well-plate".equals(experiment.instrument.inContainerSupportCategoryCode);	
 	
-		if ("normalisation".equals(type) || "normalisation-highVol".equals(type))
-			isBuffer=false;
-		else
-			isBuffer=true;
+//		if ("normalisation".equals(type) || "normalisation-highVol".equals(type))
+//			isBuffer = false;
+//		else
+//			isBuffer = true;
+		isBuffer = ! ("normalisation".equals(type) || "normalisation-highVol".equals(type));
 		
 		//tube / 96-well-plate
 		if("96-well-plate".equals(experiment.instrument.outContainerSupportCategoryCode)){
@@ -87,24 +90,22 @@ public class Output extends AbstractOutput {
 	}
 
 	private String getFileName(Experiment experiment) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyMMdd");
-		return experiment.code.toUpperCase();
-		
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyMMdd");
+		return experiment.code.toUpperCase();		
 	}
 
-
 	private List<PlateSampleSheetLine> getPlateSampleSheetLines(Experiment experiment, String inputContainerCategory) {
-
 		return  experiment.atomicTransfertMethods
 				.parallelStream()
 				.map(atm -> getPlateSampleSheetLine(atm,inputContainerCategory, experiment))
 				.collect(Collectors.toList());	
-
 	}
 
 	private PlateSampleSheetLine getPlateSampleSheetLine(AtomicTransfertMethod atm, String inputContainerCategory,Experiment experiment) {
-		Map<String, String> sourceMapping = getSourceMapping(experiment);
-		Map<String, String> destPositionMapping = getDestMapping(experiment);
+//		Map<String, String> sourceMapping = 
+				getSourceMapping(experiment);
+//		Map<String, String> destPositionMapping = 
+				getDestMapping(experiment);
 
 		InputContainerUsed icu = atm.inputContainerUseds.get(0);
 		OutputContainerUsed ocu = atm.outputContainerUseds.get(0);
@@ -121,7 +122,7 @@ public class Output extends AbstractOutput {
 			else if(ocu.volume!=null && ocu.volume.value!=null)
 				vol = (Double)ocu.volume.value;
 			else
-				Logger.error("Aucun volume renseigné dans l'expérience! ");
+				logger.error("Aucun volume renseigné dans l'expérience! ");
 
 
 			if (vol < treshold){
@@ -152,16 +153,15 @@ public class Output extends AbstractOutput {
 	
 	private List<PlateSampleSheetLine> checkSampleSheetLines (List<PlateSampleSheetLine> psslList, Boolean isPlate){
 
-		List<PlateSampleSheetLine> psslListNew = new LinkedList<PlateSampleSheetLine>();
+		List<PlateSampleSheetLine> psslListNew = new LinkedList<>();
 
-		
 		if (isPlate){
 			List<String> plateLines = Arrays.asList("A","B","C","D","E","F","G","H"); 	
 			List<Integer> colNums = Arrays.asList(1,2,3,4,5,6,7,8,9,10,11,12);
 			sampleNum=0;
 			psslListNew = filledSampleSheetLines(psslList,plateLines,colNums);
 
-		}else{
+		} else {
 			/* on gere finalement les tubes par 4 racks 
 			 */
 
@@ -194,27 +194,27 @@ public class Output extends AbstractOutput {
 	private  List<PlateSampleSheetLine> filledSampleSheetLines (List<PlateSampleSheetLine> psslList, List<String> plateLines, List<Integer> colNums){
 
 		boolean found = false;
-		List<PlateSampleSheetLine> psslListNew = new LinkedList<PlateSampleSheetLine>();
+		List<PlateSampleSheetLine> psslListNew = new LinkedList<>();
 
 		ListIterator<String> LinesItr = plateLines.listIterator();	
-		while(LinesItr.hasNext()) {
-			String line =(String) LinesItr.next();		
-
-
+		while (LinesItr.hasNext()) {
+//			String line =(String) LinesItr.next();		
+			String line = LinesItr.next();		
 			ListIterator<Integer> colNumsItr = colNums.listIterator();	
-			while(colNumsItr.hasNext()) {
-				Integer col =(Integer) colNumsItr.next();		
+			while (colNumsItr.hasNext()) {
+//				Integer col =(Integer) colNumsItr.next();		
+				Integer col = colNumsItr.next();		
 				found = false;
 
 				sampleNum ++;
 				ListIterator<PlateSampleSheetLine> psslListItr = psslList.listIterator();	
 				while(psslListItr.hasNext()) {
-					PlateSampleSheetLine pssl =(PlateSampleSheetLine) psslListItr.next();					
+//					PlateSampleSheetLine pssl =(PlateSampleSheetLine) psslListItr.next();					
+					PlateSampleSheetLine pssl = psslListItr.next();					
 					if (pssl.dwell.equals(line+col)){
-						Logger.debug("--"+pssl.dwell+" "+sampleNum);
-
-						found=true;	
-						pssl.dwellNum=sampleNum;
+						logger.debug("--"+pssl.dwell+" "+sampleNum);
+						found           = true;	
+						pssl.dwellNum   = sampleNum;
 						pssl.sampleName = "Sample "+sampleNum;
 						psslListNew.add(pssl);
 					}
@@ -226,14 +226,13 @@ public class Output extends AbstractOutput {
 					psslBlank.dwellNum=sampleNum;
 
 					psslBlank.sampleName = "Sample "+sampleNum;
-					if (! isBuffer){
+					if (! isBuffer) {
 						psslBlank.inputVolume = "0,0";
 						psslBlank.inputHighVolume = "0,0";
-					}else{
+					} else {
 						psslBlank.bufferVolume = "0,0";
 						psslBlank.bufferHighVolume = "0,0";
 					}
-				
 					psslListNew.add(psslBlank);
 				}
 			}
@@ -242,7 +241,7 @@ public class Output extends AbstractOutput {
 	}
 	
 	private Map<String, String> getSourceMapping(Experiment experiment) {
-		Map<String, String> sources = new HashMap<String, String>();
+		Map<String, String> sources = new HashMap<>();
 
 		String[] inputContainerSupportCodes = experiment.inputContainerSupportCodes.toArray(new String[0]);
 		Arrays.sort(inputContainerSupportCodes);
@@ -253,7 +252,7 @@ public class Output extends AbstractOutput {
 	}
 
 	private Map<String, String> getDestMapping(Experiment experiment) {
-		Map<String, String> dest = new HashMap<String, String>();
+		Map<String, String> dest = new HashMap<>();
 
 		String[] outputContainerSupportCodes = experiment.outputContainerSupportCodes.toArray(new String[0]);
 		Arrays.sort(outputContainerSupportCodes);

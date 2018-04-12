@@ -9,7 +9,6 @@ import javax.inject.Inject;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
-import org.springframework.stereotype.Controller;
 
 import controllers.SubDocumentController;
 import fr.cea.ig.MongoDBDAO;
@@ -57,6 +56,7 @@ public class ProjectBioinformaticParameters extends SubDocumentController<Projec
 
 
 	//@Permission(value={"reading"})
+	@Override
 	public Result get(String parentCode){
 		Project objectInDB = getObject(getSubObjectQuery(parentCode));
 		if (objectInDB == null) {
@@ -66,8 +66,9 @@ public class ProjectBioinformaticParameters extends SubDocumentController<Projec
 	}
 
 	//@Permission(value={"reading"})
+	@Override
 	public Result head(String parentCode){
-		if(!isObjectExist(getSubObjectQuery(parentCode))){
+		if (!isObjectExist(getSubObjectQuery(parentCode))) {
 			return notFound();
 		}
 		return ok();

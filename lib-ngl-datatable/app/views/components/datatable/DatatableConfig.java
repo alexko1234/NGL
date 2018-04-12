@@ -1,12 +1,12 @@
 package views.components.datatable;
 
 import java.util.List;
-import java.util.Map;
+// import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 
-import play.Logger;
+// import play.Logger;
 import play.libs.Json;
 import play.libs.Scala;
 
@@ -19,17 +19,18 @@ public class DatatableConfig {
 	public static final Integer DEFAULT_ORDER_SENSE = 1;
 	
 	public Seq<DatatableColumn> columns;
+	
 	public List<DatatableColumn> columnList;
-	public Boolean button = Boolean.FALSE; //est ce qu'il y a des bouttons à afficher
-	public Boolean edit = Boolean.FALSE; //mode edition
-	public Boolean editColumn = Boolean.FALSE; //mode edition column
-	public Boolean save = Boolean.FALSE; //mode save
-	public Boolean order = Boolean.FALSE; //mode save
-	public Boolean remove = Boolean.FALSE; //mode suppression
-	public Boolean hidding = Boolean.FALSE; //mode cacher. attention très consomateur en resource
-	public Boolean show = Boolean.FALSE; //mode details
-	public String name = "datatable"; //default js name
-	public Boolean compact = Boolean.TRUE; //mode compact pour le nom des bouttons
+	public Boolean button     = Boolean.FALSE; // est ce qu'il y a des bouttons à afficher
+	public Boolean edit       = Boolean.FALSE; // mode edition
+	public Boolean editColumn = Boolean.FALSE; // mode edition column
+	public Boolean save       = Boolean.FALSE; // mode save
+	public Boolean order      = Boolean.FALSE; // mode save
+	public Boolean remove     = Boolean.FALSE; // mode suppression
+	public Boolean hidding    = Boolean.FALSE; // mode cacher. attention très consomateur en resource
+	public Boolean show       = Boolean.FALSE; // mode details
+	public String name        = "datatable";   // default js name
+	public Boolean compact    = Boolean.TRUE;  // mode compact pour le nom des bouttons
 	
 		
 	public DatatableConfig() {
