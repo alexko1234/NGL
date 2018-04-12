@@ -55,9 +55,10 @@
           <div class="form-group col-lg-6"  ng-show="selectCol.isShow()">
              <label class="control-label">@Messages("experiments.startColumnTagPlate")</label>
              <select ng-model="tagPlateColumn" ng-options="column.name for column in columns"  
-             								   ng-change="selectCol.select(tagPlateCol)" selectpicker btn-primary">                                      
+             								   ng-change="selectCol.select()" selectpicker btn-primary">                                      
              </select>  
-             <select ng-model="tagPlate" ng-options="plate.name for plate in plates" selectpicker btn-primary">                                      
+             <select ng-model="tagPlate" ng-options="plate.name for plate in plates" 
+              						    ng-change="selectCol.select()" selectpicker btn-primary">                                      
              </select>                        				  
            </div> 
     </div>

@@ -507,6 +507,7 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
 	
 	// Autre mode possible : utiliser une plaque d'index prédéfinis, l'utilisateur a juste a indiquer a partir de quelle colonne
 	// de cette plaque le robot doit prelever les index
+
 	$scope.columns = [ {name:'---', position:-1 },
 	                   {name:'1', position:0}, {name:'2', position:8}, {name:'3', position:16}, {name:'4',  position:24}, {name:'5',  position:32}, {name:'6',  position:40},
 	                   {name:'7', position:48},{name:'8', position:56},{name:'9', position:64}, {name:'10', position:72}, {name:'11', position:80}, {name:'12', position:88},
@@ -514,9 +515,12 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
 	$scope.tagPlateColumn = $scope.columns[0]; // defaut du select
 	
 	// 21/11/2017 modifications pour possibilité d'utiliser plusieurs plaques
-	$scope.plates = [ {name:"RAP TruSeq RNA HT",   tagCategory:"DUAL-INDEX", tags:[] }, 
+	// 12/04/2018 NGL-2012 ne rien mettre par defaut !!!
+	$scope.plates = [ {name:"---", tagCategory: undefined,tags: undefined },
+	                  {name:"RAP TruSeq RNA HT",   tagCategory:"DUAL-INDEX", tags:[] }, 
 	                  {name:"IDT-ILMN TruSeq DNA UD Indexes (96 Indexes)", tagCategory:"DUAL-INDEX", tags:[] },
-	                  {name:"IDT-ILMN TruSeq DNA UD Indexes (24 Indexes)", tagCategory:"DUAL-INDEX", tags:[] }];
+	                  {name:"IDT-ILMN TruSeq DNA UD Indexes (24 Indexes)", tagCategory:"DUAL-INDEX", tags:[] }
+	                ];
 	
 	// l'indice dans le tableau correspond a l'ordre "colonne d'abord" dans la plaque
     // c'est le code des index qu'il faut mettre ici  exemple:  AglSSXT-01(name)/aglSSXT-01(code) 
@@ -586,7 +590,7 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
         if  ($scope.tagPlateColumn.name*1 + maxcol > 13 ){		
 			$scope.messages.clazz="alert alert-danger";
 			//$scope.messages.text=Messages('select.WrongStartColumnTagPlate'+ " "+$scope.tagPlateColumn.position +"+"+dataMain.length+"="+ ($scope.tagPlateColumn.position + dataMain.length));
-			$scope.messages.text=Messages('select.wrongStartColumnTagPlate');
+			$scope.messages.text=Messages('select.msg.error.wrongStartColumn.tagPlate', $scope.tagPlateColumn.name); // en attendant modif de l'algo
 			$scope.messages.showDetails = false;
 			$scope.messages.open();	
 			return;
@@ -621,7 +625,8 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
 	    atmService.data.setData(dataMain);
 	};
 	
-	$scope.selectCol = {
+	// NGL-2012
+	$scope.selectColOrPlate = {
 		isShow:function(){
 			return ( $scope.isInProgressState() && !$scope.mainService.isEditMode())
 			},	

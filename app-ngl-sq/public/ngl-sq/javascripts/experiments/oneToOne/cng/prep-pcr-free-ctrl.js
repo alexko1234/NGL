@@ -507,8 +507,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
         
         if  ($scope.tagPlateColumn.name*1 + maxcol > 13 ){			
 			$scope.messages.clazz="alert alert-danger";
-			//$scope.messages.text=Messages('select.WrongStartColumnTagPlate'+ " "+$scope.tagPlateColumn.position +"+"+dataMain.length+"="+ ($scope.tagPlateColumn.position + dataMain.length));
-			$scope.messages.text=Messages('select.msg.error.wrongStartColumn.tagPlate', $scope.tagPlateColumn.name); // en atendant modif de l'algo
+			$scope.messages.text=Messages('select.msg.error.wrongStartColumn.tagPlate', $scope.tagPlateColumn.name); // en attendant modif de l'algo
 			$scope.messages.showDetails = false;
 			$scope.messages.open();	
 			return;
