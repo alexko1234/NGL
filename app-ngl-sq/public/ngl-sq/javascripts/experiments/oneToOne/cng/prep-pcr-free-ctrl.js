@@ -434,9 +434,12 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 	$scope.tagPlateColumn = $scope.columns[0]; // defaut du select
 	
 	// 17/11/2017 modifications pour possibilité d'utiliser plusieurs plaques
-	$scope.plates = [ {name:"DAP TruSeq DNA HT",   tagCategory:"DUAL-INDEX", tags:[] }, 
+	// 12/04/2018 NGL-2012 ne rien mettre par defaut !!!
+	$scope.plates = [ {name:"---", tagCategory: undefined,tags: undefined },
+	                  {name:"DAP TruSeq DNA HT",   tagCategory:"DUAL-INDEX", tags:[] }, 
 	                  {name:"IDT-ILMN TruSeq DNA UD Indexes (96 Indexes)", tagCategory:"DUAL-INDEX", tags:[] },
-	                  {name:"IDT-ILMN TruSeq DNA UD Indexes (24 Indexes)", tagCategory:"DUAL-INDEX", tags:[] }];
+	                  {name:"IDT-ILMN TruSeq DNA UD Indexes (24 Indexes)", tagCategory:"DUAL-INDEX", tags:[] }
+	                ];
 	
 	// l'indice dans le tableau correspond a l'ordre "colonne d'abord" dans la plaque
     // c'est le code des index qu'il faut mettre ici exemple:  AglSSXT-01(name)/aglSSXT-01(code) 
@@ -485,6 +488,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 
 	$scope.tagPlate = $scope.plates[0]; // defaut du select
 	
+	//NGL-2012 a changer !!!!!!!!!!!!!!!!! voir smallrnaseqlibprep
 	var setTags = function(){
 		$scope.messages.clear();
 		//console.log("selected column=" +$scope.tagPlateColumn.name);
@@ -504,7 +508,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
         if  ($scope.tagPlateColumn.name*1 + maxcol > 13 ){			
 			$scope.messages.clazz="alert alert-danger";
 			//$scope.messages.text=Messages('select.WrongStartColumnTagPlate'+ " "+$scope.tagPlateColumn.position +"+"+dataMain.length+"="+ ($scope.tagPlateColumn.position + dataMain.length));
-			$scope.messages.text=Messages('select.wrongStartColumnTagPlate');
+			$scope.messages.text=Messages('select.msg.error.wrongStartColumn.tagPlate', $scope.tagPlateColumn.name); // en atendant modif de l'algo
 			$scope.messages.showDetails = false;
 			$scope.messages.open();	
 			return;
@@ -540,7 +544,8 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 	    atmService.data.setData(dataMain);
 	};
 	
-	$scope.selectCol = {
+	//NGL-2012
+	$scope.selectColOrPlate 
 		isShow:function(){
 			return ( $scope.isInProgressState() && !$scope.mainService.isEditMode())
 			},	
