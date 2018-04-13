@@ -366,25 +366,23 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 	// importer un fichier definissant quels index sont déposés dans quels containers
 	$scope.button = {
 		isShow:function(){
-			return ( $scope.isInProgressState() && !$scope.mainService.isEditMode())
+			return ( ($scope.isInProgressState() && !$scope.mainService.isEditMode())|| Permissions.check("admin") )
 			},
 		isFileSet:function(){
 			return ($scope.file === undefined)?"disabled":"";
 		},
-		click:importData,		
+		click:importData	
 	};
 	
 	// Autre mode possible : utiliser une plaque d'index prédéfinis, l'utilisateur a juste a indiquer a partir de quelle colonne
 	// de cette plaque le robot doit prelever les index
-	$scope.columns = [ {name:'---', position:-1 },
+	$scope.columns = [ {name:'---', position:undefined },
 	                   {name:'1', position:0}, {name:'2', position:8}, {name:'3', position:16}, {name:'4',  position:24}, {name:'5',  position:32}, {name:'6',  position:40},
 	                   {name:'7', position:48},{name:'8', position:56},{name:'9', position:64}, {name:'10', position:72}, {name:'11', position:80}, {name:'12', position:88},
 	                 ];
 	$scope.tagPlateColumn = $scope.columns[0]; // defaut du select
 	
-	// 09/11/2017 NGL-1691 NON pas ici!!!   $scope.plates = [ {name:"DAP TruSeq DNA HT",   tagCategory:"DUAL-INDEX", tags:[] } ];
 	$scope.plates = [ {name:"Agilent SureSelect [bleue]",   tagCategory:"SINGLE-INDEX", tags:[] } ];
-
 
 	// 09/11/2017  NGL-1691 voici la bonne plaque: Plaque Agilent SureSelect (SR8100258293) [plaque bleue]
 	//             c'est le code des index qu'il faut mettre ici, exemple:  AglSSXT-01(name)/aglSSXT-01(code) 
@@ -408,9 +406,7 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 	// NGL-2012/2014 a changer
 	var setTags = function(){
 		$scope.messages.clear();
-		
-		console.log("selected plate is "+ $scope.tagPlate.name);
-		console.log("selected column is " + $scope.tagPlateColumn.name);
+
 		
         var dataMain = atmService.data.getData();
         // trier dans l'ordre "colonne d'abord"
@@ -422,7 +418,9 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
          
         var last=dataMain.slice(-1)[0];
         var maxcol=last.atomicTransfertMethod.column*1;
-        console.log("last col in input plate="+maxcol);
+        console.log("last col in input plate :"+maxcol);
+		console.log("selected index plate :"+ $scope.tagPlate.name);
+		console.log("selected index column :" + $scope.tagPlateColumn.name);
         
         if  ($scope.tagPlateColumn.name*1 + maxcol > 13 ){
         	$scope.messages.clazz="alert alert-danger";
@@ -437,7 +435,7 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 			var ocu=udtData.outputContainerUsed;
 			//console.log("outputContainerUsed.code"+udtData.outputContainerUsed.code);
 			
-			if ($scope.tagPlateColumn.position != -1 ){
+			if ($scope.tagPlateColumn.position != undefined ){
 				//calculer la position sur la plaque:   pos= (col -1)*8 + line      (line est le code ascii - 65)
 				var libPos= (udtData.atomicTransfertMethod.column  -1 )*8 + ( udtData.atomicTransfertMethod.line.charCodeAt(0) -65);
 				var indexPos= libPos + $scope.tagPlateColumn.position;
@@ -463,9 +461,9 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 	
 	$scope.selectColOrPlate = {
 		isShow:function(){
-			return ( $scope.isInProgressState() && !$scope.mainService.isEditMode())
+			return ( ($scope.isInProgressState() && !$scope.mainService.isEditMode())|| Permissions.check("admin") );
 			},	
-		select:setTags,
+		select:setTags
 	};
 	
 }]);

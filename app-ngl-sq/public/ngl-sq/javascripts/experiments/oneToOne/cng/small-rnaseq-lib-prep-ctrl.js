@@ -341,65 +341,58 @@ angular.module('home').controller('SmallRNASeqLibPrepCtrl',['$scope', '$parse', 
 	// importer un fichier definissant quels index sont déposés dans quels containers
 	$scope.button = {
 		isShow:function(){
-			return ( $scope.isInProgressState() && !$scope.mainService.isEditMode())
+			return ( ($scope.isInProgressState() && !$scope.mainService.isEditMode())|| Permissions.check("admin") );
 			},
 		isFileSet:function(){
 			return ($scope.file === undefined)?"disabled":"";
 		},
-		click:importData,		
+		click:importData	
 	};
 	
 	// Autre mode possible : utiliser une plaque d'index prédéfinis, l'utilisateur a juste a indiquer a partir de quelle colonne
 	// de cette plaque le robot doit prelever les index
 	// !!!!!!!  CE SYSTEME EST CONCU POUR DES PLAQUES COMPLETES.... ET POUR LES PLAQUES 48 INDEX ???????????????
-	$scope.columns = [ {name:'---', position:-1 },
+
+	$scope.columns = [ {name:'---', position: undefined },
 	                   {name:'1', position:0}, {name:'2', position:8}, {name:'3', position:16}, {name:'4',  position:24}, {name:'5',  position:32}, {name:'6',  position:40},
-	                   {name:'7', position:48},{name:'8', position:56},{name:'9', position:64}, {name:'10', position:72}, {name:'11', position:80}, {name:'12', position:88},
+	                   {name:'7', position:48},{name:'8', position:56},{name:'9', position:64}, {name:'10', position:72}, {name:'11', position:80}, {name:'12', position:88}
 	                 ];
+	
 	$scope.tagPlateColumn = $scope.columns[0]; // defaut du select
-	
 
-	$scope.plates = [ {name:"NEBNext small RNA plaque 48",   tagCategory:"SINGLE-INDEX", tags:[] }, 
-	                  {name:"QiaSeq miRNA NGS 48 index",     tagCategory:"SINGLE-INDEX", tags:[] } ];
-
+	$scope.plates = [ {name:"",                             tagCategory: undefined,     tags: undefined },
+	                  {name:"NEBNext small RNA plaque 48",  tagCategory:"SINGLE-INDEX", tags:[] }, 
+	                  {name:"QiaSeq miRNA NGS 48 index",    tagCategory:"SINGLE-INDEX", tags:[] } 
+	                ];
 
 	// l'indice dans le tableau correspond a l'ordre "colonne d'abord" dans la plaque
 	// !! ce sont les codes des index qu'il faut mettre ici !!
-	//                             A         B         C         D         E         F         G         H
-	$scope.plates[0].tags.push("neb-01", "neb-02", "neb-03", "neb-04", "neb-05", "neb-06", "neb-07", "neb-08"); //colonne 1
-	$scope.plates[0].tags.push("neb-09", "neb-10", "neb-11", "neb-12", "neb-02", "neb-03", "neb-04", "neb-05"); //colonne 2
-	$scope.plates[0].tags.push("neb-06", "neb-07", "neb-08", "neb-09", "neb-10", "neb-11", "neb-12", "neb-01"); //colonne 3
-	$scope.plates[0].tags.push("neb-03", "neb-04", "neb-05", "neb-06", "neb-07", "neb-08", "neb-09", "neb-10"); //colonne 4
-	$scope.plates[0].tags.push("neb-11", "neb-12", "neb-01", "neb-02", "neb-04", "neb-05", "neb-06", "neb-07"); //colonne 5
-	$scope.plates[0].tags.push("neb-08", "neb-09", "neb-10", "neb-11", "neb-12", "neb-01", "neb-02", "neb-03"); //colonne 6
-	//$scope.plates[0].tags.push(); //colonne 7	
-	//$scope.plates[0].tags.push(); //colonne 8
-	//$scope.plates[0].tags.push(); //colonne 9
-	//$scope.plates[0].tags.push(); //colonne 10
-	//$scope.plates[0].tags.push(); //colonne 11
-	//$scope.plates[0].tags.push(); //colonne 12
+
+	// NEBNext small RNA plaque 48
+	//								A         B         C         D         E         F         G         H
+	$scope.plates[1].tags.push("neb-01", "neb-02", "neb-03", "neb-04", "neb-05", "neb-06", "neb-07", "neb-08"); //colonne 1
+	$scope.plates[1].tags.push("neb-09", "neb-10", "neb-11", "neb-12", "neb-02", "neb-03", "neb-04", "neb-05"); //colonne 2
+	$scope.plates[1].tags.push("neb-06", "neb-07", "neb-08", "neb-09", "neb-10", "neb-11", "neb-12", "neb-01"); //colonne 3
+	$scope.plates[1].tags.push("neb-03", "neb-04", "neb-05", "neb-06", "neb-07", "neb-08", "neb-09", "neb-10"); //colonne 4
+	$scope.plates[1].tags.push("neb-11", "neb-12", "neb-01", "neb-02", "neb-04", "neb-05", "neb-06", "neb-07"); //colonne 5
+	$scope.plates[1].tags.push("neb-08", "neb-09", "neb-10", "neb-11", "neb-12", "neb-01", "neb-02", "neb-03"); //colonne 6
 	
-	// l'indice dans le tableau correspond a l'ordre "colonne d'abord" dans la plaque
-	// !! ce sont les codes des index qu'il faut mettre ici !!
-	//                             A         B         C         D         E         F         G         H
-	$scope.plates[1].tags.push("qmr-01", "qmr-13", "qmr-25", "qmr-37", "qmr-49", "qmr-61", "qmr-73", "qmr-85"); //colonne 1
-	$scope.plates[1].tags.push("qmr-02", "qmr-14", "qmr-26", "qmr-38", "qmr-50", "qmr-62", "qmr-74", "qmr-86"); //colonne 2
-	$scope.plates[1].tags.push("qmr-03", "qmr-15", "qmr-27", "qmr-39", "qmr-51", "qmr-63", "qmr-75", "qmr-87"); //colonne 3
-	$scope.plates[1].tags.push("qmr-04", "qmr-16", "qmr-28", "qmr-40", "qmr-52", "qmr-64", "qmr-76", "qmr-88"); //colonne 4
-	$scope.plates[1].tags.push("qmr-05", "qmr-17", "qmr-29", "qmr-41", "qmr-53", "qmr-65", "qmr-77", "qmr-89"); //colonne 5
-	$scope.plates[1].tags.push("qmr-06", "qmr-18", "qmr-30", "qmr-42", "qmr-54", "qmr-66", "qmr-78", "qmr-90"); //colonne 6
-	$scope.plates[1].tags.push("qmr-07", "qmr-19", "qmr-31", "qmr-43", "qmr-55", "qmr-67", "qmr-79", "qmr-91"); //colonne 7	
-	$scope.plates[1].tags.push("qmr-08", "qmr-20", "qmr-32", "qmr-44", "qmr-56", "qmr-68", "qmr-80", "qmr-92"); //colonne 8
-	$scope.plates[1].tags.push("qmr-09", "qmr-21", "qmr-33", "qmr-45", "qmr-57", "qmr-69", "qmr-81", "qmr-93"); //colonne 9
-	$scope.plates[1].tags.push("qmr-10", "qmr-22", "qmr-34", "qmr-46", "qmr-58", "qmr-70", "qmr-82", "qmr-94"); //colonne 10
-	$scope.plates[1].tags.push("qmr-11", "qmr-23", "qmr-35", "qmr-47", "qmr-59", "qmr-71", "qmr-83", "qmr-95"); //colonne 11
-	$scope.plates[1].tags.push("qmr-12", "qmr-24", "qmr-36", "qmr-48", "qmr-60", "qmr-72", "qmr-84", "qmr-96"); //colonne 12
-	
+	//QiaSeq miRNA NGS 48 index
+	//								A         B         C         D         E         F         G         H
+	$scope.plates[2].tags.push("qmr-01", "qmr-02", "qmr-03", "qmr-04", "qmr-05", "qmr-06", "qmr-07", "qmr-08"); //colonne 1
+	$scope.plates[2].tags.push("qmr-09", "qmr-10", "qmr-11", "qmr-12", "qmr-13", "qmr-14", "qmr-15", "qmr-16"); //colonne 2
+	$scope.plates[2].tags.push("qmr-17", "qmr-18", "qmr-19", "qmr-20", "qmr-21", "qmr-22", "qmr-23", "qmr-24"); //colonne 3
+	$scope.plates[2].tags.push("qmr-25", "qmr-26", "qmr-27", "qmr-28", "qmr-29", "qmr-30", "qmr-31", "qmr-32"); //colonne 4
+	$scope.plates[2].tags.push("qmr-33", "qmr-34", "qmr-35", "qmr-36", "qmr-37", "qmr-38", "qmr-39", "qmr-40"); //colonne 5
+	$scope.plates[2].tags.push("qmr-41", "qmr-42", "qmr-43", "qmr-44", "qmr-45", "qmr-46", "qmr-47", "qmr-48"); //colonne 6
 	
 	$scope.tagPlate = $scope.plates[0]; // defaut du select
 
 	var setTags = function(){
 		$scope.messages.clear();
+			
+		console.log("selected plate is "+ $scope.tagPlate.name);
+		console.log("selected start column is " + $scope.tagPlateColumn.name);
 		
 		console.log("selected plate is "+ $scope.tagPlate.name);
 		console.log("selected column is " + $scope.tagPlateColumn.name);
@@ -429,7 +422,41 @@ angular.module('home').controller('SmallRNASeqLibPrepCtrl',['$scope', '$parse', 
 			var ocu=udtData.outputContainerUsed;
 			//console.log("outputContainerUsed.code"+udtData.outputContainerUsed.code);
 			
-			if ($scope.tagPlateColumn.position != -1 ){
+			var lastTagCol=$scope.tagPlate.tags.length / 8;    // ce sont des colonnes de 8
+			console.log("last col in tag plate="+ lastTagCol);
+			
+			// meme en prennant tous les index possibles, il n'y en a pas assez dans la plaque !!
+			if ( lastTagCol < lastInputCol ){
+	        	$scope.messages.clazz="alert alert-danger";
+	        	$scope.messages.text=Messages('select.msg.error.notEnoughTags.tagPlate',$scope.tagPlate.name);
+	        	$scope.messages.showDetails = false;
+	        	$scope.messages.open();
+	        	return;
+			}
+			
+			// la colonne de debut choisie est vide
+			if ( $scope.tagPlateColumn.name*1 > lastTagCol){
+	        	$scope.messages.clazz="alert alert-danger";
+	        	$scope.messages.text=Messages('select.msg.error.emptyStartColumn.tagPlate', $scope.tagPlateColumn.name, $scope.tagPlate.name );
+	        	$scope.messages.showDetails = false;
+	        	$scope.messages.open();	
+	        	return;
+	        }
+				
+			// la colonne choisie est incorrecte (toutes les puits input ne recevront pas d'index) !!INTERDIT
+		    if ( (lastTagCol - $scope.tagPlateColumn.name*1  +1) < lastInputCol ) {   	
+	        	$scope.messages.clazz="alert alert-danger";
+	        	$scope.messages.text=Messages('select.msg.error.wrongStartColumn.tagPlate', $scope.tagPlateColumn.name);
+	        	$scope.messages.showDetails = false;
+	        	$scope.messages.open();	
+	        	return;
+	        }
+	
+			for(var i = 0; i < dataMain.length; i++){
+				var udtData = dataMain[i];
+				var ocu=udtData.outputContainerUsed;
+				//console.log("outputContainerUsed.code"+udtData.outputContainerUsed.code);
+
 				//calculer la position sur la plaque:   pos= (col -1)*8 + line      (line est le code ascii - 65)
 				var libPos= (udtData.atomicTransfertMethod.column  -1 )*8 + ( udtData.atomicTransfertMethod.line.charCodeAt(0) -65);
 				var indexPos= libPos + $scope.tagPlateColumn.position;
@@ -455,9 +482,10 @@ angular.module('home').controller('SmallRNASeqLibPrepCtrl',['$scope', '$parse', 
 	
 	$scope.selectColOrPlate = {
 		isShow:function(){
-			return ( $scope.isInProgressState() && !$scope.mainService.isEditMode())
-			},	
-		select:setTags,
+			return ( ($scope.isInProgressState() && !$scope.mainService.isEditMode())|| Permissions.check("admin") );
+		},	
+		select:setTags()
+
 	};
 	
 }]);

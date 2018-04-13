@@ -341,20 +341,21 @@ angular.module('home').controller('BisSeqLibPrepCtrl',['$scope', '$parse',  '$fi
 	// importer un fichier definissant quels index sont déposés dans quels containers
 	$scope.button = {
 		isShow:function(){
-			return ( $scope.isInProgressState() && !$scope.mainService.isEditMode())
+			return ( ($scope.isInProgressState() && !$scope.mainService.isEditMode())|| Permissions.check("admin") );
 			},
 		isFileSet:function(){
 			return ($scope.file === undefined)?"disabled":"";
 		},
-		click:importData,		
+		click:importData
 	};
 	
 	// Autre mode possible : utiliser une plaque d'index prédéfinis, l'utilisateur a juste a indiquer a partir de quelle colonne
 	// de cette plaque le robot doit prelever les index
 	// !!!!!!!  CE SYSTEME EST CONCU POUR DES PLAQUES COMPLETES.... ET POUR LES PLAQUES 48 INDEX ???????????????
-	$scope.columns = [ {name:'---', position:-1 },
+
+	$scope.columns = [ {name:'---', position: undefined },
 	                   {name:'1', position:0}, {name:'2', position:8}, {name:'3', position:16}, {name:'4',  position:24}, {name:'5',  position:32}, {name:'6',  position:40},
-	                   {name:'7', position:48},{name:'8', position:56},{name:'9', position:64}, {name:'10', position:72}, {name:'11', position:80}, {name:'12', position:88},
+	                   {name:'7', position:48},{name:'8', position:56},{name:'9', position:64}, {name:'10', position:72}, {name:'11', position:80}, {name:'12', position:88}
 	                 ];
 	$scope.tagPlateColumn = $scope.columns[0]; // defaut du select
 	
@@ -412,7 +413,41 @@ angular.module('home').controller('BisSeqLibPrepCtrl',['$scope', '$parse',  '$fi
 			var ocu=udtData.outputContainerUsed;
 			//console.log("outputContainerUsed.code"+udtData.outputContainerUsed.code);
 			
-			if ($scope.tagPlateColumn.position != -1 ){
+			var lastTagCol=$scope.tagPlate.tags.length / 8;    // ce sont des colonnes de 8
+			console.log("last col in tag plate="+ lastTagCol);
+			
+			// meme en prennant tous les index possibles, il n'y en a pas assez dans la plaque !!
+			if ( lastTagCol < lastInputCol ){
+	        	$scope.messages.clazz="alert alert-danger";
+	        	$scope.messages.text=Messages('select.msg.error.notEnoughTags.tagPlate',$scope.tagPlate.name);
+	        	$scope.messages.showDetails = false;
+	        	$scope.messages.open();
+	        	return;
+			}
+			
+			// la colonne de debut choisie est vide
+			if ( $scope.tagPlateColumn.name*1 > lastTagCol){
+	        	$scope.messages.clazz="alert alert-danger";
+	        	$scope.messages.text=Messages('select.msg.error.emptyStartColumn.tagPlate', $scope.tagPlateColumn.name, $scope.tagPlate.name );
+	        	$scope.messages.showDetails = false;
+	        	$scope.messages.open();	
+	        	return;
+	        }
+				
+			// la colonne choisie est incorrecte (toutes les puits input ne recevront pas d'index) !!INTERDIT
+		    if ( (lastTagCol - $scope.tagPlateColumn.name*1  +1) < lastInputCol ) {   	
+	        	$scope.messages.clazz="alert alert-danger";
+	        	$scope.messages.text=Messages('select.msg.error.wrongStartColumn.tagPlate', $scope.tagPlateColumn.name);
+	        	$scope.messages.showDetails = false;
+	        	$scope.messages.open();	
+	        	return;
+	        }
+	
+			for(var i = 0; i < dataMain.length; i++){
+				var udtData = dataMain[i];
+				var ocu=udtData.outputContainerUsed;
+				//console.log("outputContainerUsed.code"+udtData.outputContainerUsed.code);
+
 				//calculer la position sur la plaque:   pos= (col -1)*8 + line      (line est le code ascii - 65)
 				var libPos= (udtData.atomicTransfertMethod.column  -1 )*8 + ( udtData.atomicTransfertMethod.line.charCodeAt(0) -65);
 				var indexPos= libPos + $scope.tagPlateColumn.position;
@@ -438,9 +473,9 @@ angular.module('home').controller('BisSeqLibPrepCtrl',['$scope', '$parse',  '$fi
 	
 	$scope.selectColOrPlate = {
 		isShow:function(){
-			return ( $scope.isInProgressState() && !$scope.mainService.isEditMode())
-			},	
-		select:setTags,
+			return ( ($scope.isInProgressState() && !$scope.mainService.isEditMode())|| Permissions.check("admin") );
+		},	
+		select:setTags
 	};
 	
 }]);

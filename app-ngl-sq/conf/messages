@@ -420,7 +420,7 @@ experiments.outputs = Container(s) en sortie(s)
 experiments.outputContainerSupportCode= Code support en sortie
 experiments.outputContainerSupportStorageCode= Stockage support en sortie
 experiments.instrumentFile = Fichier de l''instrument
-experiments.startColumnTagPlate = Colonne de début de la plaque d''index
+experiments.startColumnTagPlate = Select. une plaque d''index et la colonne de début
 
 experiments.calculation.sheet = Feuille de calcul
 experiments.src_dest.sheet = Source / Destination
