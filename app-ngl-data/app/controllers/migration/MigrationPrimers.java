@@ -76,7 +76,7 @@ public class MigrationPrimers extends UpdateSamplePropertiesCNS {
 	@Override
 	public void runImport() throws SQLException, DAOException, MongoException,
 	RulesException {
-		updateSampleImported(contextError);
+		//updateSampleImported(contextError);
 		updateExperiments(contextError);		
 	}
 
