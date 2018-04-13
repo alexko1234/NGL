@@ -51,7 +51,7 @@ object ApplicationBuild extends Build {
 	// Command line definition that allows the compilation 
 	// of a linked authentication library instead of the published one.
 	// It is enabled using sbt command line option -Dembedded.auth=true .
-	val embeddedAuth   = System.getProperty("embedded.auth")   == "false"
+	val embeddedAuth   = System.getProperty("embedded.auth")   == "true"
 	val eclipseLinking = System.getProperty("eclipse.linking") == "true"
 
 	// Workaround for missing properties in test vms. Build the test child
@@ -437,7 +437,10 @@ object ApplicationBuild extends Build {
     libraryDependencies       ++= ngldataDependencies,
     resolvers                  := nexus,
     publishArtifact in makePom := false,
-    publishTo                  := Some(nexusigpublish)
+    publishTo                  := Some(nexusigpublish),
+    publishArtifact in (Compile, packageDoc) := false,
+    publishArtifact in packageDoc := false,
+    sources in (Compile,doc) := Seq.empty
   ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
 
   val nglsq = Project(appName + "-sq", file("app-ngl-sq"), settings = buildSettings)
