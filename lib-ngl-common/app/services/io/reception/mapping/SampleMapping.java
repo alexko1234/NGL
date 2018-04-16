@@ -99,11 +99,14 @@ public class SampleMapping extends Mapping<Sample> {
 			sample.traceInformation = new TraceInformation(contextValidation.getUser());
 		}
 		//update categoryCode by default.
-		//FDS 28/02/2012 catch the case when sample.typeCode is not valid
-		if (null==SampleType.find.findByCode(sample.typeCode) ) {
+		//FDS 28/02/2018 catch the case when sample.typeCode is not valid
+		//FDS 29/03/2018 NGL-1969: remplacer  findByCode  par findByCodeOrName
+		if (null==SampleType.find.findByCodeOrName(sample.typeCode) ) {
 			contextValidation.addErrors("sample.typeCode", ValidationConstants.ERROR_NOTEXISTS_MSG, sample.typeCode);
 		} else {
-			sample.categoryCode = SampleType.find.findByCode(sample.typeCode).category.code;
+			sample.categoryCode = SampleType.find.findByCodeOrName(sample.typeCode).category.code;
+			// il faut ecraser  sample.typeCode d'entree (qui peut etre un Name!) par le code ramené de la base
+			sample.typeCode= SampleType.find.findByCodeOrName(sample.typeCode).code;
 			
 			if(sample.life != null && sample.life.from != null && sample.life.from.sampleCode != null){
 				Sample parentSample = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code",sample.life.from.sampleCode).in("projectCodes", sample.life.from.projectCode));

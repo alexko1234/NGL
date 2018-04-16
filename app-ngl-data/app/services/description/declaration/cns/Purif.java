@@ -120,6 +120,9 @@ public class Purif extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Ratio billes Ampure", "adnBeadVolumeRatio", LevelService.getLevels(Level.CODE.Experiment), String.class, true, null, 
 				null, null, null, null,"single", 2, true, null, null));
 	
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,"1"));
+		
 		return propertyDefinitions;
 	}
 

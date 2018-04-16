@@ -157,7 +157,8 @@ public class ProtocolServiceCNS {
 				concatMap(newPSV("extractionProtocol","ZR Duet prok."))));
 		lp.add(newProtocol("zr-duet-extraction-dev","Extraction ZR Duet DEV","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-rna-extraction")));
 		
-			
+		lp.add(newProtocol("quick-dna-96-plus-prok-v1","Quick-DNA 96 Plus Kit Prok.v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-extraction"),
+		concatMap(newPSV("extractionProtocol","Quick-DNA 96 Plus Kit Prok"))));
 		
 		lp.add(newProtocol("fast_prep_grinding","Broyage Fast Prep","path2","1","production",InstanceFactory.setExperimentTypeCodes("grinding")));
 		
@@ -165,7 +166,9 @@ public class ProtocolServiceCNS {
 
 		lp.add(newProtocol("fluo-dosage","dosage_fluo","path2","1","production",InstanceFactory.setExperimentTypeCodes("fluo-quantification","reception-fluo-quantification"),false));
 		lp.add(newProtocol("annexe-dosagearn-en-attente","Annexe_DosageARN_en attente","path2","1","production",InstanceFactory.setExperimentTypeCodes("fluo-quantification","reception-fluo-quantification"),false));
-		lp.add(newProtocol("annexe-dosagearn-qubit-v1","Annexe_DosageARN-Qubit_v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("fluo-quantification","reception-fluo-quantification")));
+		lp.add(newProtocol("annexe-dosagearn-qubit-v1","Annexe_DosageARN-Qubit_v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("fluo-quantification","reception-fluo-quantification"),false));
+		lp.add(newProtocol("annexe-dosagearn-qubit-v2","Annexe_DosageARN-Qubit_v2","path2","2","production",InstanceFactory.setExperimentTypeCodes("fluo-quantification","reception-fluo-quantification")));
+		
 		
 		lp.add(newProtocol("annexe-dosage-fluoroskan-v1","Annexe_DosageFluoroskan_v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("fluo-quantification","reception-fluo-quantification"),false));
 		lp.add(newProtocol("annexe-dosage-fluoroskan-v2","Annexe_DosageFluoroskan_v2","path2","1","production",InstanceFactory.setExperimentTypeCodes("fluo-quantification","reception-fluo-quantification"),false));
@@ -243,6 +246,9 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("swift-accel-1s","Swift_Accel_1S","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation"), 
 				concatMap(newPSV("libraryProtocol","Bq Swift 1S"))));
 		
+		lp.add(newProtocol("prod_ill_bqadn_bqsags-lcmanuel_164_v1","Prod_ILL_BqADN_BqSAGs-LC Manuel_164_v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation","pcr-amplification-and-purification"), 
+				concatMap(newPSV("libraryProtocol","Bq SAG LC"))));
+		
 		
 		/*
 		lp.add(newProtocol("swift-accel-1s","Swift_Accel_1S","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation","pcr-amplification-and-purification"), 
@@ -291,6 +297,10 @@ public class ProtocolServiceCNS {
 		
 		lp.add(newProtocol("prod-ill-bqarn-rna-nebuii-stranded-polya-160-v1","Prod_ILL_BqARN_RNA-NEBUII-Stranded-PolyA_160_v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-library","indexing-and-pcr-amplification"), 
 				concatMap(newPSV("rnaLibProtocol","RNA NEB_U2 Stranded PolyA"),newPSV("strandOrientation","reverse"),newPSV("cDNAsynthesisType","random"))));
+		
+		lp.add(newProtocol("prod_ill_bqarn_truseq-stranded-polya_153_v2","Prod_ILL_BqARN_TruSeq-Stranded-PolyA_153_v2","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library","pcr-amplification-and-purification"), 
+				concatMap(newPSV("rnaLibProtocol","RNA TruSeq Stranded PolyA"))));
+	
 		
 		lp.add(newProtocol("inda-c_ovation_universal_rna-seq","InDA-C Ovation Universal RNA-Seq","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library","pcr-amplification-and-purification"), 
 				concatMap(newPSV("rnaLibProtocol","InDA-C Ovation Universal RNA-Seq"),newPSV("strandOrientation","reverse"),newPSV("cDNAsynthesisType","random + oligodT"))));
@@ -350,7 +360,10 @@ public class ProtocolServiceCNS {
 		
 		lp.add(newProtocol("qcard-qc","QC_qcard","path7","1","production", InstanceFactory.setExperimentTypeCodes("qcard")));	
 
-		lp.add(newProtocol("ptr-wga-bq-sags-v3","PTR_WGA_Bq_SAGs_V3","path7","1","production", InstanceFactory.setExperimentTypeCodes("wga-amplification")));	
+		lp.add(newProtocol("ptr-wga-bq-sags-v3","PTR_WGA_Bq_SAGs_V3","path7","1","production", InstanceFactory.setExperimentTypeCodes("wga-amplification"),false));	
+		lp.add(newProtocol("prod_ill_evaladn_wga-sags_163_v4","Prod_ILL_EvalADN_WGA-SAGs_163_v4","path1","1","production", InstanceFactory.setExperimentTypeCodes("wga-amplification")));
+		
+		
 		lp.add(newProtocol("wga-nanopore","WGA_Nanopore","path7","1","production", InstanceFactory.setExperimentTypeCodes("wga-amplification")));	
 		lp.add(newProtocol("qiagen-repli-g-wga","QIAGEN REPLI-g WGA","path7","1","production", InstanceFactory.setExperimentTypeCodes("wga-amplification")));	
 		lp.add(newProtocol("qiagen-repli-g-wta","QIAGEN REPLI-g WTA","path7","1","production", InstanceFactory.setExperimentTypeCodes("wga-amplification")));	

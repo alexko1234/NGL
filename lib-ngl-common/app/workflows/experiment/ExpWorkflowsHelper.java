@@ -1,7 +1,5 @@
 package workflows.experiment;
 
-import static validation.common.instance.CommonValidationHelper.OBJECT_IN_DB;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -1254,7 +1252,7 @@ public class ExpWorkflowsHelper {
 			
 			if(null == c.qualityControlResults)c.qualityControlResults = new ArrayList<>(0);
 
-			c.qualityControlResults.add(new QualityControlResult(exp.code, exp.typeCode, c.qualityControlResults.size(), icu.experimentProperties, icu.valuation));
+			c.qualityControlResults.add(new QualityControlResult(exp.code, exp.typeCode, c.qualityControlResults.size(), icu.experimentProperties, icu.instrumentProperties, icu.valuation));
 
 			Map<String, PropertyValue> newContentProperties = getCommonPropertiesForALevelWithICU(exp, icu, CODE.Content);
 			c.contents.forEach(content -> {
@@ -1365,6 +1363,51 @@ public class ExpWorkflowsHelper {
 			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", exp.code), 
 					DBUpdate.set("atomicTransfertMethods", exp.atomicTransfertMethods).set("projectCodes", exp.projectCodes).set("sampleCodes",exp.sampleCodes));			
 		}
+	}
+	
+	public void updateNewSamplesIfNeeded(ContextValidation validation, Experiment exp){
+		ExperimentType experimentType=ExperimentType.find.findByCode(exp.typeCode);
+		if(experimentType.newSample){
+			exp.atomicTransfertMethods
+			.stream()
+			.forEach(atm -> updateNewSamples(exp, atm, validation));			
+		}
+	}
+	
+	private void updateNewSamples(Experiment exp, AtomicTransfertMethod  atm, ContextValidation validation) {
+		if(atm.inputContainerUseds.size() == 1 && atm.inputContainerUseds.get(0).contents.size() == 1){
+			InputContainerUsed icu = atm.inputContainerUseds.get(0);
+			String inputContentSampleCode = atm.inputContainerUseds.get(0).contents.get(0).sampleCode;
+			String inputContentProjectCode = atm.inputContainerUseds.get(0).contents.get(0).projectCode;
+			Sample sampleIn=MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, inputContentSampleCode);
+			
+			
+			atm.outputContainerUseds
+				.stream()
+				.forEach(ocu -> updateNewSamplePropertiesFromSampleIn(exp, ocu, icu, sampleIn, inputContentProjectCode, validation))
+				;
+			
+		}else{
+			throw new RuntimeException("To create a new sample we need to have only one InputContainerUsed with only one Content");
+		}		
+	}
+	
+	private void updateNewSamplePropertiesFromSampleIn(Experiment exp, OutputContainerUsed ocu,
+			InputContainerUsed icu, Sample sampleIn, String inputContentProjectCode, ContextValidation validation) {
+		if(ocu.experimentProperties.containsKey("sampleTypeCode") 
+				&& ocu.experimentProperties.containsKey("projectCode")
+				&& ocu.experimentProperties.containsKey("sampleCode")){
+		
+			String sampleCode=ocu.experimentProperties.get("sampleCode").value.toString();
+			
+			if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,sampleCode)){
+				Map<String, PropertyValue> newSampleProperties = new HashMap<>(sampleIn.properties);
+				newSampleProperties.putAll(getCommonPropertiesForALevel(exp, CODE.Sample));
+				newSampleProperties.putAll(getInputPropertiesForALevel(exp, icu, CODE.Sample));
+				newSampleProperties.putAll(getOutputPropertiesForALevel(exp, ocu, CODE.Sample));
+				MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, DBQuery.is("code", sampleCode), DBUpdate.set("properties", newSampleProperties));				
+			}		
+		}		
 	}
 	
 	public void createNewSamplesIfNeeded(Experiment exp, ContextValidation validation){
@@ -1549,7 +1592,8 @@ public class ExpWorkflowsHelper {
 	}
 
 
-	public void updateContentPropertiesWithExperimentContentProperties(ContextValidation validation, Experiment exp) {
+	public void updateContentPropertiesWithExperimentContentProperties(ContextValidation validation, Experiment exp, Experiment oldExp) {
+		if(null == oldExp || null == exp)throw new IllegalArgumentException("missing parameters");
 		long t1 = System.currentTimeMillis();
 		//1 extract content property code
 	
@@ -1568,7 +1612,6 @@ public class ExpWorkflowsHelper {
 		//2 update only if content property exist
 		if(contentPropertyCodes.size() > 0){
 			
-			Experiment oldExp = (Experiment) validation.getObject(OBJECT_IN_DB);
 			Map<String, Content> oldExpContents = flatMapContentsToMap(oldExp, exp.categoryCode, contentPropertyCodes);
 			
 			exp.atomicTransfertMethods.forEach(atm -> {
@@ -1580,6 +1623,42 @@ public class ExpWorkflowsHelper {
 					atm.outputContainerUseds
 							.stream()
 							.forEach(ocu -> updateContainerContentPropertiesInCascading(validation, ocu, contentPropertyCodes, oldExpContents));					
+				}
+				
+			});			
+		}
+		long t2 = System.currentTimeMillis();
+		logger.debug("Time to progate experiment content properties : "+(t2-t1)+" ms");
+		
+	}
+	
+	public void updateSamplePropertiesWithExperimentSampleProperties(ContextValidation validation, Experiment exp, Experiment oldExp) {
+		if(null == oldExp || null == exp)throw new IllegalArgumentException("missing parameters");
+		long t1 = System.currentTimeMillis();
+		//1 extract content property code
+	
+		ExperimentType expType = ExperimentType.find.findByCode(exp.typeCode);
+		final Set<String> samplePropertyCodes = getPropertyDefinitionCodesByLevelFilterObject(expType.propertiesDefinitions, CODE.Sample);
+		
+		InstrumentUsedType insType = InstrumentUsedType.find.findByCode(exp.instrument.typeCode);
+		samplePropertyCodes.addAll(getPropertyDefinitionCodesByLevelFilterObject(insType.propertiesDefinitions, CODE.Sample));
+		//extract protocol
+		
+		
+		//2 update only if content property exist
+		if(samplePropertyCodes.size() > 0){
+			
+			Map<String, Content> oldExpContents = flatMapContentsToMap(oldExp, exp.categoryCode, samplePropertyCodes);
+			
+			exp.atomicTransfertMethods.forEach(atm -> {
+				if(ExperimentCategory.CODE.qualitycontrol.toString().equals(exp.categoryCode)){
+					atm.inputContainerUseds
+							.stream()
+							.forEach(icu -> updateContainerContentPropertiesInCascading(validation, icu, samplePropertyCodes, oldExpContents));
+				}else if(atm.outputContainerUseds != null){
+					atm.outputContainerUseds
+							.stream()
+							.forEach(ocu -> updateContainerContentPropertiesInCascading(validation, ocu, samplePropertyCodes, oldExpContents));					
 				}
 				
 			});			

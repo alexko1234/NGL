@@ -105,7 +105,6 @@ object ApplicationBuild extends Build {
   val mongoJack   = "org.mongojack"        % "mongojack"          % "2.6.1.IG"
 //      "org.mongojack" % "mongojack" % "2.6.1",
 //      "org.mongojack" % "mongojack" % "2.7.0",
-
     // External libraries versions
 	val postgresql  = "org.postgresql"       % "postgresql"         % "9.4-1206-jdbc41"  
   val commonsLang = "commons-lang"         % "commons-lang"       % "2.4"
@@ -527,7 +526,10 @@ object ApplicationBuild extends Build {
     libraryDependencies       ++= ngldataDependencies,
     resolvers                  := nexus,
     publishArtifact in makePom := false,
-    publishTo                  := Some(nexusigpublish)
+    publishTo                  := Some(nexusigpublish),
+    publishArtifact in (Compile, packageDoc) := false,
+    publishArtifact in packageDoc := false,
+    sources in (Compile,doc) := Seq.empty
   ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
 
   val nglsq = Project(appName + "-sq", file("app-ngl-sq"), settings = buildSettings)

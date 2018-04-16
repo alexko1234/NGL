@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
@@ -35,20 +36,26 @@ public class ImportServiceCNG extends AbstractImportService {
 	@Override
 	public void saveImportTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ImportType> l = new ArrayList<>();
+		List<Institute> CNG = getInstitutes(Constants.CODE.CNG); // 28/03/2018 
 		
-		l.add(newImportType("Defaut", "default-import", ImportCategory.find.findByCode("sample-import"), getSampleCNGPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
-		l.add(newImportType("Import aliquots tubes", "tube-from-bank-reception", ImportCategory.find.findByCode("sample-import"), getBankReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
-		l.add(newImportType("Import aliquots plaques", "plate-from-bank-reception", ImportCategory.find.findByCode("sample-import"), getBankReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
+		//pour import automatique depuis la base Solexa
+		l.add(newImportType("Defaut", "default-import", ImportCategory.find.findByCode("sample-import"), getSampleCNGPropertyDefinitions(), CNG));
+		
+		//pour import depuis le fichier LIMS ModulBio
+		l.add(newImportType("Import aliquots tubes",   "tube-from-bank-reception",  ImportCategory.find.findByCode("sample-import"), getBankReceptionPropertyDefinitions(), CNG));
+		l.add(newImportType("Import aliquots plaques", "plate-from-bank-reception", ImportCategory.find.findByCode("sample-import"), getBankReceptionPropertyDefinitions(), CNG));
+		
+		//pour import de librairies de collaborateurs externes
 		// FDS 20/06/2017 NGL-1472
-		l.add(newImportType("Import librairies indexées (non poolées)", "library-idx-reception",ImportCategory.find.findByCode("sample-import"), getLibraryReceptionPropertyDefinitions(true), getInstitutes(Constants.CODE.CNG)));
+		l.add(newImportType("Import librairies indexées (non poolées)", "library-idx-reception",ImportCategory.find.findByCode("sample-import"), getLibraryReceptionPropertyDefinitions(true), CNG));
 		// FDS 22/11/2017 NGL-1703
-		l.add(newImportType("Import librairies indexées (poolées)", "library-idx-pool-reception",ImportCategory.find.findByCode("sample-import"), getLibraryReceptionPropertyDefinitions(true), getInstitutes(Constants.CODE.CNG)));
+		l.add(newImportType("Import librairies indexées (poolées)", "library-idx-pool-reception",ImportCategory.find.findByCode("sample-import"), getLibraryReceptionPropertyDefinitions(true), CNG));
 		// FDS 05/03/2018 NGL-1907 
-		l.add(newImportType("Import librairies (poolées) SANS démultiplexage", "no-demultiplexing-lib-pool-reception",ImportCategory.find.findByCode("sample-import"), getLibraryNodemultiplexReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
+		l.add(newImportType("Import librairies (poolées) SANS démultiplexage", "no-demultiplexing-lib-pool-reception",ImportCategory.find.findByCode("sample-import"), getLibraryNodemultiplexReceptionPropertyDefinitions(),CNG));
 		
 		// GA/FDS 14/06/2017 CONTOURNEMENT de la creation des libProcessTypecodes dans NGLBI ce qui pose des problemes dans le cas ISOPROD
 		// creer un ImportType bidon pour declarer la propriété libProcessTypecodes et sa liste de valeurs...
-		l.add(newImportType("Import bidon", "import-bidon", ImportCategory.find.findByCode("sample-import"), getLibProcessTypecodePropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
+		l.add(newImportType("Import bidon", "import-bidon", ImportCategory.find.findByCode("sample-import"), getLibProcessTypecodePropertyDefinitions(), CNG));
 		
 		DAOHelpers.saveModels(ImportType.class, l, errors);
 	}

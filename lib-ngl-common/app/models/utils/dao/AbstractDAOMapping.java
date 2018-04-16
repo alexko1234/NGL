@@ -4,6 +4,8 @@ import java.sql.Types;
 import java.util.List;
 
 import org.springframework.asm.Type;
+
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.jdbc.core.SqlParameter;
@@ -68,7 +70,34 @@ public abstract class AbstractDAOMapping<T> extends AbstractDAO<T> {
 		setObjectInCache(o, code);
 		return o;		
 	}
-
+	
+	// ajout FDS 28/03/2018 NGL-1969 (avec try/catch)
+	// pour trouver un sampleType en se basant sur son code OU SUR SON NOM
+	public T findByCodeOrName(String code) throws DAOException {
+		// TODO: change exception to IllegalArgument exception ?
+		if (null == code){
+			throw new DAOException("code is mandatory");
+		}
+		
+		T o = getObjectInCache(code);
+		if (null != o) {
+			return o;
+		} else {
+			try {
+				String sql= sqlCommon+" where t.code = ? or t.name = ?";
+				// doc spring: findObject=> lui donner un tableau avec autant d'object qu'on a de parametres a remplir, ici 2) => new Object[]{code,code})
+				// le nom des parametres est inemployé, pourraient s'appeler toto !!!      Merci N.W.
+				o = initializeMapping(sql, new SqlParameter("code",Types.VARCHAR),new SqlParameter("name",Types.VARCHAR) ).findObject(new Object[]{code,code});
+				setObjectInCache(o, code); 
+				return o;
+			} catch(IncorrectResultSizeDataAccessException e) {
+				//Logger.warn(e.getMessage());
+				return null;
+			}
+		}
+	}
+	
+	
 	@Override
 	public List<T> findByCodes(List<String> codes) throws DAOException {
 		if (codes == null)
@@ -78,6 +107,7 @@ public abstract class AbstractDAOMapping<T> extends AbstractDAO<T> {
 //			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
 //			return initializeMapping(sql, listToSqlParameters(codes ,"t.code", Types.VARCHAR)).execute(codes.toArray( new String[0]));			
 			return initializeMapping(sql, listToSqlParameters(codes ,"t.code", Types.VARCHAR)).execute(codes.toArray(new Object[codes.size()]));			
+	
 		} catch (DataAccessException e) {
 			logger.warn(e.getMessage());
 			return null;

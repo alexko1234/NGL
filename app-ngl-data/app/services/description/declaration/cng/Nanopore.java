@@ -45,7 +45,7 @@ public class Nanopore extends AbstractDeclaration{
 		 // supression nanopore-fragmentation; ajout de cDNAsynthesis; renumerotation
 
 		 l.add(DescriptionFactory.newProcessType("Nanopore DEV", "nanopore-process-dev", ProcessCategory.find.findByCode("nanopore-library"),
-				60,
+				1,
                 getPropertyDefinitionsNanoporeFragmentation(), 
                 Arrays.asList(getPET("ext-to-nanopore-process-dev",-1), 
                       

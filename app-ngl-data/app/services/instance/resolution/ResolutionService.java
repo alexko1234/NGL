@@ -571,7 +571,7 @@ public class ResolutionService {
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class,r.code);
 		// JacksonDBCollection.distinct return type is a raw List
-//		@SuppressWarnings("unchecked")
+		@SuppressWarnings("unchecked")
 		List<String> typeCodes = 
 				MongoDBDAO.getCollection(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class)
 				          .distinct("typeCodes");
@@ -717,6 +717,7 @@ public class ResolutionService {
 		r.objectTypeCode = "Experiment";
 		ArrayList<String> al = new ArrayList<>();
 		al.add("dna-rna-extraction");
+		
 		r.typeCodes = al;
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
@@ -826,6 +827,7 @@ public class ResolutionService {
 		l.add(InstanceFactory.newResolution("Processus partiel (MUST BE REPLACE)","processus-partiel", resolutionCategories.get("Default"), (short) 18));
 		l.add(InstanceFactory.newResolution("Arrêt - erreur déclaration","stop-pb-declaration", resolutionCategories.get("Default"), (short) 19));
 		l.add(InstanceFactory.newResolution("Arrêt - Rendement trop faible","stop-pb-yield-too-low", resolutionCategories.get("Default"), (short) 20));	
+	l.add(InstanceFactory.newResolution("Arrêt - pour séquençage Sanger","stop-seq-sanger", resolutionCategories.get("Default"), (short) 21));		l.add(InstanceFactory.newResolution("Arrêt - erreur manip","stop-pb-experiment", resolutionCategories.get("Default"), (short) 21));	
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "processReso";

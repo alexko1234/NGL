@@ -265,7 +265,7 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 					//-2- cas particulier pour storageCode => il est aussi present dans tous les containers du support 
 					//    si on le trouve dans la query string mettre a jour les containers avec la valeur  formSupport.storageCode	
 					if (queryFieldsForm.fields.contains("storageCode")) {
-						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, ContainerSupport.class, 
+						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
 								DBQuery.and(DBQuery.is("support.code", code)), 
 								DBUpdate.set("support.storageCode", formSupport.storageCode).set("traceInformation", dbSupport.traceInformation));
 						updateStorages(dbSupport, formSupport);
