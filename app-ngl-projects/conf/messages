@@ -35,6 +35,7 @@ search.placeholder.regexCode = Regex pour le code
 search.placeholder.umbrellaProject = Projet maître
 search.placeholder.fgGroup = Projet FG
 search.placeholder.codeFgGroup = Code projet FG
+search.placeholder.unixGroup = Groupe Unix
 
 
 #projects

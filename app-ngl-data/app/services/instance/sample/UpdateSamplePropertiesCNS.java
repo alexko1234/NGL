@@ -31,19 +31,22 @@ import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
 import validation.utils.BusinessValidationHelper;
 import workflows.container.ContentHelper;
+import com.mongodb.MongoException;
+
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.MongoDBResult.Sort;
+import fr.cea.ig.play.NGLContext;
 
 public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 
-	// private static final play.Logger.ALogger logger = play.Logger.of(UpdateSamplePropertiesCNS.class);
 	
-	ContentHelper contentHelper;
-	
+
 	@Inject
 	public UpdateSamplePropertiesCNS(FiniteDuration durationFromStart,
 			FiniteDuration durationFromNextIteration, 
 			NGLContext ctx) {
 		super("UpdatePropertiesSampleCNS", durationFromStart, durationFromNextIteration, ctx);
-		contentHelper = ctx.injector().instanceOf(ContentHelper.class);
 		
 	}
 
@@ -51,37 +54,58 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 	public UpdateSamplePropertiesCNS(String string, FiniteDuration durationFromStart,
 			FiniteDuration durationFromNextIteration, NGLContext ctx) {
 		super(string, durationFromStart, durationFromNextIteration, ctx);
-		contentHelper = ctx.injector().instanceOf(ContentHelper.class);
 		
 	}
 
 	@Override
 	public void runImport() throws SQLException, DAOException, MongoException, RulesException {
-		//Récupère tous les samples modifiés les derniers 48h
+		//Récupère tous les samples modifiés les dernieres 24h
 		updateSampleModifySince(-1,contextError);
 	}
 
 	private void updateSampleModifySince(int nbDays,ContextValidation contextError){
 
+		Integer skip = 0;
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.DAY_OF_YEAR, nbDays);
 		Date date =  calendar.getTime();
 
-		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.greaterThanEquals("traceInformation.modifyDate", date).notExists("life"))
-				.sort("code").toList();
-		logger.info("Nb samples to update :"+samples.size());
-		samples.stream().forEach(sample -> {
-			//Logger.debug("Sample "+sample.code);
-			try{
-				updateOneSample(sample,contextError);
-			}catch(Throwable t){
-				logger.error(t.getMessage(),t);	
-				if(null != t.getMessage())
-					contextError.addErrors(sample.code, t.getMessage());
-				else
-					contextError.addErrors(sample.code, "null");
-			}						
-		});
+
+		MongoDBResult<Sample> result = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.greaterThanEquals("traceInformation.modifyDate", date).notExists("life"));
+		Integer nbResult = result.count(); 
+		logger.info("nbResult : "+nbResult);
+		while(skip < nbResult) {
+			try {
+				long t1 = System.currentTimeMillis();
+					List<Sample> cursor = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.greaterThanEquals("traceInformation.modifyDate", date).notExists("life"))
+						.sort("code").skip(skip).limit(1000)
+						.toList();
+
+					cursor.forEach(sample -> {
+					try{
+						updateOneSample(sample,contextError);
+					}catch(Throwable e){
+						logger.error("Sample : "+sample.code+" - "+e,e);
+						if(null != e.getMessage())
+							contextError.addErrors(sample.code, e.getMessage());
+						else
+							contextError.addErrors(sample.code, "null");
+					}
+				});
+					skip = skip+1000;
+					long t2 = System.currentTimeMillis();
+					logger.debug("time "+skip+" - "+((t2-t1)/1000));
+				}catch(Throwable e){
+					logger.error("Error : "+e,e);
+					if(null != e.getMessage())
+						contextError.addErrors("Error", e.getMessage());
+					else
+						contextError.addErrors("Error", "null");
+				}
+		}
+		
+		
+			
 	}
 
 	public void updateOneSample(Sample sample,ContextValidation contextError) {
