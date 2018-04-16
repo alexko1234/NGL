@@ -238,6 +238,7 @@ public class LimsCNSDAO {
 				project.code = rs.getString(2).trim();
 				project.name = rs.getString(1);
 				project.properties=new HashMap<String,PropertyValue>();
+				project.bioinformaticParameters = new BioinformaticParameters();
 				
 				String fgGroupe=rs.getString("groupefg");
 				if(fgGroupe==null){
@@ -264,7 +265,7 @@ public class LimsCNSDAO {
 				project.state.user = InstanceHelpers.getUser();
 				project.state.date = new Date();
 
-				project.bioinformaticParameters = new BioinformaticParameters();
+				
 
 				if(null != rs.getString("maxadnnom")){
 					project.lastSampleCode = project.code+"_"+rs.getString("maxadnnom");
