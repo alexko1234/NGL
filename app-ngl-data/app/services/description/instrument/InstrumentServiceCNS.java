@@ -273,7 +273,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"96-well-plate"}),null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newInstrumentUsedType("Tapestation", "tapestation", InstrumentCategory.find.findByCode("chip-electrophoresis"), null, 
+		l.add(newInstrumentUsedType("Tapestation", "tapestation", InstrumentCategory.find.findByCode("chip-electrophoresis"), getTapestationProperties(), 
 				getInstruments(
 						createInstrument("tapestation-inra", "Tapestation INRA", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))),
 						getContainerSupportCategories(new String[]{"96-well-plate","tube"}),null, 
@@ -516,6 +516,12 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
         		null, "60",MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_TIME),MeasureUnit.find.findByCode( "s"),MeasureUnit.find.findByCode( "s"), "single", 3));
 		return propertyDefinitions;
 	}
+	private List<PropertyDefinition> getTapestationProperties() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		 propertyDefinitions.add(newPropertiesDefinition("Taille estimée Tapestation", "estimatedSize", LevelService.getLevels(Level.CODE.ContainerIn),String.class, false,null,
+		 null, "single", 12, true, null, null));
+		 return propertyDefinitions;
+	}
 	
 	private List<PropertyDefinition> getNanoporeMegaruptor2Properties() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
@@ -686,6 +692,11 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
         propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index1", "nbCyclesReadIndex1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",400));
         propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read2", "nbCyclesRead2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",600));
         propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index2", "nbCyclesReadIndex2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",500));
+      
+        propertyDefinitions.add(newPropertiesDefinition("Custom primers", "customPrimers", LevelService.getLevels(Level.CODE.Instrument), Boolean.class, false, null, null, 
+				"single", 10, true, null,null));
+		
+		
         return propertyDefinitions;
 	}
 	
@@ -716,7 +727,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		//l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("Frag_PE300","Frag_PE400","Frag_PE500","Frag_cDNA_Solexa"), "single"));
 		
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null, 
-				newValues("Low cost 400","Low cost 500","Low cost LC400","Low cost LC500","Low cost LC300","Frag CDNA","Projet BCB","MP Nextera post circ","PCR-Free", "Accel_ssDNA"), 
+				newValues("Low cost 400","Low cost 500","Low cost LC400","Low cost LC500","Low cost LC300","Frag CDNA","Projet BCB","MP Nextera post circ","PCR-Free", "Accel_ssDNA", "EPGV_Frag_350_PCR-Free_Pl96"), 
 				"single", 10, true, null,null));
 		
 		return l;

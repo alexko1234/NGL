@@ -506,15 +506,21 @@ public class QualityControl extends AbstractDeclaration {
 		
 		
 		//Property compute in javascript
+		propertyDefinitions.add(newPropertiesDefinition("Conc. calculée en nM", "nMcalculatedConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "nm"),MeasureUnit.find.findByCode("nm"),"single", 20, false, null,"2"));
+	
+		
 		propertyDefinitions.add(newPropertiesDefinition("Layout Nominal Length","libLayoutNominalLength", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), Integer.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 21, false, null,null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Taille insert","insertSize", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), Integer.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 22, false, null,null));
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 25, false, null,null));
 	
-		propertyDefinitions.add(newPropertiesDefinition("Conc. calculée en nM", "nMcalculatedConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "nm"),MeasureUnit.find.findByCode("nm"),"single", 20, false, null,"2"));
-	
+<<<<<<< HEAD
+=======
+		
+		
+>>>>>>> master-isoprod-sq-2.1.X
 		return propertyDefinitions;
 	}
 	

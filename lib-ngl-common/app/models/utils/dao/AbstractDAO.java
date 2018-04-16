@@ -89,6 +89,9 @@ public abstract class AbstractDAO<T> {
 	public abstract T findById(Long id) throws DAOException;
 	
 	public abstract T findByCode(String code) throws DAOException;
+	
+	// ajout FDS 28/03/2018 NGL-1969
+	public abstract T findByCodeOrName(String code) throws DAOException;
 
 	public abstract List<T> findByCodes(List<String> code) throws DAOException;
 

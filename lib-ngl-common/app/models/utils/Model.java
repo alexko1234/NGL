@@ -206,6 +206,12 @@ public abstract class Model<T> { // implements Serializable {
 			return getInstance().findByCode(code);
 		}
 		
+		//ajout FDS 28/03/2018 NGL-1969
+		@JsonIgnore
+		public T findByCodeOrName(String code) throws DAOException {
+			return getInstance().findByCodeOrName(code);
+		}
+		
 		@JsonIgnore
 		public List<T> findByCodes(List<String> codes) throws DAOException {
 			return getInstance().findByCodes(codes);

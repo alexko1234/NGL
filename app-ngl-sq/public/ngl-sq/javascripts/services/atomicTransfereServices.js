@@ -507,8 +507,8 @@ angular.module('atomicTransfereServices', [])
 							// FDS 10/03/2017 added inputContainer.suport.line and inputContainer.support.column; 
 							allData = $filter('orderBy')(allData,['inputContainer.support.code','inputContainer.support.column*1','inputContainer.support.line*1']);
 						}
-						
-						$that.data.setData(allData, allData.length);
+						//GA : used directly _setData for not cancel the configuration !!! but may be some problems
+						$that.data._setData(allData, allData.length);
 						//add new atomic in datatable
 						$that.addNewAtomicTransfertMethodsInDatatable();							
 	                });

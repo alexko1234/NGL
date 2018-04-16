@@ -10,7 +10,7 @@ resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/release
 // addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.8.2")
 
 // Use the Play sbt plugin for Play projects
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.11")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.13")
 // Eclipse project generation
 addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "5.2.4")
 // addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "4.0.0")
@@ -35,7 +35,7 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-digest" % "1.0.0")
 // addSbtPlugin("com.typesafe.sbt" % "sbt-mocha" % "1.0.0")
 addSbtPlugin("com.typesafe.sbt" % "sbt-mocha" % "1.1.2")
 // Twirl support maybe needed.
-// addSbtPlugin("com.typesafe.sbt" % "sbt-twirl" % "1.3.4")
+//addSbtPlugin("com.typesafe.sbt" % "sbt-twirl" % "1.3.15")
 
 libraryDependencies += "org.javassist" % "javassist" % "3.20.0-GA"
 

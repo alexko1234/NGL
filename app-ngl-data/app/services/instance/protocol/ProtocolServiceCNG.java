@@ -15,8 +15,13 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.protocol.instance.Protocol;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
+
+import org.mongojack.DBQuery;
+
+import play.Logger;
 import services.instance.InstanceFactory;
 import validation.ContextValidation;
+import fr.cea.ig.MongoDBDAO;
 
 public class ProtocolServiceCNG {	
 
@@ -183,7 +188,21 @@ public class ProtocolServiceCNG {
 						                               "pcr-and-indexing",
 						                               "fluo-quantification",
 						                               "labchip-migration-profile")));  
-
+		
+		/* OOps trop tot... pas pour la 2.1.2 attendre
+		// 06/04/2018 ajout protocoles pour smallRNASeq
+		lp.add(newProtocol("nebnext-small-rna-library-prep","NEBNext Small RNA Library Prep","?","1","production", 
+				InstanceFactory.setExperimentTypeCodes("small-rnaseq-lib-prep")));
+		
+		lp.add(newProtocol("qiaseq-mirna-library-prep","QIAseq miRNA Library Prep","?","1","production", 
+				InstanceFactory.setExperimentTypeCodes("small-rnaseq-lib-prep")));
+		
+		// 09/04/2018 ajout protocoles pour BisSeq
+		lp.add(newProtocol("nugen-ovation-ultralow-methyl-seq-system-1-96","NUGEN Ovation Ultralow Methyl-Seq System 1-96","?","1","production", 
+				InstanceFactory.setExperimentTypeCodes("bisseq-lib-prep")));
+		
+		*/
+		
 		//------------Experiences de Control Qualité------------------------------
 		lp.add(newProtocol("7-sop-miseq","7_SOP_Miseq","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes("miseq-qc")));

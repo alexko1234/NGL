@@ -64,7 +64,7 @@ public class Experiments extends DocumentController<Experiment> {
 	private static final play.Logger.ALogger logger = play.Logger.of(Experiments.class);
 	
 	final static List<String> DEFAULT_KEYS =  Arrays.asList("categoryCode","code","inputContainerSupportCodes","instrument","outputContainerSupportCodes","projectCodes","protocolCode","reagents","sampleCodes","state","status","traceInformation","typeCode","atomicTransfertMethods.inputContainerUseds.contents");
-	final static List<String> authorizedUpdateFields = Arrays.asList("status", "reagents");
+	final static List<String> authorizedUpdateFields = Arrays.asList("status", "reagents", "state");
 	public static final String calculationsRules = "calculations";
 	
 	private final Form<State>           stateForm; // = form(State.class);
@@ -533,6 +533,10 @@ public class Experiments extends DocumentController<Experiment> {
 				TraceInformation ti = objectInDB.traceInformation;
 				ti.setTraceInformation(getCurrentUser());
 				contextValidation.putObject(FIELD_STATE_CODE , objectInDB.state.code);
+				
+				if (queryFieldsForm.fields.contains("state")) {
+					validateState(objectInDB.typeCode, input.state, contextValidation);				
+				}
 				
 				if (queryFieldsForm.fields.contains("status")) {
 					validateStatus(objectInDB.typeCode, input.status, contextValidation);				

@@ -64,12 +64,11 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 	}
 
 	private void updateSampleModifySince(int nbDays,ContextValidation contextError){
-
+		Integer skip = 0;
 		Integer skip = 0;
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.DAY_OF_YEAR, nbDays);
 		Date date =  calendar.getTime();
-
 
 		MongoDBResult<Sample> result = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.greaterThanEquals("traceInformation.modifyDate", date).notExists("life"));
 		Integer nbResult = result.count(); 

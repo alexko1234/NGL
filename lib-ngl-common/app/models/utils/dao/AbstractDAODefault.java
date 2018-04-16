@@ -158,6 +158,32 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 		}
 	}
 	
+	// ajout FDS 28/03/2018 NGL-1969: pour trouver un sampleType en se basant sur son code OU SUR SON NOM
+	// sert dans quel cas ?????????????? la methode reellement utilisee est celle de AbstractDAOMapping....
+	// TODO: fix silent error handling		
+	public T findByCodeOrName(String code) throws DAOException {
+		if (null == code) {
+			throw new DAOException("code is mandatory");
+		}
+		T o = getObjectInCache(code);
+		if (null != o) {
+			//Logger.debug("find in cache "+entityClass.getCanonicalName() + " : "+code);
+			return o;
+		} else {
+			try {
+				String sql = getSqlCommon() + " WHERE t.code=? or t.name=?";
+				BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
+				o = this.jdbcTemplate.queryForObject(sql, mapper, code, code); /// ajout 2eme parametre
+				setObjectInCache(o, code);
+				return o;
+			} catch (IncorrectResultSizeDataAccessException e) {
+				//Logger.warn(e.getMessage());
+				return null;
+			}
+		}
+	}
+	
+	/// corriger le warning !!!!
 	@SuppressWarnings("deprecation")
 	@Override
 	public List<T> findByCodes(List<String> codes) throws DAOException {

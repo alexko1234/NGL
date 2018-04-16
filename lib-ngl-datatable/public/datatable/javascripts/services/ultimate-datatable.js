@@ -3,7 +3,8 @@
 */
 "use strict";
 
-angular.module('ultimateDataTableServices', ['infinite-scroll']).
+//angular.module('ultimateDataTableServices', ['infinite-scroll']).
+angular.module('ultimateDataTableServices', []).
 factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', '$timeout', '$anchorScroll', '$location',
 		function($http, $filter, $parse, $window, $q, udtI18n, $timeout, $anchorScroll, $location) { //service to manage datatable
     var constructor = function(iConfig) {
@@ -2542,7 +2543,7 @@ directive('udtAutoSelect',['$parse', function($parse) {
 					var model = $parse(match[7]);
 					scope.$watch(model, function(value){
 						if(value){
-			                if(value.length === 1 && (ngModel.$modelValue == undefined || ngModel.$modelValue == "")){
+			                if(value.length === 1 && ngModel.$isEmpty(ngModel.$modelValue)){
 								
 			                	var value = (multiple)?[getModelValue(value[0])]:getModelValue(value[0]);
 			                	
@@ -3214,12 +3215,13 @@ directive("udtTbody", function(){
 directive('udtChange', function() {
 	return {
 	  require: 'ngModel',
-		link: function(scope, element, attr, ngModel) {
-		   scope.$watch(attr.ngModel, function(newValue, oldValue){
+		link: function(scope, element, attr, ngModelController) {
+			
+			scope.$watch(attr.ngModel, function(newValue, oldValue){
 				if(newValue !== oldValue){
 					scope.$evalAsync(attr.udtChange);						
 				}
-			}); 
+			});									
 	  }
 	};	    	
 });;angular.module('ultimateDataTableServices').
@@ -3262,14 +3264,34 @@ directive('udtCompile', ['$compile', function($compile) {
 		}]);;angular.module('ultimateDataTableServices').
 //This directive convert the ngModel value to a view value and then the view value to the ngModel unit value
 //The value passed to the directive must be an object with displayMeasureValue and saveMeasureValue
-directive('udtConvertvalue',['udtConvertValueServices','$filter', function(udtConvertValueServices, $filter) {
+directive('udtConvertvalue',['udtConvertValueServices','$filter', '$parse', function(udtConvertValueServices, $filter, $parse) {
 	return {
-                require: 'ngModel',
-                link: function(scope, element, attr, ngModel) {
+				priority:1100,
+		 		require: 'ngModel',
+                link: function(scope, element, attrs, ngModelController) {
                 	//init service
                 	var convertValues = udtConvertValueServices();
                 	var property = undefined;
                 	
+                	if(attrs.udtConvertvalue){
+                		property = $parse(attrs.udtConvertvalue)(scope);    					
+    				}
+                	
+                	ngModelController.$formatters.push(function(value) {
+                		var convertedValue = convertValues.convertValue(value, property.saveMeasureValue, property.displayMeasureValue);
+        			    return convertedValue;
+        			}); 
+                	
+                	//view to model
+                	ngModelController.$parsers.push(function(value) {
+                    	value = convertValues.parse(value);
+                    	if(property != undefined){
+	                    	value = convertValues.convertValue(value, property.displayMeasureValue, property.saveMeasureValue);
+                    	}
+                    	return value;
+                    });
+                    
+                	/*
 					var watchModelValue = function(){
 						return scope.$watch(
 									function(){
@@ -3315,6 +3337,7 @@ directive('udtConvertvalue',['udtConvertValueServices','$filter', function(udtCo
                     	}
                     	return value;
                     });
+                    */
                 }
             };
 }]);;angular.module('ultimateDataTableServices').
@@ -3349,36 +3372,70 @@ directive('udtDateTimestamp', ['$filter', function($filter) {
 //EXAMPLE: <input type="text" default-value="test" ng-model="x">
 directive('udtDefaultValue',['$parse', function($parse) {
 	    		return {
+	    			priority:1200,					 
 	    			require: 'ngModel',
-	    			link: function(scope, element, attrs, ngModel) {
-	    				var _col = null;
+	    			link: function(scope, element, attrs, ngModelController) {
+	    				
+	    				
+	    				var _col = $parse(attrs.udtDefaultValue)(scope);
+	    				
+	    				var currentValue = $parse(attrs.ngModel)(scope);
+	    				
+	    				var setDefaultValue = function(){
+	    					if(_col != null && ngModelController.$isEmpty(currentValue)){
+								if(_col.type === "boolean"){
+									if(_col.defaultValues === "true" || _col.defaultValues === true){
+										ngModelController.$setViewValue(true);
+										ngModelController.$render();
+									}else if(_col.defaultValues === "false" || _col.defaultValues === false){
+										ngModelController.$setViewValue(true); // hack to insert false value 
+										ngModelController.$setViewValue(false);
+										ngModelController.$render();
+									}											
+								}else if(!angular.isFunction(_col.defaultValues)){
+									ngModelController.$setViewValue(_col.defaultValues);
+									ngModelController.$render();
+								}else{
+									var defaultValue = _col.defaultValues(scope.value.data, _col);
+									ngModelController.$setViewValue(defaultValue);
+									ngModelController.$render();
+								}
+			                	
+							}
+	    				}
+	    				
+	    				if(_col){
+	    					setDefaultValue();	    					
+	    					if(angular.isFunction(_col.defaultValues)){ //only watch when function to limit watching
+    							scope.$watch(attrs.udtDefaultValue+".defaultValues(value.data,col)", function(newValue, oldValue){
+    								if(newValue !== oldValue){
+    									setDefaultValue();
+    								}
+	    						});
+    						}    						
+	    				}
+	    				
+	    				/*
 	    				scope.$watch(attrs.udtDefaultValue, function(col){
 	    					if(col !== null && col !== undefined && col.defaultValues !== undefined && col.defaultValues !== null ){
-	    						_col = col;
+	    						_col = col;	
+	    						if(angular.isFunction(_col.defaultValues)){ //only watch when function to limit watching
+	    							setDefaultValue();
+	    							scope.$watch(attrs.udtDefaultValue+".defaultValues(value.data,col)", function(value){
+	    								setDefaultValue();
+		    						});
+	    						}
 	    					}
 	    				});
+	    				*/
+	    				
 	    				//TODO GA ?? better way with formatter
-						scope.$watch(ngModel, function(value){
-				                if(_col != null && (ngModel.$modelValue === undefined || ngModel.$modelValue === "")){
-									if(_col.type === "boolean"){
-										if(_col.defaultValues === "true" || _col.defaultValues === true){
-											ngModel.$setViewValue(true);
-											ngModel.$render();
-										}else if(_col.defaultValues === "false" || _col.defaultValues === false){
-											ngModel.$setViewValue(true); // hack to insert false value 
-											ngModel.$setViewValue(false);
-											ngModel.$render();
-										}											
-									}else if(!angular.isFunction(_col.defaultValues)){
-										ngModel.$setViewValue(_col.defaultValues);
-										ngModel.$render();
-									}else{
-										ngModel.$setViewValue(_col.defaultValues(scope.value.data));
-										ngModel.$render();
-									}
-				                	
-								}
+						/*
+	    				scope.$watch(ngModelController, function(value){
+							setDefaultValue();
 					    });
+					    */
+					    
 	    			}
 	    		};	    	
 	    	}]);;angular.module('ultimateDataTableServices').
@@ -3445,6 +3502,7 @@ directive('udtForm', function(){
 });;angular.module('ultimateDataTableServices').
 directive("udtHtmlFilter", function($filter, udtI18n) {
 				return {
+					  priority:1000,
 					  require: 'ngModel',
 					  link: function(scope, element, attrs, ngModelController) {
 						  	var messagesService = udtI18n(navigator.languages || navigator.language || navigator.userLanguage);
@@ -3465,7 +3523,7 @@ directive("udtHtmlFilter", function($filter, udtI18n) {
 					    	var convertedData = data;
 					    	   if(attrs.udtHtmlFilter === "number" && null !== convertedData && undefined !== convertedData 
 					    			   && angular.isString(convertedData)){
-					    		   convertedData = convertedData.replace(",",".").replace(/\u00a0/g,"");
+					    		   convertedData = convertedData.replace(",",".").replace(/[\u00a0|\s]/g,"");
 					    		   if(!isNaN(convertedData) && convertedData !== ""){						    			   
 					    			   convertedData = convertedData*1;
 					    		   }else if( isNaN(convertedData) || convertedData === ""){
@@ -3994,13 +4052,12 @@ factory('udtConvertValueServices', [function() {
 					},
 					parse : function(value){
 						var valueToConvert = value;
-						if(!angular.isNumber(valueToConvert)){
+						if(valueToConvert !== null && valueToConvert !== undefined && !angular.isNumber(valueToConvert)){
 							var valueConverted = value.replace(/\s+/g,"").replace(',','.');
 							valueConverted = parseFloat(valueConverted);
 							
 							return valueConverted;
 						}
-						
 						return value;
 					}
 				};
@@ -4517,4 +4574,4 @@ run(['$templateCache', function($templateCache) {
 			   +'</div>');
 }]);
 /* ng-infinite-scroll - v1.0.0 - 2013-02-23 */
-var mod;mod=angular.module("infinite-scroll",[]),mod.directive("infiniteScroll",["$rootScope","$window","$timeout",function(i,n,e){return{link:function(t,l,o){var r,c,f,a;return n=angular.element(n),f=0,null!=o.infiniteScrollDistance&&t.$watch(o.infiniteScrollDistance,function(i){return f=parseInt(i,10)}),a=!0,r=!1,null!=o.infiniteScrollDisabled&&t.$watch(o.infiniteScrollDisabled,function(i){return a=!i,a&&r?(r=!1,c()):void 0}),c=function(){var e,c,u,d;return d=n.height()+n.scrollTop(),e=l.offset().top+l.height(),c=e-d,u=n.height()*f>=c,u&&a?i.$$phase?t.$eval(o.infiniteScroll):t.$apply(o.infiniteScroll):u?r=!0:void 0},n.on("scroll",c),t.$on("$destroy",function(){return n.off("scroll",c)}),e(function(){return o.infiniteScrollImmediateCheck?t.$eval(o.infiniteScrollImmediateCheck)?c():void 0:c()},0)}}}]);
+//var mod;mod=angular.module("infinite-scroll",[]),mod.directive("infiniteScroll",["$rootScope","$window","$timeout",function(i,n,e){return{link:function(t,l,o){var r,c,f,a;return n=angular.element(n),f=0,null!=o.infiniteScrollDistance&&t.$watch(o.infiniteScrollDistance,function(i){return f=parseInt(i,10)}),a=!0,r=!1,null!=o.infiniteScrollDisabled&&t.$watch(o.infiniteScrollDisabled,function(i){return a=!i,a&&r?(r=!1,c()):void 0}),c=function(){var e,c,u,d;return d=n.height()+n.scrollTop(),e=l.offset().top+l.height(),c=e-d,u=n.height()*f>=c,u&&a?i.$$phase?t.$eval(o.infiniteScroll):t.$apply(o.infiniteScroll):u?r=!0:void 0},n.on("scroll",c),t.$on("$destroy",function(){return n.off("scroll",c)}),e(function(){return o.infiniteScrollImmediateCheck?t.$eval(o.infiniteScrollImmediateCheck)?c():void 0:c()},0)}}}]);
