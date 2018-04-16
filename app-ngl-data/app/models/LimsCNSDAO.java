@@ -240,7 +240,7 @@ public class LimsCNSDAO {
 				Project project = new Project();
 				project.code = rs.getString(2).trim();
 				project.name = rs.getString(1);
-				project.properties=new HashMap<String,PropertyValue>();
+				project.properties=new HashMap<>();
 				project.bioinformaticParameters = new BioinformaticParameters();
 
 				String fgGroupe=rs.getString("groupefg");
