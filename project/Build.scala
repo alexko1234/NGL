@@ -105,10 +105,6 @@ object ApplicationBuild extends Build {
   val mongoJack   = "org.mongojack"        % "mongojack"          % "2.6.1.IG"
 //      "org.mongojack" % "mongojack" % "2.6.1",
 //      "org.mongojack" % "mongojack" % "2.7.0",
-
-  val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.0.11"
-	val ceaSpring   = "fr.cea.ig"           %% "play-spring-module" % "2.6-1.4.2-SNAPSHOT"
-	val ceaMongo    = "fr.cea.ig"           %% "mongodbplugin"      % "2.0.0-SNAPSHOT"
     // External libraries versions
 	val postgresql  = "org.postgresql"       % "postgresql"         % "9.4-1206-jdbc41"  
   val commonsLang = "commons-lang"         % "commons-lang"       % "2.4"

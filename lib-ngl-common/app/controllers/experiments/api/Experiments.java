@@ -3,7 +3,7 @@ package controllers.experiments.api;
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
 import static validation.experiment.instance.ExperimentValidationHelper.validateReagents;
 import static validation.experiment.instance.ExperimentValidationHelper.validateStatus;
-
+import static validation.experiment.instance.ExperimentValidationHelper.validateState;
 import java.util.ArrayList;
 import java.util.Arrays;
 // import java.util.Collections;

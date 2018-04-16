@@ -3,15 +3,14 @@ package models.laboratory.container.instance;
 import java.util.Date;
 import java.util.Map;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections4.MapUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import validation.ContextValidation;
-import validation.IValidation;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.Valuation;
+import validation.ContextValidation;
+import validation.IValidation;
 
 
 /*
