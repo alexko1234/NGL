@@ -81,7 +81,7 @@ object ApplicationBuild extends Build {
 	val sqVersion              = "2.2.0" + distSuffix
 	val biVersion              = "2.3.0" + distSuffix
 
-	val projectsVersion        = "2.2.1"  + distSuffix
+	val projectsVersion        = "2.3.0"  + distSuffix
 	val reagentsVersion        = "2.2.0"  + distSuffix
 	val subVersion             = "2.3.0"  + distSuffix
 	// val dataVersion            = "2.0.0"  + distSuffix
