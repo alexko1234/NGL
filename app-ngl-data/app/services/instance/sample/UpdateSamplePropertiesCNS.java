@@ -41,18 +41,17 @@ import com.mongodb.MongoException;
 
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.MongoDBResult.Sort;
 import fr.cea.ig.play.NGLContext;
 
 public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 
-	ContentHelper contentHelper;
 	
 	@Inject
 	public UpdateSamplePropertiesCNS(FiniteDuration durationFromStart,
 			FiniteDuration durationFromNextIteration, 
 			NGLContext ctx) {
 		super("UpdatePropertiesSampleCNS", durationFromStart, durationFromNextIteration, ctx);
-		contentHelper = ctx.injector().instanceOf(ContentHelper.class);
 		
 	}
 
@@ -60,18 +59,16 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 	public UpdateSamplePropertiesCNS(String string, FiniteDuration durationFromStart,
 			FiniteDuration durationFromNextIteration, NGLContext ctx) {
 		super(string, durationFromStart, durationFromNextIteration, ctx);
-		contentHelper = ctx.injector().instanceOf(ContentHelper.class);
 		
 	}
 
 	@Override
 	public void runImport() throws SQLException, DAOException, MongoException, RulesException {
-		//Récupère tous les samples modifiés les derniers 48h
+		//Récupère tous les samples modifiés les dernieres 24h
 		updateSampleModifySince(-1,contextError);
 	}
 
 	private void updateSampleModifySince(int nbDays,ContextValidation contextError){
-
 		Integer skip = 0;
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.DAY_OF_YEAR, nbDays);
