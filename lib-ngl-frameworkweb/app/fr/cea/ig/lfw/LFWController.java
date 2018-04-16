@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import fr.cea.ig.authentication.Authentication;
 import fr.cea.ig.lfw.support.LoggerHolder;
 import play.Logger.ALogger;
-import play.api.libs.json.JsString;
 import play.data.validation.ValidationError;
 import play.i18n.Lang;
 import play.i18n.Messages;
