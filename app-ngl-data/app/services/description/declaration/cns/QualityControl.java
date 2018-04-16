@@ -515,12 +515,7 @@ public class QualityControl extends AbstractDeclaration {
 		
 		propertyDefinitions.add(newPropertiesDefinition("Taille insert","insertSize", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), Integer.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 25, false, null,null));
-	
-<<<<<<< HEAD
-=======
-		
-		
->>>>>>> master-isoprod-sq-2.1.X
+
 		return propertyDefinitions;
 	}
 	
