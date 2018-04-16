@@ -25,7 +25,6 @@ import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 import services.description.common.MeasureService;
 import services.description.declaration.cns.MetaBarCoding;
-import services.description.declaration.cns.MetaGenomique;
 
 public class ImportServiceCNS extends AbstractImportService {
 
@@ -368,7 +367,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		return values;	
 	}
 
-	
+	/*
 	private static List<Value> getTaraPacificIslandValues() {
 		List<Value> values = new ArrayList<>();
 
@@ -528,7 +527,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		
 		return values;	
 	}
-	
+	*/
 	private static List<PropertyDefinition> getDNAReceptionPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null, null));
@@ -707,7 +706,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		propertyDefinitions.add(newPropertiesDefinition("Nom organisme / collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				null, null,null,null,"single", 17, false, null,null));		
 		
-		List<Value> libProcessTypeCodes = new ArrayList<Value>();
+		List<Value> libProcessTypeCodes = new ArrayList<>();
 		libProcessTypeCodes.addAll(MetaBarCoding.getBanqueProcessTypeMetaTA());
 		libProcessTypeCodes.addAll(MetaBarCoding.getBanqueProcessTypeMetaTB());
 		

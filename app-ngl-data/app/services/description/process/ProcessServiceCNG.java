@@ -859,7 +859,7 @@ public class ProcessServiceCNG  extends AbstractProcessService {
 	
 	// FDS ajout 04/04/2018 pour NGL-1727 : processus SmallRNASeq
 	private static List<PropertyDefinition> getPropertyDefinitionsSmallRNASeq() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 	
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type processus librairie","libProcessTypeCode",
@@ -871,7 +871,7 @@ public class ProcessServiceCNG  extends AbstractProcessService {
 	
     // FDS ajout 04/04/2018 pour NGL-1727 : processus SmallRNASeq
 	private static List<Value> getSmallRNASeqTypeCodeValues(){
-        List<Value> values = new ArrayList<Value>();
+        List<Value> values = new ArrayList<>();
         
         // Liste evolutive !!!! voir ausii RunServiceCNG 
         values.add(DescriptionFactory.newValue("RB","RB - smallRNASeq"));
@@ -881,7 +881,7 @@ public class ProcessServiceCNG  extends AbstractProcessService {
 	
 	// FDS ajout 04/04/2018 pour NGL-1727 : processus BisSeq
 	private static List<PropertyDefinition> getPropertyDefinitionsBisSeq() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 	
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type processus librairie","libProcessTypeCode",
@@ -893,7 +893,7 @@ public class ProcessServiceCNG  extends AbstractProcessService {
 	
     // FDS ajout 04/04/2018 pour NGL-1727 : processus BisSeq
 	private static List<Value> getBisSeqTypeCodeValues(){
-        List<Value> values = new ArrayList<Value>();
+        List<Value> values = new ArrayList<>();
         
         // Liste evolutive !!!! voir ausii RunServiceCNG 
         values.add(DescriptionFactory.newValue("FD","FD - BisSeq"));

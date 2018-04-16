@@ -287,7 +287,7 @@ public class SamplePrep extends AbstractDeclaration{
 	}
 	
 	private List<PropertyDefinition> getPropertyDefinitionsExtractionADN() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		//InputContainer
 
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 

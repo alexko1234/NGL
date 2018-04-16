@@ -1,7 +1,5 @@
 package workflows.experiment;
 
-import static validation.common.instance.CommonValidationHelper.OBJECT_IN_DB;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -1403,7 +1401,7 @@ public class ExpWorkflowsHelper {
 			String sampleCode=ocu.experimentProperties.get("sampleCode").value.toString();
 			
 			if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,sampleCode)){
-				Map<String, PropertyValue> newSampleProperties = new HashMap<String, PropertyValue>(sampleIn.properties);
+				Map<String, PropertyValue> newSampleProperties = new HashMap<>(sampleIn.properties);
 				newSampleProperties.putAll(getCommonPropertiesForALevel(exp, CODE.Sample));
 				newSampleProperties.putAll(getInputPropertiesForALevel(exp, icu, CODE.Sample));
 				newSampleProperties.putAll(getOutputPropertiesForALevel(exp, ocu, CODE.Sample));

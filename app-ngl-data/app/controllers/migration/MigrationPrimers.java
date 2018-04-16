@@ -4,43 +4,24 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
 
 import com.mongodb.MongoException;
 
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.MongoDBResult.Sort;
 import fr.cea.ig.play.NGLContext;
-import models.laboratory.common.description.Level.CODE;
-import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.Content;
-import models.laboratory.experiment.description.ExperimentCategory;
-import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.instance.AbstractContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.instrument.description.InstrumentUsedType;
-import models.laboratory.protocol.instance.Protocol;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import play.Logger;
-import play.libs.Json;
 import rules.services.RulesException;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.sample.UpdateSamplePropertiesCNS;
 import validation.ContextValidation;
 import workflows.experiment.ExpWorkflows;
-import workflows.experiment.ExpWorkflowsHelper;
 
 public class MigrationPrimers extends UpdateSamplePropertiesCNS {
 	final ExpWorkflows expWorkflows;
@@ -48,7 +29,7 @@ public class MigrationPrimers extends UpdateSamplePropertiesCNS {
 			NGLContext ctx) {
 		super("MigrationPrimers", durationFromStart, durationFromNextIteration, ctx);
 		expWorkflows = ctx.injector().instanceOf(ExpWorkflows.class);
-		mapping = new HashMap<String, String>();
+		mapping = new HashMap<>();
 		mapping.put("16SV4 Procaryote", "16S V4 Prok 515FF/806R");
 		mapping.put("16SV4V5 Archae", "16S V4V5 Archae 517F/958R");
 		mapping.put("16SV5V6 Prok", "16S V5V6 Prok 784F/1061R");
@@ -76,7 +57,7 @@ public class MigrationPrimers extends UpdateSamplePropertiesCNS {
 	@Override
 	public void runImport() throws SQLException, DAOException, MongoException,
 	RulesException {
-		//updateSampleImported(contextError);
+		updateSampleImported(contextError);
 		updateExperiments(contextError);		
 	}
 

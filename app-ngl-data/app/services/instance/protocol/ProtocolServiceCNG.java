@@ -15,13 +15,8 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.protocol.instance.Protocol;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
-
-import org.mongojack.DBQuery;
-
-import play.Logger;
 import services.instance.InstanceFactory;
 import validation.ContextValidation;
-import fr.cea.ig.MongoDBDAO;
 
 public class ProtocolServiceCNG {	
 

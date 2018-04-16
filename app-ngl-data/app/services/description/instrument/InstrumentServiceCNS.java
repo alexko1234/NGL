@@ -517,7 +517,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		return propertyDefinitions;
 	}
 	private List<PropertyDefinition> getTapestationProperties() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		 propertyDefinitions.add(newPropertiesDefinition("Taille estimée Tapestation", "estimatedSize", LevelService.getLevels(Level.CODE.ContainerIn),String.class, false,null,
 		 null, "single", 12, true, null, null));
 		 return propertyDefinitions;

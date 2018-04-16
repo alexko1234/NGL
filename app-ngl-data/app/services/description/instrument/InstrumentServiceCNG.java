@@ -11,15 +11,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.Institute;
 // import com.typesafe.config.ConfigFactory;
 // import akka.util.Collections;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.common.description.Value;
-import models.laboratory.common.description.Institute;
-import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
@@ -1041,7 +1039,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService {
 	
 	// FDS 06/04/2018 NGL:1727
 	private static List<PropertyDefinition>getScicloneNGSXAndZephyrProperties()throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 		
         //TODO Sciclone
 		l.addAll(getScicloneNGSXProperties());
@@ -1053,7 +1051,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService {
 	
 	// FDS 06/04/2018 NGL:1727
 	private static List<PropertyDefinition>getTecanAndZephyrProperties()throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<>();
 
         //TODO tecan
 		

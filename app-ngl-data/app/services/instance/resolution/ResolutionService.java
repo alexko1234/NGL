@@ -571,7 +571,7 @@ public class ResolutionService {
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class,r.code);
 		// JacksonDBCollection.distinct return type is a raw List
-//		@SuppressWarnings("unchecked")
+		@SuppressWarnings("unchecked")
 		List<String> typeCodes = 
 				MongoDBDAO.getCollection(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class)
 				          .distinct("typeCodes");
