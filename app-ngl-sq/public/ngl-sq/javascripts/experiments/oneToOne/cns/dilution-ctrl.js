@@ -120,6 +120,7 @@ angular.module('home').controller('DilutionCtrl',['$scope' ,'$http','$parse', 'a
 						 "hide":true,
 						 "watch":true,
 			        	 "type":"number",
+			        	 "format":"3",
 			        	 "position":50,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
@@ -473,7 +474,7 @@ angular.module('home').controller('DilutionCtrl',['$scope' ,'$http','$parse', 'a
 			}
 			console.log("computeBufferVolume result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
-				bufferVolume = Math.round(result*10)/10;				
+				bufferVolume = result;				
 			}else{
 				bufferVolume = undefined;
 			}	
@@ -502,7 +503,7 @@ angular.module('home').controller('DilutionCtrl',['$scope' ,'$http','$parse', 'a
 		if(compute.isReady()){
 			var result = $parse("(inputVol + bufferVol)")(compute);
 			if(angular.isNumber(result) && !isNaN(result)){
-				finalVolume = Math.round(result*10)/10;				
+				finalVolume = result;				
 			}else{
 				finalVolume = undefined;
 			}	
@@ -531,7 +532,7 @@ angular.module('home').controller('DilutionCtrl',['$scope' ,'$http','$parse', 'a
 			var result = $parse("(inputVol * inputConc / finalVol)")(compute);
 			console.log("finalConc result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
-				finalConc = Math.round(result*10)/10;				
+				finalConc = result;				
 			}else{
 				finalConc = undefined;
 			}	
