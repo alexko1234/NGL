@@ -917,8 +917,8 @@ public class ResolutionService {
 
 		l.add(InstanceFactory.newResolution("Sauvegarde prod","prod-backup", resolutionCategories.get("Default"), (short) 1));
 		l.add(InstanceFactory.newResolution("Epuisé","empty", resolutionCategories.get("Default"), (short) 2));
-		l.add(InstanceFactory.newResolution("Renvoyé collaborateur","return-collab", resolutionCategories.get("Default"), (short) 3));
-		l.add(InstanceFactory.newResolution("Jeté","thrown", resolutionCategories.get("Default"), (short) 4));
+		l.add(InstanceFactory.newResolution("Jeté","trash", resolutionCategories.get("Default"), (short) 3));
+		l.add(InstanceFactory.newResolution("Renvoyé collaborateur","return-collab", resolutionCategories.get("Default"), (short) 4));
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "containerReso";
