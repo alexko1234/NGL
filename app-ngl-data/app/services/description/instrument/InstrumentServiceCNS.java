@@ -694,7 +694,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
         propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index2", "nbCyclesReadIndex2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",500));
       
         propertyDefinitions.add(newPropertiesDefinition("Custom primers", "customPrimers", LevelService.getLevels(Level.CODE.Instrument), Boolean.class, false, null, null, 
-				"single", 10, true, null,null));
+				"single", 10, true, "false",null));
 		
 		
         return propertyDefinitions;
