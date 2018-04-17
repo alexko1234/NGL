@@ -590,11 +590,15 @@ class Containers2 extends DocumentController<Container> {
 					Set<String> previousExpTypeCodes = previousExpType.stream().map(et -> et.code).collect(Collectors.toSet());
 					
 					if(CollectionUtils.isNotEmpty(containersSearch.fromTransformationTypeCodes)){
-						previousExpTypeCodes.retainAll(containersSearch.fromTransformationTypeCodes);
+						previousExpTypeCodes = previousExpTypeCodes
+													.stream()
+													.filter(petc -> (containersSearch.fromTransformationTypeCodes.contains(petc)
+															|| (containersSearch.fromTransformationTypeCodes.contains("none") && petc.startsWith("ext-to-"))))
+													.collect(Collectors.toSet());
 					}
 					
 					if(CollectionUtils.isNotEmpty(previousExpTypeCodes)){
-						subQueryElts.add(DBQuery.in("processTypeCodes", processType.code).in("fromTransformationTypeCodes", previousExpTypeCodes));
+						subQueryElts.add(DBQuery.in("processTypeCodes", processType.code).in("fromTransformationTypeCodes", previousExpTypeCodes));						
 					}else{
 						subQueryElts.add(DBQuery.in("processTypeCodes", "-1")); //force to return zero result;
 					}
