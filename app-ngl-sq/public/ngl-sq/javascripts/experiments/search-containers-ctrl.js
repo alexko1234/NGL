@@ -97,6 +97,7 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 			"property": "contents",
 			"order":false,
 			"hide":true,
+			"order":true,
 			"type":"text",
 			"position":10,
 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
