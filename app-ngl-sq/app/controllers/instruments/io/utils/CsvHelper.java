@@ -52,19 +52,19 @@ public class CsvHelper {
 		case "10X-DeNovo":
 		case "10X-WGS":
 		case "10X-SingleCell":
-			return " illumina_qc";
+			return "illumina_qc";
 		case "RNA":
-			return " illumina_rnaseq";
+			return "illumina_rnaseq";
 		case "16S":
 		case "Amplicon":
-			return " illumina_diversity_qc";
+			return "illumina_diversity_qc";
         case "Bisulfite":
         case "Bisulfite-DNA":
-            return " methylseq";
+            return "methylseq";
         case "DNA-MP":
             return "illumina_matepair";
         case "RNA-Stranded": //to validate
-			return " illumina_rnaseq";
+			return "illumina_rnaseq";
 		default:
 			return "illumina_qc";
 		}

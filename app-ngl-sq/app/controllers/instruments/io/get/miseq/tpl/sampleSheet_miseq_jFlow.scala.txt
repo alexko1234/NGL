@@ -27,7 +27,7 @@
 							***@}@***
 						***@.} [C] @***
 						***@@(c.concentration.value)pM' @***
-						***@@if((CsvHelper.getContentProcessProperties(c.contents.toList.head, "store_bam", e) != null && CsvHelper.getContentProcessProperties(c.contents.toList.head, "store_bam", e) != "non") || CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e) == "Amplicon" || CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e) == "Bisulfite"){}else{ --delete-bam} @***
+						***@@if((CsvHelper.getContentProcessProperties(c.contents.toList.head, "store_bam", e) != null && CsvHelper.getContentProcessProperties(c.contents.toList.head, "store_bam", e) != "non") || CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e) == "Amplicon" || CsvHelper.getFromAnalyseType(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e)) == "methylseq"){}else{ --delete-bam} @***
 						***@@if(c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cos.toList.head, "reference_transcriptome", e)) != null){--reference-transcriptome @(CsvHelper.getContentProcessProperties(cos.toList.head, "reference_transcriptome", e))} @***
 						***@@if(c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cos.toList.head, "reference_genome", e)) != null){@***
 							***@@if(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e) == "Bisulfite"){--control-genome /save/ng6/TODO/HiSeqIndexedGenomes/new_struct/pUC19/genome/bismark_bowtie2/pUC19.fa}@***
