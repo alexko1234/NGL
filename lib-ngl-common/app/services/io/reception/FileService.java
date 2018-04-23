@@ -124,7 +124,7 @@ public abstract class FileService {
 			if (Action.save.equals(configuration.action)) {
 				//allready one sample by line
 				Sample sample = (Sample)objectInLine.get(Mapping.Keys.sample.toString());
-				if (sample != null && sample.code != null && sample.projectCodes != null && sample.projectCodes.size() == 1) {
+				if (sample != null && sample.code == null && sample.projectCodes != null && sample.projectCodes.size() == 1) {
 					sample.code = generateSampleCode(sample); 
 					//update content sampleCode
 					List<Content> contents = container.contents.stream().filter(c -> (c.sampleCode == null)).collect(Collectors.toList());
