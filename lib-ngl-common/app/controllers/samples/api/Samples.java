@@ -1,9 +1,7 @@
 package controllers.samples.api;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
@@ -11,29 +9,25 @@ import javax.inject.Inject;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.jongo.MongoCursor;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
-
-import com.mongodb.BasicDBObject;
 
 import akka.stream.javadsl.Source;
 import akka.util.ByteString;
 import controllers.NGLAPIController;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
-import fr.cea.ig.MongoDBResult.Sort;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
-import fr.cea.ig.lfw.utils.Streamer;
-import fr.cea.ig.mongo.MongoStreamer;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.dao.api.APIException;
 import fr.cea.ig.ngl.dao.api.APISemanticException;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.samples.SamplesAPI;
 import fr.cea.ig.ngl.dao.samples.SamplesDAO;
+import fr.cea.ig.ngl.support.ListFormWrapper;
+import fr.cea.ig.util.Streamer;
 import models.laboratory.common.description.Level;
 import models.laboratory.sample.instance.Sample;
 import play.data.Form;
@@ -56,77 +50,85 @@ public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> {
 	@Override
 	@Authenticated
 	@Authorized.Read
-	public Result list() {		
+	public Result list() {
 		try {
-			SamplesSearchForm samplesSearch = objectFromRequestQueryString(SamplesSearchForm.class);
-			if (samplesSearch.reporting) {
-				logger.debug("list : running query {}",samplesSearch.reportingQuery);
-				MongoCursor<Sample> data = api().findByQuery(samplesSearch.reportingQuery);
-				if (samplesSearch.datatable) {
-					return MongoStreamer.okStreamUDT(data);
-				} else if(samplesSearch.list) {
-					return MongoStreamer.okStream(data);
-				} else if(samplesSearch.count) {
-					int count = api().count(samplesSearch.reportingQuery);
-					Map<String, Integer> map = new HashMap<>(1);
-					map.put("result", count);
-					return okAsJson(map);
-				} else {
-					return badRequest();
-				}
-			} else {
-				DBQuery.Query query = getQuery(samplesSearch);
-				BasicDBObject keys = null;
-				
-				//TODO AJ: NGL-2038: quick fix it will be deleted in version 2.3.0
-				if(samplesSearch.includes().contains("default")){
-					updateForm(samplesSearch, api().defaultKeys());
-				}
-				keys = getKeys(samplesSearch); 
-				// ---------------------------------------------------------------
-				
-				List<Sample> results = null;
-				if (samplesSearch.datatable) {
-					Source<ByteString, ?> resultsAsStream = null; 
-					if(samplesSearch.isServerPagination()){
-						if(keys == null){
-							resultsAsStream = api().streamUDTWithDefaultKeys(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), samplesSearch.pageNumber, samplesSearch.numberRecordsPerPage);
-						} else {
-							resultsAsStream = api().streamUDT(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.pageNumber, samplesSearch.numberRecordsPerPage);
-						}
-					} else {
-						if(keys == null){
-							resultsAsStream = api().streamUDTWithDefaultKeys(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), samplesSearch.limit);
-						} else {
-							resultsAsStream = api().streamUDT(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.limit);
-						}
-					}
-					return Streamer.okStream(resultsAsStream);
-				} else  {
-					if(samplesSearch.orderBy == null) samplesSearch.orderBy = "code";
-					if(samplesSearch.orderSense == null) samplesSearch.orderSense = 0;
-
-					if(samplesSearch.list) {
-						keys = new BasicDBObject();
-						keys.put("_id", 0);//Don't need the _id field
-						keys.put("code", 1);
-						results = api().list(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.limit);	
-						return MongoStreamer.okStream(convertToListObject(results, x -> x.code, x -> x.code)); // in place of getLOChunk(MongoDBResult<T> all)
-					} else if(samplesSearch.count) {
-						int count = api().count(samplesSearch.reportingQuery);
-						Map<String, Integer> m = new HashMap<>(1);
-						m.put("result", count);
-						return okAsJson(m);
-					} else {
-						return Streamer.okStream(api().stream(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.limit));
-					}
-				}
-			}
+			Source<ByteString, ?> resultsAsStream = api().list(new ListFormWrapper<Sample>(objectFromRequestQueryString(SamplesSearchForm.class), form -> generateBasicDBObjectFromKeys(form)));
+			return Streamer.okStream(resultsAsStream);
+		} catch (APIException e) {
+			getLogger().error(e.getMessage());
+			return badRequestAsJson(e.getMessage());
 		} catch (Exception e) {
 			getLogger().error(e.getMessage());
 			return nglGlobalBadRequest();
 		}
 	}
+	
+//	public Result list() {		
+//		try {
+//			SamplesSearchForm samplesSearch = objectFromRequestQueryString(SamplesSearchForm.class);
+//			if (samplesSearch.reporting) {
+//				logger.debug("list : running query {}",samplesSearch.reportingQuery);
+//				MongoCursor<Sample> data = api().findByQuery(samplesSearch.reportingQuery);
+//				if (samplesSearch.datatable) {
+//					return MongoStreamer.okStreamUDT(data);
+//				} else if(samplesSearch.list) {
+//					return MongoStreamer.okStream(data);
+//				} else if(samplesSearch.count) {
+//					int count = api().count(samplesSearch.reportingQuery);
+//					Map<String, Integer> map = new HashMap<>(1);
+//					map.put("result", count);
+//					return okAsJson(map);
+//				} else {
+//					return badRequest();
+//				}
+//			} else {
+//				DBQuery.Query query = getQuery(samplesSearch);
+//				BasicDBObject keys = null;
+//				if(! samplesSearch.includes().contains("default")){
+//					keys = generateBasicDBObjectFromKeys(samplesSearch); 
+//				}
+//				List<Sample> results = null;
+//				if (samplesSearch.datatable) {
+//					Source<ByteString, ?> resultsAsStream = null; 
+//					if(samplesSearch.isServerPagination()){
+//						if(keys == null){
+//							resultsAsStream = api().streamUDTWithDefaultKeys(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), samplesSearch.pageNumber, samplesSearch.numberRecordsPerPage);
+//						} else {
+//							resultsAsStream = api().streamUDT(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.pageNumber, samplesSearch.numberRecordsPerPage);
+//						}
+//					} else {
+//						if(keys == null){
+//							resultsAsStream = api().streamUDTWithDefaultKeys(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), samplesSearch.limit);
+//						} else {
+//							resultsAsStream = api().streamUDT(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.limit);
+//						}
+//					}
+//					return Streamer.okStream(resultsAsStream);
+//				} else  {
+//					if(samplesSearch.orderBy == null) samplesSearch.orderBy = "code";
+//					if(samplesSearch.orderSense == null) samplesSearch.orderSense = 0;
+//
+//					if(samplesSearch.list) {
+//						keys = new BasicDBObject();
+//						keys.put("_id", 0);//Don't need the _id field
+//						keys.put("code", 1);
+//						results = api().list(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.limit);	
+//						return MongoStreamer.okStream(convertToListObject(results, x -> x.code, x -> x.code)); // in place of getLOChunk(MongoDBResult<T> all)
+//					} else if(samplesSearch.count) {
+//						int count = api().count(samplesSearch.reportingQuery);
+//						Map<String, Integer> m = new HashMap<>(1);
+//						m.put("result", count);
+//						return okAsJson(m);
+//					} else {
+//						return Streamer.okStream(api().stream(query, samplesSearch.orderBy, Sort.valueOf(samplesSearch.orderSense), keys, samplesSearch.limit));
+//					}
+//				}
+//			}
+//		} catch (Exception e) {
+//			getLogger().error(e.getMessage());
+//			return nglGlobalBadRequest();
+//		}
+//	}
 	
 	@Override
 	@Authenticated
@@ -134,7 +136,7 @@ public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> {
 	public Result get(String code) {
 		try {
 			DatatableForm form = objectFromRequestQueryString(DatatableForm.class);
-			Sample sample = api().getObject(code, getKeys(form));
+			Sample sample = api().getObject(code, generateBasicDBObjectFromKeys(form));
 			if (sample == null) {
 				return notFound();
 			} 

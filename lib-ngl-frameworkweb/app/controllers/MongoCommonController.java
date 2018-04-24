@@ -363,7 +363,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		}
 	}
 	
-	//moved to DBObjectRestrictor
+	//moved to LFWRequestParsing
 	protected DatatableForm updateForm(DatatableForm form) {
 		if(form.includes.contains("default")){
 			form.includes.remove("default");

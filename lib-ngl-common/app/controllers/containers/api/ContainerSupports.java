@@ -1,12 +1,10 @@
 package controllers.containers.api;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.inject.Inject;
@@ -44,10 +42,7 @@ import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 import play.data.Form;
-import play.i18n.Lang;
-import play.mvc.Http;
 import play.mvc.Result;
-import views.components.datatable.DatatableBatchResponseElement;
 import workflows.container.ContSupportWorkflows;
 
 @Historized
@@ -69,62 +64,68 @@ public class ContainerSupports extends NGLAPIController<ContainerSupportsAPI, Co
 		stateForm                  = app.formFactory().form(State.class);
 	}
 	
+	
 	@Override
-	@Authenticated
-	@Authorized.Write
-	public Result updateState(String code) {
-		try {
-			Form<State> filledForm =  getFilledForm(stateForm, State.class);
-			State state = filledForm.get();
-			state.date = new Date();
-			state.user = getCurrentUser();
-			ContainerSupport support = api().updateState(code, state, getCurrentUser());
-			return okAsJson(support);
-		} catch (APIValidationException e) {
-			getLogger().error(e.getMessage());
-			if(e.getErrors() != null) {
-				return badRequestAsJson(errorsAsJson(e.getErrors()));
-			} else {
-				return badRequestAsJson(e.getMessage());
-			}
-		} catch (APIException e) {
-			getLogger().error(e.getMessage());
-			return badRequestAsJson(e.getMessage());
-		} catch (Exception e) {
-			getLogger().error(e.getMessage());
-			return nglGlobalBadRequest();
-		}
+	public Object updateStateImpl(String code, State state) throws APIValidationException, APIException {
+		return api().updateState(code, state, getCurrentUser());
 	}
-
-
-	@Override
-	@Authenticated
-	@Authorized.Write
-	public Result updateStateBatch() {
-		try {
-			List<Form<ContainerSupportBatchElement>> filledForms =  getFilledFormList(batchElementForm, ContainerSupportBatchElement.class);
-			final Lang lang = Http.Context.Implicit.lang();
-			List<DatatableBatchResponseElement> response = filledForms.parallelStream()
-					.map(filledForm -> {
-						ContainerSupportBatchElement element = filledForm.get();
-						State state = element.data.state;
-						state.date = new Date();
-						state.user = getCurrentUser();
-						try {
-							ContainerSupport support = api().updateState(element.data.code, state, getCurrentUser());
-							return new DatatableBatchResponseElement(OK, support, element.index);
-						} catch (APIValidationException e) {
-							return new DatatableBatchResponseElement(BAD_REQUEST, errorsAsJson(lang, e.getErrors()), element.index);
-						} catch (APIException e) {
-							return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
-						}
-					}).collect(Collectors.toList());
-			return okAsJson(response);
-		} catch (Exception e) {
-			getLogger().error(e.getMessage());
-			return nglGlobalBadRequest();
-		}
-	}
+	
+//	@Override
+//	@Authenticated
+//	@Authorized.Write
+//	public Result updateState(String code) {
+//		try {
+//			Form<State> filledForm =  getFilledForm(stateForm, State.class);
+//			State state = filledForm.get();
+//			state.date = new Date();
+//			state.user = getCurrentUser();
+//			ContainerSupport support = api().updateState(code, state, getCurrentUser());
+//			return okAsJson(support);
+//		} catch (APIValidationException e) {
+//			getLogger().error(e.getMessage());
+//			if(e.getErrors() != null) {
+//				return badRequestAsJson(errorsAsJson(e.getErrors()));
+//			} else {
+//				return badRequestAsJson(e.getMessage());
+//			}
+//		} catch (APIException e) {
+//			getLogger().error(e.getMessage());
+//			return badRequestAsJson(e.getMessage());
+//		} catch (Exception e) {
+//			getLogger().error(e.getMessage());
+//			return nglGlobalBadRequest();
+//		}
+//	}
+//
+//
+//	@Override
+//	@Authenticated
+//	@Authorized.Write
+//	public Result updateStateBatch() {
+//		try {
+//			List<Form<ContainerSupportBatchElement>> filledForms =  getFilledFormList(batchElementForm, ContainerSupportBatchElement.class);
+//			final Lang lang = Http.Context.Implicit.lang();
+//			List<DatatableBatchResponseElement> response = filledForms.parallelStream()
+//					.map(filledForm -> {
+//						ContainerSupportBatchElement element = filledForm.get();
+//						State state = element.data.state;
+//						state.date = new Date();
+//						state.user = getCurrentUser();
+//						try {
+//							ContainerSupport support = api().updateState(element.data.code, state, getCurrentUser());
+//							return new DatatableBatchResponseElement(OK, support, element.index);
+//						} catch (APIValidationException e) {
+//							return new DatatableBatchResponseElement(BAD_REQUEST, errorsAsJson(lang, e.getErrors()), element.index);
+//						} catch (APIException e) {
+//							return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
+//						}
+//					}).collect(Collectors.toList());
+//			return okAsJson(response);
+//		} catch (Exception e) {
+//			getLogger().error(e.getMessage());
+//			return nglGlobalBadRequest();
+//		}
+//	}
 
 
 	@Override
@@ -150,7 +151,7 @@ public class ContainerSupports extends NGLAPIController<ContainerSupportsAPI, Co
 			} else {
 				DBQuery.Query query = getQuery(containersSupportSearch);
 				BasicDBObject keys = null;
-				if(! containersSupportSearch.includes().contains("default")) keys = getKeys(containersSupportSearch); 
+				if(! containersSupportSearch.includes().contains("default")) keys = generateBasicDBObjectFromKeys(containersSupportSearch); 
 				
 				List<ContainerSupport> results = null;
 				if (containersSupportSearch.datatable) {

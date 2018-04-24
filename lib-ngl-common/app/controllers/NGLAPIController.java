@@ -70,14 +70,13 @@ public abstract class NGLAPIController<T extends GenericAPI<U,V>, U extends Gene
 	
 	// Mandatory methods
 	public abstract Result list();
-//	public abstract Result get(String code);
 
 	@Authenticated
 	@Authorized.Read
 	public Result get(String code) {
 		try {
 			DatatableForm form = objectFromRequestQueryString(DatatableForm.class);
-			V obj = api().getObject(code, getKeys(form));
+			V obj = api().getObject(code, generateBasicDBObjectFromKeys(form));
 			if (obj == null) {
 				return notFound();
 			} 

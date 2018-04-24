@@ -52,7 +52,7 @@ public class Projects extends NGLAPIController<ProjectsAPI, ProjectsDAO, Project
 		try {
 			ProjectsSearchForm form = filledFormQueryString(searchForm, ProjectsSearchForm.class).get();
 			Query q = getQuery(form);
-			BasicDBObject keys = getKeys(form);
+			BasicDBObject keys = generateBasicDBObjectFromKeys(form);
 			List<Project> results = null;
 			Source<ByteString, ?> resultsAsStream = null; 
 			if (form.datatable) {

@@ -27,7 +27,7 @@ public class NGLController extends LFWController implements NGLApplicationHolder
 	/**
 	 * @return badRequest Result with standard message
 	 */
-	protected Result nglGlobalBadRequest() {
+	public Result nglGlobalBadRequest() {
 		return badRequestAsJson("Error on server: contact support for more details");
 	}
 	
