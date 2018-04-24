@@ -185,7 +185,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 
 	@Override
 	protected void getExperimentTypeNodePROD() {
-		
+
 	}
 	
 	@Override
