@@ -3,6 +3,7 @@ package fr.cea.ig.mongo;
 import java.util.Iterator;
 import java.util.function.Function;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jongo.MongoCursor;
 
 import akka.stream.javadsl.Source;
@@ -10,6 +11,7 @@ import akka.util.ByteString;
 
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.lfw.utils.Iterables;
 import fr.cea.ig.lfw.utils.Streamer;
 import play.libs.Json;
 import play.mvc.Result;
@@ -34,6 +36,23 @@ import play.mvc.Result;
 // I blame the weak type inference of javac at the moment.
 
 public class MongoStreamer {
+	
+	public static final <A,B> ImmutablePair<A,B> pair(A a, B b) { return new ImmutablePair<>(a,b); }
+
+	/**
+	 * @param i an iterable
+	 * @param f a function witch converts object to String
+	 * @return  the stream of ByteString
+	 */
+	public static final <A> Source<ByteString,?> streamUDT_(Iterable<A> i, Function<A,String> f) {
+		Iterable<ByteString> it =
+				Iterables.map(i, x -> pair(1,f.apply(x))) // count as 1
+				.intercalate(pair(0,","))                 // count as 0
+				.prepend(pair(0,"{\"data\":["))           // count as 0
+				.foldlIn(0, (c,p) -> c + p.left, c -> pair(0,"],\"recordsNumber\":" + c + "}"))
+				.map(r -> { return ByteString.fromString(r.right); });
+		return Source.from(it);
+	}
 	
 	/*
 	 * Logger.
