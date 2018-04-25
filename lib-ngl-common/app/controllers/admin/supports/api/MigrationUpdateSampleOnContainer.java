@@ -12,7 +12,7 @@ import com.mongodb.BasicDBObject;
 
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.SampleOnContainer;
 import models.utils.InstanceConstants;

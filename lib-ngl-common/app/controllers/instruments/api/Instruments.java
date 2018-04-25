@@ -9,7 +9,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import controllers.APICommonController;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.utils.dao.DAOException;

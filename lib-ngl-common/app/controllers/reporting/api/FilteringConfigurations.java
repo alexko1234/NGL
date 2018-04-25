@@ -16,7 +16,7 @@ import org.mongojack.DBQuery.Query;
 
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.reporting.instance.FilteringConfiguration;
 import models.utils.InstanceConstants;
 import play.data.Form;

@@ -18,7 +18,7 @@ import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.mongo.DBQueryBuilder;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.protocol.instance.Protocol;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;

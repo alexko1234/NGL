@@ -14,7 +14,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 //import play.libs.ws.WS;
 import play.libs.ws.WSResponse;
 

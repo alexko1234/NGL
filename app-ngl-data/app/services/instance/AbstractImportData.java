@@ -8,7 +8,7 @@ import org.slf4j.MDC;
 
 import com.mongodb.MongoException;
 
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.Constants;
 import models.utils.dao.DAOException;
 // import play.libs.Akka;

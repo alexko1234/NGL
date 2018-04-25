@@ -48,7 +48,7 @@ import fr.cea.ig.ngl.support.api.ResolutionConfigurationAPIHolder;
 import fr.cea.ig.ngl.support.api.ValuationCriteriaAPIHolder;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
-//import fr.cea.ig.play.NGLContext;
+//import fr.cea.ig.play.migration.NGLContext;
 
 import javax.inject.Inject;
 

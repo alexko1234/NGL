@@ -15,7 +15,7 @@ import com.mongodb.MongoException;
 
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.project.instance.Project;
 import models.utils.InstanceConstants;

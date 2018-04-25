@@ -7,7 +7,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.LimsCNGDAO;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.parameter.Parameter;

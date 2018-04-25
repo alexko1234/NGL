@@ -1,11 +1,12 @@
 package services.description.experiment;
 
+import static fr.cea.ig.play.IGGlobals.configuration;
+
 import java.util.List;
 import java.util.Map;
 import models.utils.dao.DAOException;
 // import play.Logger;
 import play.data.validation.ValidationError;
-import static fr.cea.ig.play.IGGlobals.configuration;
 
 public class ExperimentService {
 	

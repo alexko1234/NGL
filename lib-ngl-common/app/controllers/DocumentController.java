@@ -4,7 +4,7 @@ import java.util.List;
 
 import models.laboratory.common.instance.TraceInformation;
 import fr.cea.ig.DBObject;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 
 
 /**

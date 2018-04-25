@@ -30,7 +30,7 @@ import services.description.sample.SampleService;
 //import fr.cea.ig.ngl.NGLController;
 // import controllers.CommonController;
 // import controllers.NGLBaseController;
-// import fr.cea.ig.play.NGLContext;
+// import fr.cea.ig.play.migration.NGLContext;
 
 public class All extends Controller { // NGLController { // NGLBaseController { //CommonController {
 	

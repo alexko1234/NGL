@@ -25,7 +25,7 @@ import controllers.authorisation.Permission;
 import controllers.reporting.api.ConfigurationsSearchForm;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.stats.StatsConfiguration;
 import models.utils.InstanceConstants;
 import play.data.Form;

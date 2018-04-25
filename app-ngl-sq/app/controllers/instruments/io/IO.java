@@ -11,7 +11,7 @@ import controllers.instruments.io.utils.AbstractOutput;
 import controllers.instruments.io.utils.File;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.IGBodyParsers;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.experiment.instance.Experiment;
 import models.utils.DescriptionHelper;

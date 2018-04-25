@@ -11,7 +11,7 @@ import org.mongojack.DBUpdate;
 
 import controllers.SubDocumentController;
 import controllers.authorisation.Permission;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.experiment.instance.Experiment;
 import models.utils.CodeHelper;

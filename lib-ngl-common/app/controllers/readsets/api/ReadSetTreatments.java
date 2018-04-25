@@ -8,7 +8,7 @@ import org.mongojack.DBUpdate;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.IGBodyParsers;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.common.description.Level;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;

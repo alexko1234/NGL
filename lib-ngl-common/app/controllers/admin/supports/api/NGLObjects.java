@@ -21,7 +21,7 @@ import controllers.admin.supports.api.objects.ReadSetUpdate;
 import controllers.authorisation.Permission;
 import controllers.readsets.api.ReadSets;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;

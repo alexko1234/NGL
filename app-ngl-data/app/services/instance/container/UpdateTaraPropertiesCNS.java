@@ -11,7 +11,7 @@ import org.mongojack.DBQuery;
 import com.mongodb.MongoException;
 
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.LimsCNSDAO;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.sample.instance.Sample;

@@ -8,7 +8,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import controllers.APICommonController;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import lims.models.experiment.ContainerSupport;
 import lims.models.experiment.Experiment;
 import lims.models.instrument.Instrument;

@@ -26,7 +26,7 @@ import controllers.QueryFieldsForm;
 // import controllers.sra.configurations.api.Configurations;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import mail.MailServiceException;
 import models.laboratory.common.instance.State;
 import models.sra.submit.common.instance.Study;

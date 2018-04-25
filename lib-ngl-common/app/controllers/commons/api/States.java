@@ -11,7 +11,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 
 import controllers.CommonController;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.State;
 import models.utils.ListObject;

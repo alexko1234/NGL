@@ -12,7 +12,7 @@ import services.instance.container.ContainerImportCNS;
 
 import com.mongodb.MongoException;
 
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 
 public class RunExtImportCNS extends AbstractImportDataCNS{
 

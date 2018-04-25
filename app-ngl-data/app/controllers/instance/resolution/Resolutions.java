@@ -13,7 +13,7 @@ import validation.ContextValidation;
 
 //import controllers.CommonController;
 //import controllers.NGLBaseController;
-//import fr.cea.ig.play.NGLContext;
+//import fr.cea.ig.play.migration.NGLContext;
 
 public class Resolutions extends Controller { // NGLBaseController { //CommonController {
 	

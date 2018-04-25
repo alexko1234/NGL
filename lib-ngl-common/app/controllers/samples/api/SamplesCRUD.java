@@ -22,7 +22,7 @@ import org.mongojack.DBQuery;
 import controllers.AbstractCRUDAPIController;
 import controllers.ListForm;
 import controllers.authorisation.Permission;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.common.description.Level;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;

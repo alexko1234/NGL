@@ -4,7 +4,7 @@ import java.sql.SQLException;
 
 import javax.inject.Inject;
 
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.utils.dao.DAOException;
 import scala.concurrent.duration.FiniteDuration;
 

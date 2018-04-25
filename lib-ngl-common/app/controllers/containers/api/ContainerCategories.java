@@ -11,7 +11,7 @@ import javax.inject.Inject;
 import controllers.APICommonController;
 //import controllers.CommonController;
 import controllers.authorisation.Permission;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.container.description.ContainerCategory;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;

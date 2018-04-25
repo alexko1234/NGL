@@ -1,11 +1,6 @@
 package models.utils.dao;
 
 import static fr.cea.ig.lfw.utils.FunCollections.repeat;
-
-// import fr.cea.ig.play.NGLContext;
-
-// import play.Logger;
-// import play.cache.Cache;
 import static fr.cea.ig.play.IGGlobals.cache;
 
 import java.util.List;

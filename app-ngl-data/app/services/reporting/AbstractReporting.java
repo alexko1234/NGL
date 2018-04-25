@@ -7,7 +7,7 @@ import javax.mail.MessagingException;
 
 import org.slf4j.MDC;
 
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import scala.concurrent.duration.FiniteDuration;
 
 public abstract class AbstractReporting implements Runnable {

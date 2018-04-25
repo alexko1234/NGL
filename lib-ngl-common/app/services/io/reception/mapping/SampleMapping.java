@@ -11,7 +11,7 @@ import org.mongojack.DBQuery;
 
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.reception.instance.AbstractFieldConfiguration;
 import models.laboratory.reception.instance.ReceptionConfiguration.Action;

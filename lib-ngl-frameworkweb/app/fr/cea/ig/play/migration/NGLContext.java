@@ -1,4 +1,4 @@
-package fr.cea.ig.play;
+package fr.cea.ig.play.migration;
 
 // import java.awt.font.ImageGraphicAttribute;
 import java.util.ArrayList;
@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 //import akka.actor.ActorRef;
 //import akka.actor.ActorRefFactory;
 import akka.actor.ActorSystem;
+import fr.cea.ig.play.IGGlobals;
 //import akka.actor.Props;
 import play.i18n.Lang;
 import play.i18n.MessagesApi;

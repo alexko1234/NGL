@@ -18,7 +18,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import controllers.TPLCommonController;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import lims.cns.dao.LimsManipDAO;
 import lims.models.Well;
 import models.laboratory.common.instance.property.PropertyFileValue;

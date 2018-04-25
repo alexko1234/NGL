@@ -11,7 +11,7 @@ import java.util.TreeSet;
 import javax.inject.Inject;
 
 import controllers.CommonController;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import lims.cns.dao.LimsManipDAO;
 import models.utils.CodeHelper;
 //import play.Logger;

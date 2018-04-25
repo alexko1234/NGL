@@ -2,7 +2,7 @@ package services.instance.sample;
 
 import javax.inject.Inject;
 
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import scala.concurrent.duration.FiniteDuration;
 import services.ncbi.TaxonomyServices;
 

@@ -20,7 +20,7 @@ import com.mongodb.BasicDBObject;
 import controllers.DocumentController;
 import controllers.QueryFieldsForm;
 import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.instance.UmbrellaProject;
 import models.utils.InstanceConstants;

@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 //import play.Logger;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.container.description.ContainerSupportCategory;

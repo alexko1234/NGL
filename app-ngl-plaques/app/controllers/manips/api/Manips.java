@@ -9,7 +9,7 @@ import javax.inject.Inject;
 
 import controllers.CommonController;
 import controllers.MaterielManipSearch;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import lims.cns.dao.LimsManipDAO;
 import lims.models.Manip;
 //import play.Logger;

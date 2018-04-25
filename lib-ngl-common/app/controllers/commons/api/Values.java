@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 
 import controllers.APICommonController;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.common.description.Value;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;

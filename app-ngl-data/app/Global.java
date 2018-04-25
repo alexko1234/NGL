@@ -4,7 +4,7 @@ import javax.inject.Inject;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import rules.services.RulesServices6;
 import services.instance.ImportDataCNG;
 import services.instance.ImportDataCNS;

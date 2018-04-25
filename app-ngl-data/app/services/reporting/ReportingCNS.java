@@ -16,7 +16,7 @@ import com.mongodb.MongoException;
 import com.typesafe.config.ConfigFactory;
 
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import mail.MailServiceException;
 import mail.MailServices;
 import models.laboratory.run.instance.ReadSet;

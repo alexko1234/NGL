@@ -2,7 +2,7 @@ package services.instance;
 
 import javax.inject.Inject;
 
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.LimsCNGDAO;
 import play.api.modules.spring.Spring;
 import scala.concurrent.duration.FiniteDuration;

@@ -10,7 +10,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import controllers.APICommonController;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.utils.ListObject;

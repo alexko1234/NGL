@@ -16,7 +16,7 @@ import org.mongojack.DBQuery.Query;
 
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.sra.submit.common.instance.AbstractSample;
 import models.utils.InstanceConstants;
 

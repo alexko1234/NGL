@@ -7,7 +7,7 @@ import javax.inject.Inject;
 
 import controllers.APICommonController;
 import controllers.authorisation.Permission;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.run.description.RunCategory;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;

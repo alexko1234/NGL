@@ -11,7 +11,7 @@ import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.support.NGLJavascript;
-// import fr.cea.ig.play.NGLContext;
+// import fr.cea.ig.play.migration.NGLContext;
 //import play.Routes;
 // import play.routing.JavaScriptReverseRouter;
 import play.mvc.Result;

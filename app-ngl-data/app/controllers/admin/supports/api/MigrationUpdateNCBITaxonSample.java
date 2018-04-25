@@ -10,7 +10,7 @@ import org.mongojack.DBUpdate;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.ngl.NGLConfig;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import play.mvc.Result;

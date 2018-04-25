@@ -20,7 +20,7 @@ import controllers.DocumentController;
 import controllers.ListForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.reception.instance.ReceptionConfiguration;
 import models.utils.InstanceConstants;

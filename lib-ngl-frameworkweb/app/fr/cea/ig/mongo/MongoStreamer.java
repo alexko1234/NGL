@@ -10,8 +10,7 @@ import akka.util.ByteString;
 
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.util.Streamer;
-
+import fr.cea.ig.lfw.utils.Streamer;
 import play.libs.Json;
 import play.mvc.Result;
 

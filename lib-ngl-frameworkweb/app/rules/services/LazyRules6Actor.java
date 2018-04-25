@@ -9,11 +9,8 @@ import javax.inject.Singleton;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
-import fr.cea.ig.play.NGLConfig;
-// import fr.cea.ig.play.NGLContext;
-// import play.inject.Injector;
-
 import fr.cea.ig.lfw.utils.LazyLambdaSupplier;
+import fr.cea.ig.play.migration.NGLConfig;
 
 @Singleton
 class LazyRulesKey extends LazyLambdaSupplier<String> {

@@ -42,7 +42,7 @@ import fr.cea.ig.ngl.dao.api.sra.SampleAPI;
 import fr.cea.ig.ngl.dao.api.sra.StudyAPI;
 import fr.cea.ig.ngl.dao.api.sra.SubmissionAPI;
 import fr.cea.ig.ngl.dao.samples.SamplesAPI;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;

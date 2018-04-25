@@ -30,7 +30,7 @@ import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.IGBodyParsers;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.common.description.Level;
 // import models.laboratory.common.instance.Comment;
 // import models.laboratory.common.instance.PropertyValue;

@@ -1,8 +1,6 @@
 package rules.services;
 
 import static fr.cea.ig.play.IGGlobals.application;
-// import play.Logger;
-// import play.Play;
 import static fr.cea.ig.play.IGGlobals.configuration;
 
 import java.net.MalformedURLException;

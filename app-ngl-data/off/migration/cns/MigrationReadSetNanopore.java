@@ -12,7 +12,7 @@ import akka.actor.ActorRef;
 import akka.actor.Props;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.run.instance.ReadSet;

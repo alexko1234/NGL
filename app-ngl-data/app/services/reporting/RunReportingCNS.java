@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import scala.concurrent.duration.Duration;
 import services.instance.ImportDataUtil;
 

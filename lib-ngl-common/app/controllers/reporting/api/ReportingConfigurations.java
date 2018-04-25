@@ -21,7 +21,7 @@ import controllers.DocumentController;
 //import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.reporting.instance.ReportingConfiguration;
 import models.utils.InstanceConstants;
 //import play.Logger;

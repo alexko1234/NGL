@@ -6,7 +6,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import controllers.APICommonController;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.run.description.TreatmentType;
 import models.utils.dao.DAOException;
 import play.Logger;

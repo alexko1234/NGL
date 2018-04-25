@@ -16,7 +16,7 @@ import com.mongodb.BasicDBObject;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 
 // import static play.data.Form.form;
 //import static fr.cea.ig.play.IGGlobals.form;

@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import controllers.APICommonController;
 //import controllers.CommonController;
 import controllers.authorisation.Permission;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.administration.authorisation.User;
 import models.administration.authorisation.description.dao.UserDAO;
 import models.utils.ListObject;

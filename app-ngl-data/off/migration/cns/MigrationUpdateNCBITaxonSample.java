@@ -20,7 +20,7 @@ import com.mongodb.BasicDBObject;
 import controllers.CommonController;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.container.instance.Container;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.run.instance.ReadSet;

@@ -1,5 +1,7 @@
 package mail;
 
+import static fr.cea.ig.play.IGGlobals.configuration;
+
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -10,10 +12,6 @@ import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
-//import play.Logger;
-// import play.Play;
-import static fr.cea.ig.play.IGGlobals.configuration;
 
 public class MailServices {
 

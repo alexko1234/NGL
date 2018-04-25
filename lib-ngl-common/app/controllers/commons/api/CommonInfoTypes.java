@@ -6,7 +6,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import controllers.CommonController;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.ObjectType;
 import models.utils.ListObject;

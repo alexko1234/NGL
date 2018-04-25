@@ -24,7 +24,7 @@ import fr.cea.ig.MongoDBResult;
 // import static fr.cea.ig.util.Streamer.IStreamer.write;
 import fr.cea.ig.MongoDBResult.Sort;
 import fr.cea.ig.mongo.MongoStreamer;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import play.data.Form;
 import play.libs.Json;
 import play.modules.jongo.MongoDBPlugin;

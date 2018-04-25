@@ -9,7 +9,7 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import fr.cea.ig.DBObject;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 
 public abstract class SubDocumentController<T extends DBObject, V> extends MongoCommonController<T> {
 

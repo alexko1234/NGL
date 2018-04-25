@@ -21,7 +21,7 @@ import controllers.DocumentController;
 //import models.sra.submit.util.VariableSRA;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.sra.submit.common.instance.AbstractStudy;

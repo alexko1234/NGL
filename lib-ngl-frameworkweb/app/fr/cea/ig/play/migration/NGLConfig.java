@@ -1,4 +1,4 @@
-package fr.cea.ig.play;
+package fr.cea.ig.play.migration;
 
 import java.util.List;
 

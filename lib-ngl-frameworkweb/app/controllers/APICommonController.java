@@ -17,7 +17,7 @@ import org.springframework.beans.PropertyAccessorFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import controllers.history.UserHistory;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import play.data.DynamicForm;
 import play.data.Form;
 // import play.data.validation.ValidationError;

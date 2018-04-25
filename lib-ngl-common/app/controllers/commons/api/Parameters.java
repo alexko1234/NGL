@@ -13,7 +13,7 @@ import org.mongojack.DBQuery.Query;
 //import controllers.CommonController;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.parameter.Parameter;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
