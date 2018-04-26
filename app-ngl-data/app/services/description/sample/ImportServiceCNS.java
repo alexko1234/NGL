@@ -68,7 +68,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		l.add(newImportType("Reception Pool Lib.", "pool-library-reception", ImportCategory.find.findByCode("sample-import"), getPoolLibraryReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		l.add(newImportType("Reception Lib. Amplicons", "amplicon-library-reception", ImportCategory.find.findByCode("sample-import"), getAmpliconLibraryReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newImportType("Reception Sags Tara", "sag-reception", ImportCategory.find.findByCode("sample-import"), getTaraSagReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
+		l.add(newImportType("Reception ADN (et SAG) Tara", "dna-reception-tara", ImportCategory.find.findByCode("sample-import"), getTaraSagReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		
 		
 		DAOHelpers.saveModels(ImportType.class, l, errors);
