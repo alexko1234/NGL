@@ -1,5 +1,6 @@
 package fr.cea.ig.ngl.dao.api;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -99,19 +100,34 @@ public abstract class GenericAPI<O extends GenericMongoDAO<T>, T extends DBObjec
 	}
 
 	public Source<ByteString, ?> list(ListFormWrapper<T> wrapper) throws APIException {
+		return wrapper.transform().apply(listObjects(wrapper));
+//		if(wrapper.isReportingMode()) {
+//			MongoCursor<T> results = findByQuery(wrapper.reportingQuery());
+//			return wrapper.transformMongoCursor().apply(results);
+//		} else if(wrapper.isAggregateMode()) {
+//			//TODO implement list in AggregateMode()
+//			return null;
+//		} else if(wrapper.isMongoJackMode()) {
+//			MongoDBResult<T> results = dao.mongoDBFinder(wrapper.getQuery(), "code", Sort.ASC, wrapper.getKeys(defaultKeys()));
+//			return wrapper.transformMongoDBResult().apply(results);
+//		} else {
+//			throw new APIException("Unsupported query mode");
+//		}
+	}
+	
+	public Iterable<T> listObjects(ListFormWrapper<T> wrapper) throws APIException {
 		if(wrapper.isReportingMode()) {
-			MongoCursor<T> results = findByQuery(wrapper.reportingQuery());
-			return wrapper.transformMongoCursor().apply(results);
+			return findByQuery(wrapper.reportingQuery());
 		} else if(wrapper.isAggregateMode()) {
 			//TODO implement list in AggregateMode()
 			return null;
 		} else if(wrapper.isMongoJackMode()) {
-			MongoDBResult<T> results = dao.mongoDBFinder(wrapper.getQuery(), "code", Sort.ASC, wrapper.getKeys(defaultKeys()));
-			return wrapper.transformMongoDBResult().apply(results);
+			return dao.mongoDBFinder(wrapper.getQuery(), "code", Sort.ASC, wrapper.getKeys(defaultKeys())).getCursor();
 		} else {
 			throw new APIException("Unsupported query mode");
 		}
 	}
+	
 
 	public MongoCursor<T> findByQuery(String reportingQuery) {
 		return dao.findByQuery(reportingQuery);

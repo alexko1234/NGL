@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Singleton;
@@ -22,6 +23,7 @@ import fr.cea.ig.ngl.dao.api.APIException;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.projects.ProjectsAPI;
 import fr.cea.ig.ngl.dao.samples.SamplesAPI;
+import fr.cea.ig.ngl.support.ListFormWrapper;
 import fr.cea.ig.ngl.test.AbstractAPITests;
 import fr.cea.ig.ngl.test.dao.api.factory.TestProjectFactory;
 import fr.cea.ig.ngl.test.dao.api.factory.TestSampleFactory;
@@ -164,12 +166,32 @@ public class SamplesAPITest extends AbstractSQTests implements AbstractAPITests 
 	public void listTest() {
 		logger.debug("List test");
 		setUpData();
+		
+		ListFormWrapper<Sample> listing = TestSampleFactory.wrapper(refProject.code, true, false, false);
+		ListFormWrapper<Sample> datatabling = TestSampleFactory.wrapper(refProject.code, false, true, false);
+		ListFormWrapper<Sample> counting = TestSampleFactory.wrapper(refProject.code, false, false, true);
+		ListFormWrapper<Sample> othering = TestSampleFactory.wrapper(refProject.code, false, false, false);
+		
+		
 		try {
-			Query query = DBQuery.is("code", refSample.code);
-			List<Sample> samples = api.list(query, "code", Sort.valueOf(0));
-			Assert.assertEquals(1, samples.size());
-			Assert.assertEquals(refSample.code, samples.get(0).code);
-			Assert.assertEquals(refSample.categoryCode, samples.get(0).categoryCode);
+			Iterable<Sample> iterable = api.listObjects(datatabling);
+			Iterator<Sample> iter = iterable.iterator();
+			int count = 0;
+			while(iter.hasNext()) {
+				Sample s = iter.next();
+				Assert.assertEquals(refSample.code, s.code);
+				Assert.assertEquals(refSample.categoryCode, s.categoryCode);
+				count++;
+			}
+			Assert.assertEquals(1, count);
+			
+			
+			// Old test
+//			Query query = DBQuery.is("code", refSample.code);
+//			List<Sample> samples = api.list(query, "code", Sort.valueOf(0));
+//			Assert.assertEquals(1, samples.size());
+//			Assert.assertEquals(refSample.code, samples.get(0).code);
+//			Assert.assertEquals(refSample.categoryCode, samples.get(0).categoryCode);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			exit(e.getMessage());

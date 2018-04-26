@@ -91,4 +91,8 @@ public class ListFormWrapper<T extends DBObject> {
 		}
 		return this.basicDBObjectGenerator.apply(form);
 	}
+
+	public Function<Iterable<T>, Source<ByteString,?>> transform() {
+		return form.transform();
+	}
 }

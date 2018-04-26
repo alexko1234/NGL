@@ -1,6 +1,8 @@
 package controllers;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -87,4 +89,12 @@ public class ListForm extends DatatableForm {
 	 */
 	@JsonIgnore
 	public DBQuery.Query getQuery() {return null;}
+
+	
+	/**
+	 * @return
+	 */
+	public <T extends DBObject> Function<Iterable<T>, Source<ByteString, ?>> transform() {
+		return (iterable -> MongoStreamer.streamUDT_(iterable, (obj -> obj.toString()))); // boucle infinie
+	}
 }

@@ -37,6 +37,7 @@ import play.mvc.Result;
 
 public class MongoStreamer {
 	
+	// -------------- more generic streamer ------------------
 	public static final <A,B> ImmutablePair<A,B> pair(A a, B b) { return new ImmutablePair<>(a,b); }
 
 	/**
