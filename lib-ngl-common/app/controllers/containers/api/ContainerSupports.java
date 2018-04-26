@@ -34,7 +34,7 @@ import fr.cea.ig.ngl.dao.api.APIException;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.api.containers.ContainerSupportsAPI;
 import fr.cea.ig.ngl.dao.api.containers.ContainerSupportsDAO;
-import fr.cea.ig.util.Streamer;
+import fr.cea.ig.lfw.utils.Streamer;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;

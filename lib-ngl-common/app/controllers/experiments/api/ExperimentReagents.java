@@ -31,7 +31,7 @@ import fr.cea.ig.lfw.utils.Iterables;
 import fr.cea.ig.lfw.utils.Streamer;
 import fr.cea.ig.mongo.MongoStreamer;
 import fr.cea.ig.play.migration.NGLContext;
-//import static fr.cea.ig.util.Streamer.IStreamer.write;
+//import static fr.cea.ig.lfw.utils.Streamer.IStreamer.write;
 import models.laboratory.experiment.instance.Experiment;
 import models.utils.InstanceConstants;
 // import play.data.Form;

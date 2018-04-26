@@ -39,7 +39,7 @@ import fr.cea.ig.ngl.dao.api.APISemanticException;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.api.containers.ContainersAPI;
 import fr.cea.ig.ngl.dao.api.containers.ContainersDAO;
-import fr.cea.ig.util.Streamer;
+import fr.cea.ig.lfw.utils.Streamer;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.description.ContainerSupportCategory;

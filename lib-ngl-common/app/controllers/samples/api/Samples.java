@@ -27,7 +27,7 @@ import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.samples.SamplesAPI;
 import fr.cea.ig.ngl.dao.samples.SamplesDAO;
 import fr.cea.ig.ngl.support.ListFormWrapper;
-import fr.cea.ig.util.Streamer;
+import fr.cea.ig.lfw.utils.Streamer;
 import models.laboratory.common.description.Level;
 import models.laboratory.sample.instance.Sample;
 import play.data.Form;
