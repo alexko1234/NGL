@@ -21,6 +21,8 @@ import models.laboratory.sample.instance.Sample;
  */
 public class TestSampleFactory {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(TestSampleFactory.class);
+			
 	public static Sample sample(String user) {
 		Project proj = TestProjectFactory.project(user);
 		return sample(user, proj);
@@ -45,17 +47,64 @@ public class TestSampleFactory {
 		return Arrays.asList(new Comment("very usefull comments", user));
 	}
 
-	public static ListFormWrapper<Sample> wrapper(String projectCode, boolean asList, boolean asDatatable, boolean asCount) {
+	/**
+	 * No querying mode or rendering mode are defined in the created form.
+	 * 
+	 * @param projectCode code of project
+	 * @return            wrapper of SamplesSearchForm
+	 */
+	public static ListFormWrapper<Sample> wrapper(String projectCode){
+		return wrapper(projectCode, null, null);
+	}
+	
+	/**
+	 * @param projectCode code of project
+	 * @param qmode       querying mode
+	 * @param render      rendering mode
+	 * @return            wrapper of SamplesSearchForm
+	 */
+	public static ListFormWrapper<Sample> wrapper(String projectCode, QueryMode qmode, RenderMode render) {
 		SamplesSearchForm form = new SamplesSearchForm();
 		form.projectCodes = Arrays.asList(projectCode);
-		form.list = asList;
-		form.datatable = asDatatable;
-		form.count = asCount;
+		
+		if(render != null ) {
+			form.list = (render.equals(RenderMode.LIST)) ? true : false;
+			form.datatable = (render.equals(RenderMode.DATATABLE)) ? true : false;
+			form.count = (render.equals(RenderMode.COUNT)) ? true : false;
+		} else {
+			logger.debug("no rendering mode defined in form");
+		}
+		
+		if(qmode != null) {
+			form.aggregate = (qmode.equals(QueryMode.AGGREGATE)) ? true : false;
+			form.reporting = (qmode.equals(QueryMode.REPORTING)) ? true : false;
+		} else {
+			logger.debug("no querying mode defined in form");
+		}
+		// unnecessary block because MongoJack request mode is the default one.
+		/*if(qmode.equals(QueryMode.MONGOJACK)) {
+			form.aggregate = false;
+			form.reporting = false;
+		}*/
+		
 		ListFormWrapper<Sample> wrapper = new ListFormWrapper<>(form, 
 				f -> new LFWRequestParsing() {
 					@Override
 					public LFWApplication getLFWApplication() { return null;}
 				}.generateBasicDBObjectFromKeys(f));
 		return wrapper;
+	}
+	
+	public enum QueryMode {
+		MONGOJACK,
+		REPORTING,
+		AGGREGATE;
+	}
+	
+	public enum RenderMode {
+		LIST,
+		DATATABLE,
+		COUNT;
+		
 	}
 }

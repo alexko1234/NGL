@@ -1,11 +1,7 @@
 package fr.cea.ig.ngl.test.dao.api;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 
 import javax.inject.Singleton;
 
@@ -15,10 +11,7 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
 
-import fr.cea.ig.MongoDBResult.Sort;
 import fr.cea.ig.ngl.dao.api.APIException;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.projects.ProjectsAPI;
@@ -63,9 +56,9 @@ public class SamplesAPITest extends AbstractSQTests implements AbstractAPITests 
 	
 	@BeforeClass
 	public static void setUpClass() {
-		assertTrue(app.isDev());
+		Assert.assertTrue(app.isDev());
 		projectApi = app.injector().instanceOf(ProjectsAPI.class);
-		assertNotNull(projectApi);
+		Assert.assertNotNull(projectApi);
 		api = app.injector().instanceOf(SamplesAPI.class);
 		Assert.assertNotNull(api);
 		logger.debug("define ref objects");
@@ -167,16 +160,47 @@ public class SamplesAPITest extends AbstractSQTests implements AbstractAPITests 
 		logger.debug("List test");
 		setUpData();
 		
-		ListFormWrapper<Sample> listing = TestSampleFactory.wrapper(refProject.code, true, false, false);
-		ListFormWrapper<Sample> datatabling = TestSampleFactory.wrapper(refProject.code, false, true, false);
-		ListFormWrapper<Sample> counting = TestSampleFactory.wrapper(refProject.code, false, false, true);
-		ListFormWrapper<Sample> othering = TestSampleFactory.wrapper(refProject.code, false, false, false);
-		
+		// Testing rendering ?
+//		ListFormWrapper<Sample> listing = TestSampleFactory.wrapper(refProject.code, true, false, false);
+//		ListFormWrapper<Sample> datatabling = TestSampleFactory.wrapper(refProject.code, false, true, false);
+//		ListFormWrapper<Sample> counting = TestSampleFactory.wrapper(refProject.code, false, false, true);
+//		ListFormWrapper<Sample> othering = TestSampleFactory.wrapper(refProject.code, false, false, false);
 		
 		try {
-			Iterable<Sample> iterable = api.listObjects(datatabling);
-			Iterator<Sample> iter = iterable.iterator();
+			//---------- default mode ----------
+			logger.debug("default mode");
+			ListFormWrapper<Sample> wrapper = TestSampleFactory.wrapper(refProject.code);
+			Iterable<Sample> samples = api.listObjects(wrapper);
+			Iterator<Sample> iter = samples.iterator();
 			int count = 0;
+			while(iter.hasNext()) {
+				Sample s = iter.next();
+				Assert.assertEquals(refSample.code, s.code);
+				Assert.assertEquals(refSample.categoryCode, s.categoryCode);
+				count++;
+			}
+			Assert.assertEquals(1, count);
+			
+			//---------- reporting mode----------
+			logger.debug("reporting mode");
+			wrapper = TestSampleFactory.wrapper(refProject.code, TestSampleFactory.QueryMode.REPORTING, null);
+			samples = api.listObjects(wrapper);
+			iter = samples.iterator();
+			count = 0;
+			while(iter.hasNext()) {
+				Sample s = iter.next();
+				Assert.assertEquals(refSample.code, s.code);
+				Assert.assertEquals(refSample.categoryCode, s.categoryCode);
+				count++;
+			}
+			Assert.assertEquals(1, count);
+			
+			//---------- aggregate mode----------
+			logger.debug("aggregate mode");
+			wrapper = TestSampleFactory.wrapper(refProject.code, TestSampleFactory.QueryMode.AGGREGATE, null);
+			samples = api.listObjects(wrapper);
+			iter = samples.iterator();
+			count = 0;
 			while(iter.hasNext()) {
 				Sample s = iter.next();
 				Assert.assertEquals(refSample.code, s.code);
@@ -193,7 +217,8 @@ public class SamplesAPITest extends AbstractSQTests implements AbstractAPITests 
 //			Assert.assertEquals(refSample.code, samples.get(0).code);
 //			Assert.assertEquals(refSample.categoryCode, samples.get(0).categoryCode);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			e.printStackTrace();
+			logger.error(e.getCause().getMessage());
 			exit(e.getMessage());
 		}
 		deleteData();
