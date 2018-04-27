@@ -81,11 +81,11 @@ rule "prepa-fc-ordered volume PhiX"
 		 $atomicTransfert: ManyToOneContainer( )
 		 InputContainerUsed($processProperties : contents.get(0).processProperties, $experimentProperties : experimentProperties, $experimentProperties!=null) from $atomicTransfert.inputContainerUseds
 		 $phixPercent : PropertyValue() from $processProperties.get("phixPercent")
-		 $phixConcentration : PropertyValue() from $processProperties.get("phixConcentration")
+		 $phixConcentration : PropertyValue() from $experimentProperties.get("phixConcentration")
 		 $finalVolume : PropertyValue() from $experimentProperties.get("finalVolume")
 		 eval($phixPercent.value != null &&  Number.class.isInstance($phixPercent.value) && $phixConcentration.value != null && Number.class.isInstance($phixConcentration.value) && $finalVolume.value != null && Number.class.isInstance($finalVolume.value) && null == $experimentProperties.get("phixPercent"))
 	then
-		Logger.debug("Dans prepa-fc-ordered volume PhiX");
+		Logger.debug("Dans prepa-fc-ordered volume PhiX " + $experiment.instrument.typeCode);
 		
 		PropertySingleValue pXconcenration;
 		PropertySingleValue value;
@@ -96,20 +96,29 @@ rule "prepa-fc-ordered volume PhiX"
    		} 
    		
 		if (convertPVToDouble($phixPercent) > 5){
-			if(convertPVToDouble($phixConcentration) > 1){
-				pXconcenration = new PropertySingleValue(convertPVToDouble($phixConcentration)/10,"nM");
-				$experimentProperties.remove("phixConcentration");
-				$experimentProperties.put("phixConcentration", pXconcenration);
-			}
-			value = new PropertySingleValue(Math.round((convertPVToDouble($phixPercent)*convertPVToDouble($finalVolume)))/100.0,"\u00B5L"); 
-		}else{
 			if(convertPVToDouble($phixConcentration) < 1){
 				pXconcenration = new PropertySingleValue(convertPVToDouble($phixConcentration)*10,"nM");
 				$experimentProperties.remove("phixConcentration");
 				$experimentProperties.put("phixConcentration", pXconcenration);
 			}
-			value = new PropertySingleValue(Math.round((convertPVToDouble($phixPercent)*convertPVToDouble($finalVolume)))/10.0,"\u00B5L");
+			if($experiment.instrument.typeCode.equals("cBot-interne-novaseq")){
+				value = new PropertySingleValue(Math.round((convertPVToDouble($phixPercent)*convertPVToDouble($finalVolume))/27)/10.0,"\u00B5L");
+			}else{
+				value = new PropertySingleValue(Math.round((convertPVToDouble($phixPercent)*convertPVToDouble($finalVolume)))/100.0,"\u00B5L"); 
+			}
+		}else{
+			if(convertPVToDouble($phixConcentration) > 1){
+				pXconcenration = new PropertySingleValue(convertPVToDouble($phixConcentration)/10,"nM");
+				$experimentProperties.remove("phixConcentration");
+				$experimentProperties.put("phixConcentration", pXconcenration);
+			}
+			if($experiment.instrument.typeCode.equals("cBot-interne-novaseq")){
+				value = new PropertySingleValue(Math.round((convertPVToDouble($phixPercent)*convertPVToDouble($finalVolume))/2.7)/10.0,"\u00B5L");
+			}else{
+				value = new PropertySingleValue(Math.round((convertPVToDouble($phixPercent)*convertPVToDouble($finalVolume)))/10.0,"\u00B5L");
+			}
 		}          
+		
 		if($experimentProperties.get("phixVolume") != null){
 			$experimentProperties.remove("phixVolume");
 		}
@@ -134,11 +143,16 @@ rule "prepa-fc-ordered volume PhiX 2"
 		 $finalVolume : PropertyValue() from $experimentProperties.get("finalVolume")
 		 eval($phixPercent.value != null &&  Number.class.isInstance($phixPercent.value) && $phixConcentration.value != null && Number.class.isInstance($phixConcentration.value) && $finalVolume.value != null && Number.class.isInstance($finalVolume.value))
 	then
-		Logger.debug("Dans prepa-fc-ordered volume PhiX 2");
+		Logger.debug("Dans prepa-fc-ordered volume PhiX 2 " + $experiment.instrument.typeCode);
 		
 		PropertySingleValue pXconcenration;
 		PropertySingleValue value;
 		
+ 		if(null == $experimentProperties.get("phixPercent")){
+   			PropertySingleValue phixPercent = new PropertySingleValue($phixPercent.value);
+   			$experimentProperties.put("phixPercent",phixPercent);
+   		} 
+   		
 		Logger.debug("$phixPercent " + $phixPercent.value);
 		
 		if (convertPVToDouble($phixPercent) > 5){
@@ -147,15 +161,24 @@ rule "prepa-fc-ordered volume PhiX 2"
 				$experimentProperties.remove("phixConcentration");
 				$experimentProperties.put("phixConcentration", pXconcenration);
 			}
-			value = new PropertySingleValue(Math.round((convertPVToDouble($phixPercent)*convertPVToDouble($finalVolume)))/100.0,"\u00B5L"); 
+			if($experiment.instrument.typeCode.equals("cBot-interne-novaseq")){
+				value = new PropertySingleValue(Math.round((convertPVToDouble($phixPercent)*convertPVToDouble($finalVolume))/27)/10.0,"\u00B5L");
+			}else{
+				value = new PropertySingleValue(Math.round((convertPVToDouble($phixPercent)*convertPVToDouble($finalVolume)))/100.0,"\u00B5L"); 
+			}
 		}else{
 			if(convertPVToDouble($phixConcentration) > 1){
 				pXconcenration = new PropertySingleValue(convertPVToDouble($phixConcentration)/10,"nM");
 				$experimentProperties.remove("phixConcentration");
 				$experimentProperties.put("phixConcentration", pXconcenration);
 			}
-			value = new PropertySingleValue(Math.round((convertPVToDouble($phixPercent)*convertPVToDouble($finalVolume)))/10.0,"\u00B5L");
+			if($experiment.instrument.typeCode.equals("cBot-interne-novaseq")){
+				value = new PropertySingleValue(Math.round((convertPVToDouble($phixPercent)*convertPVToDouble($finalVolume))/2.7)/10.0,"\u00B5L");
+			}else{
+				value = new PropertySingleValue(Math.round((convertPVToDouble($phixPercent)*convertPVToDouble($finalVolume)))/10.0,"\u00B5L");
+			}
 		}          
+		
 		if($experimentProperties.get("phixVolume") != null){
 			$experimentProperties.remove("phixVolume");
 		}

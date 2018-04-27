@@ -28,21 +28,12 @@ public class Output extends AbstractOutput {
 		//get container
 		List<Container> containers = OutputHelper.getInputContainersFromExperiment(experiment);
 		Logger.debug("Output- containers : "+ containers.size());
-//		//get instrument
-//		TagModel tagModel = OutputHelper.getTagModel(containers);
-//		Logger.debug("Output- tagModel : "+ tagModel.tagType);
 		
 		content = '\ufeff' + OutputHelper.format(sampleSheet_cbotinternenovaseq.render(experiment,containers).body());
-//		Logger.debug("Output- content : "+ content);
-//		content = OutputHelper.format(sampleSheet_HS3000.render(experiment,containers,tagModel).body());
-		//set destination
-		//filename = "C:/Users/Public/Downloads/" + filename;
-		//String path=new File("").getAbsolutePath();
+
 		//set file name
-			filename = OutputHelper.getInstrumentPath(experiment.instrument.code)+(new SimpleDateFormat("yyyyMMdd")).format(new Date()) + "_" + experiment.instrument.code + "_" + containers.get(0).support.code + ".csv";
+		filename = OutputHelper.getInstrumentPath(experiment.instrument.code)+(new SimpleDateFormat("yyyyMMdd")).format(new Date()) + "_" + experiment.instrument.code + "_" + containers.get(0).support.code + ".csv";
 		
-		//Logger.debug("filename dans Output : "+ OutputHelper.getInstrumentPath(experiment.instrument.code)+", "+ (new SimpleDateFormat("yyyyMMdd")).format(new Date()) + "_" + experiment.instrument.code + "_" + ftype + "_" + containers.get(0).support.code+".csv");
-		//String filename = "/tmp/" + (new SimpleDateFormat("yyyyMMdd")).format(new Date()) + "_" + experiment.instrument.code + "_" + ftype + "_" + containers.get(0).support.code+".csv";
 		File file = new File(filename, content);
 		OutputHelper.writeFile(file);
 		return file;
