@@ -111,7 +111,7 @@ public class Containers extends NGLAPIController<ContainersAPI, ContainersDAO, C
 					return MongoStreamer.okStream(data);
 				} else if(containersSearch.count) {
 					int count = api().count(containersSearch.reportingQuery);
-					Map<String, Integer> map = new HashMap<String, Integer>(1);
+					Map<String, Integer> map = new HashMap<>(1);
 					map.put("result", count);
 					return okAsJson(map);
 				} else {
@@ -171,7 +171,7 @@ public class Containers extends NGLAPIController<ContainersAPI, ContainersDAO, C
 						return MongoStreamer.okStream(convertToListObject(results, x -> x.code, x -> x.code)); // in place of getLOChunk(MongoDBResult<T> all)
 					} else if(containersSearch.count) {
 						int count = api().count(containersSearch.reportingQuery);
-						Map<String, Integer> m = new HashMap<String, Integer>(1);
+						Map<String, Integer> m = new HashMap<>(1);
 						m.put("result", count);
 						return okAsJson(m);
 					} else {

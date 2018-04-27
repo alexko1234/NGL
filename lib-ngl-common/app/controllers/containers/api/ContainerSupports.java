@@ -142,7 +142,7 @@ public class ContainerSupports extends NGLAPIController<ContainerSupportsAPI, Co
 					return MongoStreamer.okStream(data);
 				} else if(containersSupportSearch.count) {
 					int count = api().count(containersSupportSearch.reportingQuery);
-					Map<String, Integer> map = new HashMap<String, Integer>(1);
+					Map<String, Integer> map = new HashMap<>(1);
 					map.put("result", count);
 					return okAsJson(map);
 				} else {
@@ -201,7 +201,7 @@ public class ContainerSupports extends NGLAPIController<ContainerSupportsAPI, Co
 						return MongoStreamer.okStream(convertToListObject(results, x -> x.code, x -> x.code)); // in place of getLOChunk(MongoDBResult<T> all)
 					} else if(containersSupportSearch.count) {
 						int count = api().count(containersSupportSearch.reportingQuery);
-						Map<String, Integer> m = new HashMap<String, Integer>(1);
+						Map<String, Integer> m = new HashMap<>(1);
 						m.put("result", count);
 						return okAsJson(m);
 					} else {
@@ -252,7 +252,7 @@ public class ContainerSupports extends NGLAPIController<ContainerSupportsAPI, Co
 	@Authorized.Write
 	public Result saveCode(Integer numberOfCode) {
 		try {
-			List<String> codes = new ArrayList<String>(numberOfCode);
+			List<String> codes = new ArrayList<>(numberOfCode);
 			IntStream.range(0, numberOfCode).forEach(i -> {
 				codes.add(CodeHelper.getInstance().generateContainerSupportCode());
 			});

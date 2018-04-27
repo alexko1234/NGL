@@ -148,7 +148,7 @@ public class ContainerSupportsAPI extends GenericAPI<ContainerSupportsDAO, Conta
 	
 	private void updateStorages(ContainerSupport dbSupport, ContainerSupport formSupport, String currentUser) {
 		if (dbSupport.storages == null) {
-			dbSupport.storages = new ArrayList<StorageHistory>();
+			dbSupport.storages = new ArrayList<>();
 			if (dbSupport.storageCode != null) {
 				StorageHistory sh = getStorageHistory(dbSupport.storageCode, dbSupport.storages.size(), currentUser);
 				dbSupport.storages.add(sh);
