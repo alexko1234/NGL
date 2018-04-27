@@ -44,9 +44,9 @@ public class ContainerCategories extends NGLController implements NGLForms, DBOb
 				List<ContainerCategory> containerCategories = ContainerCategory.find.findAll();
 
 				if (containerCategoriesSearch.datatable) {
-					return okAsJson(new DatatableResponse<ContainerCategory>(containerCategories, containerCategories.size())); 
+					return okAsJson(new DatatableResponse<>(containerCategories, containerCategories.size())); 
 				} else if(containerCategoriesSearch.list) {
-					List<ListObject> lo = new ArrayList<ListObject>();
+					List<ListObject> lo = new ArrayList<>();
 					for(ContainerCategory cc : containerCategories){
 						lo.add(new ListObject(cc.code, cc.name));
 					}
