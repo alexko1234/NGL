@@ -1,6 +1,5 @@
 package fr.cea.ig.ngl.dao.api;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,7 +13,6 @@ import com.mongodb.BasicDBObject;
 import akka.stream.javadsl.Source;
 import akka.util.ByteString;
 import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
 import fr.cea.ig.mongo.MongoStreamer;
 import fr.cea.ig.ngl.dao.GenericMongoDAO;

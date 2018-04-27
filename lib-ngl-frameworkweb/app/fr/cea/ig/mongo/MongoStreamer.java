@@ -55,6 +55,11 @@ public class MongoStreamer {
 		return Source.from(it);
 	}
 	
+	public static final <A,B> Source<ByteString,?> stream(Iterable<A> iterable, Function<A,B> transform) {
+		return stream(Source.from(iterable),transform);
+	}
+	
+	
 	/*
 	 * Logger.
 	 */

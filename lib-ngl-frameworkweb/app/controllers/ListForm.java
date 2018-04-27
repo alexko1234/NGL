@@ -1,12 +1,10 @@
 package controllers;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.function.Function;
 
-import org.jongo.MongoCursor;
 import org.mongojack.DBQuery;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -14,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import akka.stream.javadsl.Source;
 import akka.util.ByteString;
 import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.mongo.MongoStreamer;
 import play.libs.Json;
 import views.components.datatable.DatatableForm;
@@ -30,48 +27,6 @@ public class ListForm extends DatatableForm {
 	public boolean reporting = Boolean.FALSE;
 	public String reportingQuery;
 	public boolean aggregate = Boolean.FALSE;
-	
-	/**
-	 * Define how to return results from input form values.
-	 * @return the function to transform results according to the selected mode.
-	 */
-	@JsonIgnore
-	public <T extends DBObject> Function<MongoCursor<T>, Source<ByteString,?>> transformMongoCursor() {
-		if(this.datatable) {
-			return (cursor -> MongoStreamer.streamUDT(cursor));
-		} else if(this.list) {
-			return (cursor -> MongoStreamer.stream(cursor, conversion()));
-		} else if(this.count) {
-			return (cursor -> {
-				Map<String, Integer> map = new HashMap<>(1);
-				map.put("result", cursor.count());
-				return MongoStreamer.stream(Json.toJson(map));
-			} );
-		} else {
-			return (cursor -> MongoStreamer.stream(cursor));
-		}
-	}
-	
-	/**
-	 * Define how to return results from input form values.
-	 * @return the function to transform results according to the selected mode.
-	 */
-	@JsonIgnore
-	public <T extends DBObject> Function<MongoDBResult<T>, Source<ByteString,?>> transformMongoDBResult() {
-		if(this.datatable) {
-			return (cursor -> MongoStreamer.streamUDT(cursor));
-		} else if(this.list) {
-			return (cursor -> MongoStreamer.stream(cursor, conversion()));
-		} else if(this.count) {
-			return (cursor -> {
-				Map<String, Integer> map = new HashMap<>(1);
-				map.put("result", cursor.count());
-				return MongoStreamer.stream(Json.toJson(map));
-			} );
-		} else {
-			return (cursor -> MongoStreamer.stream(cursor));
-		}
-	}
 
 	/**
 	 * Define the conversion done if the return mode selected is "list"
@@ -92,9 +47,29 @@ public class ListForm extends DatatableForm {
 
 	
 	/**
-	 * @return
+	 * Define how to return results from input form values.
+	 * @return the function to transform results according to the selected mode.
 	 */
+	@JsonIgnore
 	public <T extends DBObject> Function<Iterable<T>, Source<ByteString, ?>> transform() {
-		return (iterable -> MongoStreamer.streamUDT_(iterable, (obj -> obj.toString()))); // boucle infinie
+		if(this.datatable) {
+			return (iterable -> MongoStreamer.streamUDT_(iterable, (obj -> Json.toJson(obj).toString())));
+		} else if(this.list) {
+			return (iterable -> MongoStreamer.stream(iterable, conversion()));
+		} else if(this.count) {
+			return (iterable -> {
+				Map<String, Integer> map = new HashMap<>(1);
+				Iterator<T> iterator = iterable.iterator();
+				int size = 0;
+				while(iterator.hasNext()) {
+					size++;
+					iterator.next();
+				}
+				map.put("result", size);
+				return MongoStreamer.stream(Json.toJson(map));
+			} );
+		} else {
+			return (cursor -> MongoStreamer.stream(cursor));
+		}
 	}
 }

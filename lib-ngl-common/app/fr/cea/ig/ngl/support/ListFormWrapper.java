@@ -5,7 +5,6 @@ import java.util.function.Function;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.jongo.MongoCursor;
 import org.mongojack.DBQuery;
 
 import com.mongodb.BasicDBObject;
@@ -14,7 +13,6 @@ import akka.stream.javadsl.Source;
 import akka.util.ByteString;
 import controllers.ListForm;
 import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBResult;
 import views.components.datatable.IDatatableForm;
 
 /**
@@ -62,25 +60,6 @@ public class ListFormWrapper<T extends DBObject> {
 		}
 	} 
 
-	/**
-	 * Define how to return results. 
-	 * @see ListForm#transformMongoCursor() Concrete implementation
-	 * @return the function to transform results
-	 */
-	public Function<MongoCursor<T>, Source<ByteString,?>> transformMongoCursor() {
-		return form.transformMongoCursor();
-	}
-	
-	/**
-	 * Define how to return results. 
-	 * @see ListForm#transformMongoDBResult Concrete implementation
-	 * @return the function to transform results
-	 */
-	public Function<MongoDBResult<T>, Source<ByteString, ?>> transformMongoDBResult() {
-		return form.transformMongoDBResult();
-	}
-	
-	
 	public BasicDBObject getKeys(List<String> defaultKeys) {
 		// replace "default" keyword by the list of default keys
 		if(form.includes().contains("default")){
@@ -92,6 +71,11 @@ public class ListFormWrapper<T extends DBObject> {
 		return this.basicDBObjectGenerator.apply(form);
 	}
 
+	/**
+	 * Define how to return results. 
+	 * @see ListForm#transform() Concrete implementation
+	 * @return the function to transform results
+	 */
 	public Function<Iterable<T>, Source<ByteString,?>> transform() {
 		return form.transform();
 	}
