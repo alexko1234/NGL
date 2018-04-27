@@ -78,7 +78,7 @@ public class Iterables {
 				return new Iterator<A>() {
 					
 					private B acc = b;
-					private Iterator<A> it = iterator();
+					private Iterator<A> it = i.iterator();
 					private boolean append = true;
 					
 					@Override
