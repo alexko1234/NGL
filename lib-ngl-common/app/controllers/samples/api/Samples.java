@@ -39,6 +39,7 @@ import models.laboratory.sample.instance.Sample;
 import play.data.Form;
 import play.mvc.Result;
 import views.components.datatable.DatatableForm;
+import views.html.searchForm;
 
 @Historized
 public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> { // implements NGLForms, DBObjectConvertor {
@@ -80,9 +81,14 @@ public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> { 
 			} else {
 				DBQuery.Query query = getQuery(samplesSearch);
 				BasicDBObject keys = null;
-				if(! samplesSearch.includes().contains("default")){
-					keys = getKeys(samplesSearch); 
+				
+				//TODO AJ: NGL-2038: quick fix it will be deleted in version 2.3.0
+				if(samplesSearch.includes().contains("default")){
+					updateForm(samplesSearch, api().defaultKeys());
 				}
+				keys = getKeys(samplesSearch); 
+				// ---------------------------------------------------------------
+				
 				List<Sample> results = null;
 				if (samplesSearch.datatable) {
 					Source<ByteString, ?> resultsAsStream = null; 
