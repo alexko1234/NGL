@@ -42,6 +42,10 @@ rule "prepa-fc from process"
 			PropertySingleValue phixPercent = new PropertySingleValue($phixPercent.value);
 			$experimentProperties.put("phixPercent",phixPercent);	
 		}
+		if(null == $experimentProperties.get("volumeFinalPhiX")){
+			PropertySingleValue volumeFinalPhiX = new PropertySingleValue((convertPVToDouble($phixPercent)*10+convertPVToDouble($phixPercent)*10/100*20), "\u00B5L");
+			$experimentProperties.put("volumeFinalPhiX",volumeFinalPhiX);
+		}
    	end
 
  

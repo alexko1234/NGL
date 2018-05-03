@@ -4,18 +4,59 @@
 
 @for(etm <- e.atomicTransfertMethods.sortWith(_.line < _.line)){
 	@for(c <- etm.inputContainerUseds.sortWith(_.code < _.code)){
-		@for((k,cs) <- c.contents.groupBy(_.projectCode)){
-			@for((key1,cos1) <- cs.groupBy(CsvHelper.getContentProcessProperties(_,"analyseType", e))){
-				@for((key2,cos2) <- cos1.groupBy(CsvHelper.getContentProcessProperties(_,"reference_genome", e))){
-					@for((key,cos) <- cos2.groupBy(CsvHelper.getContentProcessProperties(_,"reference_transcriptome", e))){
-						@if(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e) == "Amplicon" && OutputHelper.getContentProperty(cos.toList.head,"taille_insert") != null && (cos.toList.groupBy(OutputHelper.getContentProperty(_,"taille_insert")).size > 1 || OutputHelper.getContentProperty(cos.toList.head,"taille_insert").toInt > OutputHelper.getInstrumentProperty(e,"nbCyclesRead1").asInstanceOf[Integer]+OutputHelper.getInstrumentProperty(e,"nbCyclesRead2").asInstanceOf[Integer]-2 || OutputHelper.getContentProperty(cos.toList.head,"taille_insert").toInt < OutputHelper.getInstrumentProperty(e,"nbCyclesRead1").asInstanceOf[Integer]-1+15) ){@(jnt=false)}
+		@for((k,cs) <- c.contents.groupBy(_.projectCode)){		
+			@for((key2,cos2) <- cos1.groupBy(CsvHelper.getContentProcessProperties(_,"reference_genome", e))){
+				@for((key,cos) <- cos2.groupBy(CsvHelper.getContentProcessProperties(_,"reference_transcriptome", e))){
+				
+					@*** Si Amplicon ou 16S et différents tailles d'insert -- créeér 1 ligne par taille d'insert ***@
+					@if((CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e) == "Amplicon" || CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e) == "16S") && OutputHelper.getContentProperty(cos.toList.head,"taille_insert") != null && cos.toList.groupBy(OutputHelper.getContentProperty(_,"taille_insert")).size > 1){
+						@for((keybis,cosbis) <- cos.groupBy(OutputHelper.getContentProperty(_,"taille_insert"))){
+							@if(OutputHelper.getContentProperty(cosbis.toList.head,"taille_insert").toInt > OutputHelper.getInstrumentProperty(e,"nbCyclesRead1").asInstanceOf[Integer]+OutputHelper.getInstrumentProperty(e,"nbCyclesRead2").asInstanceOf[Integer]-2 || OutputHelper.getContentProperty(cosbis.toList.head,"taille_insert").toInt < OutputHelper.getInstrumentProperty(e,"nbCyclesRead1").asInstanceOf[Integer]-1+15){@(jnt=false)}
+							python3.4 /usr/local/bioinfo/src/nG6/bin/ng6_cli.py @***
+							Si l'insert n'est pas assez long pour un overlap
+	                    	ou bien que la taille des inserts est inférieure à la taille des read + 15
+							***@@if(!jnt){illumina_qc}else{@(CsvHelper.getFromAnalyseType(CsvHelper.getContentProcessProperties(cosbis.toList.head, "analyseType", e)))} @***
+							***@--date '@(CsvHelper.getRunDate(e))' @***
+							***@--data-nature @if(OutputHelper.getContentProperty(cosbis.toList.head, "Type_librairie")){'@(OutputHelper.getContentProperty(cosbis.toList.head,"Type_librairie"))'}else{'-'} @***
+							***@--sequencer '@(CsvHelper.getInstrumentName(e.instrument.code))' --name '@if(OutputHelper.getContentProperty(cosbis.toList.head,"Client-Devis")!=""){@(CsvHelper.checkName(OutputHelper.getContentProperty(cosbis.toList.head,"Client-Devis")))}else{@(CsvHelper.checkName(OutputHelper.getContentProperty(cosbis.toList.head,"Nom_pool_sequencage")))}' @***
+							***@--type 'Lane 1' @***
+							***@--species @if(c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cosbis.toList.head, "species", e)) != null){'@(CsvHelper.getContentProcessProperties(cosbis.toList.head, "species",e))'}else{'-'} @***
+							***@--description 'Adapter type : @(CsvHelper.getHiseqAdapter(cosbis.toList.head)) @***
+							si "taille_insert" est renceigné
+							***@@if(OutputHelper.getContentProperty(cosbis.toList.sortWith(_.sampleCode < _.sampleCode).head,"taille_insert")!="" && OutputHelper.getContentProperty(cosbis.toList.sortWith(_.sampleCode < _.sampleCode).head,"taille_insert")!="0"){@***
+								***@- Insert : @***
+								***@@for(co <- cosbis.toList.sortWith(_.sampleCode < _.sampleCode)){@***
+											***@@if(cosbis.toList.sortWith(_.sampleCode < _.sampleCode).head != co){, }@(OutputHelper.getContentProperty(co,"taille_insert"))pb for Sample @(CsvHelper.contentName(co))@***
+								***@}@***
+							***@.} [C] @***
+							***@@(c.concentration.value)pM' @***
+							***@@if((CsvHelper.getContentProcessProperties(c.contents.toList.head, "store_bam", e) != null && CsvHelper.getContentProcessProperties(c.contents.toList.head, "store_bam", e) != "non") || CsvHelper.getContentProcessProperties(cosbis.toList.head, "analyseType", e) == "Amplicon" || CsvHelper.getFromAnalyseType(CsvHelper.getContentProcessProperties(cosbis.toList.head, "analyseType", e)) == "methylseq"){}else{ --delete-bam} @***
+							***@@if(c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cosbis.toList.head, "reference_transcriptome", e)) != null){--reference-transcriptome @(CsvHelper.getContentProcessProperties(cosbis.toList.head, "reference_transcriptome", e))} @***
+							***@@if(c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cosbis.toList.head, "reference_genome", e)) != null){@***
+								***@ --reference-genome @(CsvHelper.getContentProcessProperties(cosbis.toList.head, "reference_genome", e))@***
+							***@} @***
+							***@@if(jnt){@***
+								***@--assignation-databank '/save/ng6/TODO/HiSeqIndexedGenomes/new_struct/ncbi_16S/blast/16SMicrobial' @***
+								***@--min-overlap  @if(OutputHelper.getInstrumentProperty(e,"nbCyclesRead1").asInstanceOf[Integer]+OutputHelper.getInstrumentProperty(e,"nbCyclesRead2").asInstanceOf[Integer]-2-OutputHelper.getContentProperty(cosbis.toList.head,"taille_insert").toInt-30 > 10){@***
+									***@@(OutputHelper.getInstrumentProperty(e,"nbCyclesRead1").asInstanceOf[Integer]+OutputHelper.getInstrumentProperty(e,"nbCyclesRead2").asInstanceOf[Integer]-2-OutputHelper.getContentProperty(cosbis.toList.head,"taille_insert").toInt-30)}else{10} @***
+								***@--max-overlap @(OutputHelper.getInstrumentProperty(e,"nbCyclesRead1").asInstanceOf[Integer]+OutputHelper.getInstrumentProperty(e,"nbCyclesRead2").asInstanceOf[Integer]-2-OutputHelper.getContentProperty(cosbis.toList.head,"taille_insert").toInt+20) @***
+							***@} @***
+							***@--casava directory=#CASAVA_DIRECTORY# @***
+							***@@for(co <- cosbis.toList.sortWith(_.sampleCode < _.sampleCode)){@***
+								***@ select-sample-id=@(CsvHelper.contentName(co))@***
+							***@} @***
+							***@lane=@(etm.line) --project-name @(cosbis.toList.head.projectCode) --admin-login CTD
+						}
+					}else{
+		
+						@if((CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e) == "Amplicon" || CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e) == "16S") && OutputHelper.getContentProperty(cos.toList.head,"taille_insert") != null && (OutputHelper.getContentProperty(cos.toList.head,"taille_insert").toInt > OutputHelper.getInstrumentProperty(e,"nbCyclesRead1").asInstanceOf[Integer]+OutputHelper.getInstrumentProperty(e,"nbCyclesRead2").asInstanceOf[Integer]-2 || OutputHelper.getContentProperty(cos.toList.head,"taille_insert").toInt < OutputHelper.getInstrumentProperty(e,"nbCyclesRead1").asInstanceOf[Integer]-1+15) ){@(jnt=false)}
 						python3.4 /usr/local/bioinfo/src/nG6/bin/ng6_cli.py @***
 						Si les inserts sont de taille différentes ou que l'insert n'est pas assez long pour un overlap
                     	ou bien que la taille des inserts est inférieure à la taille des read + 15
 						***@@if(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e) == "Amplicon" && !jnt){illumina_qc}else{@(CsvHelper.getFromAnalyseType(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e)))} @***
 						***@--date '@(CsvHelper.getRunDate(e))' @***
 						***@--data-nature @if(OutputHelper.getContentProperty(cos.toList.head, "Type_librairie")){'@(OutputHelper.getContentProperty(cos.toList.head,"Type_librairie"))'}else{'-'} @***
-						***@--sequencer '@(CsvHelper.getInstrumentName(e.instrument.code))' --name '@(CsvHelper.checkName(OutputHelper.getContentProperty(cos.toList.head,"Nom_pool_sequencage")))' @***
+						***@--sequencer '@(CsvHelper.getInstrumentName(e.instrument.code))' --name '@if(OutputHelper.getContentProperty(cos.toList.head,"Client-Devis")!=""){@(CsvHelper.checkName(OutputHelper.getContentProperty(cos.toList.head,"Client-Devis")))}else{@(CsvHelper.checkName(OutputHelper.getContentProperty(cos.toList.head,"Nom_pool_sequencage")))}' @***
 						***@--type 'Lane 1' @***
 						***@--species @if(c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cos.toList.head, "species", e)) != null){'@(CsvHelper.getContentProcessProperties(cos.toList.head, "species",e))'}else{'-'} @***
 						***@--description 'Adapter type : @(CsvHelper.getHiseqAdapter(cos.toList.head)) @***
@@ -44,8 +85,10 @@
 							***@ select-sample-id=@(CsvHelper.contentName(co))@***
 						***@} @***
 						***@lane=@(etm.line) --project-name @(cos.toList.head.projectCode) --admin-login CTD
+							
 					}
-				}
+					
+				}	
 			}
 		}
 	}		
