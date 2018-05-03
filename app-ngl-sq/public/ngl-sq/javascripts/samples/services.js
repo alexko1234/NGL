@@ -308,11 +308,13 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 			initAdditionalColumns : function(){
 				this.additionalColumns=[];
 				this.selectedAddColumns=[];
+				this.mapAdditionnalColumn=new Map();
 				
 				if(lists.get("samples-addcolumns") && lists.get("samples-addcolumns").length === 1){
 					var formColumns = [];
 					//we used the order in the document to order column in display and not the position value !!!!
-					var allColumns = angular.copy(lists.get("samples-addcolumns")[0].columns);
+					//var allColumns = angular.copy(lists.get("samples-addcolumns")[0].columns);
+					var allColumns = this.computeMapAdditionnalColumns();
 					var nbElementByColumn = Math.ceil(allColumns.length / 5); //5 columns
 					for(var i = 0; i  < 5 && allColumns.length > 0 ; i++){
 						formColumns.push(allColumns.splice(0, nbElementByColumn));	    								
@@ -324,6 +326,25 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 					this.additionalColumns = formColumns;
 				}
 			},
+			
+			computeMapAdditionnalColumns:function(){
+				var allColumns = angular.copy(lists.get("samples-addcolumns")[0].columns);
+				var allColumnsFiltered = [];
+				for(var i=0; i<allColumns.length; i++){
+					if(this.mapAdditionnalColumn.get(allColumns[i].position)==undefined){
+						//if(this.contextValue==undefined || (this.contextValue!=undefined && allColumns[i].context!=null && allColumns[i].context.includes(this.contextValue))){
+							allColumnsFiltered.push(allColumns[i]);
+							var tabColumn=[];
+							tabColumn.push(allColumns[i]);
+							this.mapAdditionnalColumn.set(allColumns[i].position,tabColumn);
+							//}
+					}else{
+						this.mapAdditionnalColumn.get(allColumns[i].position).push(allColumns[i]);
+					}
+				}
+				return allColumnsFiltered;
+			},
+			
 			getAddColumnsToForm : function(){
 				if(this.additionalColumns.length === 0){
 					this.initAdditionalColumns();
@@ -338,7 +359,9 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 				for(var i = 0 ; i < this.additionalColumns.length ; i++){
 					for(var j = 0; j < this.additionalColumns[i].length; j++){
 						if(this.additionalColumns[i][j].select){
-							this.selectedAddColumns.push(this.additionalColumns[i][j]);
+							for(var c=0; c<this.mapAdditionnalColumn.get(this.additionalColumns[i][j].position).length; c++){
+								this.selectedAddColumns.push(this.mapAdditionnalColumn.get(this.additionalColumns[i][j].position)[c]);
+							}
 						}
 					}
 				}
