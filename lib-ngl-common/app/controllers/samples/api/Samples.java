@@ -12,8 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-import akka.stream.javadsl.Source;
-import akka.util.ByteString;
 import controllers.NGLAPIController;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
@@ -26,8 +24,6 @@ import fr.cea.ig.ngl.dao.api.APISemanticException;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.samples.SamplesAPI;
 import fr.cea.ig.ngl.dao.samples.SamplesDAO;
-import fr.cea.ig.ngl.support.ListFormWrapper;
-import fr.cea.ig.lfw.utils.Streamer;
 import models.laboratory.common.description.Level;
 import models.laboratory.sample.instance.Sample;
 import play.data.Form;
@@ -43,25 +39,25 @@ public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> {
 
 	@Inject
 	public Samples(NGLApplication app, SamplesAPI api) {
-		super(app, api);
+		super(app, api, SamplesSearchForm.class);
 		this.sampleForm = app.formFactory().form(Sample.class);
 	}
 
-	@Override
-	@Authenticated
-	@Authorized.Read
-	public Result list() {
-		try {
-			Source<ByteString, ?> resultsAsStream = api().list(new ListFormWrapper<Sample>(objectFromRequestQueryString(SamplesSearchForm.class), form -> generateBasicDBObjectFromKeys(form)));
-			return Streamer.okStream(resultsAsStream);
-		} catch (APIException e) {
-			getLogger().error(e.getMessage());
-			return badRequestAsJson(e.getMessage());
-		} catch (Exception e) {
-			getLogger().error(e.getMessage());
-			return nglGlobalBadRequest();
-		}
-	}
+//	@Override
+//	@Authenticated
+//	@Authorized.Read
+//	public Result list() {
+//		try {
+//			Source<ByteString, ?> resultsAsStream = api().list(new ListFormWrapper<Sample>(objectFromRequestQueryString(SamplesSearchForm.class), form -> generateBasicDBObjectFromKeys(form)));
+//			return Streamer.okStream(resultsAsStream);
+//		} catch (APIException e) {
+//			getLogger().error(e.getMessage());
+//			return badRequestAsJson(e.getMessage());
+//		} catch (Exception e) {
+//			getLogger().error(e.getMessage());
+//			return nglGlobalBadRequest();
+//		}
+//	}
 	
 //	public Result list() {		
 //		try {
@@ -183,7 +179,9 @@ public class Samples extends NGLAPIController<SamplesAPI, SamplesDAO, Sample> {
 	 * Construct the sample query.
 	 * @param samplesSearch search form
 	 * @return              query
+	 * @see SamplesSearchForm#getQuery()
 	 */
+	@Deprecated
 	public DBQuery.Query getQuery(SamplesSearchForm samplesSearch) {
 		// TODO: simply build return value at method end
 		Query query = DBQuery.empty();

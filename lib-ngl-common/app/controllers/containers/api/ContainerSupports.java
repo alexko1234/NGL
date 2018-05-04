@@ -51,17 +51,17 @@ public class ContainerSupports extends NGLAPIController<ContainerSupportsAPI, Co
 	private static final play.Logger.ALogger logger = play.Logger.of(ContainerSupports.class);
 	
 	private final Form<ContainerSupport>             containerSupportForm;
-	private final Form<QueryFieldsForm>              updateForm; 
-	private final Form<ContainerSupportBatchElement> batchElementForm;
-	private final Form<State>                        stateForm; 
+//	private final Form<QueryFieldsForm>              updateForm; 
+//	private final Form<ContainerSupportBatchElement> batchElementForm;
+//	private final Form<State>                        stateForm; 
 	
 	@Inject
 	public ContainerSupports(NGLApplication app, ContainerSupportsAPI api, ContSupportWorkflows workflows) {
-		super(app, api);
+		super(app, api, ContainerSupportsSearchForm.class);
 		containerSupportForm       = app.formFactory().form(ContainerSupport.class);
-		updateForm                 = app.formFactory().form(QueryFieldsForm.class);
-		batchElementForm           = app.formFactory().form(ContainerSupportBatchElement.class);
-		stateForm                  = app.formFactory().form(State.class);
+//		updateForm                 = app.formFactory().form(QueryFieldsForm.class);
+//		batchElementForm           = app.formFactory().form(ContainerSupportBatchElement.class);
+//		stateForm                  = app.formFactory().form(State.class);
 	}
 	
 	
@@ -128,96 +128,96 @@ public class ContainerSupports extends NGLAPIController<ContainerSupportsAPI, Co
 //	}
 
 
-	@Override
-	@Authenticated
-	@Authorized.Read
-	public Result list() {
-		try {
-			ContainerSupportsSearchForm containersSupportSearch = objectFromRequestQueryString(ContainerSupportsSearchForm.class);
-			if (containersSupportSearch.reporting) {
-				MongoCursor<ContainerSupport> data = api().findByQuery(containersSupportSearch.reportingQuery);
-				if (containersSupportSearch.datatable) {
-					return MongoStreamer.okStreamUDT(data);
-				} else if(containersSupportSearch.list) {
-					return MongoStreamer.okStream(data);
-				} else if(containersSupportSearch.count) {
-					int count = api().count(containersSupportSearch.reportingQuery);
-					Map<String, Integer> map = new HashMap<>(1);
-					map.put("result", count);
-					return okAsJson(map);
-				} else {
-					return badRequest();
-				}
-			} else {
-				DBQuery.Query query = getQuery(containersSupportSearch);
-				BasicDBObject keys = null;
-				if(! containersSupportSearch.includes().contains("default")) keys = generateBasicDBObjectFromKeys(containersSupportSearch); 
-				
-				List<ContainerSupport> results = null;
-				if (containersSupportSearch.datatable) {
-					Source<ByteString, ?> resultsAsStream = null; 
-					if(containersSupportSearch.isServerPagination()){
-						if(keys == null){
-							resultsAsStream = api().streamUDTWithDefaultKeys(query, 
-																			 containersSupportSearch.orderBy, 
-																			 Sort.valueOf(containersSupportSearch.orderSense), 
-																			 containersSupportSearch.pageNumber, 
-																			 containersSupportSearch.numberRecordsPerPage);
-						} else {
-							resultsAsStream = api().streamUDT(query, 
-									   						  containersSupportSearch.orderBy, 
-									   						  Sort.valueOf(containersSupportSearch.orderSense), 
-									   						  keys, containersSupportSearch.pageNumber, 
-									   						  containersSupportSearch.numberRecordsPerPage);
-						}
-					} else {
-						if(keys == null){
-							resultsAsStream = api().streamUDTWithDefaultKeys(query, 
-																			 containersSupportSearch.orderBy, 
-																			 Sort.valueOf(containersSupportSearch.orderSense), 
-																			 containersSupportSearch.limit);
-						} else {
-							resultsAsStream = api().streamUDT(query, 
-															  containersSupportSearch.orderBy, 
-															  Sort.valueOf(containersSupportSearch.orderSense), 
-															  keys, 
-															  containersSupportSearch.limit);
-						}
-					}
-					return Streamer.okStream(resultsAsStream);
-				} else  {
-					if(containersSupportSearch.orderBy == null) containersSupportSearch.orderBy = "code";
-					if(containersSupportSearch.orderSense == null) containersSupportSearch.orderSense = 0;
-
-					if(containersSupportSearch.list) {
-						keys = new BasicDBObject();
-						keys.put("_id", 0);//Don't need the _id field
-						keys.put("code", 1);
-						results = api().list(query, 
-											 containersSupportSearch.orderBy, 
-											 Sort.valueOf(containersSupportSearch.orderSense), 
-											 keys, 
-											 containersSupportSearch.limit);	
-						return MongoStreamer.okStream(convertToListObject(results, x -> x.code, x -> x.code)); // in place of getLOChunk(MongoDBResult<T> all)
-					} else if(containersSupportSearch.count) {
-						int count = api().count(containersSupportSearch.reportingQuery);
-						Map<String, Integer> m = new HashMap<>(1);
-						m.put("result", count);
-						return okAsJson(m);
-					} else {
-						return Streamer.okStream(api().stream(query, 
-															  containersSupportSearch.orderBy, 
-															  Sort.valueOf(containersSupportSearch.orderSense), 
-															  keys, 
-															  containersSupportSearch.limit));
-					}
-				}
-			}
-		} catch (Exception e) {
-			getLogger().error(e.getMessage());
-			return nglGlobalBadRequest();
-		}
-	}
+//	@Override
+//	@Authenticated
+//	@Authorized.Read
+//	public Result list() {
+//		try {
+//			ContainerSupportsSearchForm containersSupportSearch = objectFromRequestQueryString(ContainerSupportsSearchForm.class);
+//			if (containersSupportSearch.reporting) {
+//				MongoCursor<ContainerSupport> data = api().findByQuery(containersSupportSearch.reportingQuery);
+//				if (containersSupportSearch.datatable) {
+//					return MongoStreamer.okStreamUDT(data);
+//				} else if(containersSupportSearch.list) {
+//					return MongoStreamer.okStream(data);
+//				} else if(containersSupportSearch.count) {
+//					int count = api().count(containersSupportSearch.reportingQuery);
+//					Map<String, Integer> map = new HashMap<>(1);
+//					map.put("result", count);
+//					return okAsJson(map);
+//				} else {
+//					return badRequest();
+//				}
+//			} else {
+//				DBQuery.Query query = getQuery(containersSupportSearch);
+//				BasicDBObject keys = null;
+//				if(! containersSupportSearch.includes().contains("default")) keys = generateBasicDBObjectFromKeys(containersSupportSearch); 
+//				
+//				List<ContainerSupport> results = null;
+//				if (containersSupportSearch.datatable) {
+//					Source<ByteString, ?> resultsAsStream = null; 
+//					if(containersSupportSearch.isServerPagination()){
+//						if(keys == null){
+//							resultsAsStream = api().streamUDTWithDefaultKeys(query, 
+//																			 containersSupportSearch.orderBy, 
+//																			 Sort.valueOf(containersSupportSearch.orderSense), 
+//																			 containersSupportSearch.pageNumber, 
+//																			 containersSupportSearch.numberRecordsPerPage);
+//						} else {
+//							resultsAsStream = api().streamUDT(query, 
+//									   						  containersSupportSearch.orderBy, 
+//									   						  Sort.valueOf(containersSupportSearch.orderSense), 
+//									   						  keys, containersSupportSearch.pageNumber, 
+//									   						  containersSupportSearch.numberRecordsPerPage);
+//						}
+//					} else {
+//						if(keys == null){
+//							resultsAsStream = api().streamUDTWithDefaultKeys(query, 
+//																			 containersSupportSearch.orderBy, 
+//																			 Sort.valueOf(containersSupportSearch.orderSense), 
+//																			 containersSupportSearch.limit);
+//						} else {
+//							resultsAsStream = api().streamUDT(query, 
+//															  containersSupportSearch.orderBy, 
+//															  Sort.valueOf(containersSupportSearch.orderSense), 
+//															  keys, 
+//															  containersSupportSearch.limit);
+//						}
+//					}
+//					return Streamer.okStream(resultsAsStream);
+//				} else  {
+//					if(containersSupportSearch.orderBy == null) containersSupportSearch.orderBy = "code";
+//					if(containersSupportSearch.orderSense == null) containersSupportSearch.orderSense = 0;
+//
+//					if(containersSupportSearch.list) {
+//						keys = new BasicDBObject();
+//						keys.put("_id", 0);//Don't need the _id field
+//						keys.put("code", 1);
+//						results = api().list(query, 
+//											 containersSupportSearch.orderBy, 
+//											 Sort.valueOf(containersSupportSearch.orderSense), 
+//											 keys, 
+//											 containersSupportSearch.limit);	
+//						return MongoStreamer.okStream(convertToListObject(results, x -> x.code, x -> x.code)); // in place of getLOChunk(MongoDBResult<T> all)
+//					} else if(containersSupportSearch.count) {
+//						int count = api().count(containersSupportSearch.reportingQuery);
+//						Map<String, Integer> m = new HashMap<>(1);
+//						m.put("result", count);
+//						return okAsJson(m);
+//					} else {
+//						return Streamer.okStream(api().stream(query, 
+//															  containersSupportSearch.orderBy, 
+//															  Sort.valueOf(containersSupportSearch.orderSense), 
+//															  keys, 
+//															  containersSupportSearch.limit));
+//					}
+//				}
+//			}
+//		} catch (Exception e) {
+//			getLogger().error(e.getMessage());
+//			return nglGlobalBadRequest();
+//		}
+//	}
 
 
 	@Override
@@ -269,7 +269,9 @@ public class ContainerSupports extends NGLAPIController<ContainerSupportsAPI, Co
 	 * @param supportsSearch
 	 * @return
 	 * @throws DAOException 
+	 * @see {@link ContainerSupportsSearchForm#getQuery()}
 	 */
+	@Deprecated 
 	private static DBQuery.Query getQuery(ContainerSupportsSearchForm supportsSearch) throws DAOException {
 		List<DBQuery.Query> queryElts = new ArrayList<>();
 		queryElts.add(DBQuery.exists("_id"));

@@ -5,10 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import akka.stream.javadsl.Source;
+import akka.util.ByteString;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
+import fr.cea.ig.lfw.utils.Streamer;
 import fr.cea.ig.mongo.DBObjectConvertor;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
@@ -17,6 +20,7 @@ import fr.cea.ig.ngl.dao.api.APIException;
 import fr.cea.ig.ngl.dao.api.APISemanticException;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.api.GenericAPI;
+import fr.cea.ig.ngl.support.ListFormWrapper;
 import fr.cea.ig.ngl.support.NGLForms;
 import fr.cea.ig.play.IGBodyParsers;
 import play.data.Form;
@@ -39,6 +43,7 @@ public abstract class NGLAPIController<T extends GenericAPI<U,V>, U extends Gene
 				extends NGLController implements NGLForms, DBObjectConvertor {
 
 	protected final Form<QueryFieldsForm> updateForm;
+	protected final Class<? extends ListForm> searchFormClass;
 	
 	private final T api;
 	
@@ -46,10 +51,11 @@ public abstract class NGLAPIController<T extends GenericAPI<U,V>, U extends Gene
 		return api;
 	}
 
-	public NGLAPIController(NGLApplication app, T api) {
+	public NGLAPIController(NGLApplication app, T api, Class<? extends ListForm> searchFormClass) {
 		super(app);
 		this.api = api;
 		this.updateForm = app.formFactory().form(QueryFieldsForm.class);
+		this.searchFormClass = searchFormClass;
 	}
 	
 	/**
@@ -68,9 +74,24 @@ public abstract class NGLAPIController<T extends GenericAPI<U,V>, U extends Gene
 		}
 	}
 	
-	// Mandatory methods
-	public abstract Result list();
-
+	
+	@Authenticated
+	@Authorized.Read
+	public Result list() {
+		try {
+			Source<ByteString, ?> resultsAsStream = api().list(new ListFormWrapper<V>(objectFromRequestQueryString(this.searchFormClass), form -> generateBasicDBObjectFromKeys(form)));
+			return Streamer.okStream(resultsAsStream);
+		} catch (APIException e) {
+			getLogger().error(e.getMessage());
+			return badRequestAsJson(e.getMessage());
+		} catch (Exception e) {
+			getLogger().error(e.getMessage());
+			return nglGlobalBadRequest();
+		}
+	}
+	
+	
+	
 	@Authenticated
 	@Authorized.Read
 	public Result get(String code) {

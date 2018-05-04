@@ -64,7 +64,7 @@ public class Containers extends NGLAPIController<ContainersAPI, ContainersDAO, C
 	
 	@Inject
 	public Containers(NGLApplication app, ContainersAPI api, ContWorkflows workflows) {
-		super(app, api);
+		super(app, api, ContainersSearchForm.class);
 		form = app.formFactory().form(Container.class);
 		stateForm = app.formFactory().form(State.class);
 		batchElementForm = app.formFactory().form(ContainerBatchElement.class);
@@ -97,97 +97,97 @@ public class Containers extends NGLAPIController<ContainersAPI, ContainersDAO, C
 		}
 	}
 
-	@Override
-	@Authenticated
-	@Authorized.Read
-	public Result list() {
-		try {
-			ContainersSearchForm containersSearch = objectFromRequestQueryString(ContainersSearchForm.class);
-			if (containersSearch.reporting) {
-				MongoCursor<Container> data = api().findByQuery(containersSearch.reportingQuery);
-				if (containersSearch.datatable) {
-					return MongoStreamer.okStreamUDT(data);
-				} else if(containersSearch.list) {
-					return MongoStreamer.okStream(data);
-				} else if(containersSearch.count) {
-					int count = api().count(containersSearch.reportingQuery);
-					Map<String, Integer> map = new HashMap<>(1);
-					map.put("result", count);
-					return okAsJson(map);
-				} else {
-					return badRequest();
-				}
-			} else {
-				DBQuery.Query query = getQuery(containersSearch);
-				BasicDBObject keys = null;
-				if(! containersSearch.includes().contains("default")) keys = generateBasicDBObjectFromKeys(containersSearch); 
-				
-				List<Container> results = null;
-				if (containersSearch.datatable) {
-					Source<ByteString, ?> resultsAsStream = null; 
-					if(containersSearch.isServerPagination()){
-						if(keys == null){
-							resultsAsStream = api().streamUDTWithDefaultKeys(query, 
-																			 containersSearch.orderBy, 
-																			 Sort.valueOf(containersSearch.orderSense), 
-																			 containersSearch.pageNumber, 
-																			 containersSearch.numberRecordsPerPage);
-						} else {
-							resultsAsStream = api().streamUDT(query, 
-															  containersSearch.orderBy, 
-															  Sort.valueOf(containersSearch.orderSense), 
-															  keys, 
-															  containersSearch.pageNumber, 
-															  containersSearch.numberRecordsPerPage);
-						}
-					} else {
-						if(keys == null){
-							resultsAsStream = api().streamUDTWithDefaultKeys(query, 
-																			 containersSearch.orderBy, 
-																			 Sort.valueOf(containersSearch.orderSense), 
-																			 containersSearch.limit);
-						} else {
-							resultsAsStream = api().streamUDT(query, 
-															  containersSearch.orderBy, 
-															  Sort.valueOf(containersSearch.orderSense), 
-															  keys, 
-															  containersSearch.limit);
-						}
-					}
-					return Streamer.okStream(resultsAsStream);
-				} else  {
-					if(containersSearch.orderBy == null) containersSearch.orderBy = "code";
-					if(containersSearch.orderSense == null) containersSearch.orderSense = 0;
-
-					if(containersSearch.list) {
-						keys = new BasicDBObject();
-						keys.put("_id", 0);//Don't need the _id field
-						keys.put("code", 1);
-						results = api().list(query, 
-											 containersSearch.orderBy, 
-											 Sort.valueOf(containersSearch.orderSense), 
-											 keys, 
-											 containersSearch.limit);	
-						return MongoStreamer.okStream(convertToListObject(results, x -> x.code, x -> x.code)); // in place of getLOChunk(MongoDBResult<T> all)
-					} else if(containersSearch.count) {
-						int count = api().count(containersSearch.reportingQuery);
-						Map<String, Integer> m = new HashMap<>(1);
-						m.put("result", count);
-						return okAsJson(m);
-					} else {
-						return Streamer.okStream(api().stream(query, 
-															  containersSearch.orderBy, 
-															  Sort.valueOf(containersSearch.orderSense), 
-															  keys, 
-															  containersSearch.limit));
-					}
-				}
-			}
-		} catch (Exception e) {
-			getLogger().error(e.getMessage());
-			return nglGlobalBadRequest();
-		}
-	}
+//	@Override
+//	@Authenticated
+//	@Authorized.Read
+//	public Result list() {
+//		try {
+//			ContainersSearchForm containersSearch = objectFromRequestQueryString(ContainersSearchForm.class);
+//			if (containersSearch.reporting) {
+//				MongoCursor<Container> data = api().findByQuery(containersSearch.reportingQuery);
+//				if (containersSearch.datatable) {
+//					return MongoStreamer.okStreamUDT(data);
+//				} else if(containersSearch.list) {
+//					return MongoStreamer.okStream(data);
+//				} else if(containersSearch.count) {
+//					int count = api().count(containersSearch.reportingQuery);
+//					Map<String, Integer> map = new HashMap<>(1);
+//					map.put("result", count);
+//					return okAsJson(map);
+//				} else {
+//					return badRequest();
+//				}
+//			} else {
+//				DBQuery.Query query = getQuery(containersSearch);
+//				BasicDBObject keys = null;
+//				if(! containersSearch.includes().contains("default")) keys = generateBasicDBObjectFromKeys(containersSearch); 
+//				
+//				List<Container> results = null;
+//				if (containersSearch.datatable) {
+//					Source<ByteString, ?> resultsAsStream = null; 
+//					if(containersSearch.isServerPagination()){
+//						if(keys == null){
+//							resultsAsStream = api().streamUDTWithDefaultKeys(query, 
+//																			 containersSearch.orderBy, 
+//																			 Sort.valueOf(containersSearch.orderSense), 
+//																			 containersSearch.pageNumber, 
+//																			 containersSearch.numberRecordsPerPage);
+//						} else {
+//							resultsAsStream = api().streamUDT(query, 
+//															  containersSearch.orderBy, 
+//															  Sort.valueOf(containersSearch.orderSense), 
+//															  keys, 
+//															  containersSearch.pageNumber, 
+//															  containersSearch.numberRecordsPerPage);
+//						}
+//					} else {
+//						if(keys == null){
+//							resultsAsStream = api().streamUDTWithDefaultKeys(query, 
+//																			 containersSearch.orderBy, 
+//																			 Sort.valueOf(containersSearch.orderSense), 
+//																			 containersSearch.limit);
+//						} else {
+//							resultsAsStream = api().streamUDT(query, 
+//															  containersSearch.orderBy, 
+//															  Sort.valueOf(containersSearch.orderSense), 
+//															  keys, 
+//															  containersSearch.limit);
+//						}
+//					}
+//					return Streamer.okStream(resultsAsStream);
+//				} else  {
+//					if(containersSearch.orderBy == null) containersSearch.orderBy = "code";
+//					if(containersSearch.orderSense == null) containersSearch.orderSense = 0;
+//
+//					if(containersSearch.list) {
+//						keys = new BasicDBObject();
+//						keys.put("_id", 0);//Don't need the _id field
+//						keys.put("code", 1);
+//						results = api().list(query, 
+//											 containersSearch.orderBy, 
+//											 Sort.valueOf(containersSearch.orderSense), 
+//											 keys, 
+//											 containersSearch.limit);	
+//						return MongoStreamer.okStream(convertToListObject(results, x -> x.code, x -> x.code)); // in place of getLOChunk(MongoDBResult<T> all)
+//					} else if(containersSearch.count) {
+//						int count = api().count(containersSearch.reportingQuery);
+//						Map<String, Integer> m = new HashMap<>(1);
+//						m.put("result", count);
+//						return okAsJson(m);
+//					} else {
+//						return Streamer.okStream(api().stream(query, 
+//															  containersSearch.orderBy, 
+//															  Sort.valueOf(containersSearch.orderSense), 
+//															  keys, 
+//															  containersSearch.limit));
+//					}
+//				}
+//			}
+//		} catch (Exception e) {
+//			getLogger().error(e.getMessage());
+//			return nglGlobalBadRequest();
+//		}
+//	}
 	
 
 	@Override
@@ -257,6 +257,13 @@ public class Containers extends NGLAPIController<ContainersAPI, ContainersDAO, C
 	 * @return
 	 * @throws DAOException 
 	 */
+	/**
+	 * @param containersSearch
+	 * @return
+	 * @throws DAOException
+	 * @see ContainersSearchForm#getQuery()
+	 */
+	@Deprecated
 	public DBQuery.Query getQuery(ContainersSearchForm containersSearch) throws DAOException{		
 		List<DBQuery.Query> queryElts = new ArrayList<>();
 		Query query = DBQuery.empty();

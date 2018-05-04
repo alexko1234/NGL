@@ -40,7 +40,7 @@ public class Projects extends NGLAPIController<ProjectsAPI, ProjectsDAO, Project
 	
 	@Inject
 	public Projects(NGLApplication app, ProjectsAPI api) {
-		super(app, api);
+		super(app, api, ProjectsSearchForm.class);
 		this.searchForm  = app.formFactory().form(ProjectsSearchForm.class);
 		this.projectForm = app.formFactory().form(Project.class);
 	}
@@ -48,7 +48,7 @@ public class Projects extends NGLAPIController<ProjectsAPI, ProjectsDAO, Project
 	@Override
 	@Authenticated
 	@Authorized.Read
-	public Result list() {
+	public Result list() { //TODO Might be replaced by generic list method from NGLAPIController
 		try {
 			ProjectsSearchForm form = filledFormQueryString(searchForm, ProjectsSearchForm.class).get();
 			Query q = getQuery(form);
@@ -91,7 +91,7 @@ public class Projects extends NGLAPIController<ProjectsAPI, ProjectsDAO, Project
 	@Override
 	@Authenticated
 	@Authorized.Read
-	public Result get(String code) { // Might be replaced by generic get method from NGLAPIController
+	public Result get(String code) { //TODO Might be replaced by generic get method from NGLAPIController
 		try {
 			Project p = api().get(code);
 			if(p != null) {
