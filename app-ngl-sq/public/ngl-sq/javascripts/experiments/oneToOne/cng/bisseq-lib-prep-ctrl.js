@@ -57,20 +57,16 @@ angular.module('home').controller('BisSeqLibPrepCtrl',['$scope', '$parse',  '$fi
 			 			"position":5,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	"extraHeaders":{0: inputExtraHeaders}
-				     },
-			         /*                     ???? PAS DEMANDE
-				     { 
-				       "header": Messages("containers.table.libProcessType"),
-				       "property" : "inputContainerUsed.contents",
-				       "filter" : "getArray:'properties.libProcessTypeCode.value' |unique | codes:'value'",
-				       "order":true,
-					   "edit":false,
-					   "hide":true,
-				       "type":"text",
-				       "position":8.2,
-				       "extraHeaders":{0:inputExtraHeaders}
-				     }, 
-				     */       
+				     },   
+					 { // Concentration
+			        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
+			        	 "property":"inputContainerUsed.concentration.value",
+			        	 "order":true,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":6,
+			        	 "extraHeaders":{0: inputExtraHeaders}
+			         }, 
 			         { //Volume 
 			        	 "header":Messages("containers.table.volume") + " (µL)", 
 			        	 "property":"inputContainerUsed.volume.value",
@@ -351,17 +347,14 @@ angular.module('home').controller('BisSeqLibPrepCtrl',['$scope', '$parse',  '$fi
 	
 	// Autre mode possible : utiliser une plaque d'index prédéfinis, l'utilisateur a juste a indiquer a partir de quelle colonne
 	// de cette plaque le robot doit prelever les index
-	// !!!!!!!  CE SYSTEME EST CONCU POUR DES PLAQUES COMPLETES.... ET POUR LES PLAQUES 48 INDEX ???????????????
 
 	$scope.columns = [ {name:'---', position: undefined },
 	                   {name:'1', position:0}, {name:'2', position:8}, {name:'3', position:16}, {name:'4',  position:24}, {name:'5',  position:32}, {name:'6',  position:40},
 	                   {name:'7', position:48},{name:'8', position:56},{name:'9', position:64}, {name:'10', position:72}, {name:'11', position:80}, {name:'12', position:88}
 	                 ];
 	$scope.tagPlateColumn = $scope.columns[0]; // defaut du select
-	
 
 	$scope.plates = [ {name:"NUGEN Ovation Ultralow Methyl-Seq System 1-96",   tagCategory:"SINGLE-INDEX", tags:[] } ];
-
 
 	// l'indice dans le tableau correspond a l'ordre "colonne d'abord" dans la plaque
 	// !! ce sont les codes des index qu'il faut mettre ici !!
@@ -382,36 +375,39 @@ angular.module('home').controller('BisSeqLibPrepCtrl',['$scope', '$parse',  '$fi
 	
 	$scope.tagPlate = $scope.plates[0]; // defaut du select
 
+	//NGL-2012 - 11/03/2018: Nvel algorithme plus générique, capable de gérer des plaques d'index incomplètes...(repris de small-rnaseq-lib-prep-ctrl.js)
+	//TODO ==> algorithme utilisé dans 6 experiences: mettre dans un service pour eviter duplication !!!!
 	var setTags = function(){
 		$scope.messages.clear();
-		
+			
 		console.log("selected plate is "+ $scope.tagPlate.name);
-		console.log("selected column is " + $scope.tagPlateColumn.name);
+		console.log("selected start column is " + $scope.tagPlateColumn.name);
+		console.log("selected start position is " + $scope.tagPlateColumn.position);
 		
-        var dataMain = atmService.data.getData();
-        // trier dans l'ordre "colonne d'abord"
-        var dataMain = $filter('orderBy')(dataMain, ['atomicTransfertMethod.column*1','atomicTransfertMethod.line']);
-        
-        //attention certains choix de colonne sont incorrrects !!! 
-        // 24/10/2017 NGL-1671: le controle doit porter sur la valeur maximale de colonne trouvee sur la plaque a indexer
-        //=>dernier puit si on a trié  dans l'ordre "colonne d'abord"
-         
-        var last=dataMain.slice(-1)[0];
-        var maxcol=last.atomicTransfertMethod.column*1;
-        console.log("last col in input plate="+maxcol);
-        
-        if  ($scope.tagPlateColumn.name*1 + maxcol > 13 ){
-        	$scope.messages.clazz="alert alert-danger";
-        	$scope.messages.text=Messages('select.wrongStartColumnTagPlate');
-        	$scope.messages.showDetails = false;
-        	$scope.messages.open();	
-        	return;
-        }
-       
-	    for(var i = 0; i < dataMain.length; i++){
-			var udtData = dataMain[i];
-			var ocu=udtData.outputContainerUsed;
-			//console.log("outputContainerUsed.code"+udtData.outputContainerUsed.code);
+		var dataMain = atmService.data.getData();
+		// trier dans l'ordre "colonne d'abord"
+		var dataMain = $filter('orderBy')(dataMain, ['atomicTransfertMethod.column*1','atomicTransfertMethod.line']); 
+		
+		if (($scope.tagPlateColumn.name === '---' ) && ($scope.tagPlate.name === '---')){
+			// remise a 0 des selects par l'utilisateur ????=> nettoyage de ce qui a ete positionné precedemment
+			console.log("suppression des index ...");
+			
+			for(var i = 0; i < dataMain.length; i++){
+				var udtData = dataMain[i];
+				var ocu=udtData.outputContainerUsed;
+				ocu.experimentProperties["tag"]= undefined;
+				ocu.experimentProperties["tagCategory"]=undefined;
+			}	
+			atmService.data.setData(dataMain);
+			
+		} else if (($scope.tagPlateColumn.name !== '---' ) && ($scope.tagPlate.name !== '---')){		
+ 
+			//attention certains choix de colonne sont incorrrects !!! 
+			//le controle doit porter sur la valeur maximale de colonne trouvee sur la plaque a indexer
+			//=>dernier puit si on a trié  dans l'ordre "colonne d'abord"
+			var last=dataMain.slice(-1)[0];
+			var lastInputCol=last.atomicTransfertMethod.column*1;
+			console.log("last col in input plate="+ lastInputCol);
 			
 			var lastTagCol=$scope.tagPlate.tags.length / 8;    // ce sont des colonnes de 8
 			console.log("last col in tag plate="+ lastTagCol);
@@ -450,31 +446,35 @@ angular.module('home').controller('BisSeqLibPrepCtrl',['$scope', '$parse',  '$fi
 
 				//calculer la position sur la plaque:   pos= (col -1)*8 + line      (line est le code ascii - 65)
 				var libPos= (udtData.atomicTransfertMethod.column  -1 )*8 + ( udtData.atomicTransfertMethod.line.charCodeAt(0) -65);
-				var indexPos= libPos + $scope.tagPlateColumn.position;
-				//console.log("=> setting index "+indexPos+ ": "+ tagPlateCode[indexPos] );
+				//console.log("lib pos=" +libPos);
+				var indexPos= libPos + $scope.tagPlateColumn.position; 
+				//console.log("index pos="+indexPos);
+				console.log("=> setting index "+indexPos+ ": "+ $scope.tagPlate.tags[indexPos] );
 				
 				//ajouter dans experimentProperties les PSV tagCategory et tag
 				var ocu=udtData.outputContainerUsed;
 				if(ocu.experimentProperties===undefined || ocu.experimentProperties===null){
 					ocu.experimentProperties={};
-				}				
-				// 10/10/2017 modification pour possibilité d'utilisation plusieurs plaques
-				ocu.experimentProperties["tag"]={"_type":"single","value":$scope.tagPlate.tags[indexPos]};
-				ocu.experimentProperties["tagCategory"]={"_type":"single","value":$scope.tagPlate.tagCategory};
-
-			} else {
-				//l'utilisateur n'a rien selectionné => suprimer les PSV tagCategory et tagCode 		
-				ocu.experimentProperties["tag"]= undefined;
-				ocu.experimentProperties["tagCategory"]=undefined;
-			}
-		}	
-	    atmService.data.setData(dataMain);
+				}
+				
+				// attention aux positions non definies des plaques d'index ( plaques de 48..) /// ne doit plus arriver avec les tests initiaux...
+				// reste le cas possible de plan d'index avec des trous ???
+				if ( $scope.tagPlate.tags[indexPos] !== undefined) {
+					ocu.experimentProperties["tag"]={"_type":"single","value":$scope.tagPlate.tags[indexPos]};
+					ocu.experimentProperties["tagCategory"]={"_type":"single","value":$scope.tagPlate.tagCategory};
+				}
+			}	
+			
+			atmService.data.setData(dataMain);
+		}
+		// dans le dernier cas rien a faire...
 	};
 	
 	$scope.selectColOrPlate = {
 		isShow:function(){
 			return ( ($scope.isInProgressState() && !$scope.mainService.isEditMode())|| Permissions.check("admin") );
 		},	
+		// !!!! ce n'est pas une fonction, ne pas ecrire   select:setTags()  => comportement incomprehensible et sans erreurs !!!
 		select:setTags
 	};
 	

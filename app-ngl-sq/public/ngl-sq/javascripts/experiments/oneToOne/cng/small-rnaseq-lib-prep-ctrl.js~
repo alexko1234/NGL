@@ -347,6 +347,7 @@ angular.module('home').controller('SmallRNASeqLibPrepCtrl',['$scope', '$parse', 
 	
 	// Autre mode possible : utiliser une plaque d'index prédéfinis, l'utilisateur a juste a indiquer a partir de quelle colonne
 	// de cette plaque le robot doit prelever les index
+	// !!!!!!!  CE SYSTEME EST CONCU POUR DES PLAQUES COMPLETES.... ET POUR LES PLAQUES 48 INDEX ???????????????
 
 	$scope.columns = [ {name:'---', position: undefined },
 	                   {name:'1', position:0}, {name:'2', position:8}, {name:'3', position:16}, {name:'4',  position:24}, {name:'5',  position:32}, {name:'6',  position:40},
@@ -383,8 +384,7 @@ angular.module('home').controller('SmallRNASeqLibPrepCtrl',['$scope', '$parse', 
 	
 	$scope.tagPlate = $scope.plates[0]; // defaut du select
 
-	//NGL-2012 - 11/03/2018: Nvel algorithme plus générique, capable de gérer des plaques d'index incomplètes...
-	//TODO ==> algorithme utilisé dans 6 experiences: mettre dans un service pour eviter duplication !!!!
+	//Nvel algorithme plus générique, capable de gérer des plaques incomplètes...
 	var setTags = function(){
 		$scope.messages.clear();
 			
@@ -398,7 +398,7 @@ angular.module('home').controller('SmallRNASeqLibPrepCtrl',['$scope', '$parse', 
 		
 		if (($scope.tagPlateColumn.name === '---' ) && ($scope.tagPlate.name === '---')){
 			// remise a 0 des selects par l'utilisateur ????=> nettoyage de ce qui a ete positionné precedemment
-			console.log("suppression des index ...");
+			console.log("nettoyage ...");
 			
 			for(var i = 0; i < dataMain.length; i++){
 				var udtData = dataMain[i];
@@ -454,9 +454,9 @@ angular.module('home').controller('SmallRNASeqLibPrepCtrl',['$scope', '$parse', 
 
 				//calculer la position sur la plaque:   pos= (col -1)*8 + line      (line est le code ascii - 65)
 				var libPos= (udtData.atomicTransfertMethod.column  -1 )*8 + ( udtData.atomicTransfertMethod.line.charCodeAt(0) -65);
-				//console.log("lib pos=" +libPos);
+				console.log("lib pos=" +libPos);
 				var indexPos= libPos + $scope.tagPlateColumn.position; 
-				//console.log("index pos="+indexPos);
+				console.log("index pos="+indexPos);
 				console.log("=> setting index "+indexPos+ ": "+ $scope.tagPlate.tags[indexPos] );
 				
 				//ajouter dans experimentProperties les PSV tagCategory et tag
@@ -465,7 +465,7 @@ angular.module('home').controller('SmallRNASeqLibPrepCtrl',['$scope', '$parse', 
 					ocu.experimentProperties={};
 				}
 				
-				// attention aux positions non definies des plaques d'index ( plaques de 48..) /// ne doit plus arriver avec les tests initiaux...
+				// attention au positions non definies des plaques d'index ( plaques de 48..) /// ne doit plus arriver avec les tests initiaux...
 				// reste le cas possible de plan d'index avec des trous ???
 				if ( $scope.tagPlate.tags[indexPos] !== undefined) {
 					ocu.experimentProperties["tag"]={"_type":"single","value":$scope.tagPlate.tags[indexPos]};
@@ -481,9 +481,8 @@ angular.module('home').controller('SmallRNASeqLibPrepCtrl',['$scope', '$parse', 
 	$scope.selectColOrPlate = {
 		isShow:function(){
 			return ( ($scope.isInProgressState() && !$scope.mainService.isEditMode())|| Permissions.check("admin") );
-		},
-		// !!!! ce n'est pas une fonction, ne pas ecrire   select:setTags()  => comportement incomprehensible et sans erreurs !!!
-		select:setTags
+		},	
+		select:setTags()
 
 	};
 	

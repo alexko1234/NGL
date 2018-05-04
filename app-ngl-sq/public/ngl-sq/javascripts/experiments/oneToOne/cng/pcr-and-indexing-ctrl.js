@@ -403,7 +403,7 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 	
 	$scope.tagPlate = $scope.plates[0]; // defaut du select
 
-	// NGL-2012/2014 a changer
+	/*garder pour l'instant au cas ou....
 	var setTags = function(){
 		$scope.messages.clear();
 
@@ -457,6 +457,102 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 			}
 		}	
 	    atmService.data.setData(dataMain);
+	};
+	*/
+	
+	//NGL-2012 - 04/05/2018: Nvel algorithme plus générique, capable de gérer des plaques d'index incomplètes...(repris de small-rnaseq-lib-prep-ctrl.js)
+	//TODO ==> algorithme utilisé dans 6 experiences: mettre dans un service pour eviter duplication !!!!
+	var setTags = function(){
+		$scope.messages.clear();
+			
+		console.log("selected plate is "+ $scope.tagPlate.name);
+		console.log("selected start column is " + $scope.tagPlateColumn.name);
+		console.log("selected start position is " + $scope.tagPlateColumn.position);
+		
+		var dataMain = atmService.data.getData();
+		// trier dans l'ordre "colonne d'abord"
+		var dataMain = $filter('orderBy')(dataMain, ['atomicTransfertMethod.column*1','atomicTransfertMethod.line']); 
+
+		if (($scope.tagPlateColumn.name === '---' ) && ($scope.tagPlate.name === '---')){
+			// remise a 0 des selects par l'utilisateur ????=> nettoyage de ce qui a ete positionné precedemment
+			console.log("suppression des index ...");		
+				
+			for(var i = 0; i < dataMain.length; i++){
+				var udtData = dataMain[i];
+				var ocu=udtData.outputContainerUsed;
+				ocu.experimentProperties["tag"]= undefined;
+				ocu.experimentProperties["tagCategory"]=undefined;
+			}	
+			atmService.data.setData(dataMain);	
+			
+		} else if (($scope.tagPlateColumn.name !== '---' ) && ($scope.tagPlate.name !== '---')){	
+			
+			//attention certains choix de colonne sont incorrrects !!! 
+			//le controle doit porter sur la valeur maximale de colonne trouvee sur la plaque a indexer
+			//=>dernier puit si on a trié  dans l'ordre "colonne d'abord"
+			var last=dataMain.slice(-1)[0];
+			var lastInputCol=last.atomicTransfertMethod.column*1;
+			console.log("last col in input plate="+ lastInputCol);
+			
+			var lastTagCol=$scope.tagPlate.tags.length / 8;    // ce sont des colonnes de 8
+			console.log("last col in tag plate="+ lastTagCol);
+			
+			// meme en prennant tous les index possibles, il n'y en a pas assez dans la plaque !!
+			if ( lastTagCol < lastInputCol ){
+	        	$scope.messages.clazz="alert alert-danger";
+	        	$scope.messages.text=Messages('select.msg.error.notEnoughTags.tagPlate',$scope.tagPlate.name);
+	        	$scope.messages.showDetails = false;
+	        	$scope.messages.open();
+	        	return;
+			}
+			
+			// la colonne de debut choisie est vide
+			if ( $scope.tagPlateColumn.name*1 > lastTagCol){
+	        	$scope.messages.clazz="alert alert-danger";
+	        	$scope.messages.text=Messages('select.msg.error.emptyStartColumn.tagPlate', $scope.tagPlateColumn.name, $scope.tagPlate.name );
+	        	$scope.messages.showDetails = false;
+	        	$scope.messages.open();	
+	        	return;
+	        }
+				
+			// la colonne choisie est incorrecte (toutes les puits input ne recevront pas d'index) !!INTERDIT
+		    if ( (lastTagCol - $scope.tagPlateColumn.name*1  +1) < lastInputCol ) {   	
+	        	$scope.messages.clazz="alert alert-danger";
+	        	$scope.messages.text=Messages('select.msg.error.wrongStartColumn.tagPlate', $scope.tagPlateColumn.name);
+	        	$scope.messages.showDetails = false;
+	        	$scope.messages.open();	
+	        	return;
+	        }
+	
+			for(var i = 0; i < dataMain.length; i++){
+				var udtData = dataMain[i];
+				var ocu=udtData.outputContainerUsed;
+				//console.log("outputContainerUsed.code"+udtData.outputContainerUsed.code);
+
+				//calculer la position sur la plaque:   pos= (col -1)*8 + line      (line est le code ascii - 65)
+				var libPos= (udtData.atomicTransfertMethod.column  -1 )*8 + ( udtData.atomicTransfertMethod.line.charCodeAt(0) -65);
+				//console.log("lib pos=" +libPos);
+				var indexPos= libPos + $scope.tagPlateColumn.position; 
+				//console.log("index pos="+indexPos);
+				console.log("=> setting index "+indexPos+ ": "+ $scope.tagPlate.tags[indexPos] );
+				
+				//ajouter dans experimentProperties les PSV tagCategory et tag
+				var ocu=udtData.outputContainerUsed;
+				if(ocu.experimentProperties===undefined || ocu.experimentProperties===null){
+					ocu.experimentProperties={};
+				}
+				
+				// attention aux positions non definies des plaques d'index ( plaques de 48..) /// ne doit plus arriver avec les tests initiaux...
+				// reste le cas possible de plan d'index avec des trous ???
+				if ( $scope.tagPlate.tags[indexPos] !== undefined) {
+					ocu.experimentProperties["tag"]={"_type":"single","value":$scope.tagPlate.tags[indexPos]};
+					ocu.experimentProperties["tagCategory"]={"_type":"single","value":$scope.tagPlate.tagCategory};
+				}
+			}	
+			
+			atmService.data.setData(dataMain);
+		}
+		// dans le dernier cas rien a faire...
 	};
 	
 	$scope.selectColOrPlate = {
