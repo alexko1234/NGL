@@ -14,8 +14,8 @@ import org.junit.Test;
 
 import fr.cea.ig.ngl.dao.api.APIException;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
-import fr.cea.ig.ngl.dao.api.containers.ContainerSupportsAPI;
-import fr.cea.ig.ngl.dao.api.containers.ContainersAPI;
+import fr.cea.ig.ngl.dao.containers.ContainerSupportsAPI;
+import fr.cea.ig.ngl.dao.containers.ContainersAPI;
 import fr.cea.ig.ngl.dao.projects.ProjectsAPI;
 import fr.cea.ig.ngl.dao.samples.SamplesAPI;
 import fr.cea.ig.ngl.test.AbstractAPITests;

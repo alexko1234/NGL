@@ -1,4 +1,4 @@
-package fr.cea.ig.ngl.dao.api.containers;
+package fr.cea.ig.ngl.dao.containers;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;

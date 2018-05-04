@@ -1,4 +1,4 @@
-package fr.cea.ig.ngl.dao.api.containers;
+package fr.cea.ig.ngl.dao.containers;
 
 import java.util.Arrays;
 import java.util.Date;

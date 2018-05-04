@@ -1,4 +1,4 @@
-package fr.cea.ig.ngl.dao.api.containers;
+package fr.cea.ig.ngl.dao.containers;
 
 import java.util.ArrayList;
 import java.util.Arrays;

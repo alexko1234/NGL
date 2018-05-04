@@ -1,4 +1,4 @@
-package fr.cea.ig.ngl.dao.api.containers;
+package fr.cea.ig.ngl.dao.containers;
 
 import fr.cea.ig.ngl.dao.GenericMongoDAO;
 import models.laboratory.container.instance.ContainerSupport;
