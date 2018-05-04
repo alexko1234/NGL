@@ -318,7 +318,7 @@ public class Nanopore extends AbstractDeclaration{
 		l.add(newExperimentType("Librairie ONT","nanopore-library","LIB",2120,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 				getPropertyLibrairieNanopore(),
-				getInstrumentUsedTypes("hand"),"OneToOne", 
+				getInstrumentUsedTypes("hand","voltrax"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		l.add(newExperimentType("Sizing nanopore","nanopore-sizing","SIZ",2400,
