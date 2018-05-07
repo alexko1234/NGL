@@ -357,9 +357,12 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		// en mode 'a sauvegarder'  experimentProperties n'est pas encore defini
 		if ( undefined===$scope.experiment.experimentProperties || undefined===$scope.experiment.instrumentProperties.containerSupportCode ){ return; }
 		
-		var H4000fcRegexp= /^[A-Za-z0-9]*BBXX$/;
+		// 04/05/2018 NGL-2028: modification par Illumina du pattern des FC = *BB*
+		// var H4000fcRegexp= /^[A-Za-z0-9]*BBXX$/;
+		var H4000fcRegexp= /^[A-Za-z0-9]*BB[A-Za-z0-9]{2}$/;
+		
 		var HXfcRegexp= /^[A-Za-z0-9]*ALXX$/;
-		// var Nv6000S1fcRegexp= /^[A-Za-z0-9]*???XX$/; // pas encore d'info sur le pattern
+		// var Nv6000S1fcRegexp= /^[A-Za-z0-9]*???XX$/; // pas encore d'info sur le pattern...
 		var Nv6000S2fcRegexp= /^[A-Za-z0-9]*DMXX$/; // info Illumina 25/01/2018
 		var Nv6000S4fcRegexp= /^[A-Za-z0-9]*DSXX$/; // info Illumina 25/01/2018
 		
@@ -368,7 +371,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		//console.log('check FC pattern: FC='+ fcBarcode + 'sequencing type='+seqType );
 		
 		if ((seqType === 'Hiseq 4000') && ( null === fcBarcode.match(H4000fcRegexp))) {
-			setAlert($scope.messages.text, "Code Flowcell n'est pas du type 'Hiseq 4000' (*BBXX)")
+			setAlert($scope.messages.text, "Code Flowcell n'est pas du type 'Hiseq 4000' (*BB*)")
 			
 		} else if ((seqType === 'Hiseq X') && ( null === fcBarcode.match(HXfcRegexp))) {
 			setAlert($scope.messages.text, "Code Flowcell n'est pas du type 'Hiseq X' (*ALXX)");	
