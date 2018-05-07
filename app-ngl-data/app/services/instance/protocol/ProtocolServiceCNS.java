@@ -284,7 +284,7 @@ public class ProtocolServiceCNS {
 				concatMap(newPSV("rnaLibProtocol","Smarter DEV"),newPSV("strandOrientation","unstranded"),newPSV("cDNAsynthesisType","oligodT"))));
     	
 		lp.add(newProtocol("truseq_stranded_poly_a","TruSeq Stranded poly A_ptr_sox153_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("pcr-amplification-and-purification","rna-illumina-indexed-library"), 
-				concatMap(newPSV("rnaLibProtocol","TruSeq Stranded poly A"),newPSV("strandOrientation","reverse"),newPSV("cDNAsynthesisType","random"))));
+				concatMap(newPSV("rnaLibProtocol","TruSeq Stranded poly A"),newPSV("strandOrientation","reverse"),newPSV("cDNAsynthesisType","random")),false));
 		
 		lp.add(newProtocol("truseq_stranded_proc","TruSeq Stranded_proc_ptr_sox154_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("pcr-amplification-and-purification","rna-illumina-indexed-library"), 
 				concatMap(newPSV("rnaLibProtocol","TruSeq Stranded Proc"),newPSV("strandOrientation","reverse"),newPSV("cDNAsynthesisType","random"))));
