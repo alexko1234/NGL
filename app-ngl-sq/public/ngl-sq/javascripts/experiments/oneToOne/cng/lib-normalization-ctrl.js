@@ -254,7 +254,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 	}	
 	
 	// OUTPUT
-	if ( $scope.experiment.instrument.outContainerSupportCategoryCode !== "tube" ){	
+	if ( $scope.experiment.instrument.outContainerSupportCategoryCode === "96-well-plate" ){	
 		 datatableConfig.columns.push({
 			 // barcode plaque sortie == support Container used code... faut Used 
 			 "header":Messages("containers.table.support.name"),
@@ -295,6 +295,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
         	 "extraHeaders":{0:outputExtraHeaders}
          });		
 	} else {
+			// tube ou strip...
 		    // GA: meme pour les tubes utiliser  x.locationOnContainerSupport.code  et pas x.code
 			datatableConfig.columns.push({
 				"header":Messages("containers.table.code"),
