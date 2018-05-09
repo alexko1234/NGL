@@ -614,9 +614,14 @@ public class ImportServiceCNS extends AbstractImportService {
 				DescriptionFactory.newValues("DNA","RNA"),null,null,null,"single", 16, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Nom organisme / collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				null, null,null,null,"single", 17, false, null,null));		
-		
+		//inject with drools rule
 		propertyDefinitions.add(newPropertiesDefinition("Contrôle négatif", "negativeControl", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, false, null, 
 				null, null,null,null,"single", 20, true, null,null));	
+		
+		propertyDefinitions.add(newPropertiesDefinition("Code éch. témoin négatif PCR (1)", "tagPcrBlank1SampleCode", LevelService.getLevels(Level.CODE.Content), String.class, false, null,
+				null, null, null, null,"single", 21, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Code éch. témoin négatif PCR (2)", "tagPcrBlank2SampleCode", LevelService.getLevels(Level.CODE.Content), String.class, false, null,
+				null, null, null, null,"single", 22, true, null,null));
 		
 		return propertyDefinitions;
 	}
