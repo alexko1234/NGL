@@ -271,7 +271,8 @@ public class ProtocolServiceCNS {
 				concatMap(newPSV("libraryProtocol","Bq NEB Next Ultra II"))));
 		lp.add(newProtocol("prod-ill-bqadn-pcrfree-157-v2","Prod_ILL_BqADN_PCRFree_157_v2","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation"), 
 				concatMap(newPSV("libraryProtocol","Bq PCR free"))));
-		lp.add(newProtocol("prod-ill-tag-amplicons-159-v2","Prod_ILL_Tag_Amplicons_159_v2","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
+		lp.add(newProtocol("prod-ill-tag-amplicons-159-v2","Prod_ILL_Tag_Amplicons_159_v2","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
+		lp.add(newProtocol("prod-ill-tag-amplicons-159-v3","Prod_ILL_Tag_Amplicons_159_v3","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
 		
 		
 		lp.add(newProtocol("smarter_v4","Smarter V4_ptr_sox156_1","path1","1","production", InstanceFactory.setExperimentTypeCodes("cdna-synthesis"), 
@@ -331,8 +332,13 @@ public class ProtocolServiceCNS {
 		
 		lp.add(newProtocol("ampure_post_pcr","ampure_post_pcr","path2","1","production",InstanceFactory.setExperimentTypeCodes("post-pcr-ampure"),false));
 		lp.add(newProtocol("ampure","ampure","path2","1","production",InstanceFactory.setExperimentTypeCodes("ampure"),false));
-		lp.add(newProtocol("annexe-purifampureinversee-nucleospin-v2","Annexe_PurifAMPureInversée-NucleoSpin_v2","path2","1","production",InstanceFactory.setExperimentTypeCodes("ampure","post-pcr-ampure")));
-		lp.add(newProtocol("annexe-purifampure-au-robot-tagamplicons-v1","Annexe_PurifAMPure au Robot-TagAmplicons_v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("ampure","post-pcr-ampure")));
+		lp.add(newProtocol("annexe-purifampureinversee-nucleospin-v2","Annexe_PurifAMPureInversée-NucleoSpin_v2","path2","1","production",InstanceFactory.setExperimentTypeCodes("ampure","post-pcr-ampure"),false));
+		lp.add(newProtocol("annexe-purifampure-au-robot-tagamplicons-v1","Annexe_PurifAMPure au Robot-TagAmplicons_v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("ampure","post-pcr-ampure"),false));
+		
+		lp.add(newProtocol("annexe-purifampureinversee-nucleospin-v3","Annexe_PurifAMPureInversée-NucleoSpin_v3","path2","1","production",InstanceFactory.setExperimentTypeCodes("ampure","post-pcr-ampure")));
+		lp.add(newProtocol("annexe-purifampure-au-robot-tagamplicons-v2","Annexe_PurifAMPure au Robot-TagAmplicons_v2","path2","1","production",InstanceFactory.setExperimentTypeCodes("ampure","post-pcr-ampure")));
+		
+		
 		lp.add(newProtocol("annexe-purif-adn-ampure-v1","Annexe_PurifADN-AMPure_v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("ampure","post-pcr-ampure"),false));
 		lp.add(newProtocol("annexe-purif-adn-ampure-v2","Annexe_PurifADN-AMPure_v2","path2","1","production",InstanceFactory.setExperimentTypeCodes("ampure","post-pcr-ampure")));
 		
