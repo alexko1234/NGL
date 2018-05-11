@@ -230,10 +230,10 @@ public class IndexImportCNS extends AbstractImportDataCNS{
 	
 		indexes.forEach(index-> {
 			if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.PARAMETER_COLL_NAME, Parameter.class, index.code)){
-				Logger.info("creation index : "+ index.code +" / "+ index.categoryCode);
+				logger.info("creation index : "+ index.code +" / "+ index.categoryCode);
 				InstanceHelpers.save(InstanceConstants.PARAMETER_COLL_NAME,index,contextValidation);
 			} else {
-				Logger.info("index : "+ index.code + " already exists !!");
+				logger.info("index : "+ index.code + " already exists !!");
 			}
 		});			
 	}	
