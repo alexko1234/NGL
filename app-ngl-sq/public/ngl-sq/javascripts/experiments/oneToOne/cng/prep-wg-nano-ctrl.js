@@ -418,9 +418,10 @@ angular.module('home').controller('PrepWgNanoCtrl',['$scope', '$parse',  '$filte
 	}
 	
 	// importer un fichier definissant quels index sont déposés dans quels containers
+	// NGL-2012 :Ajouter les permision pour admin; supprimer condition sur EditMode
 	$scope.button = {
 		isShow:function(){
-			return ( ($scope.isInProgressState() && !$scope.mainService.isEditMode())|| Permissions.check("admin") );
+			return ( $scope.isInProgressState() || Permissions.check("admin") );
 			},
 		isFileSet:function(){
 			return ($scope.file === undefined)?"disabled":"";
@@ -643,9 +644,10 @@ angular.module('home').controller('PrepWgNanoCtrl',['$scope', '$parse',  '$filte
 		// dans le dernier cas rien a faire...
 	};
 	
+	// NGL-2012 :Ajouter les permissions pour admin; supprimer condition sur EditMode
 	$scope.selectColOrPlate = {
 		isShow:function(){
-			return ( ($scope.isInProgressState() && !$scope.mainService.isEditMode())|| Permissions.check("admin") );
+			return ( $scope.isInProgressState() || Permissions.check("admin") );
 			},	
 		select:setTags
 	};

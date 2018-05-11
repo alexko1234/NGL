@@ -6,49 +6,12 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 	var outputExtraHeaders=Messages("experiments.outputs");	
 	
 	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
+	// NGL-1006/NGL-2041 rendres certasine colonnes variables en fonction des category input et output
 	var datatableConfig = {
 			name: $scope.experiment.typeCode.toUpperCase(),
 			columns:[
 			         //--------------------- INPUT containers section -----------------------
 			         
-			         /* plus parlant pour l'utilisateur d'avoir Plate barcode | line | column
-					  {
-			        	 "header":Messages("containers.table.code"),
-			        	 "property":"inputContainer.code",
-			        	 "order":true,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":1,
-			        	 "extraHeaders":{0: inputExtraHeaders }
-			         },	
-			         */				
-			         { // barcode plaque entree == input support Container code
-			        	 "header":Messages("containers.table.support.name"),
-			        	 "property":"inputContainer.support.code",
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":1,
-			        	 "extraHeaders":{0: inputExtraHeaders}
-			         },
-			         { // Ligne
-			        	 "header":Messages("containers.table.support.line"),
-			        	 "property":"inputContainer.support.line",
-			        	 "order":true,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":2,
-			        	 "extraHeaders":{0: inputExtraHeaders}
-			         },
-			         { // colonne
-			        	 "header":Messages("containers.table.support.column"),
-				         // astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel forcer a numerique.=> type:number,   property:  *1
-			        	 "property":"inputContainer.support.column*1",
-			        	 "order":true,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":3,
-			        	 "extraHeaders":{0: inputExtraHeaders}
-			         },	
 			         { // Projet(s)
 			        	"header":Messages("containers.table.projectCodes"),
 			 			"property":"inputContainer.projectCodes",
@@ -155,45 +118,6 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 			          
 			         //------------------------ OUTPUT containers section -------------------
 
-		            /* ne pas afficher les containercodes sauf pour DEBUG 
-			         {
-			        	 "header":"[["+Messages("containers.table.code")+"]]",
-			        	 "property":"outputContainerUsed.code",
-			        	 "order":true,
-						 "hide":true,
-						 "edit":false,
-			        	 "type":"text",
-			        	 "position":100,
-			        	 "extraHeaders":{0:"outputExtraHeaders"}
-			         },*/
-			         { // barcode plaque sortie 
-			        	 "header":Messages("containers.table.support.name"),
-			        	 "property":"outputContainerUsed.locationOnContainerSupport.code", 
-			        	 "order":true,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":100,
-			        	 "extraHeaders":{0: outputExtraHeaders}
-			         },
-			         { // Line
-			        	 "header":Messages("containers.table.support.line"),
-			        	 "property":"outputContainerUsed.locationOnContainerSupport.line",
-			        	 "order":true,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":110,
-			        	 "extraHeaders":{0:outputExtraHeaders}
-			         },
-			         { // column
-			        	 "header":Messages("containers.table.support.column"),
-			        	 // astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel forcer a numerique.=> type:number,   property:  *1
-			        	 "property":"outputContainerUsed.locationOnContainerSupport.column*1",
-			        	 "order":true,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":111,
-			        	 "extraHeaders":{0:outputExtraHeaders}
-			         },	
 			         { // Concentration; 08/11/2016 shortLabel
 			        	 "header":Messages("containers.table.concentration.shortLabel") + " (nM)",
 			        	 "property":"outputContainerUsed.concentration.value",
@@ -277,6 +201,125 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 				dynamic:true,
 			}
 	}; // fin struct datatableConfig
+	
+	
+	// 07/05/2018 NGL-1006/NGL-2041 colonnes variables
+	//INPUT
+	// attention: 18/10/2017 experiment.instrument.inContainerSupportCategoryCode  depend de l'ordre de selection des inputs !!!
+	// => devrait etre un array et pas une var simple !!
+
+	if ( $scope.experiment.instrument.inContainerSupportCategoryCode !== "tube" ){
+		 datatableConfig.columns.push({
+			// barcode plaque entree == input support Container code
+	        "header":Messages("containers.table.support.name"),
+	        "property":"inputContainer.support.code",
+			"hide":true,
+	        "type":"text",
+	        "position":1,
+	        "extraHeaders":{0: inputExtraHeaders}
+	      });
+		 datatableConfig.columns.push({
+	        // Ligne
+	        "header":Messages("containers.table.support.line"),
+	        "property":"inputContainer.support.line",
+	        "order":true,
+			"hide":true,
+	        "type":"text",
+	         "position":2,
+	        "extraHeaders":{0: inputExtraHeaders}
+	     });
+		 datatableConfig.columns.push({
+	        // colonne
+	        "header":Messages("containers.table.support.column"),
+		    // astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel forcer a numerique.=> type:number,   property:  *1
+	        "property":"inputContainer.support.column*1",
+	        "order":true,
+			"hide":true,
+	        "type":"number",
+	        "position":3,
+	        "extraHeaders":{0: inputExtraHeaders}
+	     });
+		 
+	} else {
+			datatableConfig.columns.push({
+				"header":Messages("containers.table.code"),
+				"property":"inputContainer.support.code",
+				"order":true,
+				"edit":false,
+				"hide":true,
+				"type":"text",
+				"position":1,
+				"extraHeaders":{0: inputExtraHeaders}
+			});
+	}	
+	
+	// OUTPUT
+	if ( $scope.experiment.instrument.outContainerSupportCategoryCode !== "tube" ){	
+		 datatableConfig.columns.push({
+			 // barcode plaque sortie == support Container used code... faut Used 
+			 "header":Messages("containers.table.support.name"),
+			 "property":"outputContainerUsed.locationOnContainerSupport.code", 
+			 "order":true,
+			 "hide":true,
+			 "type":"text",
+			 "position":100,
+			 "extraHeaders":{0: outputExtraHeaders}
+         });
+		 datatableConfig.columns.push({
+			 // Line
+        	 "header":Messages("containers.table.support.line"),
+        	 "property":"outputContainerUsed.locationOnContainerSupport.line", 
+ 			 "edit" : true,
+			 "choiceInList":true,
+			 "possibleValues":[{"name":'A',"code":"A"},{"name":'B',"code":"B"},{"name":'C',"code":"C"},{"name":'D',"code":"D"},
+			                   {"name":'E',"code":"E"},{"name":'F',"code":"F"},{"name":'G',"code":"G"},{"name":'H',"code":"H"}],
+        	 "order":true,
+			 "hide":true,
+        	 "type":"text",
+        	 "position":105,
+        	 "extraHeaders":{0:outputExtraHeaders}
+         });
+		 datatableConfig.columns.push({
+			 // column
+        	 "header":Messages("containers.table.support.column"),
+        	 "property":"outputContainerUsed.locationOnContainerSupport.column",
+ 			 "edit" : true,
+			 "choiceInList":true,
+			 "possibleValues":[{"name":'1',"code":"1"},{"name":'2',"code":"2"},{"name":'3',"code":"3"},{"name":'4',"code":"4"},
+			                   {"name":'5',"code":"5"},{"name":'6',"code":"6"},{"name":'7',"code":"7"},{"name":'8',"code":"8"},
+			                   {"name":'9',"code":"9"},{"name":'10',"code":"10"},{"name":'11',"code":"11"},{"name":'12',"code":"12"}], 
+        	 "order":true,
+			 "hide":true,
+        	 "type":"number",
+        	 "position":110,
+        	 "extraHeaders":{0:outputExtraHeaders}
+         });		
+	} else {
+			// tube
+		    // GA: meme pour les tubes utiliser  x.locationOnContainerSupport.code  et pas x.code
+			datatableConfig.columns.push({
+				"header":Messages("containers.table.code"),
+				"property":"outputContainerUsed.locationOnContainerSupport.code",
+				"order":true,
+				"edit":true,
+				"hide":true,
+				"type":"text",
+				"position":100,
+				"extraHeaders":{0:outputExtraHeaders}
+			});
+			
+			datatableConfig.columns.push({
+				"header":Messages("containers.table.storageCode"),
+				"property":"outputContainerUsed.locationOnContainerSupport.storageCode",
+				"order":true,
+				"edit":true,
+				"hide":true,
+				"type":"text",
+				"position":150,
+				"extraHeaders":{0:outputExtraHeaders}
+			});		 
+	}
+
 
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");

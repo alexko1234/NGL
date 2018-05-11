@@ -284,6 +284,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
         	 "extraHeaders":{0:outputExtraHeaders}
          });		
 	} else {
+		    // tube
 		    // GA: meme pour les tubes utiliser  x.locationOnContainerSupport.code  et pas x.code
 			datatableConfig.columns.push({
 				"header":Messages("containers.table.code"),
