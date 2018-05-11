@@ -2,10 +2,10 @@
 <!--12/04/2016 : 2 cas * Hiseq2000/4000 => import fichier
 	                   * X5 => selection 1 colonne de départ pour plaque predefinie
 -->
-<div class="col-lg-12" ng-controller="PrepPcrFreeCtrl">
+<div class="col-md-12 col-lg-12" ng-controller="PrepPcrFreeCtrl">
   <!-- premiere ligne -->
-  <form class="form-inline" role="form">
-      <div class="row">
+  <form class="form-inline margin-bottom-7" role="form">
+      <div class="row margin-bottom-7">
          <div class="form-group col-lg-5">          
               <div ng-switch on="mainService.isEditMode()"> 
               <div ng-switch-when="false">   
@@ -37,9 +37,8 @@
 			  </div>   
 	     </div>
 	  </div> 
-	  
 	  <!-- 2eme ligne -->
-	  <div class="row">
+	  <div class="row margin-bottom-7"><!-- margin bottom pas pris en compte!!! -->
          <div class="form-group col-lg-5"  ng-show="button.isShow()">
              <label for="importFile" class="control-label">Fichier Workbook</label>
              <div class="input-group">
@@ -67,7 +66,6 @@
            </div> 
     </div>
   </form>	
-  <br/>
 
   <div class="row">
 	<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data"></div>						

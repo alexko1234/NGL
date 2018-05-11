@@ -1,11 +1,10 @@
 @()
 <!-- 07/05/2018 OK NGL-1006/NGL-2041: sortie tube ne marchait pas correctement -->
 <div class="col-md-12 col-lg-12" ng-switch="experiment.instrument.outContainerSupportCategoryCode"  ng-controller="LibNormalizationCtrl">  
-
  <div ng-if="plateUtils.isPlate()" >  
-    <form class="form-inline  margin-bottom-7" role="form">
+    <form class="form-inline margin-bottom-7" role="form">
   	  <!-- premiere ligne -->
-      <div class="row">
+      <div class="row margin-bottom-7">
          <div class="form-group col-lg-4">          
               <div ng-switch on="mainService.isEditMode()"> 
               <div ng-switch-when="false">   
