@@ -420,7 +420,7 @@ experiments.outputs = Container(s) en sortie(s)
 experiments.outputContainerSupportCode= Code support en sortie
 experiments.outputContainerSupportStorageCode= Stockage support en sortie
 experiments.instrumentFile = Fichier de l''instrument
-experiments.startColumnTagPlate = Colonne de début de la plaque d''index
+experiments.startColumnTagPlate = Select. une plaque d''index et la colonne de début
 
 experiments.calculation.sheet = Feuille de calcul
 experiments.src_dest.sheet = Source / Destination
@@ -615,8 +615,10 @@ button.exportCSV = Export CSV
 button.dispatch= Orientation des containers
 button.validate.warning.content = Sauvegarder et déclencher une mise à jour en cascade des propriétés contents
 
-#select
-select.wrongStartColumnTagPlate= Colonne de début de la plaque d''index incorrecte
+#select pour choix de colonne de plaque d'index
+select.msg.error.wrongStartColumn.tagPlate= La colonne {0} ne permet pas d'attribuer un index à chaque puit de librairie
+select.msg.error.emptyStartColumn.tagPlate= La colonne {0} de la plaque d''index ''{1}'' est vide
+select.msg.error.notEnoughTags.tagPlate= La plaque d''index ''{0}'' ne contient pas assez d''index pour cette expérience
 
 date.format= dd/MM/yyyy
 date.format.french= jj/mm/aaaa
@@ -632,7 +634,7 @@ experiments.msg.import.success = Import réussi, merci de vérifier puis de sauv
 experiments.msg.import.sheet.missing = L''onglet ''{0}'' est manquant
 experiments.msg.import.header-label.missing = ligne {0}: Champ d''entête ou label ''{1}'' manquant
 experiments.msg.import.value.missing = ligne {0}: Valeur ''{1}'' manquante
-experiments.msg.import.value.unexpected= ligne {0}: La valeur de ''{1}'': ''{2}''  n''est pas celle attendue: ''{3}'' 
+experiments.msg.import.value.unexpected= ligne {0}: La valeur de ''{1}'': ''{2}'' n''est pas celle attendue: ''{3}'' 
 experiments.msg.import.position.unkwown = ligne {0}: La position ''{1}'' ne correspond pas à un format de plaque connu
 experiments.msg.import.position.outofbonds = ligne {0}: La position ''{1}'' ne correspond pas au format {2}-puits
 experiments.msg.import.position.duplicate = ligne {0}: La position ''{1}'' est dupliquée; 

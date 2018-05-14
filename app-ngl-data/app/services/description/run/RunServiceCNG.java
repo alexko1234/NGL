@@ -149,6 +149,7 @@ public class RunServiceCNG  extends AbstractRunService {
          values.add(DescriptionFactory.newValue("CAD","CAD - Nimblegen : MedExome (DefCap026)"));
          values.add(DescriptionFactory.newValue("CAE","CAE - Nimblegen : MedExome+Mitome (DefCap027)"));
          values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028)"));  // NGL-1584 ajout
+         values.add(DescriptionFactory.newValue("CAG","CAG - SureSelectXTcustom(PRME) (DefCap029)"));  // NGL-2040 ajout
          
          // codes for DNA sequencing
          values.add(DescriptionFactory.newValue("DA","DA - DNASeq"));
@@ -157,6 +158,7 @@ public class RunServiceCNG  extends AbstractRunService {
          values.add(DescriptionFactory.newValue("DD","DD - PCR-NANO DNASeq")); // !! aussi dans ProcessServiceCNG / getX5WgNanoLibProcessTypeCodeValues()
          values.add(DescriptionFactory.newValue("DE","DE - Chromium WG"));     // !! aussi dans ProcessServiceCNG / getWgChromiumLibProcessTypeCodeValues()
          values.add(DescriptionFactory.newValue("DF","DF - Ancient DNASeq"));  // ajout 22/11/2017 NGL-1712
+         values.add(DescriptionFactory.newValue("DG","DG - cfDNASeq"));  // NGL-1981 ajout
          
          // codes for various sequencing
          values.add(DescriptionFactory.newValue("FA","FA - MeDipSeq"));
@@ -169,6 +171,7 @@ public class RunServiceCNG  extends AbstractRunService {
          values.add(DescriptionFactory.newValue("FH","FH - oxBisSeq"));
          values.add(DescriptionFactory.newValue("FI","FI - ATACSeq"));
          values.add(DescriptionFactory.newValue("FJ","FJ - RRBSeq")); // SUPSQCNG-497: ajout 06/11/2017 car manquant
+         values.add(DescriptionFactory.newValue("FK","FK - QMPSeq ")); // NGL-2039 ajout
          values.add(DescriptionFactory.newValue("HIC","HIC - HiC"));
          
          // codes for RNA sequencing

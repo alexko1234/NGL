@@ -6,7 +6,7 @@ import java.util.Map;
 
 //import javax.inject.Inject;
 
-import play.Logger;
+//import play.Logger;
 import play.data.validation.ValidationError;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -33,7 +33,7 @@ import services.description.sample.SampleService;
 // import fr.cea.ig.play.migration.NGLContext;
 
 public class All extends Controller { // NGLController { // NGLBaseController { //CommonController {
-	
+	private static final play.Logger.ALogger logger = play.Logger.of(Controller.class);
 //	@Inject
 //	public All(NGLApplication app) {
 //		super(app);
@@ -61,7 +61,7 @@ public class All extends Controller { // NGLController { // NGLBaseController { 
 				return badRequest(Json.toJson(errors));
 			return ok();
 		} catch (Exception e) {
-			Logger.error(e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 			return internalServerError(e.getMessage());
 		}				
 	}

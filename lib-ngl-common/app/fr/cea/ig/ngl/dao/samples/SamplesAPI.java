@@ -51,7 +51,7 @@ public class SamplesAPI extends GenericAPI<SamplesDAO, Sample> {
 	}
 
 	@Override
-	protected List<String> defaultKeys() {
+	public List<String> defaultKeys() { //TODO AJ: NGL-2038: quick fix it will be deleted in version 2.3.0
 		return this.DEFAULT_KEYS;
 	}
 	

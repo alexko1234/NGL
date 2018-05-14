@@ -364,8 +364,8 @@ public class RunIllumina extends AbstractDeclaration {
 		values.add(DescriptionFactory.newValue("150","150"));
 		values.add(DescriptionFactory.newValue("250","250"));
 		values.add(DescriptionFactory.newValue("300","300"));
-		values.add(DescriptionFactory.newValue("500","500"));
-		values.add(DescriptionFactory.newValue("600","600"));
+		//values.add(DescriptionFactory.newValue("500","500"));
+		//values.add(DescriptionFactory.newValue("600","600"));
 		values.add(DescriptionFactory.newValue("undefined","Non déterminé"));
 		return values;
 	}

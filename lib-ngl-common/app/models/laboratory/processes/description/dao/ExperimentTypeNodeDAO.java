@@ -12,10 +12,11 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ExperimentTypeNode;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
-import play.Logger;
+//import play.Logger;
 @Repository
 public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNode>{
-
+	private static final play.Logger.ALogger logger = play.Logger.of(ExperimentTypeNodeDAO.class);
+	
 //	public ExperimentTypeNodeDAO() {
 //		super("experiment_type_node", ExperimentTypeNode.class, ExperimentTypeNodeMappingQuery.class,
 //				"SELECT t.id, t.code, t.doPurification, t.mandatoryPurification, t.doQualityControl, t.mandatoryQualityControl,t.doTransfert, t.mandatoryTransfert, " +
@@ -68,7 +69,7 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 			insertPrevious(value.previousExperimentTypeNodes, value.id, false);
 		}
 		
-		Logger.debug("saveExperimentTypeNode : "+ value.code);
+		logger.debug("saveExperimentTypeNode : "+ value.code);
 		return value.id;
 	}
 

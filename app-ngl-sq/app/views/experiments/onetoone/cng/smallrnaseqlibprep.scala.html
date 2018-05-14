@@ -1,13 +1,13 @@
 @()
-<!--  05/04/2018 duplication depuis pcrandindxing.scala.html
-    2 cas * Hiseq2000/4000 => import fichier ???????????????????????????????????garder ???
-	       * X5 => selection 1 colonne de départ pour plaque DAP
+<!-- 05/04/2018 duplication depuis pcrandindxing.scala.html
+     2 cas *=> import fichier
+	       *=> selection 1 colonne de départ pour plaque predefinie
 -->
 <div class="col-md-12 col-lg-12" ng-controller="SmallRNASeqLibPrepCtrl">
-  <form class="form-inline" role="form">
+  <form class="form-inline margin-bottom-7" role="form">
   	  <!-- premiere ligne -->
       <div class="row margin-bottom-7">
-         <div class="form-group col-lg-4">          
+         <div class="form-group col-lg-5">          
               <div ng-switch on="mainService.isEditMode()"> 
               <div ng-switch-when="false">   
                    <label for="plateCode" class="control-label">@Messages("experiments.outputContainerSupportCode")</label>
@@ -37,8 +37,8 @@
 	     </div>
 	  </div>
 	  <!-- 2eme ligne -->
-	  <div class="row margin-bottom-4">
-         <div class="form-group col-lg-6"  ng-show="button.isShow()">
+	  <div class="row margin-bottom-7"><!-- margin bottom pas pris en compte!!! -->
+         <div class="form-group col-lg-5"  ng-show="button.isShow()">
              <label for="importFile" class="control-label">Fichier Excel</label>
              <div class="input-group" style="width:50%">
                 <input class="form-control input-sm" type="file" 
@@ -54,13 +54,15 @@
             </div>                         				  
           </div>
           <div class="form-group col-lg-6"  ng-show="selectColOrPlate.isShow()">
+          <!--inverser les selects et chger le message -->
              <label class="control-label">@Messages("experiments.startColumnTagPlate")</label>
-             <select ng-model="tagPlateColumn" ng-options="column.name for column in columns"  
-             								   ng-change="selectColOrPlate.select()" selectpicker btn-primary">                                      
-             </select>  
              <select ng-model="tagPlate" ng-options="plate.name for plate in plates" 
                                          ng-change="selectColOrPlate.select()" selectpicker btn-primary">                                      
              </select>                        				  
+             <select ng-model="tagPlateColumn" ng-options="column.name for column in startColumns"  
+             								   ng-change="selectColOrPlate.select()" selectpicker btn-primary">                                      
+             </select>  
+            
            </div> 
     </div>
   </form>	

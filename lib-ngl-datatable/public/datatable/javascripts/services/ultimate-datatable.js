@@ -907,20 +907,16 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                             urlCache[url] = "in waiting data ...";
                             urlQueries.push($http.get(url, {
                                 url: url
+                            }).then(function(result){
+                            	urlCache[result.config.url] = result.data;
+                            },function(result){
+                            	urlCache[result.config.url] = "Error for load column property : " + result.config.url;
                             }));
                         }
                     });
                 });
 
-                $q.all(urlQueries).then(function(results) {
-                    angular.forEach(results, function(result, key) {
-                        if (result.status !== 200) {
-                            console.log("Error for load column property : " + result.config.url);
-                        } else {
-                            urlCache[result.config.url] = result.data;
-                        }
-                    });
-                });
+                $q.all(urlQueries);
 
             },
 

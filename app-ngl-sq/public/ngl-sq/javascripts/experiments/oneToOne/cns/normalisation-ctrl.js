@@ -589,6 +589,10 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 		var oldInputVolume = getter(udtData);
 		var getter2 = $parse("outputContainerUsed.concentration.value");
 		var oldConcentration = getter2(udtData);
+		var getter3 = $parse("inputContainerUsed.concentration.value");
+		var inputConcentration = getter3(udtData);
+		var getter4 = $parse("inputContainerUsed.volume.value");
+		var inVolume = getter4(udtData);
 		
 		var newInputVolume;
 		var compute = {
@@ -606,7 +610,6 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 					return (this.outputVol);
 				}
 		};
-
 		if(compute.isReady()){
 			var result = $parse("(outputConc * outputVol) / inputConc")(compute);
 			console.log("computeInputVolumeWithConc result = "+result);
@@ -620,7 +623,17 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			}
 		}else if (! $parse("inputContainerUsed.concentration.value")(udtData)){
 			if(compute2.isReady()){
-				newInputVolume=$parse("outputVol")(compute2);
+				console.log("compute2.isReady "+inputConcentration);
+				//Pas de vol en entrée
+				if(! inVolume){
+					newInputVolume=$parse("outputVol")(compute2);
+				}
+				// vol en entrée <= volume final
+				else if (inVolume <= $parse("outputVol")(compute2)){				
+					newInputVolume=inVolume;
+				}else{
+					newInputVolume=$parse("outputVol")(compute2);
+				}
 				
 			}else{
 				newInputVolume=undefined;		
@@ -628,6 +641,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			}
 			getter.assign(udtData, newInputVolume);	
 			if(oldConcentration){
+				console.log("oldConcentration"+oldConcentration);
 				$scope.messages.setError(Messages('experiments.output.error.must-have-inputConc'));		
 			}
 			getter2.assign(udtData,undefined);
@@ -852,7 +866,9 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 	
 	var checkControlConc = function(experiment){
 
-		experiment.atomicTransfertMethods.forEach(function(atm){
+		/* Plus utile??? GS
+		 * 
+		 *experiment.atomicTransfertMethods.forEach(function(atm){
 			//Si CONC en IN est null alors conc out doit etre null			
 			if (atm.inputContainerUseds[0].concentration == undefined){				
 				atm.outputContainerUseds[0].concentration=undefined;
@@ -867,6 +883,6 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 
 			}
 
-		});		
+		});	*/	
 	}
 }]);

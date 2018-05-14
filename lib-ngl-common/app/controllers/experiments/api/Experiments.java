@@ -9,9 +9,11 @@ import java.util.Arrays;
 // import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -38,6 +40,8 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 // import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.instance.Container;
+import models.laboratory.experiment.description.ExperimentCategory;
+import models.laboratory.experiment.instance.AtomicTransfertMethod;
 // import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
 // import models.laboratory.instrument.instance.InstrumentUsed;
@@ -54,6 +58,7 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Result;
+import scala.collection.immutable.HashSet;
 import validation.ContextValidation;
 import workflows.experiment.ExpWorkflows;
 
@@ -507,7 +512,34 @@ public class Experiments extends DocumentController<Experiment> {
 //				long t2 = System.currentTimeMillis();
 				workflows.applyPreValidateCurrentStateRules(ctxVal, input);
 //				long t3 = System.currentTimeMillis();
-				input.validate(ctxVal);			
+				input.validate(ctxVal);	
+				
+				// ------------------------------------------------------
+				//AJ: Fix Bug NGL-2037
+				List<String> sc = new ArrayList<>();
+				Integer iocuSize = 0;
+				for(AtomicTransfertMethod tranfert : input.atomicTransfertMethods){
+					if(ExperimentCategory.CODE.qualitycontrol.toString().equals(input.categoryCode)){
+						iocuSize += tranfert.inputContainerUseds.size();
+						sc.addAll(tranfert.inputContainerUseds.stream().map(c -> c.locationOnContainerSupport.storageCode).collect(Collectors.toList()));
+					} else {
+						iocuSize += tranfert.outputContainerUseds.size();
+						sc.addAll(tranfert.outputContainerUseds.stream().map(c -> c.locationOnContainerSupport.storageCode).collect(Collectors.toList()));
+					}
+				}
+				sc.removeIf(Objects::isNull);
+				if(!sc.isEmpty()) {
+					Set<String> storageCodes = new TreeSet<>(sc);
+					if (! storageCodes.isEmpty() && storageCodes.size() != 1) {
+						ctxVal.addErrors("storageCode","different for several containers");
+					} else {
+						if(sc.size() != iocuSize) {
+							ctxVal.addErrors("storageCode","not defined for all containers");
+						}
+					}
+				} // else no validation required
+				// ------------------------------------------------------
+				
 				if (!ctxVal.hasErrors()) {	
 					workflows.applyPostValidateCurrentStateRules(ctxVal, input);
 //					long t4 = System.currentTimeMillis();

@@ -18,25 +18,25 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 				
 				if(measuredSize){
 					inputContainerUsed.newSize = measuredSize;
-					
+					var firstContent = inputContainerUsed.contents[0]; 
 					
 					if(experiment.typeCode === "chip-migration" && 
 							(inputContainerUsed.fromTransformationTypeCodes.indexOf("pcr-amplification-and-purification") > -1
 									|| inputContainerUsed.fromTransformationTypeCodes.indexOf("indexing-and-pcr-amplification") > -1
 									|| inputContainerUsed.fromTransformationTypeCodes.indexOf("sizing")  > -1 
-									|| inputContainerUsed.fromTransformationTypeCodes.indexOf("spri-select")  > -1)){
+									|| inputContainerUsed.fromTransformationTypeCodes.indexOf("spri-select")  > -1
+									|| (inputContainerUsed.fromTransformationTypeCodes.indexOf("dna-illumina-indexed-library")  > -1 && firstContent.properties.libProcessTypeCode.value === 'DE'))){
 						var experimentProperties = $parse("experimentProperties")(inputContainerUsed);
 						
 						experimentProperties.insertSize = {value:inputContainerUsed.newSize.value, unit:inputContainerUsed.newSize.unit};
 						experimentProperties.insertSize.value = inputContainerUsed.newSize.value - 121;
-						experimentProperties.libLayoutNominalLength = experimentProperties.insertSize;
-						
-						var firstContent = inputContainerUsed.contents[0]; 
 						
 						if(firstContent.properties.libProcessTypeCode.value === 'N'
 								|| firstContent.properties.libProcessTypeCode.value === 'A'
 									|| firstContent.properties.libProcessTypeCode.value === 'C'){
 							experimentProperties.libLayoutNominalLength = {value:-1, unit:"pb"};						
+						}else{
+							experimentProperties.libLayoutNominalLength = experimentProperties.insertSize;
 						}
 						
 					}

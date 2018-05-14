@@ -65,6 +65,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentCategory("Robot pipetage + Covaris", "liquid-handling-robot-and-covaris"));
 		l.add(newInstrumentCategory("Hydroshear","hydroshear"));
 		l.add(newInstrumentCategory("Spectrophotomètre", "spectrophotometer"));
+		l.add(newInstrumentCategory("Appareil de Prep. Librairie Nanopore","nanopore-library-prep-device"));
 		
 		DAOHelpers.saveModels(InstrumentCategory.class, l, errors);
 		
@@ -344,6 +345,11 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				null, getInstrumentPippinPulse()
 				,getContainerSupportCategories(new String[]{"tube"}), null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
+		l.add(newInstrumentUsedType("VolTRAX", "voltrax", InstrumentCategory.find.findByCode("nanopore-library-prep-device"),  
+				null, getInstrumentVoltrax()
+				,getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
 	
@@ -459,6 +465,13 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		instruments.add(createInstrument("freezer-mill-1","6770 FREEZER/MILL 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add(createInstrument("large-freezer-mill-1","6870 LARGE FREEZER/MILL 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
+		return instruments;
+	}
+
+	private List<Instrument> getInstrumentVoltrax() throws DAOException {
+		List<Instrument> instruments=new ArrayList<>();
+		instruments.add(createInstrument("voltrax-1","VolTRAX 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
 		return instruments;
 	}
 

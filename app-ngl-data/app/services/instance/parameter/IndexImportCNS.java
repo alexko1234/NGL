@@ -36,6 +36,7 @@ public class IndexImportCNS extends AbstractImportDataCNS{
 		createIndexNanopore(contextError);
 		createIndexChromium(contextError);
 		createIndexNEBNext(contextError);
+		createIndexCustom(contextError);
 	}
 
 	
@@ -182,6 +183,71 @@ public class IndexImportCNS extends AbstractImportDataCNS{
 		index.categoryCode = "SINGLE-INDEX";
 		index.supplierName = new HashMap<>();
 		index.supplierName.put("NEB", code);
+		index.traceInformation=new TraceInformation("ngl-data");
+		
+		return index;
+	}
+	private void createIndexCustom(ContextValidation contextValidation) {
+		List<Index> indexes = new ArrayList<>();
+		
+		indexes.add(getNEBNextIndex("CUSTOM001","AAACAA","EXT001"));
+		indexes.add(getNEBNextIndex("CUSTOM002","ACATAC","EXT002"));
+		indexes.add(getNEBNextIndex("CUSTOM003","ACCATC","EXT003"));
+		indexes.add(getNEBNextIndex("CUSTOM004","ACGCAT","EXT004"));
+		indexes.add(getNEBNextIndex("CUSTOM005","ACTGCC","EXT005"));
+		indexes.add(getNEBNextIndex("CUSTOM006","AGATCG","EXT006"));
+		indexes.add(getNEBNextIndex("CUSTOM007","AGGGGA","EXT007"));
+		indexes.add(getNEBNextIndex("CUSTOM008","ATACCT","EXT008"));
+		indexes.add(getNEBNextIndex("CUSTOM009","ATGGTT","EXT009"));
+		indexes.add(getNEBNextIndex("CUSTOM010","ATTAAA","EXT010"));
+		indexes.add(getNEBNextIndex("CUSTOM011","ATTCTC","EXT011"));
+		indexes.add(getNEBNextIndex("CUSTOM012","CAAAAT","EXT012"));
+		indexes.add(getNEBNextIndex("CUSTOM013","CAACTG","EXT013"));
+		indexes.add(getNEBNextIndex("CUSTOM014","CACGAA","EXT014"));
+		indexes.add(getNEBNextIndex("CUSTOM015","CATAGA","EXT015"));
+		indexes.add(getNEBNextIndex("CUSTOM016","CCGAGT","EXT016"));
+		indexes.add(getNEBNextIndex("CUSTOM017","CGGCAC","EXT017"));
+		indexes.add(getNEBNextIndex("CUSTOM018","CTATCA","EXT018"));
+		indexes.add(getNEBNextIndex("CUSTOM019","CTCGGT","EXT019"));
+		indexes.add(getNEBNextIndex("CUSTOM020","CTCTAG","EXT020"));
+		indexes.add(getNEBNextIndex("CUSTOM021","GACCCC","EXT021"));
+		indexes.add(getNEBNextIndex("CUSTOM022","GATGCA","EXT022"));
+		indexes.add(getNEBNextIndex("CUSTOM023","GCAACG","EXT023"));
+		indexes.add(getNEBNextIndex("CUSTOM024","GCTAGC","EXT024"));
+		indexes.add(getNEBNextIndex("CUSTOM025","GGGCCG","EXT025"));
+		indexes.add(getNEBNextIndex("CUSTOM026","GTAAAC","EXT026"));
+		indexes.add(getNEBNextIndex("CUSTOM027","GTGGGG","EXT027"));
+		indexes.add(getNEBNextIndex("CUSTOM028","GTGTAT","EXT028"));
+		indexes.add(getNEBNextIndex("CUSTOM029","TAGTAA","EXT029"));
+		indexes.add(getNEBNextIndex("CUSTOM030","TCAGCT","EXT030"));
+		indexes.add(getNEBNextIndex("CUSTOM031","TCCCGG","EXT031"));
+		indexes.add(getNEBNextIndex("CUSTOM032","TCCTTT","EXT032"));
+		indexes.add(getNEBNextIndex("CUSTOM033","TCTCAA","EXT033"));
+		indexes.add(getNEBNextIndex("CUSTOM034","TGCATA","EXT034"));
+		indexes.add(getNEBNextIndex("CUSTOM035","TGTCTG","EXT035"));
+		indexes.add(getNEBNextIndex("CUSTOM036","TGTGAC","EXT036"));
+		indexes.add(getNEBNextIndex("CUSTOM037","TTTTGG","EXT037"));
+	
+		indexes.forEach(index-> {
+			if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.PARAMETER_COLL_NAME, Parameter.class, index.code)){
+				logger.info("creation index : "+ index.code +" / "+ index.categoryCode);
+				InstanceHelpers.save(InstanceConstants.PARAMETER_COLL_NAME,index,contextValidation);
+			} else {
+				logger.info("index : "+ index.code + " already exists !!");
+			}
+		});			
+	}	
+	
+	private static Index getCustomIndex(String code, String seq, String shortName) {
+		Index index = new IlluminaIndex();
+		
+		index.code = code;
+		index.name = code;
+		index.shortName = shortName;
+		index.sequence = seq ; 
+		index.categoryCode = "SINGLE-INDEX";
+	//index.supplierName = new HashMap<>();
+		//index.supplierName.put("NEB", code);
 		index.traceInformation=new TraceInformation("ngl-data");
 		
 		return index;

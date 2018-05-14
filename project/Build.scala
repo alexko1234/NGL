@@ -78,7 +78,7 @@ object ApplicationBuild extends Build {
 	val buildVersion           = "2.1"    + distSuffix
 	val nglVersion             = "2.0"    + distSuffix
 	
-	val sqVersion              = "2.2.0" + distSuffix
+	val sqVersion              = "2.2.1.1" + distSuffix
 	val biVersion              = "2.3.0" + distSuffix
 
 	val projectsVersion        = "2.3.0"  + distSuffix
@@ -95,7 +95,7 @@ object ApplicationBuild extends Build {
 	val nglCommonVersion       = "2.1.0"  + distSuffix
 
 	// IG libraries
-  val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.0.12"
+  val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.1.1"
   val ceaSpring   = "fr.cea.ig"           %% "play-spring-module" % "2.0.2"
   val ceaMongo    = "fr.cea.ig"           %% "mongodbplugin"      % "2.0.5"
 	// The fix concerns the Query "in" constructs for collection properties
