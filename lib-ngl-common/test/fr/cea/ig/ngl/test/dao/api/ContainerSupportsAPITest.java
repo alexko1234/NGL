@@ -30,9 +30,10 @@ import models.laboratory.sample.instance.Sample;
 import models.utils.DescriptionHelper;
 import play.Logger.ALogger;
 import rules.services.test.TestRules6Component;
+import utils.AbstractSQTests;
 import utils.AbstractTests;
 
-public class ContainerSupportsAPITest extends AbstractTests implements AbstractAPITests {
+public class ContainerSupportsAPITest extends AbstractSQTests implements AbstractAPITests {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(ContainerSupportsAPITest.class);
 	private static final String USER = "ngsrg";
