@@ -16,11 +16,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-import controllers.ListForm;
+import controllers.DBObjectListForm;
 import controllers.NGLControllerHelper;
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.Level;
 import models.laboratory.container.description.ContainerSupportCategory;
+import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
@@ -28,7 +29,7 @@ import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import play.Logger.ALogger;
 
-public class ContainersSearchForm extends ListForm {
+public class ContainersSearchForm extends DBObjectListForm<Container> {
 	
 	private static ALogger logger = play.Logger.of(Containers.class);
 	

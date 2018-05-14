@@ -16,11 +16,12 @@ import org.mongojack.DBQuery.Query;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import controllers.ListForm;
+import controllers.DBObjectListForm;
 import controllers.NGLControllerHelper;
 import models.laboratory.common.description.Level;
+import models.laboratory.sample.instance.Sample;
 
-public class SamplesSearchForm extends ListForm {
+public class SamplesSearchForm extends DBObjectListForm<Sample> {
 
 	public String code; 
 	public String codeRegex;

@@ -15,12 +15,13 @@ import org.mongojack.DBQuery.Query;
 
 import com.mongodb.BasicDBObject;
 
-import controllers.ListForm;
+import controllers.DBObjectListForm;
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
 import models.utils.InstanceConstants;
 
-public class ContainerSupportsSearchForm extends ListForm {
+public class ContainerSupportsSearchForm extends DBObjectListForm<ContainerSupport> {
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(ContainerSupports.class);
 	

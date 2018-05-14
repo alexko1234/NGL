@@ -11,6 +11,7 @@ import com.mongodb.BasicDBObject;
 
 import akka.stream.javadsl.Source;
 import akka.util.ByteString;
+import controllers.DBObjectListForm;
 import controllers.ListForm;
 import fr.cea.ig.DBObject;
 import views.components.datatable.IDatatableForm;
@@ -23,10 +24,10 @@ import views.components.datatable.IDatatableForm;
  */
 public class ListFormWrapper<T extends DBObject> {
 
-	private final ListForm form;
+	private final DBObjectListForm<T> form;
 	private final Function<IDatatableForm, BasicDBObject> basicDBObjectGenerator;
 	
-	public ListFormWrapper(ListForm form, Function<IDatatableForm, BasicDBObject> basicDBObjectGenerator) {
+	public ListFormWrapper(DBObjectListForm<T> form, Function<IDatatableForm, BasicDBObject> basicDBObjectGenerator) {
 		this.form = form;
 		this.basicDBObjectGenerator = basicDBObjectGenerator;
 	}
@@ -36,8 +37,7 @@ public class ListFormWrapper<T extends DBObject> {
 	}
 
 	public boolean isAggregateMode() {
-		// TODO check conditions
-		return form.aggregate && ! form.reporting;
+		return form.aggregate && form.reporting && StringUtils.isNotBlank(form.reportingQuery);
 	}
 
 	public boolean isReportingMode() {

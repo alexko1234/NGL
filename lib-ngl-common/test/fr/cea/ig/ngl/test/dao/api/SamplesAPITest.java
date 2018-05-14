@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,6 +19,7 @@ import fr.cea.ig.ngl.dao.projects.ProjectsAPI;
 import fr.cea.ig.ngl.dao.samples.SamplesAPI;
 import fr.cea.ig.ngl.support.ListFormWrapper;
 import fr.cea.ig.ngl.test.AbstractAPITests;
+import fr.cea.ig.ngl.test.dao.api.factory.QueryMode;
 import fr.cea.ig.ngl.test.dao.api.factory.TestProjectFactory;
 import fr.cea.ig.ngl.test.dao.api.factory.TestSampleFactory;
 import models.laboratory.project.instance.Project;
@@ -76,6 +78,7 @@ public class SamplesAPITest extends AbstractSQTests implements AbstractAPITests 
 	}
 
 	@Override
+	@Before
 	public void setUpData() {
 		if(clean) {
 			logger.debug("create dep objects and test data");
@@ -101,6 +104,7 @@ public class SamplesAPITest extends AbstractSQTests implements AbstractAPITests 
 	}
 
 	@Override
+	@After
 	public void deleteData() {
 		logger.debug("delete dep objects and test data");
 		try {
@@ -120,29 +124,29 @@ public class SamplesAPITest extends AbstractSQTests implements AbstractAPITests 
 	@Test
 	public void createTest() {
 		logger.debug("Creation test");
-		setUpData();
+//		setUpData();
 		Assert.assertEquals(refSample.categoryCode, data.categoryCode);
 		Assert.assertEquals(refSample.code, data.code);
 		Assert.assertEquals(refSample.importTypeCode, data.importTypeCode);
 		Assert.assertEquals(refSample.name, data. name);
 		Assert.assertEquals(refSample.typeCode, data.typeCode);
-		deleteData();
+//		deleteData();
 	}
 
 	@Test
 	public void deleteTest() throws APIException {
 		logger.debug("Delete test");
-		setUpData();
+//		setUpData();
 
 		api.delete(refSample.code);
 		Assert.assertNull(api.get(refSample.getCode()));
-		deleteData();
+//		deleteData();
 	}
 
 	@Test
 	public void getTest() {
 		logger.debug("Get test");
-		setUpData();
+//		setUpData();
 		try {
 			Sample sample = api.get(refSample.code);
 			Assert.assertNotNull(sample);
@@ -152,13 +156,13 @@ public class SamplesAPITest extends AbstractSQTests implements AbstractAPITests 
 			logger.error(e.getMessage());
 			exit(e.getMessage());
 		}
-		deleteData();
+//		deleteData();
 	}
 
 	@Test
 	public void listTest() {
 		logger.debug("List test");
-		setUpData();
+//		setUpData();
 		
 		// Testing rendering ?
 //		ListFormWrapper<Sample> listing = TestSampleFactory.wrapper(refProject.code, true, false, false);
@@ -183,7 +187,7 @@ public class SamplesAPITest extends AbstractSQTests implements AbstractAPITests 
 			
 			//---------- reporting mode----------
 			logger.debug("reporting mode");
-			wrapper = TestSampleFactory.wrapper(refProject.code, TestSampleFactory.QueryMode.REPORTING, null);
+			wrapper = TestSampleFactory.wrapper(refProject.code, QueryMode.REPORTING, null);
 			samples = api.listObjects(wrapper);
 			iter = samples.iterator();
 			count = 0;
@@ -195,19 +199,20 @@ public class SamplesAPITest extends AbstractSQTests implements AbstractAPITests 
 			}
 			Assert.assertEquals(1, count);
 			
-			//---------- aggregate mode----------
-			logger.debug("aggregate mode");
-			wrapper = TestSampleFactory.wrapper(refProject.code, TestSampleFactory.QueryMode.AGGREGATE, null);
-			samples = api.listObjects(wrapper);
-			iter = samples.iterator();
-			count = 0;
-			while(iter.hasNext()) {
-				Sample s = iter.next();
-				Assert.assertEquals(refSample.code, s.code);
-				Assert.assertEquals(refSample.categoryCode, s.categoryCode);
-				count++;
-			}
-			Assert.assertEquals(1, count);
+			// Not used in Sample
+//			//---------- aggregate mode----------
+//			logger.debug("aggregate mode");
+//			wrapper = TestSampleFactory.wrapper(refProject.code, TestSampleFactory.QueryMode.AGGREGATE, null);
+//			samples = api.listObjects(wrapper);
+//			iter = samples.iterator();
+//			count = 0;
+//			while(iter.hasNext()) {
+//				Sample s = iter.next();
+//				Assert.assertEquals(refSample.code, s.code);
+//				Assert.assertEquals(refSample.categoryCode, s.categoryCode);
+//				count++;
+//			}
+//			Assert.assertEquals(1, count);
 			
 			
 			// Old test
@@ -221,14 +226,14 @@ public class SamplesAPITest extends AbstractSQTests implements AbstractAPITests 
 			logger.error(e.getCause().getMessage());
 			exit(e.getMessage());
 		}
-		deleteData();
+//		deleteData();
 	}
 	
 	@Test
 	public void isObjectExistsTest() {
-		setUpData();
+//		setUpData();
 		Assert.assertTrue(api.isObjectExist(refSample.code));
-		deleteData();
+//		deleteData();
 	}
 	
 	@Test
@@ -239,7 +244,7 @@ public class SamplesAPITest extends AbstractSQTests implements AbstractAPITests 
 	@Test
 	public void updateTest() {
 		logger.debug("Update test");
-		setUpData();
+//		setUpData();
 		try {
 			Sample sampleToUpdate = data;
 			String newName = "New name after update";
@@ -259,7 +264,7 @@ public class SamplesAPITest extends AbstractSQTests implements AbstractAPITests 
 			logger.error(e.getMessage());
 			exit(e.getMessage());
 		}
-		deleteData();
+//		deleteData();
 	}
 
 	@Override

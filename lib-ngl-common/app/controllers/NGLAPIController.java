@@ -43,7 +43,7 @@ public abstract class NGLAPIController<T extends GenericAPI<U,V>, U extends Gene
 				extends NGLController implements NGLForms, DBObjectConvertor {
 
 	protected final Form<QueryFieldsForm> updateForm;
-	protected final Class<? extends ListForm> searchFormClass;
+	protected final Class<? extends DBObjectListForm<V>> searchFormClass;
 	
 	private final T api;
 	
@@ -51,7 +51,7 @@ public abstract class NGLAPIController<T extends GenericAPI<U,V>, U extends Gene
 		return api;
 	}
 
-	public NGLAPIController(NGLApplication app, T api, Class<? extends ListForm> searchFormClass) {
+	public NGLAPIController(NGLApplication app, T api, Class<? extends DBObjectListForm<V>> searchFormClass) {
 		super(app);
 		this.api = api;
 		this.updateForm = app.formFactory().form(QueryFieldsForm.class);

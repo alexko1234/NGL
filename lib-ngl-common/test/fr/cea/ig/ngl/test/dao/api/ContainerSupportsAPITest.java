@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -17,8 +18,9 @@ import fr.cea.ig.ngl.dao.containers.ContainerSupportsAPI;
 import fr.cea.ig.ngl.dao.containers.ContainersAPI;
 import fr.cea.ig.ngl.dao.projects.ProjectsAPI;
 import fr.cea.ig.ngl.dao.samples.SamplesAPI;
+import fr.cea.ig.ngl.support.ListFormWrapper;
 import fr.cea.ig.ngl.test.AbstractAPITests;
-import fr.cea.ig.ngl.test.TestAppWithDroolsFactory;
+import fr.cea.ig.ngl.test.dao.api.factory.QueryMode;
 import fr.cea.ig.ngl.test.dao.api.factory.TestContainerFactory;
 import fr.cea.ig.ngl.test.dao.api.factory.TestProjectFactory;
 import fr.cea.ig.ngl.test.dao.api.factory.TestSampleFactory;
@@ -27,11 +29,8 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
-import models.utils.DescriptionHelper;
 import play.Logger.ALogger;
-import rules.services.test.TestRules6Component;
 import utils.AbstractSQTests;
-import utils.AbstractTests;
 
 public class ContainerSupportsAPITest extends AbstractSQTests implements AbstractAPITests {
 
@@ -236,6 +235,45 @@ public class ContainerSupportsAPITest extends AbstractSQTests implements Abstrac
 			exit(e.getMessage());
 		} catch (Exception e) {
 			logger.error(e.getMessage());
+			exit(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void listTest() {
+		logger.debug("List test");
+		try {
+			//---------- default mode ----------
+			logger.debug("default mode");
+			ListFormWrapper<ContainerSupport> wrapper = TestContainerFactory.wrapperSupport(refProject.code);
+			Iterable<ContainerSupport> containerSupports = api.listObjects(wrapper);
+			Iterator<ContainerSupport> iter = containerSupports.iterator();
+			int count = 0;
+			while(iter.hasNext()) {
+				ContainerSupport c = iter.next();
+				Assert.assertEquals(refContainerSupport.code, c.code);
+				Assert.assertEquals(refContainerSupport.categoryCode, c.categoryCode);
+				count++;
+			}
+			Assert.assertEquals(1, count);
+			
+			//---------- reporting mode----------
+			logger.debug("reporting mode");
+			wrapper = TestContainerFactory.wrapperSupport(refProject.code, QueryMode.REPORTING, null);
+			containerSupports = api.listObjects(wrapper);
+			iter = containerSupports.iterator();
+			count = 0;
+			while(iter.hasNext()) {
+				ContainerSupport c = iter.next();
+				Assert.assertEquals(refContainerSupport.code, c.code);
+				Assert.assertEquals(refContainerSupport.categoryCode, c.categoryCode);
+				count++;
+			}
+			Assert.assertEquals(1, count);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getCause().getMessage());
 			exit(e.getMessage());
 		}
 	}

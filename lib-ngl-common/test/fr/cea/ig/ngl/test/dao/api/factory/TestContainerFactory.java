@@ -2,8 +2,15 @@ package fr.cea.ig.ngl.test.dao.api.factory;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
+import controllers.containers.api.ContainerSupportsSearchForm;
+import controllers.containers.api.ContainersSearchForm;
+import controllers.samples.api.SamplesSearchForm;
+import fr.cea.ig.lfw.LFWApplication;
+import fr.cea.ig.lfw.support.LFWRequestParsing;
+import fr.cea.ig.ngl.support.ListFormWrapper;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
@@ -17,6 +24,8 @@ import models.laboratory.sample.instance.Sample;
 
 public class TestContainerFactory {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(TestContainerFactory.class);
+	
 	public static Container container(String user, Double vol, Double quantity, Project proj, Sample s, ContainerSupport containerSupport) {
 		Container c = new Container();
 		c.code = "TEST";
@@ -70,5 +79,101 @@ public class TestContainerFactory {
 		cs.nbContents = 1;
 		//cs.storageCode = "Bt20_70_A1";
 		return cs;
+	}
+	
+	/**
+	 * No querying mode or rendering mode are defined in the created form.
+	 * 
+	 * @param projectCode code of project
+	 * @return            wrapper of ContainersSearchForm
+	 */
+	public static ListFormWrapper<Container> wrapper(String projectCode){
+		return wrapper(projectCode, null, null);
+	}
+	
+	/**
+	 * @param projectCode code of project
+	 * @param qmode       querying mode
+	 * @param render      rendering mode
+	 * @return            wrapper of ContainersSearchForm
+	 */
+	public static ListFormWrapper<Container> wrapper(String projectCode, QueryMode qmode, RenderMode render) {
+		ContainersSearchForm form = new ContainersSearchForm();
+		form.projectCodes = new HashSet<>(Arrays.asList(projectCode));
+		
+		if(render != null ) {
+			form.list = (render.equals(RenderMode.LIST)) ? true : false;
+			form.datatable = (render.equals(RenderMode.DATATABLE)) ? true : false;
+			form.count = (render.equals(RenderMode.COUNT)) ? true : false;
+		} else {
+			logger.debug("no rendering mode defined in form");
+		}
+		
+		if(qmode != null) {
+			form.aggregate = (qmode.equals(QueryMode.AGGREGATE)) ? true : false;
+			form.reporting = (qmode.equals(QueryMode.REPORTING)) ? true : false;
+		} else {
+			logger.debug("no querying mode defined in form");
+		}
+		// unnecessary block because MongoJack request mode is the default one.
+		/*if(qmode.equals(QueryMode.MONGOJACK)) {
+			form.aggregate = false;
+			form.reporting = false;
+		}*/
+		
+		ListFormWrapper<Container> wrapper = new ListFormWrapper<>(form, 
+				f -> new LFWRequestParsing() {
+					@Override
+					public LFWApplication getLFWApplication() { return null;}
+				}.generateBasicDBObjectFromKeys(f));
+		return wrapper;
+	}
+	
+	/**
+	 * No querying mode or rendering mode are defined in the created form.
+	 * 
+	 * @param projectCode code of project
+	 * @return            wrapper of ContainersSearchForm
+	 */
+	public static ListFormWrapper<ContainerSupport> wrapperSupport(String projectCode){
+		return wrapperSupport(projectCode, null, null);
+	}
+	
+	/**
+	 * @param projectCode code of project
+	 * @param qmode       querying mode
+	 * @param render      rendering mode
+	 * @return            wrapper of ContainersSearchForm
+	 */
+	public static ListFormWrapper<ContainerSupport> wrapperSupport(String projectCode, QueryMode qmode, RenderMode render) {
+		ContainerSupportsSearchForm form = new ContainerSupportsSearchForm();
+		form.projectCodes = Arrays.asList(projectCode);
+		
+		if(render != null ) {
+			form.list = (render.equals(RenderMode.LIST)) ? true : false;
+			form.datatable = (render.equals(RenderMode.DATATABLE)) ? true : false;
+			form.count = (render.equals(RenderMode.COUNT)) ? true : false;
+		} else {
+			logger.debug("no rendering mode defined in form");
+		}
+		
+		if(qmode != null) {
+			form.aggregate = (qmode.equals(QueryMode.AGGREGATE)) ? true : false;
+			form.reporting = (qmode.equals(QueryMode.REPORTING)) ? true : false;
+		} else {
+			logger.debug("no querying mode defined in form");
+		}
+		// unnecessary block because MongoJack request mode is the default one.
+		/*if(qmode.equals(QueryMode.MONGOJACK)) {
+			form.aggregate = false;
+			form.reporting = false;
+		}*/
+		
+		ListFormWrapper<ContainerSupport> wrapper = new ListFormWrapper<>(form, 
+				f -> new LFWRequestParsing() {
+					@Override
+					public LFWApplication getLFWApplication() { return null;}
+				}.generateBasicDBObjectFromKeys(f));
+		return wrapper;
 	}
 }

@@ -94,17 +94,4 @@ public class TestSampleFactory {
 				}.generateBasicDBObjectFromKeys(f));
 		return wrapper;
 	}
-	
-	public enum QueryMode {
-		MONGOJACK,
-		REPORTING,
-		AGGREGATE;
-	}
-	
-	public enum RenderMode {
-		LIST,
-		DATATABLE,
-		COUNT;
-		
-	}
 }

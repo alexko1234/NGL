@@ -119,45 +119,46 @@ public abstract class GenericAPI<O extends GenericMongoDAO<T>, T extends DBObjec
 		return dao.findByQuery(reportingQuery);
 	}
 
+	@Deprecated
 	public List<T> list(Query query, String orderBy, Sort orderSense) {
 		return dao.mongoDBFinder(query, orderBy, orderSense).toList();
 	}
-
+	@Deprecated
 	public List<T> list(Query query, String orderBy, Sort orderSense, BasicDBObject keys, Integer limit) {
 		return dao.mongoDBFinder(query, orderBy, orderSense, limit, keys).toList();
 	}
-
+	@Deprecated
 	public List<T> list(Query query, String orderBy, Sort orderSense, BasicDBObject keys) {
 		return list(query, orderBy, orderSense, keys, -1);
 	}
-
+	@Deprecated
 	public List<T> list(Query query, String orderBy, Sort orderSense, BasicDBObject keys, 
 			Integer pageNumber, Integer numberRecordsPerPage) {
 		return dao.mongoDBFinderWithPagination(query, orderBy, orderSense, pageNumber, numberRecordsPerPage, keys).toList();
 	}
-
+	@Deprecated
 	public Source<ByteString, ?> streamUDT(Query query, String orderBy, Sort orderSense, BasicDBObject keys, 
 			Integer pageNumber, Integer numberRecordsPerPage) {
 		return MongoStreamer.streamUDT(dao.mongoDBFinderWithPagination(query, orderBy, orderSense, pageNumber, numberRecordsPerPage, keys));
 	}
-
+	@Deprecated
 	public Source<ByteString, ?> streamUDTWithDefaultKeys(Query query, String orderBy, Sort orderSense,
 			Integer pageNumber, Integer numberRecordsPerPage) {
 		return MongoStreamer.streamUDT(dao.mongoDBFinderWithPagination(query, orderBy, orderSense, pageNumber, numberRecordsPerPage, defaultDBKeys()));
 	}
-
+	@Deprecated
 	public Source<ByteString, ?> streamUDTWithDefaultKeys(Query query, String orderBy, Sort orderSense, Integer limit) {
 		return MongoStreamer.streamUDT(dao.mongoDBFinder(query, orderBy, orderSense, limit, defaultDBKeys()));
 	}
-
+	@Deprecated
 	public Source<ByteString, ?> streamUDT(Query query, String orderBy, Sort orderSense, BasicDBObject keys, Integer limit) {
 		return MongoStreamer.streamUDT(dao.mongoDBFinder(query, orderBy, orderSense, limit, keys));
 	}
-
+	@Deprecated
 	public Source<ByteString, ?> stream(Query query, String orderBy, Sort orderSense, BasicDBObject keys, Integer limit) {
 		return MongoStreamer.stream(dao.mongoDBFinder(query, orderBy, orderSense, limit, keys));
 	}
-
+	@Deprecated
 	public Source<ByteString, ?> streamUDT(Query query, String orderBy, Sort orderSense, BasicDBObject keys) {
 		return MongoStreamer.streamUDT(dao.mongoDBFinder(query, orderBy, orderSense, keys));
 	}

@@ -221,7 +221,7 @@ public /*abstract*/ class GenericMongoDAO<T extends DBObject> {
 				if(prefix != null) {
 					String fieldName = prefix + "." + field ;
 					BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(value);
-					Class<?> c = wrapper.getPropertyType(prefix);
+//					Class<?> c = wrapper.getPropertyType(prefix);
 					Object o = wrapper.getPropertyValue(prefix);
 					builder.set(fieldName, wrapper.getPropertyType(prefix).getField(field).get(o));
 				} else {

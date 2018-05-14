@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -18,7 +19,9 @@ import fr.cea.ig.ngl.dao.containers.ContainerSupportsAPI;
 import fr.cea.ig.ngl.dao.containers.ContainersAPI;
 import fr.cea.ig.ngl.dao.projects.ProjectsAPI;
 import fr.cea.ig.ngl.dao.samples.SamplesAPI;
+import fr.cea.ig.ngl.support.ListFormWrapper;
 import fr.cea.ig.ngl.test.AbstractAPITests;
+import fr.cea.ig.ngl.test.dao.api.factory.QueryMode;
 import fr.cea.ig.ngl.test.dao.api.factory.TestContainerFactory;
 import fr.cea.ig.ngl.test.dao.api.factory.TestProjectFactory;
 import fr.cea.ig.ngl.test.dao.api.factory.TestSampleFactory;
@@ -240,6 +243,45 @@ public class ContainersAPITest extends AbstractSQTests implements AbstractAPITes
 			exit(e.getMessage());
 		} catch (Exception e) {
 			logger.error(e.getMessage());
+			exit(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void listTest() {
+		logger.debug("List test");
+		try {
+			//---------- default mode ----------
+			logger.debug("default mode");
+			ListFormWrapper<Container> wrapper = TestContainerFactory.wrapper(refProject.code);
+			Iterable<Container> containers = api.listObjects(wrapper);
+			Iterator<Container> iter = containers.iterator();
+			int count = 0;
+			while(iter.hasNext()) {
+				Container c = iter.next();
+				Assert.assertEquals(refContainer.code, c.code);
+				Assert.assertEquals(refContainer.categoryCode, c.categoryCode);
+				count++;
+			}
+			Assert.assertEquals(1, count);
+			
+			//---------- reporting mode----------
+			logger.debug("reporting mode");
+			wrapper = TestContainerFactory.wrapper(refProject.code, QueryMode.REPORTING, null);
+			containers = api.listObjects(wrapper);
+			iter = containers.iterator();
+			count = 0;
+			while(iter.hasNext()) {
+				Container c = iter.next();
+				Assert.assertEquals(refContainer.code, c.code);
+				Assert.assertEquals(refContainer.categoryCode, c.categoryCode);
+				count++;
+			}
+			Assert.assertEquals(1, count);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getCause().getMessage());
 			exit(e.getMessage());
 		}
 	}
