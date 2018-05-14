@@ -45,7 +45,7 @@ public class OutputHelper {
 		if (instrument != null) {
 //			if (Play.application().configuration().getString("ngl.path.instrument") != null) {
 //				return Play.application().configuration().getString("ngl.path.instrument")+java.io.File.separator;
-			if (configuration().getString("ngl.path.instrument") != null) {
+			if (configuration().hasPath("ngl.path.instrument")) {
 				return configuration().getString("ngl.path.instrument")+java.io.File.separator;
 			} else if(addSampleSheet) {
 				return instrument.path + java.io.File.separator + "SampleSheet" + java.io.File.separator;
