@@ -190,50 +190,50 @@ public class IndexImportCNS extends AbstractImportDataCNS{
 	private void createIndexCustom(ContextValidation contextValidation) {
 		List<Index> indexes = new ArrayList<>();
 		
-		indexes.add(getNEBNextIndex("CUSTOM001","AAACAA","EXT001"));
-		indexes.add(getNEBNextIndex("CUSTOM002","ACATAC","EXT002"));
-		indexes.add(getNEBNextIndex("CUSTOM003","ACCATC","EXT003"));
-		indexes.add(getNEBNextIndex("CUSTOM004","ACGCAT","EXT004"));
-		indexes.add(getNEBNextIndex("CUSTOM005","ACTGCC","EXT005"));
-		indexes.add(getNEBNextIndex("CUSTOM006","AGATCG","EXT006"));
-		indexes.add(getNEBNextIndex("CUSTOM007","AGGGGA","EXT007"));
-		indexes.add(getNEBNextIndex("CUSTOM008","ATACCT","EXT008"));
-		indexes.add(getNEBNextIndex("CUSTOM009","ATGGTT","EXT009"));
-		indexes.add(getNEBNextIndex("CUSTOM010","ATTAAA","EXT010"));
-		indexes.add(getNEBNextIndex("CUSTOM011","ATTCTC","EXT011"));
-		indexes.add(getNEBNextIndex("CUSTOM012","CAAAAT","EXT012"));
-		indexes.add(getNEBNextIndex("CUSTOM013","CAACTG","EXT013"));
-		indexes.add(getNEBNextIndex("CUSTOM014","CACGAA","EXT014"));
-		indexes.add(getNEBNextIndex("CUSTOM015","CATAGA","EXT015"));
-		indexes.add(getNEBNextIndex("CUSTOM016","CCGAGT","EXT016"));
-		indexes.add(getNEBNextIndex("CUSTOM017","CGGCAC","EXT017"));
-		indexes.add(getNEBNextIndex("CUSTOM018","CTATCA","EXT018"));
-		indexes.add(getNEBNextIndex("CUSTOM019","CTCGGT","EXT019"));
-		indexes.add(getNEBNextIndex("CUSTOM020","CTCTAG","EXT020"));
-		indexes.add(getNEBNextIndex("CUSTOM021","GACCCC","EXT021"));
-		indexes.add(getNEBNextIndex("CUSTOM022","GATGCA","EXT022"));
-		indexes.add(getNEBNextIndex("CUSTOM023","GCAACG","EXT023"));
-		indexes.add(getNEBNextIndex("CUSTOM024","GCTAGC","EXT024"));
-		indexes.add(getNEBNextIndex("CUSTOM025","GGGCCG","EXT025"));
-		indexes.add(getNEBNextIndex("CUSTOM026","GTAAAC","EXT026"));
-		indexes.add(getNEBNextIndex("CUSTOM027","GTGGGG","EXT027"));
-		indexes.add(getNEBNextIndex("CUSTOM028","GTGTAT","EXT028"));
-		indexes.add(getNEBNextIndex("CUSTOM029","TAGTAA","EXT029"));
-		indexes.add(getNEBNextIndex("CUSTOM030","TCAGCT","EXT030"));
-		indexes.add(getNEBNextIndex("CUSTOM031","TCCCGG","EXT031"));
-		indexes.add(getNEBNextIndex("CUSTOM032","TCCTTT","EXT032"));
-		indexes.add(getNEBNextIndex("CUSTOM033","TCTCAA","EXT033"));
-		indexes.add(getNEBNextIndex("CUSTOM034","TGCATA","EXT034"));
-		indexes.add(getNEBNextIndex("CUSTOM035","TGTCTG","EXT035"));
-		indexes.add(getNEBNextIndex("CUSTOM036","TGTGAC","EXT036"));
-		indexes.add(getNEBNextIndex("CUSTOM037","TTTTGG","EXT037"));
+		indexes.add(getCustomIndex("EXT001","AAACAA","EXT001"));
+		indexes.add(getCustomIndex("EXT002","ACATAC","EXT002"));
+		indexes.add(getCustomIndex("EXT003","ACCATC","EXT003"));
+		indexes.add(getCustomIndex("EXT004","ACGCAT","EXT004"));
+		indexes.add(getCustomIndex("EXT005","ACTGCC","EXT005"));
+		indexes.add(getCustomIndex("EXT006","AGATCG","EXT006"));
+		indexes.add(getCustomIndex("EXT007","AGGGGA","EXT007"));
+		indexes.add(getCustomIndex("EXT008","ATACCT","EXT008"));
+		indexes.add(getCustomIndex("EXT009","ATGGTT","EXT009"));
+		indexes.add(getCustomIndex("EXT010","ATTAAA","EXT010"));
+		indexes.add(getCustomIndex("EXT011","ATTCTC","EXT011"));
+		indexes.add(getCustomIndex("EXT012","CAAAAT","EXT012"));
+		indexes.add(getCustomIndex("EXT013","CAACTG","EXT013"));
+		indexes.add(getCustomIndex("EXT014","CACGAA","EXT014"));
+		indexes.add(getCustomIndex("EXT015","CATAGA","EXT015"));
+		indexes.add(getCustomIndex("EXT016","CCGAGT","EXT016"));
+		indexes.add(getCustomIndex("EXT017","CGGCAC","EXT017"));
+		indexes.add(getCustomIndex("EXT018","CTATCA","EXT018"));
+		indexes.add(getCustomIndex("EXT019","CTCGGT","EXT019"));
+		indexes.add(getCustomIndex("EXT020","CTCTAG","EXT020"));
+		indexes.add(getCustomIndex("EXT021","GACCCC","EXT021"));
+		indexes.add(getCustomIndex("EXT022","GATGCA","EXT022"));
+		indexes.add(getCustomIndex("EXT023","GCAACG","EXT023"));
+		indexes.add(getCustomIndex("EXT024","GCTAGC","EXT024"));
+		indexes.add(getCustomIndex("EXT025","GGGCCG","EXT025"));
+		indexes.add(getCustomIndex("EXT026","GTAAAC","EXT026"));
+		indexes.add(getCustomIndex("EXT027","GTGGGG","EXT027"));
+		indexes.add(getCustomIndex("EXT028","GTGTAT","EXT028"));
+		indexes.add(getCustomIndex("EXT029","TAGTAA","EXT029"));
+		indexes.add(getCustomIndex("EXT030","TCAGCT","EXT030"));
+		indexes.add(getCustomIndex("EXT031","TCCCGG","EXT031"));
+		indexes.add(getCustomIndex("EXT032","TCCTTT","EXT032"));
+		indexes.add(getCustomIndex("EXT033","TCTCAA","EXT033"));
+		indexes.add(getCustomIndex("EXT034","TGCATA","EXT034"));
+		indexes.add(getCustomIndex("EXT035","TGTCTG","EXT035"));
+		indexes.add(getCustomIndex("EXT036","TGTGAC","EXT036"));
+		indexes.add(getCustomIndex("EXT037","TTTTGG","EXT037"));
 	
 		indexes.forEach(index-> {
 			if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.PARAMETER_COLL_NAME, Parameter.class, index.code)){
-				Logger.info("creation index : "+ index.code +" / "+ index.categoryCode);
+				logger.info("creation index : "+ index.code +" / "+ index.categoryCode);
 				InstanceHelpers.save(InstanceConstants.PARAMETER_COLL_NAME,index,contextValidation);
 			} else {
-				Logger.info("index : "+ index.code + " already exists !!");
+				logger.info("index : "+ index.code + " already exists !!");
 			}
 		});			
 	}	
