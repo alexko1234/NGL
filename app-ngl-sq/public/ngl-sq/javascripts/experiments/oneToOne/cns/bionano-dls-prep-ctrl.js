@@ -163,6 +163,7 @@ angular.module('home').controller('BionanoDLSPrepCtrl',['$scope', '$parse', 'atm
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
+		copyOutputConcToAttribute($scope.experiment);
 		$scope.$emit('childSaved', promises, func, endPromises);
 	});
 	
@@ -311,6 +312,27 @@ angular.module('home').controller('BionanoDLSPrepCtrl',['$scope', '$parse', 'atm
 			console.log("not ready to computeAverageConcentration");
 		}
 		
+	};
+	
+	var copyOutputConcToAttribute = function(experiment){
+		for(var i=0 ; i < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; i++){
+			var atm = experiment.atomicTransfertMethods[i];
+			for(var j=0 ; j < atm.outputContainerUseds.length ; j++){		
+				var ocu = atm.outputContainerUseds[j];
+				if(ocu.experimentProperties && ocu.experimentProperties.averageConcentration && ocu.experimentProperties.averageConcentration.value){
+					if (ocu.experimentProperties.averageConcentration2 && ocu.experimentProperties.averageConcentration2.value){
+						ocu.concentration.value= (ocu.experimentProperties.averageConcentration.value + ocu.experimentProperties.averageConcentration2.value)/2;	
+						ocu.concentration.unit=ocu.experimentProperties.averageConcentration.unit;	
+					}else{
+						ocu.concentration= ocu.experimentProperties.averageConcentration;
+					}
+
+				}else{
+					ocu.concentration = null;
+				}		
+				console.log("output concentration "+ocu.concentration.value);
+			}
+		}				
 	};
 	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);

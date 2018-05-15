@@ -19,6 +19,7 @@ import com.mongodb.MongoException;
 
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.migration.NGLContext;
+import models.Constants;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
@@ -101,7 +102,7 @@ public abstract class AbstractUpdateSampleNCBITaxon extends AbstractImportData {
 			        	String ncbiScientificName=taxon.getScientificName();
 						String ncbiLineage=taxon.getLineage();
 						
-						DBUpdate.Builder builder = DBUpdate.set("traceInformation.modifyDate",new Date() ).set("traceInformation.modifyUser","ngl-data");
+						DBUpdate.Builder builder = DBUpdate.set("traceInformation.modifyDate",new Date() ).set("traceInformation.modifyUser",Constants.NGL_DATA_USER);
 						
 						if(ncbiScientificName==null){
 							contextError.addErrors(taxon.code, "no ncbi scientific name");
