@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.NGLContext;
+import models.Constants;
 import models.LimsCNSDAO;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.parameter.Parameter;
@@ -78,7 +79,7 @@ public class IndexImportCNS extends AbstractImportDataCNS{
 		index.categoryCode = "SINGLE-INDEX";
 		index.supplierName = new HashMap<>();
 		index.supplierName.put("oxfordNanopore", code);
-		index.traceInformation=new TraceInformation("ngl-data");
+		index.traceInformation=new TraceInformation(Constants.NGL_DATA_USER);
 		return index;
 	}
 	
@@ -106,7 +107,7 @@ public class IndexImportCNS extends AbstractImportDataCNS{
 		index.categoryCode = "POOL-INDEX";
 		index.supplierName = new HashMap<>();
 		index.supplierName.put("10x Genomics", code);
-		index.traceInformation=new TraceInformation("ngl-data");
+		index.traceInformation=new TraceInformation(Constants.NGL_DATA_USER);
 		
 		return index;
 	}
@@ -183,7 +184,7 @@ public class IndexImportCNS extends AbstractImportDataCNS{
 		index.categoryCode = "SINGLE-INDEX";
 		index.supplierName = new HashMap<>();
 		index.supplierName.put("NEB", code);
-		index.traceInformation=new TraceInformation("ngl-data");
+		index.traceInformation=new TraceInformation(Constants.NGL_DATA_USER);
 		
 		return index;
 	}
@@ -248,7 +249,7 @@ public class IndexImportCNS extends AbstractImportDataCNS{
 		index.categoryCode = "SINGLE-INDEX";
 	//index.supplierName = new HashMap<>();
 		//index.supplierName.put("NEB", code);
-		index.traceInformation=new TraceInformation("ngl-data");
+		index.traceInformation=new TraceInformation(Constants.NGL_DATA_USER);
 		
 		return index;
 	}

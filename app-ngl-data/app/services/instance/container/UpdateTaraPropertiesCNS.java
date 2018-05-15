@@ -12,6 +12,7 @@ import com.mongodb.MongoException;
 
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.NGLContext;
+import models.Constants;
 import models.LimsCNSDAO;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.sample.instance.Sample;
@@ -71,7 +72,7 @@ public class UpdateTaraPropertiesCNS extends AbstractImportDataCNS{
 					/*NEW ALGO*/
 					sample.properties.putAll(taraProperties);
 					sample.importTypeCode = importTypeCode;
-					sample.traceInformation.setTraceInformation("ngl-data");
+					sample.traceInformation.setTraceInformation(Constants.NGL_DATA_USER);
 					contextError.setUpdateMode();
 					sample.validate(contextError);
 					if(!contextError.hasErrors()){

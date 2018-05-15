@@ -10,6 +10,7 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.mongojack.DBUpdate.Builder;
 
+import models.Constants;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
@@ -82,7 +83,7 @@ public class ProjectImportCNS extends AbstractImportDataCNS{
 					Logger.error(nglProject.code+": "+limsProject.lastSampleCode +" != "+ nglProject.lastSampleCode);
 				}
 					
-				nglProject.traceInformation.setTraceInformation("ngl-data");
+				nglProject.traceInformation.setTraceInformation(Constants.NGL_DATA_USER);
 				MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, 
 						DBQuery.is("code", limsProject.code),update);
 				
