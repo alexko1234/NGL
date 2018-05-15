@@ -6,14 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
-
 import fr.cea.ig.MongoDBDAO;
-<<<<<<< HEAD
 import fr.cea.ig.play.migration.NGLContext;
-=======
-import fr.cea.ig.play.NGLContext;
 import models.Constants;
->>>>>>> master-isoprod-sq-2.2.X
 import models.LimsCNSDAO;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.parameter.Parameter;
