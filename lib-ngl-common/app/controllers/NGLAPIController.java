@@ -79,7 +79,7 @@ public abstract class NGLAPIController<T extends GenericAPI<U,V>, U extends Gene
 	@Authorized.Read
 	public Result list() {
 		try {
-			Source<ByteString, ?> resultsAsStream = api().list(new ListFormWrapper<V>(objectFromRequestQueryString(this.searchFormClass), form -> generateBasicDBObjectFromKeys(form)));
+			Source<ByteString, ?> resultsAsStream = api().list(new ListFormWrapper<>(objectFromRequestQueryString(this.searchFormClass), form -> generateBasicDBObjectFromKeys(form)));
 			return Streamer.okStream(resultsAsStream);
 		} catch (APIException e) {
 			getLogger().error(e.getMessage());

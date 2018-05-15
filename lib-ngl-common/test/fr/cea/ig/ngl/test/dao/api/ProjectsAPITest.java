@@ -7,21 +7,21 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Iterator;
 
 import javax.inject.Singleton;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
 
-import fr.cea.ig.MongoDBResult.Sort;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.projects.ProjectsAPI;
+import fr.cea.ig.ngl.support.ListFormWrapper;
 import fr.cea.ig.ngl.test.AbstractAPITests;
+import fr.cea.ig.ngl.test.dao.api.factory.QueryMode;
 import fr.cea.ig.ngl.test.dao.api.factory.TestProjectFactory;
 import models.laboratory.project.instance.Project;
 import play.Logger.ALogger;
@@ -141,11 +141,36 @@ public class ProjectsAPITest extends AbstractTests implements AbstractAPITests {
 	@Test
 	public void listTest() {
 		try {
-			Query query = DBQuery.is("code", refProject.code);
-			List<Project> projs = api.list(query, "code", Sort.valueOf(0));
-			assertEquals(1, projs.size());
+			//---------- default mode ----------
+			logger.debug("default mode");
+			ListFormWrapper<Project> wrapper = TestProjectFactory.wrapper(refProject.code);
+			Iterable<Project> samples = api.listObjects(wrapper);
+			Iterator<Project> iter = samples.iterator();
+			int count = 0;
+			while(iter.hasNext()) {
+				Project p = iter.next();
+				Assert.assertEquals(refProject.code, p.code);
+				Assert.assertEquals(refProject.categoryCode, p.categoryCode);
+				count++;
+			}
+			Assert.assertEquals(1, count);
+			
+			//---------- reporting mode----------
+			logger.debug("reporting mode");
+			wrapper = TestProjectFactory.wrapper(refProject.code, QueryMode.REPORTING, null);
+			samples = api.listObjects(wrapper);
+			iter = samples.iterator();
+			count = 0;
+			while(iter.hasNext()) {
+				Project p = iter.next();
+				Assert.assertEquals(refProject.code, p.code);
+				Assert.assertEquals(refProject.categoryCode, p.categoryCode);
+				count++;
+			}
+			Assert.assertEquals(1, count);				
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			e.printStackTrace();
+			logger.error(e.getCause().getMessage());
 			exit(e.getMessage());
 		}
 	}

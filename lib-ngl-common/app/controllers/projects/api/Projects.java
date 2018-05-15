@@ -3,8 +3,6 @@ package controllers.projects.api;
 import javax.inject.Inject;
 
 import controllers.NGLAPIController;
-import fr.cea.ig.authentication.Authenticated;
-import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.dao.api.APIException;
@@ -13,7 +11,6 @@ import fr.cea.ig.ngl.dao.projects.ProjectsAPI;
 import fr.cea.ig.ngl.dao.projects.ProjectsDAO;
 import models.laboratory.project.instance.Project;
 import play.data.Form;
-import play.mvc.Result;
 /**
  * Controller around Project object
  *

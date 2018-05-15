@@ -7,7 +7,6 @@ import java.util.List;
 
 import controllers.containers.api.ContainerSupportsSearchForm;
 import controllers.containers.api.ContainersSearchForm;
-import controllers.samples.api.SamplesSearchForm;
 import fr.cea.ig.lfw.LFWApplication;
 import fr.cea.ig.lfw.support.LFWRequestParsing;
 import fr.cea.ig.ngl.support.ListFormWrapper;
