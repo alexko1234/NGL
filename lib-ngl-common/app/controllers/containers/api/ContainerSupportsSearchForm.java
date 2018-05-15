@@ -121,7 +121,7 @@ public class ContainerSupportsSearchForm extends DBObjectListForm<ContainerSuppo
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("support", 1);
-			Query queryContainer =ContainersOLD.getQuery(cs);
+			Query queryContainer = cs.getQuery();
 			if (queryContainer != null) {
 				List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, queryContainer, keys).toList();
 				logger.debug("Containers " + containers.size());
