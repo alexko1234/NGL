@@ -134,7 +134,7 @@ public class LimsCNSDAO {
 			public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 				Sample sample = new Sample();
-				InstanceHelpers.updateTraceInformation(sample.traceInformation, "ngl-data");
+				InstanceHelpers.updateTraceInformation(sample.traceInformation, contextError.getUser());
 				String tadco = rs.getString("tadco");
 				String tprco = rs.getString("tprco");
 				sample.code=rs.getString("code");
@@ -265,7 +265,7 @@ public class LimsCNSDAO {
 
 				project.state = new State(); 
 				project.state.code="IP";
-				project.state.user = InstanceHelpers.getUser();
+				project.state.user = contextError.getUser();
 				project.state.date = new Date();
 
 				
@@ -277,7 +277,7 @@ public class LimsCNSDAO {
 				project.archive = rs.getBoolean("prsarch");
 				
 				project.traceInformation=new TraceInformation();
-				InstanceHelpers.updateTraceInformation(project.traceInformation, "ngl-data");
+				InstanceHelpers.updateTraceInformation(project.traceInformation, contextError.getUser());
 				return project;
 			}
 		});
@@ -759,7 +759,7 @@ public class LimsCNSDAO {
 						index.supplierName=new HashMap<>();
 						index.supplierName.put("illumina",rs.getString("tagnamefour"));
 						index.traceInformation=new TraceInformation();
-						InstanceHelpers.updateTraceInformation(index.traceInformation, "ngl-data");
+						InstanceHelpers.updateTraceInformation(index.traceInformation, contextError.getUser());
 						return index;
 					}
 				});

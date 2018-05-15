@@ -16,6 +16,7 @@ import org.mongojack.DBQuery;
 
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.migration.NGLContext;
+import models.Constants;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -230,7 +231,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 	public static Container createContainerFromResultSet(ResultSet rs, String containerCategoryCode, String containerStatecode, String experimentTypeCode) throws SQLException, DAOException{
 
 		Container container = new Container();
-		container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
+		container.traceInformation.setTraceInformation(Constants.NGL_DATA_USER);
 		try {
 			container.traceInformation.creationDate=rs.getDate("dc");
 		} catch(SQLException e){
@@ -250,7 +251,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		
 		container.state = new State(); 
 		container.state.code=DataMappingCNS.getState(container.categoryCode,rs.getInt("etatLims"),experimentTypeCode);
-		container.state.user = InstanceHelpers.getUser();
+		container.state.user = Constants.NGL_DATA_USER;
 		container.state.date = new Date();
 
 		

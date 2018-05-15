@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.migration.NGLContext;
+import models.Constants;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.sample.instance.Sample;
@@ -122,7 +123,7 @@ public class ContainerImportCNG extends AbstractImportDataCNG {
 		//Logger.debug("2a/3 delete from dest database...");
 		for (Sample sample : samples) {
 			Sample oldSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sample.code);			
-			sample.traceInformation = InstanceHelpers.getUpdateTraceInformation(oldSample.traceInformation, "ngl-data");			
+			sample.traceInformation = InstanceHelpers.getUpdateTraceInformation(oldSample.traceInformation, Constants.NGL_DATA_USER);			
 			MongoDBDAO.deleteByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sample.code);
 		}
 		
@@ -199,7 +200,7 @@ public class ContainerImportCNG extends AbstractImportDataCNG {
 		for (Container container : containers) {
 			Container oldContainer = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, container.code);
 			
-			container.traceInformation = InstanceHelpers.getUpdateTraceInformation(oldContainer.traceInformation, "ngl-data");
+			container.traceInformation = InstanceHelpers.getUpdateTraceInformation(oldContainer.traceInformation, Constants.NGL_DATA_USER);
 			
 			MongoDBDAO.deleteByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, container.code);
 		}

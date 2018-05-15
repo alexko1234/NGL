@@ -115,16 +115,16 @@ public class LimsCNGDAO {
 		
 		project.state = new State(); 
 		project.state.code=PROJECT_STATE_CODE_DEFAULT;
-		project.state.user = InstanceHelpers.getUser();
+		project.state.user = ctxErr.getUser();
 		project.state.date = new Date();
 		
 		project.traceInformation = new TraceInformation(); 
-		project.traceInformation.setTraceInformation(InstanceHelpers.getUser());
+		project.traceInformation.setTraceInformation(ctxErr.getUser());
 	
 		// just one comment for one project
 		if (rs.getString("comments") != null ) {
 			project.comments = new ArrayList<>(); 
-			InstanceHelpers.addComment(rs.getString("comments"), project.comments, "ngl-data");
+			InstanceHelpers.addComment(rs.getString("comments"), project.comments, Constants.NGL_DATA_USER);
 		}
 		
 		//specific to CNG
@@ -147,7 +147,7 @@ public class LimsCNGDAO {
 			Sample sample = new Sample();
 			
 			sample.traceInformation = new TraceInformation();
-			sample.traceInformation.setTraceInformation(InstanceHelpers.getUser());
+			sample.traceInformation.setTraceInformation(ctxErr.getUser());
 
 			sample.code=rs.getString("code");
 			
@@ -183,7 +183,7 @@ public class LimsCNGDAO {
 			sample.comments = new ArrayList<>();
 			
 			if (rs.getString("comments") != null) {
-				sample.comments.add(new Comment(rs.getString("comments"), "ngl-data"));
+				sample.comments.add(new Comment(rs.getString("comments"), Constants.NGL_DATA_USER));
 			}
 			
 			sample.properties = new HashMap<>(); // <String, PropertyValue>();
@@ -208,14 +208,14 @@ public class LimsCNGDAO {
 		String specialContainerCategoryCode=containerCategoryCode; // garder une trace pour les cas xxx-well
 		
 		container.traceInformation = new TraceInformation();
-		container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
+		container.traceInformation.setTraceInformation(ctxErr.getUser());
 		container.code = rs.getString("container_code");
 		logger.debug("[commonContainerMapRow] Container code :"+container.code);
 
 		//FDS 20/01/2016 ne pas ajouter des commentaires vides  ""...
 		if ((rs.getString("comment") != null) && (! rs.getString("comment").equals(""))) {
 			container.comments = new ArrayList<>();	
-			container.comments.add(new Comment(rs.getString("comment"), "ngl-data"));
+			container.comments.add(new Comment(rs.getString("comment"), Constants.NGL_DATA_USER));
 		}
 		
 		//FDS 20/01/2016 n'ajouter que s'il n'y a qq chose!!
@@ -232,7 +232,7 @@ public class LimsCNGDAO {
 		else if (importState.equals("iw-p")) {
 			container.state.code = CONTAINER_STATE_CODE_IW_P;
 		}
-		container.state.user = InstanceHelpers.getUser();
+		container.state.user = ctxErr.getUser();
 		container.state.date = new Date(); 
 		
 		container.valuation = new Valuation(); 
@@ -1139,8 +1139,8 @@ public class LimsCNGDAO {
 						index.categoryCode = rs.getString("code_category");
 						index.sequence     = rs.getString("sequence");
 //						index.traceInformation=new TraceInformation();
-//						InstanceHelpers.updateTraceInformation(index.traceInformation, "ngl-data");
-						index.setTraceCreationStamp(contextError, "ngl-data"); // Assume creation from method name
+//						InstanceHelpers.updateTraceInformation(index.traceInformation, Constants.NGL_DATA_USER);
+						index.setTraceCreationStamp(contextError, Constants.NGL_DATA_USER); // Assume creation from method name
 						logger.info("index code: {}", index.code);
 						return index;
 					}

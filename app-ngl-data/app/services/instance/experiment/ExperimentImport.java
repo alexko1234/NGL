@@ -11,6 +11,7 @@ import java.util.Set;
 import org.mongojack.DBQuery;
 
 import fr.cea.ig.MongoDBDAO;
+import models.Constants;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.property.PropertySingleValue;
@@ -66,7 +67,7 @@ public class ExperimentImport {
 		
 		//define trace information for this experiment
 		experiment.traceInformation = new TraceInformation();
-		experiment.traceInformation.setTraceInformation(InstanceHelpers.getUser());
+		experiment.traceInformation.setTraceInformation(Constants.NGL_DATA_USER);
 		
 		//define instrumentProperties attributes
 		experiment.instrumentProperties = new HashMap<>(); // <String, PropertyValue>();

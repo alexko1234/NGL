@@ -515,11 +515,11 @@ public class Experiments extends DocumentController<Experiment> {
 				input.validate(ctxVal);	
 				
 				// ------------------------------------------------------
-				//AJ: Fix Bug NGL-2037
+				//AJ: Fix Bug NGL-2037 //TODO move to validate method
 				List<String> sc = new ArrayList<>();
 				Integer iocuSize = 0;
 				for(AtomicTransfertMethod tranfert : input.atomicTransfertMethods){
-					if(ExperimentCategory.CODE.qualitycontrol.toString().equals(input.categoryCode)){
+					if(tranfert.outputContainerUseds == null){
 						iocuSize += tranfert.inputContainerUseds.size();
 						sc.addAll(tranfert.inputContainerUseds.stream().map(c -> c.locationOnContainerSupport.storageCode).collect(Collectors.toList()));
 					} else {
