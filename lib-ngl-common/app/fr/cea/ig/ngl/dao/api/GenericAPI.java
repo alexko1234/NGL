@@ -16,13 +16,13 @@ import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBResult.Sort;
 import fr.cea.ig.mongo.MongoStreamer;
 import fr.cea.ig.ngl.dao.GenericMongoDAO;
-//import play.Logger;
+import fr.cea.ig.ngl.support.ListFormWrapper;
 import validation.ContextValidation;
 
 public abstract class GenericAPI<O extends GenericMongoDAO<T>, T extends DBObject> {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(GenericAPI.class);
-	
+
 	protected final O dao; 
 
 	@Inject
@@ -41,7 +41,28 @@ public abstract class GenericAPI<O extends GenericMongoDAO<T>, T extends DBObjec
 	protected abstract List<String> defaultKeys();
 
 	public abstract T create(T input, String currentUser) throws APIValidationException, APIException;
+
+	/**
+	 * Update a complete object
+	 * @param input 					Object to update
+	 * @param currentUser 				current user
+	 * @param fields 					fields
+	 * @return 							updated object
+	 * @throws APIException if the code doesn't correspond to an object 
+	 * @throws APIValidationException validation failure
+	 */
 	public abstract T update(T input, String currentUser) throws APIException, APIValidationException;
+
+	/**
+	 * Define only fields to update (not the entire object). <br>
+	 * Get the list of editable fields using {@link #authorizedUpdateFields()}.
+	 * @param input 			Object to update
+	 * @param currentUser 		current user
+	 * @param fields 			fields
+	 * @return 					updated object
+	 * @throws APIException if the code doesn't correspond to an object 
+	 * @throws APIValidationException validation failure
+	 */
 	public abstract T update(T input, String currentUser, List<String> fields) throws APIException, APIValidationException;
 
 	public void delete(String code) {
@@ -76,54 +97,73 @@ public abstract class GenericAPI<O extends GenericMongoDAO<T>, T extends DBObjec
 		return dao.isObjectExist(code);
 	}
 
+	public Source<ByteString, ?> list(ListFormWrapper<T> wrapper) throws APIException {
+		return wrapper.transform().apply(listObjects(wrapper));
+	}
+	
+	public Iterable<T> listObjects(ListFormWrapper<T> wrapper) throws APIException {
+		if(wrapper.isReportingMode()) {
+			return findByQuery(wrapper.reportingQuery());
+		} else if(wrapper.isAggregateMode()) {
+			//TODO implement list in AggregateMode()
+			return null;
+		} else if(wrapper.isMongoJackMode()) {
+			return dao.mongoDBFinder(wrapper.getQuery(), "code", Sort.ASC, wrapper.getKeys(defaultKeys())).getCursor();
+		} else {
+			throw new APIException("Unsupported query mode");
+		}
+	}
+	
+
+	public MongoCursor<T> findByQuery(String reportingQuery) {
+		return dao.findByQuery(reportingQuery);
+	}
+
+	@Deprecated
 	public List<T> list(Query query, String orderBy, Sort orderSense) {
 		return dao.mongoDBFinder(query, orderBy, orderSense).toList();
 	}
-
+	@Deprecated
 	public List<T> list(Query query, String orderBy, Sort orderSense, BasicDBObject keys, Integer limit) {
 		return dao.mongoDBFinder(query, orderBy, orderSense, limit, keys).toList();
 	}
-
+	@Deprecated
 	public List<T> list(Query query, String orderBy, Sort orderSense, BasicDBObject keys) {
 		return list(query, orderBy, orderSense, keys, -1);
 	}
-
+	@Deprecated
 	public List<T> list(Query query, String orderBy, Sort orderSense, BasicDBObject keys, 
 			Integer pageNumber, Integer numberRecordsPerPage) {
 		return dao.mongoDBFinderWithPagination(query, orderBy, orderSense, pageNumber, numberRecordsPerPage, keys).toList();
 	}
-
+	@Deprecated
 	public Source<ByteString, ?> streamUDT(Query query, String orderBy, Sort orderSense, BasicDBObject keys, 
 			Integer pageNumber, Integer numberRecordsPerPage) {
 		return MongoStreamer.streamUDT(dao.mongoDBFinderWithPagination(query, orderBy, orderSense, pageNumber, numberRecordsPerPage, keys));
 	}
-	
+	@Deprecated
 	public Source<ByteString, ?> streamUDTWithDefaultKeys(Query query, String orderBy, Sort orderSense,
 			Integer pageNumber, Integer numberRecordsPerPage) {
 		return MongoStreamer.streamUDT(dao.mongoDBFinderWithPagination(query, orderBy, orderSense, pageNumber, numberRecordsPerPage, defaultDBKeys()));
 	}
-	
+	@Deprecated
 	public Source<ByteString, ?> streamUDTWithDefaultKeys(Query query, String orderBy, Sort orderSense, Integer limit) {
 		return MongoStreamer.streamUDT(dao.mongoDBFinder(query, orderBy, orderSense, limit, defaultDBKeys()));
 	}
-
+	@Deprecated
 	public Source<ByteString, ?> streamUDT(Query query, String orderBy, Sort orderSense, BasicDBObject keys, Integer limit) {
 		return MongoStreamer.streamUDT(dao.mongoDBFinder(query, orderBy, orderSense, limit, keys));
 	}
-	
+	@Deprecated
 	public Source<ByteString, ?> stream(Query query, String orderBy, Sort orderSense, BasicDBObject keys, Integer limit) {
 		return MongoStreamer.stream(dao.mongoDBFinder(query, orderBy, orderSense, limit, keys));
 	}
-
+	@Deprecated
 	public Source<ByteString, ?> streamUDT(Query query, String orderBy, Sort orderSense, BasicDBObject keys) {
 		return MongoStreamer.streamUDT(dao.mongoDBFinder(query, orderBy, orderSense, keys));
 	}
 
 	/* ---- method often used in reporting context ---- */
-	public MongoCursor<T> findByQuery(String reportingQuery) {
-		return dao.findByQuery(reportingQuery);
-	}
-
 	public Integer count(String reportingQuery){
 		return findByQuery(reportingQuery).count();
 	}
@@ -131,8 +171,10 @@ public abstract class GenericAPI<O extends GenericMongoDAO<T>, T extends DBObjec
 	public Source<ByteString, ?> stream(String reportingQuery){
 		return MongoStreamer.streamUDT(findByQuery(reportingQuery));
 	}
-	
+
 	/* ------------------------------------------------ */
+
+
 
 	/**
 	 * @return BasicDBObject which corresponds to the list of default keys from {@link GenericAPI#defaultKeys()}
@@ -147,9 +189,10 @@ public abstract class GenericAPI<O extends GenericMongoDAO<T>, T extends DBObjec
 		return keys;		
 	}
 
-	public void checkAuthorizedUpdateFields(ContextValidation ctxVal, List<String> authorizedFields, List<String> fields) {
+
+	public void checkAuthorizedUpdateFields(ContextValidation ctxVal, List<String> fields) {
 		for (String field: fields) {
-			if (!authorizedFields.contains(field)) {
+			if (!authorizedUpdateFields().contains(field)) {
 				ctxVal.addErrors("fields", "error.valuenotauthorized", field);
 			}
 		}
@@ -166,5 +209,5 @@ public abstract class GenericAPI<O extends GenericMongoDAO<T>, T extends DBObjec
 			}
 		}
 	}
-	
+
 }

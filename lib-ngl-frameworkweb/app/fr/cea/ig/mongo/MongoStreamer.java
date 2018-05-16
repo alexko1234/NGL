@@ -37,6 +37,7 @@ import play.mvc.Result;
 
 public class MongoStreamer {
 	
+	// -------------- more generic streamer ------------------
 	public static final <A,B> ImmutablePair<A,B> pair(A a, B b) { return new ImmutablePair<>(a,b); }
 
 	/**
@@ -53,6 +54,11 @@ public class MongoStreamer {
 				.map(r -> { return ByteString.fromString(r.right); });
 		return Source.from(it);
 	}
+	
+	public static final <A,B> Source<ByteString,?> stream(Iterable<A> iterable, Function<A,B> transform) {
+		return stream(Source.from(iterable),transform);
+	}
+	
 	
 	/*
 	 * Logger.

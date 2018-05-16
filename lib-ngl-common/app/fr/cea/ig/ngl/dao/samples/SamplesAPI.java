@@ -96,12 +96,16 @@ public class SamplesAPI extends GenericAPI<SamplesDAO, Sample> {
 		} else {
 			ContextValidation ctxVal = new ContextValidation(currentUser);
 			ctxVal.setUpdateMode();
-			checkAuthorizedUpdateFields(ctxVal, AUTHORIZED_UPDATE_FIELDS, fields);
+			checkAuthorizedUpdateFields(ctxVal, fields);
 			checkIfFieldsAreDefined(ctxVal, fields, input);
 			if (!ctxVal.hasErrors()) {
 				input.comments = InstanceHelpers.updateComments(input.comments, ctxVal);
 				TraceInformation ti = sampleInDb.traceInformation;
-				ti.modificationStamp(ctxVal, currentUser);
+				if(ti != null){
+					ti.modificationStamp(ctxVal, currentUser);
+				} else{
+					logger.error("traceInformation is null !!");
+				}
 				if(fields.contains("valuation")){
 					input.valuation.user = currentUser;
 					input.valuation.date = new Date();

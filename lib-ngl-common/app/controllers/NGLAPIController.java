@@ -5,10 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import akka.stream.javadsl.Source;
+import akka.util.ByteString;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
+import fr.cea.ig.lfw.utils.Streamer;
 import fr.cea.ig.mongo.DBObjectConvertor;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
@@ -17,11 +20,14 @@ import fr.cea.ig.ngl.dao.api.APIException;
 import fr.cea.ig.ngl.dao.api.APISemanticException;
 import fr.cea.ig.ngl.dao.api.APIValidationException;
 import fr.cea.ig.ngl.dao.api.GenericAPI;
+import fr.cea.ig.ngl.support.ListFormWrapper;
 import fr.cea.ig.ngl.support.NGLForms;
 import fr.cea.ig.play.IGBodyParsers;
+import play.data.Form;
 import play.data.validation.ValidationError;
 import play.mvc.BodyParser;
 import play.mvc.Result;
+import views.components.datatable.DatatableForm;
 
 /**
  * Contains Generic Methods of API controllers 
@@ -36,15 +42,20 @@ import play.mvc.Result;
 public abstract class NGLAPIController<T extends GenericAPI<U,V>, U extends GenericMongoDAO<V>, V extends DBObject> 
 				extends NGLController implements NGLForms, DBObjectConvertor {
 
+	protected final Form<QueryFieldsForm> updateForm;
+	protected final Class<? extends DBObjectListForm<V>> searchFormClass;
+	
 	private final T api;
 	
 	public T api() {
 		return api;
 	}
 
-	public NGLAPIController(NGLApplication app, T api) {
+	public NGLAPIController(NGLApplication app, T api, Class<? extends DBObjectListForm<V>> searchFormClass) {
 		super(app);
 		this.api = api;
+		this.updateForm = app.formFactory().form(QueryFieldsForm.class);
+		this.searchFormClass = searchFormClass;
 	}
 	
 	/**
@@ -63,9 +74,40 @@ public abstract class NGLAPIController<T extends GenericAPI<U,V>, U extends Gene
 		}
 	}
 	
-	// Mandatory methods
-	public abstract Result list();
-	public abstract Result get(String code);
+	
+	@Authenticated
+	@Authorized.Read
+	public Result list() {
+		try {
+			Source<ByteString, ?> resultsAsStream = api().list(new ListFormWrapper<>(objectFromRequestQueryString(this.searchFormClass), form -> generateBasicDBObjectFromKeys(form)));
+			return Streamer.okStream(resultsAsStream);
+		} catch (APIException e) {
+			getLogger().error(e.getMessage());
+			return badRequestAsJson(e.getMessage());
+		} catch (Exception e) {
+			getLogger().error(e.getMessage());
+			return nglGlobalBadRequest();
+		}
+	}
+	
+	
+	
+	@Authenticated
+	@Authorized.Read
+	public Result get(String code) {
+		try {
+			DatatableForm form = objectFromRequestQueryString(DatatableForm.class);
+			V obj = api().getObject(code, generateBasicDBObjectFromKeys(form));
+			if (obj == null) {
+				return notFound();
+			} 
+			return okAsJson(obj);
+		} catch (Exception e) {
+			getLogger().error(e.getMessage());
+			return nglGlobalBadRequest();
+		}	
+	}
+	
 	
 	/**
 	 * These method defines the specific creation behavior for each resource. 
@@ -146,12 +188,4 @@ public abstract class NGLAPIController<T extends GenericAPI<U,V>, U extends Gene
 		});
 		return map;
 	}
-
-	/**
-	 * @return badRequest Result with standard message
-	 */
-	protected Result nglGlobalBadRequest() {
-		return badRequestAsJson("Error on server: contact support for more details");
-	}
-
 }

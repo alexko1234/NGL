@@ -1,13 +1,9 @@
 package fr.cea.ig.ngl;
 
-import java.util.List;
-import java.util.Map;
-
 import javax.inject.Inject;
 
 import fr.cea.ig.lfw.LFWController;
-import play.data.Form;
-import play.data.validation.ValidationError;
+import play.mvc.Result;
 
 public class NGLController extends LFWController implements NGLApplicationHolder {
 
@@ -28,22 +24,11 @@ public class NGLController extends LFWController implements NGLApplicationHolder
 		return app.nglConfig();
 	}
 	
-	/*public Result result(APIExecution toRun, String msg) {
-		try {
-			return toRun.run();
-		} catch (DAOEntityNotFoundException e) {
-			return Results.notFound();
-		} catch (Exception e) {
-			return failure(logger,msg,e);
-		}
-	}*/
-	
-	// -- form deprecation work around
-	public static Map<String,List<ValidationError>> getFormErrors(Form<?> form) {
-		// TODO : find a proper way to pass errors around
-		@SuppressWarnings("deprecation")
-		Map<String,List<ValidationError>> errors = form.errors();
-		return errors;
+	/**
+	 * @return badRequest Result with standard message
+	 */
+	public Result nglGlobalBadRequest() {
+		return badRequestAsJson("Error on server: contact support for more details");
 	}
 	
 }

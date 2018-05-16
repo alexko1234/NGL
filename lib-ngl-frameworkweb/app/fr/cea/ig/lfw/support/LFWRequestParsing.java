@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-// import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +18,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.mongodb.BasicDBObject;
 
 import fr.cea.ig.lfw.LFWApplicationHolder;
-// import play.data.Form;
 import play.libs.Json;
 import views.components.datatable.IDatatableForm;
 
@@ -93,7 +91,7 @@ public interface LFWRequestParsing extends LFWApplicationHolder {
 		return true;
 	}
 	
-	default BasicDBObject getKeys(IDatatableForm form) {
+	default BasicDBObject generateBasicDBObjectFromKeys(IDatatableForm form) {
 		BasicDBObject keys = new BasicDBObject();
 		if(!form.includes().contains("*")){
 			keys.putAll((BSONObject)getIncludeKeys(form.includes().toArray(new String[form.includes().size()])));
@@ -120,14 +118,10 @@ public interface LFWRequestParsing extends LFWApplicationHolder {
 		return values;
     }
 	
-	// Cannot use a forward reference to controllers.samples.api.Samples that is in ngl-common.
 	/**
 	 * can not access to default keys in controller (restriction to the API)
-	 * replace by: <br>
-	 * if {@link IDatatableForm#includes()} contains "default" then call method of API with use default keys <br>
-	 * else retrieve keys from form using {@link LFWRequestParsing#getKeys(IDatatableForm)}
-	 * <br> 
-	 * see controllers.samples.api.Samples#list() 
+	 * replace by: fr.cea.ig.ngl.support.ListFormWrapper.getKeys(defaultKeys).
+	 * 
 	 * @param form        IDatatableForm
 	 * @param defaultKeys {@literal List<String>}
 	 * @return            form IDatatableForm
