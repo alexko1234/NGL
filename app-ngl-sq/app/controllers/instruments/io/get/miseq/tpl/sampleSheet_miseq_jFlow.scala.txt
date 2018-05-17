@@ -5,7 +5,7 @@
 @for(etm <- e.atomicTransfertMethods.sortWith(_.line < _.line)){
 	@for(c <- etm.inputContainerUseds.sortWith(_.code < _.code)){
 		@for((k,cs) <- c.contents.groupBy(_.projectCode)){		
-			@for((key2,cos2) <- cos1.groupBy(CsvHelper.getContentProcessProperties(_,"reference_genome", e))){
+			@for((key2,cos2) <- cs.groupBy(CsvHelper.getContentProcessProperties(_,"reference_genome", e))){
 				@for((key,cos) <- cos2.groupBy(CsvHelper.getContentProcessProperties(_,"reference_transcriptome", e))){
 				
 					@*** Si Amplicon ou 16S et différents tailles d'insert -- créeér 1 ligne par taille d'insert ***@
