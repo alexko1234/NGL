@@ -6,36 +6,42 @@
 	@for(c <- etm.inputContainerUseds.sortWith(_.code < _.code)){
 		@for((k,cs) <- c.contents.groupBy(_.projectCode)){
 			@for((key1,cos1) <- cs.groupBy(CsvHelper.getContentProcessProperties(_,"analyseType", e))){
-				@for((key2,cos2) <- cos1.groupBy(CsvHelper.getContentProcessProperties(_,"reference_genome", e))){
-					@for((key,cos) <- cos2.groupBy(CsvHelper.getContentProcessProperties(_,"reference_transcriptome", e))){
-						python3.4 /usr/local/bioinfo/src/nG6/bin/ng6_cli.py @(CsvHelper.getFromAnalyseType(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e))) --date '@(CsvHelper.getRunDate(e))' @***
-						***@--data-nature @if(OutputHelper.getContentProperty(cos.toList.head, "Type_librairie")){@(OutputHelper.getContentProperty(cos.toList.head,"Type_librairie"))}else{'-'} @***
-						***@--sequencer '@(CsvHelper.getInstrumentName(e.instrument.code))' --name '@(CsvHelper.checkName(OutputHelper.getContentProperty(cos.toList.head,"Nom_pool_sequencage")))' @***
-						si 4/4 || 2/2 pour Standard 
-									--type '@if(OutputHelper.getInstrumentProperty(e,"workflow")!="Standard"){
-										1/@(e.inputContainerCodes.size) Flowcell - Lane@(etm.line)'}else{@(e.inputContainerCodes.size)/@(e.inputContainerCodes.size) Flowcell} 
-						actuellement = HiSeq
-						***@--type '1/@(e.inputContainerCodes.size) Flowcell - Lane@(etm.line)' @***
-						***@--species @if(c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cos.toList.head, "species", e)) != null){'@(CsvHelper.getContentProcessProperties(cos.toList.head, "species",e))'}else{'-'} @***
-						***@--description 'Adapter type : @(CsvHelper.getHiseqAdapter(cos.toList.head)) @***
-						si "taille_insert" est renceigné
-						***@@if(OutputHelper.getContentProperty(cos.toList.sortWith(_.sampleCode < _.sampleCode).head,"taille_insert")!="" && OutputHelper.getContentProperty(cos.toList.sortWith(_.sampleCode < _.sampleCode).head,"taille_insert")!="0"){@***
-							***@- Insert :@***
+				
+				@for((key2,cos2) <- cos1.groupBy(CsvHelper.getContentProcessProperties(_,"Run_Name"))){
+			
+					@for((key3,cos3) <- cos2.groupBy(CsvHelper.getContentProcessProperties(_,"reference_genome", e))){
+						@for((key,cos) <- cos3.groupBy(CsvHelper.getContentProcessProperties(_,"reference_transcriptome", e))){
+							python3.4 /usr/local/bioinfo/src/nG6/bin/ng6_cli.py @(CsvHelper.getFromAnalyseType(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e))) --date '@(CsvHelper.getRunDate(e))' @***
+							***@--data-nature @if(OutputHelper.getContentProperty(cos.toList.head, "Type_librairie")){@(OutputHelper.getContentProperty(cos.toList.head,"Type_librairie"))}else{'-'} @***
+							***@--sequencer '@(CsvHelper.getInstrumentName(e.instrument.code))' --name '@if(OutputHelper.getContentProperty(cos.toList.head,"Run_Name")!=""){@(CsvHelper.checkName(OutputHelper.getContentProperty(cos.toList.head,"Run_Name")))}else{@(CsvHelper.checkName(OutputHelper.getContentProperty(cos.toList.head,"Nom_pool_sequencage")))}' @***
+							si 4/4 || 2/2 pour Standard 
+										--type '@if(OutputHelper.getInstrumentProperty(e,"workflow")!="Standard"){
+											1/@(e.inputContainerCodes.size) Flowcell - Lane@(etm.line)'}else{@(e.inputContainerCodes.size)/@(e.inputContainerCodes.size) Flowcell} 
+							actuellement = HiSeq
+							***@--type '1/@(e.inputContainerCodes.size) Flowcell - Lane@(etm.line)' @***
+							***@--species @if(c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cos.toList.head, "species", e)) != null){'@(CsvHelper.getContentProcessProperties(cos.toList.head, "species",e))'}else{'-'} @***
+							***@--description 'Adapter type : @(CsvHelper.getHiseqAdapter(cos.toList.head)) @***
+							si "taille_insert" est renceigné
+							***@@if(OutputHelper.getContentProperty(cos.toList.sortWith(_.sampleCode < _.sampleCode).head,"taille_insert")!="" && OutputHelper.getContentProperty(cos.toList.sortWith(_.sampleCode < _.sampleCode).head,"taille_insert")!="0"){@***
+								***@- Insert :@***
+								***@@for(co <- cos.toList.sortWith(_.sampleCode < _.sampleCode)){@***
+											***@@if(cos.toList.sortWith(_.sampleCode < _.sampleCode).head != co){, } @(OutputHelper.getContentProperty(co,"taille_insert"))pb for Sample @(CsvHelper.contentName(co))@***
+								***@}@***
+							***@.} [C] @***
+							***@@(c.concentration.value)pM' @***
+							***@@if((CsvHelper.getContentProcessProperties(c.contents.toList.head, "store_bam", e) != null && CsvHelper.getContentProcessProperties(c.contents.toList.head, "store_bam", e) != "non") || (CsvHelper.getFromAnalyseType(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e)) == "methylseq")){}else{ --delete-bam} @***
+							***@@if(c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cos.toList.head, "reference_transcriptome", e)) != null){--reference-transcriptome @(CsvHelper.getContentProcessProperties(cos.toList.head, "reference_transcriptome", e))} @***
+							***@@if(c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cos.toList.head, "reference_genome", e)) != null){--reference-genome @(CsvHelper.getContentProcessProperties(cos.toList.head, "reference_genome", e))} @***
+							***@--casava directory=#CASAVA_DIRECTORY# @***
 							***@@for(co <- cos.toList.sortWith(_.sampleCode < _.sampleCode)){@***
-										***@@if(cos.toList.sortWith(_.sampleCode < _.sampleCode).head != co){, } @(OutputHelper.getContentProperty(co,"taille_insert"))pb for Sample @(CsvHelper.contentName(co))@***
-							***@}@***
-						***@.} [C] @***
-						***@@(c.concentration.value)pM' @***
-						***@@if((CsvHelper.getContentProcessProperties(c.contents.toList.head, "store_bam", e) != null && CsvHelper.getContentProcessProperties(c.contents.toList.head, "store_bam", e) != "non") || (CsvHelper.getFromAnalyseType(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e)) == "methylseq")){}else{ --delete-bam} @***
-						***@@if(c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cos.toList.head, "reference_transcriptome", e)) != null){--reference-transcriptome @(CsvHelper.getContentProcessProperties(cos.toList.head, "reference_transcriptome", e))} @***
-						***@@if(c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cos.toList.head, "reference_genome", e)) != null){--reference-genome @(CsvHelper.getContentProcessProperties(cos.toList.head, "reference_genome", e))} @***
-						***@--casava directory=#CASAVA_DIRECTORY# @***
-						***@@for(co <- cos.toList.sortWith(_.sampleCode < _.sampleCode)){@***
-							***@select-sample-id=@(CsvHelper.contentName(co)) @***
-						***@} @***
-						***@lane=@(etm.line) --project-name @(cos.toList.head.projectCode) --admin-login CTD
+								***@select-sample-id=@(CsvHelper.contentName(co)) @***
+							***@} @***
+							***@lane=@(etm.line) --project-name @(cos.toList.head.projectCode) --admin-login CTD
+						}
 					}
+					
 				}
+				
 			}
 		}
 	}		

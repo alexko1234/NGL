@@ -6,11 +6,25 @@ package rules
 
 
 //declare any global variables here
+rule "run-name to process property"
+	@nglSQ( processCreation )
+	dialect "java"
+	salience 1000
+	no-loop
+	when
+		$process : Process(typeCode=="illumina-run")
+		$runName : PropertyValue() from $process.sampleOnInputContainer.properties.get("Run_Name")
+	then
+		Logger.debug($process.sampleOnInputContainer.containerCode + " - " + $process.sampleOnInputContainer.properties.get("Run_Name"));
+		if(null == $process.properties.get("Run_Name")){
+			$process.properties.put("Run_Name",$process.sampleOnInputContainer.properties.get("Run_Name"));	
+		}
+	end	
 
 rule "Calculation of estimatedPercent property of pool process "
 	@nglSQ( processCreation )
 	dialect "java"
-	salience 1000
+	salience 900
 	no-loop
     when
         $process : Process(typeCode=="illumina-run")
