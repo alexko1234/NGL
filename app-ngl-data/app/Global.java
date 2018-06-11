@@ -12,7 +12,7 @@ import services.instance.ImportDataCNS;
 //import services.instance.ImportDataCNG;
 //import services.instance.ImportDataCNS;
 import services.instance.ImportDataGET;
-//import services.reporting.RunReportingCNS;
+
 
 
 public class Global extends GlobalSettings {

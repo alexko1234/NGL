@@ -480,17 +480,19 @@ angular.module('home').controller('GETIlluminaDepotCtrl',['$scope', '$parse','$h
 				
 		var generateSampleSheetIEM = function(){
 			
-			generateSampleSheet("jFlow");
-		
-//			if(check10x($scope.experiment) < countContents($scope.experiment)){
-				generateSampleSheet("IEM");	
-//			};
-			if(check10x($scope.experiment) > 0){
-				console.log ("10x = " + check10x($scope.experiment));
-				generateSampleSheet("10x");
-			};
+			if ($parse('experiment.state.code')($scope) == "N" && $parse('experiment.instrument.typeCode')($scope) == "MISEQ"){
+				generateSampleSheet("IEMnew");	
+			}else{
+				generateSampleSheet("jFlow");
 			
-			
+	//			if(check10x($scope.experiment) < countContents($scope.experiment)){
+					generateSampleSheet("IEM");	
+	//			};
+				if(check10x($scope.experiment) > 0){
+					console.log ("10x = " + check10x($scope.experiment));
+					generateSampleSheet("10x");
+				};
+			} //if not new			
 		};
 		
 //		var generateSampleSheetJFlow = function(){
@@ -523,13 +525,15 @@ angular.module('home').controller('GETIlluminaDepotCtrl',['$scope', '$parse','$h
 				$scope.messages.open();				
 			});
 		};
+		
+		console.log("test : " + $parse('experiment.instrument.typeCode')($scope));
 
 //		var addButtons = function(){
 //			if (!$scope.mainService.isEditMode() && $parse('experiment.state.code')($scope) != "N"){
 //			if ($parse('experiment.state.code')($scope) === "IP"){
 				$scope.setAdditionnalButtons([{
 					isDisabled : function(){
-						if ($scope.isCreationMode()){
+						if ($scope.isCreationMode() || $parse('experiment.instrument.typeCode')($scope) == "MISEQ"){
 							return $scope.isCreationMode();
 						}else{
 							return $parse('experiment.state.code')($scope) == "N";

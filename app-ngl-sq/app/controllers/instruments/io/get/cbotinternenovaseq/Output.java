@@ -1,4 +1,4 @@
-package controllers.instruments.io.get.cbot;
+package controllers.instruments.io.get.cbotinternenovaseq;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -8,7 +8,7 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.instance.Experiment;
 import validation.ContextValidation;
-import controllers.instruments.io.get.cbot.tpl.txt.sampleSheet_cbot;
+import controllers.instruments.io.get.cbotinternenovaseq.tpl.txt.sampleSheet_cbotinternenovaseq;
 import controllers.instruments.io.utils.AbstractOutput;
 import controllers.instruments.io.utils.CsvHelper;
 import controllers.instruments.io.utils.File;
@@ -28,21 +28,12 @@ public class Output extends AbstractOutput {
 		//get container
 		List<Container> containers = OutputHelper.getInputContainersFromExperiment(experiment);
 		Logger.debug("Output- containers : "+ containers.size());
-//		//get instrument
-//		TagModel tagModel = OutputHelper.getTagModel(containers);
-//		Logger.debug("Output- tagModel : "+ tagModel.tagType);
 		
-		content = '\ufeff' + OutputHelper.format(sampleSheet_cbot.render(experiment,containers).body());
-//		Logger.debug("Output- content : "+ content);
-//		content = OutputHelper.format(sampleSheet_HS3000.render(experiment,containers,tagModel).body());
-		//set destination
-		//filename = "C:/Users/Public/Downloads/" + filename;
-		//String path=new File("").getAbsolutePath();
+		content = '\ufeff' + OutputHelper.format(sampleSheet_cbotinternenovaseq.render(experiment,containers).body());
+
 		//set file name
 		filename = OutputHelper.getInstrumentPath(experiment.instrument.code)+(new SimpleDateFormat("yyyyMMdd")).format(new Date()) + "_" + experiment.instrument.code + "_" + containers.get(0).support.code + ".csv";
 		
-		//Logger.debug("filename dans Output : "+ OutputHelper.getInstrumentPath(experiment.instrument.code)+", "+ (new SimpleDateFormat("yyyyMMdd")).format(new Date()) + "_" + experiment.instrument.code + "_" + ftype + "_" + containers.get(0).support.code+".csv");
-		//String filename = "/tmp/" + (new SimpleDateFormat("yyyyMMdd")).format(new Date()) + "_" + experiment.instrument.code + "_" + ftype + "_" + containers.get(0).support.code+".csv";
 		File file = new File(filename, content);
 		OutputHelper.writeFile(file);
 		return file;

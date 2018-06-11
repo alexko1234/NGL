@@ -1,7 +1,7 @@
 //created on: Aug 6, 2014
 //Rules for validation
 package rules
-
+ 
 declare ATMInfo	
 	position : String
 	contentInfos : List 

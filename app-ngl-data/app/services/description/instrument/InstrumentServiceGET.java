@@ -45,6 +45,7 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 		
 		l.add(newInstrumentCategory("Main","hand"));
 		l.add(newInstrumentCategory("CBot","cbot"));
+//		l.add(newInstrumentCategory("XP Workflow","xp-wf"));
 		
 		l.add(newInstrumentCategory("Séquenceur Illumina","illumina-sequencer"));
 //		l.add(newInstrumentCategory("Cartographie Optique Opgen","opt-map-opgen"));
@@ -95,6 +96,13 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 						createInstrument("cBot-Miseq_4","cBot Miseq_4",  null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.GET))
 						),
 				getContainerSupportCategories(new String[]{"tube","96-well-plate","384-well-plate"}), getContainerSupportCategories(new String[]{"flowcell-1"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
+
+		l.add(newInstrumentUsedType("cBot-interne-NovaSeq", "cBot-interne-novaseq", InstrumentCategory.find.findByCode("cbot"), getCBotInterneNSProperties(), 
+				getInstruments(
+						createInstrument("cBot-NovaSeq","cBot NovaSeq",  null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.GET))
+						),
+				getContainerSupportCategories(new String[]{"tube","96-well-plate","384-well-plate"}), getContainerSupportCategories(new String[]{"flowcell-2-s1","flowcell-2-s2","flowcell-4-s4"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
 // TODO:  Added cbot machine
@@ -150,9 +158,9 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 		
 		l.add(newInstrumentUsedType("MiSeq", "MISEQ", InstrumentCategory.find.findByCode("illumina-sequencer"), getMiseqProperties(), 
 				getInstruments(
-				createInstrument("MISEQ", "MiSeq n°1", null, true,"/save/devcrgs/src/NGL_Feuille_route/MISEQ", DescriptionFactory.getInstitutes(Constants.CODE.GET)),
-				createInstrument("MISEQ_2","MiSeq n°2", null, true,"/save/devcrgs/src/NGL_Feuille_route/MISEQ_2", DescriptionFactory.getInstitutes(Constants.CODE.GET)),
-				createInstrument("MISEQ_4","MiSeq n°4 ", null, true,"/save/devcrgs/src/NGL_Feuille_route/MISEQ_4", DescriptionFactory.getInstitutes(Constants.CODE.GET))),
+				createInstrument("MISEQ", "MiSeq1 M00185", null, true,"/save/devcrgs/src/NGL_Feuille_route/MISEQ", DescriptionFactory.getInstitutes(Constants.CODE.GET)),
+				createInstrument("MISEQ_2","MiSeq2 M02944", null, true,"/save/devcrgs/src/NGL_Feuille_route/MISEQ_2", DescriptionFactory.getInstitutes(Constants.CODE.GET)),
+				createInstrument("MISEQ_4","MiSeq4 M01945R", null, true,"/save/devcrgs/src/NGL_Feuille_route/MISEQ_4", DescriptionFactory.getInstitutes(Constants.CODE.GET))),
 				getContainerSupportCategories(new String[]{"flowcell-1"}), null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
@@ -179,7 +187,20 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"flowcell-8"}), null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 
-			
+		/* NovaSeq*/
+        l.add(newInstrumentUsedType("NovaSeq 6000", "NOVASEQ6000", InstrumentCategory.find.findByCode("illumina-sequencer"), getNovaSeqProperties(), 
+                getInstruments(
+                 createInstrument("NOVASEQ6000","NovaSeq6000_A00318",  null, true,"/save/devcrgs/src/NGL_Feuille_route/NOVASEQ6000", DescriptionFactory.getInstitutes(Constants.CODE.GET))),
+                 getContainerSupportCategories(new String[]{"flowcell-2-s1","flowcell-2-s2","flowcell-4-s4"}), null , 
+                DescriptionFactory.getInstitutes(Constants.CODE.GET)));
+
+		/* NovaSeq*/
+//        l.add(newInstrumentUsedType("XP Workflow", "XPWORKFLOW ", InstrumentCategory.find.findByCode("xp-wf"), getNovaSeqProperties(), 
+//                getInstruments(
+//                 createInstrument("XPWORKFLOW","XP Workflow",  null, true,"/save/devcrgs/src/NGL_Feuille_route/XPWF", DescriptionFactory.getInstitutes(Constants.CODE.GET))),
+//                getContainerSupportCategories(new String[]{"tube","96-well-plate", "384-well-plate"}), getContainerSupportCategories(new String[]{"flowcell-S1","flowcell-S2","flowcell-S4"}), 
+//                DescriptionFactory.getInstitutes(Constants.CODE.GET)));
+        
 //TODO: Fragment Analyser machine 
 	
 		l.add(newInstrumentUsedType("Agilent 2100 bioanalyzer", "agilent-2100-bioanalyzer", InstrumentCategory.find.findByCode("chip-electrophoresis"), getChipElectrophoresisProperties(), 
@@ -224,13 +245,10 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 						createInstrument("RSII", "PacBioRSII", null, true, "/save/devcrgs/src/NGL_Feuille_route/RSII", DescriptionFactory.getInstitutes(Constants.CODE.GET))),
 				getContainerSupportCategories(new String[]{"smrtcell-150k"}), null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
-//		
+
 //		l.add(newInstrumentUsedType("Eppendorf MiniSpin plus", "eppendorf-mini-spin-plus", InstrumentCategory.find.findByCode("centrifuge"), getNanoporeFragmentationProperties(),  getInstrumentEppendorfMiniSpinPlus()
 //				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Constants.CODE.GET)));
-		
-		
-		
-		
+				
 //		l.add(newInstrumentUsedType("MinION", "minION", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeDepotProperties(),getInstrumentMinIon() 
 //				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
@@ -250,6 +268,19 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
         propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index2", "nbCyclesReadIndex2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",600));
 //        propertyDefinitions.add(newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValuesWithDefault("Pas de piste contrôle (auto-calibrage)","Pas de piste contrôle (auto-calibrage)","1",
 //        		"2","3","4","5","6","7","8"),"Pas de piste contrôle (auto-calibrage)","single",100));
+        return propertyDefinitions;
+	}
+
+	private static List<PropertyDefinition> getNovaSeqProperties() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        propertyDefinitions.add(newPropertiesDefinition("Workflow", "workflow", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("Standard","XP"), null, "single",200));
+        propertyDefinitions.add(newPropertiesDefinition("Type lectures", "sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE"), "single",300));
+        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read1", "nbCyclesRead1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",400));
+        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index1", "nbCyclesReadIndex1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",500));
+        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index2", "nbCyclesReadIndex2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",600));
+        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read2", "nbCyclesRead2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",700));
+//        propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",800, "n/a"));
+        propertyDefinitions.add(newPropertiesDefinition("Position", "position", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B","n/a"), "n/a", "single",900));
         return propertyDefinitions;
 	}
 	
@@ -284,12 +315,7 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType"
         		, LevelService.getLevels(Level.CODE.Instrument,Level.CODE.ContainerSupport),String.class, true,DescriptionFactory.newValues("SR","PE"),"single"));
-      //  propertyDefinitions.add(newPropertiesDefinition("Type flowcell","flowcellType"
-       // 		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("Paired End FC Hiseq-v3","Single FC Hiseq-v3","Rapid FC PE HS 2500-v1","Rapid FC SR HS 2500-v1"),"single"));
         propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100, "n/a"));
-//		propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
-//        propertyDefinitions.add(newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValuesWithDefault("Pas de piste contrôle (auto-calibrage)","Pas de piste contrôle (auto-calibrage)","1",
-//        		"2","3","4","5","6","7","8"),"Pas de piste contrôle (auto-calibrage)","single"));
         return propertyDefinitions;
 	}
 
@@ -298,12 +324,19 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType"
         		, LevelService.getLevels(Level.CODE.Instrument,Level.CODE.ContainerSupport),String.class, true,DescriptionFactory.newValues("SR","PE"),"single"));
-     //   propertyDefinitions.add(newPropertiesDefinition("Type flowcell","flowcellType"
-        //		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("Rapid FC PE HS 2500-v1","Rapid FC SR HS 2500-v1",
-        	//			"FC Miseq-v2","FC Miseq-v3"),"single"));
-        propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
-//        propertyDefinitions.add(newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValuesWithDefault("Pas de piste contrôle (auto-calibrage)","Pas de piste contrôle (auto-calibrage)","1",
-//        		"2"),"Pas de piste contrôle (auto-calibrage)","single"));
+        propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100,"n/a"));
+        return propertyDefinitions;
+	}
+	
+
+	private static List<PropertyDefinition> getCBotInterneNSProperties() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        propertyDefinitions.add(newPropertiesDefinition("Workflow", "workflow", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("Standard","XP"), null, "single",100));
+        propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType"
+        		, LevelService.getLevels(Level.CODE.Instrument,Level.CODE.ContainerSupport),String.class, true,DescriptionFactory.newValues("SR","PE"),"single"));
+        propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",300,"n/a"));
+        propertyDefinitions.add(newPropertiesDefinition("Position", "position", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B","n/a"), "n/a", "single",400));
+        
         return propertyDefinitions;
 	}
 	

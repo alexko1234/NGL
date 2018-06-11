@@ -56,11 +56,12 @@ error.validationexp.outputconcentrationnotnull.light="La saisie de la concentrat
 error.validationexp.outputvolumelow="Le volume de sortie saisi doit etre supérieur à {0} pour le container {1}"
 
 error.validationexp.outputconcentrationnotnull="La saisie de la concentration de sortie est obligatoire pour le container {0}"
-error.validationexp.lanefull="Vous avez remplis que {0} lanes"
+error.validationexp.lanefull="Vous n''avez rempli que {0} lanes"
 
 error.validationexp.codewithbadchar= "Le champ {0} contient des caractères interdits"
+error.validationexp.typesequensage= "Le type de séquençage {0} prévu pour container {1} ne corresponde pas à cette expérience"
 error.validationexp.oneInputSupport="Le type d''expérience {0} n''accepte qu''un seul support en entrée"
-error.validationexp.notAllInputContainer="Le support {0} n'est pas complet"
+error.validationexp.notAllInputContainer="Le support {0} n''est pas complet"
 error.validationexp.containerSupportCodeContainString = "Le code flowcell {0} doit contenir la chaine de caractère {1}" 
 error.validationexp.manyInputSupport ="Le Container {0} est le seul container IN de l''experience"
 error.validationexp.atomicTransfertMethod.null = "L'ATM est null"

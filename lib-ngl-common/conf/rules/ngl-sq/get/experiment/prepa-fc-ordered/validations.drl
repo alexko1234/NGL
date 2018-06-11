@@ -1,6 +1,6 @@
 package rules
 
-rule "Code Flowcell catch start"
+rule "Code Flowcell catch start1"
     @nglSQ( validations )
 	dialect "java"
 	salience 900
@@ -20,9 +20,44 @@ rule "Code Flowcell catch full"
 	salience 900
 	no-loop
     when
-	    $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-fc-ordered", $stateCode : state.code, $atomicTransfertMethods:atomicTransfertMethods, $atomicTransfertMethods.size()!=8)
+	    //$atomicTransfertMethods.size()!=8
+	    $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-fc-ordered", $stateCode : state.code, $atomicTransfertMethods:atomicTransfertMethods, $typeFlowcell:instrument.outContainerSupportCategoryCode)
+	    //$typeFlowcell:PropertyValue() from $instrument.get("outContainerSupportCategoryCode")
 	    $contextValidation:ContextValidation()
     then
-    	Logger.debug("Code Flowcell not full " + $atomicTransfertMethods.size());
-	    $contextValidation.addErrors("instrument",	"error.validationexp.lanefull", $atomicTransfertMethods.size());
+        Logger.debug("Validation, Code Flowcell catch full : Nombre de atomicTransfertMethods " + $atomicTransfertMethods.size() + " pour une flowcell " + $typeFlowcell);
+    	if (($typeFlowcell.equals("flowcell-8") && $atomicTransfertMethods.size()!=8) || ($typeFlowcell.equals("flowcell-1") && $atomicTransfertMethods.size()!=1) || ($typeFlowcell.equals("flowcell-2-s1") && $atomicTransfertMethods.size()!=2)|| ($typeFlowcell.equals("flowcell-2-s2") && $atomicTransfertMethods.size()!=2)|| ($typeFlowcell.equals("flowcell-4-s4") && $atomicTransfertMethods.size()!=4)){
+            Logger.debug("Code Flowcell not full " + $atomicTransfertMethods.size());
+            $contextValidation.addErrors("instrument",  "error.validationexp.lanefull", $atomicTransfertMethods.size());
+        }
+end
+
+rule "position catch"
+    @nglSQ( validations )
+	dialect "java"
+	salience 900
+	no-loop
+    when
+	    $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-fc-ordered", $stateCode : state.code, $stateCode == "IP", $instrument:instrument.typeCode, $instrument == "cBot-interne-novaseq", $instrumentProperties:instrumentProperties)
+	    $position: PropertyValue($code:value, $code matches ".*[^AB].*") from $instrumentProperties.get("position")
+	    $contextValidation:ContextValidation()
+    then
+	    Logger.debug("Code position without bad chars");
+	    $contextValidation.addErrors("instrument",	"error.validationexp.codewithbadchar", "position");
+end
+
+rule "type sequencage fc-ord catch"
+    @nglSQ( validations )
+	dialect "java"
+	salience 900
+	no-loop
+    when
+	    $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-fc-ordered", $stateCode : state.code, $stateCode == "N", $instrument:instrument.typeCode, $instrumentProperties:instrumentProperties)
+	    $atomicTransfert: ManyToOneContainer( )
+    	InputContainerUsed($processProperties : contents.get(0).processProperties, $code:code) from $atomicTransfert.inputContainerUseds
+		$sequencingType : PropertyValue($value:value, ($value != "Hiseq 3000" && $value != "NovaSeq 6000")) from $processProperties.get("sequencingType")
+	    $contextValidation:ContextValidation()
+    then
+	    Logger.debug("Type sequencage incorrect");
+	    $contextValidation.addErrors("container",	"error.validationexp.typesequensage", $value,$code);
 end

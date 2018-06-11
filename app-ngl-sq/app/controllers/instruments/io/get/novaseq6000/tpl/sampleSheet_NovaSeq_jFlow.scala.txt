@@ -1,4 +1,4 @@
-﻿@(e:models.laboratory.experiment.instance.Experiment, containers: List[models.laboratory.container.instance.Container], tagModel: controllers.instruments.io.utils.TagModel)
+@(e:models.laboratory.experiment.instance.Experiment, containers: List[models.laboratory.container.instance.Container], tagModel: controllers.instruments.io.utils.TagModel)
 
 @import controllers.instruments.io.utils._;
 
@@ -6,6 +6,7 @@
 	@for(c <- etm.inputContainerUseds.sortWith(_.code < _.code)){
 		@for((k,cs) <- c.contents.groupBy(_.projectCode)){
 			@for((key1,cos1) <- cs.groupBy(CsvHelper.getContentProcessProperties(_,"analyseType", e))){
+				
 				@for((key2,cos2) <- cos1.groupBy(CsvHelper.getContentProcessProperties(_,"Run_Name"))){
 			
 					@for((key3,cos3) <- cos2.groupBy(CsvHelper.getContentProcessProperties(_,"reference_genome", e))){
@@ -13,7 +14,11 @@
 							python3.4 /usr/local/bioinfo/src/nG6/bin/ng6_cli.py @(CsvHelper.getFromAnalyseType(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e))) --date '@(CsvHelper.getRunDate(e))' @***
 							***@--data-nature @if(OutputHelper.getContentProperty(cos.toList.head, "Type_librairie")){@(OutputHelper.getContentProperty(cos.toList.head,"Type_librairie"))}else{'-'} @***
 							***@--sequencer '@(CsvHelper.getInstrumentName(e.instrument.code))' --name '@if(OutputHelper.getContentProperty(cos.toList.head,"Run_Name")!=""){@(CsvHelper.checkName(OutputHelper.getContentProperty(cos.toList.head,"Run_Name")))}else{@(CsvHelper.checkName(OutputHelper.getContentProperty(cos.toList.head,"Nom_pool_sequencage")))}' @***
-							***@--type '@if(e.instrument.inContainerSupportCategoryCode == "flowcell-1"){1/1 Flowcell}else{ 1/8 Flowcell} - Lane@(etm.line)' @***
+							si 4/4 || 2/2 pour Standard 
+										--type '@if(OutputHelper.getInstrumentProperty(e,"workflow")!="Standard"){
+											1/@(e.inputContainerCodes.size) Flowcell - Lane@(etm.line)'}else{@(e.inputContainerCodes.size)/@(e.inputContainerCodes.size) Flowcell} 
+							actuellement = HiSeq
+							***@--type '1/@(e.inputContainerCodes.size) Flowcell - Lane@(etm.line)' @***
 							***@--species @if(c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cos.toList.head, "species", e)) != null){'@(CsvHelper.getContentProcessProperties(cos.toList.head, "species",e))'}else{'-'} @***
 							***@--description 'Adapter type : @(CsvHelper.getHiseqAdapter(cos.toList.head)) @***
 							si "taille_insert" est renceigné

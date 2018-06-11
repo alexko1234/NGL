@@ -1,0 +1,15 @@
+package rules
+
+rule "catch flow cell position"
+    @nglSQ( validations )
+	dialect "java"
+	salience 900
+	no-loop
+    when
+	    $experiment:Experiment($typeCode:typeCode,$typeCode=="illumina-depot", $instrument:instrument.code, $instrument=="NOVASEQ", $stateCode : state.code, $stateCode == "IP", $instrumentProperties:instrumentProperties)
+	    $containerSupportCode: PropertyValue($code:value, $code matches ".*[^AB]{1}.*") from $instrumentProperties.get("position")
+	    $contextValidation:ContextValidation()
+    then
+	    Logger.debug("Code Flowcell without bad chars " + $experiment.instrumentProperties.get("position").value);
+	    $contextValidation.addErrors("instrument",	"error.validationexp.codewithbadchar", "Position");
+end

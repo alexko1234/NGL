@@ -109,28 +109,41 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 //				"OneToOne", 
 //				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
-		
-//		l.add(newExperimentType("Preparation flowcell", "prepa-flowcell",null,1200, 
-//				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
-//				getPropertyDefinitionsPrepaflowcell(),
-//				getInstrumentUsedTypes("cBot-interne","cBot"), 
-//				"ManyToOne", 
-//				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
-		
+		//preparation flowcells non ordonnées (MiSeq)
+		l.add(newExperimentType("Preparation flowcell", "prepa-flowcell",null,1200, 
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
+				getPropertyDefinitionsPrepaflowcell(),
+				getInstrumentUsedTypes("cBot-interne","cBot"), 
+				"ManyToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
+		//preparation flowcells ordonnées (HiSeq3000, NovaSeq...)
 		l.add(newExperimentType("Prep. flowcell ordonnée", "prepa-fc-ordered",null,1200, 
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 				getPropertyDefinitionsPrepaflowcellOrdered(),
-				getInstrumentUsedTypes("cBot"), 
+				getInstrumentUsedTypes("cBot", "cBot-interne-novaseq"), 
 				"ManyToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
+//		
+//		l.add(newExperimentType("Prep. flowcell NovaSeq", "prepa-fc-ns",null,1200, 
+//				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
+//				getPropertyDefinitionsPrepaflowcellOrdered(),
+//				getInstrumentUsedTypes("cBot-interne-novaseq"), 
+//				"ManyToOne", 
+//				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
 		l.add(newExperimentType("Depot Illumina", "illumina-depot",null, 1400,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 				getPropertyDefinitionsIlluminaDepot(),
-				getInstrumentUsedTypes("MISEQ","HISEQ3000"), 
+				getInstrumentUsedTypes("MISEQ","HISEQ3000", "NOVASEQ6000"), 
 				"OneToVoid", 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
-		
+
+//		l.add(newExperimentType("Depot NovaSeq", "novaseq-depot",null, 1400,
+//				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+//				getPropertyDefinitionsNovaSeqDepot(),
+//				getInstrumentUsedTypes("NOVASEQ"), 
+//				"OneToVoid", 
+//				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
@@ -243,28 +256,42 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 //				null,  // no previous nodes
 //				null, null, null
 //				).save();		
-//		
-
-//		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),
-//				false,false,false,
-//				getExperimentTypeNodes("ext-to-prepa-flowcell"),
-//				null,null,null
-//				).save();
-		
+//		 
+		//preparation flowcells non ordonnées (MiSeq)
+		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),
+				false,false,false,
+				getExperimentTypeNodes("ext-to-prepa-flowcell"),
+				null,null,null
+				).save();
+		Logger.debug("Before saving prepa-fc-ordered");
+		//preparation flowcells ordonnées (HiSeq3000, NovaSeq...)
 		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),
 				false, false, false,
 				getExperimentTypeNodes("ext-to-prepa-flowcell"),
-//				getExperimentTypeNodes("ext-to-prepa-fc-ordered"),
 				null, null, null
 				).save();
+		Logger.debug("After saving prepa-fc-ordered");
+//		newExperimentTypeNode("prepa-fc-ns",getExperimentTypes("prepa-fc-ns").get(0),
+//				false, false, false,
+//				getExperimentTypeNodes("ext-to-prepa-flowcell"),
+//				null, null, null
+//				).save();
 
 		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),
 				false,false,false,
-				getExperimentTypeNodes("prepa-fc-ordered"), // previous nodes
+				getExperimentTypeNodes("prepa-fc-ordered","prepa-flowcell"), // previous nodes
 				null,
 				null, // pas qc
 				null  // pas tranfert
 				).save();
+
+//		newExperimentTypeNode("novaseq-depot",getExperimentTypes("novaseq-depot").get(0),
+//				false,false,false,
+//				getExperimentTypeNodes("prepa-fc-ns"), // previous nodes
+//				null,
+//				null, // pas qc
+//				null  // pas tranfert
+//				).save();
 		 
 //		newExperimentTypeNode("ext-to-library", getExperimentTypes("ext-to-library").get(0), false, false, null, null, null).save();
 		
@@ -288,7 +315,7 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 	
 //		newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,getExperimentTypeNodes("sizing","amplification"),null,null,getExperimentTypes("pool-tube", "pool-x-to-tubes")).save();
 		
-		Logger.debug("ExperimentSErviceGET saveExperimentTypeNodes ");
+		Logger.debug("ExperimentServiceGET saveExperimentTypeNodes ");
 			
 	}
 
@@ -566,7 +593,7 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 		propertyDefinitions.add(newPropertiesDefinition("Conc. Phix", "phixConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "0.3"
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "nM"),MeasureUnit.find.findByCode( "nM"),"single",17));
 		propertyDefinitions.add(newPropertiesDefinition("Vol. PhiX à prélever", "phixVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",18, false));
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",18, true));
 		propertyDefinitions.add(newPropertiesDefinition("Prelever Vol. éch.+Phix", "echPhix", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5"
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",21));
 		propertyDefinitions.add(newPropertiesDefinition("Ajouter Vol. NaOH", "NaOHVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5"
@@ -580,6 +607,8 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 		propertyDefinitions.add(newPropertiesDefinition("Ajouter Vol. master EPX", "masterEPXVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "35"
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",26));
 		
+		
+		
 //		//InputContainer 
 
 //		propertyDefinitions.add(newPropertiesDefinition("Type librairie","Type_librairie", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content),String.class, true,getLibrairieType(),null, "single",300)); 
@@ -589,7 +618,107 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 		return propertyDefinitions;
 		
 	}
+	private List<PropertyDefinition> getPropertyDefinitionsPrepaflowcell() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		 
+		//
+		/*info de depart*/
+		propertyDefinitions.add(newPropertiesDefinition("Conc. Phix", "phixConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "10",
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "nM"),MeasureUnit.find.findByCode( "nM"),"single",11));
+//		propertyDefinitions.add(newPropertiesDefinition("% PhiX à ajouter", "phixPercent", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null, null, null, "single",12,true,"30", null));
+		propertyDefinitions.add(newPropertiesDefinition("% PhiX à ajouter", "phixPercent", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null, null, null, "single",12,true,null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Volume final PhiX", "volumeFinalPhiX", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",13));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Concentration dilution souhaitée", "finalConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "pM"),MeasureUnit.find.findByCode( "pM"),"single",14));
+		propertyDefinitions.add(newPropertiesDefinition("Volume final", "volumeFinal", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "1000",
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",15));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Conc initiale", "initConc", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,"4",
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "nM"),MeasureUnit.find.findByCode( "nM"),"single",16));
+		/* etape 1 */
+		propertyDefinitions.add(newPropertiesDefinition("Volume initial lib", "volumeInitialLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",17, false));
+		propertyDefinitions.add(newPropertiesDefinition("Volume EB /lib", "EBVolumeLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",18, false));
+		propertyDefinitions.add(newPropertiesDefinition("Volume initial PhiX", "volumeInitialPhiX", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",19,false));
+		propertyDefinitions.add(newPropertiesDefinition("Volume EB /PhiX", "EBVolumePhiX", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",20,false)); 
+		propertyDefinitions.add(newPropertiesDefinition("Volume initial prep", "volumeInitialPrep", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,"5",
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",21));
+		/* etape 2 */
+		propertyDefinitions.add(newPropertiesDefinition("Ajouter NaOH", "NaOH", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true,null, 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",22,false));
+		propertyDefinitions.add(newPropertiesDefinition("Conc dénat.", "requiredConc1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,"2",
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "nM"),MeasureUnit.find.findByCode( "nM"),"single",23));
+		propertyDefinitions.add(newPropertiesDefinition("Volume HT1", "HT1Volume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",25,false));
+		propertyDefinitions.add(newPropertiesDefinition("Conc stockage", "requiredConc2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,"20",
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "pM"),MeasureUnit.find.findByCode( "pM"),"single",26));
+		/* resultat final */
+		propertyDefinitions.add(newPropertiesDefinition("Volume lib dépôt", "volumeDepoLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",27,false));
+		propertyDefinitions.add(newPropertiesDefinition("Volume HT1 depot/lib", "HT1VolumeDepoLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",28,false));
+		propertyDefinitions.add(newPropertiesDefinition("Volume PhiX depot", "volumeDepotPhiX", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",29,false));
+		propertyDefinitions.add(newPropertiesDefinition("Volume HT1 depot/PhiX", "HT1VolumeDepoPhiX", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",30,false));
+		propertyDefinitions.add(newPropertiesDefinition("Volume à remplacer", "volReplace", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",31,false));
+
+		
+		
+//		propertyDefinitions.add(newPropertiesDefinition("Concentration dilution souhaitée", "finalConcentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null
+//				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "nM"),MeasureUnit.find.findByCode( "nM"),"single",11,true)); 
+//		propertyDefinitions.add(newPropertiesDefinition("Volume dilution final", "finalVolume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "7"
+//				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",12)); //avec valeur par defaut
+//		propertyDefinitions.add(newPropertiesDefinition("Vol. échantillon engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
+//						MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",13, false));
+//		propertyDefinitions.add(newPropertiesDefinition("Vol. RSB", "rsbVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",14, false));
+//		propertyDefinitions.add(newPropertiesDefinition("Volume final prélever", "finalVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "7"
+//				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",15));
+//		propertyDefinitions.add(newPropertiesDefinition("% PhiX à ajouter", "phixPercent", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null, null, null, "single",16,true,null, null));
+//
+////		propertyDefinitions.add(newPropertiesDefinition("Conc. Phix", "phixConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null
+////				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "nM"),MeasureUnit.find.findByCode( "nM"),"single",17, false, "0.3", "1"));
+//		propertyDefinitions.add(newPropertiesDefinition("Conc. Phix", "phixConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "0.3"
+//				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "nM"),MeasureUnit.find.findByCode( "nM"),"single",17));
+//		propertyDefinitions.add(newPropertiesDefinition("Vol. PhiX à prélever", "phixVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",18, false));
+//		propertyDefinitions.add(newPropertiesDefinition("Prelever Vol. éch.+Phix", "echPhix", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5"
+//				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",21));
+//		propertyDefinitions.add(newPropertiesDefinition("Ajouter Vol. NaOH", "NaOHVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5"
+//				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",22));
+//		propertyDefinitions.add(newPropertiesDefinition("Conc. NaOH", "NaOHConcentration", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true,null, null, null, null, "single",23,true,"0.1N", null));
+//		
+//		propertyDefinitions.add(newPropertiesDefinition("Ajouter Vol. TrisHCL", "trisHCLVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5"
+//				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",24));
+//		propertyDefinitions.add(newPropertiesDefinition("Conc. TrisHCL", "trisHCLConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "200000000" 
+//				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "mM"),MeasureUnit.find.findByCode( "nM"), "single",25));
+//		propertyDefinitions.add(newPropertiesDefinition("Ajouter Vol. master EPX", "masterEPXVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "35"
+//				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",26));
+//		propertyDefinitions.add(newPropertiesDefinition("Volume EB", "EBVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null
+//		, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",14, false));
+//		propertyDefinitions.add(newPropertiesDefinition("Volume sol. stock dans dénat.", "requiredVolume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
+//		MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",11, false));
+//
+
+//		
+		
+		
+//		//InputContainer 
+
+//		propertyDefinitions.add(newPropertiesDefinition("Type librairie","Type_librairie", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content),String.class, true,getLibrairieType(),null, "single",300)); 
+//		propertyDefinitions.add(newPropertiesDefinition("Type d'analyse","analyseType", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content),String.class, true,getAnalyseType(),null, "single",301)); 
+		
 	
+		return propertyDefinitions;
+		
+	}
 //	private static List<Value> getPhixConcentrationCodeValues(){
 //        List<Value> values = new ArrayList<Value>();
 //        values.add(DescriptionFactory.newValue("2","2.0"));
@@ -600,6 +729,7 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 	
 	private static List<Value> getAnalyseType(){
         List<Value> analyseType = new ArrayList<Value>();
+        analyseType.add(DescriptionFactory.newValue("Amplicon","Amplicon"));
         analyseType.add(DescriptionFactory.newValue("Bisulfite","Bisulfite"));
         analyseType.add(DescriptionFactory.newValue("DNA","DNA"));
         analyseType.add(DescriptionFactory.newValue("DNA-MP","DNA-MP"));
@@ -610,6 +740,7 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 
     protected static List<Value> getLibrairieType(){
             List<Value> values = new ArrayList<Value>();
+            values.add(DescriptionFactory.newValue("Amplicon","Amplicon"));
             values.add(DescriptionFactory.newValue("Bisulfite-DNA","Bisulfite-DNA"));
             values.add(DescriptionFactory.newValue("ChIP-Seq","ChIP-Seq"));
             values.add(DescriptionFactory.newValue("DNA","DNA"));
@@ -667,7 +798,16 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 		propertyDefinitions.add(newPropertiesDefinition("Genome de reference","reference_genome", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content),String.class, false, "single",22)); 
 		return propertyDefinitions;
 	}
-
+	
+	private static List<PropertyDefinition> getPropertyDefinitionsNovaSeqDepot() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		//Utiliser par import ngl-data CNG de creation des depot-illumina
+		propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Espèce","species", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content),String.class, false,"single",20)); 
+		propertyDefinitions.add(newPropertiesDefinition("Transcriptome de reference","reference_transcriptome", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content),String.class, false,"single",21)); 
+		propertyDefinitions.add(newPropertiesDefinition("Genome de reference","reference_genome", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content),String.class, false, "single",22)); 
+		return propertyDefinitions;
+	}
 	
 //	private static List<PropertyDefinition> getPropertyDefinitionExtToOpgenDepot() throws DAOException {
 //		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();

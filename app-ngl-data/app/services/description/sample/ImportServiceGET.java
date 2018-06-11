@@ -81,8 +81,25 @@ public class ImportServiceGET extends AbstractImportService {
 	private static List<PropertyDefinition> getLibraryPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.addAll(getCommonPropertyDefinitions());
-		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true, "single"));
-		propertyDefinitions.add(newPropertiesDefinition("Catégorie Tag", "tagCategory", LevelService.getLevels(Level.CODE.Content), String.class, true, getTagCategories(), "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Concentration echantillon", "Concentration_Echantillon", LevelService.getLevels(Level.CODE.Content), Double.class, false, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Concentration librairie", "Concentration_Librairie", LevelService.getLevels(Level.CODE.Content), Double.class, false, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Concentration Nanodrop", "Concentration_Nanodrop_PlaGe", LevelService.getLevels(Level.CODE.Content), Double.class, false, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Concentration QuBit", "Concentration_QuBit_PlaGe", LevelService.getLevels(Level.CODE.Content), Double.class, false, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Date d'import dans NGL", "Date_import_NGL", LevelService.getLevels(Level.CODE.Content), Date.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Date preparation librairie", "Date_preparation_librairie", LevelService.getLevels(Level.CODE.Content), Date.class, false, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Date de QPCR", "Date_quantification_QPCR", LevelService.getLevels(Level.CODE.Content), Date.class, false, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Fragment Analyzer le", "Date_realisation_Fragment_Analyzer", LevelService.getLevels(Level.CODE.Content), Date.class, false, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Etat d'echantillon", "etat_echantillon", LevelService.getLevels(Level.CODE.Content), String.class, true, DescriptionFactory.newValues("echantillon","librairie","pool librairies"), "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Catégorie Tag", "tagCategory", LevelService.getLevels(Level.CODE.Content), String.class, false, getTagCategories(), "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Nom librairie", "Nom_echantillon_collaborateur", LevelService.getLevels(Level.CODE.Content), String.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Nom pool", "Nom_pool_sequencage", LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Protocole", "Protocole_preparation_librairie", LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Taille d'insert", "taille_insert", LevelService.getLevels(Level.CODE.Content), Double.class, false, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Type d'echantillon", "type_echantillon", LevelService.getLevels(Level.CODE.Content), String.class, true, DescriptionFactory.newValues("DNA","RNA","ReadyToLoad","Amplicon"),"single"));
+		propertyDefinitions.add(newPropertiesDefinition("Type de librairie", "Type_librairie", LevelService.getLevels(Level.CODE.Content), String.class, true, DescriptionFactory.newValues("DNA","DNA-MP","RNA-Stranded","RAD-Seq","ReadyToLoad","16S","Amplicon","Bisulfite-DNA","MeDIP-Seq","ChIP-Seq","10X"), "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Run name", "Run_Name", LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
+		
 		
 		return propertyDefinitions;
 	}

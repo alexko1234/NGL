@@ -1,0 +1,91 @@
+@(e:models.laboratory.experiment.instance.Experiment, containers: List[models.laboratory.container.instance.Container])
+
+@import controllers.instruments.io.utils._; 
+@import java.util.Date; val date = new Date();
+@import java.text.SimpleDateFormat; val dateformat = new SimpleDateFormat("dd-MM-yyyy à HH:mm").format(date);
+Préparation pour le lancement sur NovaSeq;;;; @(dateformat)
+;
+Prération réactifs : ;
+Sortir FC 30 min avant ;
+;		;			;	;				;				;			;;;;
+		;NaOH 0.2N	;	;				;Tris HCl 400 mM;sur glace	;;;;
+H20		;98μl		;	;H20			;60 μl 			;			;;;;
+10N NaOH;2 μl		;	;Tris-HCl 1 M	;40 μl			;			;;;;
+;
+			;PhiX 250 pM;	;          ;PhiX 2,5 nM;
+RSB			;78 μl		;	;RSB		;6 μl		;
+PhiX 10 nM	;2 μl		;	;PhiX 10 nM;2 μl		;
+;
+;
+@(OutputHelper.getInstrumentProperty(e,"workflow"))@if(e.instrument.outContainerSupportCategoryCode=="flowcell-4-s4"){ S4};@(OutputHelper.getInstrumentProperty(e,"sequencingProgramType"));@(CsvHelper.getTagModel(containers).tagType);
+;
+Commentaires:;	
+@for(etm <- e.atomicTransfertMethods.sortWith(_.line < _.line)){
+    @for(c <- etm.inputContainerUseds.sortWith(_.code < _.code)){
+@(etm.line);@if(c.contents.toList.head.processComments != null && c.contents.toList.head.processComments.size > 0){@(c.contents.toList.head.processComments.get(0).comment) /// }@for(cn <- containers.find(_.code == c.code)){@(cn.comments.get(0).comment)}
+    }
+}
+;	
+Lane;PROJET	;Echantillon;Code Barre	;Concentration	;Dilution	;Vol. final	;Vol. Ech	;Vol. RSB	;Préver X	;% de PhiX	;Concentration	;Volume		;
+	;		;			;			;qPCR (nM)		;Souhaité	;dilution	;(µL)		;(µL)		;(µL)		;à ajouter	;du PhiX		;de PhiX	;
+	;		;			;			;				;(nM)		;			;			;			;			;			;(nM)			;à prélever	(µL);	
+@for(etm <- e.atomicTransfertMethods.sortWith(_.line < _.line)){
+    @for(c <- etm.inputContainerUseds.sortWith(_.code < _.code)){
+@(etm.line);@for((key,cp) <- c.contents.groupBy(_.projectCode)){@(cp.head.projectCode);@(OutputHelper.getContentProperty(cp.head,"Nom_pool_sequencage"))};@(c.code);@(c.concentration.value);@(OutputHelper.getExperimentProperty(c,"finalConcentration1"));@(OutputHelper.getExperimentProperty(c,"finalVolume"));@(OutputHelper.getExperimentProperty(c,"inputVolume"));@(OutputHelper.getExperimentProperty(c,"rsbVolume"));@(OutputHelper.getExperimentProperty(c,"finalVolume"));@(OutputHelper.getExperimentProperty(c,"phixPercent"));@(OutputHelper.getExperimentProperty(c,"phixConcentration"));@(OutputHelper.getExperimentProperty(c,"phixVolume"));;
+    }
+}
+;
+@if(OutputHelper.getInstrumentProperty(e,"workflow")=="XP" && e.instrument.outContainerSupportCategoryCode=="flowcell-4-s4"){
+Ajouter 7 µL de NaOH 0.2 N;
+Mélanger : Vortex + Centri;
+Incuber 8 min	à T° amb;
+Ajouter 8 µL de Tris-HCl 400nM;
+}else{
+	@if(OutputHelper.getInstrumentProperty(e,"workflow")=="XP" && e.instrument.outContainerSupportCategoryCode=="flowcell-2-s1"){
+Ajouter 4µL de NaOH 0.2 N;
+Mélanger : Vortex + Centri;
+Incuber 8 min	à T° amb;
+Ajouter 5 µL de Tris-HCl 400nM;
+	}
+}	
+Mélanger :Vortex + Centri;
+puis sur glace;
+;
+Preparation du Master;
+Mix ExAmp;
+;
+Mélanger : inverser DPX1 et 2 et vortexer briv DPX3
+Centrifuger
+;
+@if(OutputHelper.getInstrumentProperty(e,"workflow")=="XP" && e.instrument.outContainerSupportCategoryCode=="flowcell-4-s4"){
+DPX1;315 µL;                     
+DPX2;45 µL;           
+DPX3;165 µL;
+}else{
+	@if(OutputHelper.getInstrumentProperty(e,"workflow")=="XP" && e.instrument.outContainerSupportCategoryCode=="flowcell-2-s1"){
+DPX1;126 µL;                     
+DPX2;18 µL;           
+DPX3;66 µL;
+	}
+}
+;
+Puis Vortex 20 sec;
+Centrifuger;
+;
+Préparer le support XP;
+;
+Préparer pool final (éch+mix);
+;
+@if(OutputHelper.getInstrumentProperty(e,"workflow")=="XP" && e.instrument.outContainerSupportCategoryCode=="flowcell-4-s4"){
+Prendre 45 µL du pool;
+Ajout 105 µL de Mix;
+Mélanger : Vortex + Centri;
+Dépot de 130µL/ligne;
+}else{
+	@if(OutputHelper.getInstrumentProperty(e,"workflow")=="XP" && e.instrument.outContainerSupportCategoryCode=="flowcell-2-s1"){
+Prendre 27 µL du pool;
+Ajout 63 µL de Mix;
+Mélanger : Vortex + Centri;
+Dépot de 80µL/ligne;
+	}
+}

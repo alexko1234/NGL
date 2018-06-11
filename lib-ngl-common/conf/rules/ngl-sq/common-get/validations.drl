@@ -3,9 +3,9 @@
 package rules
 
 
-declare InputSupport
+declare InputContainerSupport
 	code : String
-	categoryCode : String
+	cscNbLine : Integer	
 end
 
 declare InputContainer
@@ -13,6 +13,7 @@ declare InputContainer
 	supportCode : String 
 	line : String
 	column : String
+	
 end
 
 rule "Input not null for all Experiment"
@@ -42,10 +43,11 @@ rule "init inputsupport"
 	Experiment($typeCode:typeCode,$typeCode=="illumina-depot" || $typeCode=="bionano-depot" || $typeCode=="prep-pcr-free",$atomics:atomicTransfertMethods,$atomics!=null)
 	AtomicTransfertMethod($inputContainerUseds:inputContainerUseds) from $atomics
     InputContainerUsed($support:locationOnContainerSupport.code,$categoryCode:locationOnContainerSupport.categoryCode) from $inputContainerUseds
-	not InputSupport($support==code)
+	not InputContainerSupport($support==code)
     then
 		//Logger.debug("Support"+$support +" de category "+$categoryCode);
-		InputSupport inputSupport=new InputSupport($support,$categoryCode);
+		ContainerSupportCategory csc = ContainerSupportCategory.find.findByCode($categoryCode);
+		InputContainerSupport inputSupport=new InputContainerSupport($support,csc.nbLine);
 		insert(inputSupport);
 	end
 
@@ -74,7 +76,7 @@ rule "only one inputssupport"
 	no-loop
     when
     Experiment($typeCode:typeCode,$typeCode=="illumina-depot" || $typeCode=="bionano-depot" || $typeCode=="prep-pcr-free")
-    Set(empty==false,size!=1) from collect(InputSupport())
+    Set(empty==false,size!=1) from collect(InputContainerSupport())
     $contextValidation:ContextValidation($errors : errors)
     then 
     	$contextValidation.addErrors("inputContainerSupportCodes","error.validationexp.oneInputSupport", $typeCode);
@@ -87,11 +89,12 @@ rule "input all container from support"
 	no-loop
     when
  	Experiment($typeCode:typeCode,$typeCode=="illumina-depot" || $typeCode=="bionano-depot")
- 	InputSupport($support:code,$categoryCode:categoryCode,$categoryCode!=null)
+ 	InputContainerSupport($support:code,$nbLine:cscNbLine,$nbLine!=null)
  	$inputContainers:Set(empty==false) from collect(InputContainer($support==supportCode))
  	$contextValidation:ContextValidation($errors : errors)
- 	eval(!$categoryCode.endsWith(Integer.toString($inputContainers.size())))	
+ 	eval(!$nbLine.equals($inputContainers.size()))	
  	then
+	 		Logger.debug($nbLine+""+$inputContainers.size());
 	 		$contextValidation.addErrors("inputContainerSupportCodes","error.validationexp.notAllInputContainer", $support);
 	end
 

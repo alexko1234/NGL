@@ -8,9 +8,13 @@ import java.io.Writer;
 import scala.io.Codec;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.swing.tree.ExpandVetoException;
@@ -48,19 +52,19 @@ public class CsvHelper {
 		case "10X-DeNovo":
 		case "10X-WGS":
 		case "10X-SingleCell":
-			return " illumina_qc";
+			return "illumina_qc";
 		case "RNA":
-			return " illumina_rnaseq";
+			return "illumina_rnaseq";
 		case "16S":
 		case "Amplicon":
-			return " illumina_diversity_qc";
+			return "illumina_diversity_qc";
         case "Bisulfite":
         case "Bisulfite-DNA":
-            return " methylseq";
+            return "methylseq";
         case "DNA-MP":
             return "illumina_matepair";
         case "RNA-Stranded": //to validate
-			return " illumina_rnaseq";
+			return "illumina_rnaseq";
 		default:
 			return "illumina_qc";
 		}
@@ -241,5 +245,34 @@ public class CsvHelper {
 		}
 		Logger.error("content.ProcessProperties - " + propertyName + " null pour " + content.sampleCode);
 		return null;
+	}
+	
+	//Verifie qu'il n'existe pas deux echantillons avec le même nom pour
+	public static List<String> contentDubleName(List<Container> containers) {
+		Logger.debug("contentDubleName");
+		List<Content> totalContents = new ArrayList<Content>();
+		List<String> dbNames = new ArrayList<String>();
+		for (Container ctr : containers) {
+			for (Content newctt : ctr.contents) {
+				if(!dbNames.contains(contentName(newctt))){
+					for (Content ctt : totalContents) {
+						if(contentName(newctt).equals(contentName(ctt)) && !newctt.projectCode.equals(ctt.projectCode)){
+							dbNames.add(contentName(newctt));
+						}
+					}
+				}
+				totalContents.add(newctt);
+			}
+		}
+		Logger.debug("dbNames " + dbNames.size());
+		return dbNames;
+	}
+	
+	public static String contentName(Content content) {
+		if(content.referenceCollab!=null){
+			return checkName(content.referenceCollab);
+		}else{
+			return checkName(OutputHelper.getContentProperty(content, "Nom_pool_sequencage"));
+		}	
 	}
 }

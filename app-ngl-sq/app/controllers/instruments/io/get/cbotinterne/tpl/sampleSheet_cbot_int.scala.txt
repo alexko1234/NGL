@@ -1,0 +1,59 @@
+@(e:models.laboratory.experiment.instance.Experiment, containers: List[models.laboratory.container.instance.Container])
+
+@import controllers.instruments.io.utils._;
+;
+;@(OutputHelper.getInstrumentProperty(e,"sequencingProgramType"))
+@for(etm <- e.atomicTransfertMethods.sortWith(_.line < _.line)){
+	@for(c <- etm.inputContainerUseds.sortWith(_.code < _.code)){
+		Commentaires:;@if(c.contents.toList.head.processComments != null && c.contents.toList.head.processComments.size > 0){@(c.contents.toList.head.processComments.get(0).comment);}@for(cn <- containers.find(_.code == c.code)){@if(cn.comments.size>0){@(cn.comments.get(0).comment)}}
+		;
+		Lane;PROJET;Code Barre;% Phix pour dépôt;Volume final PhiX (µL);Cf dépôt(pM);Vf dépôt (µl);
+		@(etm.line);@***
+		***@@for(pr <- c.projectCodes){@if(c.projectCodes.head!=pr){,}@pr};@***
+		***@@(c.code);@***
+		***@@(OutputHelper.getExperimentProperty(c,"phixPercent"));@***
+		***@@(OutputHelper.getExperimentProperty(c,"volumeFinalPhiX"));@***
+		***@@(OutputHelper.getExperimentProperty(c,"finalConcentration"));@***
+		***@@(OutputHelper.getExperimentProperty(c,"volumeFinal"));
+		;
+		Echantillon;Conc(nM);Conc initiale(@(OutputHelper.getExperimentProperty(c,"initConc"))nM);Volume initial(µL);Volume EB(µL);Volume initial prep(@(OutputHelper.getExperimentProperty(c,"volumeInitialPrep"))µL);@***
+		***@Ajouter NaOH(µL);Conc dénat.(@(OutputHelper.getExperimentProperty(c,"requiredConc1"))nM);;Volume HT1(µL);Conc stockage(@(OutputHelper.getExperimentProperty(c,"requiredConc2"))pM);
+		@for((key,cp) <- c.contents.groupBy(_.projectCode)){@***
+		***@@if(OutputHelper.getContentProperty(cp.head,"Nom_pool_sequencage")!=""){@***
+				***@@(OutputHelper.getContentProperty(cp.head,"Nom_pool_sequencage"))}else{@(cp.head.referenceCollab)}};@***
+		***@@(c.concentration.value);@***
+		***@;@***
+		***@@(OutputHelper.getExperimentProperty(c,"volumeInitialLib"));@***
+		***@@(OutputHelper.getExperimentProperty(c,"EBVolumeLib"));@***
+		***@;@***
+		***@@(OutputHelper.getExperimentProperty(c,"NaOH"));@***
+		***@;@***
+		***@5 min à T° ambiante;@***
+		***@@(OutputHelper.getExperimentProperty(c,"HT1Volume"));
+		PhiX;@***
+		***@@(OutputHelper.getExperimentProperty(c,"phixConcentration"));@***
+		***@;@***
+		***@@(OutputHelper.getExperimentProperty(c,"volumeInitialPhiX"));@***
+		***@@(OutputHelper.getExperimentProperty(c,"EBVolumePhiX"));@***
+		***@;@***
+		***@@(OutputHelper.getExperimentProperty(c,"NaOH"));@***
+		***@;@***
+		***@5 min à T° ambiante;@***
+		***@@(OutputHelper.getExperimentProperty(c,"HT1Volume"));
+		;
+		;Volume dépôt(µL);Volume HT1(µL);Volume à remplacer(µL);
+		@for((key,cp) <- c.contents.groupBy(_.projectCode)){@***
+		***@@if(OutputHelper.getContentProperty(cp.head,"Nom_pool_sequencage")!=""){@***
+				***@@(OutputHelper.getContentProperty(cp.head,"Nom_pool_sequencage"))}else{@(cp.head.referenceCollab)}};@***
+		***@@(OutputHelper.getExperimentProperty(c,"volumeDepoLib"));@***
+		***@@(OutputHelper.getExperimentProperty(c,"HT1VolumeDepoLib"));@***
+		***@-@(OutputHelper.getExperimentProperty(c,"volReplace"));
+		PhiX;@***
+		***@@(OutputHelper.getExperimentProperty(c,"volumeDepotPhiX"));@***
+		***@@(OutputHelper.getExperimentProperty(c,"HT1VolumeDepoPhiX"));@***
+		***@+@(OutputHelper.getExperimentProperty(c,"volReplace"));
+				
+				
+ 	}
+}
+ 

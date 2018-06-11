@@ -62,7 +62,7 @@ public class OutputHelper {
 	public static void writeFile(File file) {
 		Writer writer = null;
 		try {
-			
+			Logger.debug("creating file " + file.filename);
 			FileOutputStream fos = new FileOutputStream(file.filename);
 			writer = new OutputStreamWriter(fos, Codec.UTF8().name());			
 			writer.write(file.content);
@@ -74,7 +74,6 @@ public class OutputHelper {
 			Logger.error("Problem to create sample sheet",e);
 			Logger.error("DAO error: "+e.getMessage(),e);
 		}
-		
 	}
 	
 	public static String format(String content){
