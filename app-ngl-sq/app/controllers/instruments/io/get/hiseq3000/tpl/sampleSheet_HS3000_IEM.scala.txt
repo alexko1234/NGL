@@ -23,7 +23,7 @@ Chemistry,Default
 Lane,Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,@if(tagModel.tagType == "DUAL-INDEX"){I5_Index_ID,index2,}Sample_Project,Description
 
 @for(c <- containers.sortWith(_.support.line < _.support.line)){
-	@if(c.contents.toList.length == 1){
+	@if(c.contents.toList.length == 1 && !CsvHelper.catch10x(c.contents.get(0))){
 		@(c.support.line),@if(contentDoubleName.contains(CsvHelper.contentName(c.contents.get(0)))){@(c.contents.get(0).projectCode)-}@(CsvHelper.contentName(c.contents.get(0))),@(CsvHelper.contentName(c.contents.get(0))),@(c.contents.get(0).sampleCode.split(":")(0)),@if(c.contents.get(0).sampleCode.split(":").length > 1){@(c.contents.get(0).sampleCode.split(":")(1))},NoIndex,,@if(tagModel.tagType == "DUAL-INDEX"){,,}@(c.contents.get(0).projectCode),@if(CsvHelper.getContentProcessProperties(c.contents.get(0),"analyseType",e) == "DNA"){split}
 	}else{
 		@for(co <- c.contents.toList.sortWith(CsvHelper.contentName(_)<CsvHelper.contentName(_))) {

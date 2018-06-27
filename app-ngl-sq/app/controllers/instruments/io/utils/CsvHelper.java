@@ -54,6 +54,7 @@ public class CsvHelper {
 		case "10X-SingleCell":
 			return "illumina_qc";
 		case "RNA":
+		case "RNA-Stranded":
 			return "illumina_rnaseq";
 		case "16S":
 		case "Amplicon":
@@ -63,8 +64,6 @@ public class CsvHelper {
             return "methylseq";
         case "DNA-MP":
             return "illumina_matepair";
-        case "RNA-Stranded": //to validate
-			return "illumina_rnaseq";
 		default:
 			return "illumina_qc";
 		}
