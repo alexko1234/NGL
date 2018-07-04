@@ -168,7 +168,7 @@ angular.module('home').controller('GETIlluminaDepotCtrl',['$scope', '$parse','$h
 	//add reagents into new experiment
 		var addReagents = function() {
 			
-			 if($parse('experiment.state.code')($scope) === "N" && $scope.experiment.reagents.length === 0 && $parse('experiment.instrumentProperties.sequencingProgramType')($scope)){
+			 if($parse('experiment.state.code')($scope) === "N" && $parse('experiment.instrument.typeCode')($scope) === "HISEQ3000"  && $scope.experiment.reagents.length === 0 && $parse('experiment.instrumentProperties.sequencingProgramType')($scope)){
 				 var lectureType = $scope.experiment.instrumentProperties.sequencingProgramType.value;
 				 var nbCyclesRead = $scope.experiment.instrumentProperties.nbCyclesRead1.value;
 
