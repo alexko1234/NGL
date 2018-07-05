@@ -70,21 +70,21 @@
 									***@- Insert : @***
 									***@@for(co <- cos.toList.sortWith(_.sampleCode < _.sampleCode)){@***
 												***@@if(cos.toList.sortWith(_.sampleCode < _.sampleCode).head != co){, }@***
-												***@@if(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e).split("10X").length > 0 ){@***
+												***@@if(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e).split("10X").length > 1 ){@***
 													***@@(OutputHelper.getContentProperty(co,"taille_insert"))pb for Sample @(CsvHelper.contentName(co))-1 , @(OutputHelper.getContentProperty(co,"taille_insert"))pb for Sample @(CsvHelper.contentName(co))-2 , @(OutputHelper.getContentProperty(co,"taille_insert"))pb for Sample @(CsvHelper.contentName(co))-3 , @(OutputHelper.getContentProperty(co,"taille_insert"))pb for Sample @(CsvHelper.contentName(co))-4 @***
 												***@}else{@(OutputHelper.getContentProperty(co,"taille_insert"))pb for Sample @(CsvHelper.contentName(co)) }@***
 									***@}@***
 								***@.} [C] @***
 								***@@(c.concentration.value)pM' @***
 								***@@if((CsvHelper.getContentProcessProperties(c.contents.toList.head, "store_bam", e) != null && CsvHelper.getContentProcessProperties(c.contents.toList.head, "store_bam", e) != "non") || CsvHelper.getFromAnalyseType(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e)) == "methylseq"){}else{ --delete-bam} @***
-								***@@if(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e).split("10X").length < 1 && (c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cos.toList.head, "reference_transcriptome", e)) != null)){--reference-transcriptome @(CsvHelper.getContentProcessProperties(cos.toList.head, "reference_transcriptome", e))} @***
-								***@@if(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e).split("10X").length < 1 && (c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cos.toList.head, "reference_genome", e)) != null)){@***
+								***@@if(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e).split("10X").length < 2 && (c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cos.toList.head, "reference_transcriptome", e)) != null)){--reference-transcriptome @(CsvHelper.getContentProcessProperties(cos.toList.head, "reference_transcriptome", e))} @***
+								***@@if(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e).split("10X").length < 2 && (c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cos.toList.head, "reference_genome", e)) != null)){@***
 									***@@if(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e) == "Bisulfite"){--control-genome /save/ng6/TODO/HiSeqIndexedGenomes/new_struct/pUC19/genome/bismark_bowtie2/pUC19.fa}@***
 									***@ --reference-genome @(CsvHelper.getContentProcessProperties(cos.toList.head, "reference_genome", e))@***
 								***@} @***
 								***@--casava directory=#CASAVA_DIRECTORY# @***
 								***@@for(co <- cos.toList.sortWith(_.sampleCode < _.sampleCode)){@***
-									***@@if(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e).split("10X").length > 0 ){@***
+									***@@if(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e).split("10X").length > 1 ){@***
 										***@select-sample-id=@(CsvHelper.contentName(co))-1 select-sample-id=@(CsvHelper.contentName(co))-2 select-sample-id=@(CsvHelper.contentName(co))-3 select-sample-id=@(CsvHelper.contentName(co))-4 @***
 									***@}else{@***
 										***@select-sample-id=@(CsvHelper.contentName(co)) @***
