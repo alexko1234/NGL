@@ -33,6 +33,23 @@
 				choiceInList:false
 			});
 			
+			columns.push({	property:"bioinformaticParameters.biologicalAnalysis",
+				header: "projects.bioinformaticParameters.biologicalAnalysis",
+				type :"String",
+				filter:"codes:'boolean'",	
+				order:true,
+				edit:false,
+				choiceInList:false
+			});
+			
+			columns.push({	property:"properties.unixGroup.value",
+				header: "projects.unixGroup",
+				type :"String",
+				order:true,
+				edit:false,
+				choiceInList:false
+			});
+			
 			columns.push({	property:"state.code",
 								filter:"codes:'state'",					
 								header: "projects.stateCode",
@@ -58,6 +75,7 @@
 				searchService.lists.refresh.states({objectTypeCode:"Project", display:true},'statetrue');				
 				searchService.lists.refresh.states({objectTypeCode:"Project"});							
 				searchService.lists.refresh.types({objectTypeCode:"Project"});
+				searchService.lists.refresh.values({propertyDefinitionCode:"unixGroup"},"values");
 				isInit=true;
 			}
 		};

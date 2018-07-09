@@ -7,7 +7,7 @@ GET		/api/commons/users  											controllers.commons.api.Users.list()
 GET		/api/values														controllers.commons.api.Values.list()
 
 
-GET		/api/resolutions		  										@controllers.resolutions.api.Resolutions.list()
+GET		/api/resolutions		  										controllers.resolutions.api.Resolutions.list()
 
 
 #Parameter
@@ -17,11 +17,11 @@ GET     /api/parameters/:typeCode/:code 				controllers.commons.api.Parameters.g
 
 
 #reporting
-GET    	/api/reporting/filters    	           			@controllers.reporting.api.FilteringConfigurations.list()
-GET	   	/api/reporting/filters/:code					@controllers.reporting.api.FilteringConfigurations.get(code)
-POST 	/api/reporting/filters							@controllers.reporting.api.FilteringConfigurations.save()
-PUT    	/api/reporting/filters/:code					@controllers.reporting.api.FilteringConfigurations.update(code)
-DELETE	/api/reporting/filters/:code					@controllers.reporting.api.FilteringConfigurations.delete(code: java.lang.String)
+GET    	/api/reporting/filters    	           			controllers.reporting.api.FilteringConfigurations.list()
+GET	   	/api/reporting/filters/:code					controllers.reporting.api.FilteringConfigurations.get(code)
+POST 	/api/reporting/filters							controllers.reporting.api.FilteringConfigurations.save()
+PUT    	/api/reporting/filters/:code					controllers.reporting.api.FilteringConfigurations.update(code)
+DELETE	/api/reporting/filters/:code					controllers.reporting.api.FilteringConfigurations.delete(code: java.lang.String)
 
 #reporting configuration
 GET    	/api/reporting/configs    	           			controllers.reporting.api.ReportingConfigurations.list()
@@ -31,12 +31,12 @@ PUT    	/api/reporting/configs/:code					controllers.reporting.api.ReportingConf
 DELETE	/api/reporting/configs/:code					controllers.reporting.api.ReportingConfigurations.delete(code: java.lang.String)
 
 #reception configuration
-GET    	/api/reception/configs    	           			@controllers.receptions.api.ReceptionConfigurations.list()
-GET	   	/api/reception/configs/:code					@controllers.receptions.api.ReceptionConfigurations.get(code)
-POST 	/api/reception/configs							@controllers.receptions.api.ReceptionConfigurations.save()
-PUT    	/api/reception/configs/:code					@controllers.receptions.api.ReceptionConfigurations.update(code)
-DELETE	/api/reception/configs/:code					@controllers.receptions.api.ReceptionConfigurations.delete(code: java.lang.String)
-POST	/api/reception/configs/:code/file/import		@controllers.receptions.io.Receptions.importFile(code:java.lang.String)
+GET    	/api/reception/configs    	           			controllers.receptions.api.ReceptionConfigurations.list()
+GET	   	/api/reception/configs/:code					controllers.receptions.api.ReceptionConfigurations.get(code)
+POST 	/api/reception/configs							controllers.receptions.api.ReceptionConfigurations.save()
+PUT    	/api/reception/configs/:code					controllers.receptions.api.ReceptionConfigurations.update(code)
+DELETE	/api/reception/configs/:code					controllers.receptions.api.ReceptionConfigurations.delete(code: java.lang.String)
+POST	/api/reception/configs/:code/file/import		controllers.receptions.io.Receptions.importFile(code:java.lang.String)
 
 
 #instruments
@@ -57,4 +57,4 @@ PUT    	/api/valuation/criterias/:code					controllers.valuation.api.ValuationCr
 DELETE	/api/valuation/criterias/:code					controllers.valuation.api.ValuationCriterias.delete(code: java.lang.String)
 
 
-GET		/api/property-definitions						@controllers.commons.api.PropertyDefinitions.list()
+GET		/api/property-definitions						controllers.commons.api.PropertyDefinitions.list()

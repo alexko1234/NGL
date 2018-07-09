@@ -6,19 +6,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ExperimentTypeNode;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
-
-import org.springframework.stereotype.Repository;
-
-import play.Logger;
+//import play.Logger;
 @Repository
 public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNode>{
-
+	private static final play.Logger.ALogger logger = play.Logger.of(ExperimentTypeNodeDAO.class);
+	
+//	public ExperimentTypeNodeDAO() {
+//		super("experiment_type_node", ExperimentTypeNode.class, ExperimentTypeNodeMappingQuery.class,
+//				"SELECT t.id, t.code, t.doPurification, t.mandatoryPurification, t.doQualityControl, t.mandatoryQualityControl,t.doTransfert, t.mandatoryTransfert, " +
+//				"t.fk_experiment_type FROM experiment_type_node as t", true);
+//	}
 	public ExperimentTypeNodeDAO() {
-		super("experiment_type_node", ExperimentTypeNode.class, ExperimentTypeNodeMappingQuery.class,
+		super("experiment_type_node", ExperimentTypeNode.class, ExperimentTypeNodeMappingQuery.factory,
 				"SELECT t.id, t.code, t.doPurification, t.mandatoryPurification, t.doQualityControl, t.mandatoryQualityControl,t.doTransfert, t.mandatoryTransfert, " +
 				"t.fk_experiment_type FROM experiment_type_node as t", true);
 	}
@@ -32,7 +37,7 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 			throw new DAOException("ExperimentType is mandatory");
 		}
 
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("code", value.code);
 		parameters.put("doPurification", value.doPurification);
 		parameters.put("mandatoryPurification", value.mandatoryPurification);
@@ -44,7 +49,7 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 
 		value.id = (Long) jdbcInsert.executeAndReturnKey(parameters);
 
-		List<ExperimentType> experimentTypes = new ArrayList<ExperimentType>();
+		List<ExperimentType> experimentTypes = new ArrayList<>();
 		if(null != value.possibleQualityControlTypes){
 			experimentTypes.addAll(value.possibleQualityControlTypes);
 
@@ -60,11 +65,11 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 			insertSatellites(experimentTypes, value.id, false);
 		}
 
-		if(value.previousExperimentType != null && value.previousExperimentType.size() > 0){
-			insertPrevious(value.previousExperimentType, value.id, false);
+		if(value.previousExperimentTypeNodes != null && value.previousExperimentTypeNodes.size() > 0){
+			insertPrevious(value.previousExperimentTypeNodes, value.id, false);
 		}
 		
-		Logger.debug("saveExperimentTypeNode : "+ value.code);
+		logger.debug("saveExperimentTypeNode : "+ value.code);
 		return value.id;
 	}
 
@@ -73,6 +78,7 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 		return initializeMapping(sqlCommon + " order by id DESC").execute();
 	}
 
+	@SuppressWarnings("deprecation")
 	public void insertPrevious(
 			List<ExperimentTypeNode> previousExperimentType, Long id, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
@@ -90,6 +96,7 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 
 	}
 
+	@SuppressWarnings("deprecation")
 	private void insertSatellites(
 			List<ExperimentType> experimentTypes, Long id, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
@@ -107,12 +114,14 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 
 	}
 
+	@SuppressWarnings("deprecation")
 	private void removeSatellites(Long id) {
 		String sql = "DELETE FROM satellite_experiment_type WHERE fk_experiment_type_node=?";
 		jdbcTemplate.update(sql, id);
 
 	}
 
+	@SuppressWarnings("deprecation")
 	private void removePrevious(Long id) {
 		String sql = "DELETE FROM previous_nodes WHERE fk_node=?";
 		jdbcTemplate.update(sql, id);
@@ -120,6 +129,7 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 	}
 
 	
+	@SuppressWarnings("deprecation")
 	public void removeAllPrevious(){
 		String sql = "DELETE FROM previous_nodes";
 		jdbcTemplate.update(sql);
@@ -131,7 +141,7 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 	  */
 	@Override
 	public void update(ExperimentTypeNode etn) throws DAOException {
-		insertPrevious(etn.previousExperimentType,etn.id,false);
+		insertPrevious(etn.previousExperimentTypeNodes,etn.id,false);
 		//throw new UnsupportedOperationException();
 	}
 

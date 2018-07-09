@@ -60,10 +60,10 @@ angular.module('home').controller('SearchCtrl', ['$scope',  '$window','datatable
 	$scope.reset = function(){
 		$scope.searchService.resetForm();		
 	};
-/*	$scope.goToReadSet = function(code, $event){
+	$scope.goToReadSet = function(code, $event){
 		$window.open(AppURL("bi")+"/readsets/"+code, 'readset');
 		if($event)$event.stopPropagation();
-	}*/
+	}
 	
 	//init
 	if(angular.isUndefined($scope.getHomePage())){

@@ -9,7 +9,6 @@ angular.module('home').controller('DilutionCtrl',['$scope' ,'$http','$parse', 'a
 							"order":true,
 							"hide":true,
 							"type":"text",
-							 "mergeCells" : true,
 							"position":2,
 							"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 						 "extraHeaders":{0:Messages("experiments.inputs")}
@@ -121,6 +120,7 @@ angular.module('home').controller('DilutionCtrl',['$scope' ,'$http','$parse', 'a
 						 "hide":true,
 						 "watch":true,
 			        	 "type":"number",
+			        	 "format":"3",
 			        	 "position":50,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
@@ -457,20 +457,24 @@ angular.module('home').controller('DilutionCtrl',['$scope' ,'$http','$parse', 'a
 	var computeBufferVolume = function(udtData){
 		var getter = $parse("inputContainerUsed.experimentProperties.bufferVolume.value");
 		var bufferVolume = getter(udtData);
-		
+
 		var compute = {
 				dilFactor : (($parse("inputContainerUsed.experimentProperties.dilutionFactor.value")(udtData)).indexOf("1/") ==0 ? ($parse("inputContainerUsed.experimentProperties.dilutionFactor.value")(udtData)).substring(2) : undefined ) ,
 				inputVol : $parse("inputContainerUsed.experimentProperties.inputVolume.value")(udtData),
 				isReady:function(){
 					return (this.inputVol && this.dilFactor);
 				}
-			};
-		
+		};
+
 		if(compute.isReady()){
-			var result = $parse("(inputVol * dilFactor) - inputVol")(compute);
-			console.log("result = "+result);
+			if ($parse("dilFactor")(compute) == 1){
+				var result = 0;
+			}else{
+				var result = $parse("(inputVol * dilFactor) - inputVol")(compute);
+			}
+			console.log("computeBufferVolume result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
-				bufferVolume = Math.round(result*10)/10;				
+				bufferVolume = result;				
 			}else{
 				bufferVolume = undefined;
 			}	
@@ -480,26 +484,27 @@ angular.module('home').controller('DilutionCtrl',['$scope' ,'$http','$parse', 'a
 			getter.assign(udtData, bufferVolume);
 			console.log("not ready to computeBufferVolume");
 		}
-		
+
 	}
 	//inputContainerUsed.experimentProperties.inputVolume.value + inputContainerUsed.experimentProperties.bufferVolume.value
 	var computeFinalVolume = function(udtData){
 		var getter = $parse("outputContainerUsed.volume.value");
 		var finalVolume = getter(udtData);
-		
+
 		var compute = {
 				inputVol : $parse("inputContainerUsed.experimentProperties.inputVolume.value")(udtData),			
-				bufferVol : $parse("inputContainerUsed.experimentProperties.bufferVolume.value")(udtData),			
+				bufferVol : $parse("inputContainerUsed.experimentProperties.bufferVolume.value")(udtData),	
+
 				isReady:function(){
-					return (this.inputVol && this.bufferVol);
+					return (angular.isNumber(this.inputVol) 
+							&& angular.isNumber(this.bufferVol));
 				}
-			};
-		
+		};
+
 		if(compute.isReady()){
 			var result = $parse("(inputVol + bufferVol)")(compute);
-			console.log("result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
-				finalVolume = Math.round(result*10)/10;				
+				finalVolume = result;				
 			}else{
 				finalVolume = undefined;
 			}	
@@ -526,9 +531,9 @@ angular.module('home').controller('DilutionCtrl',['$scope' ,'$http','$parse', 'a
 		
 		if(compute.isReady()){
 			var result = $parse("(inputVol * inputConc / finalVol)")(compute);
-			console.log("result = "+result);
+			console.log("finalConc result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
-				finalConc = Math.round(result*10)/10;				
+				finalConc = result;				
 			}else{
 				finalConc = undefined;
 			}	
@@ -542,33 +547,12 @@ angular.module('home').controller('DilutionCtrl',['$scope' ,'$http','$parse', 'a
 	}
 	
 	var generateSampleSheetNormalisation = function(){
-		generateSampleSheet("normalisation");
+		$scope.fileUtils.generateSampleSheet({"type":"normalisation"});
 	};
 	var generateSampleSheetNormalisationPostPCR = function(){
-		generateSampleSheet("normalisation-post-pcr");
+		$scope.fileUtils.generateSampleSheet({"type":"normalisation-post-pcr"});
 	};
 	
-	var generateSampleSheet = function(type){
-		$scope.messages.clear();
-		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url+"?type="+type,{})
-		.success(function(data, status, headers, config) {
-			var header = headers("Content-disposition");
-			var filepath = header.split("filename=")[1];
-			
-			var filename = filepath.split(/\/|\\/);
-			filename = filename[filename.length-1];
-			if(data!=null){
-				$scope.messages.setSuccess(Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath);
-				var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
-				saveAs(blob, filename);
-			}
-		})
-		.error(function(data, status, headers, config) {
-			$scope.messages.setError(Messages('experiments.msg.generateSampleSheet.error'));
-			$scope.messages.setDetails(data);
-			$scope.messages.showDetails = true;							
-		});
-	};
 	if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube" 
 		|| $scope.experiment.instrument.inContainerSupportCategoryCode !== "tube"){
 		

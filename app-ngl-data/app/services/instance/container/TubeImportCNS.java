@@ -2,14 +2,18 @@ package services.instance.container;
 
 import java.sql.SQLException;
 
+import javax.inject.Inject;
+
+import fr.cea.ig.play.migration.NGLContext;
 import models.utils.dao.DAOException;
 import scala.concurrent.duration.FiniteDuration;
 
 public class TubeImportCNS extends ContainerImportCNS {
 
+	@Inject
 	public TubeImportCNS(FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super("Container Tube CNS", durationFromStart, durationFromNextIteration);
+			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super("Container Tube CNS", durationFromStart, durationFromNextIteration, ctx);
 		
 	}
 

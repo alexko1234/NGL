@@ -10,12 +10,15 @@
 							"header":Messages("readsets.code"),
 				    	  	type :"text",		    	  	
 				    	  	order:true,
+				    	  	groupMethod:"count",
 				    	  	position:1});
 			columns.push({	property:"runCode",
 							header: Messages("readsets.runCode"),
 							type :"text",
 							group:true,
+							groupMethod:"collect:true",
 							order:true,
+							render:"<div list-resize='cellValue' list-resize-min-size='3' vertical>",
 				    	  	position:2});
 			columns.push({	property:"laneNumber",
 							header: Messages("readsets.laneNumber"),
@@ -63,7 +66,7 @@
 					columns.push({	"property":"productionValuation.resolutionCodes",
 									"header":Messages("readsets.productionValuation.resolutions"),
 									"filter":"codes:'resolution'",
-									"groupMethod":"collect",
+									"groupMethod":"collect:true",
 									"render":'<div bt-select ng-model="cellValue" bt-options="valid.name as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
 									"type":"text",
 									"hide":true,
@@ -81,7 +84,7 @@
 					columns.push({	"property":"bioinformaticValuation.resolutionCodes",
 									"header":Messages("readsets.bioinformaticValuation.resolutions"),
 									"filter":"codes:'resolution'",
-									"groupMethod":"collect",
+									"groupMethod":"collect:true",
 									"render":'<div bt-select ng-model="cellValue" bt-options="valid.name as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
 									"type":"text",
 									"hide":true,
@@ -132,6 +135,13 @@
 							    		
 					});
 					
+					columns.push({	"property":"productionValuation.comment",
+						"header":Messages("readsets.productionValuation.comment"),
+						"type":"text",
+						"edit":true,
+				    	"position":73
+					});
+					
 					columns.push({	"property":"bioinformaticValuation.valid",
 									"filter":"codes:'valuation'",
 									"header":Messages("readsets.bioinformaticValuation.valid"),
@@ -155,6 +165,8 @@
 							    	"groupBy":'category.name',
 							    	"position":82
 					});
+					
+					
 					
 			}else if(mainService.getHomePage() == 'state'){
 					columns.push({	"property":"state.code",
@@ -210,10 +222,10 @@
 									"order":true,
 									"position":80
 				    });
-					columns.push({	"property":"properties.isSentCCRT.value",
-									"header":Messages("readsets.properties.isSentCCRT"),
-									"type":"boolean",
-									"edit":true,
+					columns.push({	"property":"location",
+									"header":Messages("readsets.files.location"),
+									"type":"text",
+									"order":true,
 									"position":90
 					});
 					columns.push({	"property":"properties.isSentCollaborator.value",
@@ -245,6 +257,7 @@
 				lists.refresh.filterConfigs({pageCodes:["readsets-addfilters"]}, "readsets-addfilters");
 				
 				lists.refresh.resolutions({objectTypeCode:"ReadSet"});
+				lists.refresh.context({categoryCode:"readset"});
 				
 				lists.refresh.users();
 				isInit=true;
@@ -260,8 +273,11 @@
 				reportingConfigurationCode:undefined,
 				reportingConfiguration:undefined,
 				additionalColumns:[],
+				additionalColumnsContext:[],
+				mapAdditionnalColumn : new Map(),
 				additionalFilters:[],
 				selectedAddColumns:[],
+				contextValue:undefined,
 				
 				setRouteParams:function($routeParams){
 					var count = 0;
@@ -276,12 +292,12 @@
 				},
 				
 				updateForm : function(){
-					if (mainService.isHomePage('valuation')) {
+					/*if (mainService.isHomePage('valuation')) {
 						if(!this.isRouteParam && (this.form.stateCodes === undefined || this.form.stateCodes.length === 0)) {
 							//No stateCodes selected, the filter by default (on the only two possible states for the valuation) is applied
 							this.form.stateCodes = ["IW-VQC", "IP-VQC", "IW-VBA"];
 						}		
-					}
+					}*/
 					this.form.includes = [];
 					if(this.reportingConfiguration){
 						for(var i = 0 ; i < this.reportingConfiguration.columns.length ; i++){
@@ -304,17 +320,36 @@
 						}
 						
 					}
+					
+					if(this.form.reportingQuery){
+						this.form.reportingQuery.trim();
+						if(this.form.reportingQuery.length > 0){
+							this.form.reporting=true;
+						}else{
+							this.form.reporting=false;
+						}
+					}else{
+						this.form.reporting=false;
+					}
 				},
 				
 				convertForm : function(){
 					var _form = angular.copy(this.form);
 					if(_form.fromDate)_form.fromDate = moment(_form.fromDate, Messages("date.format").toUpperCase()).valueOf();
 					if(_form.toDate)_form.toDate = moment(_form.toDate, Messages("date.format").toUpperCase()).valueOf();		
+					if(_form.fromEvalDate)_form.fromEvalDate = moment(_form.fromEvalDate, Messages("date.format").toUpperCase()).valueOf();
+					if(_form.toEvalDate)_form.toEvalDate = moment(_form.toEvalDate, Messages("date.format").toUpperCase()).valueOf();	
 					return _form
 				},
 				
 				resetForm : function(){
-					this.form = {};									
+					this.form = {};		
+					if (mainService.isHomePage('valuation')) {
+						if(!this.isRouteParam && (this.form.stateCodes === undefined || this.form.stateCodes.length === 0)) {
+							//No stateCodes selected, the filter by default (on the only two possible states for the valuation) is applied
+							this.form.stateCodes = ["IW-VQC", "IP-VQC", "IW-VBA"];
+						}		
+					}
 				},
 				
 				resetSampleCodes : function(){
@@ -334,11 +369,11 @@
 				},
 				valuationStates : [{code:"IW-VQC",name:Codes("state.IW-VQC")},{code:"IP-VQC",name:Codes("state.IP-VQC")},{code:"IW-VBA",name:Codes("state.IW-VBA")}],
 				states : function(){
-					if (mainService.isHomePage('valuation')) {
-						return this.valuationStates;
-					}else{
+					//if (mainService.isHomePage('valuation')) {
+					//	return this.valuationStates;
+					//}else{
 						return this.lists.get('statetrue');
-					}
+					//}
 				},
 				/**
 				 * Update column when change reportingConfiguration
@@ -363,10 +398,14 @@
 				initAdditionalColumns:function(){
 					this.additionalColumns=[];
 					this.selectedAddColumns=[];
+					this.additionalColumnsContext=[];
+					this.contextValue=undefined;
+					this.mapAdditionnalColumn=new Map();
 					
 					if(lists.get("readsets-addcolumns") && lists.get("readsets-addcolumns").length === 1){
 						var formColumns = [];
-						var allColumns = angular.copy(lists.get("readsets-addcolumns")[0].columns);
+						//var allColumns = angular.copy(lists.get("readsets-addcolumns")[0].columns);
+						var allColumns = this.computeMapAdditionnalColumns();
 						var nbElementByColumn = Math.ceil(allColumns.length / 5); //5 columns
 						for(var i = 0; i  < 5 && allColumns.length > 0 ; i++){
 							formColumns.push(allColumns.splice(0, nbElementByColumn));	    								
@@ -379,22 +418,69 @@
 					}
 				},
 				
-				getAddColumnsToForm : function(){
-					if(this.additionalColumns.length === 0){
-						this.initAdditionalColumns();
+				computeMapAdditionnalColumns:function(){
+					var allColumns = angular.copy(lists.get("readsets-addcolumns")[0].columns);
+					var allColumnsFiltered = [];
+					for(var i=0; i<allColumns.length; i++){
+						if(this.mapAdditionnalColumn.get(allColumns[i].position)==undefined){
+							//if(this.contextValue==undefined || (this.contextValue!=undefined && allColumns[i].context!=null && allColumns[i].context.includes(this.contextValue))){
+								allColumnsFiltered.push(allColumns[i]);
+								var tabColumn=[];
+								tabColumn.push(allColumns[i]);
+								this.mapAdditionnalColumn.set(allColumns[i].position,tabColumn);
+ 							//}
+						}else{
+							this.mapAdditionnalColumn.get(allColumns[i].position).push(allColumns[i]);
+						}
 					}
-					return this.additionalColumns;									
+					return allColumnsFiltered;
+				},
+				
+				updateAdditionnalColumnContext: function(){
+					if(this.contextValue!=undefined){
+						var filteredColumn = [];
+						for(var i = 0 ; i < this.additionalColumns.length ; i++){
+							for(var j = 0; j < this.additionalColumns[i].length; j++){
+								if(this.additionalColumns[i][j].context!=null && this.additionalColumns[i][j].context.includes(this.contextValue)){
+									filteredColumn.push(this.additionalColumns[i][j]);
+								}
+							}
+						}
+						var formColumns = [];
+						var nbElementByColumn = Math.ceil(filteredColumn.length / 5); //5 columns
+						for(var i = 0; i  < 5 && filteredColumn.length > 0 ; i++){
+							formColumns.push(filteredColumn.splice(0, nbElementByColumn));	    								
+						}
+						//complete to 5 five element to have a great design 
+						while(formColumns.length < 5){
+							formColumns.push([]);
+						}
+						this.additionalColumnsContext=formColumns;
+					}
+				},
+				
+				getAddColumnsToForm : function(){
+					if(this.contextValue!=undefined && this.additionalColumnsContext.length>0){
+						return this.additionalColumnsContext;
+					}else{
+						if(this.additionalColumns.length === 0){
+							this.initAdditionalColumns();
+						}
+						return this.additionalColumns;
+					}
+					
 				},
 				
 				addColumnsToDatatable:function(){
-					//this.reportingConfiguration = undefined;
-					//this.reportingConfigurationCode = undefined;
 					
 					this.selectedAddColumns = [];
+					
 					for(var i = 0 ; i < this.additionalColumns.length ; i++){
 						for(var j = 0; j < this.additionalColumns[i].length; j++){
 							if(this.additionalColumns[i][j].select){
-								this.selectedAddColumns.push(this.additionalColumns[i][j]);
+								for(var c=0; c<this.mapAdditionnalColumn.get(this.additionalColumns[i][j].position).length; c++){
+									this.selectedAddColumns.push(this.mapAdditionnalColumn.get(this.additionalColumns[i][j].position)[c]);
+								}
 							}
 						}
 					}
@@ -418,6 +504,12 @@
 					if(lists.get("readsets-addfilters") && lists.get("readsets-addfilters").length === 1){
 						var formFilters = [];
 						var allFilters = angular.copy(lists.get("readsets-addfilters")[0].filters);
+						/* add static filters*/
+						allFilters.push({property:"fromEvalDate",html:"<input type='text' class='form-control' ng-model='searchService.form.fromEvalDate' placeholder='"+Messages("search.placeholder.fromEvalDate")+"' title='"+Messages("search.placeholder.fromEvalDate")+"'>",position:allFilters.length+1});
+						allFilters.push({property:"toEvalDate",html:'<input type="text" class="form-control" ng-model="searchService.form.toEvalDate" placeholder="'+Messages("search.placeholder.toEvalDate")+'" title="'+Messages("search.placeholder.toEvalDate")+'">',position:allFilters.length+1});
+						
+						
+						
 						var nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
 						for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){
 							formFilters.push(allFilters.splice(0, nbElementByColumn));	    								

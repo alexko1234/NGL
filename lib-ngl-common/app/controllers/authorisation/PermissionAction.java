@@ -1,51 +1,74 @@
 package controllers.authorisation;
 
-import play.Logger;
-import play.Play;
-import play.libs.F;
-import play.libs.F.Function0;
-import play.libs.F.Promise;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+
+import javax.inject.Inject;
+
+import fr.cea.ig.authentication.Authentication;
+import fr.cea.ig.authorization.IAuthorizator;
 import play.mvc.Action;
-import play.mvc.Http.Context;
 import play.mvc.Result;
+
 /**
+ * Implements action for the permission annotation.
  * 
  * @author michieli
- *
+ * @author vrd
+ * 
  */
 public class PermissionAction extends Action<Permission> {
 
-	private static final String COOKIE_SESSION = "NGL_FILTER_USER";
-	@Override
-	public F.Promise<Result> call(Context context) throws Throwable {
-		//TODO GA need to upgrade to play 2.4 to have the benefit of :
-		/*
-		 Note: If you want the action composition annotation(s) put on a Controller class to be executed before the one(s) put on action methods 
-		 set play.http.actionComposition.controllerAnnotationsFirst = true in application.conf. 
-		 However, be aware that if you use a third party module in your project it may rely on a certain execution order of its annotations.
-		 */
-		String username = context.session().get(COOKIE_SESSION);
-		
-		String userAgent = context.request().getHeader("User-Agent");
-		if(userAgent != null && userAgent.equals("bot")){
-			username = "ngsrg";
-		}else if(userAgent.contains("Honeywell")){
-			username = "scanner";
-		}
-		
-		for(String checkPermission:configuration.value()){
-			if(checkPermission.equals("") || !(Play.application().configuration().getString("auth.mode").equals("prod"))){
-					return delegate.call(context);
-			} else if (PermissionHelper.checkPermission(username, checkPermission)){
-						return delegate.call(context);
-			} else {
-				return Promise.promise(new Function0<Result>(){
-							public Result apply() {
-								return unauthorized();
-							}
-						});
-			}			
-		}
-		return null;
+	/**
+	 * Authorizator delegate.
+	 */
+	private final IAuthorizator authorizator;
+	
+	/**
+	 * Configuration.
+	 */
+	private final Authentication.Configuration authConfiguration;
+	
+	/**
+	 * Logger.
+	 */
+	private static final play.Logger.ALogger logger = play.Logger.of(PermissionAction.class);
+	
+	@Inject
+	public PermissionAction(IAuthorizator authorizator, Authentication.Configuration authConfiguration) {
+		this.authorizator = authorizator;
+		this.authConfiguration = authConfiguration;
 	}
+	
+	@Override
+	public CompletionStage<Result> call(final play.mvc.Http.Context context) {
+		if (configuration.value().length == 0) 
+			throw new RuntimeException("badly configured permission control with no values");
+		
+//		String userAgent = context.request().getHeader("User-Agent");
+		String userAgent = context.request().header("User-Agent").orElse(null);
+		String agentByPass = authConfiguration.agentByPass(userAgent);
+		logger.debug("Header User-Agent: "+ userAgent);
+		logger.debug("authConfiguration.agentByPass(userAgent): "+ agentByPass);
+		if (agentByPass != null && authorizator.authorize(agentByPass, configuration.value())) {
+			logger.debug("Autorisation !");
+			return delegate.call(context);
+		}
+		
+		if (!Authentication.isAuthenticatedSession(context.session())) {
+			// return CompletableFuture.supplyAsync(() -> unauthorized("not authenticated"));
+			logger.debug("not authenticated");
+			return CompletableFuture.supplyAsync(() -> forbidden("not authenticated"));
+		}
+		String username = Authentication.getUser(context.session());
+		// We run the authorizator implementation.
+		if (authorizator.authorize(username, configuration.value()))
+			return delegate.call(context);
+		else
+			return CompletableFuture.supplyAsync(() -> forbidden("not enough rights"));
+	}
+	
 }
+
+
+

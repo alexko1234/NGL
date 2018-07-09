@@ -2,8 +2,7 @@ package rules.services;
 
 import org.drools.runtime.rule.Activation;
 import org.drools.runtime.rule.AgendaFilter;
-
-import play.Logger;
+//import play.Logger;
 
 public class RulesAgendaFilter implements AgendaFilter{
 
@@ -37,8 +36,5 @@ public class RulesAgendaFilter implements AgendaFilter{
 		return false;
 
 	}
-
-	
-	
 
 }

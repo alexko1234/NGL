@@ -4,9 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import play.Logger;
+//import javax.inject.Inject;
+
+//import play.Logger;
 import play.data.validation.ValidationError;
 import play.libs.Json;
+import play.mvc.Controller;
 import play.mvc.Result;
 import services.description.common.InstituteService;
 import services.description.common.LevelService;
@@ -22,15 +25,30 @@ import services.description.run.RunService;
 import services.description.run.TreatmentService;
 import services.description.sample.ImportService;
 import services.description.sample.SampleService;
-//import services.instance.resolution.ResolutionService;
-import controllers.CommonController;
+//<<<<<<< HEAD
+////import services.instance.resolution.ResolutionService;
+//import controllers.CommonController;
+//
+//
+//=======
+//// import controllers.APICommonController;
+////import fr.cea.ig.ngl.NGLApplication;
+////import fr.cea.ig.ngl.NGLController;
+//// import controllers.CommonController;
+//// import controllers.NGLBaseController;
+//// import fr.cea.ig.play.migration.NGLContext;
+//>>>>>>> V2.0.2
 
-
-
-public class All extends CommonController {
-	public static Result save(){
+public class All extends Controller { // NGLController { // NGLBaseController { //CommonController {
+	private static final play.Logger.ALogger logger = play.Logger.of(Controller.class);
+//	@Inject
+//	public All(NGLApplication app) {
+//		super(app);
+//	}
+	
+	public Result save() {
 		try {
-			Map<String,List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
+			Map<String,List<ValidationError>> errors = new HashMap<>();
 			InstituteService.main(errors);
 			ObjectTypeService.main(errors);
 			StateService.main(errors); 
@@ -47,18 +65,23 @@ public class All extends CommonController {
 			ExperimentService.main(errors);
 			ProcessService.main(errors);
 			ProjectService.main(errors);
+//<<<<<<< HEAD
 			SampleService.main(errors);
 			//RunService.main(errors);
 			ImportService.main(errors);
 			//TreatmentService.main(errors);
-			if (errors.size() > 0) {
+//			if (errors.size() > 0) {
+//=======
+//			RunService.main(errors);
+//			TreatmentService.main(errors);
+			if (errors.size() > 0)
+//>>>>>>> V2.0.2
 				return badRequest(Json.toJson(errors));
-			} else {
-				return ok();
-			}
+			return ok();
 		} catch (Exception e) {
-			Logger.error(e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 			return internalServerError(e.getMessage());
 		}				
 	}
+	
 }

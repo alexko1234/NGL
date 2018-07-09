@@ -159,7 +159,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$http', '$q', '$filt
 							"property" : "outputContainerSupportCodes",
 							"position" : 6,
 							"filter":"unique",
-							"render" : "<div list-resize='cellValue' list-resize-min-size='2'>",
+							// "render" : "<div list-resize='cellValue' list-resize-min-size='2'>",
 							"type" : "text",
 							"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 							"groupMethod":"collect:true"

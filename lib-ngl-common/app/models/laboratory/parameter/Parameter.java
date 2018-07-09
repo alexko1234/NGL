@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
+import models.laboratory.common.instance.ITracingAccess;
 import models.laboratory.common.instance.TraceInformation;
 import models.utils.InstanceConstants;
 import fr.cea.ig.DBObject;
@@ -20,13 +21,16 @@ import fr.cea.ig.DBObject;
 	@JsonSubTypes.Type(value =  models.laboratory.parameter.index.IlluminaIndex.class, name = "index-illumina-sequencing"),
 	@JsonSubTypes.Type(value =  models.laboratory.parameter.index.NanoporeIndex.class, name = "index-nanopore-sequencing"),
 	@JsonSubTypes.Type(value =  models.laboratory.parameter.printer.BBP11.class, name = "BBP11"),
+	@JsonSubTypes.Type(value =  models.laboratory.parameter.map.MapParameter.class, name = "map-parameter"),
+	@JsonSubTypes.Type(value =  models.laboratory.parameter.context.ContextDescription.class, name = "context-description"),
+
 })
-public abstract class Parameter extends DBObject  implements IValidation{
+public abstract class Parameter extends DBObject implements IValidation, ITracingAccess {
 	
-	public String typeCode;
+	public String           typeCode;
 	public TraceInformation traceInformation;
-	public String categoryCode;
-	public String name;
+	public String           categoryCode;
+	public String           name;
 	
 	protected Parameter(String typeCode) {
 		super();
@@ -39,6 +43,13 @@ public abstract class Parameter extends DBObject  implements IValidation{
 		CommonValidationHelper.validateCode(this, InstanceConstants.PARAMETER_COLL_NAME, contextValidation);
 		ValidationHelper.required(contextValidation, categoryCode, "categoryCode");
 		ValidationHelper.required(contextValidation, name, "name");
-		
 	}
+	
+	@Override
+	public TraceInformation getTraceInformation() {
+		if (traceInformation == null)
+			traceInformation = new TraceInformation(); 
+		return traceInformation;
+	}
+	
 }

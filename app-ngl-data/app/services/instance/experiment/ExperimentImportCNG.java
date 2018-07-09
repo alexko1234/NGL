@@ -4,8 +4,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.cea.ig.MongoDBDAO;
+import javax.inject.Inject;
 
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.experiment.instance.Experiment;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
@@ -16,9 +18,10 @@ import services.instance.AbstractImportDataCNG;
 
 public class ExperimentImportCNG extends AbstractImportDataCNG{
 	
+	@Inject
 	public ExperimentImportCNG(FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super("ExperimentImportCNG",durationFromStart, durationFromNextIteration);
+			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super("ExperimentImportCNG",durationFromStart, durationFromNextIteration, ctx);
 	}
 
 	@Override
@@ -35,14 +38,14 @@ public class ExperimentImportCNG extends AbstractImportDataCNG{
 		List<Experiment> experiments = limsServices.findIlluminaDepotExperiment(contextError, "sop_depot_1");		
 		List<Experiment> existingExperiments=MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class).toList();
 		
-		List<Experiment> experimentsToUpdate = new ArrayList<Experiment>();
+		List<Experiment> experimentsToUpdate = new ArrayList<>();
 		for (Experiment experiment : experiments) {
 			if (existingExperiments.contains(experiment)) {
 				experimentsToUpdate.add(experiment);
 			}
 		}
 		
-		List<Experiment> experimentsToCreate = new ArrayList<Experiment>();
+		List<Experiment> experimentsToCreate = new ArrayList<>();
 		for (Experiment experiment : experiments) {
 			if (!experimentsToUpdate.contains(experiment)) {
 				experimentsToCreate.add(experiment);

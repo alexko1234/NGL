@@ -15,7 +15,6 @@ import services.description.DescriptionFactory;
 
 public abstract class AbstractImportService {
 	
-	
 	public void main(Map<String, List<ValidationError>> errors)  throws DAOException{
 		DAOHelpers.removeAll(ImportType.class, ImportType.find);
 		DAOHelpers.removeAll(ImportCategory.class, ImportCategory.find);
@@ -34,10 +33,11 @@ public abstract class AbstractImportService {
 	}
 	
 	public static List<Institute> getInstitutes(Constants.CODE...codes) throws DAOException {
-		List<Institute> institutes = new ArrayList<Institute>();
+		List<Institute> institutes = new ArrayList<>();
 		for(Constants.CODE code : codes){
 			institutes.add(Institute.find.findByCode(code.name()));
 		}
 		return institutes;
 	}
+	
 }

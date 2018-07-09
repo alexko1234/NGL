@@ -5,13 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import controllers.ListForm;
 
 public class RunsSearchForm extends ListForm {
 	
     public List<String> codes;
     public String code;
+    public String regexCode;
     
     public List<String> categoryCodes;
     public String categoryCode;
@@ -51,7 +51,7 @@ public class RunsSearchForm extends ListForm {
     
     public List<String> existingFields, notExistingFields;
     
-    public Map<String, List<String>> properties = new HashMap<String, List<String>>();
-    public Map<String, Map<String, List<String>>> treatmentProperties = new HashMap<String, Map<String, List<String>>>();
-    public Map<String, Map<String, List<String>>> treatmentLanesProperties = new HashMap<String, Map<String, List<String>>>();
+    public Map<String, List<String>> properties = new HashMap<>();
+    public Map<String, Map<String, List<String>>> treatmentProperties = new HashMap<>();
+    public Map<String, Map<String, List<String>>> treatmentLanesProperties = new HashMap<>();
 }

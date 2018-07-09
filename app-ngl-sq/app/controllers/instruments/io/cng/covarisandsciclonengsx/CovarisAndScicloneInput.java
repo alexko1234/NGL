@@ -1,38 +1,35 @@
 package controllers.instruments.io.cng.covarisandsciclonengsx;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.ss.usermodel.FormulaEvaluator; // BUG: ajout 25/01/2017
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.ss.usermodel.FormulaEvaluator; // BUG: ajout 25/01/2017
 
-import models.laboratory.common.instance.PropertyValue;
+import controllers.instruments.io.utils.AbstractInput;
+import controllers.instruments.io.utils.InputHelper;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
-import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.parameter.index.Index;
+import models.utils.InstanceConstants;
+import play.Logger;
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;
-import controllers.instruments.io.utils.AbstractInput;
-import controllers.instruments.io.utils.InputHelper;
-import controllers.instruments.io.utils.TagModel;
-import play.Logger;
 
 public abstract class CovarisAndScicloneInput extends AbstractInput {
 	
 	@Override
 	public Experiment importFile(Experiment experiment, PropertyFileValue pfv, ContextValidation contextValidation) throws Exception {
 		
-		InputStream is = new ByteArrayInputStream(pfv.value);
+//		InputStream is = new ByteArrayInputStream(pfv.value);
+		InputStream is = new ByteArrayInputStream(pfv.byteValue());
 		
 		// le barcode a checker doit etre dans experiment.ouputContainerSupportCodes......si l'experience a deja ete sauvegardee...	
 		String outputSupportContainerCode=experiment.outputContainerSupportCodes.iterator().next().toString();
@@ -86,7 +83,7 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 			return experiment;
 		}
 		
-		Map<String,Index> results = new HashMap<String,Index>(0);
+		Map<String,Index> results = new HashMap<>(0);
 		
 		// traiter les 96 lignes
 		for(int i = 3; i < 3+96; i++){
@@ -131,7 +128,7 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 				.stream()
 				.map(atm -> atm.inputContainerUseds.get(0))
 				.forEach(icu -> {
-					if(!results.containsKey(getCodePosition(icu.code))){
+					if (!results.containsKey(getCodePosition(icu.code))) {
 						contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.tag.missing",getCodePosition(icu.code));
 					}
 				});
@@ -139,7 +136,7 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 		
 		// set tag et tag Categorie ...
 		Logger.info ("updating experimentProperties => set tag and tagCatgory");
-		if(!contextValidation.hasErrors()){
+		if (!contextValidation.hasErrors()) {
 			experiment.atomicTransfertMethods
 				.stream()
 				.forEach(atm -> {	
@@ -148,12 +145,13 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 					String icupos=getCodePosition(icu.code);
 					
 					// BUG: 25/01/2017 !! verifier d'abord si experimentProperties existe ! sinon la creer
-					if(null == ocu.experimentProperties) ocu.experimentProperties = new HashMap<String,PropertyValue>(0);
+					if (ocu.experimentProperties == null) 
+						ocu.experimentProperties = new HashMap<>(); // <String,PropertyValue>(0);
 					
 					PropertySingleValue tagPsv = new PropertySingleValue();
 					// !!! ce n'est pas le nom de l'index qui est dans results mais le code.
 					tagPsv.value = results.get(icupos).code;
-					ocu.experimentProperties.put("tag", tagPsv);
+					ocu.experimentProperties.put(InstanceConstants.TAG_PROPERTY_NAME, tagPsv);
 					//Logger.info ("icupos="+ icupos +" => " +tagPsv.value);
 					
 					PropertySingleValue tagCategoryPsv = new PropertySingleValue();

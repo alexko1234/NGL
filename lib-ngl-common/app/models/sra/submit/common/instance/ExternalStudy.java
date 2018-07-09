@@ -1,27 +1,28 @@
 package models.sra.submit.common.instance;
 
 
-import org.apache.commons.lang3.StringUtils;
-
-import play.api.modules.spring.Spring;
-import validation.ContextValidation;
-import validation.sra.SraValidationHelper;
-import workflows.sra.submission.SubmissionWorkflows;
-import models.sra.submit.util.VariableSRA;
-import models.utils.InstanceConstants;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
+//import workflows.sra.submission.SubmissionWorkflows;
+// import models.sra.submit.util.VariableSRA;
+import models.utils.InstanceConstants;
+
+// import org.apache.commons.lang3.StringUtils;
+
+// import play.api.modules.spring.Spring;
+import validation.ContextValidation;
+import validation.sra.SraValidationHelper;
 
 
 public class ExternalStudy extends AbstractStudy {
-	final SubmissionWorkflows subWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
+	
+	//final SubmissionWorkflows subWorkflows = IGGlobals.instanceOf(SubmissionWorkflows.class); //Spring.get BeanOfType(SubmissionWorkflows.class);
 
 	public ExternalStudy() {
-		super();
+		//super();
 		state = new State("F-SUB", null); // Reference sur "models.laboratory.common.instance.state"
 	}
-
-
+	
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		contextValidation.addKeyToRootKeyName("externalStudy");

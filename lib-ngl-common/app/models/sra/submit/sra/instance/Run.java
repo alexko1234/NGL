@@ -6,13 +6,13 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import fr.cea.ig.MongoDBDAO;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.sra.SraValidationHelper;
 import validation.utils.ValidationHelper;
-import fr.cea.ig.MongoDBDAO;
 
 public class Run implements IValidation {
 	// RunType
@@ -22,7 +22,7 @@ public class Run implements IValidation {
 	public String accession;       // numeros d'accession attribué par ebi 
 	public String expCode;
 	public String expAccession;
-	public List <RawData> listRawData = new ArrayList<RawData>();
+	public List <RawData> listRawData = new ArrayList<>();
 	public String adminComment; // commentaire privé "reprise historique"				
 
 	
@@ -33,7 +33,7 @@ public class Run implements IValidation {
 		ValidationHelper.required(contextValidation, this.runDate , "runDate");
 		System.out.println("this.runCenter: " + this.runCenter);
 
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.runCenter, VariableSRA.mapCenterName, "runCenter");
+		SraValidationHelper.requiredAndConstraint(contextValidation, this.runCenter, VariableSRA.mapCenterName(), "runCenter");
 		
 		// verifier que code est bien renseigné
 		if(StringUtils.isBlank(this.code)) {

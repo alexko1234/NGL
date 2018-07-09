@@ -1,11 +1,8 @@
 package services;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+// import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,113 +11,127 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+// import java.util.regex.Matcher;
+// import java.util.regex.Pattern;
+
+import javax.inject.Inject;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+// import javax.xml.xpath.XPath;
+// import javax.xml.xpath.XPathExpressionException;
+// import javax.xml.xpath.XPathFactory;
+// import com.typesafe.config.ConfigFactory;
 
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
-import play.Logger;
-import play.Play;
-import play.api.modules.spring.Spring;
-import validation.ContextValidation;
-import workflows.sra.submission.SubmissionWorkflows;
+// import java.util.Date;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-import com.typesafe.config.ConfigFactory;
 
-import java.util.Date;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
+// import javax.xml.parsers.DocumentBuilder;
+// import javax.xml.parsers.DocumentBuilderFactory;
+// import javax.xml.parsers.ParserConfigurationException;
+// import javax.xml.xpath.XPath;
+// import javax.xml.xpath.XPathExpressionException;
+// import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import org.apache.commons.lang3.StringUtils;
+// import org.apache.commons.lang3.StringUtils;
 
-
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.ngl.NGLConfig;
 import mail.MailServiceException;
 import mail.MailServices;
 import models.laboratory.common.instance.State;
-import models.laboratory.run.instance.ReadSet;
+// import models.laboratory.run.instance.ReadSet;
 import models.sra.submit.common.instance.Sample;
 import models.sra.submit.common.instance.Study;
 import models.sra.submit.common.instance.Submission;
 import models.sra.submit.sra.instance.Experiment;
 import models.sra.submit.util.SraException;
-import models.sra.submit.util.VariableSRA;
+// import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
-import fr.cea.ig.MongoDBDAO;
+//import play.Logger;
+// import play.Play;
+// import play.api.modules.spring.Spring;
+import validation.ContextValidation;
+import workflows.sra.submission.SubmissionWorkflows;
 
 public class FileAcServices  {
-	final static SubmissionWorkflows submissionWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
+	
+	private static final play.Logger.ALogger logger = play.Logger.of(FileAcServices.class);
 
-	public static Submission traitementFileAC(ContextValidation ctxVal, String submissionCode, File ebiFileAc) throws IOException, SraException, MailServiceException {
+	// final static SubmissionWorkflows submissionWorkflows = Spring.get BeanOfType(SubmissionWorkflows.class);
+
+	private final NGLConfig           config;
+	private final SubmissionWorkflows submissionWorkflows;
+	
+	@Inject
+	public FileAcServices(NGLConfig config, SubmissionWorkflows submissionWorkflows) {
+		this.config              = config;
+		this.submissionWorkflows = submissionWorkflows;
+	}
+	
+
+	
+	public Submission traitementFileAC(ContextValidation ctxVal, String submissionCode, File ebiFileAc) throws IOException, SraException, MailServiceException {
 		if (StringUtils.isBlank(submissionCode) || (ebiFileAc == null)) {
 			throw new SraException("traitementFileAC :: parametres d'entree à null" );
 		}
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
-		if (submission == null){
-			throw new SraException(" soumission " + submission.code + " impossible à recuperer dans base");
+		if (submission == null) {
+			throw new SraException(" soumission " + submissionCode + " impossible à recuperer dans base");
 		}
-		if (! ebiFileAc.exists()){
+		if (! ebiFileAc.exists()) {
 			throw new SraException("Fichier des AC de l'Ebi non present sur disque : "+ ebiFileAc.getAbsolutePath());
 		}
 
-		BufferedReader inputBuffer = null;
-		try {
-			inputBuffer = new BufferedReader(new FileReader(ebiFileAc));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+//		BufferedReader inputBuffer = null;
+//		try {
+//			inputBuffer = new BufferedReader(new FileReader(ebiFileAc));
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		}
 		
-
 		// Get global parameters for email => utiliser Play.application().configuration().getString plutot que
 		// ConfigFactory.load().getString pour recuperer les parametres pour avoir les surcharges de AbstractTest si 
 		// test unitaires 
 		MailServices mailService = new MailServices();
 //		String expediteur = ConfigFactory.load().getString("accessionReporting.email.from"); 
-		String expediteur = Play.application().configuration().getString("accessionReporting.email.from"); 
-
-		String dest = Play.application().configuration().getString("accessionReporting.email.to");   
+		// String expediteur = Play.application().configuration().getString("accessionReporting.email.from");
+		String expediteur = config.getReleaseReportingEmailFrom();
+		// String dest = Play.application().configuration().getString("accessionReporting.email.to");
+		String dest = config.getReleaseReportingEmailTo();
 		System.out.println("destinataires = "+ dest);
-		String subjectSuccess = Play.application().configuration().getString("accessionReporting.email.subject.success");
-		
-		//Logger.debug("subjectSuccess = "+Play.application().configuration().getString("accessionReporting.email.subject.success"));
-		
-		String subjectError = Play.application().configuration().getString("accessionReporting.email.subject.error");
-		Set<String> destinataires = new HashSet<String>();
+		// String subjectSuccess = Play.application().configuration().getString("accessionReporting.email.subject.success");
+		String subjectSuccess = config.getReleaseReportingEmailSubjectSuccess();
+		//logger.debug("subjectSuccess = "+Play.application().configuration().getString("accessionReporting.email.subject.success"));
+		// String subjectError = Play.application().configuration().getString("accessionReporting.email.subject.error");
+		String subjectError = config.getReleaseReportingEmailSubjectError(); 
+		Set<String> destinataires = new HashSet<>();
 		
 		destinataires.addAll(Arrays.asList(dest.split(",")));    		    
 
-		String sujet = null;
+//		String sujet = null;
 
-		
-		Map<String, String> mapSamples = new HashMap<String, String>(); 
-		Map<String, String> mapExtIdSamples = new HashMap<String, String>(); 
-		Map<String, String> mapExperiments = new HashMap<String, String>(); 
-		Map<String, String> mapRuns = new HashMap<String, String>(); 
-		String submissionAc = null;
-		String studyAc = null;
-		String studyExtId = null;
-		String message = null;
+		Map<String, String> mapSamples      = new HashMap<>(); // String, String>(); 
+		Map<String, String> mapExtIdSamples = new HashMap<>(); // String, String>(); 
+		Map<String, String> mapExperiments  = new HashMap<>(); // <String, String>(); 
+		Map<String, String> mapRuns         = new HashMap<>(); // String, String>(); 
+		String submissionAc      = null;
+		String studyAc           = null;
+		String studyExtId        = null;
+		String message           = null;
 		String ebiSubmissionCode = null;
-		String ebiStudyCode = null;
-		String errorStatus = "FE-SUB";
-		String okStatus = "F-SUB";
-		Boolean ebiSuccess = false;	
+		String ebiStudyCode      = null;
+		String errorStatus       = "FE-SUB";
+		String okStatus          = "F-SUB";
+		Boolean ebiSuccess       = false;	
 		// On ne prend pas ctxVal.getUser, car methode lancé par birds,pas très informatif
 		String user;
 		if (StringUtils.isNotBlank(submission.creationUser)) {
@@ -161,20 +172,14 @@ public class FileAcServices  {
 			/*
 			 * Etape 5 : récupération des samples
 			 */
-			
-
-			
 			final NodeList racineNoeuds = racine.getChildNodes();
 			final int nbRacineNoeuds = racineNoeuds.getLength();
-			
-			
-			
-			if( racine.getAttribute("success").equalsIgnoreCase ("true")){
+			if ( racine.getAttribute("success").equalsIgnoreCase ("true")) {
 				ebiSuccess = true;
 			}
 			for (int i = 0; i<nbRacineNoeuds; i++) {
 				
-				if(racineNoeuds.item(i).getNodeType() == Node.ELEMENT_NODE) {
+				if (racineNoeuds.item(i).getNodeType() == Node.ELEMENT_NODE) {
 					
 					final Element elt = (Element) racineNoeuds.item(i);
 					//Affichage d'un elt :
@@ -186,7 +191,7 @@ public class FileAcServices  {
 					System.out.println("alias : " + alias);
 					System.out.println("accession : " + accession);
 					
-					if(elt.getTagName().equalsIgnoreCase("SUBMISSION")) {
+					if (elt.getTagName().equalsIgnoreCase("SUBMISSION")) {
 						ebiSubmissionCode = elt.getAttribute("alias");	
 						submissionAc = elt.getAttribute("accession");
 					} else if(elt.getTagName().equalsIgnoreCase("STUDY")) {
@@ -204,12 +209,9 @@ public class FileAcServices  {
 				    	mapExperiments.put(elt.getAttribute("alias"), elt.getAttribute("accession"));	
 					} else if(elt.getTagName().equalsIgnoreCase("RUN")) {
 						mapRuns.put(elt.getAttribute("alias"), elt.getAttribute("accession"));
-					} else {
-						
+					} else {		
 					}
 				}
-				
-				
 			}  // end for  
 		} catch (final ParserConfigurationException e) {
 			e.printStackTrace();
@@ -229,20 +231,17 @@ public class FileAcServices  {
 			return submission;
 		}
 		
-		
 		// Mise à jour des objets :
 		Boolean error = false;
-		sujet = "Probleme parsing fichier des AC : ";
+//		sujet = "Probleme parsing fichier des AC : ";
 		message = "Pour la soumission " + submissionCode + ", le fichier des AC "+ ebiFileAc.getPath() + "</br>";
 		String destinataire = submission.creationUser;
-		
 		if (StringUtils.isNotBlank(destinataire)) {
-			if(!destinataire.endsWith("@genoscope.cns.fr")) {
+			if (!destinataire.endsWith("@genoscope.cns.fr")) {
 				destinataire = destinataire + "@genoscope.cns.fr";
 			}
 			destinataires.add(destinataire);
 		}
-	
 		if (StringUtils.isBlank(ebiSubmissionCode)) {
 			//System.out.println("Pas de Recuperation de ebiSubmissionCode");
 		    message += "- ne contient pas ebiSubmissionCode \n";
@@ -260,13 +259,12 @@ public class FileAcServices  {
 			    message += "- ne contient pas de valeur pour le studyCode " + submission.studyCode+"</br>";
 			}
 		}
-		if (submission.sampleCodes != null){
+		if (submission.sampleCodes != null) {
 			for (int i = 0; i < submission.sampleCodes.size() ; i++) {
 				if (!mapSamples.containsKey(submission.sampleCodes.get(i))){
 					//System.out.println("sampleAc attendu non trouvé pour " + submission.sampleCodes.get(i));
 					message += "- ne contient pas d'AC pour le sampleCode " + submission.sampleCodes.get(i)+"</br>";
 					error = true;
-					
 				}	
 			}
 		}
@@ -289,10 +287,7 @@ public class FileAcServices  {
 				}	
 			}
 		}
-
-		if (error){
-			//System.out.println("ERROR" + message);
-			//mailService.sendMail("william@genoscope.cns.fr", destinataires, sujet, message);
+		if (error) {
 		    mailService.sendMail(expediteur, destinataires, subjectError, new String(message.getBytes(), "iso-8859-1"));
 			State errorState = new State(okStatus, user);
 			submissionWorkflows.setState(ctxVal, submission, errorState);
@@ -308,23 +303,22 @@ public class FileAcServices  {
 		Date date  = calendar.getTime();		
 		calendar.add(Calendar.YEAR, 2);
 		Date release_date  = calendar.getTime();
-		
 		message = "Liste des AC attribues pour la soumission "  + submissionCode + " en mode confidentiel jusqu'au : " + release_date +" </br></br>";
-		String retourChariot = "</br>";
-		
+//		String retourChariot = "</br>";
 		message += "submissionCode = " + submissionCode + ",   AC = "+ submissionAc + "</br>";  
 		submission.accession=submissionAc;
 		
-				
 		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, 
 				DBQuery.is("code", submissionCode).notExists("accession"),
 				DBUpdate.set("accession", submissionAc).set("submissionDate", date).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", date));	
 
 		if (StringUtils.isNotBlank(ebiStudyCode)) {	
-			message += "studyCode = " + ebiStudyCode + ",   AC = "+ studyAc + "</br>";  
+			message += "studyCode = " + ebiStudyCode + ",   AC = "+ studyAc + "</br>";
+			logger.debug("Mise à jour du study {} avec AC={} et externalId={}", ebiStudyCode, studyAc, studyExtId);
 			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
 					DBQuery.is("code", ebiStudyCode).notExists("accession"),
 					DBUpdate.set("accession", studyAc).set("externalId", studyExtId).set("firstSubmissionDate", date).set("releaseDate", release_date).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", date));
+			
 		}
 		
 		for(Entry<String, String> entry : mapSamples.entrySet()) {
@@ -332,6 +326,8 @@ public class FileAcServices  {
 			String ac = entry.getValue();
 			String ext_id_ac = mapExtIdSamples.get(code);
 			message += "sampleCode = " + code + ",   AC = "+ ac + "</br>";  
+			logger.debug("Mise à jour du sample {} avec AC={} et externalId={}", code, ac, ext_id_ac);
+
 			MongoDBDAO.update(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class,
 					DBQuery.is("code", code).notExists("accession"),
 					DBUpdate.set("accession", ac).set("externalId", ext_id_ac).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", date)); 		
@@ -341,7 +337,7 @@ public class FileAcServices  {
 			String code = entry.getKey();
 			String ac = entry.getValue();
 			message += "experimentCode = " + code + ",   AC = "+ ac + "</br>";  
-
+			logger.debug("Mise à jour de l'exp {} avec AC={}", code, ac);
 			MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class,
 					DBQuery.is("code", code).notExists("accession"),
 					DBUpdate.set("accession", ac).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", date)); 	
@@ -350,6 +346,8 @@ public class FileAcServices  {
 			String code = entry.getKey();
 			String ac = entry.getValue();
 			message += "runCode = " + code + ",   AC = "+ ac  + "</br>";  
+			logger.debug("Mise à jour du run {} avec AC={}", code, ac);
+			
 			MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class,
 					DBQuery.is("run.code", code).notExists("run.accession"),
 					DBUpdate.set("run.accession", ac)); 			

@@ -1,6 +1,10 @@
+@this(ctx : fr.cea.ig.play.migration.NGLContext)
 @()
 @import play.mvc.Http.Context
 @import controllers.authorisation.PermissionHelper
+
+@user            = @{ ctx.currentUser() }
+@writePermission = @{ PermissionHelper.checkPermission(user, "writing") }
 
 <!-- ----------------------------------------------------------------------------- -->
 <!-- Modal to display image in full size -->
@@ -29,7 +33,7 @@
 	<div class="col-md-12 col-lg-12">
 		<div class="page-header">	
 			<div class="btn-toolbar pull-right">
-				@if(PermissionHelper.checkPermission(Context.current().request().username(), "writing")){
+				@if(writePermission){
 				 	<button class="btn btn-default" ng-if="isEditMode()" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
 				 	<button class="btn btn-default" ng-if="isEditMode()" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
 			 	

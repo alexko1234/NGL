@@ -23,9 +23,9 @@ import services.description.common.MeasureService;
 
 public class SampleServiceTEST extends AbstractSampleService {
 	
-
+	@Override
 	public void saveSampleCategories(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<SampleCategory> l = new ArrayList<SampleCategory>();
+		List<SampleCategory> l = new ArrayList<>();
 		
 		l.add(newSampleCategory("ADN Cloné", "cloned-DNA"));
 		l.add(newSampleCategory("Matériel Immunoprécipité","IP-sample"));
@@ -50,8 +50,9 @@ public class SampleServiceTEST extends AbstractSampleService {
 	/* FDS 05/06/205 JIRA NGL-672: ajout Institute.CODE.CNG pour les sampleType communs CNS/CNG 
 	 * NOTE: pour le CNG certains SampleCategory n'ont pas de SampleType definis=> utiliser le meme code (cf G.albini)
 	 */
+	@Override
 	public void saveSampleTypes(Map<String, List<ValidationError>> errors) throws DAOException{
-		List<SampleType> l = new ArrayList<SampleType>();
+		List<SampleType> l = new ArrayList<>();
 		
 		l.add(newSampleType("BAC", "BAC", SampleCategory.find.findByCode("cloned-DNA"), getPropertyDefinitionsADNClone(), getInstitutes(Constants.CODE.TEST)));	
 		l.add(newSampleType("Plasmide", "plasmid", SampleCategory.find.findByCode("cloned-DNA"), getPropertyDefinitionsADNClone(), getInstitutes(Constants.CODE.TEST)));	
@@ -99,10 +100,8 @@ public class SampleServiceTEST extends AbstractSampleService {
 		DAOHelpers.saveModels(SampleType.class, l, errors);
 	}
 	
-	
-	
 	private static List<PropertyDefinition> getSampleCommonPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", LevelService.getLevels(Level.CODE.Content,Level.CODE.Sample),Long.class, true,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"), "single"));
 		propertyDefinitions.add(newPropertiesDefinition("Fragmenté", "isFragmented", LevelService.getLevels(Level.CODE.Sample),Boolean.class, true, "single"));
 		propertyDefinitions.add(newPropertiesDefinition("Adaptateurs", "isAdapters", LevelService.getLevels(Level.CODE.Sample),Boolean.class, true, "single"));
@@ -110,16 +109,14 @@ public class SampleServiceTEST extends AbstractSampleService {
 		return propertyDefinitions;
 	}
 	
-	
 	private static List<PropertyDefinition> getSampleDefinitionADNplug() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", LevelService.getLevels(Level.CODE.Content,Level.CODE.Sample),Long.class, true,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"), "single"));
 		return propertyDefinitions;
 	}
 	
-		
 	public static List<PropertyDefinition> getPropertyDefinitionsADNClone() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
         propertyDefinitions.addAll(getSampleCommonPropertyDefinitions());
         propertyDefinitions.add(newPropertiesDefinition("Taille d'insert", "insertSize", LevelService.getLevels(Level.CODE.Sample),Double.class, false,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("kb"), MeasureUnit.find.findByCode("kb"), "single"));
 		propertyDefinitions.add(newPropertiesDefinition("Vecteur", "vector", LevelService.getLevels(Level.CODE.Sample),String.class, false, "single"));
@@ -129,14 +126,14 @@ public class SampleServiceTEST extends AbstractSampleService {
 	}
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsADN() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
         propertyDefinitions.addAll(getSampleCommonPropertyDefinitions());
         propertyDefinitions.add(newPropertiesDefinition("WGA", "isWGA", LevelService.getLevels(Level.CODE.Sample),Boolean.class, false, "single"));
 		return propertyDefinitions;
 	}
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsADNGenomic() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
         propertyDefinitions.addAll(getPropertyDefinitionsADN());
         //TODO GCpercent same as TreatmentService
         propertyDefinitions.add(newPropertiesDefinition("% GC", "gcPercent", LevelService.getLevels(Level.CODE.Sample),Double.class, false, "single"));
@@ -145,7 +142,7 @@ public class SampleServiceTEST extends AbstractSampleService {
 	}
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsAmplicon() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
         propertyDefinitions.addAll(getSampleCommonPropertyDefinitions());
         propertyDefinitions.add(newPropertiesDefinition("Matériel ciblé", "targetSampleCategory", LevelService.getLevels(Level.CODE.Sample),String.class, false, "single"));
         propertyDefinitions.add(newPropertiesDefinition("Plusieurs Régions ciblées", "isSeveralTargets", LevelService.getLevels(Level.CODE.Sample), Boolean.class, false, "single"));
@@ -155,7 +152,7 @@ public class SampleServiceTEST extends AbstractSampleService {
 	}
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsARN() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", LevelService.getLevels(Level.CODE.Sample, Level.CODE.Content),Long.class, true,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"), "single"));
 		propertyDefinitions.add(newPropertiesDefinition("Fragmenté", "isFragmented", LevelService.getLevels(Level.CODE.Sample),Boolean.class, true, "single"));
 		propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", LevelService.getLevels(Level.CODE.Sample),Integer.class, false, "single"));
@@ -163,11 +160,10 @@ public class SampleServiceTEST extends AbstractSampleService {
 	}
 	
 	public static List<PropertyDefinition> getPropertyDefinitionscDNA() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
         propertyDefinitions.addAll(getSampleCommonPropertyDefinitions());
         propertyDefinitions.add(newPropertiesDefinition("Type de synthèse", "synthesisType", LevelService.getLevels(Level.CODE.Sample), String.class, false, newValues("random","oligoDT"), "single"));        
         return propertyDefinitions;
 	}
 	
-
 }

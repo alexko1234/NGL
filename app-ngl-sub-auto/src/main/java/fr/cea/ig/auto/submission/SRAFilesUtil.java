@@ -105,6 +105,14 @@ public class SRAFilesUtil {
 		return rpsRawDataFilter;
 	}
 	
+	public static boolean isNotNullValue(String value)
+	{
+		if (value!=null && !value.equals("")&& !value.equals("null"))
+			return true;
+		else
+			return false;
+	}
+	
 	public static void main(String[] args)
 	{
 		String[] extensions = new String[] { "fastq.gz", "sff" , "srf" };

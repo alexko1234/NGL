@@ -1,54 +1,63 @@
+@this(ctx : fr.cea.ig.play.migration.NGLContext) 
+@* constructeur de la classe *@
+
+@* signature de la methode render: *@
 @(nav: String = "")
 
 @import play.mvc.Http.Context
+@import views.html.ddmenu._
+@import controllers.sra.studies.tpl.routes.Studies
+@import controllers.sra.configurations.tpl.routes.Configurations
+@import controllers.sra.submissions.tpl.routes.Submissions
+@import controllers.sra.documentation.tpl.routes.Documentation
+@import controllers.sra.samples.tpl.routes.Samples
+@import controllers.sra.experiments.tpl.routes.Experiments
+
+@* variable de la methode render: *@
+@user = @{ ctx.currentUser() }
   
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="@controllers.main.tpl.routes.Main.home()">@Messages("application.name")@helper.env()</a>
+			<a class="navbar-brand" href="@controllers.main.tpl.routes.Main.home()">@ctx.messageEnv("application.name")</a>
     	</div>
     	<div class="collapse navbar-collapse">
     		<ul class="nav navbar-nav">
-    		
-    			<li class="dropdown @("active".when(nav.startsWith("studies")))">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="studies">@Messages("studies.menu")<b class="caret"></b></a>
-					<ul class="dropdown-menu" role="menu" aria-labelledby="studies">
-					<!-- sous menu create qui appelle controler tpl study.home -->
-						<li class="@("active".when(nav == "studies.consultation"))"><a href="@controllers.sra.studies.tpl.routes.Studies.home("consultation")">@Messages("studies.menu.consultation")</a></li>																				
-						<li class="@("active".when(nav == "studies.create"))"><a href="@controllers.sra.studies.tpl.routes.Studies.home("create")">@Messages("studies.menu.create")</a></li>																				
-						<!--
-						<li class="@("active".when(nav == "studies.release"))"><a href="@controllers.sra.studies.tpl.routes.Studies.home("release")">@Messages("studies.menu.release")</a></li>																				
-						-->
-					</ul>
-				</li>
-				
-   				<li class="dropdown @("active".when(nav.startsWith("configurations")))">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="configurations">@Messages("configurations.menu")<b class="caret"></b></a>
-					<ul class="dropdown-menu" role="menu" aria-labelledby="configurations">
-					<!-- sous menu create qui appelle controler tpl configuration.home -->
-						<li class="@("active".when(nav == "configurations.consultation"))"><a href="@controllers.sra.configurations.tpl.routes.Configurations.home("consultation")">@Messages("configurations.menu.consultation")</a></li>																				
-						<li class="@("active".when(nav == "configurations.create"))"><a href="@controllers.sra.configurations.tpl.routes.Configurations.home("create")">@Messages("configurations.menu.create")</a></li>																				
-					</ul>
-				</li>				
-				
-				<li class="dropdown @("active".when(nav.startsWith("submissions")))">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="submissions">@Messages("submissions.menu")<b class="caret"></b></a>
-					<ul class="dropdown-menu" role="menu" aria-labelledby="submissions">
-					<!-- sous menu create qui appelle controler tpl submission.home -->
-						<li class="@("active".when(nav == "submissions.consultation"))"><a href="@controllers.sra.submissions.tpl.routes.Submissions.home("consultation")">@Messages("submissions.menu.consultation")</a></li>																				
-						<li class="@("active".when(nav == "submissions.create"))"><a href="@controllers.sra.submissions.tpl.routes.Submissions.home("create")">@Messages("submissions.menu.create")</a></li>																				
-						<li class="@("active".when(nav == "submissions.validation"))"><a href="@controllers.sra.submissions.tpl.routes.Submissions.home("validation")">@Messages("submissions.menu.validation")</a></li>																				
-						<li class="@("active".when(nav == "submissions.activate"))"><a href="@controllers.sra.submissions.tpl.routes.Submissions.home("activate")">@Messages("submissions.menu.activate")</a></li>																				
-					</ul>
-				</li>
+    			@ddmenu(nav, "studies","studies.menu") {
+    			  @* arg 1 : nav = reperage dans page navigation
+    			     arg 2 : identifiant du sous-menu qui doit commencer par meme nom que menu
+    			     arg 3 : url destination
+    			     arg 4 : texte traduit via Messages
+    			  *@
+				  @ddentry(nav, "studies.consultation", Studies.home("consultation"), "studies.menu.consultation")
+				  @ddentry(nav, "studies.create"      , Studies.home("create")      , "studies.menu.create")	
+				  @* ddentry(nav, "studies.release"   , Studies.home("release")     , "studies.menu.release") *@	
+				  		  
+				}
+    			@ddmenu(nav, "configurations","configurations.menu") {
+				  @ddentry(nav, "configurations.consultation",Configurations.home("consultation"),"configurations.menu.consultation")
+				  @ddentry(nav, "configurations.create",      Configurations.home("create"),      "configurations.menu.create")					  		  
+				}
+    			@ddmenu(nav, "submissions","submissions.menu") {
+				  @ddentry(nav, "submissions.consultation", Submissions.home("consultation"), "submissions.menu.consultation")
+				  @ddentry(nav, "submissions.create"      , Submissions.home("create")      , "submissions.menu.create")					  		  
+				  @ddentry(nav, "submissions.validation"  , Submissions.home("validation")  , "submissions.menu.validation")
+				  @ddentry(nav, "submissions.activate"    , Submissions.home("activate")    , "submissions.menu.activate")
+				}  
+    			@ddmenu(nav, "samples","samples.menu") {
+				  @ddentry(nav, "samples.consultation", Samples.home("consultation"), "samples.menu.consultation")
+				} 	  			
+    			@ddmenu(nav, "experiments","experiments.menu") {
+				  @ddentry(nav, "experiments.consultation", Experiments.home("consultation"), "experiments.menu.consultation")
+				} 	
 				<li class="@("active".when(nav == "documentation"))">
-					<a href="@controllers.sra.documentation.tpl.routes.Documentation.home()">@Messages("documentation.menu")</a>
-				</li>					
-			</ul>
+					<a href="@Documentation.home()">@Messages("documentation.menu")</a>
+				</li>	
+			</ul>				
 			<ul class="nav navbar-nav navbar-right">
 				<li>
 				<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="user">
-				<i class="fa fa-user"></i> @Context.current().request().username() <b class="caret"></b></a>
+				<i class="fa fa-user"></i> @user <b class="caret"></b></a>
 				<ul class="dropdown-menu" role="menu" aria-labelledby="user">
 						<li><a href="/authentication/logout">@Messages("authentification.dropdown_list.signout")</a></li>
 				</ul>

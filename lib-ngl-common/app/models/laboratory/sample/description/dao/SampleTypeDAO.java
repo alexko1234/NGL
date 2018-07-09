@@ -4,48 +4,43 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.dao.CommonInfoTypeDAO;
-import models.laboratory.instrument.description.InstrumentUsedType;
-import models.laboratory.instrument.description.dao.InstrumentUsedTypeMappingQuery;
-import models.laboratory.sample.description.SampleCategory;
-import models.laboratory.sample.description.SampleType;
-import models.utils.DescriptionHelper;
-import models.utils.dao.AbstractDAOCommonInfoType;
-import models.utils.dao.AbstractDAOMapping;
-import models.utils.dao.DAOException;
-
 import org.springframework.asm.Type;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
+import models.laboratory.common.description.dao.CommonInfoTypeDAO;
+import models.laboratory.sample.description.SampleType;
+import models.utils.dao.AbstractDAOCommonInfoType;
+import models.utils.dao.DAOException;
 import play.api.modules.spring.Spring;
 
 @Repository
-public class SampleTypeDAO extends AbstractDAOCommonInfoType<SampleType>{
+public class SampleTypeDAO extends AbstractDAOCommonInfoType<SampleType> {
 
+//	protected SampleTypeDAO() {
+//		super("sample_type", SampleType.class, SampleTypeMappingQuery.class, 
+//				"SELECT distinct c.id, c.fk_common_info_type, c.fk_sample_category ",
+//				"FROM sample_type as c "+sqlCommonInfoType, false);
+//	}
 	protected SampleTypeDAO() {
-		super("sample_type", SampleType.class, SampleTypeMappingQuery.class, 
+		super("sample_type", SampleType.class, SampleTypeMappingQuery.factory, 
 				"SELECT distinct c.id, c.fk_common_info_type, c.fk_sample_category ",
 				"FROM sample_type as c "+sqlCommonInfoType, false);
 	}
 
 	@Override
-	public long save(SampleType sampleType) throws DAOException
-	{
-		
-		if(null == sampleType){
+	public long save(SampleType sampleType) throws DAOException	{
+		if (sampleType == null)
 			throw new DAOException("sampleType is mandatory");
-		}
 		//Check if category exist
-		if(sampleType.category == null || sampleType.category.id == null){
+		if (sampleType.category == null || sampleType.category.id == null)
 			throw new DAOException("SampleCategory is not present !!");
-		}
 		
 		//Add commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		sampleType.id = commonInfoTypeDAO.save(sampleType);
 		//Create sampleType 
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("id", sampleType.id);
 		parameters.put("fk_common_info_type", sampleType.id);
 		parameters.put("fk_sample_category", sampleType.category.id);
@@ -60,6 +55,7 @@ public class SampleTypeDAO extends AbstractDAOCommonInfoType<SampleType>{
 		commonInfoTypeDAO.update(sampleType);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void remove(SampleType sampleType) throws DAOException {
 		//remove from abstractExperiment experiment_type_sample_type
@@ -79,4 +75,5 @@ public class SampleTypeDAO extends AbstractDAOCommonInfoType<SampleType>{
 		SampleTypeMappingQuery sampleTypeMappingQuery = new SampleTypeMappingQuery(dataSource, sql,new SqlParameter("id", Type.LONG));
 		return sampleTypeMappingQuery.execute(id);
 	}
+	
 }

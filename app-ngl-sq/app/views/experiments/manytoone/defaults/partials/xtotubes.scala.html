@@ -1,6 +1,8 @@
+@this(ctx : fr.cea.ig.play.migration.NGLContext, inputtubes_ : inputtubes, outputtubes_ : outputtubes, inputplates_ : inputplates)
+
 @()
 
-<div class="col-md-12 col-lg-12" ng-switch="atmService.inputContainerSupportCategoryCode">
+<div class="col-md-12 col-lg-12" ng-switch="supportCategoryCode">
 <div ng-switch-when="tube">
 	<ul class="nav nav-tabs margin-bottom-5" role="tablist">
 	  <li class="active"><a href="" role="tab" data-target="#tube" data-toggle="tab">@Messages("experiments.tube.design")</a></li>
@@ -14,7 +16,7 @@
 			<div class="row">
 			<div class="col-md-10 col-lg-10" ng-if="mainService.isEditMode() && isNewState()">
 			<!-- InputContainers table -->
-				@inputtubes()
+				@inputtubes_()
 			</div>
 			<div class="col-md-2 col-lg-2" ng-if="mainService.isEditMode() && isNewState()">
 			<!-- Drop buttons -->
@@ -31,7 +33,7 @@
 			<!-- OutputContainers table -->
 			<div class="row">
 				<div class="col-md-10 col-lg-10 flowcellTable">
-				@outputtubes()
+				@outputtubes_()
 				</div>
 			</div>		
 		</div>
@@ -56,7 +58,7 @@
 	<div class="tab-pane active" id="plate">
 		<div class="row"  ng-if="mainService.isEditMode() && isNewState()">
 		<div class="col-md-10 col-lg-10">
-			@inputplates()
+			@inputplates_()
 		</div>
 		<div class="col-md-2 col-lg-2">
 		
@@ -76,7 +78,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-10 col-lg-10 flowcellTable">
-			@outputtubes()
+			@outputtubes_()
 			</div>
 		</div>
 	</div>

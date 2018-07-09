@@ -18,24 +18,25 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 				
 				if(measuredSize){
 					inputContainerUsed.newSize = measuredSize;
-					
+					var firstContent = inputContainerUsed.contents[0]; 
 					
 					if(experiment.typeCode === "chip-migration" && 
 							(inputContainerUsed.fromTransformationTypeCodes.indexOf("pcr-amplification-and-purification") > -1
+									|| inputContainerUsed.fromTransformationTypeCodes.indexOf("indexing-and-pcr-amplification") > -1
 									|| inputContainerUsed.fromTransformationTypeCodes.indexOf("sizing")  > -1 
-									|| inputContainerUsed.fromTransformationTypeCodes.indexOf("spri-select")  > -1)){
+									|| inputContainerUsed.fromTransformationTypeCodes.indexOf("spri-select")  > -1
+									|| (inputContainerUsed.fromTransformationTypeCodes.indexOf("dna-illumina-indexed-library")  > -1 && firstContent.properties.libProcessTypeCode.value === 'DE'))){
 						var experimentProperties = $parse("experimentProperties")(inputContainerUsed);
 						
 						experimentProperties.insertSize = {value:inputContainerUsed.newSize.value, unit:inputContainerUsed.newSize.unit};
 						experimentProperties.insertSize.value = inputContainerUsed.newSize.value - 121;
-						experimentProperties.libLayoutNominalLength = experimentProperties.insertSize;
-						
-						var firstContent = inputContainerUsed.contents[0]; 
 						
 						if(firstContent.properties.libProcessTypeCode.value === 'N'
 								|| firstContent.properties.libProcessTypeCode.value === 'A'
 									|| firstContent.properties.libProcessTypeCode.value === 'C'){
 							experimentProperties.libLayoutNominalLength = {value:-1, unit:"pb"};						
+						}else{
+							experimentProperties.libLayoutNominalLength = experimentProperties.insertSize;
 						}
 						
 					}
@@ -48,13 +49,22 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 				
 				
 				if(experiment.typeCode === "chip-migration-rna-evaluation"){
-					var concentration1 = $parse("experimentProperties.concentration1")(inputContainerUsed);
-					if(concentration1){
-						inputContainerUsed.newConcentration = concentration1;
+					if($scope.experiment.experimentProperties.copyConcentration.value === true){
+						console.log("copy concentration and quantity");
+						var concentration1 = $parse("experimentProperties.concentration1")(inputContainerUsed);
+						if(concentration1){
+							inputContainerUsed.newConcentration = concentration1;
+						}
+						inputContainerUsed.newQuantity = $scope.computeQuantity(
+								(concentration1)?inputContainerUsed.newConcentration:inputContainerUsed.concentration, 
+								(volume1)?inputContainerUsed.newVolume:inputContainerUsed.volume);
+					}else{
+						console.log("not copy concentration and quantity");
+						inputContainerUsed.newConcentration = null;
+						inputContainerUsed.newQuantity = $scope.computeQuantity(
+										inputContainerUsed.concentration, 
+										(volume1)?inputContainerUsed.newVolume:inputContainerUsed.volume); 
 					}
-					inputContainerUsed.newQuantity = $scope.computeQuantity(
-							(concentration1)?inputContainerUsed.newConcentration:inputContainerUsed.concentration, 
-							(volume1)?inputContainerUsed.newVolume:inputContainerUsed.volume);
 				}else{
 					var quantity1 = $parse("experimentProperties.quantity1")(inputContainerUsed);
 					if(quantity1){
@@ -326,34 +336,12 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 	};
 	
 	
-	var generateSampleSheet = function(){
-		$scope.messages.clear();
-		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
-		.success(function(data, status, headers, config) {
-			var header = headers("Content-disposition");
-			var filepath = header.split("filename=")[1];
-			
-			var filename = filepath.split(/\/|\\/);
-			filename = filename[filename.length-1];
-			if(data!=null){
-				$scope.messages.setSuccess(Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath);
-				var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
-				saveAs(blob, filename);
-			}
-		})
-		.error(function(data, status, headers, config) {
-			$scope.messages.setError(Messages('experiments.msg.generateSampleSheet.error'));
-			$scope.messages.setDetails(data);
-			$scope.messages.showDetails = true;							
-		});
-	};
-	
 	if("labchip-gx" === $scope.experiment.instrument.typeCode){
 		
 		$scope.setAdditionnalButtons([{
 			isDisabled : function(){return $scope.isNewState();} ,
 			isShow:function(){return !$scope.isNewState();},
-			click:generateSampleSheet,
+			click:$scope.fileUtils.generateSampleSheet,
 			label:Messages("experiments.sampleSheet")
 		}]);
 	}

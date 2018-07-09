@@ -6,73 +6,188 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+//import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+//import com.fasterxml.jackson.annotation.JsonValue;
+
+import controllers.ICommentable;
+import fr.cea.ig.DBObject;
 import models.laboratory.common.instance.Comment;
+import models.laboratory.common.instance.ITracingAccess;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
-import models.laboratory.sample.instance.tree.SampleLife;
-import models.utils.InstanceConstants;
 import models.laboratory.sample.instance.reporting.SampleProcess;
 import models.laboratory.sample.instance.reporting.SampleProcessesStatistics;
+import models.laboratory.sample.instance.tree.SampleLife;
+import models.utils.InstanceConstants;
 
-import org.mongojack.MongoCollection;
+// import org.mongojack.MongoCollection;
 
 import validation.ContextValidation;
+import validation.ICRUDValidation;
 import validation.IValidation;
 import validation.sample.instance.SampleValidationHelper;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+//Link to this : {@link models.laboratory.sample.instance.Sample}
 
-import fr.cea.ig.DBObject;
+// TODO: cleanup, comment
+// TODO: create a base class DBOject,ITracingAccess,ICommentable,IValidation
 
 /**
+ * Sample information as required by the laboratory (the L in LIMS).
  * 
- * Instances Sample are stored in MongoDB collection named Sample
- *  
- * Sample is referenced in Content
- *  
+ * Sample collection name is defined as {@link models.utils.InstanceConstants#SAMPLE_COLL_NAME}.
+ * 
  * @author mhaquell
- *
+ * @author vrd
+ * 
  */
-@MongoCollection(name="Sample")
-public class Sample extends DBObject implements IValidation{
+// @MongoCollection(name="Sample")
+@SuppressWarnings("unused") // IValidation duplicates ICRUDValiation
+public class Sample extends DBObject implements IValidation, ICommentable, ITracingAccess, ICRUDValidation<Sample> {
 
+	// @JsonIgnore
+	// TODO: explain
+	public final static String HEADER = 
+			"Sample.code;Sample.projectCodes;Sample.name;Sample.referenceCollab;Sample.taxonCode;Sample.comments";
 
-	@JsonIgnore
-	public final static String HEADER="Sample.code;Sample.projectCodes;Sample.name;Sample.referenceCollab;Sample.taxonCode;Sample.comments";
-
-	// SampleType Ref
+	// ngl-data/services.description.sample.SampleServiceCNS
+	
+	/*
+	 * Type code, defined in ngl-data project {@link services.description.sample.SampleServiceCNS}.
+	 * More probably from : {@link models.laboratory.sample.description.dao.SampleTypeDAO}.
+	 * In the end : {@link models.laboratory.sample.description.SampleType}.
+	 * To be understood as something like: CodeReference<SampleType> type;
+	 * Possibly use some @JsonValue that would allow type annotation.
+	 */
 	public String typeCode;
-
-	public String importTypeCode;
-	//Sample Category Ref
+	
+	/*
+	 * Sample type category code, implied by the type definition and defined 
+	 * in ngl-data project {@link services.description.sample.SampleServiceCNS}.
+	 * More probably from: {@link models.laboratory.sample.description.dao.SampleCategoryDAO}.
+	 * In the end: {@link models.laboratory.sample.description.SampleCategory}.
+	 * Would be {@code type.category}.
+	 */
 	public String categoryCode;
+	
+	/*
+	 * Import source type (import file type or so).
+	 * {@link models.laboratory.sample.description.ImportType} linked to some 
+	 * {@link models.laboratory.sample.description.ImportCategory}.
+	 */
+	public String importTypeCode;
 
+	/**
+	 * Set of projects code this sample is used in.
+	 */
 	public Set<String> projectCodes;
 
-	// ?? Wath is difference with code / referenceCollbab => code s'est interne au genoscope
+	/**
+	 * Name = localized code (default:null)
+	 */
 	public String name;
-	public String referenceCollab; 
+	
+	// ?? Wath is difference with code / referenceCollbab => code s'est interne au genoscope
+	/**
+	 * Name of the sample in the collab referential
+	 */
+	public String referenceCollab;
+	
+	// TODO: use Map<String,PropertyValue<?>>
+	/**
+	 * Mandatory : meta : false (meta:metagenomic,metatrucs)
+	 */
 	public Map<String,PropertyValue> properties;
-	// Valid taxon
+	
+	/**
+	 * Unused (not yet ?).
+	 */
 	public Valuation valuation;
 	//public List<CollaboratorInvolve> collaborators;
+	
+	// Expanded taxonomy information retrieved from the NCBI.
+	// See https://www.ncbi.nlm.nih.gov/taxonomy.
+	
+	// TODO: describe if/how the taxonCode can be changed for a sample.
+	/**
+	 * Taxonomy code (@see <a href="https://www.ncbi.nlm.nih.gov/taxonomy">taxonomy</a>).
+	 */
 	public String taxonCode;
+	
+	/**
+	 * Scientific name (@see <a href="https://www.ncbi.nlm.nih.gov/taxonomy">taxonomy</a>).
+	 * Auto filled (at least on prod).
+	 */
 	public String ncbiScientificName;
+	
+	/**
+	 * Lineage (@see <a href="https://www.ncbi.nlm.nih.gov/taxonomy">taxonomy</a>).
+	 * Auto filled (at least on prod).
+	 */
 	public String ncbiLineage;
-	public List<Comment> comments = new ArrayList<Comment>(0);
+	
+	/**
+	 * Comments.
+	 */
+	public List<Comment> comments;
+	
+	/**
+	 * System maintained access information.
+	 */
 	public TraceInformation traceInformation;
 
+	/*
+	 * Sample parent if any.
+	 * 
+	 * life: {
+from: {
+projectCode: "BUP",
+sampleCode: "BUP_AAAA",
+sampleTypeCode: "DNA",
+experimentCode: "TAG-PCR-20160819_130125AHH",
+experimentTypeCode: "tag-pcr",
+containerCode: "18ID3I6DL",
+supportCode: "18ID3I6DL",
+fromTransformationTypeCodes: null,
+fromTransformationCodes: null,
+processTypeCodes: [
+"tag-pcr-and-dna-library"
+],
+processCodes: [
+"BUP_AAAA_TAG-PCR-AND-DNA-LIBRARY_18IF26TQZ"
+],
+},
+path: ",CO-0000140,BUP_AAAA",
+},
+	 */
 	public SampleLife life;
 	
+	/**
+	 * List of projections of process that use this sample.
+	 * Populated when experiments/processes are done.
+	 */
 	public List<SampleProcess> processes;
+	
+	/**
+	 * Summary (count read sets and other stuff).
+	 */
 	public SampleProcessesStatistics processesStatistics;
+	
+	/**
+	 * Time of the last automated update.
+	 */
 	public Date processesUpdatedDate;
 	
-	public Sample(){
-		this.traceInformation=new TraceInformation();
+	/**
+	 * Constructs a new Sample.
+	 */
+	public Sample() {
+		// TODO: remove trace information initialization as it is not needed
+		traceInformation = new TraceInformation();
+		comments         = new ArrayList<>(0);
 	}
-
 
 	@JsonIgnore
 	@Override
@@ -82,14 +197,42 @@ public class Sample extends DBObject implements IValidation{
 		SampleValidationHelper.validateCode(this, InstanceConstants.SAMPLE_COLL_NAME, contextValidation);
 
 		SampleValidationHelper.validateSampleCategoryCode(categoryCode,contextValidation);
-		SampleValidationHelper.validateProjectCodes(this.projectCodes, contextValidation);
+		SampleValidationHelper.validateProjectCodes(projectCodes, contextValidation);
 
 		SampleValidationHelper.validateSampleType(typeCode,importTypeCode,properties,contextValidation);
 		SampleValidationHelper.validateTraceInformation(traceInformation, contextValidation);
-		//TODO validation taxon
+		SampleValidationHelper.validateRules(this, contextValidation);
+		// TODO: validation taxon
 		
 	}
 
+	// Interfaces implementations
+	
+	// We cannot @JsonIgnore setters or getters otherwise the corresponding
+	// field serialization is disabled.
+	
+	// IAccessTracking
+	
+	//@JsonIgnore
+	@Override
+	public TraceInformation getTraceInformation() {
+		if (traceInformation == null)
+			traceInformation = new TraceInformation();
+		return traceInformation;
+	}
 
+	// ICommentable
+	
+	//@JsonIgnore
+	@Override
+	public List<Comment> getComments() {
+		return comments;
+	}
 
+	//@JsonIgnore
+	@Override
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+	
 }

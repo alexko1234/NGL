@@ -4,12 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import controllers.ListForm;
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.utils.ValidationHelper;
-import controllers.ListForm;
-
-
 
 public class NGLObjectsSearchForm extends ListForm implements IValidation{
 	
@@ -21,7 +19,7 @@ public class NGLObjectsSearchForm extends ListForm implements IValidation{
 	public String projectCode;
 	public String sampleCode;
 	
-    public Map<String, List<String>> contentProperties = new HashMap<String, List<String>>();
+    public Map<String, List<String>> contentProperties = new HashMap<>();
     public String contentPropertyNameUpdated;
 	
     @Override

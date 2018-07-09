@@ -30,7 +30,7 @@ public class RunIllumina extends AbstractDeclaration {
 
 	@Override
 	protected List<ExperimentType> getExperimentTypeCommon() {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		List<ExperimentType> l = new ArrayList<>();
 
 		l.add(newExperimentType("Ext to Run Illumina","ext-to-illumina-run",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
@@ -45,19 +45,17 @@ public class RunIllumina extends AbstractDeclaration {
 
 		l.add(newExperimentType("Preparation flowcell", "prepa-flowcell",null,1200, 
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcellCNS(),
-				getInstrumentUsedTypes("cBot-interne","cBot"), "ManyToOne", 
+				getInstrumentUsedTypes("cBot","cBot-interne"), "ManyToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		l.add(newExperimentType("Prep. flowcell ordonnée", "prepa-fc-ordered",null,1300, 
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcellOrdered(),
-				getInstrumentUsedTypes("cBot"), "ManyToOne", 
+				getInstrumentUsedTypes("cBot","cbot-onboard-novaseq","novaseq-xp-fc-dock"), "ManyToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
-
 
 		l.add(newExperimentType("Depot Illumina", "illumina-depot",null, 1400,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(),
-				getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","HISEQ4000"), "OneToVoid", 
+				getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","HISEQ4000","NOVASEQ6000"), "OneToVoid", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		l.add(newExperimentType("Ext to Norm, FC, Depot","ext-to-norm-fc-depot-illumina",null,-1,
@@ -70,8 +68,7 @@ public class RunIllumina extends AbstractDeclaration {
 	
 	@Override
 	protected List<ExperimentType> getExperimentTypeDEV() {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
-		
+		List<ExperimentType> l = new ArrayList<>();
 		return l;
 	}
 
@@ -88,7 +85,7 @@ public class RunIllumina extends AbstractDeclaration {
 
 	@Override
 	protected List<ProcessType> getProcessTypeCommon() {
-		List<ProcessType> l=new ArrayList<ProcessType>();
+		List<ProcessType> l=new ArrayList<>();
 
 		l.add(DescriptionFactory.newProcessType("Run Illumina", "illumina-run", 
 				ProcessCategory.find.findByCode("sequencing"),62 , 
@@ -101,10 +98,12 @@ public class RunIllumina extends AbstractDeclaration {
 						getExperimentTypes("prepa-flowcell").get(0),getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-illumina-run").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
+		
 		l.add(DescriptionFactory.newProcessType("STK, FC, dépôt Illumina", "norm-fc-depot-illumina", 
 				ProcessCategory.find.findByCode("sequencing"), 63,
 				getIlluminaDepotProperties(), 
 				Arrays.asList(getPET("ext-to-norm-fc-depot-illumina",-1),
+						getPET("dna-illumina-indexed-library",-1),
 						getPET("sizing",-1),
 						getPET("spri-select",-1),
 						getPET("pcr-amplification-and-purification",-1),
@@ -116,14 +115,13 @@ public class RunIllumina extends AbstractDeclaration {
 						getExperimentTypes("solution-stock").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-norm-fc-depot-illumina").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));		
 		
-		
 		return l;
 	}
 	
 	@Override
 	protected List<ProcessType> getProcessTypeDEV() {
 		
-		List<ProcessType> l=new ArrayList<ProcessType>();
+		List<ProcessType> l=new ArrayList<>();
 		
 		return l;
 	}
@@ -140,7 +138,7 @@ public class RunIllumina extends AbstractDeclaration {
 	}
 
 	public static List<PropertyDefinition> getIlluminaDepotProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
 		//TO do multi value
 		propertyDefinitions.add(
@@ -172,7 +170,7 @@ public class RunIllumina extends AbstractDeclaration {
 		
 		newExperimentTypeNode("ext-to-norm-fc-depot-illumina", getExperimentTypes("ext-to-norm-fc-depot-illumina").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,
-				getExperimentTypeNodes("ext-to-norm-fc-depot-illumina", "ext-to-ampli-stk-illumina-depot", "ext-to-ampure-stk-illumina-depot","sizing","spri-select","pcr-amplification-and-purification","indexing-and-pcr-amplification","dna-illumina-indexed-library"),null,getExperimentTypes("qpcr-quantification"),getExperimentTypes("pool", "pool-tube")).save();
+				getExperimentTypeNodes("ext-to-norm-fc-depot-illumina", "ext-to-ampure-stk-illumina-depot","sizing","spri-select","pcr-amplification-and-purification","indexing-and-pcr-amplification","dna-illumina-indexed-library"),null,getExperimentTypes("qpcr-quantification"),getExperimentTypes("pool", "pool-tube")).save();
 		
 		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false, false,false,getExperimentTypeNodes("ext-to-illumina-run","solution-stock"),null,null,null).save();
 		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),false, false,false,getExperimentTypeNodes("ext-to-illumina-run","solution-stock"),null,null,null).save();
@@ -198,7 +196,7 @@ public class RunIllumina extends AbstractDeclaration {
 
 
 	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepot() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		//Utiliser par import ngl-data CNG de creation des depot-illumina
 		//propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", LevelService.getLevels(Level.CODE.Experiment), Integer.class, false, "single"));	
 		
@@ -219,7 +217,7 @@ public class RunIllumina extends AbstractDeclaration {
 
 
 	private static List<PropertyDefinition> getPropertyDefinitionSolutionStock() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Volume à engager", "requiredVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, "IP",
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",21, false,null, "1"));
@@ -237,7 +235,7 @@ public class RunIllumina extends AbstractDeclaration {
 	// GA separation getPropertyDefinitionsPrepaflowcellCNS / getPropertyDefinitionsPrepaflowcellCNG pour JIRA 676
 	//  ==> feuille de calcul differentes pour la prepaflowcell entre CNS et CNG
 	private static List<PropertyDefinition> getPropertyDefinitionsPrepaflowcellCNS() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
 		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Volume sol. stock dans dénat.", "requiredVolume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
@@ -267,7 +265,7 @@ public class RunIllumina extends AbstractDeclaration {
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",23, false));
 
 		propertyDefinitions.add(newPropertiesDefinition("Conc. sol. mère Phix", "phixConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "pM"),MeasureUnit.find.findByCode( "nM"),"single",24, true,"0.02", null));
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "pM"),MeasureUnit.find.findByCode( "nM"),"single",24, true,"20", null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Conc. dilution", "finalConcentration2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null 
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "pM"),MeasureUnit.find.findByCode( "nM"), "single",25));
@@ -289,44 +287,49 @@ public class RunIllumina extends AbstractDeclaration {
 	}
 
 	private List<PropertyDefinition> getPropertyDefinitionsPrepaflowcellOrdered() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
+		propertyDefinitions.add(newPropertiesDefinition("Choix feuille de calculs", "worksheet", LevelService.getLevels(Level.CODE.Experiment), String.class, true, null,
+				DescriptionFactory.newValues("4000","NovaSeq S2 / onboard","NovaSeq S2 / XP FC","NovaSeq S4 / onboard","NovaSeq S4 / XP FC"),null,null,null, 
+				"single",10, true, null,null));	
+		
 		//InputContainer
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,null,
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",11, false,null,"1"));
-		propertyDefinitions.add(newPropertiesDefinition("Vol. PhiX", "phixVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",12, false));
-		propertyDefinitions.add(newPropertiesDefinition("Vol. RSB", "rsbVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
+		propertyDefinitions.add(newPropertiesDefinition("Vol. PhiX", "phixVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",12, false, null,"1"));
+		propertyDefinitions.add(newPropertiesDefinition("Vol. RSB", "rsbVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,null,
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",13, false,null,"1"));
 		//Add list value
-		propertyDefinitions.add(newPropertiesDefinition("Conc. Phix", "phixConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, getPhixConcentrationCodeValues(), null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "nM"),MeasureUnit.find.findByCode( "nM"),"single",14));
-		propertyDefinitions.add(newPropertiesDefinition("Concentration dilution", "finalConcentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "nM"),MeasureUnit.find.findByCode( "nM"),"single",15,true));
+		propertyDefinitions.add(newPropertiesDefinition("Conc. Phix", "phixConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, getPhixConcentrationCodeValues()
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "nM"),MeasureUnit.find.findByCode( "nM"),"single",14, true,null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Concentration dilution", "finalConcentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "nM"),MeasureUnit.find.findByCode( "nM"),"single",15, true,null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Volume dilution", "finalVolume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",16));
-		propertyDefinitions.add(newPropertiesDefinition("Vol. dil. ds dénat", "inputVolume2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5"
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",21));
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",16, true,null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Vol. dil. ds dénat", "inputVolume2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",21, true, null,null));
 
-		propertyDefinitions.add(newPropertiesDefinition("Vol. NaOH", "NaOHVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5"
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",22));
+		propertyDefinitions.add(newPropertiesDefinition("Vol. NaOH", "NaOHVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",22, true, null,null));
 
-		propertyDefinitions.add(newPropertiesDefinition("Conc. NaOH", "NaOHConcentration", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true,null, null, null, null, "single",23,true,"0.1N", null));
-		propertyDefinitions.add(newPropertiesDefinition("Vol. TrisHCL", "trisHCLVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5"
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",24));
-		propertyDefinitions.add(newPropertiesDefinition("Conc. TrisHCL", "trisHCLConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "200000000" 
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "mM"),MeasureUnit.find.findByCode( "nM"), "single",25));
-		propertyDefinitions.add(newPropertiesDefinition("Vol. master EPX", "masterEPXVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "35"
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",26));
-		propertyDefinitions.add(newPropertiesDefinition("Concentration finale", "finalConcentration2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true,  null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "pM"),MeasureUnit.find.findByCode( "nM"),"single",27,false));
-
+		propertyDefinitions.add(newPropertiesDefinition("Conc. NaOH", "NaOHConcentration", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null,null
+				, null, null, null, "single",23,true,"0.1N", null));
+		propertyDefinitions.add(newPropertiesDefinition("Vol. TrisHCL", "trisHCLVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",24, true,null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Conc. TrisHCL", "trisHCLConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null 
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "mM"),MeasureUnit.find.findByCode( "nM"), "single",25, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Vol. master EPX", "masterEPXVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",26, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Concentration finale", "finalConcentration2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "pM"),MeasureUnit.find.findByCode( "nM"),"single",27,false, null, null));
 
 		//OuputContainer
 		//keep order declaration between phixPercent and finalVolume
-		propertyDefinitions.add(newPropertiesDefinition("% phiX", "phixPercent", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null, null, null, null, "single",51,false,"1", null));		
-		propertyDefinitions.add(newPropertiesDefinition("Volume final", "finalVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",28,false));
+		propertyDefinitions.add(newPropertiesDefinition("% phiX", "phixPercent", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null, null
+				,null, null, null, "single",51,false,"1", null));		
+		propertyDefinitions.add(newPropertiesDefinition("Volume final", "finalVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",28,false, null, null));
 
 		return propertyDefinitions;
 
@@ -335,18 +338,19 @@ public class RunIllumina extends AbstractDeclaration {
 	
 
 	private static List<Value> getSequencingType(){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("Hiseq 2000/2500N", "Hiseq 2000 / 2500 N"));
 		values.add(DescriptionFactory.newValue("Hiseq 2500 Rapide", "Hiseq 2500 Rapide"));
 		values.add(DescriptionFactory.newValue("Miseq", "Miseq"));
 		values.add(DescriptionFactory.newValue("Hiseq 4000", "Hiseq 4000"));
+		values.add(DescriptionFactory.newValue("NovaSeq 6000", "NovaSeq 6000"));
 		values.add(DescriptionFactory.newValue("undefined","Non déterminé"));
 		return values;	
 	}
 
 
 	private static List<Value> getReadType(){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("SR", "SR"));
 		values.add(DescriptionFactory.newValue("PE", "PE"));
 		values.add(DescriptionFactory.newValue("undefined","Non déterminé"));
@@ -354,20 +358,20 @@ public class RunIllumina extends AbstractDeclaration {
 	}
 
 	private static List<Value> getReadLenght(){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("50","50"));
 		values.add(DescriptionFactory.newValue("100","100"));
 		values.add(DescriptionFactory.newValue("150","150"));
 		values.add(DescriptionFactory.newValue("250","250"));
 		values.add(DescriptionFactory.newValue("300","300"));
-		values.add(DescriptionFactory.newValue("500","500"));
-		values.add(DescriptionFactory.newValue("600","600"));
+		//values.add(DescriptionFactory.newValue("500","500"));
+		//values.add(DescriptionFactory.newValue("600","600"));
 		values.add(DescriptionFactory.newValue("undefined","Non déterminé"));
 		return values;
 	}
 
 	private static List<Value> getPhixConcentrationCodeValues(){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("0.1","100"));
 		values.add(DescriptionFactory.newValue("0.2","200"));
 		values.add(DescriptionFactory.newValue("0.3","300"));

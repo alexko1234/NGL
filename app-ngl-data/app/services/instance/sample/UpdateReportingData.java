@@ -14,6 +14,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
@@ -24,79 +26,79 @@ import controllers.migration.OneToVoidContainer;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
-
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.common.instance.Valuation;
-import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OutputContainerUsed;
+import models.laboratory.processes.instance.Process;
+import models.laboratory.run.instance.ReadSet;
 import models.laboratory.sample.instance.Sample;
 import models.laboratory.sample.instance.reporting.SampleExperiment;
 import models.laboratory.sample.instance.reporting.SampleProcess;
 import models.laboratory.sample.instance.reporting.SampleProcessesStatistics;
 import models.laboratory.sample.instance.reporting.SampleReadSet;
-import models.laboratory.processes.description.ProcessType;
-import models.laboratory.processes.instance.Process;
-import models.laboratory.run.instance.ReadSet;
-import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
-import play.Logger;
-import play.api.modules.spring.Spring;
+// import play.Logger;
+// import play.api.modules.spring.Spring;
 import rules.services.RulesException;
 import scala.concurrent.duration.FiniteDuration;
-
 import services.instance.AbstractImportData;
 import workflows.process.ProcWorkflowHelper;
-import static workflows.process.ProcWorkflowHelper.TAG_PROPERTY_NAME;
 
 public class UpdateReportingData extends AbstractImportData {
-	private ProcWorkflowHelper procWorkflowHelper;
 	
-	public UpdateReportingData(FiniteDuration durationFromStart,FiniteDuration durationFromNextIteration) {
-			super("UpdateReportingData", durationFromStart, durationFromNextIteration);
-			procWorkflowHelper = Spring.getBeanOfType(ProcWorkflowHelper.class);
+//	private static final play.Logger.ALogger logger = play.Logger.of(UpdateReportingData.class);
+	
+	private Map<String, List<String>> transformationCodesByProcessTypeCode = new HashMap<>();
+	private Map<String, Integer> nbExpPositionInProcessType = new HashMap<>(); 
+
+	private final ProcWorkflowHelper procWorkflowHelper;
+	
+	@Inject
+	public UpdateReportingData(FiniteDuration durationFromStart, FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super("UpdateReportingData", durationFromStart, durationFromNextIteration, ctx);
+		procWorkflowHelper = ctx.injector().instanceOf(ProcWorkflowHelper.class); // Spring.get BeanOfType(ProcWorkflowHelper.class);
 	}
 
 	@Override
 	public void runImport() throws SQLException, DAOException, MongoException, RulesException {
-		Logger.debug("Start reporting synchro");
+		logger.debug("Start reporting synchro");
 		Integer skip = 0;
 		Date date = new Date();
-			MongoDBResult<Sample> result = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class);
-			Integer nbResult = result.count(); 
-			while(skip < nbResult){
-				try{
-					
-					long t1 = System.currentTimeMillis();
-					MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class)
-						.sort("traceInformation.creationDate", Sort.DESC).skip(skip).limit(5000)
-						.cursor.forEach(sample -> {
-							try{
-								updateProcesses(sample);
-								Logger.debug("update sample "+sample.code);
-								if(sample.processes != null && sample.processes.size() > 0){
-									MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), 
-											DBUpdate.set("processes", sample.processes).set("processesStatistics", sample.processesStatistics).set("processesUpdatedDate", date));
-								}else{
-									MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), 
-											DBUpdate.unset("processes").unset("processesStatistics").set("processesUpdatedDate", date));
-								}
-							}catch(Throwable e){
-								logger.error("Sample : "+sample.code+" - "+e,e);
-								if(null != e.getMessage())
-									contextError.addErrors(sample.code, e.getMessage());
-								else
-									contextError.addErrors(sample.code, "null");
-							}
-						});
-					skip = skip+5000;
+		MongoDBResult<Sample> result = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class);
+		Integer nbResult = result.count(); 
+		while(skip < nbResult) {
+			try {
+				long t1 = System.currentTimeMillis();
+					List<Sample> cursor = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class)
+						.sort("traceInformation.creationDate", Sort.DESC).skip(skip).limit(1000)
+						.toList();
+
+					cursor.forEach(sample -> {
+					try{
+						updateProcesses(sample);
+						logger.debug("update sample "+sample.code);
+						if(sample.processes != null && sample.processes.size() > 0){
+							MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), 
+									DBUpdate.set("processes", sample.processes).set("processesStatistics", sample.processesStatistics).set("processesUpdatedDate", date));
+						}else{
+							MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), 
+									DBUpdate.unset("processes").unset("processesStatistics").set("processesUpdatedDate", date));
+						}
+					}catch(Throwable e){
+						logger.error("Sample : "+sample.code+" - "+e,e);
+						if(null != e.getMessage())
+							contextError.addErrors(sample.code, e.getMessage());
+						else
+							contextError.addErrors(sample.code, "null");
+					}
+				});
+					skip = skip+1000;
 					long t2 = System.currentTimeMillis();
-					Logger.debug("time "+skip+" - "+((t2-t1)/1000));
+					logger.debug("time "+skip+" - "+((t2-t1)/1000));
 				}catch(Throwable e){
 					logger.error("Error : "+e,e);
 					if(null != e.getMessage())
@@ -104,9 +106,7 @@ public class UpdateReportingData extends AbstractImportData {
 					else
 						contextError.addErrors("Error", "null");
 				}
-			}
-		
-		
+		}
 	}
 
 	private void updateProcesses(Sample sample) {
@@ -124,8 +124,6 @@ public class UpdateReportingData extends AbstractImportData {
 		
 		computeStatistics(sample);
 	}
-
-	
 
 	private void computeStatistics(Sample sample) {
 		if(null != sample.processes){
@@ -148,8 +146,8 @@ public class UpdateReportingData extends AbstractImportData {
 		sampleProcess.traceInformation= process.traceInformation;
 		sampleProcess.sampleOnInputContainer = process.sampleOnInputContainer;
 		
-		if(process.properties != null && process.properties.size() > 0){
-			sampleProcess.properties= process.properties;			
+		if (process.properties != null && process.properties.size() > 0) {
+			sampleProcess.properties = process.properties;			
 		}
 		sampleProcess.currentExperimentTypeCode = process.currentExperimentTypeCode;
 		if(process.experimentCodes != null && process.experimentCodes.size() > 0){
@@ -182,8 +180,6 @@ public class UpdateReportingData extends AbstractImportData {
 		
 		return sampleProcess;
 	}
-	private Map<String, List<String>> transformationCodesByProcessTypeCode = new HashMap<String, List<String>>();
-	private Map<String, Integer> nbExpPositionInProcessType = new HashMap<String, Integer>(); 
 			
 	private List<String> getTransformationCodesForProcessTypeCode(Process process) {
 		List<String> transformationCodes;
@@ -200,11 +196,8 @@ public class UpdateReportingData extends AbstractImportData {
 		return transformationCodes;
 	}
 
-
-	
-
 	private List<SampleExperiment> updateExperiments(Process process) {		
-		List<SampleExperiment> sampleExperiments = new ArrayList<SampleExperiment>();
+		List<SampleExperiment> sampleExperiments = new ArrayList<>();
 		MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.in("code", process.experimentCodes))
 			.cursor.forEach(experiment -> {
 				sampleExperiments.addAll(convertToSampleExperiments(process, experiment));
@@ -213,12 +206,11 @@ public class UpdateReportingData extends AbstractImportData {
 		//List<Experiment> experiments = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.in("code", process.experimentCodes)).toList();
 		//return experiments.parallelStream().map(exp -> convertToSampleExperiments(process, exp)).flatMap(List::stream).collect(Collectors.toList());		
 	}
-
 	
 	//map key = expCode-processCode
 	private List<SampleExperiment> convertToSampleExperiments(Process process, Experiment experiment) {
-		List<SampleExperiment> sampleExperiments = new ArrayList<SampleExperiment>();
-		Set<String> containerCodes = new TreeSet<String>();
+		List<SampleExperiment> sampleExperiments = new ArrayList<>();
+		Set<String> containerCodes = new TreeSet<>();
 		containerCodes.add(process.inputContainerCode);
 		
 		if(null != process.outputContainerCodes){
@@ -298,33 +290,32 @@ public class UpdateReportingData extends AbstractImportData {
 		return sampleExperiments;
 	}
 
-	private Map<String, PropertyValue> computeExperimentProperties(Experiment experiment, InputContainerUsed icu,
-			OutputContainerUsed ocu) {
-		Map<String, PropertyValue> finalProperties = new HashMap<String, PropertyValue>();
-		if(null != experiment.experimentProperties)finalProperties.putAll(filterProperties(experiment.experimentProperties));
-		if(null != experiment.instrumentProperties)finalProperties.putAll(filterProperties(experiment.instrumentProperties));
-		if(null != icu.experimentProperties)finalProperties.putAll(filterProperties(icu.experimentProperties));
-		if(null != icu.instrumentProperties)finalProperties.putAll(filterProperties(icu.instrumentProperties));
-		if(null != ocu){
-			if(null != ocu.experimentProperties)finalProperties.putAll(filterProperties(ocu.experimentProperties));
-			if(null != ocu.instrumentProperties)finalProperties.putAll(filterProperties(ocu.instrumentProperties));
+	private Map<String, PropertyValue> computeExperimentProperties(Experiment experiment, 
+			                                                          InputContainerUsed icu,
+			                                                          OutputContainerUsed ocu) {
+		Map<String, PropertyValue> finalProperties = new HashMap<>(); // <String, PropertyValue>();
+		if (null != experiment.experimentProperties) finalProperties.putAll(filterProperties(experiment.experimentProperties));
+		if (null != experiment.instrumentProperties) finalProperties.putAll(filterProperties(experiment.instrumentProperties));
+		if (null != icu.experimentProperties)        finalProperties.putAll(filterProperties(icu.experimentProperties));
+		if (null != icu.instrumentProperties)        finalProperties.putAll(filterProperties(icu.instrumentProperties));
+		if (null != ocu){
+			if(null != ocu.experimentProperties) finalProperties.putAll(filterProperties(ocu.experimentProperties));
+			if(null != ocu.instrumentProperties) finalProperties.putAll(filterProperties(ocu.instrumentProperties));
 		}
 		
 		return finalProperties;
 	}
 
-	private Map<String, PropertyValue> filterProperties(
-			Map<String, PropertyValue> properties) {
+	private Map<String, PropertyValue> filterProperties(Map<String, PropertyValue> properties) {
 		return properties.entrySet().parallelStream()
 				.filter(entry -> entry.getValue() != null && !entry.getValue()._type.equals(PropertyValue.imgType)
 						&& !entry.getValue()._type.equals(PropertyValue.fileType))
 				.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
 	}
 	
-
 	private List<SampleReadSet> getSampleReadSets(Sample sample, Process process) {
-		List<SampleReadSet> sampleReadSets = new ArrayList<SampleReadSet>();
-		String tag = procWorkflowHelper.getTagAssignFromProcessContainers(process);
+		List<SampleReadSet> sampleReadSets = new ArrayList<>();
+		Set<String> tags = procWorkflowHelper.getTagAssignFromProcessContainers(process);
 		
 		BasicDBObject keys = new BasicDBObject();
 		keys.put("treatments", 0);
@@ -334,9 +325,9 @@ public class UpdateReportingData extends AbstractImportData {
 				keys)
 		.cursor
 		.forEach(readset -> {
-			if(!readset.sampleOnContainer.properties.containsKey(TAG_PROPERTY_NAME)
-					|| (null != tag && readset.sampleOnContainer.properties.containsKey(TAG_PROPERTY_NAME) 
-					&&  tag.equals(readset.sampleOnContainer.properties.get(TAG_PROPERTY_NAME).value))){
+			if(!readset.sampleOnContainer.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)
+					|| (null != tags && readset.sampleOnContainer.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME) 
+					&&  tags.contains(readset.sampleOnContainer.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value))){
 				sampleReadSets.add(convertToSampleReadSet(readset));				
 			}
 		});
@@ -370,16 +361,16 @@ public class UpdateReportingData extends AbstractImportData {
 		return sampleReadSet;
 	}
 
-	private Map<String, Treatment> filterTreaments(Map<String, Treatment> treatments) {
-		treatments.values()
-			.parallelStream()
-			.forEach(treament ->{
-				treament.results.entrySet().forEach(entry -> {
-					entry.setValue(filterProperties(entry.getValue()));
-				});
-			});
-		return treatments;
-	}
+//	private Map<String, Treatment> filterTreaments(Map<String, Treatment> treatments) {
+//		treatments.values()
+//			.parallelStream()
+//			.forEach(treament ->{
+//				treament.results.entrySet().forEach(entry -> {
+//					entry.setValue(filterProperties(entry.getValue()));
+//				});
+//			});
+//		return treatments;
+//	}
 	
 	/**
 	 * Extract ReadSet before the beginning of ngl-sq used.
@@ -391,7 +382,7 @@ public class UpdateReportingData extends AbstractImportData {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 			Date date = sdf.parse("2015/03/30");
 		
-			List<SampleReadSet> sampleReadSets = new ArrayList<SampleReadSet>();
+			List<SampleReadSet> sampleReadSets = new ArrayList<>();
 			
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("treatments", 0);
@@ -412,9 +403,9 @@ public class UpdateReportingData extends AbstractImportData {
 			
 			return sampleProcess;
 		} catch (ParseException e) {
-			Logger.error(e.getMessage(),e);
+			logger.error(e.getMessage(),e);
 			return null;
 		}
-		
 	}
+	
 }

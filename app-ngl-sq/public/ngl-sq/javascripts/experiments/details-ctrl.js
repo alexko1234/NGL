@@ -296,7 +296,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 					}
 				});		
 			};
-			saveOnRemote(endSaveSuccessCallbackFunction);
+			saveOnRemote({endSaveSuccessCallbackFunction:endSaveSuccessCallbackFunction});
 		}		
 		
 	};
@@ -310,7 +310,33 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				endSaveSuccessCallbackFunction : endSaveSuccessCallbackFunction
 		};
 		
+		if($scope.experiment.state.code === 'F' && !Permissions.check("admin")){
+			callbackFunctions.updateURL ='?fields=status&fields=reagents&fields=state';
+		}
+		
 		$scope.$broadcast('saveReagents', callbackFunctions);		
+	};
+	$scope.askSaveAdmin = function(){
+		
+		angular.element('#saveAdminModal').modal('show');
+		
+	};
+	$scope.saveAdmin = function(){
+		if(Permissions.check("admin")){
+			$scope.messages.clear();
+			saveInProgress = true;
+			
+			var callbackFunctions = {
+					
+			};
+			
+			if($scope.experiment.state.code === 'F'){
+				callbackFunctions.updateURL ='?fields=all&&fields=updateContentProperties';
+			}			
+			
+			$scope.$broadcast('saveReagents', callbackFunctions);
+			angular.element('#saveAdminModal').modal('hide');
+		}			
 	};
 	
 	$scope.startExperiment = function(){
@@ -401,14 +427,14 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		}else if(callbackFunctions.endSaveChildCallbackFunction){
 				callbackFunctions.endSaveChildCallbackFunction();
 		}else{
-			saveOnRemote(callbackFunctions.endSaveSuccessCallbackFunction);
+			saveOnRemote(callbackFunctions);
 		} 
 		
 	});
 	
-	var saveOnRemote = function(callbackFunction){
+	var saveOnRemote = function(callbackFunctions){
 		if(creationMode){
-			$http.post(jsRoutes.controllers.experiments.api.Experiments.save().url, $scope.experiment, {callbackFunction:callbackFunction})
+			$http.post(jsRoutes.controllers.experiments.api.Experiments.save().url, $scope.experiment, {callbackFunction:callbackFunctions.endSaveSuccessCallbackFunction})
 				.success(function(data, status, headers, config) {
 					
 					creationMode = false;
@@ -433,7 +459,12 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 					}
 				});
 		}else{
-			$http.put(jsRoutes.controllers.experiments.api.Experiments.update($scope.experiment.code).url, $scope.experiment, {callbackFunction:callbackFunction})
+			var url = jsRoutes.controllers.experiments.api.Experiments.update($scope.experiment.code).url;	
+			if(callbackFunctions.updateURL !== undefined && callbackFunctions.updateURL !== null){
+				url +=callbackFunctions.updateURL;
+			}
+		
+			$http.put(url, $scope.experiment, {callbackFunction:callbackFunctions.endSaveSuccessCallbackFunction})
 			.success(function(data, status, headers, config) {
 				if(config.callbackFunction){
 					config.callbackFunction(data);
@@ -528,6 +559,39 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		}else{
 			$scope.experimentTypeTemplate =  undefined;
 		}				
+	};
+	
+	$scope.fileUtils = {
+			generateSampleSheet : function(params, msgSuccessKey, msgErrorKey){
+				
+				if(!msgSuccessKey)msgSuccessKey='experiments.msg.generateSampleSheet.success';
+				if(!msgErrorKey)msgErrorKey='experiments.msg.generateSampleSheet.error';
+				
+				$http.get(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url, {params:params})
+				.success(function(data, status, headers, config) {
+					var header = headers("Content-disposition");
+					var filepath = header.split("filename=")[1];
+					var filename = filepath.split(/\/|\\/);
+					filename = filename[filename.length-1];
+					filename = filename.replace(/\"/g,"");
+					if(data!=null){
+						$scope.messages.clazz="alert alert-success";
+						$scope.messages.text=Messages(msgSuccessKey)+" : "+filepath;
+						$scope.messages.showDetails = false;
+						$scope.messages.open();	
+						
+						var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
+						saveAs(blob, filename);
+					}
+				})
+				.error(function(data, status, headers, config) {
+					$scope.messages.clazz = "alert alert-danger";
+					$scope.messages.text = Messages(msgErrorKey);
+					$scope.messages.setDetails(data);
+					$scope.messages.showDetails = true;
+					$scope.messages.open();				
+				});
+			}
 	};
 	
 	$scope.plateUtils = {
@@ -816,6 +880,9 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.lists.refresh.states({"objectTypeCode":"Experiment"});
 		$scope.lists.refresh.kitCatalogs({"experimentTypeCodes":$scope.experiment.typeCode});
 		$scope.lists.refresh.experimentCategories();
+		
+		
+		
 	};
 	
 	var creationMode = false;
@@ -844,7 +911,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			creationMode = true;
 			$scope.startEditMode();
 			
-			if(!defaultExperiment){
+			if(!defaultExperiment || defaultExperiment.typeCode !== $routeParams.typeCode){
 				defaultExperiment = {
 					state : {
 						resolutionCodes : [],
@@ -1624,12 +1691,19 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	$scope.isProcessResolutionsMustBeSet = function(value){
 		//TODO GA rename to fromTransformationCodes
 		if(value !== undefined){
+			
+			/* Old test, comment because dont see resolutions on dispatch === 4 with QC
 			var fromTransformationTypeCode = ($scope.isOutputATMVoid())?$scope.experiment.typeCode:value.data.container.fromTransformationTypeCodes[0];
 			if(value.data.dispatch === 6 || 
 					(value.data.dispatch === 4 
 							&& fromTransformationTypeCode === processTypes[value.data.container.processTypeCodes[0]].lastExperimentType.code)){
 				return true;
-			}else{
+			}*/
+			if(value.data.dispatch === 6 || 
+					value.data.dispatch === 4){
+				return true;
+			}
+			else{
 				value.data.processResolutions = undefined;
 				return false;
 			}
@@ -2117,7 +2191,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 									supportViewDataTmp[container.support.code].container.projectCodes = supportViewDataTmp[container.support.code].container.projectCodes.concat(container.projectCodes);
 									supportViewDataTmp[container.support.code].container.sampleCodes = supportViewDataTmp[container.support.code].container.sampleCodes.concat(container.sampleCodes);
 									supportViewDataTmp[container.support.code].container.contents = supportViewDataTmp[container.support.code].container.contents.concat(container.contents);
-									supportViewDataTmp[container.support.code].container.treeOfLife.from.containers = supportViewDataTmp[container.support.code].container.treeOfLife.from.containers.concat(container.treeOfLife.from.containers);
+									//supportViewDataTmp[container.support.code].container.treeOfLife.from.containers = supportViewDataTmp[container.support.code].container.treeOfLife.from.containers.concat(container.treeOfLife.from.containers);
 									supportViewDataTmp[container.support.code].container.processCodes = supportViewDataTmp[container.support.code].container.processCodes.concat(container.processCodes);
 									supportViewDataTmp[container.support.code].container.processTypeCodes = supportViewDataTmp[container.support.code].container.processTypeCodes.concat(container.processTypeCodes);
 									supportViewDataTmp[container.support.code].container.fromTransformationTypeCodes = supportViewDataTmp[container.support.code].container.fromTransformationTypeCodes.concat(container.fromTransformationTypeCodes);

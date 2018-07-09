@@ -16,12 +16,23 @@ angular.module('home').controller('OneToVoidUvSpectrophotometryCNSCtrl',['$scope
 				if(volume1){
 					inputContainerUsed.newVolume = volume1;
 				}
-				if(concentration1){
-					inputContainerUsed.newConcentration = concentration1;
+				
+				if($scope.experiment.experimentProperties.copyConcentration.value === true){
+					console.log("copy concentration and quantity");
+				
+					if(concentration1){
+						inputContainerUsed.newConcentration = concentration1;
+					}
+					inputContainerUsed.newQuantity =  $scope.computeQuantity(
+							(concentration1)?inputContainerUsed.newConcentration:inputContainerUsed.concentration, 
+							(volume1)?inputContainerUsed.newVolume:inputContainerUsed.volume);
+				}else{
+					console.log("not copy concentration and quantity");
+					inputContainerUsed.newConcentration = null;
+					inputContainerUsed.newQuantity = $scope.computeQuantity(
+									inputContainerUsed.concentration, 
+									(volume1)?inputContainerUsed.newVolume:inputContainerUsed.volume); 
 				}
-				inputContainerUsed.newQuantity =  $scope.computeQuantity(
-						(concentration1)?inputContainerUsed.newConcentration:inputContainerUsed.concentration, 
-						(volume1)?inputContainerUsed.newVolume:inputContainerUsed.volume);
 			}			
 		});			
 	};
@@ -82,13 +93,24 @@ angular.module('home').controller('OneToVoidUvSpectrophotometryCNSCtrl',['$scope
 		"order" : false,
 		"hide" : true,
 		"type" : "text",
-		"position" : 7,
+		"position" : 7.1,
 		"extraHeaders" : {
 			0 : Messages("experiments.inputs")
 		}
 
 	});
-	
+	columns.push({
+		"header" : Messages("containers.table.volume") + " (µL)",
+		"property" : "inputContainerUsed.volume.value",
+		"order" : true,
+		"edit" : false,
+		"hide" : true,
+		"type" : "number",
+		"position" : 7.05,
+		"extraHeaders" : {
+			0 : Messages("experiments.inputs")
+		}
+	});
 	
 	$scope.atmService.data.setColumnsConfig(columns);
 

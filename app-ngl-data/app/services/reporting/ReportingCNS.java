@@ -1,36 +1,39 @@
 package services.reporting;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.mail.MessagingException;
-import java.io.UnsupportedEncodingException;
 
-import org.drools.core.base.DroolsQuery;
 import org.mongojack.DBQuery;
-import com.mongodb.MongoException;
-import fr.cea.ig.MongoDBDAO;
 
+import com.mongodb.MongoException;
 import com.typesafe.config.ConfigFactory;
 
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.migration.NGLContext;
 import mail.MailServiceException;
 import mail.MailServices;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
-import play.Logger;
 import scala.concurrent.duration.FiniteDuration;
-
-import services.reporting.txt.*;
-
+import services.reporting.txt.reportingCNS;
 
 public class ReportingCNS extends AbstractReporting {
 
+	// Accessed through static methods
+	@SuppressWarnings("hiding")
+	private static final play.Logger.ALogger logger = play.Logger.of(ReportingCNS.class);
+	
+	@Inject
 	public ReportingCNS(FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super("ReportingCNS", durationFromStart, durationFromNextIteration);
+			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super("ReportingCNS", durationFromStart, durationFromNextIteration, ctx);
 	}
 	
 	
@@ -43,17 +46,18 @@ public class ReportingCNS extends AbstractReporting {
 			String expediteur = ConfigFactory.load().getString("reporting.email.from"); 
 			String dest = ConfigFactory.load().getString("reporting.email.to");   
 			String subject = ConfigFactory.load().getString("reporting.email.subject") + " " + ConfigFactory.load().getString("institute") + " " + ConfigFactory.load().getString("ngl.env");
-		    Set<String> destinataires = new HashSet<String>();
+		    Set<String> destinataires = new HashSet<>();
 		    destinataires.addAll(Arrays.asList(dest.split(",")));
 		    
 		    MailServices mailService = new MailServices();
 		    
 		    //Get data 
 		    int nbQueries = 5;
-		    Logger.debug("Call fives query");
+		    logger.debug("Call fives query");
 		    Integer[] nbResults = new Integer[nbQueries];  
-		    ArrayList<ArrayList<String>> listResults = new ArrayList<ArrayList<String>>();
-		    ArrayList<String> results = new ArrayList<String>();
+//		    ArrayList<ArrayList<String>> listResults = new ArrayList<ArrayList<String>>();
+		    ArrayList<ArrayList<String>> listResults = new ArrayList<>();
+		    ArrayList<String> results = new ArrayList<>();
 		    String[] subHeaders2 = new String[nbQueries];
 		    for (int i=0; i<nbQueries; i++) {
 		    	nbResults[i] = getQueryResults(i+1).size();
@@ -71,7 +75,7 @@ public class ReportingCNS extends AbstractReporting {
 		    mailService.sendMail(expediteur, destinataires, subject, new String(content.getBytes(), "iso-8859-1"));
 		    
 		} catch (MailServiceException e) {
-			Logger.error("MailService error: "+e.getMessage(),e);
+			logger.error("MailService error: "+e.getMessage(),e);
 		}
 		
 	}
@@ -108,7 +112,7 @@ public class ReportingCNS extends AbstractReporting {
 						DBQuery.notExists("treatments.taxonomy"))).toList();
 				break;
 		}
-		ArrayList<String> lines = new ArrayList<String>(); 
+		ArrayList<String> lines = new ArrayList<>(); 
 		StringBuffer buffer;
 		for (ReadSet readSet : readSets) { 
 			buffer = new StringBuffer();
@@ -119,9 +123,9 @@ public class ReportingCNS extends AbstractReporting {
 			lines.add(buffer.toString());
 			
 		}
-		Logger.debug("Result ");
+		logger.debug("Result ");
 		for(String line : lines){
-			Logger.debug("Line "+line);
+			logger.debug("Line "+line);
 		}
 		return lines;
 	}

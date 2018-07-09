@@ -2,7 +2,7 @@ package rules
 
 
 rule "prepa-fc-ordered"
-	@nglSQ( calculations )
+	@nglSQ( oldCalculations )
 	dialect "java"
 	salience 1000
 	no-loop
@@ -17,7 +17,7 @@ rule "prepa-fc-ordered"
     end
 
 rule "prepa-fc-ordered volume stock engaged in denaturation"
-	@nglSQ( calculations )
+	@nglSQ( oldCalculations )
 	dialect "java"
 	salience 1000
 	no-loop
@@ -43,7 +43,7 @@ rule "prepa-fc-ordered volume stock engaged in denaturation"
 
 
 rule "prepa-fc-ordered volume PhiX"
-	@nglSQ( calculations )
+	@nglSQ( oldCalculations )
 	dialect "java"
 	salience 700
 	no-loop
@@ -71,7 +71,7 @@ rule "prepa-fc-ordered volume PhiX"
 	end     
 	
 rule "prepa-fc-ordered volume RSB"
-	@nglSQ( calculations )
+	@nglSQ( oldCalculations )
 	dialect "java"
 	salience 900
 	no-loop
@@ -94,7 +94,7 @@ rule "prepa-fc-ordered volume RSB"
    	end 
 
 rule "prepa-fc-ordered concentration final"
-	@nglSQ( calculations )
+	@nglSQ( oldCalculations )
 	dialect "java"
 	salience 800
 	lock-on-active true

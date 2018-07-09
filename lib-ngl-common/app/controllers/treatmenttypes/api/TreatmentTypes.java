@@ -1,28 +1,32 @@
  package controllers.treatmenttypes.api;
 
-import static play.data.Form.form;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import controllers.APICommonController;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.run.description.TreatmentType;
 import models.utils.dao.DAOException;
-
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
 import play.Logger;
-
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import views.components.datatable.DatatableResponse;
-import controllers.CommonController;
 
 
 
-public class TreatmentTypes extends CommonController {
-	final static Form<TreatmentTypesSearchForm> treatmentTypesForm = form(TreatmentTypesSearchForm.class);
+public class TreatmentTypes extends APICommonController<TreatmentTypesSearchForm> {
+	@Inject
+	public TreatmentTypes(NGLContext ctx) {
+		super(ctx, TreatmentTypesSearchForm.class);
+		treatmentTypesForm = ctx.form(TreatmentTypesSearchForm.class);
+	}
 
-	public static Result list() {
+	private final /*static*/ Form<TreatmentTypesSearchForm> treatmentTypesForm;
+
+	public Result list() {
 		Form<TreatmentTypesSearchForm> treatmentTypesFilledForm = filledFormQueryString(treatmentTypesForm,TreatmentTypesSearchForm.class);
 		TreatmentTypesSearchForm searchForm = treatmentTypesFilledForm.get();
 
@@ -35,7 +39,7 @@ public class TreatmentTypes extends CommonController {
 				treatments = TreatmentType.find.findAll();
 			}
 			if(searchForm.datatable){
-				return ok(Json.toJson(new DatatableResponse<TreatmentType>(treatments, treatments.size()))); 
+				return ok(Json.toJson(new DatatableResponse<>(treatments, treatments.size()))); 
 			}else{
 				return ok(Json.toJson(treatments));
 			}
@@ -46,8 +50,7 @@ public class TreatmentTypes extends CommonController {
 	}
 	
 	
-	//@Permission(value={"reading"})
-	public static Result get(String code) {
+	public Result get(String code) {
 		TreatmentType treatmentType =  getTreatmentType(code);		
 		if(treatmentType != null) {
 			return ok(Json.toJson(treatmentType));	

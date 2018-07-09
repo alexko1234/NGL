@@ -1,30 +1,53 @@
 package controllers.reagents.tpl;
 
-import controllers.CommonController;
-import play.Routes;
+import javax.inject.Inject;
+
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.authorization.Authorized;
+import fr.cea.ig.lfw.Historized;
+import fr.cea.ig.ngl.NGLApplication;
+import fr.cea.ig.ngl.NGLController;
+import fr.cea.ig.ngl.support.NGLJavascript;
 import play.mvc.Result;
 import views.html.catalogs.home;
-import views.html.catalogs.kitCatalogsCreation;
-import views.html.catalogs.kitCatalogsSearch;
 
-public class BoxCatalogs extends CommonController {
+// public class BoxCatalogs extends -CommonController {
+public class BoxCatalogs extends NGLController implements NGLJavascript { // NGLBaseController {
 
-	public Result home(String code){
+	private final home home;
+	
+	@Inject
+	public BoxCatalogs(NGLApplication app, home home) {
+		super(app);
+		this.home = home;
+	}
+	
+	@Authenticated
+	@Historized
+	@Authorized.Read
+	public Result home(String code) {
 		return ok(home.render(code));
 	}
 
-	public Result get(String code){
+	public Result get(String code) {
 		return ok(home.render(code));
 	}
 	
 	public Result javascriptRoutes() {
+		return jsRoutes(controllers.reagents.api.routes.javascript.BoxCatalogs.list());
+	}
+
+	/*
+	public Result javascriptRoutes() {
 		response().setContentType("text/javascript");
 		return ok(	  	      
-				Routes.javascriptRouter("jsRoutes",  	       
+				// Routes.javascriptRouter("jsRoutes",
+				JavaScriptReverseRouter.create("jsRoutes",
 						// Routes	
 						controllers.reagents.api.routes.javascript.BoxCatalogs.list()
 						)
 				);
 	}
-
+*/
+	
 }

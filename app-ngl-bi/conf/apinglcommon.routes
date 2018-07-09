@@ -14,7 +14,7 @@ GET		/api/values									controllers.commons.api.Values.list()
 
 
 #list
-GET		/api/resolutions  							@controllers.resolutions.api.Resolutions.list()
+GET		/api/resolutions  							controllers.resolutions.api.Resolutions.list()
 
 #instruments
 GET		/api/instruments							controllers.instruments.api.Instruments.list()
@@ -42,11 +42,11 @@ POST 	/api/reporting/configs							controllers.reporting.api.ReportingConfigurat
 PUT    	/api/reporting/configs/:code					controllers.reporting.api.ReportingConfigurations.update(code)
 DELETE	/api/reporting/configs/:code					controllers.reporting.api.ReportingConfigurations.delete(code: java.lang.String)
 
-GET    	/api/reporting/filters    	           			@controllers.reporting.api.FilteringConfigurations.list()
-GET	   	/api/reporting/filters/:code					@controllers.reporting.api.FilteringConfigurations.get(code)
-POST 	/api/reporting/filters							@controllers.reporting.api.FilteringConfigurations.save()
-PUT    	/api/reporting/filters/:code					@controllers.reporting.api.FilteringConfigurations.update(code)
-DELETE	/api/reporting/filters/:code					@controllers.reporting.api.FilteringConfigurations.delete(code: java.lang.String)
+GET    	/api/reporting/filters    	           			controllers.reporting.api.FilteringConfigurations.list()
+GET	   	/api/reporting/filters/:code					controllers.reporting.api.FilteringConfigurations.get(code)
+POST 	/api/reporting/filters							controllers.reporting.api.FilteringConfigurations.save()
+PUT    	/api/reporting/filters/:code					controllers.reporting.api.FilteringConfigurations.update(code)
+DELETE	/api/reporting/filters/:code					controllers.reporting.api.FilteringConfigurations.delete(code: java.lang.String)
 
 
 #valuation configuration
@@ -56,4 +56,4 @@ POST 	/api/valuation/criterias						controllers.valuation.api.ValuationCriterias
 PUT    	/api/valuation/criterias/:code					controllers.valuation.api.ValuationCriterias.update(code)
 DELETE	/api/valuation/criterias/:code					controllers.valuation.api.ValuationCriterias.delete(code: java.lang.String)
 
-GET		/api/property-definitions						@controllers.commons.api.PropertyDefinitions.list()
+GET		/api/property-definitions						controllers.commons.api.PropertyDefinitions.list()

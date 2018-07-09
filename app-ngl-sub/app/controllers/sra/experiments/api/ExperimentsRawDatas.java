@@ -1,40 +1,44 @@
 package controllers.sra.experiments.api;
 
-import static play.data.Form.form;
+//import static play.data.Form.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import models.laboratory.run.instance.Treatment;
-import models.sra.submit.common.instance.Submission;
-import models.sra.submit.sra.instance.Experiment;
-import models.sra.submit.sra.instance.RawData;
-import models.utils.InstanceConstants;
+import javax.inject.Inject;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-import play.data.Form;
-import play.libs.Json;
-import play.mvc.Result;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.migration.NGLContext;
+import models.sra.submit.common.instance.Submission;
+import models.sra.submit.sra.instance.Experiment;
+import models.sra.submit.sra.instance.RawData;
+import models.utils.InstanceConstants;
+import play.data.Form;
+import play.libs.Json;
+import play.mvc.Result;
 
 public class ExperimentsRawDatas extends DocumentController<Experiment> {
 
-	final static Form<ExperimentsSearchForm> experimentsSearchForm = form(ExperimentsSearchForm.class);
-	final static Form<RawData> rawDataForm = form(RawData.class);
+	final /*static*/ Form<ExperimentsSearchForm> experimentsSearchForm;// = form(ExperimentsSearchForm.class);
+	final /*static*/ Form<RawData> rawDataForm;// = form(RawData.class);
 	
-	public ExperimentsRawDatas() {
-		super(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class);
+	@Inject
+	public ExperimentsRawDatas(NGLContext ctx) {
+		super(ctx,InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class);
+		experimentsSearchForm = ctx.form(ExperimentsSearchForm.class);
+		rawDataForm = ctx.form(RawData.class);
 	}
 
-	public Result list()
-	{
-		List<RawData> allRawDatas = new ArrayList<RawData>();
+	public Result list() {
+		List<RawData> allRawDatas = new ArrayList<>();
 		Form<ExperimentsSearchForm> form = filledFormQueryString(experimentsSearchForm, ExperimentsSearchForm.class);
 		ExperimentsSearchForm formExp = form.get();
 		Query query = getQuery(formExp);
@@ -62,7 +66,7 @@ public class ExperimentsRawDatas extends DocumentController<Experiment> {
 		Form<RawData> filledForm = getFilledForm(rawDataForm, RawData.class);
 		RawData rawData = filledForm.get();
 		Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, code);
-		List<RawData> newRawDatas = new ArrayList<RawData>();
+		List<RawData> newRawDatas = new ArrayList<>();
 		for(RawData rawDataDB : experiment.run.listRawData){
 			if(rawDataDB.relatifName.equals(relatifName))
 				newRawDatas.add(rawData);
@@ -75,7 +79,7 @@ public class ExperimentsRawDatas extends DocumentController<Experiment> {
 	}
 	
 	private Query getQuery(ExperimentsSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		Query query = null;
 		
 		if (StringUtils.isNotBlank(form.submissionCode)) {
@@ -86,10 +90,10 @@ public class ExperimentsRawDatas extends DocumentController<Experiment> {
 			}
 		}
 		
-		if(StringUtils.isNotBlank(form.experimentCode)){
-			queries.add(DBQuery.is("code", form.experimentCode));
-		}else if (CollectionUtils.isNotEmpty(form.listExperimentCodes)) { //all
-			queries.add(DBQuery.in("code", form.listExperimentCodes));
+		if(StringUtils.isNotBlank(form.code)) {
+			queries.add(DBQuery.is("code", form.code));
+		} else if (CollectionUtils.isNotEmpty(form.codes)) { //all
+			queries.add(DBQuery.in("code", form.codes));
 		}
 		
 		// ajout pour interface release study :

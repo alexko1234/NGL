@@ -1,6 +1,6 @@
 #samples
-GET		/api/samples								@controllers.samples.api.Samples.list()
-GET		/api/samples/:code							@controllers.samples.api.Samples.get(code: java.lang.String)
+GET		/api/samples								controllers.samples.api.Samples.list()
+GET		/api/samples/:code							controllers.samples.api.Samples.get(code: java.lang.String)
 
 
 #containers api
@@ -14,5 +14,5 @@ GET		/api/supports/:code							controllers.containers.api.ContainerSupports.get(
 HEAD	/api/supports/:code							controllers.containers.api.ContainerSupports.head(code:java.lang.String)
 
 #experiment api
-GET		/api/experiments							@controllers.experiments.api.Experiments.list()
-GET		/api/experiments/:code						@controllers.experiments.api.Experiments.get(code:java.lang.String)
+GET		/api/experiments							controllers.experiments.api.Experiments.list()
+GET		/api/experiments/:code						controllers.experiments.api.Experiments.get(code:java.lang.String)

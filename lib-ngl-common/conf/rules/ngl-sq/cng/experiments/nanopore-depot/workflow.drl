@@ -167,5 +167,7 @@ rule "Update Workflow Run Nanopore"
 		nextState.code = "IP-S";
 		nextState.date = new Date();
 		nextState.user = "ngl-sq";
-		Workflows.setRunState($contextError, $run, nextState);				
+		RunWorkflows workflows = IGGlobals.injector().instanceOf(RunWorkflows.class);
+		workflows.setState($contextError, $run, nextState);
+		//Workflows.setRunState($contextError, $run, nextState);				
 end

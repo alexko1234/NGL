@@ -1,7 +1,7 @@
  "use strict";
  
  angular.module('ngl-bi.AnalysesServices', []).
-	factory('analysisSearchService', ['$http', 'mainService', 'lists', 'datatable', function($http, mainService, lists, datatable){
+	factory('analysisSearchService', ['$http', '$filter', '$parse', 'mainService', 'lists', 'datatable', function($http, $filter, $parse, mainService, lists, datatable){
 		
 		var getColumns = function(){
 			var columns = [];
@@ -249,8 +249,7 @@
 					this.datatable.setColumnsConfig(this.getColumns());
 					this.search();
 				},
-				
-				
+			
 				/**
 				 * initialization of the service
 				 */

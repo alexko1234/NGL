@@ -1,3 +1,4 @@
+@this()
 @(code: String, media: String)
 
 	
@@ -23,6 +24,10 @@
 
 @if(code == "trimming") {
 	@_treatments.trimming()
+}
+
+@if(code == "trimming-nanopore") {
+	@_treatments.trimmingNanopore()
 }
 
 
@@ -94,4 +99,8 @@
 
 @if(code == "chromium"){
 	@_treatments.chromium()
+}
+
+@if(code == "clustersdb-assignation"){
+@_treatments.clusterDbAssignation()
 }

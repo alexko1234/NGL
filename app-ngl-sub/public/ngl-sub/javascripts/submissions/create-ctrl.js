@@ -84,7 +84,7 @@ angular.module('home').controller('CreateCtrl',[ '$http', '$scope', '$routeParam
 	};
 	
 	$scope.reset = function(){
-		$scope.createService.resetForm(); // on initialise à null toutes les variables recuperees dans create-ctrl.js dans code : ng-model="createService.form.xxx
+		$scope.createService.resetForm(); // on initialise à null toutes les variables recuperees dans create-ctrl.js dans code : ng-model="createService.form
 		$scope.createService.userFileExperiments=null;
 		$scope.createService.userFileSamples=null;
 		$scope.createService.userFileCloneToAc=null;

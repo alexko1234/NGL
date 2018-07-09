@@ -55,8 +55,9 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"order":false,
 			"hide":true,
 			"group":true,
-			"position":6,					
-			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='2'>",
+			"position":6,
+			"filter":"unique",
+			"render":"<div list-resize='cellValue' list-resize-min-size='2'>",
 			"type":"text",
 			"groupMethod":"collect"
 		});			
@@ -95,6 +96,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"property": "contents",
 			"order":false,
 			"hide":true,
+			"order":true,
 			"type":"text",
 			"position":10,
 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
@@ -105,7 +107,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 		columns.push({
 			"header":Messages("containers.table.fromTransformationTypeCodes"),
 			"property":"fromTransformationTypeCodes",
-			"order":false,
+			"order":true,
 			"hide":true,
 			"position":5.5,
 			"type":"text",
@@ -410,7 +412,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 					if(angular.isNumber(result) && !isNaN(result)){
 						var quantity = {};
 						quantity.value = Math.round(result*10)/10;
-						quantity.unit = (concentration.unit === 'nM')?'nmol':'ng';
+						quantity.unit = (concentration.unit === 'nM')?'fmol':'ng';
 						container.quantity = quantity;
 					}else {
 						container.quantity =  undefined;
@@ -429,6 +431,8 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			refreshSamples : function(){
 				if(this.form.projectCodes && this.form.projectCodes.length>0){
 					lists.refresh.samples({projectCodes:this.form.projectCodes});
+				}else{
+					lists.clear('samples');
 				}
 			},
 			changeProject : function(){

@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.typesafe.config.ConfigFactory;
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.processes.description.ProcessCategory;
@@ -16,25 +18,23 @@ import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 import services.description.declaration.cns.BanqueIllumina;
 import services.description.declaration.cns.Bionano;
-import services.description.declaration.cns.ExtractionDNARNA;
 import services.description.declaration.cns.MetaBarCoding;
 import services.description.declaration.cns.MetaGenomique;
 import services.description.declaration.cns.MetaTProcess;
 import services.description.declaration.cns.Nanopore;
 import services.description.declaration.cns.Opgen;
-import services.description.declaration.cns.QualityControl;
-import services.description.declaration.cns.Transfert;
 import services.description.declaration.cns.Purif;
-
+import services.description.declaration.cns.QualityControl;
 import services.description.declaration.cns.RunIllumina;
-
-import com.typesafe.config.ConfigFactory;
+import services.description.declaration.cns.SamplePrep;
+import services.description.declaration.cns.Transfert;
 
 public class ProcessServiceCNS extends AbstractProcessService {
 
 
+	@Override
 	public void saveProcessCategories(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<ProcessCategory> l = new ArrayList<ProcessCategory>();
+		List<ProcessCategory> l = new ArrayList<>();
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			//l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Sequencage", "pre-sequencing"));
 			//l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Banque", "pre-library"));
@@ -52,8 +52,9 @@ public class ProcessServiceCNS extends AbstractProcessService {
 
 	}
 
+	@Override
 	public void saveProcessTypes(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<ProcessType> l = new ArrayList<ProcessType>();
+		List<ProcessType> l = new ArrayList<>();
 		
 		if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 			/*
@@ -74,7 +75,7 @@ public class ProcessServiceCNS extends AbstractProcessService {
 		l.addAll(new Nanopore().getProcessType());
 		l.addAll(new RunIllumina().getProcessType());
 		l.addAll(new Opgen().getProcessType());
-		l.addAll(new ExtractionDNARNA().getProcessType());
+		l.addAll(new SamplePrep().getProcessType());
 		
 		DAOHelpers.saveModels(ProcessType.class, l, errors);
 		
@@ -84,7 +85,7 @@ public class ProcessServiceCNS extends AbstractProcessService {
 	
 
 	public static List<PropertyDefinition> getPropertyDefinitionsLib300600() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
 		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Robot à utiliser","autoVsManuel", LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("MAN","ROBOT"), "single",100));

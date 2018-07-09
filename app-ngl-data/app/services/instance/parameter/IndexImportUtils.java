@@ -6,7 +6,7 @@ import java.util.Map;
 public class IndexImportUtils {
 	
 	public static Map<String, String> getChromiumIndex(){
-		Map<String, String> index = new HashMap<String, String>();
+		Map<String, String> index = new HashMap<>();
 		
 		index.put("SI-GA-A1","GGTTTACT-CTAAACGG-TCGGCGTC-AACCGTAA");
 		index.put("SI-GA-A2","TTTCATGA-ACGTCCCT-CGCATGTG-GAAGGAAC");

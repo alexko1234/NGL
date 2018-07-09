@@ -7,6 +7,15 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+
+import com.mongodb.MongoException;
+
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.migration.NGLContext;
 import models.Constants;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
@@ -18,46 +27,48 @@ import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.SampleOnContainer;
 import models.laboratory.run.instance.Treatment;
 import models.laboratory.sample.instance.Sample;
-import models.util.Workflows;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
-
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-
-import play.Logger;
-import play.Play;
+// import play.Logger;
+// import play.Play;
+// import play.api.modules.spring.Spring;
 import rules.services.RulesException;
 import rules.services.RulesServices;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
 import validation.run.instance.LaneValidationHelper;
+import workflows.run.RunWorkflows;
 
-import com.mongodb.MongoException;
+public class RunImportCNS extends AbstractImportDataCNS {
 
-import fr.cea.ig.MongoDBDAO;
-
-public class RunImportCNS extends AbstractImportDataCNS{
-
+	// Accessed through static methods 
+	@SuppressWarnings("hiding")
+	private static final play.Logger.ALogger logger = play.Logger.of(RunImportCNS.class);
+	
+	// final static RunWorkflows workflows = Spring.get BeanOfType(RunWorkflows.class);
+	private final RunWorkflows workflows;
+	
+	@Inject
 	public RunImportCNS(FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super("RunCNS",durationFromStart, durationFromNextIteration);
+			            FiniteDuration durationFromNextIteration, 
+			            NGLContext ctx, 
+			            RunWorkflows workflows) {
+		super("RunCNS",durationFromStart, durationFromNextIteration, ctx);
+		this.workflows = workflows;
 	}
 
 	@Override
 	public void runImport() throws SQLException, DAOException, MongoException, RulesException {
 		createRuns("pl_RunToNGL",contextError);
-
 	}
 
-
-	public static void createRuns(String sql,ContextValidation contextError) throws SQLException, DAOException{
-		Logger.debug("Create Run From Lims CNS");
+	public void createRuns(String sql,ContextValidation contextError) throws SQLException, DAOException{
+		logger.debug("Create Run From Lims CNS");
 		List<Run> runs=limsServices.findRunsToCreate(sql, contextError);
 		//Create Lane
-		List<Run> newRuns=new ArrayList<Run>();
+		List<Run> newRuns=new ArrayList<>();
 		String rootKeyName=null;
 
 		for(Run run:runs){
@@ -68,18 +79,19 @@ public class RunImportCNS extends AbstractImportDataCNS{
 
 				//Save Run du Lims si n'existe pas ou n'est pas transféré dans NGL
 				Run newRun=MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class, run.code);
-				if(newRun==null){
-					Logger.debug("Save Run "+run.code + " mode "+contextError.getMode());
-					newRun=(Run) InstanceHelpers.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run, ctx, true);
+				if (newRun == null) {
+					logger.debug("Save Run "+run.code + " mode "+contextError.getMode());
+//					newRun=(Run) InstanceHelpers.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run, ctx, true);
+					newRun = InstanceHelpers.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run, ctx, true);
 				} else {
 
-					Logger.debug("Update Run "+run.code + " mode "+contextError.getMode());	
+					logger.debug("Update Run "+run.code + " mode "+contextError.getMode());	
 					ctx.setCreationMode();
 					ctx.putObject("level", Level.CODE.Run);
 					ctx.putObject("run", run);
 					run.treatments.get("ngsrg").validate(ctx);
 
-					if(!ctx.hasErrors()){
+					if (!ctx.hasErrors()) {
 						
 						run.state = fusionRunStateHistorical(run.state, newRun.state);
 						
@@ -110,34 +122,34 @@ public class RunImportCNS extends AbstractImportDataCNS{
 			}
 		}
 
-		List<Run> updateRuns=new ArrayList<Run>();
+		List<Run> updateRuns=new ArrayList<>();
 
-		for(Run run:newRuns){
+		for (Run run:newRuns) {
 			ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
-			Logger.debug("Create ReadSet from Run "+run.code);
+			logger.debug("Create ReadSet from Run "+run.code);
 			createReadSetFromRun(run, contextValidation);
 
-			Run newRun=MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
+			Run newRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
 			if(!contextValidation.hasErrors()){
-				List<Object> list=new ArrayList<Object>();
+				List<Object> list=new ArrayList<>();
 				list.add(newRun);
-				try{
-					Logger.debug("Run Rules from Run "+run.code);
-					new RulesServices().callRules(Play.application().configuration().getString("rules.key"),"F_RG_1",list);
-				}catch (Exception e) {
+				try {
+					logger.debug("Run Rules from Run "+run.code);
+					// new RulesServices().callRules(Play.application().configuration().getString("rules.key"),"F_RG_1",list);
+					new RulesServices().callRules(ctx.getRulesKey(),"F_RG_1",list);
+				} catch (Exception e) {
 					contextValidation.addErrors("rules", e.toString()+ "runCode :"+run.code, run.code);
 				}
-				Workflows.nextRunState(contextValidation, newRun);
+				workflows.nextState(contextValidation, newRun);
 			}
 
-			if(!contextValidation.hasErrors()){
+			if (!contextValidation.hasErrors()) {
 				updateRuns.add(run);
-			}else {
+			} else {
 				contextError.errors.putAll(contextValidation.errors);
 			}			
 
 		}		
-
 		//Update Run if lane and readSet are created
 		limsServices.updateRunLims(updateRuns,contextError);
 	}
@@ -166,7 +178,7 @@ public class RunImportCNS extends AbstractImportDataCNS{
 	}
 
 	public static Run createLaneFromRun(Run newRun,ContextValidation contextError) throws SQLException{
-		Logger.debug("Create Lanes from Run "+newRun.code);
+		logger.debug("Create Lanes from Run "+newRun.code);
 		List<Lane> lanes=limsServices.findLanesToCreateFromRun(newRun, contextError);
 		//Save TreatmentLane
 		ContextValidation contextErrorValidation = new ContextValidation(Constants.NGL_DATA_USER);
@@ -179,7 +191,6 @@ public class RunImportCNS extends AbstractImportDataCNS{
 			contextErrorValidation.setCreationMode();
 			LaneValidationHelper.validationLanes(lanes, contextErrorValidation);
 
-
 			if(!contextErrorValidation.hasErrors()){
 				for(Lane lane : lanes){
 
@@ -187,17 +198,12 @@ public class RunImportCNS extends AbstractImportDataCNS{
 							DBQuery.is("code", newRun.code),
 							DBUpdate.push("lanes", lane));
 
-					Logger.debug("Save new Lanes "+lane.number+"from Run "+newRun.code);
-
+					logger.debug("Save new Lanes "+lane.number+"from Run "+newRun.code);
 				}
 			}
-
-
-
 			//creation traitements ngsrg
-		}else {
-			for(Lane lane:lanes){
-
+		} else {
+			for (Lane lane:lanes) {
 				for(String treatmentKey:lane.treatments.keySet()){
 					if(treatmentKey.equals("ngsrg")){
 						Treatment treatment=lane.treatments.get("ngsrg");
@@ -209,7 +215,7 @@ public class RunImportCNS extends AbstractImportDataCNS{
 							MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 									DBQuery.and(DBQuery.is("code", newRun.code), DBQuery.is("lanes.number", lane.number)),
 									DBUpdate.set("lanes.$.treatments."+treatment.code, treatment));
-							Logger.debug("Save new treatment ngsrg lanes "+lane.number+"from run "+newRun.code);
+							logger.debug("Save new treatment ngsrg lanes "+lane.number+"from run "+newRun.code);
 						}
 					}
 				}
@@ -247,7 +253,7 @@ public class RunImportCNS extends AbstractImportDataCNS{
 
 	public static List<ReadSet> createReadSetFromRun(Run run,ContextValidation contextValidation)throws SQLException, DAOException {
 
-		List<ReadSet> newReadSets=new ArrayList<ReadSet>();
+		List<ReadSet> newReadSets = new ArrayList<>();
 
 		//Delete old readSet from run
 		if(MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", run.code))){

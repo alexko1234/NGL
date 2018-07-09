@@ -1,7 +1,7 @@
  "use strict";
 
- angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', '$sce', 'mainService', 'tabService', 'datatable', 'messages', 'lists', 'treatments', '$window', 'valuationService', 
-                                                   function($scope, $http, $q, $routeParams, $sce, mainService, tabService, datatable, messages, lists, treatments, $window, valuationService) {
+ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', '$sce', '$filter', 'mainService', 'tabService', 'datatable', 'messages', 'lists', 'treatments', '$window', 'valuationService', 
+                                                   function($scope, $http, $q, $routeParams, $sce, $filter, mainService, tabService, datatable, messages, lists, treatments, $window, valuationService) {
 		
 	 
 	 $scope.save = function(){
@@ -73,6 +73,29 @@
 	    $scope.showReadSet = function(readSetCode){
 			$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.get(readSetCode).url, 'readsets');
 		};
+		
+		var indexedTrt = [];
+		
+		$scope.treatmentsFilter = function(){
+			indexedTrt = [];
+			return $scope.analysis.treatments[treatments.getTreatment().code].read1.assignationBilan.value;
+		}
+		
+		$scope.filterTreatments = function(trt){
+			 var trtIsNew = indexedTrt.indexOf(trt.controlName) == -1;
+		        if (trtIsNew) {
+		        	indexedTrt.push(trt.controlName);
+		        }
+		        return trtIsNew;
+		}
+		
+		$scope.sorterFunc = function(trt){
+		    return -parseInt(trt.abundance);
+		};
+		
+		$scope.getList = function(str){
+			return str.split(";"); 
+		}
 		
 	    var init = function(){
 		 	$scope.messages = messages();

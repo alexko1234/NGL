@@ -5,7 +5,7 @@ import java.util.TreeSet;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class DatatableForm {
+public class DatatableForm implements IDatatableForm {
 	public Boolean datatable = Boolean.FALSE;
 	public Integer orderSense = DatatableConfig.DEFAULT_ORDER_SENSE;
 	public Integer numberRecordsPerPage = DatatableConfig.DEFAULT_NB_ELEMENT;
@@ -19,6 +19,17 @@ public class DatatableForm {
 		return "REMOTE".equalsIgnoreCase(paginationMode);
 	}
 	
-	public Set<String> excludes = new TreeSet<String>();
-	public Set<String> includes = new TreeSet<String>();
+	public Set<String> excludes = new TreeSet<>();
+	public Set<String> includes = new TreeSet<>();
+
+	@Override
+	@JsonIgnore
+	public Set<String> excludes() {
+		return this.excludes;
 	}
+	@Override
+	@JsonIgnore
+	public Set<String> includes() {
+		return this.includes;
+	}
+}

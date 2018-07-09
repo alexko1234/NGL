@@ -1,4 +1,8 @@
 // FDS 04/10/2017 -- JIRA NGL-1584: denaturation en tubes et plaques
+// 16/10/2017 restriction main: forcer tube en sortie
+// 11/05/2018  le robot Epimotion n'est configuré que pour les container sortie=tube
+//             ==> mise en commentaire du code des gestion des plaques ( pour le jour ou ca sera demandé....
+
 angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToSingleDatatable',
                                                      function($scope, $parse, atmToSingleDatatable){
 
@@ -243,6 +247,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 	}	
 	
 	// OUTPUT
+	/* 11/05/2018 mise en attente (voir commentaire en debut du fichier)
 	if ( $scope.experiment.instrument.outContainerSupportCategoryCode !== "tube" ){	
 		 datatableConfig.columns.push({
 			 // barcode plaque sortie == support Container used code... faut Used 
@@ -284,6 +289,8 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
         	 "extraHeaders":{0:outputExtraHeaders}
          });		
 	} else {
+	*/
+		    // tube
 		    // GA: meme pour les tubes utiliser  x.locationOnContainerSupport.code  et pas x.code
 			datatableConfig.columns.push({
 				"header":Messages("containers.table.code"),
@@ -306,7 +313,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 				"position":150,
 				"extraHeaders":{0:outputExtraHeaders}
 			});		 
-	}
+	//}
 
 
 	$scope.$on('save', function(e, callbackFunction) {	
@@ -354,6 +361,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 	
 
 	// si Output != tube (plaque et strip ??)
+	/* 11/05/2018 mise en attente (voir commentaire en debut du fichier)
 	if ( $scope.experiment.instrument.outContainerSupportCategoryCode !== "tube" ) {
 
 		$scope.outputContainerSupport = { code : null , storageCode : null};	
@@ -366,6 +374,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
 		}
 	}
+	*/
 	
 	// modifié a partir de copyContainerSupportCodeAndStorageCodeToDT
 	var copyContainerSupportCodeAndStorageCode = function(experiment){
@@ -442,49 +451,9 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 	if ( ($scope.experiment.instrument.typeCode === 'epmotion') && ($scope.experiment.instrument.inContainerSupportCategoryCode !=="tube") ){
 		console.log("Le robot Epmotion n'autorise que des tubes en entrée");
 		$scope.messages.setError(Messages("experiments.input.error.instrument-input.only-tubes"));
-	
 	} else {
 		$scope.messages.clear();
 		$scope.atmService = atmService;
 	}
 
-
-	/*  pas de sample sheet demandee pour l'instant...
-	var generateSampleSheet = function(){
-		$scope.messages.clear();
-		
-		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
-		.success(function(data, status, headers, config) {
-			var header = headers("Content-disposition");
-			var filepath = header.split("filename=")[1];
-			var filename = filepath.split(/\/|\\/);
-			filename = filename[filename.length-1];
-			if(data!=null){
-				$scope.messages.clazz="alert alert-success";
-				$scope.messages.text=Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath;
-				$scope.messages.showDetails = false;
-				$scope.messages.open();	
-				
-				var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
-				saveAs(blob, filename);
-			}
-		})
-		.error(function(data, status, headers, config) {
-			$scope.messages.clazz = "alert alert-danger";
-			$scope.messages.text = Messages('experiments.msg.generateSampleSheet.error');
-			$scope.messages.setDetails(data);
-			$scope.messages.showDetails = true;
-			$scope.messages.open();				
-		});
-	};
-	
-	$scope.setAdditionnalButtons([{
-		isDisabled : function(){return $scope.isCreationMode();},
-		isShow:function(){return ($scope.experiment.instrument.typeCode === 'janus')}, // FDS pourquoi ce forcage ???
-		click: generateSampleSheet,
-		label:Messages("experiments.sampleSheet") 
-	}]);
-	*/
-	
-	
 }]);

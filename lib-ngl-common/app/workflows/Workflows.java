@@ -26,8 +26,7 @@ public abstract class Workflows<T> {
 	
 	public abstract void nextState(ContextValidation contextValidation, T object);
 	
-	protected TraceInformation updateTraceInformation(
-			TraceInformation traceInformation, State nextState) {		
+	protected TraceInformation updateTraceInformation(TraceInformation traceInformation, State nextState) {		
 		traceInformation.modifyDate = nextState.date;
 		traceInformation.modifyUser = nextState.user;		
 		return traceInformation;
@@ -44,31 +43,30 @@ public abstract class Workflows<T> {
 		return goBack;
 	}
 
-	
-	/**
+	/*
 	 * Clone State without historical
 	 * @param state
 	 * @return
 	 */
 	protected State cloneState(State state, String user) {
 		State nextState = new State();
-		nextState.code = state.code;
-		nextState.date = new Date();
-		nextState.user = user;
+		nextState.code  = state.code;
+		nextState.date  = new Date();
+		nextState.user  = user;
 		return nextState;
 	}
 	
 	protected static State getNewState(String stateCode, String user) {
 		State nextState = new State();
-		nextState.code = stateCode;
-		nextState.user = user;
-		nextState.date = new Date();
+		nextState.code  = stateCode;
+		nextState.user  = user;
+		nextState.date  = new Date();
 		return nextState;
 	}
 	
 	protected State updateHistoricalNextState(State previousState, State nextState) {
 		if (null == previousState.historical) {
-			nextState.historical = new HashSet<TransientState>(0);
+			nextState.historical = new HashSet<>(0);
 			nextState.historical.add(new TransientState(previousState, nextState.historical.size()));
 		} else {
 			nextState.historical = previousState.historical;
@@ -76,4 +74,5 @@ public abstract class Workflows<T> {
 		nextState.historical.add(new TransientState(nextState, nextState.historical.size()));		
 		return nextState;
 	}
+	
 }

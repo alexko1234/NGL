@@ -29,7 +29,7 @@ angular.module('home', ['ngRoute', 'commonsServices', 'ultimateDataTableServices
 	
 	$routeProvider.when('/sra/submissions/validation/home', {
 		// url qui va appeler controler java de type tpl
-		templateUrl : '/tpl/sra/submissions/consultation',
+		templateUrl : '/tpl/sra/submissions/validation',
 		controller : 'ValidationCtrl'
 	});		
 	

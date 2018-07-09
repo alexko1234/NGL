@@ -5,7 +5,6 @@ import static services.description.DescriptionFactory.newPropertiesDefinition;
 import static services.description.DescriptionFactory.newValues;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -25,12 +24,14 @@ import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 import services.description.common.MeasureService;
+import services.description.declaration.cns.MetaBarCoding;
 
 public class ImportServiceCNS extends AbstractImportService {
 
 
+	@Override
 	public void saveImportCategories(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<ImportCategory> l = new ArrayList<ImportCategory>();
+		List<ImportCategory> l = new ArrayList<>();
 		l.add(saveImportCategory("Sample Import", "sample-import"));
 		DAOHelpers.saveModels(ImportCategory.class, l, errors);
 	}
@@ -40,10 +41,9 @@ public class ImportServiceCNS extends AbstractImportService {
 		return ic;
 	}
 
-	
-	public void saveImportTypes(
-			Map<String, List<ValidationError>> errors) throws DAOException {
-		List<ImportType> l = new ArrayList<ImportType>();
+	@Override
+	public void saveImportTypes(Map<String, List<ValidationError>> errors) throws DAOException {
+		List<ImportType> l = new ArrayList<>();
 		
 		
 		//import-type for lims import
@@ -60,11 +60,16 @@ public class ImportServiceCNS extends AbstractImportService {
 		
 		l.add(newImportType("Reception d'ADN", "dna-reception", ImportCategory.find.findByCode("sample-import"), getDNAReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		l.add(newImportType("Reception d'Amplicon", "amplicon-reception", ImportCategory.find.findByCode("sample-import"), getAmpliconReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
+		l.add(newImportType("Import échantillons Amplicons à 'recibler' ", "amplicon-to-amplify-reception", ImportCategory.find.findByCode("sample-import"), getAmpliconToAmplifyReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		l.add(newImportType("Reception d'ARN", "rna-reception", ImportCategory.find.findByCode("sample-import"), getRNAReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		l.add(newImportType("Reception Lib. ARN", "rna-library-reception", ImportCategory.find.findByCode("sample-import"), getRNALibraryReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		l.add(newImportType("Reception Lib. ADN", "dna-library-reception", ImportCategory.find.findByCode("sample-import"), getDNALibraryReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		l.add(newImportType("Reception Lib. ADN sans index", "dna-library-without-index-reception", ImportCategory.find.findByCode("sample-import"), getDNALibraryWithoutIndexReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		l.add(newImportType("Reception Pool Lib.", "pool-library-reception", ImportCategory.find.findByCode("sample-import"), getPoolLibraryReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
+		l.add(newImportType("Reception Lib. Amplicons", "amplicon-library-reception", ImportCategory.find.findByCode("sample-import"), getAmpliconLibraryReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(newImportType("Reception ADN (et SAG) Tara", "dna-reception-tara", ImportCategory.find.findByCode("sample-import"), getTaraSagReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
+		
 		
 		DAOHelpers.saveModels(ImportType.class, l, errors);
 		
@@ -75,7 +80,7 @@ public class ImportServiceCNS extends AbstractImportService {
 	
 
 	private static List<PropertyDefinition> getImportDefaultLimsDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", LevelService.getLevels(Level.CODE.Container,Level.CODE.Sample),Integer.class, false, "single"));
 		
@@ -89,7 +94,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		return propertyDefinitions;
 	}
 	private static List<PropertyDefinition> getLibraryPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.addAll(getImportDefaultLimsDefinitions());
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true, "single"));
 		propertyDefinitions.add(newPropertiesDefinition("Catégorie Tag", "tagCategory", LevelService.getLevels(Level.CODE.Content), String.class, true, getTagCategories(), "single"));
@@ -98,7 +103,7 @@ public class ImportServiceCNS extends AbstractImportService {
 	}
 	
 	private static List<Value> getTagCategories(){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("SINGLE-INDEX", "SINGLE-INDEX"));
 		values.add(DescriptionFactory.newValue("DUAL-INDEX", "DUAL-INDEX"));
 		values.add(DescriptionFactory.newValue("MID", "MID"));
@@ -107,7 +112,7 @@ public class ImportServiceCNS extends AbstractImportService {
 	}
 	
 	private static List<PropertyDefinition> getTaraPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.addAll(getImportDefaultLimsDefinitions());
 		propertyDefinitions.add(newPropertiesDefinition("Station TARA", "taraStation", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Integer.class, true, getTaraStationValues(), "single"));
 		propertyDefinitions.add(newPropertiesDefinition("Nom Profondeur TARA", "taraDepth", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true,getTaraDepthCodeValues(true), "single"));
@@ -121,7 +126,7 @@ public class ImportServiceCNS extends AbstractImportService {
 	}
 	
 	private static List<PropertyDefinition> getTaraReceptionPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, 
 				null, "single", 1, true, null, null));
 		
@@ -131,11 +136,15 @@ public class ImportServiceCNS extends AbstractImportService {
 				getTaraPacificFinalDestination(), "single", 3, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Protocole TARA Pacific", "taraProtocol", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null, 
 				getTaraPacificProtocolValues(), "single", 4, true, null, null));
-		
-		
+		/*keep when all data are not migrated*/
+		propertyDefinitions.add(newPropertiesDefinition("Station TARA", "taraStation", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Integer.class, false, null, 
+				null, "single", 5, true, null, null));
+		/* OLD VERSION
 		propertyDefinitions.add(newPropertiesDefinition("Station TARA", "taraStation", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Integer.class, false, null, 
 				getTaraPacificStationValues(), "single", 5, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, false, null, 
+		*/
+		
+		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, 
 				null, "single", 5, true, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Environnement TARA Pacific", "taraEnvironment", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
@@ -145,29 +154,47 @@ public class ImportServiceCNS extends AbstractImportService {
 				null, "single", 7, true, null, null));
 		
 		//Nouvelles prop d'import
+		propertyDefinitions.add(newPropertiesDefinition("Ile", "taraIsland", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				null, "single", 8, true, null, null));		
+		propertyDefinitions.add(newPropertiesDefinition("Colonie / Poisson", "taraColony", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				null, "single", 9, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Site", "taraSite", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				null, "single", 10, true, null, null));		
+		
+		propertyDefinitions.add(newPropertiesDefinition("OA", "taraOA", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				null, "single", 12, true, null, null));		
+		
+		/* OLD VERSION		
 		propertyDefinitions.add(newPropertiesDefinition("Ile / Env", "taraIsland", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				getTaraPacificIslandValues(), "single", 8, true, null, null));		
 		propertyDefinitions.add(newPropertiesDefinition("Colonie / Poisson", "taraColony", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				getTaraPacificColonyValues(), "single", 9, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Site", "taraSite", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				getTaraPacificSiteValues(), "single", 10, true, null, null));		
-		
+		*/
 		propertyDefinitions.add(newPropertiesDefinition("Réplicat", "replicate", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				getTaraPacificReplicateValues(), "single", 11, true, null, null));		
-		
 		
 		return propertyDefinitions;
 	}
 	
 	
 	private static List<PropertyDefinition> getTaraUpdatePropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null,
 				null, "single", 1, true, null, null));
 		
+		propertyDefinitions.add(newPropertiesDefinition("Code Barre TARA", "taraBarCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true,
+				null, null, "single", 2, true, null, null));
+		
+		
+		/*keep when all data are not migrated*/
+		propertyDefinitions.add(newPropertiesDefinition("Station TARA", "taraStation", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Integer.class, false, null, 
+				null, "single", 2, true, null, null));
+		/* OLD VERSION		
 		propertyDefinitions.add(newPropertiesDefinition("Station TARA", "taraStation", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Integer.class, true, null, 
 				getTaraPacificStationValues(), "single", 2, true, null, null));
-		
+		*/
 		propertyDefinitions.add(newPropertiesDefinition("Filtre TARA", "taraFilterCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				getTaraPacificFilterValues(), "single", 3, true, null, null));
 		
@@ -180,19 +207,32 @@ public class ImportServiceCNS extends AbstractImportService {
 		propertyDefinitions.add(newPropertiesDefinition("Destination finale", "finalDestination", LevelService.getLevels(Level.CODE.Container), String.class, false, null, 
 				null, "single", 6, true, null, null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, 
+		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, false, null, 
 				null, "single",71, true, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Provenance", "origin", LevelService.getLevels(Level.CODE.Container), String.class, false, null, 
 				null, "single", 8, true, null, null));
 		
 		//Nouvelles prop to update
+		propertyDefinitions.add(newPropertiesDefinition("Ile", "taraIsland", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				null, "single", 9, true, null, null));		
+		propertyDefinitions.add(newPropertiesDefinition("Colonie / Poisson", "taraColony", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				null, "single", 10, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Site", "taraSite", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				null, "single", 11, true, null, null));		
+		
+		propertyDefinitions.add(newPropertiesDefinition("OA", "taraOA", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				null, "single", 12, true, null, null));		
+		
+		/* OLD VERSION		
 		propertyDefinitions.add(newPropertiesDefinition("Ile / Env", "taraIsland", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				getTaraPacificIslandValues(), "single", 9, true, null, null));		
 		propertyDefinitions.add(newPropertiesDefinition("Colonie / Poisson", "taraColony", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				getTaraPacificColonyValues(), "single", 10, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Site", "taraSite", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				getTaraPacificSiteValues(), "single", 11, true, null, null));		
+		*/
+		
 		
 		propertyDefinitions.add(newPropertiesDefinition("Réplicat", "replicate", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				getTaraPacificReplicateValues(), "single", 12, true, null, null));		
@@ -201,7 +241,7 @@ public class ImportServiceCNS extends AbstractImportService {
 	}
 	
 	private static List<Value> getTaraPacificReplicateValues() {
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		
 		values.add(DescriptionFactory.newValue("R1", "R1"));
 		values.add(DescriptionFactory.newValue("R2", "R2"));
@@ -212,7 +252,7 @@ public class ImportServiceCNS extends AbstractImportService {
 	}
 	
 	private static List<Value> getTaraPacificFinalDestination() {
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("Genoscope", "Genoscope"));
 		values.add(DescriptionFactory.newValue("Roscoff", "Roscoff"));
 		values.add(DescriptionFactory.newValue("Monaco", "Monaco"));
@@ -234,7 +274,7 @@ public class ImportServiceCNS extends AbstractImportService {
 
 	
 	private static List<Value> getTaraPacificProtocolValues(){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("CORE", "IMG-(core)_Coral"));
 		values.add(DescriptionFactory.newValue("CS10", "SEQ-(10g)a_Coral"));
 		values.add(DescriptionFactory.newValue("CS40", "SEQ-(40g)_Coral"));
@@ -286,14 +326,26 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("CDIV", "CDIV"));
 		values.add(DescriptionFactory.newValue("CCA", "Crustose Coralline algae"));
 		values.add(DescriptionFactory.newValue("E2000", "SEQ-IMG-ethanol>2000"));
+		//new 17/11/2017
+		values.add(DescriptionFactory.newValue("TMETAL", "TMETAL"));
+		values.add(DescriptionFactory.newValue("S03>", "S03>"));
+		values.add(DescriptionFactory.newValue("SCB", "SCB"));
+		values.add(DescriptionFactory.newValue("SCB20-(FSW)", "SCB20-(FSW)"));
+		values.add(DescriptionFactory.newValue("SCB20-(FSW+GB)", "SCB20-(FSW+GB)"));
+		values.add(DescriptionFactory.newValue("SCB20-(TC)", "SCB20-(TC)"));
+		values.add(DescriptionFactory.newValue("SCB200-(FSW)", "SCB200-(FSW)"));
+		values.add(DescriptionFactory.newValue("SCB200-(TC)", "SCB200-(TC)"));
+		values.add(DescriptionFactory.newValue("E300", "E300"));
+		
 		values.add(DescriptionFactory.newValue("Undefined", "Undefined"));
+		
 		return values;	
 	}
 	
 	
 	
 	private static List<Value> getTaraPacificEnvironmentValues(){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("AW", "Ambient Water"));
 		values.add(DescriptionFactory.newValue("IW", "Interstitial Water"));
 		values.add(DescriptionFactory.newValue("OA", "Ocean Atmosphere"));
@@ -306,7 +358,7 @@ public class ImportServiceCNS extends AbstractImportService {
 	
 	
 	private static List<Value> getTaraPacificFilterValues(){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("S<02", "< 0,2 µm"));
 		values.add(DescriptionFactory.newValue("S023", "0,2-3 µm"));
 		values.add(DescriptionFactory.newValue("S320", "3-20 µm"));
@@ -316,9 +368,9 @@ public class ImportServiceCNS extends AbstractImportService {
 		return values;	
 	}
 
-	
+	/*
 	private static List<Value> getTaraPacificIslandValues() {
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 
 		// toutes les OA-001 à 150
 		 for(int i = 0; i <= 150 ; i++){
@@ -336,7 +388,7 @@ public class ImportServiceCNS extends AbstractImportService {
 			values.add(DescriptionFactory.newValue("OA-999", "OA-999"));
 
 		// Tous les I
-		for (int i = 0; i <= 20; i++) {
+		for (int i = 0; i <= 21; i++) {
 			String ile = (i < 10) ? "0" + i : "" + i;
 			values.add(DescriptionFactory.newValue("I" + ile, "I" + ile));
 		}
@@ -345,9 +397,9 @@ public class ImportServiceCNS extends AbstractImportService {
 	}
 
 	private static List<Value> getTaraPacificColonyValues() {
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 
-		for (int k = 0; k <= 40; k++) {
+		for (int k = 0; k <= 120; k++) {
 			String colonie = (k < 10) ? "0" + k : "" + k;
 			values.add(DescriptionFactory.newValue("C" + colonie, "C" + colonie));
 		}
@@ -364,7 +416,7 @@ public class ImportServiceCNS extends AbstractImportService {
 	}
 
 	private static List<Value> getTaraPacificSiteValues() {
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 
 		for (int j = 0; j <= 4; j++) {
 			String site = "0" + j;
@@ -378,7 +430,7 @@ public class ImportServiceCNS extends AbstractImportService {
 	}
 
 	private static List<Value> getTaraPacificStationValues(){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		//Miami first reception end june 
 		//toutes les OA-001 à 150
 				
@@ -402,12 +454,12 @@ public class ImportServiceCNS extends AbstractImportService {
 		//version 6 et version 9 I01S01 et I01S01C01 à I01S01C40
 		
 		values.add(DescriptionFactory.newValue("100000000", "I00S00C00"));	
-		for(int i = 1; i <= 20; i++){
+		for(int i = 1; i <= 21; i++){
 			String ile = (i < 10)?"0"+i:""+i;
 			for(int j = 1; j <= 4; j++){
 				String site = "0"+j;
 				values.add(DescriptionFactory.newValue("1"+ile+"0"+site, "I"+ile+"S"+site));
-				for(int k = 1; k <= 40; k++){
+				for(int k = 1; k <= 120; k++){
 					String colonnie = (k < 10)?"0"+k:""+k;
 					values.add(DescriptionFactory.newValue("1"+ile+"0"+site+"0"+colonnie, "I"+ile+"S"+site+"C"+colonnie));					
 				}
@@ -422,7 +474,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("110000", "I10S00"));		
 		values.add(DescriptionFactory.newValue("111000", "I11S00"));
 		values.add(DescriptionFactory.newValue("100000100", "I00S00F00"));	
-		for(int i = 1; i <= 20; i++){
+		for(int i = 1; i <= 21; i++){
 			String ile = (i < 10)?"0"+i:""+i;
 			for(int j = 1; j <= 4; j++){
 				String site = "0"+j;
@@ -446,7 +498,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		
 		
 		values.add(DescriptionFactory.newValue("100000200", "I00S00M00"));	
-		for(int i = 1; i <= 20; i++){
+		for(int i = 1; i <= 21; i++){
 			String ile = (i < 10)?"0"+i:""+i;
 			for(int j = 1; j <= 4; j++){
 				String site = "0"+j;
@@ -457,27 +509,50 @@ public class ImportServiceCNS extends AbstractImportService {
 			}
 		}
 		
-		/*
-		values.add(DescriptionFactory.newValue("102001", "I02S01"));
-		values.add(DescriptionFactory.newValue("102001001", "I02S01C01"));
-		values.add(DescriptionFactory.newValue("102001011", "I02S01C11"));
-		values.add(DescriptionFactory.newValue("102001012", "I02S01C12"));
-		values.add(DescriptionFactory.newValue("102001002", "I02S01C02"));
-		values.add(DescriptionFactory.newValue("102001029", "I02S01C29"));
-		values.add(DescriptionFactory.newValue("102001030", "I02S01C30"));
-		values.add(DescriptionFactory.newValue("102001031", "I02S01C31"));
-		values.add(DescriptionFactory.newValue("102001032", "I02S01C32"));
-		values.add(DescriptionFactory.newValue("102003", "I02S03"));
-		values.add(DescriptionFactory.newValue("102003001", "I02S03C01"));
-		values.add(DescriptionFactory.newValue("102003010", "I02S03C10"));
-		values.add(DescriptionFactory.newValue("102003101", "I02S03F01"));
-		values.add(DescriptionFactory.newValue("102003102", "I02S03F02"));
-		*/
+		//
+		//values.add(DescriptionFactory.newValue("102001", "I02S01"));
+		//values.add(DescriptionFactory.newValue("102001001", "I02S01C01"));
+		//values.add(DescriptionFactory.newValue("102001011", "I02S01C11"));
+		//values.add(DescriptionFactory.newValue("102001012", "I02S01C12"));
+		//values.add(DescriptionFactory.newValue("102001002", "I02S01C02"));
+		//values.add(DescriptionFactory.newValue("102001029", "I02S01C29"));
+		//values.add(DescriptionFactory.newValue("102001030", "I02S01C30"));
+		//values.add(DescriptionFactory.newValue("102001031", "I02S01C31"));
+		//values.add(DescriptionFactory.newValue("102001032", "I02S01C32"));
+		//values.add(DescriptionFactory.newValue("102003", "I02S03"));
+		//values.add(DescriptionFactory.newValue("102003001", "I02S03C01"));
+		//values.add(DescriptionFactory.newValue("102003010", "I02S03C10"));
+		//values.add(DescriptionFactory.newValue("102003101", "I02S03F01"));
+		//values.add(DescriptionFactory.newValue("102003102", "I02S03F02"));
+		//
 		
 		return values;	
 	}
-	
+	*/
 	private static List<PropertyDefinition> getDNAReceptionPropertyDefinitions() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
+		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, null, "single", 2, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("% GC théorique", "theoricalGCPercent", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Double.class, false, null, null, "single", 1, false, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Long.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"), "single", 1, false, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Nom organisme / collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				null, null,null,null,"single", 17, false, null,null));		
+		// A supprimer car uniquement utilisé dans l'import d'echantillons bio cf NGL-1663
+		propertyDefinitions.add(newPropertiesDefinition("Fraction / couche", "sizeFractionOrLayer", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null,
+		newValues(">20 µm","2-20 µm","0.2-2 µm",">2 µm","0.1 cm","1-3 cm","3-5 cm","5-10 cm","10-15 cm","15-30 cm"), null,null,null,"single", 6, false, null,null));				
+		propertyDefinitions.add(newPropertiesDefinition("Méthode préparation ADN (ou ARN)", "dnaTreatment", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null,
+				DescriptionFactory.newValues("MDA","size selection using ampure","EtOH-reconcentrated","WGA", "SAG"), null, null, null,"single", 18, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Code éch. témoin négatif extraction", "extractionBlankSampleCode", LevelService.getLevels(Level.CODE.Content), String.class, false, null,
+				null, null, null, null,"single", 22, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Contrôle négatif", "negativeControl", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, false, null, 
+				null, null,null,null,"single", 14, true, null,null));	
+		
+		
+		return propertyDefinitions;
+	}
+	
+	private static List<PropertyDefinition> getTaraSagReceptionPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, null, "single", 2, true, null, null));
@@ -486,59 +561,124 @@ public class ImportServiceCNS extends AbstractImportService {
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"), "single", 1, false, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Nom organisme / collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				null, null,null,null,"single", 17, false, null,null));		
+		// A supprimer car uniquement utilisé dans l'import d'echantillons bio cf NGL-1663
 		propertyDefinitions.add(newPropertiesDefinition("Fraction / couche", "sizeFractionOrLayer", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null,
-				newValues(">20 µm","2-20 µm","0.2-2 µm",">2 µm","0.1 cm","1-3 cm","3-5 cm","5-10 cm","10-15 cm","15-30 cm"), null,null,null,"single", 6, false, null,null));		
-		
+		newValues(">20 µm","2-20 µm","0.2-2 µm",">2 µm","0.1 cm","1-3 cm","3-5 cm","5-10 cm","10-15 cm","15-30 cm"), null,null,null,"single", 6, false, null,null));				
+		propertyDefinitions.add(newPropertiesDefinition("Méthode préparation ADN (ou ARN)", "dnaTreatment", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null,
+				DescriptionFactory.newValues("MDA","size selection using ampure","EtOH-reconcentrated","WGA", "SAG"), null, null, null,"single", 18, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Code Barre TARA", "taraBarCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true,
+				null, null, "single", 2, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Station TARA", "taraStation", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Integer.class, true, getTaraStationValues(), "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Profondeur TARA", "taraDepthCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, getTaraDepthCodeValues(false),"single"));
+	
 		return propertyDefinitions;
 	}
 	
 	private static List<PropertyDefinition> getBiologicalSamplePropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, null, "single", 2, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("% GC théorique", "theoricalGCPercent", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Double.class, false, null, null, "single", 3, false, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Long.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"), "single", 4, false, null, null));
+		//propertyDefinitions.add(newPropertiesDefinition("% GC théorique", "theoricalGCPercent", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Double.class, false, null, null, "single", 3, false, null, null));
+	//	propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Long.class, false, null, 
+		//		null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"), "single", 4, false, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Nom scientifique collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				null, null,null,null,"single", 5, false, null,null));		
-		propertyDefinitions.add(newPropertiesDefinition("Fraction / couche", "sizeFractionOrLayer", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null,
-				newValues(">20 µm","2-20 µm","0.2-2 µm",">2 µm","0.1 cm","1-3 cm","3-5 cm","5-10 cm","10-15 cm","15-30 cm"), null,null,null,"single", 6, false, null,null));		
+	//	propertyDefinitions.add(newPropertiesDefinition("Fraction / couche", "sizeFractionOrLayer", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null,
+		//		newValues(">20 µm","2-20 µm","0.2-2 µm",">2 µm","0.1 cm","1-3 cm","3-5 cm","5-10 cm","10-15 cm","15-30 cm"), null,null,null,"single", 6, false, null,null));		
+		
+		propertyDefinitions.add(newPropertiesDefinition("Fraction de taille", "sizeFraction", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null,
+				newValues(">20 µm","2-20 µm","0.2-2 µm",">2 µm",">3 µm","0.2-3 µm","0.22-200 µm","<0.2 µm"), null,null,null,"single", 6, false, null,null));		
+		propertyDefinitions.add(newPropertiesDefinition("Profondeur / Couche", "depthOrLayer", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null,
+				newValues("0.1 cm","1-3 cm","3-5 cm","5-10 cm","10-15 cm","15-30 cm"), null,null,null,"single", 6, false, null,null));		
+	
+		propertyDefinitions.add(newPropertiesDefinition("Contrôle négatif", "negativeControl", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, false, null, 
+				null, null,null,null,"single", 5, true, null,null));		
+	//
 		
 		return propertyDefinitions;
 	}
 	
 	private static List<PropertyDefinition> getAmpliconReceptionPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
+		
 		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, null, "single", 2, true, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Amorces", "amplificationPrimers", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
-				DescriptionFactory.newValues("Fuhrman primer","V9 primer", "16S primer + Fuhrman primer", "ITS2 primer", "ITSintfor2 / ITS-Reverse", "SYM_VAR_5.8S2 / SYM_VAR_REV", "ITSD / ITS2REV","CP23S primers","5.8S F1 / R1","18S_V4 primer", "COI primer m1COIintF / jgHCO2198","Sneed2015 27F / 519Rmodbio", "COI primer LCO1490/ HC02198"), null, null, null,"single", 2, true, null,null));
+				getAmplificationPrimers(), null, null, null,"single", 2, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Région ciblée", "targetedRegion", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
-				DescriptionFactory.newValues("16S_V4V5","18S_V9", "16S_Full Length + 16S_V4V5", "ITS2","CP23S","5.8S","16S_V1V2V3","18S_V4","COI"), null, null, null,"single", 3, true, null,null));
+				getTargetedRegion(), null, null, null,"single", 3, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Taille amplicon attendue", "expectedAmpliconSize", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				null,null,null,null,"single", 16, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Issu du type d'échantillon", "fromSampleTypeCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				DescriptionFactory.newValues("DNA","RNA"),null,null,null,"single", 16, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Nom organisme / collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				null, null,null,null,"single", 17, false, null,null));		
+		//inject with drools rule
+		propertyDefinitions.add(newPropertiesDefinition("Contrôle négatif", "negativeControl", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, false, null, 
+				null, null,null,null,"single", 20, true, null,null));	
 		
+		propertyDefinitions.add(newPropertiesDefinition("Code éch. témoin négatif PCR (1)", "tagPcrBlank1SampleCode", LevelService.getLevels(Level.CODE.Content), String.class, false, null,
+				null, null, null, null,"single", 21, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Code éch. témoin négatif PCR (2)", "tagPcrBlank2SampleCode", LevelService.getLevels(Level.CODE.Content), String.class, false, null,
+				null, null, null, null,"single", 22, true, null,null));
 		
 		return propertyDefinitions;
 	}
 	
+	private static List<PropertyDefinition> getAmpliconToAmplifyReceptionPropertyDefinitions() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
+		
+		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate",
+				LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null,
+				null));
+		propertyDefinitions.add(
+				newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample, Level.CODE.Content),
+						Boolean.class, true, null, null, "single", 2, true, null, null));
+
+		propertyDefinitions.add(newPropertiesDefinition("Amorces (origine)", "originAmplificationPrimers",
+				LevelService.getLevels(Level.CODE.Sample, Level.CODE.Content), String.class, true, null,
+				getAmplificationPrimers(), null, null, null, "single", 5, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Région ciblée (origine)", "originTargetedRegion",
+				LevelService.getLevels(Level.CODE.Sample, Level.CODE.Content), String.class, true, null,
+				getTargetedRegion(), null, null, null, "single", 3, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Taille amplicon attendue (origine)",
+				"originExpectedAmpliconSize", LevelService.getLevels(Level.CODE.Sample, Level.CODE.Content),
+				String.class, true, null, null, null, null, null, "single", 6, true, null, null));
+		propertyDefinitions
+				.add(newPropertiesDefinition("Issu du type d'échantillon (origine)", "fromOriginSampleTypeCode",
+						LevelService.getLevels(Level.CODE.Sample, Level.CODE.Content), String.class, true, null,
+						DescriptionFactory.newValues("DNA", "ARN"), null, null, null, "single", 4, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Nom organisme / collaborateur", "collabScientificName",
+				LevelService.getLevels(Level.CODE.Sample, Level.CODE.Content), String.class, false, null, null, null,
+				null, null, "single", 17, false, null, null));
+
+		propertyDefinitions.add(newPropertiesDefinition("Contrôle négatif", "negativeControl",
+				LevelService.getLevels(Level.CODE.Sample, Level.CODE.Content), Boolean.class, false, null, null, null,
+				null, null, "single", 20, true, null, null));
+
+		return propertyDefinitions;
+	}
+	
+	
 	private List<PropertyDefinition> getRNAReceptionPropertyDefinitions() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, null, "single", 2, false, null, null));	
 		propertyDefinitions.add(newPropertiesDefinition("Nom organisme / collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				null, null,null,null,"single", 17, false, null,null));		
+
+		propertyDefinitions.add(newPropertiesDefinition("Code éch. témoin négatif extraction", "extractionBlankSampleCode", LevelService.getLevels(Level.CODE.Content), String.class, false, null,
+				null, null, null, null,"single", 19, true, null,null));
+
 		
+		propertyDefinitions.add(newPropertiesDefinition("Contrôle négatif", "negativeControl", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, false, null, 
+				null, null,null,null,"single", 20, true, null,null));	
 		return propertyDefinitions;
 	}
 	
 	private List<PropertyDefinition> getRNALibraryReceptionPropertyDefinitions() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, null, "single", 2, false, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
@@ -556,7 +696,7 @@ public class ImportServiceCNS extends AbstractImportService {
 	}
 	
 	private List<PropertyDefinition> getDNALibraryWithoutIndexReceptionPropertyDefinitions() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, null, "single", 2, false, null, null));
 	
@@ -568,7 +708,7 @@ public class ImportServiceCNS extends AbstractImportService {
 	}
 	
 	private List<PropertyDefinition> getDNALibraryReceptionPropertyDefinitions() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, null, "single", 2, false, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
@@ -582,8 +722,81 @@ public class ImportServiceCNS extends AbstractImportService {
 		return propertyDefinitions;
 	}
 	
+	private List<PropertyDefinition> getAmpliconLibraryReceptionPropertyDefinitions() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
+		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, null, "single", 2, false, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
+				null, null,null,null,"single", 14, false, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
+				getTagCategories(), null,null,null,"single", 15, false, null,null));		
+					
+		propertyDefinitions.add(newPropertiesDefinition("Nom organisme / collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				null, null,null,null,"single", 17, false, null,null));		
+		
+		List<Value> libProcessTypeCodes = new ArrayList<>();
+		libProcessTypeCodes.addAll(MetaBarCoding.getBanqueProcessTypeMetaTA());
+		libProcessTypeCodes.addAll(MetaBarCoding.getBanqueProcessTypeMetaTB());
+		
+		
+		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Content), String.class, true, null,
+				libProcessTypeCodes,null,null,null,"single", 18, false, null, null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Taille théorique sizing", "expectedSize", LevelService.getLevels(Level.CODE.Content), String.class, false, null,
+                 DescriptionFactory.newValues("280-310 (F300)","400-550 (ITS2)","450-550 (W500)","550-650 (W600)","500-650","550-700 (ITS2)","600-700 (W700)","650-750 (W700)","650-700 (W700)","650-800","700-800 (W800)","750-800", "autre"),  MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 20, true, null,null));
+
+		propertyDefinitions.add(newPropertiesDefinition("Amorces", "amplificationPrimers", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				getAmplificationPrimers(),null, null, null,"single", 3, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Région ciblée", "targetedRegion", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				getTargetedRegion(), null, null, null,"single", 4, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Taille amplicon attendue", "expectedAmpliconSize", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+					null,null,null,null,"single", 5, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Issu du type d'échantillon", "fromSampleTypeCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+					DescriptionFactory.newValues("DNA","RNA"),null,null,null,"single", 6, true, null, null));
+
+		
+		return propertyDefinitions;
+	}
+	
+	/* TODO OLD VALUES need clean
+	private static List<Value> getAmplificationPrimers() {
+		return DescriptionFactory.newValues("Fuhrman primer", "V9 primer", "16S primer + Fuhrman primer", "ITS2 primer",
+				"ITSintfor2 / ITS-Reverse", "SYM_VAR_5.8S2 / SYM_VAR_REV", "ITSD / ITS2REV", "CP23S primers",
+				"5.8S F1 / R1", "18S_V4 primer", "COI primer m1COIintF / jgHCO2198", "COI primer LCO1490/ HC02198",
+				"Sneed2015 27F / 519Rmodbio", "16SV4V5 Archae", "16SV5V6 Prok", "18SV1V2 Metazoaire",
+				"16SV4 Procaryote", "16SFL", "18S FungiF390/FungiR1");
+	}
+	*/
+	
+	private static List<Value> getAmplificationPrimers() {
+		return DescriptionFactory.newValues("16S FL 27F/1390R + Fuhrman primers","16S FL 27F/1390R","16S FL 27F/1492R","16S FL 27F/1492R + Fuhrman primers",
+				"16S FL W18/W02","16S V1V2V3 Prok Sneed2015 27F/519Rmodbio","16S V4 Prok 515FF/806R","16S V4V5 Archae 517F/958R",
+				"16S V5V6 Prok 784F/1061R", "16S V3 F342/V4R802","18S FungiF390/FungiR1","18S V1V2 Metazoaire SSUF04/SSURmod","18S V4 Euk V4f (TAReukF1)/V4r (TAReukR)",
+				"18S V9 1389F/1510R","5.8S F1/R1","COI primers LCOI1490/HC022198","COI primers m1COIintF/jgHCO2198",
+				"CP23S primers","Fuhrman primers","ITS2/SYM_VAR_5.8S2/SYM_VAR_REV","ITSD/ITS2REV","ITSintfor2/ITS-Reverse");
+	}
+
+	
+/*
+	private static List<Value> getOriginAmplificationPrimers() {
+		return DescriptionFactory.newValues("Fuhrman primer", "V9 primer", "16S primer + Fuhrman primer",
+				"ITSintfor2 / ITS-Reverse", "SYM_VAR_5.8S2 / SYM_VAR_REV", "ITSD / ITS2REV", "CP23S primers",
+				"5.8S F1 / R1", "18S_V4 primer", "COI primer m1COIintF / jgHCO2198", "Sneed2015 27F / 519Rmodbio",
+				"16SV4V5 Archae", "16SV5V6 Prok", "18SV1V2 Metazoaire", "16SV4 Procaryote", "16SFL");
+	}
+*/
+	private static List<Value> getTargetedRegion() {
+		return DescriptionFactory.newValues("16S_V4V5", "18S_V9", "16S_Full Length + 16S_V4V5", "ITS2", "CP23S",
+				"18S_V4", "COI", "16S_V1V2V3", "16S_V3V4", "16S_V5V6", "18S_V1V2", "16S_V4", "5.8S","16SFL", "18S_V7V8");
+	}
+/*
+	private static List<Value> getOriginTargetedRegion() {
+		return DescriptionFactory.newValues("16S_V4V5", "18S_V9", "16S_Full Length + 16S_V4V5", "ITS2", "CP23S",
+				"18S_V4", "COI", "16S_V1V2V3", "16S_V5V6", "18S_V1V2", "16S_V4","5.8S", "16SFL");
+	}
+*/	
 	private List<PropertyDefinition> getPoolLibraryReceptionPropertyDefinitions() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Label de travail", "workName", LevelService.getLevels(Level.CODE.Container), String.class, true, null, null, "single", 15, false, null, null));
 		
@@ -611,9 +824,9 @@ public class ImportServiceCNS extends AbstractImportService {
 
 		
 		propertyDefinitions.add(newPropertiesDefinition("Amorces", "amplificationPrimers", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
-				DescriptionFactory.newValues("Fuhrman primer","V9 primer", "16S primer + Fuhrman primer", "ITS2 primer", "ITSintfor2 / ITS-Reverse", "SYM_VAR_5.8S2 / SYM_VAR_REV", "ITSD / ITS2REV","CP23S primers","5.8S F1 / R1","18S_V4 primer", "COI primer m1COIintF / jgHCO2198","Sneed2015 27F / 519Rmodbio", "COI primer LCO1490/ HC02198"), null, null, null,"single", 11, true, null,null));
+				getAmplificationPrimers(), null, null, null,"single", 11, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Région ciblée", "targetedRegion", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
-				DescriptionFactory.newValues("16S_V4V5","18S_V9", "16S_Full Length + 16S_V4V5", "ITS2","CP23S","5.8S","16S_V1V2V3","18S_V4","COI"), null, null, null,"single", 12, true, null,null));
+				getTargetedRegion(), null, null, null,"single", 12, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Taille amplicon attendue", "expectedAmpliconSize", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				null,null,null,null,"single", 13, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Issu du type d'échantillon", "fromSampleTypeCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
@@ -625,7 +838,7 @@ public class ImportServiceCNS extends AbstractImportService {
 	
 	
 	private static List<Value> getTaraStationValues(){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("3", "Station3"));
 		values.add(DescriptionFactory.newValue("4", "Station4"));
 		values.add(DescriptionFactory.newValue("5", "Station5"));
@@ -786,7 +999,7 @@ public class ImportServiceCNS extends AbstractImportService {
 	}
 	
 	private static List<Value> getTaraDepthCodeValues(boolean reverse){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("COR", "Coral"));
 		values.add(DescriptionFactory.newValue("CTL", "CTL"));
 		values.add(DescriptionFactory.newValue("DCM", "Deep Chlorophyl Maximum"));
@@ -823,7 +1036,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("ZZZ", "DiscreteDepth"));
 		
 		if(reverse){
-			List<Value> rValues = new ArrayList<Value>();
+			List<Value> rValues = new ArrayList<>();
 			for(Value v : values){
 				rValues.add(DescriptionFactory.newValue(v.name, v.code));
 			}
@@ -835,7 +1048,7 @@ public class ImportServiceCNS extends AbstractImportService {
 	}
 	
 	private static List<Value> getTaraFilterCodeValues(boolean reverse){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("AACC", "0-0.2"));
 		values.add(DescriptionFactory.newValue("AAZZ", "0-inf"));
 		values.add(DescriptionFactory.newValue("BBCC", "0.1-0.2"));
@@ -863,7 +1076,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("ZZZZ", "inf-inf"));
 
 		if(reverse){
-			List<Value> rValues = new ArrayList<Value>();
+			List<Value> rValues = new ArrayList<>();
 			for(Value v : values){
 				rValues.add(DescriptionFactory.newValue(v.name, v.code));
 			}
@@ -875,7 +1088,7 @@ public class ImportServiceCNS extends AbstractImportService {
 	
 	
 	private static List<PropertyDefinition> getLibraryTaraPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.addAll(getTaraPropertyDefinitions());
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true, "single"));
 		propertyDefinitions.add(newPropertiesDefinition("Catégorie Tag", "tagCategory", LevelService.getLevels(Level.CODE.Content), String.class, true, getTagCategories(), "single"));
@@ -884,8 +1097,8 @@ public class ImportServiceCNS extends AbstractImportService {
 	}
 	
 	public static List<Institute> getInstitutes(Constants.CODE...codes) throws DAOException {
-		List<Institute> institutes = new ArrayList<Institute>();
-		for(Constants.CODE code : codes){
+		List<Institute> institutes = new ArrayList<>();
+		for (Constants.CODE code : codes) {
 			institutes.add(Institute.find.findByCode(code.name()));
 		}
 		return institutes;

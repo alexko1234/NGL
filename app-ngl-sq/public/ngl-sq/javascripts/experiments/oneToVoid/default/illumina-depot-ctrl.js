@@ -134,7 +134,7 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 		});
 		
 		$scope.$on('refresh', function(e) {
-			console.log("call event refresh on one-to-void");		
+			console.log("call event refresh on one-to-void (default)");	// OK sort	
 			var dtConfig = $scope.atmService.data.getConfig();
 			$scope.atmService.data.setConfig(dtConfig);
 			
@@ -143,12 +143,12 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 		});
 		
 		$scope.$on('cancel', function(e) {
-			console.log("call event cancel");
+			console.log("call event cancel on one-to-void (default)"); // OK sort
 			$scope.atmService.data.cancel();						
 		});
 		
 		$scope.$on('activeEditMode', function(e) {
-			console.log("call event activeEditMode");
+			console.log("call event activeEditMode on one-to-void (default)");// PB ne sort jamais si experience a etat Finished!!!
 			$scope.atmService.data.selectAll(true);
 			$scope.atmService.data.setEdit();
 		});
@@ -168,37 +168,10 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 		
 		$scope.atmService = atmService;
 		
-		var generateSampleSheet = function(){
-			$scope.messages.clear();
-			$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
-			.success(function(data, status, headers, config) {
-				var header = headers("Content-disposition");
-				var filepath = header.split("filename=")[1];
-				var filename = filepath.split(/\/|\\/);
-				filename = filename[filename.length-1];
-				if(data!=null){
-					$scope.messages.clazz="alert alert-success";
-					$scope.messages.text=Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath;
-					$scope.messages.showDetails = false;
-					$scope.messages.open();	
-					
-					var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
-					saveAs(blob, filename);
-				}
-			})
-			.error(function(data, status, headers, config) {
-				$scope.messages.clazz = "alert alert-danger";
-				$scope.messages.text = Messages('experiments.msg.generateSampleSheet.error');
-				$scope.messages.setDetails(data);
-				$scope.messages.showDetails = true;
-				$scope.messages.open();				
-			});
-		};
-		
 		$scope.setAdditionnalButtons([{
 			isDisabled : function(){return $scope.isCreationMode();},
 			isShow:function(){return true},
-			click:generateSampleSheet,
+			click:$scope.fileUtils.generateSampleSheet,
 			label:Messages("experiments.sampleSheet")
 		}]);
 		
@@ -210,5 +183,54 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 				$parse("experimentProperties.runStartDate.value").assign($scope.experiment, date); 
 			}
 		}
+		
+		//22/01/2018 NGL-1768 22/01/2018: importer le fichier XML du NovaSeq 6000
+		var importNOVASEQ6000XMLfile = function(){
+			console.log('Import NOVASEQ6000 RunParameters XML file');
+
+			$scope.messages.clear();
+			
+			$http.post(jsRoutes.controllers.instruments.io.IO.importFile($scope.experiment.code).url, $scope.file)
+			.success(function(data, status, headers, config) {
+				$scope.messages.setSuccess(Messages('experiments.msg.import.success'));
+
+				// data est l'experience retournée par input.java
+				// PAS BESOIN ICI ....$scope.experiment.instrumentProperties= data.instrumentProperties;
+				
+				// et reagents ....
+				$scope.experiment.reagents=data.reagents;
+				
+				// reinit select File...
+				$scope.file = undefined;
+				angular.element('#NOVASEQ6000XMLfile')[0].value = null;
+				
+				//refresh  reagents !!!
+				$scope.$emit('askRefreshReagents');
+				
+			})
+			.error(function(data, status, headers, config) {
+				$scope.messages.clazz = "alert alert-danger";
+				$scope.messages.text = Messages('experiments.msg.import.error');
+				$scope.messages.setDetails(data);
+				$scope.messages.showDetails = true;
+				$scope.messages.open();	
+		
+				// reinit select File..
+				$scope.file = undefined;
+				// il faut aussi réinitaliser le bouton d'import
+				angular.element('#NOVASEQ6000XMLfile')[0].value = null;
+			});		
+		};
+			
+		$scope.buttonNOVASEQ6000XMLfile = {
+				isShow:function(){
+					//return (( $scope.isInProgressState() || $scope.isFinishState() ) &&  $scope.isEditMode() ); // MARCHE pas, editMode pas vu voir plus haut
+					return ( $scope.isInProgressState() || $scope.isFinishState() );
+					},
+				isFileSet:function(){
+					return ($scope.file === undefined)?"disabled":"";
+				},
+				click:importNOVASEQ6000XMLfile	
+			};
 		
 }]);

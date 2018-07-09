@@ -10,4 +10,5 @@ public class ParametersSearchForm extends ListForm{
 	public Set<String> typeCodes;
 	public String sequence;
 	public Set<String> categoryCodes;
+	public String categoryCode;
 }

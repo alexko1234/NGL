@@ -3,29 +3,20 @@ package controllers.instruments.io.cns.tecanevo100;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.IntStream;
 
-
-
-import org.assertj.core.internal.Numbers;
-
-
-
-import play.Logger;
+import controllers.instruments.io.cns.tecanevo100.tpl.txt.pool_x_to_tubes;
+import controllers.instruments.io.cns.tecanevo100.tpl.txt.solution_stock_output_96_well_plate;
+import controllers.instruments.io.cns.tecanevo100.tpl.txt.solution_stock_output_tube;
+import controllers.instruments.io.utils.AbstractOutput;
+import controllers.instruments.io.utils.File;
+import controllers.instruments.io.utils.OutputHelper;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OutputContainerUsed;
 import validation.ContextValidation;
-import controllers.instruments.io.cns.tecanevo100.tpl.txt.*;
-import controllers.instruments.io.utils.AbstractOutput;
-import controllers.instruments.io.utils.File;
-import controllers.instruments.io.utils.OutputHelper;
 
 public class Output extends AbstractOutput {
 
@@ -57,7 +48,7 @@ public class Output extends AbstractOutput {
 		Map<String, String> sourceMapping = getSourceMapping(experiment);
 		Map<String, String> destPositionMapping = getDestMapping(experiment);
 		
-		List<SampleSheetPoolLine> lines = new ArrayList<SampleSheetPoolLine>();
+		List<SampleSheetPoolLine> lines = new ArrayList<>();
 		
 		experiment.atomicTransfertMethods.forEach(atm -> {
 			
@@ -91,7 +82,7 @@ public class Output extends AbstractOutput {
 	}
 
 	private Map<String, String> getSourceMapping(Experiment experiment) {
-		Map<String, String> sources = new HashMap<String, String>();
+		Map<String, String> sources = new HashMap<>();
 		
 		String[] inputContainerSupportCodes = experiment.inputContainerSupportCodes.toArray(new String[0]);
 		Arrays.sort(inputContainerSupportCodes);
@@ -102,7 +93,7 @@ public class Output extends AbstractOutput {
 	}
 	
 	private Map<String, String> getDestMapping(Experiment experiment) {
-		Map<String, String> dest = new HashMap<String, String>();
+		Map<String, String> dest = new HashMap<>();
 		
 		String[] outputContainerSupportCodes = experiment.outputContainerSupportCodes.toArray(new String[0]);
 		Arrays.sort(outputContainerSupportCodes);

@@ -6,30 +6,36 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.springframework.jdbc.core.SqlParameter;
+
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
 import models.laboratory.processes.description.ExperimentTypeNode;
 import models.utils.dao.DAOException;
-
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.object.MappingSqlQuery;
-
+import models.utils.dao.MappingSqlQueryFactory;
+import models.utils.dao.NGLMappingSqlQuery;
 import play.api.modules.spring.Spring;
 
-public class ExperimentTypeNodeMappingQuery  extends MappingSqlQuery<ExperimentTypeNode>{
+//public class ExperimentTypeNodeMappingQuery  extends MappingSqlQuery<ExperimentTypeNode> {
+public class ExperimentTypeNodeMappingQuery extends NGLMappingSqlQuery<ExperimentTypeNode> {
 
-	public ExperimentTypeNodeMappingQuery()
-	{
-		super();
-	}
+	public static final MappingSqlQueryFactory<ExperimentTypeNode> factory = ExperimentTypeNodeMappingQuery::new;
 	
-	public ExperimentTypeNodeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)
-	{
-		super(ds,sql);
-		if(sqlParameter!=null)
-			super.declareParameter(sqlParameter);
-		compile();
+//	public ExperimentTypeNodeMappingQuery() {
+//		super();
+//	}
+	
+//	public ExperimentTypeNodeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
+//		super(ds,sql);
+//		if (sqlParameter != null)
+////			super.declareParameter(sqlParameter);
+//			declareParameter(sqlParameter);
+//		compile();
+//	}
+
+	public ExperimentTypeNodeMappingQuery(DataSource ds, String sql, SqlParameter... sqlParameter) {
+		super(ds,sql,sqlParameter);
 	}
 
 	@Override
@@ -48,6 +54,7 @@ public class ExperimentTypeNodeMappingQuery  extends MappingSqlQuery<ExperimentT
 			
 			node.experimentType = expTypeDAO.findById(rs.getLong("fk_experiment_type"));
 			
+			node.previousExperimentTypes = expTypeDAO.findPreviousExperimentTypeForAnExperimentTypeCode(node.experimentType.code);
 			List<ExperimentType> experimentTypes = expTypeDAO.findSatelliteExperimentByNodeId(node.id);
 			
 			for(ExperimentType et: experimentTypes){
@@ -60,13 +67,11 @@ public class ExperimentTypeNodeMappingQuery  extends MappingSqlQuery<ExperimentT
 				}else{
 					throw new DAOException("Bad Satellite "+et.code);
 				}
-			}
-						
+			}				
 			return node;
 		} catch (DAOException e) {
 			throw new SQLException(e);
 		}
-		
 	}
 
 }

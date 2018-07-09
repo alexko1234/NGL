@@ -2,10 +2,9 @@ package controllers.reagents.api;
 
 import java.util.List;
 
-import models.laboratory.common.instance.Valuation;
 import controllers.ListForm;
 
-public class KitCatalogSearchForm extends ListForm{
+public class KitCatalogSearchForm extends ListForm {
 	public String code;
 	public List<String> codes;
 	public String name;

@@ -1,15 +1,11 @@
-// 11/08/2017 GA/FDS experience One to Many 
-// 16/10/2017 finalement il faut qd meme un datatable 
+// 11/08/2017 GA/FDS experience One to Many => Il faut refaire un atmService "allégé" par rapport a celui dans atomicTransfereServices.js
+// 16/10/2017 finalement il faut qd meme un datatable...
 
-/* 20/10/2017 FDS essai ajout '$q','$routeParams', $http......
-angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', '$filter','commonAtomicTransfertMethod','mainService','datatable',
-                                                               function($scope, $parse, $filter, commonAtomicTransfertMethod, mainService, datatable ) {
-*/
+// 20/10/2017 FDS ajout '$q','$routeParams', $http pour les promises
 angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse', '$filter','$q','$routeParams','commonAtomicTransfertMethod','mainService','datatable',
                                                                function($scope, $http, $parse, $filter, $q, $routeParams, commonAtomicTransfertMethod, mainService, datatable ) {
 	
 	var inputExtraHeaders=Messages("experiments.inputs");
-	var outputExtraHeaders=Messages("experiments.outputs");	
 	
 	var inputContainerDatatableConfig = {
 			columns:[   
@@ -21,7 +17,7 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":1,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
 			         { // Ligne
 			        	 "header":Messages("containers.table.support.line"),
@@ -30,7 +26,7 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":2,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
 			         { // colonne
 			        	 "header":Messages("containers.table.support.column"),
@@ -40,7 +36,7 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":3,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
 			         { // Projet(s)
 				        "header":Messages("containers.table.projectCodes"),
@@ -153,109 +149,108 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 	
 	
    $scope.values=[1,2];
-   // Julie ne veut pas de preselection....$scope.nbOutputSupport=$scope.values[0];
-	
+   
    // créer un tableau sur lequel pourra boucler ng-repeat
    // ce tableau est modifié sur onChange de "nbOutputSupport"
    $scope.initOutputContainerSupportCodes = function(nbOutputSupport){
 	   
-	   $scope.nbOutputSupport=nbOutputSupport;//necessaire si pas de preselection
+	    //$scope.nbOutputSupport=nbOutputSupport;//necessaire si pas de preselection
 	   
 		if($scope.isCreationMode() ){
 			$scope.outputContainerSupportCodes= new Array(nbOutputSupport*1);// *1 pour forcer en numerique nbOutputSupport qui est est un input type text
+			$scope.outputContainerSupportStorageCodes= new Array(nbOutputSupport*1);
 		} else {
 		    //en mode edition récupérer les codes des outputContainers et reinjecter si possible ce qu'il y avait avant
-			previousOutputContainerSupportCodes=$scope.$eval("atomicTransfertMethods|flatArray:'outputContainerUseds'|getArray:'locationOnContainerSupport.code'|unique",$scope.experiment);
-			previousStorageCodes=$scope.$eval("atomicTransfertMethods|flatArray:'outputContainerUseds'|getArray:'locationOnContainerSupport.storageCode'|unique",$scope.experiment);
+			previousOutputContainerSupportCodes=$scope.$eval("atomicTransfertMethods| flatArray:'outputContainerUseds'| getArray:'locationOnContainerSupport.code'| unique",$scope.experiment);
+			previousOutputContainerSupportStorageCodes=$scope.$eval("atomicTransfertMethods| flatArray:'outputContainerUseds'| getArray:'locationOnContainerSupport.storageCode'| unique",$scope.experiment);
+			
 			if(previousOutputContainerSupportCodes.length >= nbOutputSupport){
-				//tronquer le tableau
+				//l'utilisateur a reduit le nombre de output...tronquer le tableau
 				$scope.outputContainerSupportCodes = previousOutputContainerSupportCodes.splice(0, nbOutputSupport);
-				// idem pour storageCodes
-				$scope.storageCodes = previousStorageCodes.splice(0, nbOutputSupport);
+				$scope.outputContainerSupportStorageCodes = previousOutputContainerSupportStorageCodes.splice(0, nbOutputSupport);
 				
 			}else if(previousOutputContainerSupportCodes.length < nbOutputSupport){
-				// completer le tableau  //idem pour storageCodes
+				//l'utilisateur a augmenté completer le tableau avec des null
 				$scope.outputContainerSupportCodes=previousOutputContainerSupportCodes;
-				$scope.storageCodes=previousStorageCodes;
+				$scope.outputContainerSupportStorageCodes=previousOutputContainerSupportStorageCodes; 
+				
 				for (var j=previousOutputContainerSupportCodes.length ; j<  nbOutputSupport; j++){
 					$scope.outputContainerSupportCodes.push(null);
-					$scope.storageCodes.push(null);
+					$scope.outputContainerSupportStorageCodes.push(null);
 				}
 			}
 		} 
 	}
 
    if($scope.isCreationMode()){
-	   // trouver LE/LES codes des supports de tous les containers en entree de l'experience (il peut y en avoir plusieurs..)
-	   $scope.inputSupportCodes = $scope.$eval("getBasket().get()|getArray:'support.code'|unique", mainService); 
-	   
-	   $scope.initOutputContainerSupportCodes(0);
-	   
-	   if ($scope.inputSupportCodes.length > 1){
-		   $scope.messages.clear();
-		   $scope.messages.clazz = "alert alert-danger";
-		   $scope.messages.text = Messages("experiments.input.error.only-1-plate");
-		   $scope.messages.showDetails = false;
-		   $scope.messages.open();
-	   } else {		  
-		   $scope.inputSupportCode=$scope.inputSupportCodes[0];
-		   $scope.outputContainerSupportCodes=[]; 
-		   $scope.storageCodes=[];
-		   $scope.outputContainerSupportStates=[];// ajout 20/10/2017;  il faudrait plutot creer un objet outputContainerSupports avec 3 champs code/storageCode/state !!!
+
+	   if ($scope.experiment.instrument.typeCode === 'bravo-workstation') {
+		   $scope.nbOutputSupport=1;
+	   } else {
+		   $scope.nbOutputSupport=2;
 	   }
+	   
+	   //16/02/2018 en fonction instrument
+	   $scope.initOutputContainerSupportCodes($scope.nbOutputSupport);
+	   
+	   // trouver LE/LES codes des supports de tous les containers en entree de l'experience (ce sont des puits de plaque)   
+	   $scope.inputSupportCodes = $scope.$eval("getBasket().get()|getArray:'support.code'|unique", mainService); 
+	   var categoryCodes = $scope.$eval("getBasket().get()|getArray:'support.categoryCode'|unique",mainService);
+	   
+	   //  26/02/2018  experience ne peut marcher qu'avec 1 plaque en entree!!!!!
+	   if ( ($scope.inputSupportCodes.length > 1) || ( categoryCodes[0] !== "96-well-plate")){
+		   $scope.messages.clear();
+		   $scope.messages.setError(Messages("experiments.input.error.only-1-plate"));
+
+		   // faudrait empecher la page de se charger... ATTENTION dans cette experience on a un atmService local car specifique oneToMany
+		   //var atmService = null; // n' empeche pas la page de se charger.. car redefini en lignes 310...
+	   } else {
+		   //22/03/2018 ajouté car supprimé precedemment??? ( bug vu par J.Guy pendant test NGL-1906)
+		   $scope.inputSupportCode=$scope.inputSupportCodes[0];
+	   }
+	   
 	} else {
 		 getExperimentData();
-	}
-  
-    // TODO  recuperer l'etat d'un containerSupport 
-	//            voir containerSupport/details.js....
-	//            voir 'ngl-sq.barCodeSearchServices'
-	function getOutputContainerSupportState(code){
-		if (undefined !== code ){
-       	console.log('get support data for '+ code);
-       
-       	/* FDS essai abandonné pour l'instant
-			var promise = [];
-			promise.push($http.get(jsRoutes.controllers.containers.api.ContainerSupports.get($routeParams.code).url));
-			$q.all(promise).then(function(results){
-			$scope.support = results[0].data;
-				...
-			});		
-       	 */
-       	return ("TODO: Etat de..."+code);
-	    }
 	}
 	
 	function getExperimentData(){	
 		//1 récupérer LE locationOnContainerSupport.code des containers (il ne peux y en avoir qu'un seul)
-	    $scope.inputSupportCode = $scope.$eval("atomicTransfertMethods|flatArray:'inputContainerUseds'|getArray:'locationOnContainerSupport.code'|unique",$scope.experiment)[0];
+	    $scope.inputSupportCode = $scope.$eval("atomicTransfertMethods| flatArray:'inputContainerUseds'| getArray:'locationOnContainerSupport.code'| unique",$scope.experiment)[0];
 	     
 		//2 récupérer le nbre de nbOutputSupport en se basant sur atomic[0]: tjrs vrai ??? 
-        //  => oui si on bloque les cas de sauvegarde sans  nbOutputSupport
-	    $scope.nbOutputSupport=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds.length;
+        //  => oui si on bloque les cas de sauvegarde sans nbOutputSupport
+	    $scope.nbOutputSupport=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds.length; 
 			  
-	    //3 récupérer les codes des outputContainers  
-	    $scope.outputContainerSupportCodes=$scope.$eval("atomicTransfertMethods|flatArray:'outputContainerUseds'|getArray:'locationOnContainerSupport.code'|unique",$scope.experiment);
-		
-	    //4 récupérer les storageCodes
-	    $scope.storageCodes=$scope.$eval("atomicTransfertMethods|flatArray:'outputContainerUseds'|getArray:'locationOnContainerSupport.storageCode'|unique",$scope.experiment);
-		
-	    //?? qu'est-ce qui prouve que les 2 tableaux locationOnContainerSupport.code  et locationOnContainerSupport.storageCode  sont récupéres dans le meme ordre ?????
+	    //3 récupérer les codes des outputContainers et les storageCodes des outputContainers 
+	    $scope.outputContainerSupportCodes=$scope.$eval("atomicTransfertMethods| flatArray:'outputContainerUseds'| getArray:'locationOnContainerSupport.code'| unique",        $scope.experiment);
+	    $scope.outputContainerSupportStorageCodes=$scope.$eval("atomicTransfertMethods| flatArray:'outputContainerUseds'| getArray:'locationOnContainerSupport.storageCode'| unique", $scope.experiment);
+    
+	    // 5 NGL-1670- recuperer l'etat des outputContainers
+	    $scope.outputContainerSupportStates= [];
 	    
-	    /* TODO  recuperer aussi l'etat des support output ?? ... et du coup on voit bien ici le probleme...
-	    $scope.outputContainerSupportStates=[];
 	    $scope.outputContainerSupportCodes.forEach(function(code) {
-	       $scope.outputContainerSupportStates.push( getOutputContainerSupportState(code) ); 
-	    });
-	    */
+	    	getOutputContainerSupportState(code);
+	    });   
 	}
 	
-		
+    // NGL-1670  recuperer l'etat d'un containerSupport ==> utiliser promise (voir containerSupport/details.js)
+	// il faut que le containerSupport ait été créé... MARCHE PAS A L"ETAT NOUVEAU !!!
+	function getOutputContainerSupportState(supportCode){
+		if (undefined !== supportCode ){
+			$http.get(jsRoutes.controllers.containers.api.ContainerSupports.get(supportCode).url).then(function(results){ 
+				
+				var stateCode=results.data.state.code;
+				console.log(supportCode +"=>"+stateCode );
+				$scope.outputContainerSupportStates.push(stateCode);
+			});		
+	    }
+	}
 	
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
 
 		$scope.atmService.viewToExperimentOneToMany($scope.experiment);
+		
 		if ( $scope.experiment.atomicTransfertMethods[0].outputContainerUseds.length === 0){
 			$scope.$emit('childSavedError', callbackFunction);
 			
@@ -278,15 +273,17 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 		dtConfig.edit.start = false;
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.setConfig(dtConfig);
-		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		
+        // pour rafraichissement de l'affichage des outputContainerSupports
+        getExperimentData();
+		
+		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		$scope.$emit('viewRefeshed');
 	});
 	
 	$scope.$on('cancel', function(e) {
 		console.log("call event cancel");		
 		getExperimentData();
-
 	});
 	
 	$scope.$on('activeEditMode', function(e) {
@@ -294,7 +291,40 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 		// rien  ????
 	});
 	
-
+	// FDS 16/03/2018 : NGL-1906 rechercher le robotRunWorkLabel positionné au niveau processus pour le copier dans robotRunCode (sauf s'il y en plusieurs!!)
+	$scope.$watch("experiment.instrument.code", function(newValue, OldValue){
+		if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {
+			// exemple dans prepa-fc-ordered: var categoryCodes = $scope.$eval("getBasket().get()|getArray:'support.categoryCode'|unique",mainService);
+			// mais ici mainService n'est pas defini, et pas necessaire...
+			// obliger de passer par contents[0], mais normalement ne doit pas poser de probleme...
+			var workLabels= $scope.$eval("getBasket().get()|getArray:'contents[0].processProperties.robotRunWorkLabel.value'|unique");
+			if ( workLabels.length > 1 ){
+				$scope.messages.clear();
+				$scope.messages.clazz = "alert alert-warning";
+				$scope.messages.text = "Plusieurs noms de travail (robot) trouvés parmi les containers d'entrée (info processus)";
+				$scope.messages.open();			
+			
+				console.log('>1  run workLabel trouvé !!');
+				
+			} else if ( workLabels.length === 1 ){
+				// verifier que TOUS les containers ont une valeur...
+				var contents= $scope.$eval("getBasket().get()|getArray:'contents[0]'");
+				var labels= $scope.$eval("getBasket().get()|getArray:'contents[0].processProperties.robotRunWorkLabel.value'");
+				if ( labels.length < contents.length ) {
+					$scope.messages.clear();
+					$scope.messages.clazz = "alert alert-warning";
+					$scope.messages.text = "Certains containers en entrée n'ont pas de nom de travail run (robot) (info processus)";
+					$scope.messages.open();			
+				
+					console.log("Certains containers n'ont pas de workLabel.");
+				} else {
+					$parse("instrumentProperties.robotRunCode.value").assign($scope.experiment, workLabels[0]);
+				}
+			} 
+			// si aucun workLabel ne rien faire
+		}
+	});
+		
 	
 	//init data
 	//GA 16/10/2017 Cette experience est la seule qui fait du one to many avec plaque en entre/ plaques en sortie.
@@ -447,8 +477,8 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 									//affectation du SupportCode
 									outputContainerUsed.locationOnContainerSupport.code=  $scope.outputContainerSupportCodes[j];
 									//affectation du storageCode si defini
-									if ( $scope.storageCodes[j] !== undefined && $scope.storageCodes[j] !== null){			  
-										  outputContainerUsed.locationOnContainerSupport.storageCode=  $scope.storageCodes[j];
+									if ( $scope.outputContainerSupportStorageCodes[j] !== undefined && $scope.outputContainerSupportStorageCodes[j] !== null){			  
+										  outputContainerUsed.locationOnContainerSupport.storageCode=  $scope.outputContainerSupportStorageCodes[j];
 									}
 									atm.outputContainerUseds.push(outputContainerUsed);		
 								}

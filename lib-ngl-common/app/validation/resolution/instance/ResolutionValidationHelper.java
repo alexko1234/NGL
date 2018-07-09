@@ -11,11 +11,10 @@ import validation.utils.ValidationConstants;
 
 public class ResolutionValidationHelper extends CommonValidationHelper {
 	
-	
 	public static void validationResolutions(List<Resolution> resolutions, ContextValidation contextValidation) {
-		if(null != resolutions && resolutions.size() > 0) {
+		if (null != resolutions && resolutions.size() > 0) {
 			int index = 0;
-			Set<String> resolutionCodes = new TreeSet<String>();
+			Set<String> resolutionCodes = new TreeSet<>();
 			for (Resolution resolution : resolutions) {
 				if (resolution != null) {
 					contextValidation.addKeyToRootKeyName("resolutions[" + index + "]");

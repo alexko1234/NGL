@@ -23,13 +23,13 @@ import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
 
 
-
 public class AnalysisValidationHelper extends CommonValidationHelper {
-
 	
-	public static void validateAnalysisType(String typeCode,	Map<String, PropertyValue> properties, ContextValidation contextValidation) {
+	public static void validateAnalysisType(String typeCode,	
+			                                Map<String, PropertyValue> properties, 
+			                                ContextValidation contextValidation) {
 		AnalysisType analysisType = validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", AnalysisType.find,true);
-		if(null != analysisType){
+		if (analysisType != null) {
 			contextValidation.addKeyToRootKeyName("properties");
 			ValidationHelper.validateProperties(contextValidation, properties, analysisType.getPropertyDefinitionByLevel(Level.CODE.Analysis), true);
 			contextValidation.removeKeyFromRootKeyName("properties");

@@ -1,45 +1,44 @@
 package controllers.admin.supports.api.objects;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import models.laboratory.common.description.Level;
-import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.common.instance.property.PropertySingleValue;
-import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.run.description.TreatmentCategory;
-import models.laboratory.run.instance.File;
-import models.laboratory.run.instance.ReadSet;
-import models.laboratory.run.instance.Treatment;
-import models.utils.InstanceConstants;
-import play.Logger;
+import javax.inject.Inject;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-import validation.ContextValidation;
-import validation.utils.ValidationHelper;
 import controllers.admin.supports.api.NGLObject;
 import controllers.admin.supports.api.NGLObjectsSearchForm;
 import controllers.readsets.api.ReadSets;
 import fr.cea.ig.MongoDBDAO;
+import models.laboratory.common.description.Level;
+import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.common.instance.property.PropertySingleValue;
+import models.laboratory.run.instance.ReadSet;
+import models.laboratory.run.instance.Treatment;
+import models.utils.InstanceConstants;
+import validation.ContextValidation;
+import validation.utils.ValidationHelper;
 
 public class ReadSetUpdate extends AbstractUpdate<ReadSet>{
 
-	public ReadSetUpdate() {
-		super(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class);		
+	private ReadSets readSets;
+	@Inject
+	public ReadSetUpdate(ReadSets readSets) {
+		super(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class);	
+		this.readSets = readSets;
 	}
 	
 	@Override
 	public Query getQuery(NGLObjectsSearchForm form) {
 		Query query = null;
 		
-		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
+		List<DBQuery.Query> queryElts = new ArrayList<>();
 		queryElts.add(getProjectCodeQuery(form, ""));
 		queryElts.add(getSampleCodeQuery(form, ""));
 		queryElts.addAll(getContentPropertiesQuery(form, "sampleOnContainer."));
@@ -55,7 +54,8 @@ public class ReadSetUpdate extends AbstractUpdate<ReadSet>{
 	@Override
 	public void update(NGLObject input, ContextValidation cv) {
 		if(NGLObject.Action.delete.equals(NGLObject.Action.valueOf(input.action))){
-			ReadSets.delete(input.code);
+			this.readSets.delete(input.code);
+			//ReadSets.delete(input.code);
 		}else if(NGLObject.Action.exchange.equals(NGLObject.Action.valueOf(input.action))){
 			//Update readset and switch readSet
 			
@@ -99,7 +99,8 @@ public class ReadSetUpdate extends AbstractUpdate<ReadSet>{
 			PropertyDefinition pd = PropertyDefinition.find.findUnique(input.contentPropertyNameUpdated, Level.CODE.Content);
 			Object newValue = ValidationHelper.convertStringToType(pd.valueType, input.newValue);
 			
-			readSet.sampleOnContainer.properties.get(input.contentPropertyNameUpdated).value = newValue;
+			// readSet.sampleOnContainer.properties.get(input.contentPropertyNameUpdated).value = newValue;
+			readSet.sampleOnContainer.properties.get(input.contentPropertyNameUpdated).assignValue(newValue);
 			readSet.validate(cv);
 			if(!cv.hasErrors()){
 				updateObject(readSet);				
@@ -110,7 +111,7 @@ public class ReadSetUpdate extends AbstractUpdate<ReadSet>{
 	private void updateReadSetProperties(ReadSet readSet, String oldValue, String newValue)
 	{
 		readSet.code=readSet.code.replace(oldValue, newValue);
-		readSet.sampleOnContainer.properties.put("tag", new PropertySingleValue(newValue));
+		readSet.sampleOnContainer.properties.put(InstanceConstants.TAG_PROPERTY_NAME, new PropertySingleValue(newValue));
 		
 		readSet.files = readSet.files.stream().filter(file->!file.typeCode.equals("CLEAN")).collect(Collectors.toList());
 		readSet.files.stream().forEach(file->{

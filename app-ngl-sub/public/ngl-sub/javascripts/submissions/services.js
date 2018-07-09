@@ -62,7 +62,7 @@
 				refreshSraStudies : function(){
 					if(this.form.projCodes && this.form.projCodes.length > 0){
 						// appel de refresh.sraStudies dans lists de common.js
-						this.lists.refresh.sraStudies({projCodes:this.form.projCodes, stateCodes:["N", "F-SUB"]});
+						this.lists.refresh.sraStudies({projCodes:this.form.projCodes, stateCodes:["NONE", "F-SUB"]});
 					}
 				},
 				
@@ -74,7 +74,6 @@
 				},
 				
 				refreshReadSets : function(){
-					console.log
 					if(this.form.projCodes && this.form.projCodes.length > 0){
 						// appel de refresh.ReadSets dans lists de common.js
 						// Dans ReadSetsSearchForm.java champs projectCodes et non projCodes !!!

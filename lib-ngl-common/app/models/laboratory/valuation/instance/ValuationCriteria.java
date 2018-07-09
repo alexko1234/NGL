@@ -1,13 +1,11 @@
 package models.laboratory.valuation.instance;
 
 import java.util.List;
-import java.util.Map;
 
+import fr.cea.ig.DBObject;
 import models.laboratory.common.instance.TraceInformation;
-
 import validation.ContextValidation;
 import validation.IValidation;
-import fr.cea.ig.DBObject;
 
 public class ValuationCriteria extends DBObject implements IValidation{
 
@@ -25,8 +23,7 @@ public class ValuationCriteria extends DBObject implements IValidation{
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 
 }

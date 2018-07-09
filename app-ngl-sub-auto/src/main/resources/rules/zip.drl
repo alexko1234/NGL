@@ -25,7 +25,7 @@ dialect 'java'
         String[] tabExperimentCodes = groupJobResource.getProperty("experimentCodes").split(",");
         for(int i=0; i<tabExperimentCodes.length; i++){
         
-			Set<ResourceProperties> rpsRawData = $referentialDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/rawDatas?experimentCode="+tabExperimentCodes[i],"bot");
+			Set<ResourceProperties> rpsRawData = $referentialDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/rawDatas?code="+tabExperimentCodes[i],"bot");
 			Set<ResourceProperties> rpsRawDataFilter = SRAFilesUtil.filterByGzipForSubmission(rpsRawData);
 		
 			for(ResourceProperties rpRawDataFilter : rpsRawDataFilter)
@@ -83,6 +83,8 @@ rule "POST DONE EXECUTION of zip : Update relatifName of RawData"
 		log.debug("Result JSON RawDataModify"+JSONRawDataModify);
 		String JSONRawDataModify2 = jsonDevice.modifyJSON(JSONRawDataModify, "extention", "fastq.gz");
 		log.debug("Result JSON RawDataModify"+JSONRawDataModify2);
+		String JSONRawDataModify3 = jsonDevice.modifyJSON(JSONRawDataModify, "gzipForSubmission", "false");
+		log.debug("Result JSON RawDataModify"+JSONRawDataModify3);
 		String jsonResult = jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/api/sra/experiments/"+jobResource.getProperty("experimentCode")+"/rawDatas/"+jobResource.getProperty("fileName"),JSONRawDataModify2, "bot");
 		log.debug("Result "+jsonResult);
 end

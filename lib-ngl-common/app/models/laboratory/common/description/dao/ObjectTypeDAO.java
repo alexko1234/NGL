@@ -1,35 +1,35 @@
 package models.laboratory.common.description.dao;
 
-import java.sql.Types;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
 import models.laboratory.common.description.ObjectType;
-import models.laboratory.common.description.State;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.stereotype.Repository;
-
 @Repository
-public class ObjectTypeDAO extends AbstractDAOMapping<ObjectType>{
+public class ObjectTypeDAO extends AbstractDAOMapping<ObjectType> {
 
+//	protected ObjectTypeDAO() {
+//		super("object_type", ObjectType.class, ObjectTypeMappingQuery.class, 
+//				"SELECT t.id as oId, t.code as codeObject, t.generic "+
+//				"FROM object_type as t ", true);
+//	}
 	protected ObjectTypeDAO() {
-		super("object_type", ObjectType.class, ObjectTypeMappingQuery.class, 
+		super("object_type", ObjectType.class, ObjectTypeMappingQuery.factory, 
 				"SELECT t.id as oId, t.code as codeObject, t.generic "+
 				"FROM object_type as t ", true);
 	}
 	
-	
+	@Override
 	public long save(ObjectType ot) throws DAOException {
 		//Check if objectType exist
-		if(null == ot){
+		if (ot == null) 
 			throw new DAOException("ObjectType is mandatory");
-		}
 		//Create new ot
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("code", ot.code);
 		//field generic can not be null
 		parameters.put("generic", ot.generic);
@@ -40,7 +40,8 @@ public class ObjectTypeDAO extends AbstractDAOMapping<ObjectType>{
 		return ot.id;
 	}
 
-	
+	@SuppressWarnings("deprecation")
+	@Override
 	public void update(ObjectType ot) throws DAOException {
 		if (null == ot) {
 			throw new DAOException("ObjectType is mandatory (case 1)");
@@ -65,6 +66,7 @@ public class ObjectTypeDAO extends AbstractDAOMapping<ObjectType>{
 		super.remove(objectType);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void removeStates(Long otId) {
 		String sqlState = "DELETE FROM state_object_type WHERE fk_object_type=?";
 		jdbcTemplate.update(sqlState, otId);

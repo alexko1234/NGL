@@ -5,7 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.Assert;
+// import junit.framework.Assert;
+import org.junit.Assert;
+import org.junit.Test;
+import org.springframework.dao.EmptyResultDataAccessException;
+
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.MeasureUnit;
@@ -33,18 +37,14 @@ import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
-
-import org.junit.Test;
-import org.springframework.dao.EmptyResultDataAccessException;
-
-import play.Logger;
-import play.Logger.ALogger;
+//import play.Logger;
+//import play.Logger.ALogger;
 import play.api.modules.spring.Spring;
 import utils.AbstractTests;
 
 public class FindDAOTest extends AbstractTests {
 	
-	protected static ALogger logger=Logger.of("FindDAOTest");
+	protected static play.Logger.ALogger logger = play.Logger.of(FindDAOTest.class);
 	
 	@Test
 	public void CommonInfoTypeFindTest() throws DAOException {
@@ -70,7 +70,8 @@ public class FindDAOTest extends AbstractTests {
 		ProcessType pt4 = ProcessType.find.findByProcessCategoryCodes(pt.category.code).get(0);
 		Assert.assertNotNull(pt4);
 		Assert.assertFalse(ProcessType.find.isCodeExist(""));
-		List<ProcessType> pt5 = ProcessType.find.findByExperimentTypeCode("");
+		// List<ProcessType> pt5 = 
+				ProcessType.find.findByExperimentTypeCode("");
 	}
 
 	@Test 
@@ -144,7 +145,6 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertFalse(ReadSetType.find.isCodeExist(""));
 	}
 
-
 	@Test
 	public void TreatmentTypeFindTest() throws DAOException {
 		TreatmentType rt = TreatmentType.find.findAll().get(0);
@@ -170,8 +170,7 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertNotNull(lo);
 		Assert.assertFalse(ImportType.find.isCodeExist(""));		
 	}
-	
-	
+		
 	@Test
 	public void SampleTypeFindTest() throws DAOException {
 		SampleType rt = SampleType.find.findAll().get(0);
@@ -184,7 +183,6 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertNotNull(lo);
 		Assert.assertFalse(SampleType.find.isCodeExist(""));
 	}
-	
 	
 	@Test
 	public void ContainerSupportCategoryFindTest() throws DAOException {
@@ -240,8 +238,6 @@ public class FindDAOTest extends AbstractTests {
 		etDAO.findByProcessTypeCode(pt.code, false);
 	}
 
-	
-
 	@Test
 	public void InstituteFindTest() throws DAOException {
 		Institute type = Institute.find.findAll().get(0);
@@ -280,12 +276,13 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertFalse(ObjectType.find.isCodeExist(""));
 	}
 
-	@Test(expected=UnsupportedOperationException.class)
+	@Test // (expected=UnsupportedOperationException.class)
 	public void PropertyDefinitionFindTest() throws DAOException {
 		PropertyDefinition type = PropertyDefinition.find.findAll().get(0);
-		PropertyDefinition cType = PropertyDefinition.find
-				.findByCode(type.code);
-		PropertyDefinition cTypeId = PropertyDefinition.find.findById(type.id);
+		// PropertyDefinition cType = 
+				PropertyDefinition.find.findByCode(type.code);
+		// PropertyDefinition cTypeId = 
+				PropertyDefinition.find.findById(type.id);
 	}
 	
 	@Test
@@ -296,7 +293,6 @@ public class FindDAOTest extends AbstractTests {
 		PropertyDefinitionDAO pDAO = Spring.getBeanOfType(PropertyDefinitionDAO.class);
 		Assert.assertNotNull(pDAO.findByCommonInfoType(citTreatment.id));
 	}
-
 	
 	@Test
 	public void StateFindTest() throws DAOException {
@@ -325,10 +321,10 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertFalse(InstrumentUsedType.find.isCodeExist(""));
 		Assert.assertNotNull(InstrumentUsedType.find.findByExperimentTypeCode(""));		
 		InstrumentUsedTypeDAO iDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
-		List<InstrumentUsedType> liut = new ArrayList<InstrumentUsedType>();
+		List<InstrumentUsedType> liut = new ArrayList<>();
 		liut = iDAO.findByExperimentId(0);
 		Assert.assertTrue(liut.size() >= 0);
-		Map<String, Object> m = new HashMap<String, Object>();
+		Map<String, Object> m = new HashMap<>();
 		m = iDAO.findTypeCodeAndCatCode(0);
 		Assert.assertTrue(m.size() >= 0);
 	}
@@ -341,13 +337,13 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertNotNull(intruments);
 		
 		instrumentQuery = new InstrumentQueryParams();
-		instrumentQuery.typeCodes = new ArrayList();
+		instrumentQuery.typeCodes = new ArrayList<>();
 		instrumentQuery.typeCodes.add("ARGUS");
 		intruments = Instrument.find.findByQueryParams(instrumentQuery);
 		Assert.assertNotNull(intruments);
 		
 		instrumentQuery = new InstrumentQueryParams();
-		instrumentQuery.categoryCodes = new ArrayList();
+		instrumentQuery.categoryCodes = new ArrayList<>();
 		instrumentQuery.categoryCodes.add("covaris");
 		intruments = Instrument.find.findByQueryParams(instrumentQuery);
 		Assert.assertNotNull(intruments);
@@ -359,9 +355,9 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertNotNull(intruments);
 		
 		instrumentQuery = new InstrumentQueryParams();
-		instrumentQuery.typeCodes =new ArrayList();
+		instrumentQuery.typeCodes = new ArrayList<>();
 		instrumentQuery.typeCodes.add("ARGUS");
-		instrumentQuery.categoryCodes = new ArrayList();
+		instrumentQuery.categoryCodes = new ArrayList<>();
 		instrumentQuery.categoryCodes.add("opt-map-opgen");
 		intruments = Instrument.find.findByQueryParams(instrumentQuery);
 		Assert.assertNotNull(intruments);		

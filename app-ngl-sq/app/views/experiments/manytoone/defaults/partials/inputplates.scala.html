@@ -1,4 +1,7 @@
+@this()
+
 @()
+
 <!-- work with atmDragAndDrop2 -->
 
 <table class="table table-bordered table-condensed"
@@ -23,12 +26,10 @@
 	        	ng-mouseenter="atmService.data.selectInputContainer($event, container)"
 	        	ng-mousedown="atmService.data.startSelectInputContainer($event, container)"
 	        	ng-class="atmService.data.getInputContainerCellClass(container)">
-	        	    <!-- 08/12/2016 test allegement: supprimer le projet
-	        	    <div list-resize="container.contents | collect:'projectCode+&quot; / &quot;+sampleCode+&quot; / &quot;+properties.tag.value'"> -->
-	        		<div list-resize="container.contents | collect:'sampleCode+&quot; / &quot;+properties.tag.value'">
+	        	   <div list-resize="container.contents | collect:'sampleCode+&quot; / &quot;+properties.libProcessTypeCode.value+&quot; / &quot;+properties.tag.value'">
 	        		</div>				        		        	    						    					
 	         </td>          
 	    </tr>
 	  
 	</tbody>				 
-</table>	
+</table>

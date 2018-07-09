@@ -4,11 +4,15 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.mongojack.DBQuery;
 
 import com.mongodb.MongoException;
 
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.migration.NGLContext;
+import models.Constants;
 import models.LimsCNSDAO;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.sample.instance.Sample;
@@ -23,10 +27,12 @@ import validation.ContextValidation;
 
 public class UpdateTaraPropertiesCNS extends AbstractImportDataCNS{
 
+	@Inject
 	public UpdateTaraPropertiesCNS(
 			FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super("UpdateTara", durationFromStart, durationFromNextIteration);
+			FiniteDuration durationFromNextIteration, 
+			NGLContext ctx) {
+		super("UpdateTara", durationFromStart, durationFromNextIteration, ctx);
 	
 	}
 
@@ -41,7 +47,7 @@ public class UpdateTaraPropertiesCNS extends AbstractImportDataCNS{
 		List<Map<String, PropertyValue>> taraPropertyList = taraServices.findTaraSampleUpdated(limsCodes);
 	
 		//Logger.debug("Nb Map Tara"+taraPropertyList.size());
-		for(Map<String,PropertyValue> taraProperties : taraPropertyList){
+		for (Map<String,PropertyValue> taraProperties : taraPropertyList) {
 	
 			if(!taraProperties.containsKey(LimsCNSDAO.LIMS_CODE)){
 				contextError.addErrors(LimsCNSDAO.LIMS_CODE,"error.codeNotExist","");
@@ -66,7 +72,7 @@ public class UpdateTaraPropertiesCNS extends AbstractImportDataCNS{
 					/*NEW ALGO*/
 					sample.properties.putAll(taraProperties);
 					sample.importTypeCode = importTypeCode;
-					sample.traceInformation.setTraceInformation("ngl-data");
+					sample.traceInformation.setTraceInformation(Constants.NGL_DATA_USER);
 					contextError.setUpdateMode();
 					sample.validate(contextError);
 					if(!contextError.hasErrors()){

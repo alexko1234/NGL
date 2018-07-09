@@ -14,8 +14,11 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNGCtrl',['$scope'
 			if(inputContainerUsed){
 				
 				var concentration1 = $parse("experimentProperties.concentration1")(inputContainerUsed);
-				if(concentration1){
+				// 26/03/2018: NGL-1970 la copie de la concentration ne doit etre faite que si l'utilisateur le demande explicitement !!!
+				if (concentration1  &&  $scope.experiment.experimentProperties.copyConcentration.value){
 					inputContainerUsed.newConcentration = concentration1;
+				} else {
+					inputContainerUsed.newConcentration = null;
 				}
 				
 				// pas de newsize 
@@ -49,9 +52,11 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNGCtrl',['$scope'
 		});
 	};
 	
+	//NGL-1761: pour l'instant seul le fichier spectramax est disponible (masquer le bouton pour qbit)
 	$scope.button = {
 		isShow:function(){
-			return ($scope.isInProgressState() && !$scope.mainService.isEditMode() || Permissions.check("admin"))
+			return ($scope.experiment.instrument.typeCode === "spectramax" && !$scope.mainService.isEditMode() 
+					&&  ( $scope.isInProgressState() || Permissions.check("admin")) )	
 			},
 		isFileSet:function(){
 			return ($scope.file === undefined)?"disabled":"";

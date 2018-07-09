@@ -10,10 +10,11 @@
 							    	"type" :"text",
 							    	"order":true,
 							    	"position":1,
-							    	"groupMethod":"count:true",
+							    	"groupMethod":"countDistinct"
 								},
 								{	"property":"typeCode",
 									"header": Messages("runs.typeCode"),
+									"filter":"codes:'type'",
 									"type" :"text",
 							    	"order":true,
 							    	"group":true,

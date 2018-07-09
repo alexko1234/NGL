@@ -45,7 +45,11 @@ angular.module('commonsServices', []).
 								if(this.details[pName] === undefined || this.details[pName] === null){
 									this.details[pName] = details[pName];
 								}else{
-									this.details[pName].push(details[pName]);
+									if(angular.isArray(details[pName])){
+										this.details[pName] = this.details[pName].concat(details[pName]);
+									}else{
+										this.details[pName].push(details[pName]);
+									}									
 								}
 							}
 							this.isDetails = true;
@@ -214,6 +218,9 @@ angular.module('commonsServices', []).
     				propertyDefinitions : function(params, key){
     					load(jsRoutes.controllers.commons.api.PropertyDefinitions.list().url,params,(key)?key:'propertyDefinitions');    				
     				},
+    				treatmentTypes : function(params, key){
+    					load(jsRoutes.controllers.treatmenttypes.api.TreatmentTypes.list().url,params,(key)?key:'treatmentTypes');    				
+    				},
     				values : function(params, key){
     					load(jsRoutes.controllers.commons.api.Values.list().url,params,(key)?key:'values');    				
     				},
@@ -234,11 +241,24 @@ angular.module('commonsServices', []).
     				sraStudies : function(params, key){
     					load(jsRoutes.controllers.sra.studies.api.Studies.list().url,params,(key)?key:'sraStudies');    				
     				},
+    				sraSamples : function(params, key){
+    					load(jsRoutes.controllers.sra.samples.api.Samples.list().url,params,(key)?key:'sraSamples');    				
+    				},
+    				sraExperiments : function(params, key){
+    					load(jsRoutes.controllers.sra.experiments.api.Experiments.list().url,params,(key)?key:'sraExperiments');    				
+    				},
     				sraConfigurations : function(params, key){
     					load(jsRoutes.controllers.sra.configurations.api.Configurations.list().url,params,(key)?key:'sraConfigurations');    				
     				},
     				readSets : function(params, key){
     					load(jsRoutes.controllers.readsets.api.ReadSets.list().url,params,(key)?key:'readSets');    				
+    				},
+    				//Solution temporaire en attendant le passage de la description SQL dans Mongo
+    				context : function(params,key){
+    					if(angular.isUndefined(params)){
+    	    				params = {typeCode:'context-description'};
+    	    			}
+    					load(jsRoutes.controllers.commons.api.Parameters.list().url,params,(key)?key:'context');
     				},
     				all : function(params){
     					this.resolutions(params);
@@ -381,6 +401,13 @@ angular.module('commonsServices', []).
     				}
     				return results[key];
     			},
+    			getTreatmentTypes : function(params, key){
+    				key = (key)?key:'treatmentTypes';
+    				if(results[key] === undefined){
+    					refresh.treatmentTypes(params, key);
+    				}
+    				return results[key];
+    			},
     			getSampleTypes : function(params, key){
     				key = (key)?key:'sampleTypes';
     				if(results[key] === undefined){
@@ -393,12 +420,19 @@ angular.module('commonsServices', []).
     			getReadSets : function(params,key){
     				key = (key)?key:'readSets';
     				if(results[key] === undefined){
-    					refresh.tags(params, key);
+    					refresh.readSets(params, key);
     				}
     				return results[key];
     			},
     			getTags : function(params,key){
     				key = (key)?key:'tags';
+    				if(results[key] === undefined){
+    					refresh.tags(params, key);
+    				}
+    				return results[key];
+    			},
+    			getContext : function(params,key){
+    				key = (key)?key:'context';
     				if(results[key] === undefined){
     					refresh.tags(params, key);
     				}
@@ -874,7 +908,7 @@ angular.module('commonsServices', []).
 	      		      var optionsConfig = parseBtsOptions(btOptions);
 	      		      var items = [];
 	      		      var groupByLabels = {};
-	      		      var filterValue;
+	      		      var filterValueRegex;
 	      		      var ngFocus = attr.ngFocus;
 	      		      var ngModelValue = attr.ngModel;
 	      		      function parseBtsOptions(input){
@@ -909,7 +943,11 @@ angular.module('commonsServices', []).
 	      		   
 	      		     scope.filter = filter; 
 	      		     scope.setFilterValue = function(value){
-	      		    	filterValue = value
+	      		    	 if(value.match(/^\/.+\/.{0,1}/)){
+	      		    		filterValueRegex = new RegExp(value.split("/")[1], value.split("/")[2]);
+	      		    	 }else{
+	      		    		filterValueRegex = new RegExp(value, "i");
+	      		    	 }	      		    	 
 	      		     };
 	      		     
 	      		     scope.isTextarea = function(){
@@ -969,13 +1007,15 @@ angular.module('commonsServices', []).
 	      		    			filter[pName] = filterValue;
 	      		    		}
 	      		    		*/
+	      		    		/*
 	      		    		if(filterValue){
 	      		    			filterValue=filterValue.toLowerCase();
 	      		    		}
+	      		    		*/
 	      		    		var functionFilter = function(value, index, array){
-	      		    			if(filterValue){
-	      		    				var label = scope.itemLabel(value).toLowerCase();
-	      		    				var result = label.match(filterValue);
+	      		    			if(filterValueRegex){
+	      		    				var label = scope.itemLabel(value);
+	      		    				var result = label.match(filterValueRegex);
 	      		    				if(null == result)return false;	      		    				
 	      		    			}
 	      		    			return true;	      		    			
@@ -1016,7 +1056,15 @@ angular.module('commonsServices', []).
       		      
       		      scope.itemLabel = function(item){	      		    	
       		    	// return item[optionsConfig.viewMapper.replace(optionsConfig.itemName+'.','')];  
-      		    	return $parse(optionsConfig.viewMapper.replace(new RegExp(optionsConfig.itemName+'.','g'),''))(item);
+      		    	//return $parse(optionsConfig.viewMapper.replace(new RegExp(optionsConfig.itemName+'.','g'),''))(item);
+      		    	var obj = {};
+  		    		
+      		    	if(optionsConfig.viewMapper.indexOf(optionsConfig.itemName) > -1){
+      		    		obj[optionsConfig.itemName]=item;
+      		    	}else{
+      		    		obj = item;
+      		    	}
+      		    	return $parse(optionsConfig.viewMapper)(obj);  
       		      };
       		      
       		      scope.itemValue = function(item){
@@ -1159,6 +1207,37 @@ angular.module('commonsServices', []).
 			                if(_defaultValue != null && (ngModel.$modelValue === undefined || ngModel.$modelValue === "")){
 									ngModel.$setViewValue(_defaultValue);
 									ngModel.$render();
+							}
+				    });
+    			}
+    		};	    	
+    	}]).directive('pdefDefaultValue',['$parse', function($parse) {
+    		return {
+    			require: 'ngModel',
+    			link: function(scope, element, attrs, ngModel) {
+    				var _pdef = null;
+    				scope.$watch(attrs.pdefDefaultValue, function(pdef){
+    					if(pdef !== null && pdef !== undefined && pdef.defaultValue !== undefined && pdef.defaultValue !== null ){
+    						_pdef = pdef;
+    					}
+    				});
+    				//TODO GA ?? better way with formatter
+					scope.$watch(ngModel, function(value){
+			                if(_pdef != null && (ngModel.$modelValue === undefined || ngModel.$modelValue === "")){
+								if(_pdef.valueType === "java.lang.Boolean"){
+									if(_pdef.defaultValue === "true" || _pdef.defaultValue === true){
+										ngModel.$setViewValue(true);
+										ngModel.$render();
+									}else if(_pdef.defaultValue === "false" || _pdef.defaultValue === false){
+										ngModel.$setViewValue(true); // hack to insert false value 
+										ngModel.$setViewValue(false);
+										ngModel.$render();
+									}											
+								}else {
+									ngModel.$setViewValue(_pdef.defaultValue);
+									ngModel.$render();
+								}
+			                	
 							}
 				    });
     			}
@@ -1372,7 +1451,7 @@ angular.module('commonsServices', []).
     	    			}
     	    			
     	    			
-    	    		}else if (!params.key && angular.isObject(value)){
+    	    		}else if (!key && angular.isObject(value)){
     	    			throw "missing key !";
     	    		}
     	    		
@@ -1408,7 +1487,7 @@ angular.module('commonsServices', []).
     	    			}
     	    			
     	    			
-    	    		}else if (!params.key && angular.isObject(value)){
+    	    		}else if (!key && angular.isObject(value)){
     	    			throw "missing key !";
     	    		}
     	    		
@@ -1445,5 +1524,36 @@ angular.module('commonsServices', []).
     			      });
     			    }
     			  };
-    			});
+    	}).filter('format',  ['$parse',function($parse){ //transform object to array
+  		  return function (obj,pattern) {
+			  if(obj === null || obj === undefined)return;  
+			  if(pattern === null || pattern === undefined)return;
+			  return $parse(pattern)(obj);
+			  };
+		}]).filter('formatProjectListLabel',  ['$filter','$parse',
+			function($filter, $parse){ 
+	  		  return function (proj) {
+				  if(proj === null || proj === undefined)return;  
+				  var convert = function(proj){
+					  if(angular.isObject(proj)){
+						  if(proj.code !== proj.name)
+							  return $parse('code+\" \(\"+name+\"\)\"')(proj);
+						  else
+							  return $parse('code')(proj);
+					  } else if(angular.isString(proj)){
+						  var name = $filter("codes")(proj, "project");
+						  if(proj !== name)
+							  return proj+' ('+name+')';
+						  else
+							  return proj;
+					  } 
+				  };
+				  if(angular.isArray(proj)){
+					  return proj.map(function(p){return convert(p);});
+				  }else{
+					  return convert(proj);
+				  }
+				 
+	  		  };
+		}])
     	

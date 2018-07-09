@@ -1,16 +1,14 @@
 package services.description.sample;
 
-import static services.description.DescriptionFactory.newPropertiesDefinition;
+//import static services.description.DescriptionFactory.newPropertiesDefinition;
 import static services.description.DescriptionFactory.newSampleType;
-import static services.description.DescriptionFactory.newValues;
+//import static services.description.DescriptionFactory.newValues;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.Level;
-import models.laboratory.common.description.MeasureCategory;
-import models.laboratory.common.description.MeasureUnit;
+import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
@@ -18,14 +16,15 @@ import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
 import services.description.Constants;
-import services.description.common.LevelService;
-import services.description.common.MeasureService;
+//import services.description.common.LevelService;
+//import services.description.common.MeasureService;
 
 public class SampleServiceCNG extends AbstractSampleService {
 	
 	
+	@Override
 	public  void saveSampleCategories(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<SampleCategory> l = new ArrayList<SampleCategory>();
+		List<SampleCategory> l = new ArrayList<>();
 		
 		l.add(newSampleCategory("Défaut", "default"));
 		l.add(newSampleCategory("Inconnu", "unknown"));
@@ -40,61 +39,40 @@ public class SampleServiceCNG extends AbstractSampleService {
 		DAOHelpers.saveModels(SampleCategory.class, l, errors);
 	}
 	
+	// 28/03/2018 copié depuis SampleServiceCNS.java
+	private SampleType makeSampleType(String name, String code, String category, List<PropertyDefinition> properties, List<Institute> institutes) {
+		return newSampleType(name,code,SampleCategory.find.findByCode(category),properties,institutes);
+	}
 
+	@Override
 	public void saveSampleTypes(Map<String, List<ValidationError>> errors) throws DAOException{
-		List<SampleType> l = new ArrayList<SampleType>();
+		List<Institute> CNG = getInstitutes(Constants.CODE.CNG); // 28/03/2018 faire comme au CNS...
+		List<SampleType> l = new ArrayList<>();
 				
-		l.add(newSampleType("ARN", "RNA", SampleCategory.find.findByCode("RNA"),null, getInstitutes(Constants.CODE.CNG)));
-		l.add(newSampleType("ADN", "DNA", SampleCategory.find.findByCode("DNA"),null, getInstitutes(Constants.CODE.CNG)));
-		l.add(newSampleType("IP", "IP", SampleCategory.find.findByCode("IP-sample"),null, getInstitutes(Constants.CODE.CNG)));
+		// 28/03/2018 passer a 	makeSampleType rend la creation de sampleTypes plus lisible !!
+		//					name				code			category		properties	institutes
 		
-		// a supprimer apres mise a jour de la base: est remplacé par "IP" ci dessus...
-		l.add(newSampleType("Materiel Immunoprecipite", "IP-sample", SampleCategory.find.findByCode("IP-sample"), null, getInstitutes(Constants.CODE.CNG)));
+		l.add(makeSampleType("ARN",				"RNA",			"RNA",			null,		CNG));   
+		l.add(makeSampleType("ARN totaux",		"total-RNA",	"RNA",			null,		CNG));    // ajout 28/03/2018 NGL-1969
+		l.add(makeSampleType("ARN small",		"small-RNA",	"RNA",			null,		CNG));    // ajout 28/03/2018 NGL-1969
+
+		l.add(makeSampleType("ADN",				"DNA",			"DNA",			null,		CNG));
+		l.add(makeSampleType("ADN Génomique",	"gDNA",			"DNA",			null,		CNG));
 		
-		l.add(newSampleType("ADN Génomique", "gDNA", SampleCategory.find.findByCode("DNA"), null, getInstitutes(Constants.CODE.CNG))); 
+		l.add(makeSampleType("IP",				"IP",			"IP-sample",	null,		CNG));
 
 		/* pas de subdivisions dans la base solexa...=> SampleType=SampleCategory*/
-		l.add(newSampleType("FAIRE", "FAIRE", SampleCategory.find.findByCode("FAIRE"), null, getInstitutes(Constants.CODE.CNG)));
-		l.add(newSampleType("methylated base DNA (mbd)", "methylated-base-DNA", SampleCategory.find.findByCode("methylated-base-DNA"), null, getInstitutes(Constants.CODE.CNG)));
-		l.add(newSampleType("bisulfite DNA", "bisulfite-DNA", SampleCategory.find.findByCode("bisulfite-DNA"), null, getInstitutes(Constants.CODE.CNG)));
-		l.add(newSampleType("Control", "CTRL", SampleCategory.find.findByCode("control"), null, getInstitutes(Constants.CODE.CNG)));
+		l.add(makeSampleType("FAIRE",			 "FAIRE",		 "FAIRE", 		null, 		CNG));
+		l.add(makeSampleType("methylated base DNA (mbd)", "methylated-base-DNA", "methylated-base-DNA", null, CNG));
+		l.add(makeSampleType("bisulfite DNA", "bisulfite-DNA", "bisulfite-DNA", null, 		CNG));
+		l.add(makeSampleType("Control", 		"CTRL", 		"control", 		null, 		CNG));
 		
-		//default values		
-		l.add(newSampleType("Défaut", "default-sample-cng", SampleCategory.find.findByCode("default"), null, getInstitutes(Constants.CODE.CNG)));
-		l.add(newSampleType("Inconnu", "unknown", SampleCategory.find.findByCode("unknown"), null, getInstitutes(Constants.CODE.CNG)));
-		
+		l.add(makeSampleType("Défaut", 	"default-sample-cng", 	"default", 		null, 		CNG));
+		l.add(makeSampleType("Inconnu", 		"unknown", 		"unknown", 		null,		CNG));
 		//use only in  NGL-BI. Please not used in sample import !!!!!!!!!!!!!!!
-		l.add(newSampleType("Non défini", "not-defined", SampleCategory.find.findByCode("unknown"),null, getInstitutes(Constants.CODE.CNG)));
+		l.add(makeSampleType("Non défini", 		"not-defined", 	"unknown",		null,		CNG));
 		
 		DAOHelpers.saveModels(SampleType.class, l, errors);
 	}
 	
-	
-	
-	/*FDS 20/01/2016 DEPRECATED
-	private static List<PropertyDefinition> getSampleCommonPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", LevelService.getLevels(Level.CODE.Content,Level.CODE.Sample),Double.class, true,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"), "single"));
-		propertyDefinitions.add(newPropertiesDefinition("Fragmenté", "isFragmented", LevelService.getLevels(Level.CODE.Sample),Boolean.class, true, "single"));
-		propertyDefinitions.add(newPropertiesDefinition("Adaptateurs", "isAdapters", LevelService.getLevels(Level.CODE.Sample),Boolean.class, true, "single"));
-		propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", LevelService.getLevels(Level.CODE.Sample),Integer.class, false, "single"));
-		return propertyDefinitions;
-	}
-	*/
-	
-	/* FDS 20/01/2016 DEPRECATED
-	public static List<PropertyDefinition> getPropertyDefinitionsADNGenomic() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-        propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", LevelService.getLevels(Level.CODE.Content,Level.CODE.Sample),Double.class, true,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"), "single"));
-		propertyDefinitions.add(newPropertiesDefinition("Fragmenté", "isFragmented", LevelService.getLevels(Level.CODE.Sample),Boolean.class, true, "single"));
-		propertyDefinitions.add(newPropertiesDefinition("Adaptateurs", "isAdapters", LevelService.getLevels(Level.CODE.Sample),Boolean.class, true, "single"));
-		propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", LevelService.getLevels(Level.CODE.Sample),Integer.class, false, "single"));
-        propertyDefinitions.add(newPropertiesDefinition("WGA", "isWGA", LevelService.getLevels(Level.CODE.Sample),Boolean.class, false, "single"));
-        propertyDefinitions.add(newPropertiesDefinition("% GC", "gcPercent", LevelService.getLevels(Level.CODE.Sample),Double.class, false, "single"));
-        return propertyDefinitions;
-	}
-	*/
-	
-
-
 }

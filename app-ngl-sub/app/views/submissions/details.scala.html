@@ -1,4 +1,8 @@
+@this()
 @()
+
+@import views.html.tools._
+
 @column()(value: Html) = {
 	<div class="col-md-4 col-lg-4">
 		@value
@@ -7,34 +11,15 @@
 
 
 
-<div class="row">
-	<div class="col-md-12 col-lg-12">
-	<div class="page-header">	
-		<div class="btn-toolbar pull-right" >
-			<!--Afficher boutons  uniquement si submission.state.code='N' => ng-if="submission.state.code=='N'"
-			Variable submission declarée dans scope de details.ctrl.js-->
-			 <button class="btn btn-default" ng-if="submission.state.code=='N'" ng-disabled="!(studyCheck &&sampleCheck && experimentCheck && runCheck && rawDataCheck)" ng-click="userValidate()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
-			 <button class="btn btn-default" ng-if="mainService.isEditMode() && submission.state.code=='N'" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
-			 <button class="btn btn-default" ng-if="!mainService.isEditMode() && submission.state.code=='N'" ng-click="activeEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>		 					
-		</div>	 
-	</div>
-	</div>
-</div>
+@standard_header("submission", "TRUE") { 
+   <!--Afficher boutons  uniquement si submission.state.code='N' => ng-if="submission.state.code=='N'"
+    Variable submission declarée dans scope de details.ctrl.js-->
+   <button class="btn btn-default" ng-if="submission.state.code=='N'" ng-disabled="!(studyCheck &&sampleCheck && experimentCheck && runCheck && rawDataCheck)" ng-click="userValidate()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
+   <button class="btn btn-default" ng-if="mainService.isEditMode() && submission.state.code=='N'" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
+   <button class="btn btn-default" ng-if="!mainService.isEditMode() && submission.state.code=='N'" ng-click="activeEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>		 					 
+}
 
 
-
-<div class="row">
-	<!--Affichage du message de reussite ou echec si bouton activé--> 
-	<div class="col-md-12 col-lg-12" messages="messages"></div>
-</div>
-
-</div>
-	<h1 >
-	<span  ng-bind="submission.code" ></span>
-	</h1>
-	<h5>
-	</h5>
-</div>
 <!-- stopPropagation on checkbox prevent parents default behavior (stop <a> call) -->
 
 

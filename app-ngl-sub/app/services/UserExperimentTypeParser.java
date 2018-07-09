@@ -1,6 +1,5 @@
 package services;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +19,7 @@ public class UserExperimentTypeParser {
 	static final String NOMINAL_LENGTH = "nominal_length";
 	static final String TITLE = "title";
 
-	private List<String> allowedFields = new ArrayList<String>();
+	private List<String> allowedFields = new ArrayList<>();
 	private String keyField;
 	private String separator;
 	
@@ -45,11 +44,12 @@ public class UserExperimentTypeParser {
 	}
 	
 	public List<UserExperimentType> load(InputStream inputStream) throws SraException {
-		List<UserExperimentType> listExperiments = new ArrayList<UserExperimentType>();
+		List<UserExperimentType> listExperiments = new ArrayList<>();
 		if (inputStream != null) {
 			ColumnParser parser = new ColumnParser(keyField, separator);
 			if (parser.setAllowedFields(allowedFields)) {
-				listExperiments = (List<UserExperimentType>)parser.load(inputStream, new UserExperimentTypeParserFactory());
+				// listExperiments = (List<UserExperimentType>)parser.load(inputStream, new UserExperimentTypeParserFactory());
+				listExperiments = parser.load(inputStream, new UserExperimentTypeParserFactory());
 			} else {
 				throw new SraException("Probleme lors de l'installation des champs autorises");
 			}
@@ -58,11 +58,12 @@ public class UserExperimentTypeParser {
 	}	
 	
 	public Map<String, UserExperimentType> loadMap(InputStream inputStream) throws SraException {
-		Map<String, UserExperimentType> mapExperiments = new HashMap<String, UserExperimentType>();
+		Map<String, UserExperimentType> mapExperiments = new HashMap<>();
 		if (inputStream != null) {
 			ColumnParser parser = new ColumnParser(keyField, separator);
 			if (parser.setAllowedFields(allowedFields)) {
-				mapExperiments = (Map<String, UserExperimentType>)parser.loadMap(inputStream, new UserExperimentTypeParserFactory());
+				// mapExperiments = (Map<String, UserExperimentType>)parser.loadMap(inputStream, new UserExperimentTypeParserFactory());
+				mapExperiments = parser.loadMap(inputStream, new UserExperimentTypeParserFactory());
 			} else {
 				throw new SraException("Probleme lors de l'installation des champs autorises");
 			}

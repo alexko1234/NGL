@@ -5,25 +5,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-
-
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.reception.instance.ReceptionConfiguration.Action;
 import validation.ContextValidation;
 
-
-
-
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-
 public class PropertiesFieldConfiguration extends AbstractFieldConfiguration {
 	
 	@JsonIgnore
-	public Map<String, PropertyValueFieldConfiguration> configs = new HashMap<String, PropertyValueFieldConfiguration>();
+	public Map<String, PropertyValueFieldConfiguration> configs = new HashMap<>();
 
 	@JsonAnyGetter
     public Map<String, PropertyValueFieldConfiguration> configs() {
@@ -40,45 +33,40 @@ public class PropertiesFieldConfiguration extends AbstractFieldConfiguration {
 	}
 
 	@Override
-	public void populateField(Field field, Object dbObject,
-			Map<Integer, String> rowMap, ContextValidation contextValidation, Action action) throws Exception {
-		
+	public void populateField(Field field, 
+			                  Object dbObject,
+			                  Map<Integer, String> rowMap, 
+			                  ContextValidation contextValidation, 
+			                  Action action) throws Exception {
 		Map<String,PropertyValue> properties = getProperties(field, dbObject, action);
-		//we create or update all the properties
+		// we create or update all the properties
 		Set<String> propertyNames = configs.keySet();
 		propertyNames.forEach(pName -> {
 			try {
 				PropertyValueFieldConfiguration propertyFieldConfig = configs.get(pName);
 				PropertyValue psv = (PropertyValue)Class.forName(propertyFieldConfig.className).newInstance();
-				if(null != propertyFieldConfig.value)
+				if (propertyFieldConfig.value != null)
 					propertyFieldConfig.value.populateField(psv.getClass().getField("value"), psv, rowMap, contextValidation, action);
-				if(null != propertyFieldConfig.unit)
+				if(propertyFieldConfig.unit != null)
 					propertyFieldConfig.unit.populateField(psv.getClass().getField("unit"), psv, rowMap, contextValidation, action);
-				
-				if(null != psv.value){
+				if (psv.value != null) {
 					properties.put(pName, psv);
 				}
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}			
 		});
-		
 		populateField(field, dbObject, properties);		
 	}
 
-	private Map<String, PropertyValue> getProperties(Field field,
-			Object dbObject, Action action)
-			throws IllegalAccessException {
+	@SuppressWarnings("unchecked") // untypable recursive reflection
+	private Map<String, PropertyValue> getProperties(Field field, Object dbObject, Action action) throws IllegalAccessException {
 		Map<String,PropertyValue> properties = null;
-		if(Action.update.equals(action)){
+		if (Action.update.equals(action))
 			properties = (Map<String,PropertyValue>) field.get(dbObject);
-		}
-		
-		if(properties == null){
-			properties = new HashMap<String, PropertyValue>();			
-		}
+		if (properties == null)
+			properties = new HashMap<>(); // <String, PropertyValue>();			
 		return properties;
 	}
 
-	
 }

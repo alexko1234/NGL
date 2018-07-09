@@ -1,8 +1,10 @@
 @()
-
-<div class="col-md-12 col-lg-12" ng-controller="LibNormalizationCtrl">
-  <div class="row margin-bottom-7">
-    <form class="form-inline" role="form">
+<!-- 07/05/2018 OK NGL-1006/NGL-2041: sortie tube ne marchait pas correctement -->
+<div class="col-md-12 col-lg-12" ng-switch="experiment.instrument.outContainerSupportCategoryCode"  ng-controller="LibNormalizationCtrl">  
+ <div ng-if="plateUtils.isPlate()" >  
+    <form class="form-inline margin-bottom-7" role="form">
+  	  <!-- premiere ligne -->
+      <div class="row margin-bottom-7">
          <div class="form-group col-lg-4">          
               <div ng-switch on="mainService.isEditMode()"> 
               <div ng-switch-when="false">   
@@ -16,7 +18,7 @@
 			  							                ng-model="outputContainerSupport.code" />	
 			  </div>
 			  </div>   
-	     </div>   
+	     </div> 
          <div class="form-group col-lg-6">
               <div ng-switch on="mainService.isEditMode()"> 
               <div ng-switch-when="false">   
@@ -25,17 +27,18 @@
               </div>
               <div ng-switch-when="true">
                   <label for="plateStorage" class="control-label">@Messages("experiments.outputContainerSupportStorageCode")</label>
-                  <!-- FDS pas trouvé de classe correcte==> style="width:65%" -->
                   <input class="form-control input-sm" type="text" id="plateStorage" style="width:65%"
 									                   title=@Messages("experiments.outputContainerSupportStorageCode") 
 			 						                   ng-model="outputContainerSupport.storageCode" />	
 			  </div>
 			  </div>   
 	     </div>
-    </form>		
+	  </div>
+    </form>	
+    <br/>
   </div> 
-  
-  <div class="row">
-	  <div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data"></div>					
-  </div>	
-</div>
+ 
+
+  @views.html.experiments.onetoone.defaults.partials.udtAndPlateDesign()
+ </div>
+

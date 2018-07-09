@@ -232,6 +232,14 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 		if(col.property === 'outputContainerUsed.experimentProperties.tag.value'){
 			computeTagCategory(value.data);			
 		}
+		/*
+		if( col.property === 'inputContainerUsed.experimentProperties.libraryInputQuantity.value'){
+			computeInputVolume(value.data);			
+		}
+		*/
+		if(col.property === 'inputContainerUsed.experimentProperties.inputVolume.value' ){
+			computelibraryInputQuantity(value.data);				
+		}
 		
 	}
 	
@@ -263,6 +271,63 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 	}
 	
 	
+	var computelibraryInputQuantity = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.libraryInputQuantity.value");
+		var libraryInputQuantity = getter(udtData);
+		
+		var compute = {
+				inputVolume : $parse("inputContainerUsed.experimentProperties.inputVolume.value")(udtData),
+				conc : $parse("inputContainerUsed.concentration.value")(udtData),
+				
+				isReady:function(){
+					return (this.inputVolume && this.conc);
+				}
+			};
+		if(compute.isReady()){
+			var result = compute.inputVolume * compute.conc;
+			console.log("result = "+result);
+			if(result){
+				libraryInputQuantity = Math.round(result*10)/10;;				
+			}else{
+				libraryInputQuantity = undefined;
+			}	
+			getter.assign(udtData, libraryInputQuantity);
+		}else {
+			console.log("not ready");
+			getter.assign(udtData, undefined);
+		}
+		
+	}
+	/*
+	var computeInputVolume = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.inputVolume.value");
+		var inputVolume = getter(udtData);
+		
+		var compute = {
+				libraryInputQuantity : $parse("inputContainerUsed.experimentProperties.libraryInputQuantity.value")(udtData),
+				conc : $parse("inputContainerUsed.concentration.value")(udtData),
+				
+				isReady:function(){
+					return (this.libraryInputQuantity && this.conc);
+				}
+			};
+		if(compute.isReady()){
+			var result = compute.libraryInputQuantity / compute.conc;
+			console.log("result = "+result);
+			if(result){
+				inputVolume = result;				
+			}else{
+				inputVolume = undefined;
+			}	
+			getter.assign(udtData, inputVolume);
+		}else {
+			console.log("not ready");
+			getter.assign(udtData, undefined);
+		}
+		
+	}
+	*/
+	/*
 	var populateIndex12LinePlate = function(startIndex, endIndex){
 		var currentIndex = startIndex;
 		
@@ -287,6 +352,64 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 		}
 		return values
 	}
+	*/
+	/**
+	 * More Generic than populateIndex12LinePlate
+	 */
+	var populateIndexLinePlate = function(prefix, startIndex, endIndex){
+		var currentIndex = startIndex;
+		
+		var values={};
+		var lines = ["A","B","C","D","E","F","G","H"];
+		
+		for(var j=0; j < lines.length; j++){
+			var line = lines[j];
+			for(var i = 1 ; i <= 12; i++){
+				var pos = currentIndex+i-1;
+				var computePrefix = null;
+				if(pos < 10){
+					computePrefix = prefix+"00";
+				}else if(pos < 100){
+					computePrefix = prefix+"0";
+				}else {
+					computePrefix = prefix;
+				}
+				values[line+i]=computePrefix+pos;;
+			}
+			currentIndex = currentIndex+12;
+		}
+		return values
+	}
+	
+	
+	
+	
+	var populateIndexColumnPlate = function(prefix, startIndex, endIndex){
+		var currentIndex = startIndex;
+		
+		var values={};
+		var lines = ["A","B","C","D","E","F","G","H"];
+		
+		for(var i = 1 ; i <= 12; i++){
+			for(var j=0; j < lines.length; j++){
+				var line = lines[j];
+				
+				var computePrefix = null;
+				if(currentIndex < 10){
+					computePrefix = prefix+"00";
+				}else if(currentIndex < 100){
+					computePrefix = prefix+"0";
+				}else {
+					computePrefix = prefix;
+				}
+				values[line+i]=computePrefix+currentIndex;
+				currentIndex++;
+			}
+			
+		}
+		return values
+	}
+	
 	
 	var populateIndex6ColumnPlate = function(startIndex, endIndex){
 		var currentIndex = startIndex;
@@ -306,20 +429,57 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 				}else{
 					currentIndex++;
 				}
+			}			
+		}
+		return values
+	}
+	
+	var populateEPGVDualIndexColumnPlate = function(prefix, startIndex, endIndex){
+		var currentIndex = startIndex;
+		
+		var values={};
+		var lines = ["A","B","C","D","E","F","G","H"];
+		
+		for(var i = 1 ; i <= 12; i++){
+			for(var j=0; j < lines.length; j++){
+				var line = lines[j];
+				
+				var computePrefix = null;
+				if(currentIndex < 10){
+					computePrefix = prefix+"0";
+				}else {
+					computePrefix = prefix;
+				}
+				values[line+i]=computePrefix+currentIndex+"_i7-"+computePrefix+currentIndex+"_i5"; //ex "udi0001_i7-udi0001_i5"
+				if(currentIndex === endIndex){
+					currentIndex = startIndex;
+				}else{
+					currentIndex++;
+				}
 			}
 			
 		}
 		return values
 	}
 	
+	
 	$scope.indexPlates = [];
 	//12BA001-12BA096 ; 12BA097-12BA192 ; 12BA193-12BA288 ; 12BA289-12BA384
 	
-	$scope.indexPlates.push({label:"12BA001-12BA096", value:populateIndex12LinePlate(1, 96)});
-	$scope.indexPlates.push({label:"12BA097-12BA192", value:populateIndex12LinePlate(97, 192)});
-	$scope.indexPlates.push({label:"12BA193-12BA288", value:populateIndex12LinePlate(193, 288)});
-	$scope.indexPlates.push({label:"12BA289-12BA384", value:populateIndex12LinePlate(289, 384)});
+	$scope.indexPlates.push({label:"12BA001-12BA096", value:populateIndexLinePlate("12BA", 1, 96)});
+	$scope.indexPlates.push({label:"12BA097-12BA192", value:populateIndexLinePlate("12BA", 97, 192)});
+	$scope.indexPlates.push({label:"12BA193-12BA288", value:populateIndexLinePlate("12BA", 193, 288)});
+	$scope.indexPlates.push({label:"12BA289-12BA384", value:populateIndexLinePlate("12BA", 289, 384)});
 	$scope.indexPlates.push({label:"IND1-IND48", value:populateIndex6ColumnPlate(1, 48)});
+	
+	$scope.indexPlates.push({label:"FLD0001-FLD0096 (EPGV)", value:populateIndexColumnPlate("fld0", 1, 96)});
+	$scope.indexPlates.push({label:"FLD0097-FLD0192 (EPGV)", value:populateIndexColumnPlate("fld0", 97, 192)});
+	$scope.indexPlates.push({label:"FLD0193-FLD0288 (EPGV)", value:populateIndexColumnPlate("fld0", 193, 288)});
+	$scope.indexPlates.push({label:"FLD0289-FLD0384 (EPGV)", value:populateIndexColumnPlate("fld0", 289, 384)});
+	$scope.indexPlates.push({label:"FLD0289-FLD0384 (EPGV)", value:populateIndexColumnPlate("fld0", 289, 384)});
+	
+	$scope.indexPlates.push({label:"IDT-ILMN TruSeq DNA UD Indexes (24 Indexes) (EPGV)", value:populateEPGVDualIndexColumnPlate("udi00", 1, 24)});
+	
 	
 	$scope.updatePlateWithIndex = function(selectedPlateIndex){
 		console.log("choose : "+selectedPlateIndex);
@@ -491,7 +651,7 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 	atmService.convertOutputPropertiesToDatatableColumn = function(property, pName){
 		var column = atmService.$commonATM.convertTypePropertyToDatatableColumn(property,"outputContainerUsed."+pName+".",{"0":Messages("experiments.outputs")});
 		if(property.code=="tag"){
-			column.editTemplate='<input class="form-control" type="text" #ng-model typeahead="v.code as v.code for v in tags | filter:$viewValue | limitTo:20" typeahead-min-length="1" udt-change="updatePropertyFromUDT(value,col)"/>';        											
+			column.editTemplate='<input class="form-control" type="text" #ng-model typeahead="v.code as v.code for v in tags | filter:{code:$viewValue} | limitTo:20" typeahead-min-length="1" udt-change="updatePropertyFromUDT(value,col)"/>';        											
 		}
 		return column;
 	};

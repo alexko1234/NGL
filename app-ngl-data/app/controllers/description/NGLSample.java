@@ -4,32 +4,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import play.Logger;
+import controllers.CommonController;
 import play.data.validation.ValidationError;
 import play.libs.Json;
 import play.mvc.Result;
-import services.description.common.InstituteService;
-import services.description.common.LevelService;
-import services.description.common.MeasureService;
-import services.description.common.ObjectTypeService;
-import services.description.common.StateService;
-import services.description.container.ContainerService;
-import services.description.experiment.ExperimentService;
-import services.description.instrument.InstrumentService;
-import services.description.process.ProcessService;
-import services.description.project.ProjectService;
-import services.description.run.RunService;
-import services.description.run.TreatmentService;
 import services.description.sample.ImportService;
 import services.description.sample.SampleService;
-import controllers.CommonController;
-
-
 
 public class NGLSample extends CommonController {
-	public static Result save(){
+	
+	private static final play.Logger.ALogger logger = play.Logger.of(NGLSample.class);
+	
+	public static Result save() {
 		try {
-			Map<String,List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
+			Map<String,List<ValidationError>> errors = new HashMap<>();
 			//InstituteService.main(errors);
 			//ObjectTypeService.main(errors);
 			//StateService.main(errors); 
@@ -51,8 +39,9 @@ public class NGLSample extends CommonController {
 				return ok();
 			}
 		} catch (Exception e) {
-			Logger.error(e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 			return internalServerError(e.getMessage());
 		}				
 	}
+	
 }

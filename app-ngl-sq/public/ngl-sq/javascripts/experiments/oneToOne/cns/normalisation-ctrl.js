@@ -9,7 +9,6 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 							"order":true,
 							"hide":true,
 							"type":"text",
-							 "mergeCells" : true,
 							"position":2,
 							"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 						 "extraHeaders":{0:Messages("experiments.inputs")}
@@ -53,6 +52,8 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			        	 "header" : Messages("containers.table.concentration"),
 			 			 "property": "inputContainerUsed.concentration.value",
 			 			 "order":true,
+			 			 "editDirectives":" udt-change='updatePropertyFromUDT(value,col)' ",
+			 			"tdClass":"valuationService.valuationCriteriaClass(value.data, experiment.status.criteriaCode, col.property)",			        	
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"number",
@@ -121,6 +122,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
+						 "watch":true,
 			        	 "type":"text",
 			        	 "defaultValues":"nM",
 			        	 "position":51,
@@ -253,6 +255,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
+		checkControlConc($scope.experiment);
 		updateATM($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
@@ -454,30 +457,55 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			size : {copyInputContainer:true}
 	};
 	
+	atmService.convertInputPropertiesToDatatableColumn = function(property, pName){
+        var column = atmService.$commonATM.convertTypePropertyToDatatableColumn(property,"inputContainerUsed."+pName+".",{"0":Messages("experiments.inputs")});
+        if(property.code=="maximumConcentration"){
+        //    column.property="(inputContainerUsed.maximumConcentration.value|number).concat(' '+inputContainerUsed.concentration.unit)";
+        }else{
+            
+        console.log("test "+property.code);
+        }
+        return column;
+    };
+	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	$scope.atmService = atmService;
 	
 	$scope.updatePropertyFromUDT = function(value, col){
 		console.log("update from property : "+col.property);
-		
+
 		if(col.property === 'inputContainerUsed.experimentProperties.computeMode.value'){
 			resetAll(value.data);
+		}else{
+			var computeMode = $parse("data.inputContainerUsed.experimentProperties.computeMode.value")(value);
+
+
+			if(computeMode == 'fixeCfVf'){
+				console.log("Volume final fixe")
+				if(col.property === 'outputContainerUsed.volume.value' || col.property === 'outputContainerUsed.concentration.value'){
+					computeInputVolumeWithConc(value.data);
+					computeBufferVolume(value.data);
+					computeMaxConc(value.data);
+					computeOutputQuantity(value.data);
+				}else if( col.property === 'inputContainerUsed.experimentProperties.inputVolume.value'){
+					$scope.messages.setError("Ne pas renseigner le champs volume engagé avec ce mode de calcul!");
+				}		
+			}else if(computeMode == 'fixeCfVi'){
+				console.log("volume a engager fixe");
+				if(col.property === 'inputContainerUsed.experimentProperties.inputVolume.value' 
+					|| col.property === 'outputContainerUsed.concentration.value'){
+					checkInputVolume(value.data);
+					computeFinalVolumeWithConc(value.data);
+					computeBufferVolume(value.data);
+					computeMaxConc(value.data);
+					computeOutputQuantity(value.data);
+				}	
+				if( col.property === 'outputContainerUsed.volume.value'){
+					$scope.messages.setError("Ne pas renseigner le champs volume final avec ce mode de calcul!");
+				}		
+			}	
+
 		}
-		var computeMode = $parse("data.inputContainerUsed.experimentProperties.computeMode.value")(value);
-		
-		if(computeMode == 'fixeCfVf'){
-			if(col.property === 'outputContainerUsed.volume.value' || col.property === 'outputContainerUsed.concentration.value'){
-				computeInputVolumeWithConc(value.data);
-				computeBufferVolume(value.data);
-			}			
-		}else if(computeMode == 'fixeCfVi'){
-			if(col.property === 'inputContainerUsed.experimentProperties.inputVolume.value' 
-				|| col.property === 'outputContainerUsed.concentration.value'){
-				computeFinalVolumeWithConc(value.data);
-				computeBufferVolume(value.data);
-			}			
-		}		
-		computeOutputQuantity(value.data);
 	}
 	
 	var resetAll = function(udtData){
@@ -488,42 +516,84 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 		
 	};
 	
-	var computeConcentration = function(udtData){
-		var getter = $parse("outputContainerUsed.concentration.value");
-		var oldOutputConc = getter(udtData);
-		var newOutputConc;
+	//si le volume engagé est > au volume en entrée => on entre dans une boucle de mise à jour sans fin
+	// => on bloque donc la valeur max de vol en entrée
+	var checkInputVolume = function(udtData){
+		var volumeEngage = $parse("inputContainerUsed.experimentProperties.inputVolume.value");
+				
 		var compute = {
-				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
-				inputVol : $parse("inputContainerUsed.experimentProperties.inputVolume.value")(udtData),
-				outputVol : $parse("outputContainerUsed.volume.value")(udtData),			
+				inputVol : $parse("inputContainerUsed.volume.value")(udtData),
+				volEngage : $parse("inputContainerUsed.experimentProperties.inputVolume.value")(udtData),
 				isReady:function(){
-					return (this.inputConc && this.inputVol && this.outputVol);
+					return (this.inputVol && this.volEngage);
 				}
-			};
-		
+		};
+
 		if(compute.isReady()){
-			var result = $parse("(inputConc * inputVol) / outputVol")(compute);
-			console.log("result = "+result);
-			if(angular.isNumber(result) && !isNaN(result)){
-				newOutputConc = Math.round(result*10)/10;					
-			}else{
-				newOutputConc = undefined;
-			}	
-			if(newOutputConc !== oldOutputConc){
-				getter.assign(udtData, newOutputConc);
+			if (compute.inputVol < compute.volEngage ){
+				volumeEngage.assign(udtData,compute.inputVol);
 			}
-		}else{
-			getter.assign(udtData, null);
-			console.log("not ready to computeConcentration");
 		}
 		
+	};
+	
+	var computeMaxConc = function(udtData){
+		
+		var getter = $parse("inputContainerUsed.experimentProperties.maximumConcentration");
+		var maxConc = getter(udtData);
+		var getter2 = $parse("outputContainerUsed.concentration");
+		var outputConc = getter2(udtData);
+		
+		
+		var compute = {
+				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
+				inputConcUnit : $parse("inputContainerUsed.concentration.unit")(udtData),
+				inputVol : $parse("inputContainerUsed.volume.value")(udtData),
+				outputVol : $parse("outputContainerUsed.volume.value")(udtData),			
+				isReady:function(){
+					return (this.inputConc && this.inputVol && this.outputVol );
+				}
+		};
+
+		if(compute.isReady()){
+			var result = $parse("(inputConc * inputVol) / outputVol")(compute);
+			console.log("refreshMaxConcfunction result "+result);
+			if(angular.isNumber(result) && !isNaN(result)){
+				maxConc = {};
+				maxConc.unit = compute.inputConcUnit;
+				if(result > compute.inputConc){
+					maxConc.value =  compute.inputConc;						
+				}else{
+					maxConc.value = Math.round(result*100)/100;						
+				}
+				if (outputConc){
+					if (outputConc.value > maxConc.value){
+						outputConc.value = maxConc.value;
+						outputConc.unit= maxConc.unit;
+						getter2.assign(udtData,outputConc);
+					}
+				}
+			}else{
+				maxConc =undefined;				
+			}	
+			getter.assign(udtData, maxConc);				
+				
+		}
 	};
 	
 	//cOut * vOut / cIn : 
 	//outputContainerUsed.concentration.value * outputContainerUsed.volume.value / inputContainerUsed.concentration.value
 	var computeInputVolumeWithConc = function(udtData){
+		
 		var getter = $parse("inputContainerUsed.experimentProperties.inputVolume.value");
 		var oldInputVolume = getter(udtData);
+		var getter2 = $parse("outputContainerUsed.concentration.value");
+		var oldConcentration = getter2(udtData);
+		var getter3 = $parse("inputContainerUsed.concentration.value");
+		var inputConcentration = getter3(udtData);
+		var getter4 = $parse("inputContainerUsed.volume.value");
+		var inVolume = getter4(udtData);
+		
 		var newInputVolume;
 		var compute = {
 				outputConc : $parse("outputContainerUsed.concentration.value")(udtData),
@@ -532,40 +602,17 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 				isReady:function(){
 					return (this.outputConc && this.inputConc && this.outputVol);
 				}
-			};
-		
-		if(compute.isReady()){
-			var result = $parse("(outputConc * outputVol) / inputConc")(compute);
-			console.log("result = "+result);
-			if(angular.isNumber(result) && !isNaN(result)){
-				newInputVolume = Math.round(result*10)/10;					
-			}else{
-				newInputVolume = undefined;
-			}	
-			if(newInputVolume !== oldInputVolume){
-				getter.assign(udtData, newInputVolume);
-			}
-		}else{
-			getter.assign(udtData, null);
-			console.log("not ready to computeInputVolume");
-		}
-		
-	};
-	var computeInputVolumeWithOtherVol = function(udtData){
-		var getter = $parse("inputContainerUsed.experimentProperties.inputVolume.value");
-		var oldInputVolume = getter(udtData);
-		var newInputVolume;
-		var compute = {
-				bufferVol : $parse("inputContainerUsed.experimentProperties.bufferVolume.value")(udtData),
+		};
+
+		var compute2 = {
 				outputVol : $parse("outputContainerUsed.volume.value")(udtData),			
 				isReady:function(){
-					return (this.outputVol && this.bufferVol);
+					return (this.outputVol);
 				}
-			};
-		
+		};
 		if(compute.isReady()){
-			var result = $parse("outputVol - bufferVol")(compute);
-			console.log("result = "+result);
+			var result = $parse("(outputConc * outputVol) / inputConc")(compute);
+			console.log("computeInputVolumeWithConc result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
 				newInputVolume = Math.round(result*10)/10;					
 			}else{
@@ -574,19 +621,47 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			if(newInputVolume !== oldInputVolume){
 				getter.assign(udtData, newInputVolume);
 			}
+		}else if (! $parse("inputContainerUsed.concentration.value")(udtData)){
+			if(compute2.isReady()){
+				console.log("compute2.isReady "+inputConcentration);
+				//Pas de vol en entrée
+				if(! inVolume){
+					newInputVolume=$parse("outputVol")(compute2);
+				}
+				// vol en entrée <= volume final
+				else if (inVolume <= $parse("outputVol")(compute2)){				
+					newInputVolume=inVolume;
+				}else{
+					newInputVolume=$parse("outputVol")(compute2);
+				}
+				
+			}else{
+				newInputVolume=undefined;		
+				console.log("not ready to computeInputVolume");
+			}
+			getter.assign(udtData, newInputVolume);	
+			if(oldConcentration){
+				console.log("oldConcentration"+oldConcentration);
+				$scope.messages.setError(Messages('experiments.output.error.must-have-inputConc'));		
+			}
+			getter2.assign(udtData,undefined);
 		}else{
-			getter.assign(udtData, null);
 			console.log("not ready to computeInputVolume");
+			getter.assign(udtData, null);
 		}
-		
-	}
+	};
+	
+	
 	//cIn * inputVolume / cOut : 
 	//inputContainerUsed.concentration.value * inputContainerUsed.experimentProperties.inputVolume.value / outputContainerUsed.concentration.value
 	var computeFinalVolumeWithConc = function(udtData){
 		var getter = $parse("outputContainerUsed.volume.value");
 		var oldOutputVolume = getter(udtData);
+		var getter2 = $parse("outputContainerUsed.concentration.value");
+		var oldConcentration = getter2(udtData);
+
 		var newOutputVolume;
-		
+
 		var compute = {
 				outputConc : $parse("outputContainerUsed.concentration.value")(udtData),
 				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
@@ -594,8 +669,15 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 				isReady:function(){
 					return (this.outputConc && this.inputConc && this.inputVol);
 				}
-			};
-		
+		};
+
+		var compute2 = {
+				inputVol : $parse("inputContainerUsed.experimentProperties.inputVolume.value")(udtData),			
+				isReady:function(){
+					return (this.inputVol);
+				}
+		};
+
 		if(compute.isReady()){
 			var result = $parse("(inputConc * inputVol) / outputConc")(compute);
 			console.log("result = "+result);
@@ -607,13 +689,24 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			if(newOutputVolume !== oldOutputVolume){
 				getter.assign(udtData, newOutputVolume);
 			}
-		}else{
+		}else if (! $parse("inputContainerUsed.concentration.value")(udtData)){
+			if(compute2.isReady()){
+				newOutputVolume = $parse("inputVol")(compute);
+				getter.assign(udtData, newOutputVolume);
+			}
+			
+			if(oldConcentration){
+				$scope.messages.setError(Messages('experiments.output.error.must-have-inputConc'));		
+			}
+		getter2.assign(udtData,undefined);
+			
+		}else{ 
 			getter.assign(udtData, null);
 			console.log("not ready to computeFinalVolume");
 		}
-		
+
 	};
-	
+	//Pas utilisé???
 	var computeFinalVolumeWithOtherVol = function(udtData){
 		var getter = $parse("outputContainerUsed.volume.value");
 		var oldOutputVolume = getter(udtData);
@@ -695,7 +788,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			console.log("result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
 				outputQuantity.value = Math.round(result*10)/10;	
-				outputQuantity.unit = (compute.outputConcUnit === 'nM')?'nmol':'ng';
+				outputQuantity.unit = (compute.outputConcUnit === 'nM')?'fmol':'ng';
 			}else{
 				outputQuantity = undefined;
 			}	
@@ -710,48 +803,86 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 	}
 	
 	var generateSampleSheetNormalisation = function(){
-		generateSampleSheet("normalisation");
+		$scope.fileUtils.generateSampleSheet({"type":"normalisation"});
 	};
-	var generateSampleSheetNormalisationPostPCR = function(){
-		generateSampleSheet("normalisation-post-pcr");
+	var generateSampleSheetNormalisationHighVol = function(){
+		$scope.fileUtils.generateSampleSheet({"type":"normalisation-highVol"});
+	};
+	var generateSampleSheetNormalisationBuffer = function(){
+		$scope.fileUtils.generateSampleSheet({"type":"normalisation-buffer"});
+	};
+	var generateSampleSheetNormalisationBufferHighVol = function(){
+		$scope.fileUtils.generateSampleSheet({"type":"normalisation-buffer-highVol"});
 	};
 	
-	var generateSampleSheet = function(type){
-		$scope.messages.clear();
-		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url+"?type="+type,{})
-		.success(function(data, status, headers, config) {
-			var header = headers("Content-disposition");
-			var filepath = header.split("filename=")[1];
-			
-			var filename = filepath.split(/\/|\\/);
-			filename = filename[filename.length-1];
-			if(data!=null){
-				$scope.messages.setSuccess(Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath);
-				var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
-				saveAs(blob, filename);
-			}
-		})
-		.error(function(data, status, headers, config) {
-			$scope.messages.setError(Messages('experiments.msg.generateSampleSheet.error'));
-			$scope.messages.setDetails(data);
-			$scope.messages.showDetails = true;							
-		});
+	var generateSampleSheetNormalisationPostPCR = function(){
+		$scope.fileUtils.generateSampleSheet({"type":"normalisation-post-pcr"});
 	};
+	
 	if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube" 
 		|| $scope.experiment.instrument.inContainerSupportCategoryCode !== "tube"){
-		
-		$scope.setAdditionnalButtons([{
-			isDisabled : function(){return $scope.isNewState();} ,
-			isShow:function(){return !$scope.isNewState();},
-			click:generateSampleSheetNormalisation,
-			label:Messages("experiments.sampleSheet")+" normalisation"
-		},{
-			isDisabled : function(){return $scope.isNewState();} ,
-			isShow:function(){return !$scope.isNewState();},
-			click:generateSampleSheetNormalisationPostPCR,
-			label:Messages("experiments.sampleSheet")+" normalisation post PCR"
-		}]);
+
+	if($scope.experiment.instrument.typeCode === "brand-lhs"){
+			$scope.setAdditionnalButtons([{
+				isDisabled : function(){return $scope.isNewState();} ,
+				isShow:function(){return !$scope.isNewState();},
+				click:generateSampleSheetNormalisation,
+				label:Messages("experiments.sampleSheet")+" normalisation ADN_pipette_P50"
+			},{
+                isDisabled : function(){return $scope.isNewState();} ,
+                isShow:function(){return !$scope.isNewState();},
+                click:generateSampleSheetNormalisationHighVol,
+                label:Messages("experiments.sampleSheet")+" normalisation ADN_pipette_P200"
+            },{
+				isDisabled : function(){return $scope.isNewState();} ,
+				isShow:function(){return !$scope.isNewState();},
+				click:generateSampleSheetNormalisationBuffer,
+				label:Messages("experiments.sampleSheet")+" normalisation Tampon_pipette_P50"
+			},{
+                isDisabled : function(){return $scope.isNewState();} ,
+                isShow:function(){return !$scope.isNewState();},
+                click:generateSampleSheetNormalisationBufferHighVol,
+                label:Messages("experiments.sampleSheet")+" normalisation Tampon_pipette_P200"
+            }]);	
+		}else if ($scope.experiment.instrument.typeCode === "hand"){
+
+
+		}else{		
+			$scope.setAdditionnalButtons([{
+				isDisabled : function(){return $scope.isNewState();} ,
+				isShow:function(){return !$scope.isNewState();},
+				click:generateSampleSheetNormalisation,
+				label:Messages("experiments.sampleSheet")+" normalisation"
+			},{
+				isDisabled : function(){return $scope.isNewState();} ,
+				isShow:function(){return !$scope.isNewState();},
+				click:generateSampleSheetNormalisationPostPCR,
+				label:Messages("experiments.sampleSheet")+" normalisation post PCR"
+			}]);
+		}
+
 	}
 	
 	
+	var checkControlConc = function(experiment){
+
+		/* Plus utile??? GS
+		 * 
+		 *experiment.atomicTransfertMethods.forEach(function(atm){
+			//Si CONC en IN est null alors conc out doit etre null			
+			if (atm.inputContainerUseds[0].concentration == undefined){				
+				atm.outputContainerUseds[0].concentration=undefined;
+				
+				atm.inputContainerUseds[0].experimentProperties.bufferVolume.value =0;
+
+				if (atm.outputContainerUseds[0].volume && atm.outputContainerUseds[0].volume.value  ){
+					atm.inputContainerUseds[0].experimentProperties.inputVolume.value = atm.outputContainerUseds[0].volume.value;
+				}else {
+					atm.outputContainerUseds[0].volume.value = atm.inputContainerUseds[0].experimentProperties.inputVolume.value; 
+				}
+
+			}
+
+		});	*/	
+	}
 }]);

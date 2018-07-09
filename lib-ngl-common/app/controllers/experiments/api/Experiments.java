@@ -1,127 +1,112 @@
 package controllers.experiments.api;
 
-import static play.data.Form.form;
-
+import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
+import static validation.experiment.instance.ExperimentValidationHelper.validateReagents;
+import static validation.experiment.instance.ExperimentValidationHelper.validateStatus;
+import static validation.experiment.instance.ExperimentValidationHelper.validateState;
 import java.util.ArrayList;
 import java.util.Arrays;
+// import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
-import models.laboratory.common.description.Level;
-import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.container.instance.Container;
-import models.laboratory.experiment.instance.Experiment;
-import models.utils.CodeHelper;
-import models.utils.InstanceConstants;
-import models.utils.dao.DAOException;
-import models.utils.instance.ExperimentHelper;
+import javax.inject.Inject;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-import play.Logger;
-import play.api.modules.spring.Spring;
+import com.mongodb.BasicDBObject;
+
+import controllers.DocumentController;
+import controllers.NGLControllerHelper;
+import controllers.QueryFieldsForm;
+import controllers.authorisation.Permission;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.IGBodyParsers;
+import fr.cea.ig.play.migration.NGLContext;
+import models.laboratory.common.description.Level;
+// import models.laboratory.common.instance.Comment;
+// import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TraceInformation;
+// import models.laboratory.common.instance.Valuation;
+import models.laboratory.container.instance.Container;
+import models.laboratory.experiment.description.ExperimentCategory;
+import models.laboratory.experiment.instance.AtomicTransfertMethod;
+// import models.laboratory.experiment.instance.AtomicTransfertMethod;
+import models.laboratory.experiment.instance.Experiment;
+// import models.laboratory.instrument.instance.InstrumentUsed;
+// import models.laboratory.reagent.instance.ReagentUsed;
+import models.utils.CodeHelper;
+import models.utils.InstanceConstants;
+// import models.utils.InstanceHelpers;
+import models.utils.dao.DAOException;
+import models.utils.instance.ExperimentHelper;
+// import play.Logger;
+// import play.api.modules.spring.Spring;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Result;
+import scala.collection.immutable.HashSet;
 import validation.ContextValidation;
 import workflows.experiment.ExpWorkflows;
 
-import com.mongodb.BasicDBObject;
+// TODO: cleanup
 
-import controllers.DocumentController;
-import controllers.NGLControllerHelper;
-import controllers.authorisation.Permission;
-import fr.cea.ig.MongoDBDAO;
-
-public class Experiments extends DocumentController<Experiment>{
+public class Experiments extends DocumentController<Experiment> {
 	
-	final static Form<State> stateForm = form(State.class);
+	private static final play.Logger.ALogger logger = play.Logger.of(Experiments.class);
 	
-	final Form<Experiment> experimentForm = form(Experiment.class);
-	final Form<ExperimentSearchForm> experimentSearchForm = form(ExperimentSearchForm.class);
-	final static List<String> defaultKeys =  Arrays.asList("categoryCode","code","inputContainerSupportCodes","instrument","outputContainerSupportCodes","projectCodes","protocolCode","reagents","sampleCodes","state","status","traceInformation","typeCode","atomicTransfertMethods.inputContainerUseds.contents");
+	final static List<String> DEFAULT_KEYS =  Arrays.asList("categoryCode","code","inputContainerSupportCodes","instrument","outputContainerSupportCodes","projectCodes","protocolCode","reagents","sampleCodes","state","status","traceInformation","typeCode","atomicTransfertMethods.inputContainerUseds.contents");
+	final static List<String> authorizedUpdateFields = Arrays.asList("status", "reagents", "state");
+	public static final String calculationsRules = "calculations";
 	
-	final ExpWorkflows workflows = Spring.getBeanOfType(ExpWorkflows.class);
+	private final Form<State>           stateForm; // = form(State.class);
+	private final Form<QueryFieldsForm> updateForm; // = form(QueryFieldsForm.class);
+	// private final Form<Experiment> experimentForm; // = form(Experiment.class);
+	// private final Form<ExperimentSearchForm> experimentSearchForm; // = form(ExperimentSearchForm.class);
+	// final ExpWorkflows workflows = Spring.get BeanOfType(ExpWorkflows.class);
+	private final ExpWorkflows          workflows;
 	
-	public static final String calculationsRules ="calculations";
-	
-	public Experiments() {
-		super(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, defaultKeys);	
+	@Inject
+	public Experiments(NGLContext ctx, ExpWorkflows workflows) {
+		super(ctx,InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DEFAULT_KEYS);
+		stateForm            = ctx.form(State.class);
+		updateForm           = ctx.form(QueryFieldsForm.class);
+		// experimentForm       = ctx.form(Experiment.class);
+		// experimentSearchForm = ctx.form(ExperimentSearchForm.class);
+		this.workflows       = workflows;
 	}
 	
-	
 	@Permission(value={"reading"})
-	public Result list(){
+	public Result list() {
 		ExperimentSearchForm searchForm = filledFormQueryString(ExperimentSearchForm.class);
-		if(searchForm.reporting){
+		if (searchForm.reporting) {
 			return nativeMongoDBQuery(searchForm);
-		}else{
+		} else {
 			DBQuery.Query query = getQuery(searchForm);
 			return mongoJackQuery(searchForm, query);			
 		}
 	}
+	
 	/*
-	@Permission(value={"reading"})
-	public Result list(){
-		//Form<ExperimentSearchForm> experimentFilledForm = filledFormQueryString(experimentSearchForm,ExperimentSearchForm.class);
-		//ExperimentSearchForm experimentsSearch = experimentFilledForm.get();
-		ExperimentSearchForm experimentsSearch = filledFormQueryString(ExperimentSearchForm.class);
-		BasicDBObject keys = getKeys(updateForm(experimentsSearch));
-		DBQuery.Query query = getQuery(experimentsSearch);
-
-		if(experimentsSearch.datatable){
-			MongoDBResult<Experiment> results =  mongoDBFinder(experimentsSearch, query, keys);
-			List<Experiment> experiments = results.toList();
-			return ok(Json.toJson(new DatatableResponse<Experiment>(experiments, results.count())));
-		}else if (experimentsSearch.list){
-			keys = new BasicDBObject();
-			keys.put("_id", 0);//Don't need the _id field
-			keys.put("code", 1);
-			if(null == experimentsSearch.orderBy)experimentsSearch.orderBy = "code";
-			if(null == experimentsSearch.orderSense)experimentsSearch.orderSense = 0;				
-
-			MongoDBResult<Experiment> results = mongoDBFinder(experimentsSearch, query, keys);
-			List<Experiment> experiments = results.toList();
-			List<ListObject> los = new ArrayList<ListObject>();
-			for(Experiment p: experiments){					
-				los.add(new ListObject(p.code, p.code));								
-			}
-			return Results.ok(Json.toJson(los));
-		}else{
-			if(null == experimentsSearch.orderBy)experimentsSearch.orderBy = "code";
-			if(null == experimentsSearch.orderSense)experimentsSearch.orderSense = 0;
-			MongoDBResult<Experiment> results = mongoDBFinder(experimentsSearch, query, keys);
-			List<Experiment> experiments = results.toList();
-			return ok(Json.toJson(experiments));
-		}
-	}
-
-	protected DatatableForm updateForm(ExperimentSearchForm form) {
-		if(form.includes.contains("default")){
-			form.includes.remove("default");
-			form.includes.addAll(defaultKeys);
-		}
-		return form;
-	}
-	*/
-	/**
 	 * Construct the experiment query
 	 * @param experimentSearch
 	 * @return the query
 	 */
 	protected DBQuery.Query getQuery(ExperimentSearchForm experimentSearch) {
-		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
+		List<DBQuery.Query> queryElts = new ArrayList<>();
 		Query query=DBQuery.empty();
 		
 		if(CollectionUtils.isNotEmpty(experimentSearch.codes)){
@@ -157,7 +142,7 @@ public class Experiments extends DocumentController<Experiment>{
 		}
 
 		
-		Set<String> containerCodes = new TreeSet<String>();
+		Set<String> containerCodes = new TreeSet<>();
 		if(MapUtils.isNotEmpty(experimentSearch.atomicTransfertMethodsInputContainerUsedsContentsProperties)){
 			List<DBQuery.Query> listContainerQuery = NGLControllerHelper.generateQueriesForProperties(experimentSearch.atomicTransfertMethodsInputContainerUsedsContentsProperties, Level.CODE.Content, "contents.properties");
 			
@@ -182,12 +167,12 @@ public class Experiments extends DocumentController<Experiment>{
 		}
 		
 		if(containerCodes.size() > 0){
-			List<DBQuery.Query> qs = new ArrayList<DBQuery.Query>();
+			List<DBQuery.Query> qs = new ArrayList<>();
 			qs.add(DBQuery.in("inputContainerCodes",containerCodes));
 			qs.add(DBQuery.in("outputContainerCodes",containerCodes));
 			queryElts.add(DBQuery.or(qs.toArray(new DBQuery.Query[qs.size()])));
 		}else if(StringUtils.isNotBlank(experimentSearch.containerCodeRegex)){			
-			List<DBQuery.Query> qs = new ArrayList<DBQuery.Query>();
+			List<DBQuery.Query> qs = new ArrayList<>();
 			qs.add(DBQuery.regex("inputContainerCodes",Pattern.compile(experimentSearch.containerCodeRegex)));
 			qs.add(DBQuery.regex("outputContainerCodes",Pattern.compile(experimentSearch.containerCodeRegex)));
 			queryElts.add(DBQuery.or(qs.toArray(new DBQuery.Query[qs.size()])));
@@ -195,19 +180,19 @@ public class Experiments extends DocumentController<Experiment>{
 		
 		
 		if(StringUtils.isNotBlank(experimentSearch.containerSupportCode)){			
-			List<DBQuery.Query> qs = new ArrayList<DBQuery.Query>();
+			List<DBQuery.Query> qs = new ArrayList<>();
 
 			qs.add(DBQuery.in("inputContainerSupportCodes",experimentSearch.containerSupportCode));
 			qs.add(DBQuery.in("outputContainerSupportCodes",experimentSearch.containerSupportCode));
 			queryElts.add(DBQuery.or(qs.toArray(new DBQuery.Query[qs.size()])));
 		}else if(CollectionUtils.isNotEmpty(experimentSearch.containerSupportCodes)){			
-			List<DBQuery.Query> qs = new ArrayList<DBQuery.Query>();
+			List<DBQuery.Query> qs = new ArrayList<>();
 
 			qs.add(DBQuery.in("inputContainerSupportCodes",experimentSearch.containerSupportCodes));
 			qs.add(DBQuery.in("outputContainerSupportCodes",experimentSearch.containerSupportCodes));
 			queryElts.add(DBQuery.or(qs.toArray(new DBQuery.Query[qs.size()])));
 		}else if(StringUtils.isNotBlank(experimentSearch.containerSupportCodeRegex)){			
-			List<DBQuery.Query> qs = new ArrayList<DBQuery.Query>();
+			List<DBQuery.Query> qs = new ArrayList<>();
 
 			qs.add(DBQuery.regex("inputContainerSupportCodes",Pattern.compile(experimentSearch.containerSupportCodeRegex)));
 			qs.add(DBQuery.regex("outputContainerSupportCodes",Pattern.compile(experimentSearch.containerSupportCodeRegex)));
@@ -284,19 +269,20 @@ public class Experiments extends DocumentController<Experiment>{
 	}
 	
 	@Permission(value={"writing"})
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 10000 * 1024)
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 10000 * 1024)
+	@BodyParser.Of(value = IGBodyParsers.Json10MB.class)
 	public Result save() throws DAOException{
 		Form<Experiment> filledForm = getMainFilledForm();
 		Experiment input = filledForm.get();
 		
-		if (null == input._id) {
+		if (input._id == null) {
 			input.code = CodeHelper.getInstance().generateExperimentCode(input);
 			input.traceInformation = new TraceInformation();
 			input.traceInformation.setTraceInformation(getCurrentUser());
 			
-			if(null == input.state){
+			if (input.state == null) 
 				input.state = new State();
-			}
+			
 			input.state.code = "N";
 			input.state.user = getCurrentUser();
 			input.state.date = new Date();	
@@ -304,113 +290,346 @@ public class Experiments extends DocumentController<Experiment>{
 		} else {
 			return badRequest("use PUT method to update the experiment");
 		}
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		ctxVal.setCreationMode();
-		long t1 = System.currentTimeMillis();
+//		long t1 = System.currentTimeMillis();
 		workflows.applyPreStateRules(ctxVal, input, input.state);
-		long t2 = System.currentTimeMillis();
+//		long t2 = System.currentTimeMillis();
 		ExperimentHelper.doCalculations(input, calculationsRules);
-		long t3 = System.currentTimeMillis();
+//		long t3 = System.currentTimeMillis();
 		input.validate(ctxVal);	
 		if (!ctxVal.hasErrors()) {
-			long t4 = System.currentTimeMillis();
+//			long t4 = System.currentTimeMillis();
 			input = saveObject(input);
-			long t5 = System.currentTimeMillis();
+//			long t5 = System.currentTimeMillis();
 			workflows.applySuccessPostStateRules(ctxVal, input);
-			long t6 = System.currentTimeMillis();
-			
+//			long t6 = System.currentTimeMillis();			
 			//Logger.debug((t2-t1)+" - "+(t3-t2)+" - "+(t4-t3)+" - "+(t5-t4)+" - "+(t6-t4));
-			
 			return ok(Json.toJson(input));
 		} else {
 			workflows.applyErrorPostStateRules(ctxVal, input, input.state);
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}				
 	}
 	
-	@Permission(value={"writing"})
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 10000 * 1024)
-	public Result update(String code) throws DAOException{
-		Experiment objectInDB =  getObject(code);
-		if(objectInDB == null) {
-			return badRequest("Experiment with code "+code+" does not exist");
+	// TODO: remove dead test code
+	/*
+	private void eq(String n, String s0, String s1) {
+		if (!s0.equals(s1))
+			throw new RuntimeException(n + " : " + s0 + " =/= " + s1);
+	}
+	
+	// Should provide some current and fields to swap
+	private String swap(Experiment good, Experiment bad, String... fieldNames) {
+		for (String fieldName : fieldNames) {
+			try {
+			java.lang.reflect.Field field = good.getClass().getField(fieldName);
+			Object badVal = field.get(bad);
+			field.set(bad, field.get(good));
+			try {
+				updateObject(bad);
+				// swap field swap has been enough, we're golden
+				return fieldName;
+			} catch (Exception e) {
+				// failed, reset and try next
+				field.set(bad, badVal);
+			}
+			} catch (Exception e) {
+				throw new RuntimeException("bad fail",e);
+			}
 		}
-		//TODO Peux t'on mettre à jour une expérience terminée
-		//	=> Oui mais on ne peut plus modifier sa structure juste les valeurs reagents et comments
-		//	=> comment vérifier le point précédent ????
+		throw new RuntimeException("no single swap worked");
+	}
+	
+	// We trace the a's to avoid cycling.
+	static class Comp implements java.util.Comparator<Object> {
+		public int compare(Object a, Object b) {
+			if (a instanceof fr.cea.ig.DBObject) {
+				if (b instanceof fr.cea.ig.DBObject) {
+					return ((fr.cea.ig.DBObject)a)._id.compareTo(((fr.cea.ig.DBObject)b)._id);
+				}
+			}
+			return 0;
+		}
+	}
+	private void diff(Set<Object> done, String path, Object a, Object b) {
+		if (a == null && b == null) {
+		} else if (a == null && b != null) {
+			logger.debug(path + " null vs non null");
+		} else if (a != null && b == null) {
+			logger.debug(path + " not null and null");
+		} else if (done.contains(a)) {
+			// avoid recursion of checked objects
+		} else if (a.getClass() != b.getClass()) {
+			logger.debug(path + " class diff " + a.getClass() + " " + b.getClass());
+		} else {
+			// logger.debug("diff " + path + a.getClass() + " " + b.getClass() + " " + a + " / " + b);
+			if (a instanceof String) {
+				if (!a.equals(b)) 
+					logger.debug((path + " string diff " + a + " " + b));
+			} else if (a instanceof List) {
+				List<Object> l0 = (List<Object>)a;
+				List<Object> l1 = (List<Object>)b;
+				Collections.sort(l0,new Comp());
+				Collections.sort(l1,new Comp());
+				// Reorder using some criterion so the lists are the same
+				done.add(a);
+				for (int i=0; i<l0.size(); i++) 
+					diff(done,path+"["+i+"]",l0.get(i),l1.get(i));
+			} else if (a instanceof Set) {
+				Set<Object> s0 = (Set<Object>)a;
+				Set<Object> s1 = (Set<Object>)b;
+				if (!s0.containsAll(s1) || !s1.containsAll(s0))
+					logger.debug(path + " set diff " + s0 + " " + s1);
+			} else if (a instanceof Map) {
+				// throw new RuntimeException("map");
+			} else {
+				for (Field field : a.getClass().getFields()) {
+					done.add(a);
+					try {
+						diff(done,path+"/"+field.getName(),field.get(a),field.get(b));
+					} catch (IllegalAccessException e) {
+						logger.error("field error",e);
+					}
+				}
+			}
+		}
+	}
+	
+	private void compare(Experiment e0, Experiment e1) {
+		logger.debug("comparing " + e0 + " and " + e1);
+		
+		// public String typeCode;
+		eq("typeCode",e0.typeCode,e1.typeCode);
+		// public String categoryCode;
+		eq("categoryCode",e0.categoryCode,e1.categoryCode);
+		
+		// Expreiment class field names
+		public TraceInformation traceInformation = new TraceInformation();
+		public Map<String,PropertyValue> experimentProperties;
+		
+		public Map<String, PropertyValue> instrumentProperties;
+		
+		public InstrumentUsed instrument;
+		public String protocolCode;
+
+		public State state = new State();
+		public Valuation status = new Valuation();
+		
+		public List<AtomicTransfertMethod> atomicTransfertMethods; 
+		
+		public List<ReagentUsed> reagents;
+		
+		public List<Comment> comments;
+		
+		public Set<String> projectCodes;
+		public Set<String> sampleCodes;
+		
+		public Set<String> inputContainerSupportCodes;
+		public Set<String> inputContainerCodes;
+		public Set<String> inputProcessCodes;
+		public Set<String> inputProcessTypeCodes;
+		public Set<String> inputFromTransformationTypeCodes;
+		
+		public Set<String> outputContainerCodes;
+		public Set<String> outputContainerSupportCodes;
+		
+	}
+	*/
+	
+//	private void findBigInts(Set<Object> done, String path, Object a) {
+//		if (a == null) {
+//		} else if (done.contains(a)) {
+//			// avoid recursion of checked objects
+//		} else if (a instanceof java.math.BigInteger) {
+//			logger.debug("found bi : " + path + " bigint " + a);
+//		} else {
+//			// logger.debug("diff " + path + a.getClass() + " " + b.getClass() + " " + a + " / " + b);
+//			if (a instanceof String) {
+//			} else if (a instanceof List) {
+//				List<Object> l0 = (List<Object>)a;
+//				done.add(a);
+//				for (int i=0; i<l0.size(); i++) 
+//					findBigInts(done,path+"["+i+"]",l0.get(i));
+//			} else if (a instanceof Set) {
+//				Set<Object> s0 = (Set<Object>)a;
+//				for (Object o : s0)
+//					findBigInts(done,path+"[-]",o);
+//			} else if (a instanceof Map) {
+//				// throw new RuntimeException("map");
+//			} else {
+//				for (Field field : a.getClass().getFields()) {
+//					done.add(a);
+//					try {
+//						findBigInts(done,path+"/"+field.getName(),field.get(a));
+//					} catch (IllegalAccessException e) {
+//						logger.error("field error",e);
+//					}
+//				}
+//			}
+//		}
+//		// throw new RuntimeException("crash");
+//	}
+	
+	@Permission(value={"writing"})
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 10000 * 1024)
+	@BodyParser.Of(value = IGBodyParsers.Json10MB.class)
+	public Result update(String code) throws DAOException {
+		logger.debug("update '" + code + "'");
+		Experiment objectInDB =  getObject(code);
+		if (objectInDB == null) {
+			return badRequest("Experiment with code " + code + " does not exist");
+		}
+		
 		Form<Experiment> filledForm = getMainFilledForm();
 		Experiment input = filledForm.get();
+		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
+		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
 		
-		if (input.code.equals(code)) {
-			if(null != input.traceInformation){
-				input.traceInformation = getUpdateTraceInformation(input.traceInformation);
-			}else{
-				Logger.error("traceInformation is null !!");
-			}
+		if(queryFieldsForm.fields == null || queryFieldsForm.fields.contains("all")){
 			
-			if(!objectInDB.state.code.equals(input.state.code)){
-				return badRequest("you cannot change the state code. Please used the state url ! ");
-			}
-			long t1 = System.currentTimeMillis();
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
-			ctxVal.setUpdateMode();
-			ExperimentHelper.doCalculations(input, calculationsRules);
-			long t2 = System.currentTimeMillis();
-			workflows.applyPreValidateCurrentStateRules(ctxVal, input);
-			long t3 = System.currentTimeMillis();
-			input.validate(ctxVal);			
-			if (!ctxVal.hasErrors()) {	
-				workflows.applyPostValidateCurrentStateRules(ctxVal, input);
-				long t4 = System.currentTimeMillis();
-				updateObject(input);	
-				long t5 = System.currentTimeMillis();
-				//Logger.debug((t2-t1)+" - "+(t3-t2)+" - "+(t4-t3)+" - "+(t5-t4));
+			if (input.code.equals(code)) {
+				if(null != input.traceInformation){
+					input.traceInformation = getUpdateTraceInformation(input.traceInformation);
+				}else{
+					logger.error("traceInformation is null !!");
+				}
 				
-				return ok(Json.toJson(input));
-			}else {
-				return badRequest(filledForm.errorsAsJson());			
-			}
-		}else{
-			return badRequest("Experiment code are not the same");
-		}
+				if(!objectInDB.state.code.equals(input.state.code)){
+					return badRequest("you cannot change the state code. Please used the state url ! ");
+				}
+//				long t1 = System.currentTimeMillis();
+//				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
+				ctxVal.setUpdateMode();
+				//todo update in cascading contentProperties, only for administrator
+				if (queryFieldsForm.fields != null && queryFieldsForm.fields.contains("updateContentProperties")) {
+					ctxVal.putObject("updateContentProperties", Boolean.TRUE);
+				}
+				ExperimentHelper.doCalculations(input, calculationsRules);
+//				long t2 = System.currentTimeMillis();
+				workflows.applyPreValidateCurrentStateRules(ctxVal, input);
+//				long t3 = System.currentTimeMillis();
+				input.validate(ctxVal);	
 				
+				// ------------------------------------------------------
+				//AJ: Fix Bug NGL-2037 //TODO move to validate method
+				List<String> sc = new ArrayList<>();
+				Integer iocuSize = 0;
+				for(AtomicTransfertMethod tranfert : input.atomicTransfertMethods){
+					if(tranfert.outputContainerUseds == null){
+						iocuSize += tranfert.inputContainerUseds.size();
+						sc.addAll(tranfert.inputContainerUseds.stream().map(c -> c.locationOnContainerSupport.storageCode).collect(Collectors.toList()));
+					} else {
+						iocuSize += tranfert.outputContainerUseds.size();
+						sc.addAll(tranfert.outputContainerUseds.stream().map(c -> c.locationOnContainerSupport.storageCode).collect(Collectors.toList()));
+					}
+				}
+				sc.removeIf(Objects::isNull);
+				if(!sc.isEmpty()) {
+					Set<String> storageCodes = new TreeSet<>(sc);
+					if (! storageCodes.isEmpty() && storageCodes.size() != 1) {
+						ctxVal.addErrors("storageCode","different for several containers");
+					} else {
+						if(sc.size() != iocuSize) {
+							ctxVal.addErrors("storageCode","not defined for all containers");
+						}
+					}
+				} // else no validation required
+				// ------------------------------------------------------
+				
+				if (!ctxVal.hasErrors()) {	
+					workflows.applyPostValidateCurrentStateRules(ctxVal, input);
+//					long t4 = System.currentTimeMillis();
+					updateObject(input);	
+//					long t5 = System.currentTimeMillis();
+					//Logger.debug((t2-t1)+" - "+(t3-t2)+" - "+(t4-t3)+" - "+(t5-t4));					
+					return ok(Json.toJson(input));
+				} else {
+					// return badRequest(filledForm.errors-AsJson());
+					return badRequest(errorsAsJson(ctxVal.getErrors()));
+				}
+			} else {
+				return badRequest("Experiment code are not the same");
+			}
+		} else {
+//			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm); 	
+			contextValidation.setUpdateMode();
+			validateAuthorizedUpdateFields(contextValidation, queryFieldsForm.fields, authorizedUpdateFields);
+			validateIfFieldsArePresentInForm(contextValidation, queryFieldsForm.fields, filledForm);
+			// if(!filledForm.hasErrors()){
+			if (!contextValidation.hasErrors()) {
+				TraceInformation ti = objectInDB.traceInformation;
+				ti.setTraceInformation(getCurrentUser());
+				contextValidation.putObject(FIELD_STATE_CODE , objectInDB.state.code);
+				
+				if (queryFieldsForm.fields.contains("state")) {
+					validateState(objectInDB.typeCode, input.state, contextValidation);				
+				}
+				
+				if (queryFieldsForm.fields.contains("status")) {
+					validateStatus(objectInDB.typeCode, input.status, contextValidation);				
+				}
+				
+				if (queryFieldsForm.fields.contains("reagents")) {
+					validateReagents(objectInDB.reagents, contextValidation);				
+				}
+				
+				if (!contextValidation.hasErrors()) {
+					MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, 
+							DBQuery.and(DBQuery.is("code", code)), getBuilder(input, queryFieldsForm.fields).set("traceInformation", ti));
+					return ok(Json.toJson(getObject(code)));
+				} else {
+					// return badRequest(filledForm.errors-AsJson());
+					return badRequest(errorsAsJson(contextValidation.getErrors()));
+				}				
+			} else {
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(contextValidation.getErrors()));
+			}
+		}							
 	}
 	
 	@Permission(value={"writing"})
 	public Result updateState(String code){
 		Experiment objectInDB = getObject(code);
-		if(objectInDB == null) {
+		if (objectInDB == null)
 			return notFound();
-		}
+
 		Form<State> filledForm =  getFilledForm(stateForm, State.class);
 		State state = filledForm.get();
 		state.date = new Date();
 		state.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		workflows.setState(ctxVal, objectInDB, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getObject(code)));
-		}else {
-			return badRequest(filledForm.errorsAsJson());
+		} else {
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 	
-	
+	@Override
 	@Permission(value={"writing"})
 	public Result delete(String code){
 		Experiment objectInDB =  getObject(code);
-		if(objectInDB == null) {
+		if (objectInDB == null)
 			return notFound();
-		}
-		DynamicForm deleteForm = form();
-		ContextValidation contextValidation=new ContextValidation(getCurrentUser(),deleteForm.errors());
+		DynamicForm deleteForm = ctx.form();
+//		ContextValidation contextValidation = new ContextValidation(getCurrentUser(),deleteForm.errors());
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), deleteForm);
 		workflows.delete(contextValidation, objectInDB);
 		if (!contextValidation.hasErrors()) {
 			return ok();
-		}else {
-			return badRequest(deleteForm.errorsAsJson());
+		} else {
+			// return badRequest(deleteForm.errors-AsJson());
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
 		}
-		
-		
 	}
+	
 }

@@ -6,9 +6,7 @@ import java.util.Map;
 
 import controllers.ListForm;
 
-
-
-public class AnalysesSearchForm extends ListForm{
+public class AnalysesSearchForm extends ListForm {
 	
 	public List<String> stateCodes;
 	public String stateCode;
@@ -32,8 +30,8 @@ public class AnalysesSearchForm extends ListForm{
     
 	public List<String> existingFields, notExistingFields;
    
-    public Map<String, List<String>> properties = new HashMap<String, List<String>>();
-    public Map<String, Map<String, List<String>>> treatmentProperties = new HashMap<String, Map<String, List<String>>>();
+    public Map<String, List<String>> properties = new HashMap<>();
+    public Map<String, Map<String, List<String>>> treatmentProperties = new HashMap<>();
     
 	 
 }

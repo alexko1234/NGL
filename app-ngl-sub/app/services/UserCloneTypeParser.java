@@ -1,5 +1,5 @@
 package services;
-import java.io.File;
+// import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ public class UserCloneTypeParser {
 	static final String STUDY_AC = "study_ac";
 	static final String SAMPLE_AC = "sample_ac";
 
-	private List<String> allowedFields = new ArrayList<String>();
+	private List<String> allowedFields = new ArrayList<>();
 	private String keyField;
 	private String separator;
 	
@@ -35,26 +35,28 @@ public class UserCloneTypeParser {
 	
 //	public List<UserCloneType> load(File file) throws SraException {
 	public List<UserCloneType> load(InputStream inputStream) throws SraException {
-		List<UserCloneType> listUserClones = new ArrayList<UserCloneType>();
+		List<UserCloneType> listUserClones = new ArrayList<>();
 		if (inputStream != null) {
 			ColumnParser parser = new ColumnParser(keyField, separator);
 			if (parser.setAllowedFields(allowedFields)) {
-				listUserClones = (List<UserCloneType>)parser.load(inputStream, new UserCloneTypeParserFactory());
+				// listUserClones = (List<UserCloneType>)parser.load(inputStream, new UserCloneTypeParserFactory());
+				listUserClones = parser.load(inputStream, new UserCloneTypeParserFactory());
 			} else {
 				throw new SraException("Probleme lors de l'installation des champs autorises");
 			}
 		}
-			return listUserClones;
+		return listUserClones;
 	}
 	
 	
 	public Map<String, UserCloneType> loadMap(InputStream inputStream) throws SraException {
-		Map<String, UserCloneType> mapUserClones = new HashMap<String, UserCloneType>();
+		Map<String, UserCloneType> mapUserClones = new HashMap<>();
 		
 		if (inputStream!=null) {
 			ColumnParser parser = new ColumnParser(keyField, separator);
 			if (parser.setAllowedFields(allowedFields)) {
-				mapUserClones = (Map<String, UserCloneType>)parser.loadMap(inputStream, new UserCloneTypeParserFactory());
+				// mapUserClones = (Map<String, UserCloneType>)parser.loadMap(inputStream, new UserCloneTypeParserFactory());
+				mapUserClones = parser.loadMap(inputStream, new UserCloneTypeParserFactory());
 			} else {
 				throw new SraException("Probleme lors de l'installation des champs autorises");
 			}

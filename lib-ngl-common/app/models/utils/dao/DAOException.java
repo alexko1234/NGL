@@ -1,6 +1,6 @@
 package models.utils.dao;
 
-public class DAOException extends RuntimeException{
+public class DAOException extends RuntimeException {
 
 	/**
 	 * 
@@ -23,4 +23,9 @@ public class DAOException extends RuntimeException{
 		super(cause);
 	}
 
+	public static void daoAssertNotNull(String name, Object value) throws DAOException {
+		if (value == null)
+			throw new DAOIllegalArgumentException(name);
+	}
+	
 }

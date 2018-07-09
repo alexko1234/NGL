@@ -6,165 +6,132 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
+import javax.inject.Inject;
+
+import org.mongojack.DBQuery;
+
+import com.mongodb.MongoException;
+
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.container.instance.Container;
-import models.laboratory.processes.instance.Process;
-import models.laboratory.run.instance.ReadSet;
-import models.laboratory.run.instance.Run;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
-
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-
-import play.Logger;
 import rules.services.RulesException;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
 import validation.utils.BusinessValidationHelper;
 
-import com.mongodb.MongoException;
-
-import fr.cea.ig.MongoDBDAO;
-
 public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 
+	
+
+	@Inject
 	public UpdateSamplePropertiesCNS(FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super("UpdatePropertiesSampleCNS", durationFromStart, durationFromNextIteration);
+			FiniteDuration durationFromNextIteration, 
+			NGLContext ctx) {
+		super("UpdatePropertiesSampleCNS", durationFromStart, durationFromNextIteration, ctx);
+		
+	}
+
+	@Inject
+	public UpdateSamplePropertiesCNS(String string, FiniteDuration durationFromStart,
+			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super(string, durationFromStart, durationFromNextIteration, ctx);
+		
 	}
 
 	@Override
 	public void runImport() throws SQLException, DAOException, MongoException, RulesException {
-		//Récupère tous les samples modifiés les derniers 48h
+		//Récupère tous les samples modifiés les dernieres 24h
 		updateSampleModifySince(-1,contextError);
 	}
 
-	private static void updateSampleModifySince(int nbDays,ContextValidation contextError){
+	private void updateSampleModifySince(int nbDays,ContextValidation contextError){
+		Integer skip = 0;
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_YEAR, nbDays);
+		Date date =  calendar.getTime();
 
-				Calendar calendar = Calendar.getInstance();
-				calendar.add(Calendar.DAY_OF_YEAR, nbDays);
-				Date date =  calendar.getTime();
+		MongoDBResult<Sample> result = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.greaterThanEquals("traceInformation.modifyDate", date).notExists("life"));
+		Integer nbResult = result.count(); 
+		logger.info("nbResult : "+nbResult);
+		while(skip < nbResult) {
+			try {
+				long t1 = System.currentTimeMillis();
+					List<Sample> cursor = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.greaterThanEquals("traceInformation.modifyDate", date).notExists("life"))
+						.sort("code").skip(skip).limit(1000)
+						.toList();
 
-				List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.greaterThanEquals("traceInformation.modifyDate", date).notExists("life")).toList();
-				Logger.info("Nb samples to update :"+samples.size());
-				samples.stream().forEach(sample -> {
-					//Logger.debug("Sample "+sample.code);
-					updateOneSample(sample,contextError);
+					cursor.forEach(sample -> {
+					try{
+						updateOneSample(sample,contextError);
+					}catch(Throwable e){
+						logger.error("Sample : "+sample.code+" - "+e,e);
+						if(null != e.getMessage())
+							contextError.addErrors(sample.code, e.getMessage());
+						else
+							contextError.addErrors(sample.code, "null");
+					}
 				});
+					skip = skip+1000;
+					long t2 = System.currentTimeMillis();
+					logger.debug("time "+skip+" - "+((t2-t1)/1000));
+				}catch(Throwable e){
+					logger.error("Error : "+e,e);
+					if(null != e.getMessage())
+						contextError.addErrors("Error", e.getMessage());
+					else
+						contextError.addErrors("Error", "null");
+				}
+		}
+		
+		
+			
 	}
 
-	public static void updateOneSample(Sample sample,ContextValidation contextError) {
+	public void updateOneSample(Sample sample,ContextValidation contextError) {
 
-		Logger.debug("Update sample "+sample.code);
+		logger.debug("Update sample {}", sample.code);
 
-		Map<String, PropertyValue> properties=new HashMap<String, PropertyValue>();
-
+		Map<String, PropertyValue> updatedProperties = new HashMap<>(); // String, PropertyValue>();
+		Set<String> deletedPropertyCodes = new TreeSet<>();
 		SampleType sampleType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.typeCode, "typeCode", SampleType.find,true);
 		ImportType importType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.importTypeCode, "importTypeCode", ImportType.find,true);
 
-		if(importType !=null){
-			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(importType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,properties);
+		if (importType != null) {
+			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(importType.getPropertyDefinitionByLevel(Level.CODE.Sample, Level.CODE.Content), sample.properties,updatedProperties);
+			deletedPropertyCodes.addAll(InstanceHelpers.getDeletedPropertyDefinitionCode(importType.getPropertyDefinitionByLevel(Level.CODE.Sample, Level.CODE.Content), sample.properties));
 		}
-		if(sampleType !=null){
-			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(sampleType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,properties);
+		if (sampleType != null) {
+			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(sampleType.getPropertyDefinitionByLevel(Level.CODE.Sample, Level.CODE.Content), sample.properties,updatedProperties);
+			deletedPropertyCodes.addAll(InstanceHelpers.getDeletedPropertyDefinitionCode(sampleType.getPropertyDefinitionByLevel(Level.CODE.Sample, Level.CODE.Content), sample.properties));
 		}
-
-		Map<String,DBUpdate.Builder> updates=new HashMap<String, DBUpdate.Builder>();
-		DBUpdate.Builder updateSample = new DBUpdate.Builder();
-		//DBUpdate.Builder updateContainer = new DBUpdate.Builder();
-		DBUpdate.Builder updateReadSet = new DBUpdate.Builder();
-		DBUpdate.Builder updateProcess = new DBUpdate.Builder();
-		
-		properties.forEach((k,v) -> {
-			Logger.debug("properties "+k+" value "+v);
-			updateSample.set("properties."+k,v);
-			//updateContainer.set("contents.$.properties."+k,v);
-			updateReadSet.set("sampleOnContainer.properties."+k,v);
-			updateProcess.set("sampleOnInputContainer.properties."+k,v);
-		});		
-		
-		updates.put("sample",updateSample);
-		//updates.put("container",updateContainer);
-		updates.put("readset",updateReadSet);
-		updates.put("process",updateProcess);
-		
-		updateCollectionsFromSample(sample, properties, updates,contextError);
-
+		logger.warn("property will be deleted " + deletedPropertyCodes);
+		updateCollectionsFromSample(sample, updatedProperties, deletedPropertyCodes,contextError);
 	} 
 
-	static private void updateCollectionsFromSample(Sample sample, Map<String, PropertyValue> updatedProperties, Map<String,DBUpdate.Builder> updates, ContextValidation contextError){
+	private void updateCollectionsFromSample(Sample sample, Map<String, PropertyValue> updatedProperties, Set<String> deletedPropertyCodes, ContextValidation contextError){
 
-		Logger.info("Update son samples, containers, readSets, process from sample :"+sample.code);
-		
-		//Son Samples update properties
-		MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, 
-				DBQuery.is("life.from.sampleCode",sample.code),
-				updates.get("sample")
-				.set("referenceCollab", sample.referenceCollab)
-				.set("taxonCode",sample.taxonCode)
-				.set("ncbiScientificName",sample.ncbiScientificName)
-				.set("ncbiLineage",sample.ncbiLineage)
-				);
-		
-		//Containers content update contents.$.properties
-		//TODO Verifier si fonctionne pool meme sample et tag diff => GA le 17/10/2016 confirme marche pas !!!
-		/*
-		MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
-				 DBQuery.is("contents.sampleCode", sample.code),
-				updates.get("container")
-						.set("contents.$.referenceCollab", sample.referenceCollab)
-						.set("contents.$.taxonCode",sample.taxonCode)
-						.set("contents.$.ncbiScientificName",sample.ncbiScientificName)
-						.set("traceInformation.modifyUser",contextError.getUser())
-						.set("traceInformation.modifyDate",new Date() ),true);
-		*/
-		
-		MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("contents.sampleCode", sample.code))
-			.cursor.forEach(container -> {
-				container.traceInformation.setTraceInformation(contextError.getUser());
-				container.contents.stream()
-					.filter(content -> content.sampleCode.equals(sample.code))
-					.forEach(content -> {
-						content.ncbiScientificName = sample.ncbiScientificName;
-						content.taxonCode = sample.taxonCode;
-						content.referenceCollab = sample.referenceCollab;
-						content.properties.putAll(updatedProperties);
-					});;
-				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);	
-			});
-		
-		// ReadSet update sampleOnContainer.properties
-		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,
-				DBQuery.is("sampleOnContainer.sampleCode", sample.code),
-				updates.get("readset")
-					.set("sampleOnContainer.referenceCollab",sample.referenceCollab)
-					.set("sampleOnContainer.taxonCode",sample.taxonCode)
-					.set("sampleOnContainer.ncbiScientificName", sample.ncbiScientificName)
-					.set("sampleOnContainer.lastUpdateDate", new Date()),true);
-		
-		// Processes update sampleOnInputContainer.properties
-		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,
-				DBQuery.is("sampleOnInputContainer.sampleCode", sample.code),
-				updates.get("process")
-					.set("sampleOnInputContainer.referenceCollab",sample.referenceCollab)
-					.set("sampleOnInputContainer.taxonCode",sample.taxonCode)
-					.set("sampleOnInputContainer.ncbiScientificName", sample.ncbiScientificName)
-					,true);
-		
-
+		logger.info("Update son samples, containers, readSets, process from sample : {}", sample.code);
+		InstanceHelpers.updateContentProperties(sample, updatedProperties, deletedPropertyCodes, contextError);
 		//Update son samples
-		List<Sample> sonSamples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,DBQuery.is("life.from.sampleCode",sample.code)).toList();
-		sonSamples.stream().forEach(sonSample ->{
-			updateCollectionsFromSample(sonSample, updatedProperties, updates, contextError);
-		});
+		MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,
+				DBQuery.is("life.from.sampleCode",sample.code).in("life.from.projectCode", sample.projectCodes))
+				.cursor
+				.forEach(sonSample -> {
+					updateCollectionsFromSample(sonSample, updatedProperties, deletedPropertyCodes, contextError);
+				});
 	}
 
 }

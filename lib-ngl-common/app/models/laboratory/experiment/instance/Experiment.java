@@ -1,6 +1,5 @@
 package models.laboratory.experiment.instance;
 
-
 import static validation.common.instance.CommonValidationHelper.FIELD_EXPERIMENT;
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
 import static validation.common.instance.CommonValidationHelper.validateCode;
@@ -32,14 +31,13 @@ import models.utils.InstanceConstants;
 
 import org.mongojack.MongoCollection;
 
-import play.Logger;
+//import play.Logger;
 import validation.ContextValidation;
 import validation.IValidation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import fr.cea.ig.DBObject;
-
 
 /**
  * 
@@ -50,17 +48,16 @@ import fr.cea.ig.DBObject;
  * @author mhaquell
  *
  */
-
 @MongoCollection(name="Experiment")
 public class Experiment extends DBObject implements IValidation {
 	
-
 	public String typeCode;
 	public String categoryCode;
 	
 	public TraceInformation traceInformation = new TraceInformation();
-	public Map<String,PropertyValue> experimentProperties;
-	
+//	public Map<String,PropertyValue<?>> experimentProperties;
+//	public Map<String, PropertyValue<?>> instrumentProperties;
+	public Map<String, PropertyValue> experimentProperties;
 	public Map<String, PropertyValue> instrumentProperties;
 	
 	public InstrumentUsed instrument;
@@ -87,68 +84,64 @@ public class Experiment extends DBObject implements IValidation {
 	public Set<String> outputContainerCodes;
 	public Set<String> outputContainerSupportCodes;
 	
-	
-	
-	public Experiment(){
-		traceInformation=new TraceInformation();		
+	public Experiment() {
+		traceInformation = new TraceInformation();		
 	}
 	
-	public Experiment(String code){
-		this.code=code;		
+	public Experiment(String code) {
+		this.code = code;		
 	}
-	
 	
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		long t0 = System.currentTimeMillis();
-		if(contextValidation.getObject(FIELD_STATE_CODE) == null){
-			contextValidation.putObject(FIELD_STATE_CODE , state.code);
-			
+		//long t0 = System.currentTimeMillis();
+		if (contextValidation.getObject(FIELD_STATE_CODE) == null) {
+			contextValidation.putObject(FIELD_STATE_CODE , state.code);			
 		}
 		contextValidation.putObject(FIELD_EXPERIMENT , this);
 		
-		long t1 = System.currentTimeMillis();
+		// long t1 = System.currentTimeMillis();
 		validateId(this, contextValidation);
 		
-		long t2 = System.currentTimeMillis();
+		// long t2 = System.currentTimeMillis();
 		validateCode(this, InstanceConstants.EXPERIMENT_COLL_NAME, contextValidation);
 		
-		long t3 = System.currentTimeMillis();
+		// long t3 = System.currentTimeMillis();
 		validationExperimentType(typeCode, experimentProperties, contextValidation);
 		
-		long t4 = System.currentTimeMillis();
+		// long t4 = System.currentTimeMillis();
 		validationExperimentCategoryCode(categoryCode, contextValidation);
 		
-		long t5 = System.currentTimeMillis();
+		// long t5 = System.currentTimeMillis();
 		validateState(this.typeCode, this.state, contextValidation);
 		
-		long t6 = System.currentTimeMillis();
+		// long t6 = System.currentTimeMillis();
 		validateStatus(this.typeCode, this.status, contextValidation);
 		
-		long t7 = System.currentTimeMillis();
+		// long t7 = System.currentTimeMillis();
 		validationProtocoleCode(typeCode,protocolCode,contextValidation);
 		
-		long t8 = System.currentTimeMillis();
+		// long t8 = System.currentTimeMillis();
 		validateInstrumentUsed(instrument,instrumentProperties,contextValidation);
 		
-		long t9 = System.currentTimeMillis();
+		// long t9 = System.currentTimeMillis();
 		validateAtomicTransfertMethods(typeCode, instrument, atomicTransfertMethods,contextValidation);
 		
-		long t10 = System.currentTimeMillis();
+		// long t10 = System.currentTimeMillis();
 		validateReagents(reagents,contextValidation); //TODO active reagents validation inside ReagentUsed
 		
-		long t11 = System.currentTimeMillis();
+		// long t11 = System.currentTimeMillis();
 		validateTraceInformation(traceInformation, contextValidation);
 		
-		long t12 = System.currentTimeMillis();
+		// long t12 = System.currentTimeMillis();
 		validateComments(comments, contextValidation);
 		
-		long t13 = System.currentTimeMillis();
+		// long t13 = System.currentTimeMillis();
 		validateRules(this,contextValidation);
 		contextValidation.removeObject(FIELD_EXPERIMENT);
 		
-		long t14 = System.currentTimeMillis();
+		//long t14 = System.currentTimeMillis();
 		/*
 		Logger.debug("Experiment validate \n "
 				+"1 = "+(t1-t0)+" ms\n"

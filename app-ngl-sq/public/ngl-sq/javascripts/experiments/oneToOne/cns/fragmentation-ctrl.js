@@ -12,8 +12,7 @@ angular.module('home').controller('FragmentationCtrl',['$scope','$http', '$parse
 								 "edit":false,
 								 "hide":true,
 					        	 "type":"text",
-					        	 "mergeCells" : true,
-					        	 "position":1,
+					        	"position":1,
 					        	 "extraHeaders":{0:Messages("experiments.inputs")}
 					         },	
 					         */	         
@@ -23,7 +22,6 @@ angular.module('home').controller('FragmentationCtrl',['$scope','$http', '$parse
 					 			"order":true,
 					 			"hide":true,
 					 			"type":"text",
-					 			 "mergeCells" : true,
 					 			"position":2,
 					 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 					        	 "extraHeaders":{0:Messages("experiments.inputs")}
@@ -34,7 +32,6 @@ angular.module('home').controller('FragmentationCtrl',['$scope','$http', '$parse
 					 			"order":true,
 					 			"hide":true,
 					 			"type":"text",
-					 			 "mergeCells" : true,
 					 			"position":3,
 					 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 					        	 "extraHeaders":{0:Messages("experiments.inputs")}
@@ -46,8 +43,7 @@ angular.module('home').controller('FragmentationCtrl',['$scope','$http', '$parse
 								 "edit":false,
 								 "hide":true,
 					        	 "type":"text",
-					        	 "mergeCells" : true,
-					 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
+					        	 "render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
 					        	 "position":4,
 					        	 "extraHeaders":{0:Messages("experiments.inputs")}
 					         },
@@ -258,21 +254,47 @@ angular.module('home').controller('FragmentationCtrl',['$scope','$http', '$parse
 	$scope.updatePropertyFromUDT = function(value, col){
 		console.log("update from property : "+col.property);
 		
-		if(col.property === 'outputContainerUsed.volume.value'){
+		if(col.property === 'outputContainerUsed.volume.value' || col.property === 'inputContainerUsed.experimentProperties.requiredQuantity.value'){
 			computeRequiredVolume(value.data);
 			computeInputVolume(value.data);
 			computeInputQuantity(value.data);
 			computeBufferVolume(value.data);
-		}else if(col.property === 'inputContainerUsed.experimentProperties.requiredQuantity.value'){
+			updateVolUnquantifiableSamples(value.data);
+		}/*else if(col.property === 'inputContainerUsed.experimentProperties.requiredQuantity.value'){
 			computeRequiredVolume(value.data);
 			computeInputVolume(value.data);
 			computeInputQuantity(value.data);
 			computeBufferVolume(value.data);
-		}
+		}*/
 		
 	}
 	
-	// requiredQunatity * concentrationIn
+	var updateVolUnquantifiableSamples = function (udtData){
+		var outputVol = $parse("outputContainerUsed.volume.value")(udtData);
+		var vol = $parse("inputContainerUsed.volume.value")(udtData);
+		var conc = $parse("inputContainerUsed.concentration.value")(udtData);
+
+		var getter = $parse("inputContainerUsed.experimentProperties.bufferVolume.value");
+		var bufferVol = getter(udtData);
+		
+		var getter2 = $parse("inputContainerUsed.experimentProperties.inputVolume.value");
+		var inputVol = getter2(udtData);
+		
+		if (conc == null){
+			$scope.messages.setError(Messages('experiments.input.warn.unquantifiableSample'));		
+			console.log("UnquantifiableSample conc null");
+			if (outputVol <= vol){
+				inputVol = outputVol;	
+			}else if(outputVol > vol){
+				inputVol = vol;
+			}
+			bufferVol = outputVol - inputVol;
+			getter.assign(udtData,bufferVol);
+			getter2.assign(udtData,inputVol);
+		}
+	}
+	
+	// requiredQuantity * concentrationIn
 	var computeRequiredVolume = function(udtData){
 		var getter = $parse("inputContainerUsed.experimentProperties.requiredVolume.value");
 		var requiredVolume = getter(udtData);
@@ -296,8 +318,8 @@ angular.module('home').controller('FragmentationCtrl',['$scope','$http', '$parse
 			getter.assign(udtData, requiredVolume);
 		}else{
 			console.log("not ready to computerequiredVolume");
-		}
-		
+			getter.assign(udtData, undefined);
+		}		
 	}
 	
 	
@@ -309,16 +331,15 @@ angular.module('home').controller('FragmentationCtrl',['$scope','$http', '$parse
 		var compute = {
 				requiredVol : $parse("inputContainerUsed.experimentProperties.requiredVolume.value")(udtData),
 				outputVol : $parse("outputContainerUsed.volume.value")(udtData),
-				inputVol : $parse("inputContainerUsed.volume.value")(udtData),			
 				isReady:function(){
-					return (this.requiredVol && this.outputVol && this.inputVol);
+					return (this.requiredVol && this.outputVol);
 				}
 			};
 		
 		if(compute.isReady()){
 			
 			var result;
-			if( compute.requiredVol> compute.inputVol){
+			if( compute.requiredVol> compute.outputVol){
 				result=compute.outputVol;
 			} else {
 				result=compute.requiredVol;
@@ -333,6 +354,7 @@ angular.module('home').controller('FragmentationCtrl',['$scope','$http', '$parse
 			getter.assign(udtData, inputVolume);
 		}else{
 			console.log("not ready to computeInputVolume");
+			getter.assign(udtData, undefined);
 		}
 		
 	}
@@ -361,7 +383,8 @@ angular.module('home').controller('FragmentationCtrl',['$scope','$http', '$parse
 			}	
 			getter.assign(udtData, frgInputQuantity);
 		}else{
-			console.log("not ready to computeFrgInputQuantity");
+			console.log("not ready to computeInputQuantity");
+			getter.assign(udtData, undefined);
 		}
 		
 	}
@@ -391,6 +414,7 @@ angular.module('home').controller('FragmentationCtrl',['$scope','$http', '$parse
 			getter.assign(udtData, bufferVolume);
 		}else{
 			console.log("not ready to computeBufferVolume");
+			getter.assign(udtData, undefined);
 		}
 	}
 	
@@ -563,31 +587,9 @@ angular.module('home').controller('FragmentationCtrl',['$scope','$http', '$parse
 	$scope.atmService = atmService;
 	
 	var generateSampleSheetNormalisation = function(){
-		generateSampleSheet("normalisation");
+		$scope.fileUtils.generateSampleSheet({"type":"normalisation"});
 	};
 	
-	
-	var generateSampleSheet = function(type){
-		$scope.messages.clear();
-		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url+"?type="+type,{})
-		.success(function(data, status, headers, config) {
-			var header = headers("Content-disposition");
-			var filepath = header.split("filename=")[1];
-			
-			var filename = filepath.split(/\/|\\/);
-			filename = filename[filename.length-1];
-			if(data!=null){
-				$scope.messages.setSuccess(Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath);
-				var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
-				saveAs(blob, filename);
-			}
-		})
-		.error(function(data, status, headers, config) {
-			$scope.messages.setError(Messages('experiments.msg.generateSampleSheet.error'));
-			$scope.messages.setDetails(data);
-			$scope.messages.showDetails = true;							
-		});
-	};
 	if($scope.experiment.instrument.typeCode === "biomek-fx-and-covaris-e220"){
 		
 		$scope.setAdditionnalButtons([{

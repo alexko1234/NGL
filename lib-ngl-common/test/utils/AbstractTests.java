@@ -1,57 +1,74 @@
 package utils;
 
+// import java.io.File;
 
-import static play.test.Helpers.fakeApplication;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import models.utils.DescriptionHelper;
-import models.utils.dao.DAOException;
-
-import org.hibernate.validator.internal.util.privilegedactions.GetClassLoader;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
-import play.Logger;
-import play.test.FakeApplication;
-import play.test.Helpers;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
+import models.utils.DescriptionHelper;
+import ngl.common.Global;
+import play.Application;
 
+/**
+ * Application provider for test classes.
+ * 
+ * @author vrd
+ *
+ */
 public abstract class AbstractTests {
+
+	/**
+	 * Application created for the class defined tests.
+	 */
+	protected static Application app;
 	
-	protected static FakeApplication app;
-	protected static Map<String,String> config = new HashMap<String,String>();
+	/**
+	 * Initialize test application.
+	 */
 	@BeforeClass
-	public  static void startTest() throws InstantiationException, IllegalAccessException, ClassNotFoundException, DAOException{
-		System.setProperty("config.file", TestHelper.getConfigFilePath("ngl-common-test.conf"));
+	public static void startTestApplication() {
 		app = getFakeApplication();
-		Helpers.start(app);
+		// TODO: remove static reset
 		DescriptionHelper.initInstitute();
 	}
 
+	/**
+	 * Shutdown test application.
+	 */
 	@AfterClass
-	public  static void endTest() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
-		app = getFakeApplication();
-		Helpers.stop(app);
+	public static void shutdownTestApplication() {
+		app.asScala().stop();
+		// TODO: remove static reset
 		DescriptionHelper.initInstitute();
 	}
 
-	
-	public static FakeApplication getFakeApplication(){
-		return fakeApplication();
+	/**
+	 * Create a test application.
+	 * @return
+	 */
+	private static Application getFakeApplication() {
+//		System.out.println("************ USING COMMON FACTORY ***********");
+		// return fr.cea.ig.play.test.DevAppTesting.devapp("ngl-common.test.conf");
+		return Global.af.createApplication();
 	}
 	
-	public static <T extends DBObject> T saveDBOject(Class<T> type, String collectionName,String code)
-			throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-
-		String collection=type.getSimpleName();
-		T object = (T) Class.forName (type.getName()).newInstance();
-		object.code=code;
-		object=MongoDBDAO.save(collectionName, object);
+	/**
+	 * Create and save a new instance of a DBObject subclass with some provided code.
+	 * @param type           class of the instance to create 
+	 * @param collectionName name of the collection to save the instance to 
+	 * @param code           DBObject code of the created instance
+	 * @return               the created and saved instance
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 */
+	public static <T extends DBObject> T saveDBOject(Class<T> type, String collectionName, String code)
+			throws InstantiationException, IllegalAccessException {
+		T object = type.newInstance();
+		object.code = code;
+		object = MongoDBDAO.save(collectionName, object);
 		return object;
 	}
-
 
 }

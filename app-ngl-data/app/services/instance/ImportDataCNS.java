@@ -4,6 +4,9 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
+import fr.cea.ig.play.migration.NGLContext;
 import scala.concurrent.duration.Duration;
 import services.instance.container.BanqueAmpliImportCNS;
 import services.instance.container.SizingImportCNS;
@@ -22,18 +25,24 @@ import services.instance.sample.UpdateReportingData;
 import services.instance.sample.UpdateSampleCNS;
 import services.instance.sample.UpdateSampleNCBITaxonCNS;
 import services.instance.sample.UpdateSamplePropertiesCNS;
+import services.ncbi.TaxonomyServices;
 
 public class ImportDataCNS{
 
-	public ImportDataCNS(){
-	
+//<<<<<<< HEAD
+//	public ImportDataCNS(){
+//	
+//=======
+	@Inject
+	public ImportDataCNS(NGLContext ctx){
+//>>>>>>> V2.0.2
 		// Import Projects tous les jours à 16h00
-		new ProjectImportCNS(ImportDataUtil.getDurationForNextHour(0),Duration.create(1,TimeUnit.HOURS));
-		new TubeImportCNS(ImportDataUtil.getDurationForNextHour(10),Duration.create(1,TimeUnit.HOURS));
-		new UpdateSampleCNS(ImportDataUtil.getDurationForNextHour(20),Duration.create(1,TimeUnit.HOURS));
+		new ProjectImportCNS(ImportDataUtil.getDurationForNextHour(0),Duration.create(1,TimeUnit.HOURS), ctx);
+		new TubeImportCNS(ImportDataUtil.getDurationForNextHour(10),Duration.create(1,TimeUnit.HOURS), ctx);
+		new UpdateSampleCNS(ImportDataUtil.getDurationForNextHour(20),Duration.create(1,TimeUnit.HOURS), ctx);
 		
-		new BanqueAmpliImportCNS(Duration.create(5,TimeUnit.SECONDS),Duration.create(5,TimeUnit.MINUTES));
-		new SizingImportCNS(Duration.create(10,TimeUnit.SECONDS),Duration.create(5,TimeUnit.MINUTES));
+		new BanqueAmpliImportCNS(Duration.create(5,TimeUnit.SECONDS),Duration.create(5,TimeUnit.MINUTES), ctx);
+		new SizingImportCNS(Duration.create(10,TimeUnit.SECONDS),Duration.create(5,TimeUnit.MINUTES), ctx);
 		
 		
 		//Update/Create Container
@@ -55,16 +64,22 @@ public class ImportDataCNS{
 		new UpdateSizingCNS(Duration.create(1,TimeUnit.MINUTES),Duration.create(10,TimeUnit.MINUTES));
 		new UpdateAmpliCNS(Duration.create(1,TimeUnit.MINUTES),Duration.create(10,TimeUnit.MINUTES));
 		*/
+		new UpdateSampleNCBITaxonCNS(ImportDataUtil.getDurationForNextHour(15),Duration.create(6,TimeUnit.HOURS), ctx, new TaxonomyServices(ctx));
+		new UpdateSamplePropertiesCNS(ImportDataUtil.getDurationForNextHour(45),Duration.create(6,TimeUnit.HOURS), ctx);
 		
-		new UpdateSamplePropertiesCNS(ImportDataUtil.getDurationForNextHour(30),Duration.create(6,TimeUnit.HOURS));
-		new UpdateSampleNCBITaxonCNS(ImportDataUtil.getDurationForNextHour(45),Duration.create(6,TimeUnit.HOURS));
+		//new RunExtImportCNS(ImportDataUtil.getDurationInMillinsBefore(12, 30),Duration.create(12,TimeUnit.HOURS), ctx);
 		
-		new RunExtImportCNS(ImportDataUtil.getDurationInMillinsBefore(12, 30),Duration.create(12,TimeUnit.HOURS));
+//<<<<<<< HEAD
+//		new UpdateReportingData(ImportDataUtil.getDurationInMillinsBefore(20, 0),Duration.create(1,TimeUnit.DAYS));
+//		new UpdateTaraPropertiesCNS(ImportDataUtil.getDurationInMillinsBefore(4, 0),Duration.create(1,TimeUnit.DAYS));
+//	    new IndexImportCNS(ImportDataUtil.getDurationInMillinsBefore(5, 0),Duration.create(1,TimeUnit.DAYS));
+//
+//=======
+		new UpdateReportingData(ImportDataUtil.getDurationInMillinsBefore(20, 0),Duration.create(1,TimeUnit.DAYS), ctx);
+		new UpdateTaraPropertiesCNS(ImportDataUtil.getDurationInMillinsBefore(4, 0),Duration.create(1,TimeUnit.DAYS), ctx);
+	    new IndexImportCNS(ImportDataUtil.getDurationInMillinsBefore(5, 0),Duration.create(1,TimeUnit.DAYS), ctx);
 		
-		new UpdateReportingData(ImportDataUtil.getDurationInMillinsBefore(20, 0),Duration.create(1,TimeUnit.DAYS));
-		new UpdateTaraPropertiesCNS(ImportDataUtil.getDurationInMillinsBefore(4, 0),Duration.create(1,TimeUnit.DAYS));
-	    new IndexImportCNS(ImportDataUtil.getDurationInMillinsBefore(5, 0),Duration.create(1,TimeUnit.DAYS));
-
+//>>>>>>> V2.0.2
 	}
 
 	

@@ -1,3 +1,4 @@
+@this()
 @(code: String)
 
 @if(code == "merging-ba") {
@@ -26,5 +27,9 @@
 
 @if(code == "whole-genome") {
 	@_treatments.wholeGenome()		
+}
+
+@if(code == "ampliconassignation-ba") {
+	@_treatments.assignationBA()		
 }
 

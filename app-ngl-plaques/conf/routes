@@ -1,6 +1,5 @@
-# Routes
-# This file defines all application routes (Higher priority routes first)
-# ~~~~
+
+->  / nglcommon.Routes  
 
 # Home page
 GET     /                           controllers.main.tpl.Main.home()
@@ -20,7 +19,7 @@ GET		/api/plates									controllers.plates.api.Plates.list()
 GET    	/api/plates/:code               			controllers.plates.api.Plates.get(code: String)
 DELETE	/api/plates/:code               			controllers.plates.api.Plates.remove(code: String)
 
-POST	/api/plates/file/import/:emnco				@controllers.plates.io.Plates.importFile(emnco:java.lang.Integer)
+POST	/api/plates/file/import/:emnco				controllers.plates.io.Plates.importFile(emnco:java.lang.Integer)
 
 
 #manip api
@@ -49,6 +48,6 @@ GET /api/combo/users								controllers.combo.api.Lists.users()
 ->  /authentication authentication.Routes
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+# GET     /assets/*file               controllers.Assets.at(path="/public", file)
 GET     /messages.js                controllers.main.tpl.Main.jsMessages()
 GET     /codes.js        	        controllers.main.tpl.Main.jsCodes()

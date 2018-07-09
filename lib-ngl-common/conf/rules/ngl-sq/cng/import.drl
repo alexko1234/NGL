@@ -48,3 +48,4 @@ import models.laboratory.run.instance.Treatment;
 import models.laboratory.run.instance.Lane;
 import workflows.run.*;
 import org.apache.commons.lang3.StringUtils;
+import fr.cea.ig.play.IGGlobals;

@@ -299,7 +299,9 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");		
 		var dtConfig = $scope.atmService.data.getConfig();
-		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
+		//NGL-1735 correction bouton edit: F et pas IP
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
+		dtConfig.edit.showButton = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
 		dtConfig.edit.byDefault = false;
 		dtConfig.edit.start = false;
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
@@ -323,6 +325,40 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 		console.log("call event activeEditMode");
 		$scope.atmService.data.selectAll(true);
 		$scope.atmService.data.setEdit();
+	});
+	
+	// FDS 16/03/2018 : NGL-1906 rechercher le robotRunWorkLabel positionné au niveau processus pour le copier dans robotRunCode (sauf s'il y en plusieurs!!)
+	$scope.$watch("experiment.instrument.code", function(newValue, OldValue){
+		if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {		
+			// exemple dans prepa-fc-ordered: var categoryCodes = $scope.$eval("getBasket().get()|getArray:'support.categoryCode'|unique",mainService);
+			// mais ici mainService n'est pas defini, et pas necessaire...
+			// obliger de passer par contents[0], mais normalement ne doit pas poser de probleme...
+			var workLabels= $scope.$eval("getBasket().get()|getArray:'contents[0].processProperties.robotRunWorkLabel.value'|unique");
+			if ( workLabels.length > 1 ){
+				$scope.messages.clear();
+				$scope.messages.clazz = "alert alert-warning";
+				$scope.messages.text = "Plusieurs noms de travail (robot) trouvés parmi les containers d'entrée (info processus)";
+				$scope.messages.open();			
+			
+				console.log('>1  run workLabel trouvé !!');
+				
+			} else if ( workLabels.length === 1 ){
+				// verifier que TOUS les containers ont une valeur...
+				var contents= $scope.$eval("getBasket().get()|getArray:'contents[0]'");
+				var labels= $scope.$eval("getBasket().get()|getArray:'contents[0].processProperties.robotRunWorkLabel.value'");
+				if ( labels.length < contents.length ) {
+					$scope.messages.clear();
+					$scope.messages.clazz = "alert alert-warning";
+					$scope.messages.text = "Certains containers en entrée n'ont pas de nom de travail run (robot) (info processus)";
+					$scope.messages.open();			
+				
+					console.log("Certains containers n'ont pas de workLabel.");
+				} else {
+					$parse("instrumentProperties.robotRunCode.value").assign($scope.experiment, workLabels[0]);
+				}
+			} 
+			// si aucun workLabel ne rien faire
+		}
 	});
 		
 	//Init atmService
@@ -367,39 +403,13 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 		$scope.outputContainerSupport.storageCode=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.storageCode;
 		//console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
 	}
-	
-	var generateSampleSheet = function(){
-		$scope.messages.clear();
 		
-		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
-		.success(function(data, status, headers, config) {
-			var header = headers("Content-disposition");
-			var filepath = header.split("filename=")[1];
-			var filename = filepath.split(/\/|\\/);
-			filename = filename[filename.length-1];
-			if(data!=null){
-				$scope.messages.clazz="alert alert-success";
-				$scope.messages.text=Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath;
-				$scope.messages.showDetails = false;
-				$scope.messages.open();	
-				
-				var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
-				saveAs(blob, filename);
-			}
-		})
-		.error(function(data, status, headers, config) {
-			$scope.messages.clazz = "alert alert-danger";
-			$scope.messages.text = Messages('experiments.msg.generateSampleSheet.error');
-			$scope.messages.setDetails(data);
-			$scope.messages.showDetails = true;
-			$scope.messages.open();				
-		});
-	};
-	
 	$scope.setAdditionnalButtons([{
 		isDisabled : function(){return $scope.isCreationMode();},
-		isShow:function(){return ($scope.experiment.instrument.typeCode === 'bravo-workstation')}, 
-		click: generateSampleSheet,
+		// FDS 15/03/2018 SUPSQCNG-547: inutile de tester les instruments=> FDR pour tous !!!
+		//isShow:function(){return (($scope.experiment.instrument.typeCode === 'bravo-workstation')||($scope.experiment.instrument.typeCode=== 'bravows-and-mastercycler-epg'))}, 
+		isShow:function(){return true;},
+		click: $scope.fileUtils.generateSampleSheet,
 		label:Messages("experiments.sampleSheet") 
 	}]);
 	
@@ -420,29 +430,36 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 				inputConc :  $parse("inputContainerUsed.concentration.value")(udtData), 
 				inputQty :   $parse("inputContainerUsed.experimentProperties.inputQuantity.value")(udtData),
 				inputConcUnit: $parse("inputContainerUsed.concentration.unit")(udtData),
+				inputVol :  $parse("inputContainerUsed.volume.value")(udtData), 
 
 				isReady:function(){
 					// traiter le cas ou la qté est volontairement mise a 0
-					return (this.inputConc && ( this.inputQty || this.inputQty === 0 ) && (this.inputConcUnit === "ng/µL"||this.inputConcUnit === "ng/µl" ) );
+					// 06/12/2017 SUPSQCNG-505 traiter le cas ou concentration =0 (eau !!)
+					return ((this.inputConc||this.inputConc===0) && ( this.inputQty || this.inputQty === 0 ) && (this.inputConcUnit === "ng/µL"||this.inputConcUnit === "ng/µl" ) );
 				}
 		};
 		
 
 		if(compute.isReady()){
-			var engageVol=$parse("inputQty / inputConc")(compute);
-			var inputConc=$parse("inputConc")(compute);
+			//06/12/2017 SUPSQCNG-505  si inputConc === 0  ---> engageVol=inpVolume...
+			if ( compute.inputConc === 0 && compute.inputVol ){
+				var engageVol=compute.inputVol;
+			}else{
+				var engageVol= compute.inputQty / compute.inputConc;
 			
-			// arrondir...
-			if(angular.isNumber(engageVol) && !isNaN(engageVol)){
-				engageVol = Math.round(engageVol*10)/10;				
+				// arrondir...
+				if(angular.isNumber(engageVol) && !isNaN(engageVol)){
+					engageVol = Math.round(engageVol*10)/10;				
+				}
 			}
+			
 			console.log("vol engagé = "+engageVol);
-	
 			getterEngageVol.assign(udtData, engageVol);
 			
 		}else{
 			console.log("Impossible de calculer les volumes: valeurs manquantes OU concentration avec unité incorrecte");
 			getterEngageVol.assign(udtData, undefined);
+			//getterEngageVol.assign(udtData, 999);//DEBUG...
 		}
 	}
 	

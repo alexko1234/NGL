@@ -1,60 +1,127 @@
 package validation;
 
 import java.util.ArrayList;
+// import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.apache.commons.lang3.StringUtils;
 
-import play.Logger;
+//import com.sun.org.apache.xerces.internal.impl.dv.ValidationContext;
+
 import play.Logger.ALogger;
+import play.data.Form;
 import play.data.validation.ValidationError;
-import play.i18n.Messages;
+
+
+// TODO: change name to ValidationContext
+
+/**
+ * Validation context for objects that support validation (implementing IValidate).
+ * Misnamed, should be ValidationContext.
+ *  
+ * @author vrd
+ *
+ */
+
+// The context mode should probably be required at the constructor level to avoid
+// the NOT_DEFINED mode. The mode should probably not be modified for a given context.
 
 public class ContextValidation {
 
-	
-	private enum Mode {
-		CREATION, UPDATE, DELETE, NOT_DEFINED;
+	public enum Mode {
+		CREATION, 
+		UPDATE, 
+		DELETE, 
+		NOT_DEFINED
 	}
 
+	/**
+	 * User running the validation.
+	 */
 	private String user = null;
 
+	/**
+	 * Validation context mode.
+	 */
 	private Mode mode = Mode.NOT_DEFINED;
-	
-	
+		
+	//
 	private String rootKeyName = "";
+	
+	//
 	public Map<String,List<ValidationError>> errors;
+	
+	//
 	private Map<String,Object> contextObjects;
 
-	public ContextValidation(String user){
-		errors= new TreeMap<String, List<ValidationError>>();
-		contextObjects= new TreeMap<String, Object>();
-		this.user = user;
+	/**
+	 * Constructs a validation context using the provided user name.
+	 * @param user user name
+	 */
+	public ContextValidation(String user) {
+		errors         = new TreeMap<>();
+		contextObjects = new TreeMap<>();
+		this.user      = user;
 	}
 
-	public ContextValidation(String user, Map<String,List<ValidationError>> errors){
-		this.errors = errors;
-		contextObjects= new TreeMap<String, Object>();
-		this.user = user;
+	/*
+	 * Constructs a validation context using the provided user name and initial errors.
+	 * @param user
+	 * @param errors
+	 */
+	public ContextValidation(String user, Map<String,List<ValidationError>> errors) {
+		this.errors    = new TreeMap<>(errors);
+		contextObjects = new TreeMap<>();
+		this.user      = user;
 	}
-
 	
+	protected ContextValidation() {}
+	
+	// TODO: provide a proper initialization
+	@SuppressWarnings("deprecation")
+	public ContextValidation(String user, Form<?> form) {
+		this(user,form.errors());
+	}
+	
+	/**
+	 * User running the validation.
+	 * @return user running the validation. 
+	 */
 	public String getUser() {
 		return user;
 	}
 
-	/**
+	/*
 	 *
 	 * @param key
 	 * @return
 	 */
 	public Object getObject(String key){
-		if(contextObjects.containsKey(key)) {
+		if (contextObjects.containsKey(key)) {
 			return contextObjects.get(key);
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * Get a typed object from this context, this does nothing else than
+	 * moving the cast problem in a single place.
+	 * @param key object name
+	 * @param <T> expected object type
+	 * @return    typed object
+	 */
+//	@SuppressWarnings("unchecked")
+	public <T> T getTypedObject(String key){
+		if (contextObjects.containsKey(key)) {
+//			return (T)contextObjects.get(key);
+			@SuppressWarnings("unchecked") // No way to type from context objects
+			T t = (T)contextObjects.get(key);
+			return t;
 		} else {
 			return null;
 		}
@@ -66,11 +133,15 @@ public class ContextValidation {
 
 
 	public void setContextObjects(Map<String,Object> contextObjects) {
-        this.contextObjects = new TreeMap<String,Object>(contextObjects);
-        
+//<<<<<<< HEAD
+//        this.contextObjects = new TreeMap<String,Object>(contextObjects);
+//        
+//=======
+		this.contextObjects = new TreeMap<>(contextObjects);
+//>>>>>>> V2.0.2
 	}
 
-	/**
+	/*
 	 *
 	 * @param key
 	 * @param value
@@ -79,7 +150,7 @@ public class ContextValidation {
 		contextObjects.put(key, value);
 	}
 	
-	/**
+	/*
 	 *
 	 * @param key
 	 * @param value
@@ -90,24 +161,35 @@ public class ContextValidation {
 
 
 	/**
-	 * add an error message
-	 * @param key : property key
-	 * @param message : message key
-	 * @param arguments : message args
+	 * Add an error message. 
+	 * Misnamed, should be addError, @see {@link #addError(String, String, Object...)}.
+	 * @param property  property key
+	 * @param message   message key
+	 * @param arguments message args
 	 */
-	public void addErrors(String property, String message, Object...arguments) {
+	public void addErrors(String property, String message, Object... arguments) {
 		String key = getKey(property);
 		if (!errors.containsKey(key)) {
 			errors.put(key, new ArrayList<ValidationError>());
 		}
 		errors.get(key).add(new ValidationError(key, message,  java.util.Arrays.asList(arguments)));			
 	}
-
-	public void addErrors(Map<String,List<ValidationError>> errors){
+	
+	/**
+	 * Add an error message.
+	 * @param property  property key
+	 * @param message   message
+	 * @param arguments message parameters
+	 */
+	public void addError(String property, String message, Object... arguments) {
+		addErrors(property,message,arguments);
+	}
+	
+	public void addErrors(Map<String,List<ValidationError>> errors) {
 		this.errors.putAll(errors);
 	}
 	
-	/**
+	/*
 	 *
 	 * @param rootKeyName
 	 * @param property
@@ -117,8 +199,7 @@ public class ContextValidation {
 		return (StringUtils.isBlank(rootKeyName))?property: rootKeyName+"."+property;
 	}
 
-
-	/**
+	/*
 	 *
 	 * @return
 	 */
@@ -126,7 +207,7 @@ public class ContextValidation {
 		return this.rootKeyName;
 	}
 
-	/**
+	/*
 	 *
 	 * @param rootKeyName
 	 */
@@ -134,7 +215,7 @@ public class ContextValidation {
 		this.rootKeyName = rootKeyName;
 	}
 
-	/**
+	/*
 	 *
 	 * @param key
 	 */
@@ -147,14 +228,14 @@ public class ContextValidation {
 		}
 	}
 
-	/**
+	/*
 	 *
 	 * @param key
 	 */
 	public void removeKeyFromRootKeyName(String key) {
-		if(StringUtils.isNotBlank(this.rootKeyName) && this.rootKeyName.equals(key)){
+		if (StringUtils.isNotBlank(this.rootKeyName) && this.rootKeyName.equals(key)) {
 			this.rootKeyName = null;
-		}else if(StringUtils.isNotBlank(this.rootKeyName) && this.rootKeyName.endsWith(key)){
+		} else if(StringUtils.isNotBlank(this.rootKeyName) && this.rootKeyName.endsWith(key)) {
 			this.rootKeyName = this.rootKeyName.substring(0, this.rootKeyName.length()-key.length()-1);
 		}
 	}
@@ -202,31 +283,32 @@ public class ContextValidation {
 	public Mode getMode() {
 		return this.mode;
 	}
-	
-	
-	/***
+		
+	/*
 	 *
 	 */
-	public void clear(){
+	public void clear() {
 		errors.clear();
-		rootKeyName=null;
+		rootKeyName = null;
 		contextObjects.clear();
-		mode=Mode.NOT_DEFINED;
+		mode = Mode.NOT_DEFINED;
 	}
 
-	
 	public void displayErrors(ALogger logger) {
-		Iterator entries = this.errors.entrySet().iterator();
+		Iterator<Entry<String,List<ValidationError>>> entries = this.errors.entrySet().iterator();
 		while (entries.hasNext()) {
-			Entry thisEntry = (Entry) entries.next();
-			String key = (String) thisEntry.getKey();
-			List<ValidationError> value = (List<ValidationError>) thisEntry.getValue();	  
-
+			Entry<String,List<ValidationError>> thisEntry = /*(Entry)*/ entries.next();
+			String key = /*(String)*/ thisEntry.getKey();
+			List<ValidationError> value = /*(List<ValidationError>)*/ thisEntry.getValue();	  
 			for(ValidationError validationError:value){
-				logger.error( key+ " : "+Messages.get(validationError.message(),validationError.arguments()));
+				// logger.error(key + " : " + Messages.get(validationError.message(),validationError.arguments()));
+				logger.error(key + " : " + fr.cea.ig.play.IGGlobals.messages().at(validationError.message(),validationError.arguments()));
 			}
 		}
-		
 	}
 
+	public Map<String,List<ValidationError>> getErrors() {
+		return errors;
+	}
+	
 }

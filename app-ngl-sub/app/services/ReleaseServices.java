@@ -1,122 +1,141 @@
 package services;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+// import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
+// import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
-import java.util.Map.Entry;
+// import java.util.Map;
+// import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.inject.Inject;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+// import javax.xml.xpath.XPath;
+// import javax.xml.xpath.XPathExpressionException;
+// import javax.xml.xpath.XPathFactory;
+// import com.typesafe.config.ConfigFactory;
 
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
-import play.Logger;
-import play.Play;
-import play.api.modules.spring.Spring;
-import validation.ContextValidation;
-import workflows.sra.submission.SubmissionWorkflows;
+// import java.util.Date;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-import com.typesafe.config.ConfigFactory;
-
-import java.util.Date;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
+// import javax.xml.parsers.DocumentBuilder;
+// import javax.xml.parsers.DocumentBuilderFactory;
+// import javax.xml.parsers.ParserConfigurationException;
+// import javax.xml.xpath.XPath;
+// import javax.xml.xpath.XPathExpressionException;
+// import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import org.apache.commons.lang3.StringUtils;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
+// import org.apache.commons.lang3.StringUtils;
+// import java.util.regex.Pattern;
+// import java.util.regex.Matcher;
 
+//import play.Logger;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.ngl.NGLConfig;
 import mail.MailServiceException;
 import mail.MailServices;
 import models.laboratory.common.instance.State;
-import models.laboratory.run.instance.ReadSet;
-import models.sra.submit.common.instance.Sample;
+// import models.laboratory.run.instance.ReadSet;
+// import models.sra.submit.common.instance.Sample;
 import models.sra.submit.common.instance.Study;
 import models.sra.submit.common.instance.Submission;
-import models.sra.submit.sra.instance.Experiment;
+// import models.sra.submit.sra.instance.Experiment;
 import models.sra.submit.util.SraException;
-import models.sra.submit.util.VariableSRA;
+// import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
-import fr.cea.ig.MongoDBDAO;
+//import play.Logger;
+// import play.Play;
+// import play.api.modules.spring.Spring;
+import validation.ContextValidation;
+import workflows.sra.submission.SubmissionWorkflows;
 
 public class ReleaseServices  {
-	final static SubmissionWorkflows submissionWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
 
-	public static Submission traitementRetourRelease(ContextValidation ctxVal, String submissionCode, File retourEbiRelease) throws IOException, SraException, MailServiceException {
+	private static final play.Logger.ALogger logger = play.Logger.of(ReleaseServices.class);
+
+	// final static SubmissionWorkflows submissionWorkflows = Spring.get BeanOfType(SubmissionWorkflows.class);
+	
+	private final SubmissionWorkflows submissionWorkflows;
+	private final NGLConfig           config;
+	
+	@Inject
+	public ReleaseServices(NGLConfig config, SubmissionWorkflows submissionWorkflows) {
+		this.submissionWorkflows = submissionWorkflows;
+		this.config              = config;
+	}
+
+	public Submission traitementRetourRelease(ContextValidation ctxVal, String submissionCode, File retourEbiRelease) throws IOException, SraException, MailServiceException {
 		if (StringUtils.isBlank(submissionCode) || (retourEbiRelease == null)) {
 			throw new SraException("traitementRelease :: parametres d'entree à null" );
 		}
-		System.out.println("submissionCode=" + submissionCode);
+//		System.out.println("submissionCode=" + submissionCode);
+		logger.debug("submissionCode = {}", submissionCode);
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
+
+		if (submission == null) 
+			throw new SraException("soumission " + submissionCode + " impossible à recuperer dans base");
 		Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, submission.studyCode);
+		if (! retourEbiRelease.exists())
+			throw new SraException("Fichier resultat de l'ebi pour la release absent des disques : " + retourEbiRelease.getAbsolutePath());
+		if (!submission.release)
+			throw new SraException("soumission " + submission.code + " ne correspond pas a une soumission pour release");
 
-		if (submission == null){
-			throw new SraException("soumission " + submission.code + " impossible à recuperer dans base");
-		}
-		if (! retourEbiRelease.exists()){
-			throw new SraException("Fichier resultat de l'ebi pour la release absent des disques : "+ retourEbiRelease.getAbsolutePath());
-		}
-		if (!submission.release){
-			throw new SraException("soumission "+submission.code+" ne correspond pas a une soumission pour release");
-		}
-		BufferedReader inputBuffer = null;
-		try {
-			inputBuffer = new BufferedReader(new FileReader(retourEbiRelease));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+//		BufferedReader inputBuffer = null;
+//		try {
+//			inputBuffer = new BufferedReader(new FileReader(retourEbiRelease));
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		}
+//		// BufferedReader inputBuffer = null;
+//		try (BufferedReader inputBuffer = new BufferedReader(new FileReader(retourEbiRelease))) {
+//			// inputBuffer = new BufferedReader(new FileReader(retourEbiRelease));
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		} 
 		
-
 		// Get global parameters for email => utiliser Play.application().configuration().getString plutot que
 		// ConfigFactory.load().getString pour recuperer les parametres pour avoir les surcharges de AbstractTest si 
 		// test unitaires 
 		MailServices mailService = new MailServices();
 //		String expediteur = ConfigFactory.load().getString("releaseReporting.email.from"); 
-		String expediteur = Play.application().configuration().getString("releaseReporting.email.from"); 
-		System.out.println("expediteur="+expediteur);
-		String dest = Play.application().configuration().getString("releaseReporting.email.to");   
-		System.out.println("destinataires = "+ dest);
-		String subjectSuccess = Play.application().configuration().getString("releaseReporting.email.subject.success");
-		
-		//Logger.debug("subjectSuccess = "+Play.application().configuration().getString("releaseReporting.email.subject.success"));
-		
-		String subjectError = Play.application().configuration().getString("releaseReporting.email.subject.error");
-		Set<String> destinataires = new HashSet<String>();
+		// String expediteur = Play.application().configuration().getString("releaseReporting.email.from");
+		String expediteur = config.getReleaseReportingEmailFrom();
+//		System.out.println("expediteur=" + expediteur);
+		logger.debug("expediteur=" + expediteur);
+		// String dest = Play.application().configuration().getString("releaseReporting.email.to");
+		String dest = config.getReleaseReportingEmailTo();
+//		System.out.println("destinataires = " + dest);
+		logger.debug("destinataires = " + dest);
+		// String subjectSuccess = Play.application().configuration().getString("releaseReporting.email.subject.success");
+		String subjectSuccess = config.getReleaseReportingEmailSubjectSuccess();
+		//l.debug("subjectSuccess = "+Play.application().configuration().getString("releaseReporting.email.subject.success"));
+		// String subjectError = Play.application().configuration().getString("releaseReporting.email.subject.error");
+		String subjectError = config.getReleaseReportingEmailSubjectError();
+		Set<String> destinataires = new HashSet<>();
 		
 		destinataires.addAll(Arrays.asList(dest.split(",")));    		    
 
-		String message = null;
-		String errorStatus = "FE-SUB-R";
-		String okStatus = "F-SUB";
-		Boolean ebiSuccess = false;	
-		String studyAccession = null;
-		String infos = null;
+		String  message        = null;
+		String  errorStatus    = "FE-SUB-R";
+		String  okStatus       = "F-SUB";
+		Boolean ebiSuccess     = false;	
+		String  studyAccession = null;
+		String  infos          = null;
 		// On ne prend pas ctxVal.getUser, car methode lancé par birds,pas très informatif
 		String user;
 		if (StringUtils.isNotBlank(submission.creationUser)) {
@@ -157,9 +176,10 @@ public class ReleaseServices  {
 			final NodeList racineNoeuds = racine.getChildNodes();
 			final int nbRacineNoeuds = racineNoeuds.getLength();
 			
-			System.out.println("Nombre de racine noeud = "+ nbRacineNoeuds);
+//			System.out.println("Nombre de racine noeud = "+ nbRacineNoeuds);
+			logger.debug("Nombre de racine noeud = "+ nbRacineNoeuds);
 			
-			if( racine.getAttribute("success").equalsIgnoreCase ("true")){
+			if ( racine.getAttribute("success").equalsIgnoreCase ("true")) {
 				ebiSuccess = true;
 			} else {
 				ebiSuccess = false;
@@ -185,7 +205,8 @@ public class ReleaseServices  {
 							Matcher m = p.matcher(infos);
 							if ( m.find() ) { 
 								studyAccession = m.group(1);
-								System.out.println("studyAccession="+ studyAccession);
+//								System.out.println("studyAccession="+ studyAccession);
+								logger.debug("studyAccession="+ studyAccession);
 							}
 						}
 					}
@@ -198,31 +219,36 @@ public class ReleaseServices  {
 		} catch (final IOException e) {
 			e.printStackTrace();
 		} 
-		if (submissionCode.equals(submission.code)){
-			System.out.println("ok submissionCode = submission.code");
+		if (submissionCode.equals(submission.code)) {
+//			System.out.println("ok submissionCode = submission.code");
+			logger.debug("ok submissionCode = submission.code");
 		}
-		if (StringUtils.isNotBlank(studyAccession)){
-			if(studyAccession.equals(study.accession)) {
-				System.out.println("studyAccession :'"+ studyAccession + "' ==  study.accession :'" +  study.accession +"'");
+		if (StringUtils.isNotBlank(studyAccession)) {
+			if (studyAccession.equals(study.accession)) {
+//				System.out.println("studyAccession :'"+ studyAccession + "' ==  study.accession :'" +  study.accession +"'");
+				logger.debug("studyAccession :'"+ studyAccession + "' ==  study.accession :'" +  study.accession +"'");
 				ebiSuccess = true;
 				message = "Objets lies au studyAccession = " + studyAccession + " mis dans le domaine public via la soumission "+ submissionCode + "</br>"; 
 			} else {
 				ebiSuccess = false;
-				System.out.println("studyAccession :'"+ studyAccession + "' !=  study.accession :'" +  study.accession +"' pour study.code = '"+ study.code +"'");
+//				System.out.println("studyAccession :'"+ studyAccession + "' !=  study.accession :'" +  study.accession +"' pour study.code = '"+ study.code +"'");
+				logger.debug("studyAccession :'"+ studyAccession + "' !=  study.accession :'" +  study.accession +"' pour study.code = '"+ study.code +"'");
 				message = "La soumission ."+ submission.code + " indique un study à releaser "+ submission.studyCode + " different du studyAccession indiqué dans " + retourEbiRelease.getName();
 			}
 		} else {
-			System.out.println("Pas de recuperation du studyAccession");
+//			System.out.println("Pas de recuperation du studyAccession");
+			logger.debug("Pas de recuperation du studyAccession");
 			message = "La soumission ."+ submission.code + " a un retour incorrect " + retourEbiRelease.getName();
 		}
 		String destinataire = submission.creationUser;
-		System.out.println("destinataire="+destinataire);
+//		System.out.println("destinataire="+destinataire);
+		logger.debug("destinataire="+destinataire);
 		// ne pas envoyer de mail à ngsrg:
 		if (destinataire.equals("ngsrg")) {
 			destinataire = "";
 		}
 		if (StringUtils.isNotBlank(destinataire)) {
-			if(!destinataire.endsWith("@genoscope.cns.fr")) {
+			if (!destinataire.endsWith("@genoscope.cns.fr")) {
 				destinataire = destinataire + "@genoscope.cns.fr";
 			}
 			destinataires.add(destinataire);
@@ -257,5 +283,4 @@ public class ReleaseServices  {
 		return submission;
 	}
 	
-
 }

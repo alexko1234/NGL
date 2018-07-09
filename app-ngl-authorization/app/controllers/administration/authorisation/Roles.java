@@ -50,10 +50,10 @@ public class Roles extends Controller {
 	  public static Result createOrUpdate(String format) {
 			Form<Role> filledForm = form(Role.class).bindFromRequest();
 			
-			if(filledForm.hasErrors()) {
-				if("json".equals(format)){
-					return badRequest(filledForm.errorsAsJson());
-				}else{
+			if (filledForm.hasErrors()) {
+				if ("json".equals(format)){
+					return badRequest(filledForm.errorsAsJson( )); // legit
+				} else {
 					return badRequest(addRole.render(filledForm,PermissionHelper.getMapPerm(),"permissions","id",true));
 				}
 				

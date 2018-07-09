@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
+import fr.cea.ig.DBObject;
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
@@ -17,14 +19,10 @@ import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.StorageHistory;
 import models.laboratory.reception.instance.AbstractFieldConfiguration;
 import models.laboratory.reception.instance.ReceptionConfiguration.Action;
-import models.laboratory.sample.instance.Sample;
-import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import play.Logger;
 import services.io.reception.Mapping;
 import validation.ContextValidation;
-import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBDAO;
 
 
 
@@ -34,7 +32,7 @@ public class SupportMapping extends Mapping<ContainerSupport> {
 		super(objects, configuration, action, InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, Mapping.Keys.support, contextValidation);
 	}
 
-	
+	@Override
 	protected void update(ContainerSupport support) {
 		//TODO update categoryCode if not a code but a label.
 		if(Action.update.equals(action)){
@@ -56,7 +54,7 @@ public class SupportMapping extends Mapping<ContainerSupport> {
 		//historisation of storageCode
 		if(configuration.containsKey("storageCode")){
 			if(support.storages == null){
-				support.storages = new ArrayList<StorageHistory>();
+				support.storages = new ArrayList<>();
 			}
 			StorageHistory sh = new StorageHistory();
 			sh.code = support.storageCode;
@@ -66,7 +64,6 @@ public class SupportMapping extends Mapping<ContainerSupport> {
 			support.storages.add(sh);
 		}
 	}
-
 
 	@Override
 	public void consolidate(ContainerSupport support) {

@@ -1,37 +1,38 @@
  package controllers.analyses.api;
 
-import static play.data.Form.form;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
-import org.springframework.stereotype.Controller;
+import javax.inject.Inject;
 
-import models.laboratory.common.instance.State;
-import models.laboratory.run.instance.Analysis;
-import models.laboratory.run.instance.File;
-import models.utils.InstanceConstants;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
+
+import controllers.QueryFieldsForm;
+import controllers.SubDocumentController;
+import controllers.authorisation.Permission;
+import fr.cea.ig.play.migration.NGLContext;
+import models.laboratory.run.instance.Analysis;
+import models.laboratory.run.instance.File;
+import models.utils.InstanceConstants;
 import play.data.Form;
 import play.mvc.Result;
 import validation.ContextValidation;
 import validation.run.instance.FileValidationHelper;
-import controllers.QueryFieldsForm;
-import controllers.SubDocumentController;
-import controllers.authorisation.Permission;
 
-@Controller
 public class Files extends SubDocumentController<Analysis, File> {
 
-	final static List<String> authorizedUpdateFields = Arrays.asList("fullname");
-	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
+	private final static List<String> authorizedUpdateFields = Arrays.asList("fullname");
+	private final Form<QueryFieldsForm> updateForm; 
 	
-	public Files() {
-		super(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, File.class);
+	@Inject
+	public Files(NGLContext ctx) {
+		super(ctx,InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, File.class);
+		this.updateForm = getNGLContext().form(QueryFieldsForm.class);
 	}
+	
 	@Override
 	protected Object getSubObject(Analysis objectInDB, String fullname) {
 		for (File file : objectInDB.files) {
@@ -52,7 +53,7 @@ public class Files extends SubDocumentController<Analysis, File> {
 		return objectInDB.files;
 	}
 	
-	@Permission(value={"writing"})	//@Permission(value={"creation_update_files"})
+	@Permission(value={"writing"})	
 	public Result save(String parentCode) {
 		Analysis objectInDB = getObject(parentCode);
 		if (objectInDB == null) {
@@ -62,7 +63,8 @@ public class Files extends SubDocumentController<Analysis, File> {
 		Form<File> filledForm = getSubFilledForm();
 		File inputFile = filledForm.get();
 				
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		ctxVal.putObject("analysis", objectInDB);
 		ctxVal.putObject("objectClass", objectInDB.getClass());
 		ctxVal.setCreationMode();
@@ -74,11 +76,11 @@ public class Files extends SubDocumentController<Analysis, File> {
 					.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 			return get(parentCode, inputFile.fullname);
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 	
-	@Permission(value={"writing"})	//@Permission(value={"creation_update_files"})
+	@Permission(value={"writing"})
 	public Result update(String parentCode, String fullname) {
 		Analysis objectInDB = getObject(getSubObjectQuery(parentCode, fullname));
 		if (objectInDB == null) {
@@ -90,9 +92,10 @@ public class Files extends SubDocumentController<Analysis, File> {
 		
 		Form<File> filledForm = getSubFilledForm();
 		File fileInput = filledForm.get();
-		if(queryFieldsForm.fields == null){
+		if (queryFieldsForm.fields == null) {
 			if (fullname.equals(fileInput.fullname)) {			
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 				ctxVal.putObject("analysis", objectInDB);
 				ctxVal.putObject("objectClass", objectInDB.getClass());
 				ctxVal.setUpdateMode();
@@ -104,13 +107,14 @@ public class Files extends SubDocumentController<Analysis, File> {
 							.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 					return get(parentCode, fullname);
 				} else {
-					return badRequest(filledForm.errorsAsJson());
+					return badRequest(errorsAsJson(ctxVal.getErrors()));
 				}
-			}else{
+			} else {
 				return badRequest("fullname are not the same");
 			}
-		}else{ //update only some authorized properties
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+		} else { //update only some authorized properties
+//			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 			ctxVal.putObject("analysis", objectInDB);
 			ctxVal.putObject("objectClass", objectInDB.getClass());
 			ctxVal.setUpdateMode();
@@ -121,7 +125,7 @@ public class Files extends SubDocumentController<Analysis, File> {
 				ctxVal.setCreationMode();
 				FileValidationHelper.validateFileFullName(fileInput.fullname, ctxVal);
 			}
-			if(!ctxVal.hasErrors()){
+			if (!ctxVal.hasErrors()) {
 				updateObject(getSubObjectQuery(parentCode, fullname), 
 						getBuilder(fileInput, queryFieldsForm.fields, File.class,"files.$")
 						.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
@@ -129,13 +133,13 @@ public class Files extends SubDocumentController<Analysis, File> {
 					fullname = fileInput.fullname;
 				}
 				return get(parentCode, fullname);
-			}else{
-				return badRequest(filledForm.errorsAsJson());
+			} else {
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}			
 		}
 	}
 
-	@Permission(value={"writing"})	//@Permission(value={"delete_files"})
+	@Permission(value={"writing"})	
 	public Result delete(String parentCode, String fullname) {
 		Analysis objectInDB = getObject(getSubObjectQuery(parentCode, fullname));
 		if (objectInDB == null) {
@@ -150,9 +154,8 @@ public class Files extends SubDocumentController<Analysis, File> {
 	@Permission(value={"writing"})
 	public Result deleteByParentCode(String parentCode) {
 		Analysis objectInDB = getObject(parentCode);
-		if (objectInDB == null) {
+		if (objectInDB == null)
 			return notFound();
-		}
 		
 		updateObject(DBQuery.is("code", parentCode), 
 				DBUpdate.unset("files").set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));		
