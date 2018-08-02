@@ -272,7 +272,8 @@ public abstract class ContainerImportGET extends AbstractImportDataGET {
 		Logger.debug("ContainerImportGET - createContainers, avant ContainerImportGET.deleteContainerAndContainerSupport");
 		ContainerImportGET.deleteContainerAndContainerSupport(containers);
 		
-		Map<String,PropertyValue<String>> propertiesContainerSupports=new HashMap<String, PropertyValue<String>>();
+//		Map<String,PropertyValue<String>> propertiesContainerSupports=new HashMap<String, PropertyValue<String>>();
+		Map<String,PropertyValue> propertiesContainerSupports=new HashMap<>();
 		for(Container container : containers){
 						
 			if(!propertiesContainerSupports.containsKey(container.support) && container.properties.get("sequencingProgramType")!=null){

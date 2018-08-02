@@ -26,14 +26,18 @@ import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.parameter.index.Index;
+import models.utils.code.DefaultCodeImpl;
+//import models.utils.code.play;
 import models.utils.dao.DAOException;
-import play.Logger;
-import play.Play;
+//import play.Logger;
+//import play.Play;
 
 // used to help to set export files
 
 public class CsvHelper {
 			
+	private static final play.Logger.ALogger logger = play.Logger.of(CsvHelper.class);
+	
 	/**
 	 * adapt analysis type name for reading by HiSeq3000
 	 * 
@@ -41,7 +45,7 @@ public class CsvHelper {
 	 * @return
 	 */
 	public static String getFromAnalyseType(String analyseType){
-		Logger.debug("getFromAnalyseType analyseType : " + analyseType);
+		logger.debug("getFromAnalyseType analyseType : " + analyseType);
 		switch (analyseType.trim()) {
 		case "DNA":
 		case "RAD-Seq":
@@ -167,7 +171,7 @@ public class CsvHelper {
 			for(PropertyValue _tag : tags){
 				PropertySingleValue tag = (PropertySingleValue)_tag;
 				Index index = OutputHelper.getIndex("index-illumina-sequencing", tag.value.toString());
-				Logger.debug("getTagModel : " + index);
+				logger.debug("getTagModel : " + index);
 				
 				if("SINGLE-INDEX".equals(index.categoryCode)) {
 					if(index.sequence.length() > tagModel.maxTag1Size){
@@ -229,26 +233,26 @@ public class CsvHelper {
 
 	public static String getContentProcessProperties(Content content, String propertyName, Experiment experiment) {
 		if(content.processProperties != null){
-			Logger.debug("content.ProcessProperties - OK pour " + propertyName);
+			logger.debug("content.ProcessProperties - OK pour " + propertyName);
 			if(content.processProperties != null && content.processProperties.containsKey(propertyName)){
 				return (String) content.processProperties.get(propertyName).getValue();
 			}
 		}else if(experiment != null && experiment.inputProcessCodes != null){
 			for( String processCode : experiment.inputProcessCodes){
-				Logger.debug("experiment.inputProcessCodes - " + processCode + " OK pour " + content.sampleCode);
+				logger.debug("experiment.inputProcessCodes - " + processCode + " OK pour " + content.sampleCode);
 				if(processCode.matches(content.sampleCode + "(.*)")){
-					Logger.debug("experiment.inputProcessCodes - " + processCode);
+					logger.debug("experiment.inputProcessCodes - " + processCode);
 					return OutputHelper.getProcessProperty(processCode, propertyName);
 				}
 			}
 		}
-		Logger.error("content.ProcessProperties - " + propertyName + " null pour " + content.sampleCode);
+		logger.error("content.ProcessProperties - " + propertyName + " null pour " + content.sampleCode);
 		return null;
 	}
 	
 	//Verifie qu'il n'existe pas deux echantillons avec le même nom pour
 	public static List<String> contentDubleName(List<Container> containers) {
-		Logger.debug("contentDubleName");
+		logger.debug("contentDubleName");
 		List<Content> totalContents = new ArrayList<Content>();
 		List<String> dbNames = new ArrayList<String>();
 		for (Container ctr : containers) {
@@ -263,7 +267,7 @@ public class CsvHelper {
 				totalContents.add(newctt);
 			}
 		}
-		Logger.debug("dbNames " + dbNames.size());
+		logger.debug("dbNames " + dbNames.size());
 		return dbNames;
 	}
 	

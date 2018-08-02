@@ -421,6 +421,9 @@ import models.laboratory.parameter.index.Index;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 
+//GET
+import models.laboratory.processes.instance.Process;
+
 public class OutputHelper {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(OutputHelper.class); 
@@ -739,6 +742,25 @@ public class OutputHelper {
 		}
 		return null;
 	}
+	
+    /**
+     * 
+     * @param processCode - Mongo process code 
+     * @param propertyName - process property name to find
+     * @return - property value string
+     */
+    //GET
+	//get property string from process
+    public static String getProcessProperty(String processCode, String propertyName) {
+        Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, processCode);
+        
+        if(process != null){
+            
+            return (String) process.properties.get(propertyName).value;
+        }else {
+            return null;
+        }
+    }
 	
 }
 //>>>>>>> V2.0.2

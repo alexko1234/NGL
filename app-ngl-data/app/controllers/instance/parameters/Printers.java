@@ -40,7 +40,7 @@ public class Printers extends Controller { // extends NGLBaseController { //Comm
 			if(play.Play.application().configuration().getString("institute").equals("GET")){
 				
 			}else{
-				Logger.error("You need to specify only one institute ! Now, it's "+ play.Play.application().configuration().getString("institute"));
+				logger.error("You need to specify only one institute ! Now, it's "+ play.Play.application().configuration().getString("institute"));
 //=======
 //			String institute = configuration().getString("institute");
 ////			if (play.Play.application().configuration().getString("institute").equals("CNS")) {

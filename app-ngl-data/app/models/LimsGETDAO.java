@@ -57,7 +57,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import play.Logger;
+//import play.Logger;
 import play.api.modules.spring.Spring;
 import services.instance.container.ContainerImportGET;
 import validation.ContextValidation;
@@ -71,6 +71,8 @@ import fr.cea.ig.MongoDBDAO;
  */
 @Repository
 public class LimsGETDAO{
+
+	private static final play.Logger.ALogger logger = play.Logger.of(LimsGETDAO.class);
 
 	public JdbcTemplate jdbcTemplate;
 
@@ -144,10 +146,10 @@ public class LimsGETDAO{
 				if (rs.getString("description").equals("Responsable Technique")){
 					user.technicaluser = 1;
 				}
-				Logger.debug("LimsGETDAO - findUsersToSynchronize mapRow- : Utilisateur retourné = " + user.code);
+				logger.debug("LimsGETDAO - findUsersToSynchronize mapRow- : Utilisateur retourné = " + user.code);
 			
 			} catch (DAOException e) {
-				Logger.error("LimsGETDAO - findUsersToSynchronize mapRow- Erreur",e);
+				logger.error("LimsGETDAO - findUsersToSynchronize mapRow- Erreur",e);
 			} 
 							
 			return user;
@@ -172,10 +174,10 @@ public class LimsGETDAO{
 				Container container = null;
 				try {
 					container = ContainerImportGET.createContainerFromResultSet(rs, containerCategoryCode,containerStateCode,experimentTypeCode);
-					Logger.debug("LimsGETDAO - findContainersToCreate apres createContainerFromResultSet container.categoryCode: " + container.categoryCode);
+					logger.debug("LimsGETDAO - findContainersToCreate apres createContainerFromResultSet container.categoryCode: " + container.categoryCode);
 				
 				} catch (DAOException e) {
-					Logger.error("LimsGETDAO - findContainersToCreate mapRow- Erreur",e);
+					logger.error("LimsGETDAO - findContainersToCreate mapRow- Erreur",e);
 				} 
 								
 				return container;
@@ -189,7 +191,7 @@ public class LimsGETDAO{
 			if (cont.categoryCode != null){
 				listContenairesNonVide.add(cont);
 			}else {
-				Logger.error("LimsGETDAO - findContainersToCreate categoryCode idefini pour : " + cont.code + " il est ne donc PAS IMPORTE dans Mongo");
+				logger.error("LimsGETDAO - findContainersToCreate categoryCode idefini pour : " + cont.code + " il est ne donc PAS IMPORTE dans Mongo");
 			}
 		}
 		
@@ -201,7 +203,7 @@ public class LimsGETDAO{
 
 
 	public Sample findSampleToCreate(final ContextValidation contextError, String sampleCode) throws SQLException, DAOException {
-		Logger.debug("LimsGETDAO - findSampleToCreate - findSampleToCreate : " + sampleCode);
+		logger.debug("LimsGETDAO - findSampleToCreate - findSampleToCreate : " + sampleCode);
 		String SQLSample="SELECT  DISTINCT "
 				+ "tob.object_barcode as code,"
 				+"tob.object_id as barcodeid,"
@@ -229,13 +231,13 @@ public class LimsGETDAO{
 				Sample sample = new Sample();
 				
 				if (rs.getString("createUser") != null){
-					Logger.debug("sample.createUser " + rs.getString("createUser"));
+					logger.debug("sample.createUser " + rs.getString("createUser"));
 					InstanceHelpers.updateTraceInformation(sample.traceInformation, rs.getString("createUser"));
 				}else{
 					InstanceHelpers.updateTraceInformation(sample.traceInformation, "ngl-data");
 				}
 				
-				Logger.debug("LimsGETDAO - FindSample mapRow:   param query " + sampleCode);
+				logger.debug("LimsGETDAO - FindSample mapRow:   param query " + sampleCode);
 				sample.code=rs.getString("code");
 				sample.properties=new HashMap<String, PropertyValue>();
 				sample.properties = getCaracteristiquesForContainer(rs.getInt("barcodeid"));
@@ -243,7 +245,7 @@ public class LimsGETDAO{
 				if (sample.properties.containsKey("Nom_echantillon_collaborateur")){
 					PropertySingleValue aa ;
 					aa = (PropertySingleValue)sample.properties.get("Nom_echantillon_collaborateur");
-					Logger.debug("LimsGETDAO - FindSample mapRow if Nom_echantillon_collaborateur: " + aa.toString() );
+					logger.debug("LimsGETDAO - FindSample mapRow if Nom_echantillon_collaborateur: " + aa.toString() );
 					sample.referenceCollab = aa.value.toString();
 //					container.concentration = new PropertySingleValue(Math.round(rs.getFloat("measuredConcentration")*100.0)/100.0, mesuredConcentrationUnit);
 				}
@@ -252,18 +254,18 @@ public class LimsGETDAO{
 				if (sample.properties.containsKey("type_echantillon")){
 					PropertySingleValue aa ;
 					aa = (PropertySingleValue)sample.properties.get("type_echantillon");
-					Logger.debug("LimsGETDAO - mapRow, type_echantillon : " + aa.value.toString());
+					logger.debug("LimsGETDAO - mapRow, type_echantillon : " + aa.value.toString());
 //					sampleTypeCode = aa.value.toString();
 //					container.concentration = new PropertySingleValue(Math.round(rs.getFloat("measuredConcentration")*100.0)/100.0, mesuredConcentrationUnit);
 					
 					sampleTypeCode=DataMappingGET.getSampleTypeFromLims(aa.value.toString());
-					Logger.debug("LimsGETDAO - mapRow if, apres getSampleTypeFromLims");
+					logger.debug("LimsGETDAO - mapRow if, apres getSampleTypeFromLims");
 					try {
 //						Logger.info("LimsGETDAO - findSampleToCreate : ERROR CODE findByCode " + sampleTypeCode);
 						sampleType = SampleType.find.findByCode(sampleTypeCode);
 						
 					} catch (DAOException e) {
-						Logger.error("LimsGETDAO - findSampleToCreate : catch findByCode " + e.toString(),e);
+						logger.error("LimsGETDAO - findSampleToCreate : catch findByCode " + e.toString(),e);
 						return null;
 					}
 					if( sampleType==null ){
@@ -272,14 +274,14 @@ public class LimsGETDAO{
 					}
 					sample.categoryCode=sampleType.category.code;
 					sample.typeCode=sampleTypeCode;
-					Logger.debug("ContainerImportGET - createContainerFromResultSet, type_echantillon , sampleType.category.code : " + sampleType.category.code);
+					logger.debug("ContainerImportGET - createContainerFromResultSet, type_echantillon , sampleType.category.code : " + sampleType.category.code);
 				}
 				
 				sample.projectCodes=new HashSet<String>();
 				List<String> projects = new ArrayList<String>();
 				projects = findProjectsForContainer(rs.getInt("barcodeid"));
 				for (String project : projects) {
-					Logger.debug("LimsGETDAO - findSampleToCreate - Projet lié à sample " + sample.code + "  : " + project);
+					logger.debug("LimsGETDAO - findSampleToCreate - Projet lié à sample " + sample.code + "  : " + project);
 					sample.projectCodes.add(project);
 				}
 				sample.name=rs.getString("name");
@@ -290,24 +292,24 @@ public class LimsGETDAO{
 				
 				sample.properties = new HashMap<String, PropertyValue>();
 
-				Logger.debug("LimsGETDAO - findSampleToCreate - Properties sample "+sample.properties.containsKey("taxonSize"));
+				logger.debug("LimsGETDAO - findSampleToCreate - Properties sample "+sample.properties.containsKey("taxonSize"));
 
 
 				sample.importTypeCode="default-import";
-				Logger.debug("LimsGETDAO - findSampleToCreate - END "+sample);
+				logger.debug("LimsGETDAO - findSampleToCreate - END "+sample);
 				return sample;
 			}
 
 
 		});        
-		Logger.debug("LimsGETDAO - findSampleToCreate - END. Nombre de samples =   "+results.size());
+		logger.debug("LimsGETDAO - findSampleToCreate - END. Nombre de samples =   "+results.size());
 		if(results.size()==1)
 		{
-			Logger.debug("LimsGETDAO - findSampleToCreate - END - One sample");
+			logger.debug("LimsGETDAO - findSampleToCreate - END - One sample");
 			return results.get(0);
 		}
 		else {
-			Logger.error("LimsGETDAO - findSampleToCreate - END - Nombre de samples : " + Integer.toString((results.size())) + ". Retourne null du coup.");
+			logger.error("LimsGETDAO - findSampleToCreate - END - Nombre de samples : " + Integer.toString((results.size())) + ". Retourne null du coup.");
 			return null;
 		}
 
@@ -418,20 +420,20 @@ public class LimsGETDAO{
 		
 		//get today date string
 		String date = Constants.today();
-		Logger.debug("Date : "+ date);
+		logger.debug("Date : "+ date);
 		
 //		Object[] dateImportCaracteristic = new Object[] { new Date(),  caracteristicstypeid };
 //		Object[] dateImportCaracteristic = new Object[] { date,  caracteristicstypeid };
 		
 		try {
 			//try if today date characteristic exist
-			Logger.debug("Resultat int : " + this.jdbcTemplate.queryForObject("SELECT caracteristique_id FROM trace_caracteristique WHERE caracteristique_type_id = '" + caracteristicstypeid + "' AND valeur = '"+ date +"'", Integer.class));
+			logger.debug("Resultat int : " + this.jdbcTemplate.queryForObject("SELECT caracteristique_id FROM trace_caracteristique WHERE caracteristique_type_id = '" + caracteristicstypeid + "' AND valeur = '"+ date +"'", Integer.class));
 			
 		} catch (Exception e) {			
 			//if today date characteristic don't exist create a new characteristic with import NGL date type (id = 270)
 			String insertSql =  "INSERT INTO trace_caracteristique(valeur,caracteristique_type_id) VALUES (?, ?)";
 			this.jdbcTemplate.update(insertSql, new Object[] { date,  caracteristicstypeid});
-			Logger.debug("new insertid"+ this.jdbcTemplate.queryForObject("SELECT caracteristique_id FROM trace_caracteristique WHERE caracteristique_type_id = '" + caracteristicstypeid + "' AND valeur = '"+ date +"'", Integer.class));
+			logger.debug("new insertid"+ this.jdbcTemplate.queryForObject("SELECT caracteristique_id FROM trace_caracteristique WHERE caracteristique_type_id = '" + caracteristicstypeid + "' AND valeur = '"+ date +"'", Integer.class));
 		} 
 		
 		
@@ -461,7 +463,7 @@ public class LimsGETDAO{
 		//create new link
 		String insertSql =  "INSERT INTO trace_caracteristique_link_object(object_id,caracteristique_id) VALUES (?, ?)";
 		this.jdbcTemplate.update(insertSql, new Object[]{barcodeId, caracteristicId});
-		Logger.debug("New link id : "+ this.jdbcTemplate.queryForObject("SELECT trace_caracteristique_link_object_id FROM trace_caracteristique_link_object WHERE object_id=? AND caracteristique_id=?", new Object[] {barcodeId, caracteristicId}, Integer.class));
+		logger.debug("New link id : "+ this.jdbcTemplate.queryForObject("SELECT trace_caracteristique_link_object_id FROM trace_caracteristique_link_object WHERE object_id=? AND caracteristique_id=?", new Object[] {barcodeId, caracteristicId}, Integer.class));
 		
 	}
 	 
@@ -485,7 +487,7 @@ public class LimsGETDAO{
 		List<Integer> links = this.jdbcTemplate.queryForList(sqlTmp, new Object[] {barcodeId, caracteristicTypeId, caracteristicId}, Integer.class);
 		for (Integer delId : links) {
 			this.jdbcTemplate.update(sqldel, delId);
-			Logger.debug("LimsGETDAO deletSameLinkCaracteristics"  + delId);
+			logger.debug("LimsGETDAO deletSameLinkCaracteristics"  + delId);
 		}
 	}
 
@@ -499,13 +501,13 @@ public HashMap<String, PropertyValue> getCaracteristiquesForContainer(int barcod
 			+ "WHERE tclo.object_id = ?";
 	 
 	List<Map<String,Object>>rows = this.jdbcTemplate.queryForList(sql_query,barcodeId);
-	Logger.debug("LimsGETDAO - getCaracteristiquesForContainer - Caracteristiques d'eSIToul pour l'objet " + barcodeId);
+	logger.debug("LimsGETDAO - getCaracteristiquesForContainer - Caracteristiques d'eSIToul pour l'objet " + barcodeId);
 	for (Map<String, Object> row : rows) {
-		Logger.debug("Caracteristique " + row.get("intitule").toString() + " ("+row.get("unite").toString()+") " + row.get("caracteristiqueTypeId").toString() + " : " + row.get("valeur").toString());
+		logger.debug("Caracteristique " + row.get("intitule").toString() + " ("+row.get("unite").toString()+") " + row.get("caracteristiqueTypeId").toString() + " : " + row.get("valeur").toString());
 		//DataMappingGET.getInstrumentTypeCodeMapping(rs.getString("insCategoryCode"));
 
 		if ("274".equals(row.get("caracteristiqueTypeId").toString())){
-			Logger.debug("Index " + row.get("valeur").toString());
+			logger.debug("Index " + row.get("valeur").toString());
 			if (!"NoIndex".equals(row.get("valeur").toString())){
 				caracteristiques.put("tag",new PropertySingleValue(row.get("valeur").toString().substring(0, row.get("valeur").toString().indexOf(":"))));
 				caracteristiques.put("tagCategory",new PropertySingleValue(DataMappingGET.getTagCategory(row.get("valeur").toString())));
@@ -513,7 +515,7 @@ public HashMap<String, PropertyValue> getCaracteristiquesForContainer(int barcod
 			
 		}else if (!row.get("unite").toString().equals("indéfini")){
 			caracteristiques.put(row.get("intitule").toString(), new PropertySingleValue(row.get("valeur").toString(), row.get("unite").toString()));
-//			Logger.debug("Index " + row.get("intitule").toString()+ ", " + row.get("valeur").toString() + ", " + row.get("unite").toString());
+//			logger.debug("Index " + row.get("intitule").toString()+ ", " + row.get("valeur").toString() + ", " + row.get("unite").toString());
 		}else{
 			caracteristiques.put(row.get("intitule").toString(), new PropertySingleValue(row.get("valeur").toString()));
 		}
@@ -632,7 +634,7 @@ public HashMap<String, PropertyValue> getCaracteristiquesForContainer(int barcod
 				try{
 					if(!limsCode.equals("0")){
 						String sql="pm_MaterielmanipInNGL @matmaco=?";
-						Logger.debug(sql+limsCode);
+						logger.debug(sql+limsCode);
 						this.jdbcTemplate.update(sql, Integer.parseInt(limsCode));
 					}
 				} catch(DataAccessException e){
@@ -666,7 +668,7 @@ public HashMap<String, PropertyValue> getCaracteristiquesForContainer(int barcod
 			try{
 
 				String sql="pm_SampleInNGL @code=?";
-				Logger.debug(sql+sample.code);
+				logger.debug(sql+sample.code);
 				this.jdbcTemplate.update(sql, sample.code);
 
 			} catch(DataAccessException e){
@@ -686,13 +688,13 @@ public HashMap<String, PropertyValue> getCaracteristiquesForContainer(int barcod
 	 *  
 	 *  */
 	public List<Content> findContentsFromContainer(String sqlContent, String code) throws SQLException{
-		Logger.debug("LimsGETDAO - findContentsFromContainer : code - " + code + ", requete : " + sqlContent);
+		logger.debug("LimsGETDAO - findContentsFromContainer : code - " + code + ", requete : " + sqlContent);
 
 		List<Content> results = this.jdbcTemplate.query(sqlContent,new Object[]{code},new RowMapper<Content>() {
 			
 			@SuppressWarnings("rawtypes")
 			public Content mapRow(ResultSet rs, int rowNum) throws SQLException {
-				Logger.debug("LimsGETDAO - findContentsFromContainer mapRow : " + rs.getString("sampleCode") );
+				logger.debug("LimsGETDAO - findContentsFromContainer mapRow : " + rs.getString("sampleCode") );
 				Content sampleUsed = new Content(rs.getString("sampleCode"),null,null);
 				
 				List<String> projects = new ArrayList<String>();
@@ -700,17 +702,17 @@ public HashMap<String, PropertyValue> getCaracteristiquesForContainer(int barcod
 				//verifier l'existance des informations liés au content
 				
 				if (projects.isEmpty()){	
-					Logger.error("LimsGETDAO - findContentsFromContainer : sampleUsed projects.isEmpty " + rs.getString("sampleCode"));
+					logger.error("LimsGETDAO - findContentsFromContainer : sampleUsed projects.isEmpty " + rs.getString("sampleCode"));
 				}else {
 						
 					if (projects.size() > 1){
-						Logger.error("LimsGETDAO - findContentsFromContainer : plusieurs projets associés au même barre-code : "+ rs.getInt("barcodeid"));
+						logger.error("LimsGETDAO - findContentsFromContainer : plusieurs projets associés au même barre-code : "+ rs.getInt("barcodeid"));
 						
 					} 
 					sampleUsed.projectCode = projects.get(0);
 					
 	//				sampleUsed.projectCode = rs.getString("project");
-					Logger.debug("LimsGETDAO - findContentsFromContainer : sampleUsed.projectCode - "+sampleUsed.projectCode);
+					logger.debug("LimsGETDAO - findContentsFromContainer : sampleUsed.projectCode - "+sampleUsed.projectCode);
 					//TODO add projectCode
 					// Todo add properties from ExperimentType
 					sampleUsed.properties=new HashMap<String, PropertyValue>();
@@ -733,7 +735,7 @@ public HashMap<String, PropertyValue> getCaracteristiquesForContainer(int barcod
 	//				if(rs.getString("libLayoutNominalLength") != null){
 	//					sampleUsed.properties.put("libLayoutNominalLength", new PropertySingleValue(rs.getInt("libLayoutNominalLength")));
 	//				} 
-					Logger.debug("LimsGETDAO - findContentsFromContainer : sampleUsed OK");
+					logger.debug("LimsGETDAO - findContentsFromContainer : sampleUsed OK");
 				
 				}
 				return sampleUsed;
@@ -753,7 +755,7 @@ public HashMap<String, PropertyValue> getCaracteristiquesForContainer(int barcod
 
 			@SuppressWarnings("rawtypes")
 			public Run mapRow(ResultSet rs, int rowNum) throws SQLException {
-				Logger.debug("Begin findRunsToCreate");
+				logger.debug("Begin findRunsToCreate");
 
 				ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
 				contextValidation.addKeyToRootKeyName(contextError.getRootKeyName());
@@ -842,7 +844,7 @@ public HashMap<String, PropertyValue> getCaracteristiquesForContainer(int barcod
 				Lane lane=getLane(run,rs.getInt("lanenum"));
 
 				if(lane==null){
-					Logger.debug("Lane null");
+					logger.debug("Lane null");
 					lane=new Lane();
 					lane.number=rs.getInt("lanenum");
 				}
@@ -893,7 +895,7 @@ public HashMap<String, PropertyValue> getCaracteristiquesForContainer(int barcod
 				MappingHelper.getPropertiesFromResultSet(rs, treatmentType.getPropertyDefinitionByLevel(level),m);
 			}
 		} catch (DAOException e) {
-			Logger.error("",e);
+			logger.error("",e);
 		}
 		treatment.results=new HashMap<String, Map<String,PropertyValue>>();
 		treatment.results.put("default",m);
@@ -1019,7 +1021,7 @@ public HashMap<String, PropertyValue> getCaracteristiquesForContainer(int barcod
 
 			try{
 				String sql="pm_RunhdInNGL @runhnom=?, @InNGL=?";
-				Logger.debug(sql+run.code);
+				logger.debug(sql+run.code);
 				int intInNGL = (inNGL) ? 1 : 0;
 				this.jdbcTemplate.update(sql, run.code,intInNGL);
 
@@ -1052,7 +1054,7 @@ public HashMap<String, PropertyValue> getCaracteristiquesForContainer(int barcod
 				try {
 					readSetType = ReadSetType.find.findByCode(readSet.typeCode);
 				} catch (DAOException e) {
-					Logger.error("",e);
+					logger.error("",e);
 				}
 				file.properties=new HashMap<String, PropertyValue>();
 				MappingHelper.getPropertiesFromResultSet(rs,readSetType.getPropertyDefinitionByLevel(Level.CODE.File),file.properties);

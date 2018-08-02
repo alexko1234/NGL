@@ -494,36 +494,33 @@ angular.module('home').controller('GETIlluminaDepotCtrl',['$scope', '$parse','$h
 				};
 			} //if not new			
 		};
-		
-//		var generateSampleSheetJFlow = function(){
-//			generateSampleSheet("jFlow");
-//		};
 			
 		var generateSampleSheet = function(f){
-			$scope.messages.clear();
-			$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{'fType':f})
-			.success(function(data, status, headers, config) {
-				var header = headers("Content-disposition");
-				var filepath = header.split("filename=")[1];
-				var filename = filepath.split(/\/|\\/);
-				filename = filename[filename.length-1];
-				if(data!=null){
-					$scope.messages.clazz="alert alert-success";
-					$scope.messages.text=Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath;
-					$scope.messages.showDetails = false;
-					$scope.messages.open();	
-					
-					var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
-					saveAs(blob, filename);
-				}
-			})
-			.error(function(data, status, headers, config) {
-				$scope.messages.clazz = "alert alert-danger";
-				$scope.messages.text = Messages('experiments.msg.generateSampleSheet.error');
-				$scope.messages.setDetails(data);
-				$scope.messages.showDetails = true;
-				$scope.messages.open();				
-			});
+			$scope.fileUtils.generateSampleSheet({'fType':f});
+//			$scope.messages.clear();
+//			$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{'fType':f})
+//			.success(function(data, status, headers, config) {
+//				var header = headers("Content-disposition");
+//				var filepath = header.split("filename=")[1];
+//				var filename = filepath.split(/\/|\\/);
+//				filename = filename[filename.length-1];
+//				if(data!=null){
+//					$scope.messages.clazz="alert alert-success";
+//					$scope.messages.text=Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath;
+//					$scope.messages.showDetails = false;
+//					$scope.messages.open();	
+//					
+//					var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
+//					saveAs(blob, filename);
+//				}
+//			})
+//			.error(function(data, status, headers, config) {
+//				$scope.messages.clazz = "alert alert-danger";
+//				$scope.messages.text = Messages('experiments.msg.generateSampleSheet.error');
+//				$scope.messages.setDetails(data);
+//				$scope.messages.showDetails = true;
+//				$scope.messages.open();				
+//			});
 		};
 		
 		console.log("test : " + $parse('experiment.instrument.typeCode')($scope));

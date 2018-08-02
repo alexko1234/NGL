@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import models.Constants;
+import models.utils.InstanceHelpers;
+//import models.utils.play;
 import scala.concurrent.duration.Duration;
 import services.instance.container.PoolImportGET;
 //import services.instance.container.BanqueAmpliImportGET;
@@ -26,13 +28,15 @@ import services.instance.container.puitsPlaqueImportGET;
 //import services.instance.sample.UpdateSampleGET;
 //import services.instance.resolution.ResolutionService;
 import play.data.validation.ValidationError;
-import play.Logger;
+//import play.Logger;
 import validation.ContextValidation;
 
 public class ImportDataGET{
 
+	public static final play.Logger.ALogger logger = play.Logger.of(InstanceHelpers.class);
+	
 	public ImportDataGET(){
-		Logger.debug("ImportDataGET");
+		logger.debug("ImportDataGET");
 /*
  * 		ResolutionService
  * 		Créé dans la collection mongo (ngl_common.ResolutionConfiguration) les résolutions à indiquer à la fin d'expérience 

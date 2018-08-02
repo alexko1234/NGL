@@ -563,7 +563,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	$scope.fileUtils = {
 			generateSampleSheet : function(params, msgSuccessKey, msgErrorKey){
-				
+				console.log("details-ctrl $scope.fileUtils.generateSampleSheet params : " + JSON.stringify(params));
 				if(!msgSuccessKey)msgSuccessKey='experiments.msg.generateSampleSheet.success';
 				if(!msgErrorKey)msgErrorKey='experiments.msg.generateSampleSheet.error';
 				
