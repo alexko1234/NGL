@@ -11,13 +11,14 @@ import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataGET;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.migration.NGLContext;
 import play.Logger;
 
 public class ProjectImportGET extends AbstractImportDataGET{
 
 	public ProjectImportGET(FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super("Project GET",durationFromStart, durationFromNextIteration);
+			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super("Project GET",durationFromStart, durationFromNextIteration, ctx);
 	}
 
 	@Override

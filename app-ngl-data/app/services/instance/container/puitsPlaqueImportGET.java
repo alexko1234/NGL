@@ -3,13 +3,15 @@ package services.instance.container;
 import java.sql.SQLException;
 
 
+
+import fr.cea.ig.play.migration.NGLContext;
 import models.utils.dao.DAOException;
 import scala.concurrent.duration.FiniteDuration;
 import play.Logger;
 public class puitsPlaqueImportGET extends ContainerImportGET {
 
-	public puitsPlaqueImportGET(FiniteDuration durationFromStart,FiniteDuration durationFromNextIteration) {
-		super("Container well GET", durationFromStart, durationFromNextIteration);
+	public puitsPlaqueImportGET(FiniteDuration durationFromStart,FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super("Container well GET", durationFromStart, durationFromNextIteration,ctx);
 	}
 
 	@Override 

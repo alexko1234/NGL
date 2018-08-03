@@ -3,13 +3,14 @@ package services.instance.container;
 import java.sql.SQLException;
 import java.util.Calendar;
 
+import fr.cea.ig.play.migration.NGLContext;
 import models.utils.dao.DAOException;
 import scala.concurrent.duration.FiniteDuration;
 import play.Logger;
 public class TubeImportGET extends ContainerImportGET {
 
-	public TubeImportGET(FiniteDuration durationFromStart,FiniteDuration durationFromNextIteration) {
-		super("Container Tube GET", durationFromStart, durationFromNextIteration);
+	public TubeImportGET(FiniteDuration durationFromStart,FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super("Container Tube GET", durationFromStart, durationFromNextIteration, ctx);
 	}
 
 	@Override 

@@ -44,14 +44,15 @@ import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataGET;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.migration.NGLContext;
 
 public abstract class ContainerImportGET extends AbstractImportDataGET {
 	
 	public static Comment updateComment = new Comment("Container est mis à jour", InstanceHelpers.getUser());
 	
 	public ContainerImportGET(String name,FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super(name,durationFromStart, durationFromNextIteration);
+			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super(name, durationFromStart, durationFromNextIteration, ctx);
 	}
 
 	public static Boolean saveSampleFromContainer(ContextValidation contextError,Container container,String sqlContent, Container containerDB) throws SQLException, DAOException{

@@ -3,13 +3,15 @@ package services.instance.container;
 import java.sql.SQLException;
 
 
+
+import fr.cea.ig.play.migration.NGLContext;
 import models.utils.dao.DAOException;
 import scala.concurrent.duration.FiniteDuration;
 
 public class SampleImportGET extends ContainerImportGET {
 
-	public SampleImportGET(FiniteDuration durationFromStart,FiniteDuration durationFromNextIteration) {
-		super("Samples Tube GET", durationFromStart, durationFromNextIteration);
+	public SampleImportGET(FiniteDuration durationFromStart,FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super("Samples Tube GET", durationFromStart, durationFromNextIteration, ctx);
 	}
 
 	@Override 

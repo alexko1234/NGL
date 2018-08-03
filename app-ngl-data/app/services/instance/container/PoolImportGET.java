@@ -2,14 +2,15 @@ package services.instance.container;
 
 import java.sql.SQLException;
 
+import fr.cea.ig.play.migration.NGLContext;
 import models.utils.dao.DAOException;
 //import rules.services.RulesException;
 import scala.concurrent.duration.FiniteDuration;
 import play.Logger;
 public class PoolImportGET extends ContainerImportGET {
 
-	public PoolImportGET(FiniteDuration durationFromStart,FiniteDuration durationFromNextIteration) {
-		super("Container Pool GET", durationFromStart, durationFromNextIteration);
+	public PoolImportGET(FiniteDuration durationFromStart,FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super("Container Pool GET", durationFromStart, durationFromNextIteration, ctx);
 	}
 
 	@Override
