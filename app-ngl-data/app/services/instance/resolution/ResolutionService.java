@@ -34,7 +34,7 @@ public class ResolutionService {
 	private static HashMap<String, ResolutionCategory> resolutionCategories; 
 	
 //	public static void main(ContextValidation ctx) {			
-//		String inst=play.Play.application().configuration().getString("institute");
+//		String inst=configuration().getString("institute");
 //		if ( inst.equals("CNS") || inst.equals("CNG") || inst.equals("TEST") ) {
 //			Logger.info("Create and save "+inst+ " resolution categories ...");
 //			saveResolutions(ctx, inst);

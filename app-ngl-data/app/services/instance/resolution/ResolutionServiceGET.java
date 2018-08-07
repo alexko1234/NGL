@@ -1,9 +1,12 @@
 package services.instance.resolution;
 
+import static fr.cea.ig.play.IGGlobals.configuration;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.resolutions.instance.Resolution;
@@ -12,11 +15,8 @@ import models.laboratory.resolutions.instance.ResolutionConfiguration;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
-import play.Logger;
-import play.Logger.ALogger;
 import services.instance.InstanceFactory;
 import validation.ContextValidation;
-import fr.cea.ig.MongoDBDAO;
 
 /**
  * Create Resolutions : for more flexibility, these data are created in a specific collection (in MongoDB) 
@@ -27,22 +27,22 @@ import fr.cea.ig.MongoDBDAO;
  */
 public class ResolutionServiceGET {
 	
-
-	private static final ALogger logger = Logger.of("ResolutionService");
+	public static final play.Logger.ALogger logger = play.Logger.of(ResolutionService.class);
+//	private static final ALogger logger = Logger.of("ResolutionService");
 	private static HashMap<String, ResolutionCategory> resolutionCategories; 
 	
 	// FDS 15/01 reecriture...
 	public static void main(ContextValidation ctx) {	
 		
-		String inst=play.Play.application().configuration().getString("institute");
-		Logger.info("Create and save "+inst+ " resolution categories ...");
+		String inst=configuration().getString("institute");
+		logger.info("Create and save "+inst+ " resolution categories ...");
 		if ( inst.equals("GET") ) {
-			Logger.info("Create and save "+inst+ " resolution categories ...");
+			logger.info("Create and save "+inst+ " resolution categories ...");
 			
 			saveResolutions(ctx, inst);
 		}
 		else {
-			Logger.error("You need to specify only one institute !");
+			logger.error("You need to specify only one institute !");
 		}
 		
 		ctx.displayErrors(logger);
@@ -182,12 +182,12 @@ public class ResolutionServiceGET {
 			List<ExperimentType> expTypes=ExperimentType.find.findAll();
 			for(ExperimentType expType:expTypes){
 				if(typeCodes == null || !typeCodes.contains(expType.code)){
-					Logger.debug("Add experimentType default resolution "+ expType.code);
+					logger.debug("Add experimentType default resolution "+ expType.code);
 					al.add(expType.code);
 				}	
 			}
 		} catch (DAOException e) {
-			Logger.error("Creation Resolution for ExperimentType error "+e.getMessage());
+			logger.error("Creation Resolution for ExperimentType error "+e.getMessage());
 		}
 		
 		r.typeCodes = al;
@@ -209,11 +209,11 @@ public class ResolutionServiceGET {
 		try {
 			List<ProcessType> processTypes=ProcessType.find.findAll();
 			for(ProcessType processType:processTypes){
-					Logger.debug("Add processType default resolution "+ processType.code);
+				logger.debug("Add processType default resolution "+ processType.code);
 					al.add(processType.code);
 			}
 		} catch (DAOException e) {
-			Logger.error("Creation Resolution for Process Type error "+e.getMessage());
+			logger.error("Creation Resolution for Process Type error "+e.getMessage());
 		}
 		
 		r.typeCodes = al;

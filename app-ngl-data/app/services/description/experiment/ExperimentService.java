@@ -17,7 +17,7 @@ public class ExperimentService {
 //	private static final play.Logger.ALogger logger = play.Logger.of(ExperimentService.class);
 //
 //	public static void main(Map<String,List<ValidationError>> errors) throws DAOException{
-////		String institute = play.Play.application().configuration().getString("institute");
+////		String institute = configuration().getString("institute");
 //		String institute = configuration().getString("institute");
 //		if (institute.equals("CNS")) {
 //			new ExperimentServiceCNS().main(errors);

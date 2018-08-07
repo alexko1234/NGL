@@ -65,7 +65,7 @@ public class MigrationUpdateNCBITaxonSample extends DocumentController<Sample> {
 		String ncbiScientificName=null;
 		String ncbiLineage=null;
 		
-//		if(play.Play.application().configuration().getString("institute").equals("CNS")){
+//		if(configuration().getString("institute").equals("CNS")){
 		if(config.getInstitute().equals("CNS")) {
 			ncbiScientificName = taxonomyServices.getScientificName(sample.taxonCode);
 			ncbiLineage = taxonomyServices.getLineage(sample.taxonCode);

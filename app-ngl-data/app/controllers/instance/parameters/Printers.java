@@ -20,7 +20,6 @@ import validation.ContextValidation;
 // import fr.cea.ig.play.migration.NGLContext;
 
 public class Printers extends Controller { // extends NGLBaseController { //CommonController {
-	
 	public static final play.Logger.ALogger logger = play.Logger.of(Printers.class);
 		
 //	@Inject
@@ -33,24 +32,24 @@ public class Printers extends Controller { // extends NGLBaseController { //Comm
 		ctx.setCreationMode();
 		try {
 //<<<<<<< HEAD
-////			if (play.Play.application().configuration().getString("institute").equals("CNS")){
+////			if (configuration().getString("institute").equals("CNS")){
 ////				PrinterCNS.main(ctx);
-////			}else if(play.Play.application().configuration().getString("institute").equals("CNG")){
+////			}else if(configuration().getString("institute").equals("CNG")){
 ////			}else
-			if(play.Play.application().configuration().getString("institute").equals("GET")){
+			if(configuration().getString("institute").equals("GET")){
 				
 			}else{
-				logger.error("You need to specify only one institute ! Now, it's "+ play.Play.application().configuration().getString("institute"));
+				logger.error("You need to specify only one institute ! Now, it's "+ configuration().getString("institute"));
 //=======
 //			String institute = configuration().getString("institute");
-////			if (play.Play.application().configuration().getString("institute").equals("CNS")) {
+////			if (configuration().getString("institute").equals("CNS")) {
 ////				PrinterCNS.main(ctx);
-////			} else if(play.Play.application().configuration().getString("institute").equals("CNG")) {
+////			} else if(configuration().getString("institute").equals("CNG")) {
 ////				
-////			} else if(play.Play.application().configuration().getString("institute").equals("TEST")) {
+////			} else if(configuration().getString("institute").equals("TEST")) {
 ////				
 ////			} else {
-////				Logger.error("You need to specify only one institute ! Now, it's "+ play.Play.application().configuration().getString("institute"));
+////				Logger.error("You need to specify only one institute ! Now, it's "+ configuration().getString("institute"));
 ////			}
 //			switch (institute) {
 //			case "CNS"  : PrinterCNS.main(ctx); break; 

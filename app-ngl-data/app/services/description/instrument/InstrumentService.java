@@ -18,7 +18,7 @@ public class InstrumentService {
 //<<<<<<< HEAD
 		(new InstrumentServiceGET()).main(errors);
 //=======
-////		String institute=play.Play.application().configuration().getString("institute");
+////		String institute=configuration().getString("institute");
 //		String institute = configuration().getString("institute");
 ////		if (institute.equals("CNS")) {
 ////			(new InstrumentServiceCNS()).main(errors);
@@ -27,7 +27,7 @@ public class InstrumentService {
 ////		} else if(institute.equals("TEST")) {
 ////			(new InstrumentServiceTEST()).main(errors);
 ////		} else {
-////			logger.error("You need to specify only one institute ! Now, it's "+ play.Play.application().configuration().getString("institute"));
+////			logger.error("You need to specify only one institute ! Now, it's "+ configuration().getString("institute"));
 ////		}
 //		switch (institute) {
 //		case "CNS"  : new InstrumentServiceCNS().main(errors);  break;

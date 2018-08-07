@@ -30,13 +30,13 @@ public class RunService {
 	}
 	
 //	public static void main(Map<String,List<ValidationError>> errors) throws DAOException{
-//		String institute=play.Play.application().configuration().getString("institute");
+//		String institute=configuration().getString("institute");
 //		if (institute.equals("CNS")){
 //			(new RunServiceCNS()).main(errors);
 //		}else if(institute.equals("CNG")){
 //			(new RunServiceCNG()).main(errors);
 //		}else{
-//			Logger.error("You need to specify only one institute ! Now, it's "+ play.Play.application().configuration().getString("institute"));
+//			Logger.error("You need to specify only one institute ! Now, it's "+ configuration().getString("institute"));
 //		}
 //
 //		}

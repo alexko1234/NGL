@@ -581,7 +581,8 @@ public HashMap<String, PropertyValue> getCaracteristiquesForContainer(int barcod
 //					project.state.code = "IP";	
 //				}
 
-				project.state.user = InstanceHelpers.getUser();
+				project.state.user = "GS";
+//				project.state.user = InstanceHelpers.getUser();
 				project.state.date = new Date();
 
 				project.bioinformaticParameters = new BioinformaticParameters();

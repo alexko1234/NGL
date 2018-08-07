@@ -35,14 +35,14 @@ public class Protocols extends Controller { // NGLBaseController { //CommonContr
 //<<<<<<< HEAD
 			ProtocolServiceGET.main(ctx);
 //=======
-////			if (play.Play.application().configuration().getString("institute").equals("CNS")) {
+////			if (configuration().getString("institute").equals("CNS")) {
 ////				ProtocolServiceCNS.main(ctx);
-////			} else if(play.Play.application().configuration().getString("institute").equals("CNG")) {
+////			} else if(configuration().getString("institute").equals("CNG")) {
 ////				ProtocolServiceCNG.main(ctx);
-////			} else if(play.Play.application().configuration().getString("institute").equals("TEST")) {
+////			} else if(configuration().getString("institute").equals("TEST")) {
 ////				ProtocolServiceCNS.main(ctx);
 ////			} else {
-////				logger.error("You need to specify only one institute ! Now, it's "+ play.Play.application().configuration().getString("institute"));
+////				logger.error("You need to specify only one institute ! Now, it's "+ configuration().getString("institute"));
 ////			}
 //			switch (institute) {
 //			case "CNS"  : ProtocolServiceCNS.main(ctx); break;

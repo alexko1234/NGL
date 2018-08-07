@@ -23,13 +23,13 @@ public class InstituteService {
 //<<<<<<< HEAD
 		List<Institute> l = new ArrayList<Institute>();
 		
-		String institute=play.Play.application().configuration().getString("institute");
+		String institute=configuration().getString("institute");
 
 		if(institute.equals("GET")){
 			l.add(newInstitute("Génome et Transcriptome","GET"));
 //=======
 //		List<Institute> l = new ArrayList<>();
-////		String institute=play.Play.application().configuration().getString("institute");
+////		String institute=configuration().getString("institute");
 //		String institute = configuration().getString("institute");
 //		if(institute.equals("CNG")){
 //			l.add(newInstitute("Centre National de Génomique","CNG"));

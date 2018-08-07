@@ -18,7 +18,7 @@ public class ImportService {
 	private static final play.Logger.ALogger logger = play.Logger.of(ImportService.class);
 	
 	public static void main(Map<String,List<ValidationError>> errors) throws DAOException {
-		// String institute=play.Play.application().configuration().getString("institute");
+		// String institute=configuration().getString("institute");
 		String institute = configuration().getString("institute");
 		if (institute.equals("CNS")) {
 			new ImportServiceCNS().main(errors);
@@ -27,7 +27,7 @@ public class ImportService {
 		} else if(institute.equals("GET")) {
 			new ImportServiceGET().main(errors);
 		} else {
-			logger.error("You need to specify only one institute ! Now, it's {}", institute); // + play.Play.application().configuration().getString("institute"));
+			logger.error("You need to specify only one institute ! Now, it's {}", institute); // + configuration().getString("institute"));
 		}
 
 //>>>>>>> V2.0.2
