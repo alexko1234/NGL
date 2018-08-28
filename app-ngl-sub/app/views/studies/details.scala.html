@@ -1,32 +1,19 @@
-@this()
-@()
-
-@import views.html.tools._
-
-@user            = @{ fr.cea.ig.authentication.Authentication.getUser() }
-
-@column()(value: Html) = {
-	<div class="col-md-4 col-lg-4">
-		@value
-	</div>
-}
-
-@* @views.html.tools.imageModal() *@
-@*
+@this() @() @import views.html.tools._ @user = @{
+fr.cea.ig.authentication.Authentication.getUser() } @column()(value:
+Html) = {
+<div class="col-md-4 col-lg-4">@value</div>
+} @* @views.html.tools.imageModal() *@ @*
 <div class="row">
 	<div class="col-md-12 col-lg-12">
-	<div class="page-header">	
-		<div class="btn-toolbar pull-right" >
-		
-		</div>	
-		<-- genere le titre-->
-		@views.html.tools.details_header("study")
-	</div>
+		<div class="page-header">
+			<div class="btn-toolbar pull-right"></div>
+			<-- genere le titre--> @views.html.tools.details_header("study")
+		</div>
 	</div>
 </div>
 
 <div class="row">
-	<!--Affichage du message de reussite ou echec si bouton release activé --> 
+	<!--Affichage du message de reussite ou echec si bouton release activé -->
 	<div class="col-md-12 col-lg-12" messages="messages"></div>
 </div>
 *@
@@ -34,47 +21,51 @@
 
 <!--debut-->
 
-@standard_header("study", "TRUE"){ 
-  <!-- affichage uniquement si donnee releasable : study avec state.code=F-SUB et date relase > date du jour : voir details.ctrl.js.$scope.isReleasable--> 
-  <button class="btn btn-default"  ng-if="isReleasable('@user')"  ng-click="userRelease()" data-toggle="tooltip" title="@Messages("button.release")" ><i class="fa fa-save"></i> @Messages("button.release")</button>
-  @*<button class="btn btn-default"   ng-click="userRelease()" data-toggle="tooltip" title="@Messages("button.release")" ><i class="fa fa-save"></i> @Messages("button.release")</button>*@
-}
+@standard_header("study", "TRUE"){
+<!-- affichage uniquement si donnee releasable : study avec state.code=F-SUB et date relase > date du jour : voir details.ctrl.js.$scope.isReleasable-->
+<button class="btn btn-default" ng-if="isReleasable('@user')"
+	ng-click="userRelease()" data-toggle="tooltip" title="@Messages("button.release")" >
+	<i class="fa fa-save"></i> @Messages("button.release")
+</button>
+@*
+<button class="btn btn-default" ng-click="userRelease()"
+	data-toggle="tooltip" title="@Messages("button.release")" >
+	<i class="fa fa-save"></i> @Messages("button.release")
+</button>
+*@ }
 
 
 <form class="form-horizontal" name="studyForm">
 
-<div class="row">
-	@column(){
-		@* Ecriture de la ligne status :*@
-  		<div ng-if="isReleasable"> @simpleLine(Messages("study.status"),Messages("study.private"))</div>
-  		<div ng-if="!isReleasable"> @simpleLine(Messages("study.status"),Messages("study.public"))</div>
-	    @* Ecriture des autres lignes code, state, title, abstract et description :*@
-		@line("study.code")
-		@line("study.accession")
-		@line("study.externalId")
-		@labelLine("study.state")
-		@line("study.title")
-		@line("study.abstract", "study.studyAbstract") @* nom du champs different de nom de label *@
-		@line("study.description")
-	}
-</div>
+	<div class="row">
+		@column(){ @* Ecriture de la ligne status :*@
+		<div ng-if="isReleasable">
+			@simpleLine(Messages("study.status"),Messages("study.private"))</div>
+		<div ng-if="!isReleasable">
+			@simpleLine(Messages("study.status"),Messages("study.public"))</div>
+		@* Ecriture des autres lignes code, state, title, abstract et
+		description :*@ @line("study.code") @line("study.accession")
+		@line("study.externalId") @labelLine("study.state")
+		@line("study.title") @line("study.abstract", "study.studyAbstract") @*
+		nom du champs different de nom de label *@ @line("study.description")
+		}
+	</div>
 
-</form>		
+</form>
 
 <form class="form-horizontal" name="studyForm2">
-	
-<div class="page-header"/>	
-					
-<div class="row">
-	@column(){	
-		@views.html.helper.columnLabelValue(Messages("studies.msg.details-release")){
-			<p class="form-control-static">{{study.code}}</p>
-		}	
-	}	
-</div>	
-</div>
 
-</form>		
+	<div class="page-header" />
+
+	<div class="row">
+		@column(){
+		@views.html.helper.columnLabelValue(Messages("studies.msg.details-release")){
+		<p class="form-control-static">{{study.code}}</p>
+		} }
+	</div>
+	</div>
+
+</form>
 
 
 <!-- stopPropagation on checkbox prevent parents default behavior (stop <a> call) -->
@@ -83,7 +74,8 @@
 	<div class="col-md-12 col-lg-12">
 		<ul class="nav nav-tabs margin-bottom-5">
 			<!--class="active" permet affichage sans avoir à cliquer sur colonne-->
-			<li class="active"><a a href="#" data-target="#experiment" data-toggle="tab" >@Messages("studies.tabs.experiment")</a></li>
+			<li class="active"><a a href="#" data-target="#experiment"
+				data-toggle="tab">@Messages("studies.tabs.experiment")</a></li>
 			<li><a a href="#" data-target="#run" data-toggle="tab">@Messages("studies.tabs.run")</a></li>
 			<li><a a href="#" data-target="#rawData" data-toggle="tab">@Messages("studies.tabs.rawData")</a></li>
 		</ul>

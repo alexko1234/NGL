@@ -5,32 +5,37 @@
 
 	<!-- ResourceType -->
 
-	
+
 	<ResourceType name="submissionCCRT">
-		<RequiredProperty propertyName="code" keyProperty="true"/>
-		<RequiredProperty propertyName="submissionDirectory"/>
-		<RequiredProperty propertyName="relatifName" keyProperty="true"/>
-		<RequiredProperty propertyName="directory"/>
+		<RequiredProperty propertyName="code" keyProperty="true" />
+		<RequiredProperty propertyName="submissionDirectory" />
+		<RequiredProperty propertyName="relatifName"
+			keyProperty="true" />
+		<RequiredProperty propertyName="directory" />
 	</ResourceType>
-	
+
 	<ResourceType name="rawDataZip">
-		<RequiredProperty propertyName="fileName" keyProperty="true"/>
-		<RequiredProperty propertyName="directory" keyProperty="true"/>
-		<RequiredProperty propertyName="submissionDirectory" keyProperty="true"/>
-		<RequiredProperty propertyName="experimentCode"/>
+		<RequiredProperty propertyName="fileName"
+			keyProperty="true" />
+		<RequiredProperty propertyName="directory"
+			keyProperty="true" />
+		<RequiredProperty propertyName="submissionDirectory"
+			keyProperty="true" />
+		<RequiredProperty propertyName="experimentCode" />
 	</ResourceType>
 
 	<!-- Referential -->
 
-	
+
 	<Referential name="nglSubRef_processCCRT" device="jsonDevice">
 		<ResourceType name="submissionCCRT" />
 	</Referential>
-	
-	
-	
+
+
+
 	<!-- Project by submission type -->
-	<Project name="SRA" workspace="/env/cns/submit_traces/SRA/SNTS_output_xml/autoFtp/log" >
+	<Project name="SRA"
+		workspace="/env/cns/submit_traces/SRA/SNTS_output_xml/autoFtp/log">
 		<ProjectProperty name="ccrt_user" value="scarpelc" />
 	</Project>
 </Declaration>

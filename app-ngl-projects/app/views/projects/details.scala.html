@@ -1,221 +1,236 @@
-@()
-
-@column()(value: Html) = {
-	<div class="col-md-4 col-lg-4">
-		@value
-	</div>
+@() @column()(value: Html) = {
+<div class="col-md-4 col-lg-4">@value</div>
 }
 
 
 <div class="row">
 	<div class="col-md-12 col-lg-12 ">
-	<div class="page-header" ng-init="init()">
-		<div class="btn-toolbar pull-right">
-			 <button class="btn btn-default" ng-if="mainService.isEditMode()" ng-click="update()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
-			 <button class="btn btn-default" ng-if="mainService.isEditMode()" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
-			 <button class="btn btn-default" ng-if="!mainService.isEditMode()" ng-click="startEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>
+		<div class="page-header" ng-init="init()">
+			<div class="btn-toolbar pull-right">
+				<button class="btn btn-default" ng-if="mainService.isEditMode()"
+					ng-click="update()" data-toggle="tooltip" title="@Messages("button.validate")" >
+					<i class="fa fa-save"></i> @Messages("button.validate")
+				</button>
+				<button class="btn btn-default" ng-if="mainService.isEditMode()"
+					ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" >
+					<i class="fa fa-undo"></i> @Messages("button.cancel")
+				</button>
+				<button class="btn btn-default" ng-if="!mainService.isEditMode()"
+					ng-click="startEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" >
+					<i class="fa fa-edit"></i> @Messages("button.edit")
+				</button>
+			</div>
+			<h1>
+				{{project.code}} <small> <span
+					ng-bind="project.state.code|codes:'state'"></span>
+				</small>
+			</h1>
 		</div>
-	 	<h1>	
-		 	{{project.code}} 
-			<small>		 		
-		 		<span ng-bind="project.state.code|codes:'state'"></span>
-		 	</small>
-		 </h1>
 	</div>
-</div>
 
-<div class="row">
-	<div class="col-md-12 col-lg-12"  messages="messages"></div>
-</div>
+	<div class="row">
+		<div class="col-md-12 col-lg-12" messages="messages"></div>
+	</div>
 
 
-<div class="row margin-bottom-7">
-<div class="col-md-12 col-lg-12">
-   <ul class="nav nav-tabs margin-bottom-5">
-   	<li class="active"><a href="#" data-target="#general" data-toggle="tab">@Messages("projects.details.general")</a></li>
-   	<li ><a href="#" data-target="#bioinformaticParameters" data-toggle="tab">@Messages("projects.details.bioinformaticParameters")</a></li>    	
-   </ul>
-   
-   <form class="form-horizontal">
+	<div class="row margin-bottom-7">
+		<div class="col-md-12 col-lg-12">
+			<ul class="nav nav-tabs margin-bottom-5">
+				<li class="active"><a href="#" data-target="#general"
+					data-toggle="tab">@Messages("projects.details.general")</a></li>
+				<li><a href="#" data-target="#bioinformaticParameters"
+					data-toggle="tab">@Messages("projects.details.bioinformaticParameters")</a></li>
+			</ul>
 
-	<div class="tab-content">
-	
-		<div class="tab-pane active" id="general">
+			<form class="form-horizontal">
 
-			<div class="row margin-bottom-7">
-				<div class="col-md-12 col-lg-12">
-						<div class="row">
-							@column(){
-								@views.html.helper.columnLabelValue(Messages("projects.code")){
+				<div class="tab-content">
+
+					<div class="tab-pane active" id="general">
+
+						<div class="row margin-bottom-7">
+							<div class="col-md-12 col-lg-12">
+								<div class="row">
+									@column(){
+									@views.html.helper.columnLabelValue(Messages("projects.code")){
 									<p class="form-control-static">{{project.code}}</p>
-								}
-								
-								@views.html.helper.columnLabelValue(Messages("projects.name")){
+									}
+
+									@views.html.helper.columnLabelValue(Messages("projects.name")){
 									<!-- div ng-switch on="mainService.isEditMode()">
 										<p class="form-control-static" ng-switch-when="false">{{project.name}}</p>
 										<input type="text" class="form-control" ng-switch-when="true" ng-model="project.name">
 									</div -->
 									<p class="form-control-static">{{project.name}}</p>
-									
-								}
-				
-								@views.html.helper.columnLabelValue(Messages("projects.state.code")){
+
+									}
+
+									@views.html.helper.columnLabelValue(Messages("projects.state.code")){
 									<!-- div ng-switch on="mainService.isEditMode()">
 										
 										<p class="form-control-static" ng-switch-when="false">{{project.state.code | codes:'state'}}</p>									
 										
 										<div bt-select class="form-control" ng-switch-when="true" ng-model="project.state.code" bt-options="state.code as state.name for state in lists.getStates()"></div>
-									</div-->		
-									
-									<p class="form-control-static">{{project.state.code | codes:'state'}}</p>		
-								}
-									
-									
-								@views.html.helper.columnLabelValue(Messages("projects.type")){
+									</div-->
+
+									<p class="form-control-static">{{project.state.code |
+										codes:'state'}}</p>
+									}
+
+
+									@views.html.helper.columnLabelValue(Messages("projects.type")){
 									<!-- div ng-switch on="mainService.isEditMode()">
 									<p class="form-control-static" ng-switch-when="false">{{project.typeCode | codes:'type'}}</p>
 										<div bt-select class="form-control" ng-switch-when="true" ng-model="project.typeCode" bt-options="type.code as type.name for type in lists.getProjectTypes()"></div>
 									</div-->
-									
-									<p class="form-control-static">{{project.typeCode | codes:'type'}}</p>
-										
-								}
-								
-								@views.html.helper.columnLabelValue(Messages("projects.category.type")){
+
+									<p class="form-control-static">{{project.typeCode |
+										codes:'type'}}</p>
+
+									}
+
+									@views.html.helper.columnLabelValue(Messages("projects.category.type")){
 									<!-- div ng-switch on="mainService.isEditMode()">
 										<p class="form-control-static" ng-switch-when="false">{{project.categoryCode | codes:'project_cat'}}</p>
 										<div bt-select class="form-control" ng-switch-when="true" ng-model="project.categoryCode" bt-options="category.code as category.name for category in lists.getProjectCategories()"></div>
 									</div-->
-									
-									<p class="form-control-static">{{project.categoryCode | codes:'project_cat'}}</p>
-											
-								}
-								
-								
-								@views.html.helper.columnLabelValue(Messages("projects.description")){
+
+									<p class="form-control-static">{{project.categoryCode |
+										codes:'project_cat'}}</p>
+
+									}
+
+
+									@views.html.helper.columnLabelValue(Messages("projects.description")){
 									<!--  div ng-switch on="mainService.isEditMode()">
 										<p class="form-control-static" ng-switch-when="false">{{project.description}}</p>
 										<textarea class="form-control" ng-switch-when="true" ng-model="project.description"></textarea>
-									</div -->	
-									
+									</div -->
+
 									<p class="form-control-static">{{project.description}}</p>
-								}	
-								
-								@views.html.helper.columnLabelValue(Messages("projects.umbrellaProjectCode")){
+									}
+
+									@views.html.helper.columnLabelValue(Messages("projects.umbrellaProjectCode")){
 									<!-- div ng-switch on="mainService.isEditMode()">
 										<p class="form-control-static" ng-switch-when="false">{{project.umbrellaProjectCode}}</p>
 										<div bt-select class="form-control" ng-switch-when="true" ng-model="project.umbrellaProjectCode" bt-options="project.code as project.name for project in lists.getUmbrellaProjects()"></div>
-									</div-->	
-									
+									</div-->
+
 									<p class="form-control-static">{{project.umbrellaProjectCode}}</p>
-								}	
-							}
-							
-							
-							@column(){
-								@views.html.helper.columnLabelValue(Messages("projects.traceInformation.creationDate")){
-									<p class="form-control-static">{{project.traceInformation.creationDate | date:'@Messages("date.format")'}}</p>	
-								}
-				
-								@views.html.helper.columnLabelValue(Messages("projects.traceInformation.createUser")){
-									<p class="form-control-static">{{project.traceInformation.createUser}}</p>	
-								}
-								
-								@views.html.helper.columnLabelValue(Messages("projects.lastSampleCode")){
-									<p class="form-control-static">{{project.lastSampleCode}}</p>	
-								}
-								
-								@views.html.helper.columnLabelValue(Messages("projects.nbCharactersInSampleCode")){
-									<div ng-switch on="(mainService.isEditMode() && !project.lastSampleCode)">
+									} } @column(){
+									@views.html.helper.columnLabelValue(Messages("projects.traceInformation.creationDate")){
+									<p class="form-control-static">{{project.traceInformation.creationDate
+										| date:'@Messages("date.format")'}}</p>
+									}
+
+									@views.html.helper.columnLabelValue(Messages("projects.traceInformation.createUser")){
+									<p class="form-control-static">{{project.traceInformation.createUser}}</p>
+									}
+
+									@views.html.helper.columnLabelValue(Messages("projects.lastSampleCode")){
+									<p class="form-control-static">{{project.lastSampleCode}}</p>
+									}
+
+									@views.html.helper.columnLabelValue(Messages("projects.nbCharactersInSampleCode")){
+									<div ng-switch
+										on="(mainService.isEditMode() && !project.lastSampleCode)">
 										<p class="form-control-static" ng-switch-when="false">{{project.nbCharactersInSampleCode}}</p>
-										<input type="text" class="form-control" ng-switch-when="true" ng-model="project.nbCharactersInSampleCode">										
+										<input type="text" class="form-control" ng-switch-when="true"
+											ng-model="project.nbCharactersInSampleCode">
 									</div>
-								}
-								@views.html.helper.columnLabelValue(Messages("projects.unixGroup")){
+									}
+									@views.html.helper.columnLabelValue(Messages("projects.unixGroup")){
 									<div ng-switch on="mainService.isEditMode()">
 										<p class="form-control-static" ng-switch-when="false">{{project.properties.unixGroup.value}}</p>
-										<div ng-switch-when="true"><div bt-select  class="form-control" ng-model="project.properties.unixGroup.value" bt-options='v.code as v.code for v in lists.getValues({},"values")'></div></div>
-										<!-- <input type="text" class="form-control" ng-switch-when="true" ng-model="project.properties.unixGroup.value">	 -->									
+										<div ng-switch-when="true">
+											<div bt-select class="form-control"
+												ng-model="project.properties.unixGroup.value"
+												bt-options='v.code as v.code for v in lists.getValues({},"values")'></div>
+										</div>
+										<!-- <input type="text" class="form-control" ng-switch-when="true" ng-model="project.properties.unixGroup.value">	 -->
 									</div>
-								}
-							}				
+									} }
+								</div>
+
+							</div>
 						</div>
-						
-				</div>
-			</div>
-			
-		</div>
-		
-		<div class="tab-pane" id="bioinformaticParameters">
-		
-			<div class="row margin-bottom-7">
-				<div class="col-md-12 col-lg-12">
-						<div class="row">
-							@column(){
-								@views.html.helper.columnLabelValue(Messages("projects.bioinformaticParameters.biologicalAnalysis")){
+
+					</div>
+
+					<div class="tab-pane" id="bioinformaticParameters">
+
+						<div class="row margin-bottom-7">
+							<div class="col-md-12 col-lg-12">
+								<div class="row">
+									@column(){
+									@views.html.helper.columnLabelValue(Messages("projects.bioinformaticParameters.biologicalAnalysis")){
 									<div class="checkbox" ng-if="mainService.isEditMode()">
-					 					<label>
-											<input type="checkbox"  ng-model="project.bioinformaticParameters.biologicalAnalysis">&nbsp;	
+										<label> <input type="checkbox"
+											ng-model="project.bioinformaticParameters.biologicalAnalysis">&nbsp;
 										</label>
-									</div>				
-									<p class="form-control-static" ng-if="!mainService.isEditMode()" ng-switch on="project.bioinformaticParameters.biologicalAnalysis">
+									</div>
+									<p class="form-control-static"
+										ng-if="!mainService.isEditMode()" ng-switch
+										on="project.bioinformaticParameters.biologicalAnalysis">
 										<i ng-switch-when="true" class="fa fa-check-square-o  fa-lg"></i>
 										<i ng-switch-default class="fa fa-square-o  fa-lg"></i>
-									</p>					
-								}
-								
-								@views.html.helper.columnLabelValue(Messages("projects.bioinformaticParameters.regexBiologicalAnalysis")){
-									<div ng-switch on="mainService.isEditMode() && project.bioinformaticParameters.biologicalAnalysis">
+									</p>
+									}
+
+									@views.html.helper.columnLabelValue(Messages("projects.bioinformaticParameters.regexBiologicalAnalysis")){
+									<div ng-switch
+										on="mainService.isEditMode() && project.bioinformaticParameters.biologicalAnalysis">
 										<p class="form-control-static" ng-switch-when="false">{{project.bioinformaticParameters.regexBiologicalAnalysis}}</p>
-										<input type="text" class="form-control" ng-switch-when="true" ng-model="project.bioinformaticParameters.regexBiologicalAnalysis">										
+										<input type="text" class="form-control" ng-switch-when="true"
+											ng-model="project.bioinformaticParameters.regexBiologicalAnalysis">
 									</div>
-								}
-								
-								@views.html.helper.columnLabelValue(Messages("projects.bioinformaticParameters.mappingReference")){
+									}
+
+									@views.html.helper.columnLabelValue(Messages("projects.bioinformaticParameters.mappingReference")){
 									<div ng-switch on="mainService.isEditMode()">
 										<p class="form-control-static" ng-switch-when="false">{{project.bioinformaticParameters.mappingReference}}</p>
-										<input type="text" class="form-control" ng-switch-when="true" ng-model="project.bioinformaticParameters.mappingReference">										
+										<input type="text" class="form-control" ng-switch-when="true"
+											ng-model="project.bioinformaticParameters.mappingReference">
 									</div>
-								}
-								
-								@views.html.helper.columnLabelValue(Messages("projects.bioinformaticParameters.fgGroup")){
+									}
+
+									@views.html.helper.columnLabelValue(Messages("projects.bioinformaticParameters.fgGroup")){
 									<div ng-switch on="mainService.isEditMode()">
 										<p class="form-control-static" ng-switch-when="false">{{project.bioinformaticParameters.fgGroup}}</p>
-										<input type="text" class="form-control" ng-switch-when="true" ng-model="project.bioinformaticParameters.fgGroup">										
+										<input type="text" class="form-control" ng-switch-when="true"
+											ng-model="project.bioinformaticParameters.fgGroup">
 									</div>
-								}
-								
-								@views.html.helper.columnLabelValue(Messages("projects.bioinformaticParameters.fgPriority")){
+									}
+
+									@views.html.helper.columnLabelValue(Messages("projects.bioinformaticParameters.fgPriority")){
 									<div ng-switch on="mainService.isEditMode()">
 										<p class="form-control-static" ng-switch-when="false">{{project.bioinformaticParameters.fgPriority}}</p>
-										<input type="text" class="form-control" ng-switch-when="true" ng-model="project.bioinformaticParameters.fgPriority">										
+										<input type="text" class="form-control" ng-switch-when="true"
+											ng-model="project.bioinformaticParameters.fgPriority">
 									</div>
-								}	
-								@views.html.helper.columnLabelValue(Messages("projects.bioinformaticParameters.localDataDelete")){
+									}
+									@views.html.helper.columnLabelValue(Messages("projects.bioinformaticParameters.localDataDelete")){
 									<div class="checkbox" ng-if="mainService.isEditMode()">
-					 					<label>
-											<input type="checkbox"  ng-model="project.bioinformaticParameters.localDataDelete">&nbsp;	
+										<label> <input type="checkbox"
+											ng-model="project.bioinformaticParameters.localDataDelete">&nbsp;
 										</label>
-									</div>				
-									<p class="form-control-static" ng-if="!mainService.isEditMode()" ng-switch on="project.bioinformaticParameters.localDataDelete">
+									</div>
+									<p class="form-control-static"
+										ng-if="!mainService.isEditMode()" ng-switch
+										on="project.bioinformaticParameters.localDataDelete">
 										<i ng-switch-when="true" class="fa fa-check-square-o  fa-lg"></i>
 										<i ng-switch-default class="fa fa-square-o  fa-lg"></i>
-									</p>					
-								}							
-							}
-						</div>
-						
-				</div>
-			</div>
+									</p>
+									} }
+								</div>
 
-		
+							</div>
+						</div>
+
+
+					</div>
+				</div>
+
+			</form>
 		</div>
 	</div>
-	
-	</form>
-	</div>
-</div>
-		
-		
-
-       

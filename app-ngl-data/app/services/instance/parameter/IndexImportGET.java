@@ -11,12 +11,16 @@ import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataGET;
+import services.instance.ImportDataGET;
+//import services.instance.play;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.migration.NGLContext;
 
 public class IndexImportGET extends AbstractImportDataGET{
 
+	public static final play.Logger.ALogger logger = play.Logger.of(IndexImportGET.class);
+	
 	public IndexImportGET(FiniteDuration durationFromStart,
 			FiniteDuration durationFromNextIteration, NGLContext ctx) {
 		
@@ -39,6 +43,7 @@ public class IndexImportGET extends AbstractImportDataGET{
 			if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.PARAMETER_COLL_NAME, Index.class, index.code)){
 				MongoDBDAO.deleteByCode(InstanceConstants.PARAMETER_COLL_NAME, Index.class, index.code);
 			}
+			logger.debug("IndexImportGET - " + index.shortName);
 		}
 	
 		InstanceHelpers.save(InstanceConstants.PARAMETER_COLL_NAME,indexs,contextValidation);

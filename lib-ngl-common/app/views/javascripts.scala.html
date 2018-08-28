@@ -1,8 +1,6 @@
-@(scripts: Html = Html(""))
+@(scripts: Html = Html("")) @import views.html.imports._
 
-@import views.html.imports._
-
- <!--[if lt IE 9]>
+<!--[if lt IE 9]>
 	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<script src="@helper.getAsset("javascript","json","2.0","json_2.0.js")" type="text/javascript" charset="utf-8"></script>
 <![endif]-->
@@ -18,8 +16,6 @@
 @ajscript("ui-bootstrap","0.12.1","ui-bootstrap-tpls-0.12.1.js")
 @ajscript("moment","2.4.0","moment_2.4.0.min.js")
 
-@rscript("lib/datatable/datatable/javascripts/fileSaver/fileSaver.min.js") 
+@rscript("lib/datatable/datatable/javascripts/fileSaver/fileSaver.min.js")
 
-@uscript("/messages.js")
- 
-@scripts
+@uscript("/messages.js") @scripts

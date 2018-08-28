@@ -1,30 +1,20 @@
-@(dataForm: Form[controllers.utils.DataTableForm], tableForm: Form[models.administration.authorisation.Application])
-@import helper._
-@import models.administration.authorisation.Application
-@implicitField = @{ FieldConstructor(helper.tbformvertical.f) }
+@(dataForm: Form[controllers.utils.DataTableForm], tableForm:
+Form[models.administration.authorisation.Application]) @import helper._
+@import models.administration.authorisation.Application @implicitField =
+@{ FieldConstructor(helper.tbformvertical.f) } @searchForm(handler:
+FieldConstructor, lang : Lang = implicitly[Lang]) = {
 
-@searchForm(handler: FieldConstructor, lang : Lang = implicitly[Lang]) = {
-	
-	@helper.form(action = controllers.administration.authorisation.routes.Applications.list(), args = 'class -> "well form-search") {		
-		
-				@helper.tbInputText(
-				field = dataForm("search_1"), 
-                args = 'placeholder -> "Label",
-                'class -> "search-query",
-                '_label -> "Label"  
-            )(handler = handler)
-            
-			@helper.tbInputText(
-				field = dataForm("search_2"), 
-                args = 'placeholder -> "Code",
-                'class -> "search-query",
-                '_label -> "Code"  
-            )(handler = handler)                  				
-	}
-} 
+@helper.form(action =
+controllers.administration.authorisation.routes.Applications.list(),
+args = 'class -> "well form-search") { @helper.tbInputText( field =
+dataForm("search_1"), args = 'placeholder -> "Label", 'class ->
+"search-query", '_label -> "Label" )(handler = handler)
 
-@scripts(handler: FieldConstructor, lang : Lang = implicitly[Lang]) = {
-  <script type="text/javascript">
+@helper.tbInputText( field = dataForm("search_2"), args = 'placeholder
+-> "Code", 'class -> "search-query", '_label -> "Code" )(handler =
+handler) } } @scripts(handler: FieldConstructor, lang : Lang =
+implicitly[Lang]) = {
+<script type="text/javascript">
 $(document).ready( function () {
     var myDatatable = $('#table_id').dataTable({
          "sDom":"Trti",
@@ -166,10 +156,10 @@ $(document).ready( function () {
 @helper.inputText(field = dataForm("code"), 'class -> "input-medium")(handler = handler, lang)
 </div>
 </script>
-}
-
-@search("Admin applications", "applications", scripts(implicitField))(searchForm(implicitField)){
-	<form class="form-inline">
-		<table id="table_id" class="table table-bordered table-condensed table-hover"></table>   
-	</form> 
+} @search("Admin applications", "applications",
+scripts(implicitField))(searchForm(implicitField)){
+<form class="form-inline">
+	<table id="table_id"
+		class="table table-bordered table-condensed table-hover"></table>
+</form>
 }

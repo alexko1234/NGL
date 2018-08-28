@@ -1,17 +1,15 @@
 /*custom bootstrap*/
-
 body {
-	padding-top:50px;
+	padding-top: 50px;
 }
 
-.list-group-item{
+.list-group-item {
 	padding: 7px 10px;
 }
 
-.panel-heading, .panel-footer{
+.panel-heading,.panel-footer {
 	padding: 10px 10px;
 }
-
 
 input[type="radio"] {
 	margin: 1px 0 0;
@@ -22,42 +20,42 @@ input[type="checkbox"] {
 }
 
 .input-group-btn .btn.btn-default {
-	height:29px; /*compliance with form-control where height:29px*/
+	height: 29px; /*compliance with form-control where height:29px*/
 }
 
 /*additionnal class*/
-.text-overflow{
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.text-overflow {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
-.plates > .alert {
-	margin-bottom:0px;
+.plates>.alert {
+	margin-bottom: 0px;
 }
 
 .margin-bottom-5 {
-	margin-bottom:5px;
+	margin-bottom: 5px;
 }
 
 .margin-bottom-5:last-child {
-	margin-bottom:0px;
+	margin-bottom: 0px;
 }
 
 .margin-bottom-7 {
-	margin-bottom:7px;
+	margin-bottom: 7px;
 }
-	
+
 .margin-bottom-7:last-child {
-	margin-bottom:0px;
+	margin-bottom: 0px;
 }
 
-.draggable{
-	 cursor:move;
+.draggable {
+	cursor: move;
 }
 
-.drag, .over{
-	  background-color: #f1f1f1;
+.drag,.over {
+	background-color: #f1f1f1;
 }
 
 /*list-resize directive*/
@@ -74,25 +72,24 @@ input[type="checkbox"] {
 	background: transparent
 }
 
-.scanner legend{
-	margin-bottom:0px;
+.scanner legend {
+	margin-bottom: 0px;
 }
 
-.scanner .form-group{
-	margin:0px;
+.scanner .form-group {
+	margin: 0px;
 }
 
-.scanner .input-sm{
+.scanner .input-sm {
 	height: 14px;
-	font-size:8px;
+	font-size: 8px;
 }
 
 .form-group.required .control-label:after {
-  content:" *";
-  color:red;
+	content: " *";
+	color: red;
 }
 
 .form-group.content .control-label::first-letter {
-  text-decoration: underline;
+	text-decoration: underline;
 }
-
