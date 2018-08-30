@@ -1,10 +1,10 @@
 @()
 
 
-<h3>@Messages("readsets.treatments.firstBaseReport.topSurface")</h3>
+<h3>@Messages("readsets.treatments.firstBaseReport.topSurface")</h3>	
 <div class="row">
 	<div class="col-md-12 col-lg-12">
-		<table class="table table-condensed table-hover table-bordered">
+		 <table class="table table-condensed table-hover table-bordered">
 			<thead>
 				<tr>
 					<th>#</th>
@@ -20,8 +20,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr
-					ng-repeat="value in readsets.treatments[treatments.getTreatment().code].clusterDensityTop.value">
+				<tr ng-repeat="value in readsets.treatments[treatments.getTreatment().code].clusterDensityTop.value">
 					<td>{{$index + 1}}</td>
 					<td>{{value.clusterDensityTop}}</td>
 					<td>{{value.intensityATop}}</td>
@@ -32,7 +31,7 @@
 					<td>{{value.focusScoreCTop}}</td>
 					<td>{{value.focusScoreGTop}}</td>
 					<td>{{value.focusScoreTTop}}</td>
-				</tr>
+				</tr>	
 			</tbody>
 		</table>
 	</div>
@@ -56,8 +55,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr
-					ng-repeat="value in readsets.treatments[treatments.getTreatment().code].clusterDensityTop.value">
+				<tr ng-repeat="value in readsets.treatments[treatments.getTreatment().code].clusterDensityTop.value">
 					<td>{{ $index + 1 }}</td>
 					<td>{{value.clusterDensityBottom}}</td>
 					<td>{{value.intensityABottom}}</td>
@@ -68,8 +66,8 @@
 					<td>{{value.focusScoreCBottom}}</td>
 					<td>{{value.focusScoreGBottom}}</td>
 					<td>{{value.focusScoreTBottom}}</td>
-				</tr>
+					</tr>			
 			</tbody>
-		</table>
+		</table>	
 	</div>
 </div>

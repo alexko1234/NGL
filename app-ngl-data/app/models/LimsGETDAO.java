@@ -526,7 +526,7 @@ public HashMap<String, PropertyValue> getCaracteristiquesForContainer(int barcod
 
 	public List<Project> findProjectToCreate(final ContextValidation contextError) throws SQLException, DAOException {
 
-		String sql_query = "SELECT DISTINCT prt.projectid, prt.ident, prt.name, prt.description, prt.avancement, prt.creationdate, prt.project_level, prt.in_france_genomique, prt.intitule_programme, prt.name_contact, prt.tel_contact, prt.type_projet, ppl.ident as user FROM project prt inner join people ppl on prt.last_modification_by = ppl.userid where avancement != 'Terminé' ORDER BY prt.ident ASC";
+		String sql_query = "SELECT DISTINCT * FROM project";
 		
 		List<Project> results = this.jdbcTemplate.query(sql_query,new Object[]{} ,new RowMapper<Project>() {
 
@@ -581,8 +581,7 @@ public HashMap<String, PropertyValue> getCaracteristiquesForContainer(int barcod
 //					project.state.code = "IP";	
 //				}
 
-				project.state.user = rs.getString("user");
-//				project.state.user = InstanceHelpers.getUser();
+				project.state.user = InstanceHelpers.getUser();
 				project.state.date = new Date();
 
 				project.bioinformaticParameters = new BioinformaticParameters();

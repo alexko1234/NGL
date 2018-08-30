@@ -1,6 +1,9 @@
-@this(xtotubes :
-views.html.experiments.manytoone.defaults.partials.xtotubes) @()
+@this(xtotubes : views.html.experiments.manytoone.defaults.partials.xtotubes)
+
+@()
 
 <div ng-controller="XToTubesCtrl">
-	<div ng-controller="CNSXToTubesCtrl">@xtotubes()</div>
+	<div ng-controller="CNSXToTubesCtrl">
+		@xtotubes()
+	</div>
 </div>

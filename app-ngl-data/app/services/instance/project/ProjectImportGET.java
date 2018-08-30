@@ -1,7 +1,6 @@
 package services.instance.project;
 
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 
 import models.laboratory.project.instance.Project;
@@ -31,12 +30,12 @@ public class ProjectImportGET extends AbstractImportDataGET{
 	public static void createProjet(ContextValidation contextValidation) throws SQLException, DAOException{
 		Logger.debug("ProjectImportGET - createProjet : Récupération des projets");	
 		List<Project> projects = limsServices.findProjectToCreate(contextValidation) ;
-				
+		
 		for(Project project:projects){
-//			Logger.debug("ProjectImportGET - createProjet : Traitement du projet " + project.code);	
+			Logger.debug("ProjectImportGET - createProjet : Traitement du projet " + project.code);	
 			if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, project.code)){
 				MongoDBDAO.deleteByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, project.code);
-//					Logger.debug("Project to create :"+project.code + " " + project.state.user);				
+				Logger.debug("Project to create :"+project.code);
 			}
 			
 			
@@ -44,7 +43,6 @@ public class ProjectImportGET extends AbstractImportDataGET{
 				InstanceHelpers.save(InstanceConstants.PROJECT_COLL_NAME,project,contextValidation);
 			}
 		}
-		Logger.debug(projects.size() + " projets to import");
 	
 		//InstanceHelpers.save(InstanceConstants.PROJECT_COLL_NAME,projects,contextValidation);
 		

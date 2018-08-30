@@ -92,7 +92,7 @@
 ////		 		Logger.info("NGL reporting has started");
 ////				try {
 ////					
-////					String institute=configuration().getString("institute");
+////					String institute=play.Play.application().configuration().getString("institute");
 ////					Logger.info("institute for the reporting : "+ institute);
 ////				
 ////					if (institute.equals("CNS")) {
@@ -113,8 +113,6 @@
 
 import javax.inject.Inject;
 
-import static fr.cea.ig.play.IGGlobals.configuration;
-
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 
@@ -122,20 +120,18 @@ import fr.cea.ig.play.migration.NGLContext;
 import rules.services.RulesServices6;
 import services.instance.ImportDataCNG;
 import services.instance.ImportDataCNS;
-import services.instance.ImportDataGET;
 import services.reporting.RunReportingCNS;
 
 // TODO: use proper polymorphism instead of key test
 public class Global { // extends GlobalSettings {
 	
-	private static final play.Logger.ALogger logger = play.Logger.of("application");
+	private static final play.Logger.ALogger logger = play.Logger.of(Global.class);
 	
 	private NGLContext ctx;
 	
 	@Inject
 	public Global (NGLContext ctx) {
 		this.ctx = ctx;
-		logger.info("Global NGL has started");
 	}
 	// @Override
 	public void onStart(play.Application app) {
@@ -152,7 +148,7 @@ public class Global { // extends GlobalSettings {
 
 		importData();
 
-//		generateReporting();
+		generateReporting();
 
 	}
 
@@ -196,17 +192,12 @@ public class Global { // extends GlobalSettings {
 					new ImportDataCNG(ctx);
 				} else if ("CNS".equals(institute)) {
 					new ImportDataCNS(ctx);
-				}else 
-				if ("GET".equals(institute)) {
-//					logger.info("Import institute ImportDataGET");
-					new ImportDataGET(ctx);
 				} else {
 					throw new RuntimeException("La valeur de l'attribut import.institute dans application.conf n'a pas d'implementation");
 				}
 
 			} catch(Exception e){
-				logger.error("importData error " + e.getMessage());
-				throw new RuntimeException("Erreur rencontrée lors de l'import des données",e);
+				throw new RuntimeException("L'attribut import.institute dans application.conf n'est pas renseigné",e);
 			}
 
 		} else { 
@@ -223,7 +214,7 @@ public class Global { // extends GlobalSettings {
 			logger.info("NGL reporting has started");
 			try {
 
-				// String institute=configuration().getString("institute");
+				// String institute=play.Play.application().configuration().getString("institute");
 				String institute = ctx.config().getString("institute");
 				logger.info("institute for the reporting : "+ institute);
 

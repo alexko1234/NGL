@@ -7,10 +7,9 @@
                        -sciclone: 96-well-plate => 96-well-plate
 
 -->
-<div class="col-md-12 col-lg-12"
-	ng-controller="WgChromiumLibraryPrepCtrl">
+<div class="col-md-12 col-lg-12" ng-controller="WgChromiumLibraryPrepCtrl" >
 
-	<!--  13/03/2017----    suite a reunion NE PAS ENCORE mettre en production le mode sciclone/plaque
+<!--  13/03/2017----    suite a reunion NE PAS ENCORE mettre en production le mode sciclone/plaque
   <div ng-if ="( experiment.instrument.outContainerSupportCategoryCode  !== 'tube')" >
   <form class="form-inline" role="form">
   	  -- premiere ligne --
@@ -76,12 +75,12 @@
   </form>
   </div>	
   -->
-
-	<!-- juste pour espacement tant que le code cidessus n'est pas activé -->
-	<div class="row margin-bottom-4"></div>
-
-
-	<div class="row">
-		<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data"></div>
-	</div>
+  
+  <!-- juste pour espacement tant que le code cidessus n'est pas activé -->
+  <div class="row margin-bottom-4"></div>
+  
+   
+  <div class="row">
+	<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data"></div>						
+  </div>
 </div>

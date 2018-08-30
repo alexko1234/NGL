@@ -3,9 +3,7 @@ package services.instance.container;
 import java.sql.SQLException;
 import java.util.Calendar;
 
-
 import fr.cea.ig.play.migration.NGLContext;
-//import fr.cea.ig.play.migration.NGLContext;
 import models.utils.dao.DAOException;
 import scala.concurrent.duration.FiniteDuration;
 import play.Logger;
@@ -47,10 +45,10 @@ public class TubeImportGET extends ContainerImportGET {
                 +								"INNER join trace_operation top on top.operation_id = tolo.operation_id "
                 +								"INNER join trace_operation_type topt on topt.operation_type_id = top.operation_type_id "
                 +								"WHERE topt.nom_operation='Pooling' )"
-//				+ "AND (tob.object_id NOT IN (SELECT object_id FROM trace_caracteristique_link_object tclo "
-//				+ 									"INNER JOIN trace_caracteristique tc on tclo.caracteristique_id=tc.caracteristique_id "
-//				+ 										"WHERE tc.caracteristique_type_id = "+play.Play.application().configuration().getString("caracteristicstypeEsitoul.DateImportNgl")+" "
-//				+ 										"AND tclo.caracteristique_id != "+play.Play.application().configuration().getString("caracteristiqueEsitoulDateImportNglIndefini")+")) "
+				+ "AND (tob.object_id NOT IN (SELECT object_id FROM trace_caracteristique_link_object tclo "
+				+ 									"INNER JOIN trace_caracteristique tc on tclo.caracteristique_id=tc.caracteristique_id "
+				+ 										"WHERE tc.caracteristique_type_id = "+play.Play.application().configuration().getString("caracteristicstypeEsitoul.DateImportNgl")+" "
+				+ 										"AND tclo.caracteristique_id != "+play.Play.application().configuration().getString("caracteristiqueEsitoulDateImportNglIndefini")+")) "
 				//Import_dans_NGL is TRUE
 				+ "AND tclo.caracteristique_id ="+ play.Play.application().configuration().getString("caracteristiqueEsitoulImportDansNglVrai"); //vrai 
 			Logger.debug("TubeImportGET : " + SQLContainer);

@@ -1,5 +1,6 @@
 @media print {
+
 	@page {
-		size: landscape;
+	  size: landscape;
 	}
 }

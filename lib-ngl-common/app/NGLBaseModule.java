@@ -128,7 +128,6 @@ class ConfigChecker {
 			String configFile = System.getProperty("config.file");
 			// This should not happen except if configuration resource is used but this is
 			// not NGL strategy.
-//			logger.error("System.getProperties() " + System.getProperties().toString());
 			if (configFile == null)
 				throw new IOException("config file is not defined");
 			logger.debug("*****************************************************");

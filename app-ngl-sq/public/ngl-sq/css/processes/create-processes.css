@@ -3,20 +3,19 @@
 /* MAIN */
 
 /*SUPPORT AND CONTAINER TABLE*/
-.SelectContainerProcess .datatable .btn-toolbar>.btn-group>.btn:last-child:not
-	(:first-child )[ng-click="swithView()"] {
+
+.SelectContainerProcess .datatable .btn-toolbar>.btn-group>.btn:last-child:not(:first-child)[ng-click="swithView()"]{
 	margin-left: 5px;
-	width: 180px;
+	width: 180px;	
 	background: #FFF;
 	color: #333;
-	font-weight: lighter;
+	font-weight: lighter;	
 }
 
-.SelectContainerProcess .datatable .btn-toolbar>.btn-group>.btn:first-child:not
-	(:last-child ):not (.dropdown-toggle )[ng-click="save()"] {
+.SelectContainerProcess .datatable .btn-toolbar>.btn-group>.btn:first-child:not(:last-child):not(.dropdown-toggle)[ng-click="save()"]{
 	border-radius: 4px;
 }
 
-.switchLabel {
+.switchLabel{
 	font-weight: lighter;
 }
