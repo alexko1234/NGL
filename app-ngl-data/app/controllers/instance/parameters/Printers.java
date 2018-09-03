@@ -32,32 +32,11 @@ public class Printers extends Controller { // extends NGLBaseController { //Comm
 		ContextValidation ctx = new ContextValidation(Constants.NGL_DATA_USER);
 		ctx.setCreationMode();
 		try {
-//<<<<<<< HEAD
-////			if (play.Play.application().configuration().getString("institute").equals("CNS")){
-////				PrinterCNS.main(ctx);
-////			}else if(play.Play.application().configuration().getString("institute").equals("CNG")){
-////			}else
 			if(play.Play.application().configuration().getString("institute").equals("GET")){
 				
 			}else{
 				logger.error("You need to specify only one institute ! Now, it's "+ play.Play.application().configuration().getString("institute"));
-//=======
-//			String institute = configuration().getString("institute");
-////			if (play.Play.application().configuration().getString("institute").equals("CNS")) {
-////				PrinterCNS.main(ctx);
-////			} else if(play.Play.application().configuration().getString("institute").equals("CNG")) {
-////				
-////			} else if(play.Play.application().configuration().getString("institute").equals("TEST")) {
-////				
-////			} else {
-////				Logger.error("You need to specify only one institute ! Now, it's "+ play.Play.application().configuration().getString("institute"));
-////			}
-//			switch (institute) {
-//			case "CNS"  : PrinterCNS.main(ctx); break; 
-//			case "CNG"  : break;
-//			case "TEST" : break;
-//			default     : logger.error("You need to specify only one institute ! Now, it's " + institute);
-//>>>>>>> V2.0.2
+
 			}
 			if (ctx.hasErrors()) {
 				ctx.displayErrors(logger);

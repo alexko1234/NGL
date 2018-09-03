@@ -28,7 +28,7 @@ public class ProjectImportGET extends AbstractImportDataGET{
 
 	
 	public static void createProjet(ContextValidation contextValidation) throws SQLException, DAOException{
-		Logger.debug("ProjectImportGET - createProjet : Récupération des projets");	
+//		Logger.debug("ProjectImportGET - createProjet : Récupération des projets");	
 		List<Project> projects = limsServices.findProjectToCreate(contextValidation) ;
 		
 		for(Project project:projects){
@@ -44,6 +44,8 @@ public class ProjectImportGET extends AbstractImportDataGET{
 			}
 		}
 	
+		Logger.debug(projects.size() + " projets to import");
+		
 		//InstanceHelpers.save(InstanceConstants.PROJECT_COLL_NAME,projects,contextValidation);
 		
 	}
