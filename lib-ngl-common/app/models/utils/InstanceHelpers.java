@@ -62,7 +62,20 @@ public class InstanceHelpers {
 	}
 	
 	public static String getUser() {
-		return fr.cea.ig.authentication.Authentication.getUser();
+//		v2.0.2
+//		return fr.cea.ig.authentication.Authentication.getUser();
+		
+//		v1.6 modified
+		String user;
+		try {
+			user = fr.cea.ig.authentication.Authentication.getUser();
+			if (user == null) {
+				user = "ngl";
+			}
+		} catch (RuntimeException e) {
+			user = "ngl";
+		}
+		return user;
 	}
 
 //	@Deprecated
