@@ -51,7 +51,9 @@
 										***@@for(co <- cosbis.toList.sortWith(_.sampleCode < _.sampleCode)){@***
 											***@ select-sample-id=@(CsvHelper.contentName(co))@***
 										***@} @***
-										***@lane=@(etm.line) --project-name @(cosbis.toList.head.projectCode) --admin-login CTD
+										***@lane=@(etm.line) --project-name @(cosbis.toList.head.projectCode) --admin-login CTD @***
+										si plus d'une librairie dans le pool
+										***@@if(cosbis.toList.length > 1){--keep all}
 										
 									}
 									
@@ -91,7 +93,9 @@
 											***@select-sample-id=@(CsvHelper.contentName(co)) @***
 										***@}@***
 									***@} @***
-									***@lane=@(etm.line) --project-name @(cos.toList.head.projectCode) --admin-login CTD
+									***@lane=@(etm.line) --project-name @(cos.toList.head.projectCode) --admin-login CTD @***
+									si plus d'une librairie dans le pool
+									***@@if(cos.toList.length > 1){--keep all}
 								
 							}
 							
