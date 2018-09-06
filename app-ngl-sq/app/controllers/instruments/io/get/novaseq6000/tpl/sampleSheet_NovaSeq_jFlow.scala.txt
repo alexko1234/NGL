@@ -68,7 +68,7 @@
 											--type '@if(OutputHelper.getInstrumentProperty(e,"workflow")!="Standard"){
 												1/@(e.inputContainerCodes.size) Flowcell - Lane@(etm.line)'}else{@(e.inputContainerCodes.size)/@(e.inputContainerCodes.size) Flowcell} 
 								actuellement = HiSeq
-								***@--type '1/@(e.inputContainerCodes.size) Flowcell - Lane@(etm.line)' @***
+								***@--type '1/@(e.inputContainerCodes.size) Flowcell @(OutputHelper.getInstrumentProperty(e,"position")) - Lane@(etm.line)' @***
 								***@--species @if(c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cos.toList.head, "species", e)) != null){'@(CsvHelper.getContentProcessProperties(cos.toList.head, "species",e))'}else{'-'} @***
 								***@--description 'Adapter type : @(CsvHelper.getHiseqAdapter(cos.toList.head)) @***
 								si "taille_insert" est renceigné
