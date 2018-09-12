@@ -61,3 +61,22 @@ rule "type sequencage fc-ord catch"
 	    Logger.debug("Type sequencage incorrect");
 	    $contextValidation.addErrors("container",	"error.validationexp.typesequensage", $value,$code);
 end
+/*
+rule "run_name container into fc"
+    @nglSQ( validations )
+	dialect "java"
+	salience 900
+	no-loop
+    when
+	    $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-fc-ordered", $stateCode : state.code, $stateCode!="F")
+	    $atomicTransfert: ManyToOneContainer($inputContainers : inputContainerUseds)
+		$container : InputContainerUsed( $contents : contents,$contents!=null,$contents.size()>1) from $inputContainers
+		$content : Content($code : sampleCode) from $contents
+		$contextValidation:ContextValidation()
+    then
+    	if(!$content.processProperties.containsKey("Run_Name")){
+	    	Logger.debug($code + " dans " + $container.code + " n'a pas de Run_Name");
+	    	$contextValidation.addErrors("content",	"error.validationexp.runName", $code,$container.code);
+	    } 	
+end
+*/
