@@ -61,7 +61,7 @@ rule "type sequencage fc-ord catch"
 	    Logger.debug("Type sequencage incorrect");
 	    $contextValidation.addErrors("container",	"error.validationexp.typesequensage", $value,$code);
 end
-/*
+
 rule "run_name container into fc"
     @nglSQ( validations )
 	dialect "java"
@@ -79,4 +79,3 @@ rule "run_name container into fc"
 	    	$contextValidation.addErrors("content",	"error.validationexp.runName", $code,$container.code);
 	    } 	
 end
-*/

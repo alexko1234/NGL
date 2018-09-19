@@ -1,6 +1,7 @@
 package services.instance.container;
 
 
+import java.awt.geom.Area;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.sql.DataSource;
 
@@ -42,6 +44,7 @@ import controllers.MongoCommonController;
 import play.Logger;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataGET;
+import services.instance.ImportDataUtilGET;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.migration.NGLContext;
@@ -61,7 +64,8 @@ public abstract class ContainerImportGET extends AbstractImportDataGET {
 		Sample newSample =null; //sample in Mongo
 		List<String> refLibraryProjectCodes = null; // list of projects from reference library in e-SiToul
 		String rootKeyName=null;
-			
+		Set<String> libNames = new HashSet<>();	//
+		
 			//récuperer des contents
 			List<Content> contents;
 			Logger.debug("ContainerImportGET - saveSampleFromContainer - container.code =  " + container.code);
@@ -77,16 +81,19 @@ public abstract class ContainerImportGET extends AbstractImportDataGET {
 			}	
 			
 			Logger.debug("ContainerImportGET - saveSampleFromContainer - " + contents.size());
-							
+						
 			for(Content smplUsd : contents){
+				//Logger.debug("FOR " + smplUsd.sampleCode + " - " + smplUsd.properties.get("Nom_echantillon_collaborateur").value);
 				//si l'un des contents n'a pas tout les infos requis - stop
 				if(smplUsd.properties.isEmpty()){
 					Logger.error("Container " + container.code + " n'a pas été importé");
 					return false;
-				//si l'index non renceigné - assigner valeur "NoIndex"
-				}else if(smplUsd.properties.get("Nom_echantillon_collaborateur") == null){
-					Logger.error("Container " + container.code + " n'a pas été importé, car " + smplUsd.sampleCode +" n'a pas de Nom_echantillon_collaborateur");
+				//si le Nom_echantillon_collaborateur non renceigné - stop
+				}else if(smplUsd.properties.get("Nom_echantillon_collaborateur") == null || ImportDataUtilGET.Checkname((String) smplUsd.properties.get("Nom_echantillon_collaborateur").value)){
+					Logger.error("Container " + container.code + " n'a pas été importé, car " + smplUsd.sampleCode +" n'a pas de Nom_echantillon_collaborateur ou celui-ci contien les caracteres non autorisés");
 					return false;
+				}else if(!libNames.add((String) smplUsd.properties.get("Nom_echantillon_collaborateur").value)){
+					Logger.error("Container " + container.code + " n'a pas été importé, car le nom " + smplUsd.properties.get("Nom_echantillon_collaborateur").value +" est en double");
 				//si l'index non renceigné - assigner valeur "NoIndex"
 				}else if(smplUsd.properties.get("tag") == null){
 					smplUsd.properties.put("tag", new PropertySingleValue("NoIndex"));
@@ -122,7 +129,7 @@ public abstract class ContainerImportGET extends AbstractImportDataGET {
 						newSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, sampleUsed.sampleCode);
 						
 						Logger.debug("ContainerImportGET - saveSampleFromContainer - "+ newSample.referenceCollab);
-						sampleUsed.referenceCollab = newSample.referenceCollab;
+						sampleUsed.referenceCollab = (String) sampleUsed.properties.get("Nom_echantillon_collaborateur").value;
 						
 						/*
 						 * check if container to update
@@ -148,8 +155,7 @@ public abstract class ContainerImportGET extends AbstractImportDataGET {
 					/* Error : No sample, remove container from list to create */
 					if(newSample==null){
 //						containers.remove(container);
-						Logger.error("Container " + container.code + " n'a pas été importé. Sample "
-								+ newSample.referenceCollab + " na pas pu être créer");
+						Logger.error("Container " + container.code + " n'a pas été importé. Sample " + newSample.referenceCollab + " na pas pu être créer");
 						contextError.addErrors("sample","error.codeNotExist", sampleUsed.sampleCode);
 						return false;
 					}else{

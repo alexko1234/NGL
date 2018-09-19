@@ -57,16 +57,17 @@ public class ImportDataGET{
 //			Logger.error(e.getMessage(), e);
 //		}
 
-//		new ProjectImportGET(Duration.create(1,TimeUnit.SECONDS),Duration.create(24,TimeUnit.HOURS), ctx); 
+		new ProjectImportGET(Duration.create(1,TimeUnit.SECONDS),Duration.create(24,TimeUnit.HOURS), ctx); 
 //		//Import Index
 		new IndexImportGET(Duration.create(1,TimeUnit.SECONDS),Duration.create(24,TimeUnit.HOURS), ctx); 
-// 
-//		//Update/Create Container
-//		new TubeImportGET(Duration.create(3,TimeUnit.SECONDS),Duration.create(60,TimeUnit.MINUTES),ctx); 
-//		//new SampleImportGET(Duration.create(10,TimeUnit.SECONDS),Duration.create(60,TimeUnit.MINUTES));
-//		new puitsPlaqueImportGET(Duration.create(7,TimeUnit.SECONDS),Duration.create(60,TimeUnit.MINUTES), ctx);
-//		new PoolImportGET(Duration.create(10,TimeUnit.SECONDS),Duration.create(60,TimeUnit.MINUTES),ctx);
-//		new UserImportGET(Duration.create(50,TimeUnit.SECONDS),Duration.create(24,TimeUnit.MINUTES), ctx);
+		
+		new UserImportGET(Duration.create(1,TimeUnit.SECONDS),Duration.create(24,TimeUnit.HOURS), ctx);
+ 
+		//Update/Create Container
+		new TubeImportGET(Duration.create(5,TimeUnit.SECONDS),Duration.create(15,TimeUnit.MINUTES),ctx); 
+//		//new SampleImportGET(Duration.create(10,TimeUnit.SECONDS),Duration.create(15,TimeUnit.MINUTES));
+		new puitsPlaqueImportGET(Duration.create(10,TimeUnit.SECONDS),Duration.create(15,TimeUnit.MINUTES), ctx);
+		new PoolImportGET(Duration.create(15,TimeUnit.SECONDS),Duration.create(15,TimeUnit.MINUTES),ctx);
 	}
 
 }

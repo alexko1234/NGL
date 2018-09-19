@@ -58,7 +58,6 @@ rule "check run-name"
 	then
 		Logger.error($process.sampleOnInputContainer.containerCode + " Run_Name : " + $process.properties.get("Run_Name"));
 		if(null == $process.properties.get("Run_Name")){
-			Logger.error($process.sampleOnInputContainer.containerCode + " n'a pas de  Run_Name : " + $process.properties.get("Run_Name"));
 			$contextValidation.addErrors("process",	"error.validationexp.runName", $process.sampleOnInputContainer.sampleCode, $process.sampleOnInputContainer.containerCode);
 		}
 end		
