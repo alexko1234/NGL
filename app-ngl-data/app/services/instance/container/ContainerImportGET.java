@@ -86,12 +86,13 @@ public abstract class ContainerImportGET extends AbstractImportDataGET {
 				//Logger.debug("FOR " + smplUsd.sampleCode + " - " + smplUsd.properties.get("Nom_echantillon_collaborateur").value);
 				//si l'un des contents n'a pas tout les infos requis - stop
 				if(smplUsd.properties.isEmpty()){
-					Logger.error("Container " + container.code + " n'a pas été importé");
+					Logger.error("Container " + container.code + " n'a pas été importé, car il manque des propriétés de "  + container.code);
 					return false;
-				//si le Nom_echantillon_collaborateur non renceigné - stop
+				//si le Nom_echantillon_collaborateur non renceigné ou n'est pas conforme - stop
 				}else if(smplUsd.properties.get("Nom_echantillon_collaborateur") == null || ImportDataUtilGET.Checkname((String) smplUsd.properties.get("Nom_echantillon_collaborateur").value)){
 					Logger.error("Container " + container.code + " n'a pas été importé, car " + smplUsd.sampleCode +" n'a pas de Nom_echantillon_collaborateur ou celui-ci contien les caracteres non autorisés");
 					return false;
+				//si le Nom_echantillon_collaborateur est en double - stop
 				}else if(!libNames.add((String) smplUsd.properties.get("Nom_echantillon_collaborateur").value)){
 					Logger.error("Container " + container.code + " n'a pas été importé, car le nom " + smplUsd.properties.get("Nom_echantillon_collaborateur").value +" est en double");
 				//si l'index non renceigné - assigner valeur "NoIndex"
@@ -305,11 +306,11 @@ public abstract class ContainerImportGET extends AbstractImportDataGET {
  		* et récuperer son id
  		*/
 		Integer characteristicDateImportNGLid = null;
-		if(! containers.isEmpty()){
-			//if container list don't empty get|create characteristic id to associate
-			Logger.debug("Before  createCaracteristicDateImportNGL " + play.Play.application().configuration().getString("caracteristicstypeEsitoul.DateImportNgl"));
-			characteristicDateImportNGLid = limsServices.createCaracteristicDateImportNGL(Integer.parseInt(play.Play.application().configuration().getString("caracteristicstypeEsitoul.DateImportNgl")));
-		}
+//		if(! containers.isEmpty()){
+//			//if container list don't empty get|create characteristic id to associate
+//			Logger.debug("Before  createCaracteristicDateImportNGL " + play.Play.application().configuration().getString("caracteristicstypeEsitoul.DateImportNgl"));
+//			characteristicDateImportNGLid = limsServices.createCaracteristicDateImportNGL(Integer.parseInt(play.Play.application().configuration().getString("caracteristicstypeEsitoul.DateImportNgl")));
+//		}
 		
 		for(Container container:containers){
 			//Logger.debug("Container :"+container.code+ "nb sample code"+container.sampleCodes.size());
@@ -324,14 +325,14 @@ public abstract class ContainerImportGET extends AbstractImportDataGET {
 			* si container a été bien créé
 			* lier characteristicDateImportNGL au container		
 			*/		
-			if(result!=null){
-				/* container model in NGL don't keep an barcodeid from e-sitoul barre-code 
-				 * so, barcode string is used for create new link with characteristic Date_Import_NGL
-				 */
-				Logger.debug("BARCODE "+ container.code +" caracteristicDateImportNGL : "+ characteristicDateImportNGLid);
-				limsServices.linkBarcodeToCaracteristics3(container.code, characteristicDateImportNGLid);
-				limsServices.deletSameLinkCaracteristics(container.code, characteristicDateImportNGLid);
-			}
+//			if(result!=null){
+//				/* container model in NGL don't keep an barcodeid from e-sitoul barre-code 
+//				 * so, barcode string is used for create new link with characteristic Date_Import_NGL
+//				 */
+//				Logger.debug("BARCODE "+ container.code +" caracteristicDateImportNGL : "+ characteristicDateImportNGLid);
+//				limsServices.linkBarcodeToCaracteristics3(container.code, characteristicDateImportNGLid);
+//				limsServices.deletSameLinkCaracteristics(container.code, characteristicDateImportNGLid);
+//			}
 			
 			contextError.removeKeyFromRootKeyName(rootKeyName);
 		}
