@@ -275,7 +275,8 @@ public class CsvHelper {
 		if(content.referenceCollab!=null){
 			return checkName(content.referenceCollab);
 		}else{
-			return checkName(OutputHelper.getContentProperty(content, "Nom_pool_sequencage"));
+			return checkName(OutputHelper.getContentProperty(content, "Nom_echantillon_collaborateur"));
+//			return checkName(OutputHelper.getContentProperty(content, "Nom_pool_sequencage"));
 		}	
 	}
 }
