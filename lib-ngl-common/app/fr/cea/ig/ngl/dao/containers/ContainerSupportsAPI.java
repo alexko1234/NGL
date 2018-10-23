@@ -129,6 +129,7 @@ public class ContainerSupportsAPI extends GenericAPI<ContainerSupportsDAO, Conta
 	}
 	
 	public ContainerSupport updateState(String code, State state, String currentUser) throws APIException, APIValidationException {
+//		logger.debug("ContainerSupportAPI updateState currentUser " + currentUser);
 		ContainerSupport containerSupportInDb = get(code);
 		if(containerSupportInDb == null) {
 			throw new APIException("Container support with code " + code + " not exist");

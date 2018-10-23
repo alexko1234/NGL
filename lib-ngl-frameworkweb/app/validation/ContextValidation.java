@@ -16,6 +16,7 @@ import play.Logger.ALogger;
 import play.data.Form;
 import play.data.validation.ValidationError;
 
+//import play.Logger;
 
 // TODO: change name to ValidationContext
 
@@ -92,6 +93,7 @@ public class ContextValidation {
 	 * @return user running the validation. 
 	 */
 	public String getUser() {
+//		Logger.debug("ContextValidation.getUser() " + user);
 		return user;
 	}
 

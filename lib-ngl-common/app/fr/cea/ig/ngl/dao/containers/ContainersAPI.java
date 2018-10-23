@@ -18,6 +18,7 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.utils.InstanceHelpers;
 import play.Logger.ALogger;
+//import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.container.instance.ContainerValidationHelper;
@@ -159,6 +160,7 @@ public class ContainersAPI extends GenericAPI<ContainersDAO, Container> {
 	}
 	
 	public Container updateState(String code, State state, String currentUser) throws APIException, APIValidationException {
+//		Logger.debug("ContainersAPI updateState currentUser - " + currentUser); 
 		Container containerInDb = get(code);
 		if(containerInDb == null) {
 			throw new APIException("Container with code " + code + " not exist");

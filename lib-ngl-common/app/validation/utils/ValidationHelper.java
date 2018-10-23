@@ -813,6 +813,7 @@ public class ValidationHelper {
 	 */
 	// More like a valueExists or something like taht.
 	public static boolean required(ContextValidation contextValidation, Object object, String property) {
+//		Logger.debug("ValidationHelper.required() " + " property - " + property );
 		boolean isValid = true;
 		if (object == null) {
 			isValid = false;
@@ -833,6 +834,11 @@ public class ValidationHelper {
         if (!isValid) {
         	contextValidation.addErrors(property, ERROR_REQUIRED_MSG, object);
         }        
+//        if (object != null) {
+//        	Logger.debug("ValidationHelper.required() obj - " + object.toString() + " return isValid " + isValid);
+//        }else{
+//        	Logger.debug("ValidationHelper.required() obj - null");
+//        }
         return isValid;		
 	}
 	

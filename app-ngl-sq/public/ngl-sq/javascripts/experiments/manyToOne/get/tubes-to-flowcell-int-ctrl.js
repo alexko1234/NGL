@@ -248,7 +248,7 @@ angular.module('home').controller('GETTubesToFlowcellIntCtrl',['$scope', '$parse
 		$scope.updateConcentration($scope.experiment);
 		console.log("apres updateConcentration");
 		$scope.$emit('childSaved', callbackFunction);
-		addReagents();
+//		addReagents();
 	});
 
 	var copyFlowcellCodeToDT = function(datatable){
@@ -334,77 +334,24 @@ angular.module('home').controller('GETTubesToFlowcellIntCtrl',['$scope', '$parse
 	};
 	
 	
-//add reagents into new experiment
-	var addReagents = function() {
-//TODO	
-/*
-		if($parse('experiment.state.code')($scope) === "N" && $scope.experiment.reagents.length === 0 && $parse('experiment.instrumentProperties.sequencingProgramType')($scope)){
-			 var lectureType = $scope.experiment.instrumentProperties.sequencingProgramType.value;
-	//		 console.log("Type lectures : " + JSON.stringify($scope.experiment.instrumentProperties));
-			 console.log("Exp.state : " + $parse('experiment.state.code')($scope) + ", type lecture : " + lectureType);
-			 if (lectureType === "PE"){
-				 var ReagentUseds = [
-				                     {
-				                         "kitCatalogCode": "24SA5FUL0",
-				                         "boxCatalogCode": "24SB1MUK4",
-				                         "reagentCatalogCode": "24SB2EOEC" 
-				                      },
-				                       {
-				                         "kitCatalogCode": "24SA5FUL0",
-				                         "boxCatalogCode": "24SC2HEKT" 
-				                      },
-				                       {
-				                         "kitCatalogCode": "24SA5FUL0",
-				                         "boxCatalogCode": "24SC2JW11" 
-				                      },
-				                      {
-				                          "kitCatalogCode": "26K91I1IF",
-				                          "boxCatalogCode": "26K91I25Z" 
-				                       } 
-				                    ];
-				 
-			 }
-			 else if(lectureType === "SR"){
-				 var ReagentUseds = [
-				                  {
-			                         "kitCatalogCode": "24SC16VM8",
-			                         "boxCatalogCode": "24SC19ECW",
-			                         "reagentCatalogCode": "24SC1VKL2" 
-			                      },
-			                       {
-			                         "kitCatalogCode": "24SC16VM8",
-			                         "boxCatalogCode": "24SC1F18X" 
-			                      },
-			                       {
-			                         "kitCatalogCode": "24SC16VM8",
-			                         "boxCatalogCode": "24SC1HQNY" 
-			                      },
-			                      {
-			                          "kitCatalogCode": "26K91I1IF",
-			                          "boxCatalogCode": "26K91I25Z" 
-			                       } 
-			                    ];
-			 }
-			 
-			 $scope.experiment.reagents = ReagentUseds;
-			 $scope.$emit('askRefreshReagents');
-		 }
-	*/
-    }
-	
-	
 	$scope.$on('refresh', function(e) {
-		console.log("call event refresh");
+		console.log("call event refresh 1");
 		
 		var dtConfig = $scope.atmService.data.$atmToSingleDatatable.data.getConfig();
+//		console.log("call event refresh 2");
 
 		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
+//		console.log("call event refresh 3");
 		dtConfig.edit.byDefault = false;
+//		console.log("call event refresh 4");
 		$scope.atmService.data.$atmToSingleDatatable.data.setConfig(dtConfig);
 //		$scope.atmService.viewToExperiment($scope.experiment);
+//		console.log("call event refresh 5");
 		 
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
+//		console.log("call event refresh 6");
 		$scope.$emit('viewRefeshed');
+//		console.log("call event refresh 7");
 	});
 	
 	
@@ -534,32 +481,32 @@ angular.module('home').controller('GETTubesToFlowcellIntCtrl',['$scope', '$parse
 
 	
 	var generateSampleSheet = function(){		
-		$scope.fileUtils.generateSampleSheet("":"");
-//		$scope.messages.clear();
-//		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
-//		.success(function(data, status, headers, config) {
-//			var header = headers("Content-disposition");
-//			var filepath = header.split("filename=")[1];
-//			console.log(filepath);
-//			var filename = filepath.split(/\/|\\/);
-//			filename = filename[filename.length-1];
-//			if(data!=null){
-//				$scope.messages.clazz="alert alert-success";
-//				$scope.messages.text=Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath;
-//				$scope.messages.showDetails = false;
-//				$scope.messages.open();	
-//				
-//				var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
-//				saveAs(blob, filename);
-//			}
-//		})
-//		.error(function(data, status, headers, config) {
-//			$scope.messages.clazz = "alert alert-danger";
-//			$scope.messages.text = Messages('experiments.msg.generateSampleSheet.error');
-//			$scope.messages.setDetails(data);
-//			$scope.messages.showDetails = true;
-//			$scope.messages.open();				
-//		});
+		$scope.fileUtils.generateSampleSheet({"":""});
+		$scope.messages.clear();
+		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
+		.success(function(data, status, headers, config) {
+			var header = headers("Content-disposition");
+			var filepath = header.split("filename=")[1];
+			console.log(filepath);
+			var filename = filepath.split(/\/|\\/);
+			filename = filename[filename.length-1];
+			if(data!=null){
+				$scope.messages.clazz="alert alert-success";
+				$scope.messages.text=Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath;
+				$scope.messages.showDetails = false;
+				$scope.messages.open();	
+				
+				var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
+				saveAs(blob, filename);
+			}
+		})
+		.error(function(data, status, headers, config) {
+			$scope.messages.clazz = "alert alert-danger";
+			$scope.messages.text = Messages('experiments.msg.generateSampleSheet.error');
+			$scope.messages.setDetails(data);
+			$scope.messages.showDetails = true;
+			$scope.messages.open();				
+		});
 	};
 
 	$scope.setAdditionnalButtons([{

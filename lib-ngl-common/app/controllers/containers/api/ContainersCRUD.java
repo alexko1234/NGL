@@ -291,6 +291,7 @@ public class ContainersCRUD extends AbstractCRUDAPIController<Container> {
 
 	@Permission(value={"writing"})
 	public Result updateStateBatch() {
+//		logger.debug("controllers.containers.api.routes.javascript.Containers.updateStateBatch()");
 		List<Form<ContainerBatchElement>> filledForms =  getFilledFormList(batchElementForm, ContainerBatchElement.class);
 		final String user = getCurrentUser();
 		final Lang lang = Http.Context.Implicit.lang();
@@ -298,6 +299,7 @@ public class ContainersCRUD extends AbstractCRUDAPIController<Container> {
 		.map(filledForm -> {
 			ContainerBatchElement element = filledForm.get();
 			Container container = findContainer(element.data.code);
+//			logger.debug("controllers.containers.api.routes.javascript.Containers.updateStateBatch()" + container.code);
 			if (container != null) {
 				State state = element.data.state;
 				state.date = new Date();
