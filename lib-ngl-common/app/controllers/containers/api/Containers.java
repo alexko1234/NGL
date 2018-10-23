@@ -40,6 +40,7 @@ import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 import play.data.Form;
 import workflows.container.ContWorkflows;
+//import play.Logger;
 
 
 @Historized
@@ -82,6 +83,7 @@ public class Containers extends NGLAPIController<ContainersAPI, ContainersDAO, C
 
 	@Override
 	public Object updateStateImpl(String code, State state) throws APIValidationException, APIException {
+//		Logger.debug("Containers updateStateImpl code - " + code + ", state - " + state.code + ", user - " + getCurrentUser());
 		return api().updateState(code, state, getCurrentUser());
 	}
 	

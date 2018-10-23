@@ -23,6 +23,7 @@ import models.utils.CodeHelper;
 import play.data.Form;
 import play.mvc.Result;
 import workflows.container.ContSupportWorkflows;
+//import play.Logger;
 
 @Historized
 public class ContainerSupports extends NGLAPIController<ContainerSupportsAPI, ContainerSupportsDAO, ContainerSupport> implements StateController {
@@ -37,6 +38,7 @@ public class ContainerSupports extends NGLAPIController<ContainerSupportsAPI, Co
 	
 	@Override
 	public Object updateStateImpl(String code, State state) throws APIValidationException, APIException {
+//		Logger.debug("ContainerSupports.updateStateImpl() " + code);
 		return api().updateState(code, state, getCurrentUser());
 	}
 	

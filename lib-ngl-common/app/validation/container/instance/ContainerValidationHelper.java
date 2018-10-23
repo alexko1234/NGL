@@ -67,9 +67,11 @@ public class ContainerValidationHelper extends CommonValidationHelper {
 	
 	public static void validateNextState(Container container, State nextState, ContextValidation contextValidation) {
 		CommonValidationHelper.validateState(ObjectType.CODE.Container, nextState, contextValidation);
+//		Logger.debug("validateNextState " + container.code + " : " + container.state.code + " -> " + nextState.code);
 		if (!contextValidation.hasErrors() && !nextState.code.equals(container.state.code)) {
 			String nextStateCode    = nextState.code;
 			String currentStateCode = container.state.code;
+//			Logger.debug("validateNextState context - " + contextValidation.hasErrors() + " " + contextValidation.getObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT));
 			String context = (String) contextValidation.getObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT);
 			switch (context) {
 			case "workflow":

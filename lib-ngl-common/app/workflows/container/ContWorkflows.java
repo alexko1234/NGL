@@ -132,13 +132,14 @@ public class ContWorkflows extends Workflows<Container> {
 	@Override
 	public void setState(ContextValidation contextValidation, Container container,
 			State nextState) {
-		
+//		logger.debug("setState " + container.categoryCode + " nextState - " + nextState.code);
 		ContextValidation currentCtxValidation = new ContextValidation(contextValidation.getUser());
 		currentCtxValidation.setContextObjects(contextValidation.getContextObjects());
 		currentCtxValidation.setUpdateMode();
 		
 		ContainerValidationHelper.validateNextState(container, nextState, currentCtxValidation);
 		if (!currentCtxValidation.hasErrors() && !nextState.code.equals(container.state.code)) {
+//			logger.debug("setState if() " + container.code);
 			applyPreStateRules(currentCtxValidation, container, nextState);
 			currentCtxValidation.putObject(FIELD_PREVIOUS_STATE_CODE , container.state.code);
 			currentCtxValidation.putObject(FIELD_STATE_CODE , nextState.code);
@@ -161,7 +162,9 @@ public class ContWorkflows extends Workflows<Container> {
 				applyErrorPostStateRules(currentCtxValidation, container, nextState);
 			}
 		}
+//		logger.debug("setState");
 		if(currentCtxValidation.hasErrors()){
+//			logger.debug("setState error");
 			contextValidation.addErrors(currentCtxValidation.errors);
 		}
 		

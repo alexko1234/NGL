@@ -1941,11 +1941,15 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	};
 	
 	var saveData = function(supports, containers, processes){
+//		console.log("Avant $http.put(jsRoutes.controllers.containers.api.Containers.updateStateBatch().url,containers)");
 		//$http.put(jsRoutes.controllers.containers.api.ContainerSupports.updateStateBatch().url,supports)
 		//	.then(function(data, status,headers,config){
+//		console.log("jsRoutes : " + JSON.stringify(jsRoutes.controllers.containers.api.Containers.updateStateBatch().url));
 				$http.put(jsRoutes.controllers.containers.api.Containers.updateStateBatch().url,containers)
 					.then(function(result){
+//						console.log("result : " + JSON.stringify(result));
 						var data = result.data;
+//						console.log("data : " + JSON.stringify(data));
 						var containers = result.config.data
 						var errors = []; var isErrors = false;
 						
