@@ -38,6 +38,7 @@
 #error.validationexp.noTagSampleWithTagSample="Présence de containers NON indéxés avec des containers indexés"
 #error.validationexp.tagcategory.notvalid = La category de tag n''est pas valide pour l''index {0} du container {1}.
 #error.validationexp.processProperties.notexist = Pas de processProperties pour {0} dans {1}.
+#error.validationexp.processPropertie.notexist = Pas de {0} pour {1} dans {2}.
 #error.validationexp.tagNotExist = Le tag {0} n''existe pas pour le container {1}.
 #error.validationexp.samelibprocesstypecode="Les containers non indexés ({0},{1}) n''ont pas le même type de processus de banque ({2},{3})"
 #error.validationexp.samefromexperimenttypecode="Les containers non indexés ({0},{1}) ne proviennent pas du même type d''experience ({2},{3})"
@@ -222,6 +223,8 @@ error.validationexp.inputContainer.state.code = Le container {0} n''a pas le bon
 error.validation.container.inputProcesses.notnull = "Le container est associé à un processus"
 
 error.validationexp.runName = "{0} dans {1} n''a pas de Run_Name"
+error.validationexp.referencegenome = "{0} dans {1} pour l''analyse Bisulfite n''a pas de genome de reference"
+error.validationexp.typesequensage = "Le {0}, indiqué comme type de sequencage pour {1} n''est pas compatible à ce type d''experience"
 
 error.receptionfile.taxonCode.diff = "Le code taxon est différent du sample parent {0} <> {1}"
 error.receptionfile.referenceCollab.diff = "La réf. collaborateur est différente du sample parent {0} <> {1}"

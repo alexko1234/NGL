@@ -58,7 +58,7 @@ public class ContentValidationHelper extends CommonValidationHelper {
 			contextValidation.addErrors("sample", ValidationConstants.ERROR_NOTEXISTS_MSG, projectCode+" + "+sampleCode);
 			Logger.debug("ContentValidationHelper !checkSampleWithProject(projectCode, sampleCode after contextValidation");
 		}
-		Logger.debug("ContentValidationHelper after checkSampleWithProject");
+//		Logger.debug("ContentValidationHelper after checkSampleWithProject");
 	}
 
 //<<<<<<< HEAD
