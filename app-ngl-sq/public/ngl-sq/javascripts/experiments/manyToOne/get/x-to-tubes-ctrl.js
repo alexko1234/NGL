@@ -83,7 +83,7 @@ angular.module('home').controller('GETPlatesToTubesCtrl',['$scope', '$http','$pa
 	}
 	
 	var generateSampleSheet = function(){
-		$scope.fileUtils.generateSampleSheet("":"");
+		$scope.fileUtils.generateSampleSheet({"":""});
 //		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
 //		.success(function(data, status, headers, config) {
 //			var header = headers("Content-disposition");
