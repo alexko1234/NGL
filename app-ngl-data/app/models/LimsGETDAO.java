@@ -292,7 +292,7 @@ public class LimsGETDAO{
 				
 				sample.properties = new HashMap<String, PropertyValue>();
 
-				Logger.debug("LimsGETDAO - findSampleToCreate - Properties sample "+sample.properties.containsKey("taxonSize"));
+//				Logger.debug("LimsGETDAO - findSampleToCreate - Properties sample "+sample.properties.containsKey("taxonSize"));
 
 
 				sample.importTypeCode="default-import";
