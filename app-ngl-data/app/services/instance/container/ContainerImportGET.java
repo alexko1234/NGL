@@ -74,8 +74,14 @@ public abstract class ContainerImportGET extends AbstractImportDataGET {
 			//si sql pour ce type de container
 			if(sqlContent!=null){	
 				Logger.debug("ContainerImportGET - saveSampleFromContainer - sqlContent n'est pas null pour container.code =  " + container.code);
-				container.contents.clear();
-				contents = new ArrayList<Content>(limsServices.findContentsFromContainer(sqlContent,container.code));	
+				contents = new ArrayList<Content>(limsServices.findContentsFromContainer(sqlContent,container.code));
+				if (!contents.isEmpty()){
+					container.contents.clear();
+				}else{
+					Logger.error("Pool dans " + container.code + " n'a pas de contents valides.");
+					return false;
+				}
+				
 			}else{
 				Logger.debug("ContainerImportGET - saveSampleFromContainer - qlContent est null pour container.code =  " + container.code);
 				contents = new ArrayList<Content>(container.contents);
@@ -313,11 +319,11 @@ public abstract class ContainerImportGET extends AbstractImportDataGET {
  		* et récuperer son id
  		*/
 		Integer characteristicDateImportNGLid = null;
-//		if(! containers.isEmpty()){
-//			//if container list don't empty get|create characteristic id to associate
-//			Logger.debug("Before  createCaracteristicDateImportNGL " + play.Play.application().configuration().getString("caracteristicstypeEsitoul.DateImportNgl"));
-//			characteristicDateImportNGLid = limsServices.createCaracteristicDateImportNGL(Integer.parseInt(play.Play.application().configuration().getString("caracteristicstypeEsitoul.DateImportNgl")));
-//		}
+		if(! containers.isEmpty()){
+			//if container list don't empty get|create characteristic id to associate
+			Logger.debug("Before  createCaracteristicDateImportNGL " + play.Play.application().configuration().getString("caracteristicstypeEsitoul.DateImportNgl"));
+			characteristicDateImportNGLid = limsServices.createCaracteristicDateImportNGL(Integer.parseInt(play.Play.application().configuration().getString("caracteristicstypeEsitoul.DateImportNgl")));
+		}
 		
 		for(Container container:containers){
 			//Logger.debug("Container :"+container.code+ "nb sample code"+container.sampleCodes.size());
@@ -332,14 +338,14 @@ public abstract class ContainerImportGET extends AbstractImportDataGET {
 			* si container a été bien créé
 			* lier characteristicDateImportNGL au container		
 			*/		
-//			if(result!=null){
-//				/* container model in NGL don't keep an barcodeid from e-sitoul barre-code 
-//				 * so, barcode string is used for create new link with characteristic Date_Import_NGL
-//				 */
-//				Logger.debug("BARCODE "+ container.code +" caracteristicDateImportNGL : "+ characteristicDateImportNGLid);
-//				limsServices.linkBarcodeToCaracteristics3(container.code, characteristicDateImportNGLid);
-//				limsServices.deletSameLinkCaracteristics(container.code, characteristicDateImportNGLid);
-//			}
+			if(result!=null){
+				/* container model in NGL don't keep an barcodeid from e-sitoul barre-code 
+				 * so, barcode string is used for create new link with characteristic Date_Import_NGL
+				 */
+				Logger.debug("BARCODE "+ container.code +" caracteristicDateImportNGL : "+ characteristicDateImportNGLid);
+				limsServices.linkBarcodeToCaracteristics3(container.code, characteristicDateImportNGLid);
+				limsServices.deletSameLinkCaracteristics(container.code, characteristicDateImportNGLid);
+			}
 			
 			contextError.removeKeyFromRootKeyName(rootKeyName);
 		}
@@ -575,7 +581,8 @@ public abstract class ContainerImportGET extends AbstractImportDataGET {
 				}
 			}
 		}
-		
+		ctNew.sampleTypeCode = DataMappingGET.getSampleTypeFromLims(ctNew.properties.get("type_echantillon").value.toString());
+		ctNew.sampleCategoryCode = ctNew.sampleTypeCode;
 		if (ctDB.processProperties != null){
 			ctNew.processProperties = ctDB.processProperties;
 			Logger.debug("ContainerImportGET UpdateContent add processProperties to : " + ctNew.sampleCode);

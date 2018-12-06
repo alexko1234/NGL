@@ -71,7 +71,7 @@ rule "run_name container into new fc"
 	salience 900
 	no-loop
     when
-	    $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-flowcell", $stateCode : state.code, $stateCode!="F")
+	    $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-flowcell" || $typeCode=="prepa-fc-ordered", $stateCode : state.code, $stateCode=="N")
 	    $atomicTransfert: ManyToOneContainer($inputContainers : inputContainerUseds)
 		$container : InputContainerUsed( $contents : contents,$contents!=null,$contents.size()>1) from $inputContainers
 		$content : Content($code : sampleCode) from $contents
@@ -82,3 +82,9 @@ rule "run_name container into new fc"
 	    	$contextValidation.addErrors("content",	"error.validationexp.runName", $code,$container.code);
 	    } 	
 end
+
+/*
+additional rules :
+
+		rule "reference-genome for bisulfite" dans prepa-fc-ordered/validation.drl
+*/
