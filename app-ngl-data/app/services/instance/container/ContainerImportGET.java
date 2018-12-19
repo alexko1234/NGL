@@ -50,6 +50,8 @@ import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.migration.NGLContext;
 
+import com.typesafe.config.ConfigFactory;
+
 public abstract class ContainerImportGET extends AbstractImportDataGET {
 	
 	public static Comment updateComment = new Comment("Container est mis à jour", InstanceHelpers.getUser());
@@ -313,16 +315,18 @@ public abstract class ContainerImportGET extends AbstractImportDataGET {
 			ContainerHelper.createSupportFromContainers(allContainersToSupport,propertiesContainerSupports, contextError);
 		Logger.debug("ContainerImportGET - createContainers, après ContainerHelper.createSupportFromContainers");
 			
-/* ACTIVER POUR PROD !!!
+		/* ACTIVE POUR PROD !!!
  		*
  		* créer ou retrouver dans e-SItoul characteristicDateImportNGL avec la date du jour
  		* et récuperer son id
  		*/
 		Integer characteristicDateImportNGLid = null;
-		if(! containers.isEmpty()){
+//		Logger.debug("ngl.env 1 : " + ConfigFactory.load().getString("ngl.env") + ", " + ConfigFactory.load().getString("caracteristicstypeEsitoul.DateImportNgl"));
+		if(! containers.isEmpty() && "PROD".equals(ConfigFactory.load().getString("ngl.env"))){
+//			Logger.debug("ngl.env 2 : " + ConfigFactory.load().getString("ngl.env"));
 			//if container list don't empty get|create characteristic id to associate
-			Logger.debug("Before  createCaracteristicDateImportNGL " + play.Play.application().configuration().getString("caracteristicstypeEsitoul.DateImportNgl"));
-			characteristicDateImportNGLid = limsServices.createCaracteristicDateImportNGL(Integer.parseInt(play.Play.application().configuration().getString("caracteristicstypeEsitoul.DateImportNgl")));
+			Logger.debug("Before  createCaracteristicDateImportNGL " + ConfigFactory.load().getString("caracteristicstypeEsitoul.DateImportNgl"));
+			characteristicDateImportNGLid = limsServices.createCaracteristicDateImportNGL(Integer.parseInt(ConfigFactory.load().getString("caracteristicstypeEsitoul.DateImportNgl")));
 		}
 		
 		for(Container container:containers){
@@ -333,12 +337,13 @@ public abstract class ContainerImportGET extends AbstractImportDataGET {
 			Container result=(Container) InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME,container, contextError,true);
 			Logger.debug("ContainerImportGET - createContainers, après InstanceHelpers.save avec sampleCodes= " + container.sampleCodes);
 
-/*
- * ACTIVER POUR PROD !!!
+			/*
+			 * ACTIVE POUR PROD !!!
 			* si container a été bien créé
 			* lier characteristicDateImportNGL au container		
 			*/		
-			if(result!=null){
+			if(result!=null  && "PROD".equals(ConfigFactory.load().getString("ngl.env"))){
+//				Logger.debug("ngl.env 3 : " + ConfigFactory.load().getString("ngl.env"));
 				/* container model in NGL don't keep an barcodeid from e-sitoul barre-code 
 				 * so, barcode string is used for create new link with characteristic Date_Import_NGL
 				 */
