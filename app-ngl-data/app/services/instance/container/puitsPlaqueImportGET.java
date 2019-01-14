@@ -53,7 +53,7 @@ public class puitsPlaqueImportGET extends ContainerImportGET {
 //				+ "AND tob.object_barcode = 'GENO43136:B4' "
 				//Import_dans_NGL is TRUE
 				+ "AND tclo.caracteristique_id ="+ play.Play.application().configuration().getString("caracteristiqueEsitoulImportDansNglVrai"); //vrai 
-			Logger.debug("puitsPlaqueImportGET : " + SQLContainer);
+			Logger.debug("puitsPlaqueImportGET");
 			createContainers(contextError,SQLContainer,"well","IW-P",null,null);
 			//contextError.setUpdateMode();
 	}

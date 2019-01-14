@@ -84,7 +84,8 @@ public class PoolImportGET extends ContainerImportGET {
                                                                         +"INNER JOIN trace_object tob on tolo.object_id = tob.object_id "
                                                                         +"WHERE object_barcode = ? ORDER BY operation_id DESC LIMIT 1)) "; //ex. GENO34763
 		
-		Logger.debug("PoolImportGET : " + SQLContainer);	
+//		Logger.debug("PoolImportGET : " + SQLContainer);	
+		Logger.debug("PoolImportGET");	
 		createContainers(contextError,SQLContainer,null,"IW-P",null,sqlContent);
 		
 			
