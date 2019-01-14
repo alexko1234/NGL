@@ -863,7 +863,8 @@ angular.module('commonsServices', []).
   		    			+'<button tabindex="-1" data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle" type="button" ng-disabled="isDisabled()" ng-click="open()">'
   		    			+'<span class="caret"></span>'
   		    			+'</button>'
-  		    			+'<ul class="dropdown-menu dropdown-menu-right"  role="menu">'
+//  		    			+'<ul class="dropdown-menu dropdown-menu-right"  role="menu">'
+  		    			+'<ul class="dropdown-menu dropdown-menu-right"  role="menu" style="max-width: 300px; overflow: auto;">' //GET PlaGe
   				        +'<li ng-show="filter"><input ng-class="inputClass" type="text" ng-click="inputClick($event)" ng-model="filterValue" ng-change="setFilterValue(filterValue)" placeholder="{{getMessage(\'bt-select.here\')}}"/></li>'
   				        // Liste des items déja cochés
 		    	  		+'<li ng-repeat-start="item in getSelectedItems()" ng-if="groupBy(item, $index) && acceptsMultiple()"></li>'

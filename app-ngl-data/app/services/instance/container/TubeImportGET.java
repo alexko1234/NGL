@@ -51,7 +51,7 @@ public class TubeImportGET extends ContainerImportGET {
 				+ 										"AND tclo.caracteristique_id != "+play.Play.application().configuration().getString("caracteristiqueEsitoulDateImportNglIndefini")+")) "
 				//Import_dans_NGL is TRUE
 				+ "AND tclo.caracteristique_id ="+ play.Play.application().configuration().getString("caracteristiqueEsitoulImportDansNglVrai"); //vrai 
-			Logger.debug("TubeImportGET : " + SQLContainer);
+			Logger.debug("TubeImportGET");
 			createContainers(contextError,SQLContainer,"tube","IW-P",null,null);
 			
 			//contextError.setUpdateMode();
