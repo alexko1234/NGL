@@ -290,6 +290,7 @@ public class ProcessServiceGET extends AbstractProcessService {
         analyseType.add(DescriptionFactory.newValue("Bisulfite","Bisulfite"));
         analyseType.add(DescriptionFactory.newValue("DNA","DNA"));
         analyseType.add(DescriptionFactory.newValue("DNA-MP","DNA-MP"));
+        analyseType.add(DescriptionFactory.newValue("RadSeq","RadSeq"));
         analyseType.add(DescriptionFactory.newValue("RNA","RNA"));
         analyseType.add(DescriptionFactory.newValue("10X-DeNovo","10X-DeNovo"));
         analyseType.add(DescriptionFactory.newValue("10X-WGS","10X-WGS"));
