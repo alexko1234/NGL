@@ -1,3 +1,4 @@
+@this()
 @()
 @import views.html.helper._
 
@@ -5,7 +6,7 @@
 
 	@columnSearchForm{
 		@formGroup{
-			<div class="form-control" bt-select  ng-model="consultationService.form.projCodes" filter="true" multiple="true" placeholder='@Messages("consultation.placeholder.projectCodes")' bt-options="project.code as project.code for project in consultationService.lists.getProjects()"></div>	
+			<div class="form-control" bt-select  ng-model="consultationService.form.projCodes" filter="true" multiple="true" placeholder='@Messages("consultation.placeholder.projectCodes")' bt-options="project.code as project|formatProjectListLabel for project in consultationService.lists.getProjects()"></div>	
 		}													
 	}
 	@columnSearchForm{
@@ -57,6 +58,8 @@
 <div class="row">
 <div class="col-md-12 col-lg-12"  messages="messages"></div>
 </div>
+
+@* XXXXXXXX CONSULTATION XXXXXXXXXXXXXX *@
 
 <div class="row"> 
 	<div class="col-md-12 col-lg-12" ultimate-datatable="consultationService.datatable">

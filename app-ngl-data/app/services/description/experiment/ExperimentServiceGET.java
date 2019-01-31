@@ -733,7 +733,11 @@ public class ExperimentServiceGET extends AbstractExperimentService {
         analyseType.add(DescriptionFactory.newValue("Bisulfite","Bisulfite"));
         analyseType.add(DescriptionFactory.newValue("DNA","DNA"));
         analyseType.add(DescriptionFactory.newValue("DNA-MP","DNA-MP"));
+        analyseType.add(DescriptionFactory.newValue("RAD-Seq","RAD-Seq"));
         analyseType.add(DescriptionFactory.newValue("RNA","RNA"));
+        analyseType.add(DescriptionFactory.newValue("10X-DeNovo","10X-DeNovo"));
+        analyseType.add(DescriptionFactory.newValue("10X-WGS","10X-WGS"));
+        analyseType.add(DescriptionFactory.newValue("10X-SingleCell","10X-SingleCell"));
         analyseType.add(DescriptionFactory.newValue("16S","16S"));
         return analyseType;
 	}

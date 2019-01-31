@@ -157,7 +157,9 @@ rule "Generate TagInfo from ContainerSupport"
 			Container container = cursor.next();
 			if(null != container.contents){
 				for(Content content : container.contents){
+//					Logger.debug("rules");
 					if(content.properties.containsKey("libProcessTypeCode")){
+//						Logger.debug("rules libProcessTypeCode" + content.properties.get("libProcessTypeCode").value);
 						libProcessTypeCodes.add((String)content.properties.get("libProcessTypeCode").value);
 					}
 					if(content.properties.containsKey("tag")){

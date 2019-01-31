@@ -93,7 +93,8 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 //						createInstrument("cBot-hiseq2500","cBot HiSeq2500",  null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.GET)),
 						createInstrument("cBot-Miseq_1","cBot Miseq_1",  null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.GET)),
 						createInstrument("cBot-Miseq_2","cBot Miseq_2",  null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.GET)),
-						createInstrument("cBot-Miseq_4","cBot Miseq_4",  null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.GET))
+						createInstrument("cBot-Miseq_4","cBot Miseq_4",  null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.GET)),
+						createInstrument("cBot-Miseq_5","cBot Miseq_5",  null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.GET))
 						),
 				getContainerSupportCategories(new String[]{"tube","96-well-plate","384-well-plate"}), getContainerSupportCategories(new String[]{"flowcell-1"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
@@ -160,7 +161,8 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 				getInstruments(
 				createInstrument("MISEQ", "MiSeq1 M00185", null, true,"/save/devcrgs/src/NGL_Feuille_route/MISEQ", DescriptionFactory.getInstitutes(Constants.CODE.GET)),
 				createInstrument("MISEQ_2","MiSeq2 M02944", null, true,"/save/devcrgs/src/NGL_Feuille_route/MISEQ_2", DescriptionFactory.getInstitutes(Constants.CODE.GET)),
-				createInstrument("MISEQ_4","MiSeq4 M01945R", null, true,"/save/devcrgs/src/NGL_Feuille_route/MISEQ_4", DescriptionFactory.getInstitutes(Constants.CODE.GET))),
+				createInstrument("MISEQ_4","MiSeq4 M01945R", null, true,"/save/devcrgs/src/NGL_Feuille_route/MISEQ_4", DescriptionFactory.getInstitutes(Constants.CODE.GET)),
+				createInstrument("MISEQ_5","MiSeq5 M01764", null, true,"/save/devcrgs/src/NGL_Feuille_route/MISEQ_5", DescriptionFactory.getInstitutes(Constants.CODE.GET))),
 				getContainerSupportCategories(new String[]{"flowcell-1"}), null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		

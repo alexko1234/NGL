@@ -30,14 +30,19 @@ rule "Create external sample"
 		$contextVal : ContextValidation($external:contextObjects["external"], $external!=null, (Boolean)$external==true)
 	then
 		//create external sample
-		ILimsRunServices  limsRunServices = Spring.getBeanOfType(ILimsRunServices.class);
-		Sample extSample = limsRunServices.findSampleToCreate($readset.sampleCode);
-		Logger.debug("Ext sample "+extSample);
-		if(extSample!=null){
-			$contextVal.setCreationMode();
-			InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,extSample,$contextVal,true);
-		}else{
-			$contextVal.addErrors("sampleCode","error.no.sample.lims",$readset.sampleCode);
+		
+		//Get sample from NGL
+		Sample extSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, $readset.sampleCode);
+		if(extSample==null){
+			ILimsRunServices  limsRunServices = Spring.getBeanOfType(ILimsRunServices.class);
+			extSample = limsRunServices.findSampleToCreate($readset.sampleCode);
+			Logger.debug("Ext sample "+extSample);
+			if(extSample!=null){
+				$contextVal.setCreationMode();
+				InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,extSample,$contextVal,true);
+			}else{
+				$contextVal.addErrors("sampleCode","error.no.sample.lims",$readset.sampleCode);
+			}
 		}
 		
 		//update sampleOnContainer
@@ -66,9 +71,13 @@ rule "Find Pattern Krona for taxonomy treatment"
 		//Get krona from read1 or pairs value
 		String krona = null;
 		if($treatmentTaxo.results.get("read1")!=null){
-			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).value);
+//			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).value);
+//			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).getValue());
+			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).byteValue());
 		}else if($treatmentTaxo.results.get("pairs")!=null){
-			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("pairs").get("krona")).value);
+//			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("pairs").get("krona")).value);
+//			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("pairs").get("krona")).getValue());
+			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("pairs").get("krona")).byteValue());
 		}
 		if(krona!=null){
 			Pattern p1 = Pattern.compile(".*<node name=\"all\">\\s+<magnitude><val>(\\d+)</val></magnitude>.*", Pattern.DOTALL);
@@ -94,7 +103,7 @@ rule "Set state to In Waiting Transfert CCRT from Avalaible readSet"
 	no-loop
 	when
 		$nextState : State(code=="A")
-		$project : Project(bioinformaticParameters!=null, bioinformaticParameters.fgGroup!=null)
+		$project : Project(bioinformaticParameters!=null, bioinformaticParameters.fgGroup!=null, !StringUtils.isBlank(bioinformaticParameters.fgGroup))
 		$readSet : ReadSet(location==null || (location!=null && location!="CCRT"))
 	then
 		Logger.debug("Update state code "+$readSet.code+" to IW-TF");	
@@ -113,28 +122,39 @@ rule "Find Fungi for taxonomy treatment"
 		Logger.debug("Find Fungi in taxonomy krona "+$readset.code);	
 			
 		String krona = null;
-		List<Map<String, ?>> keywordBilan = new ArrayList<Map<String, ?>>();
+//		List<Map<String, ?>> keywordBilan = new ArrayList<Map<String, ?>>();
+		List<Map<String, Object>> keywordBilan = new ArrayList<Map<String, Object>>();
 		boolean createPropKeywordBilan = true;
 		if($treatmentTaxo.results.get("read1")!=null){
 			Logger.debug("Get from read1");
-			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).value);
+//			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).value);
+//			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).getValue());
+			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).byteValue());
 			if($treatmentTaxo.results.get("read1").get("keywordBilan")!=null){
-				keywordBilan = ((PropertyObjectListValue)$treatmentTaxo.results.get("read1").get("keywordBilan")).value;
+//				keywordBilan = ((PropertyObjectListValue)$treatmentTaxo.results.get("read1").get("keywordBilan")).value;
+				keywordBilan = ((PropertyObjectListValue)$treatmentTaxo.results.get("read1").get("keywordBilan")).getValue();
 				createPropKeywordBilan=false;
 			}
 		}else if($treatmentTaxo.results.get("pairs")!=null){
 			Logger.debug("Get from pairs");
-			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("pairs").get("krona")).value);
+//			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("pairs").get("krona")).value);
+//			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("pairs").get("krona")).getValue());
+			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("pairs").get("krona")).byteValue());
 			if($treatmentTaxo.results.get("pairs").get("keywordBilan")!=null){
-				keywordBilan = ((PropertyObjectListValue)$treatmentTaxo.results.get("pairs").get("keywordBilan")).value;
+//				keywordBilan = ((PropertyObjectListValue)$treatmentTaxo.results.get("pairs").get("keywordBilan")).value;
+				keywordBilan = ((PropertyObjectListValue)$treatmentTaxo.results.get("pairs").get("keywordBilan")).getValue();
 				createPropKeywordBilan=false;
 			}
 		}
 		if(createPropKeywordBilan){
-				PropertyObjectListValue pol = new PropertyObjectListValue(new ArrayList<Map<String, ?>>());
+//				PropertyObjectListValue pol = new PropertyObjectListValue(new ArrayList<Map<String, ?>>());
+				PropertyObjectListValue pol = new PropertyObjectListValue(new ArrayList<Map<String, Object>>());
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 					DBQuery.is("code", $readset.code),
 					DBUpdate.set("treatments.taxonomy.pairs.keywordBilan", pol));
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+					DBQuery.is("code", $readset.code),
+					DBUpdate.set("treatments.taxonomy.read1.keywordBilan", pol));
 		}
 		
 		if(krona!=null){
@@ -157,10 +177,12 @@ rule "Find Fungi for taxonomy treatment"
 				Logger.debug("Match Group Fungi = "+fungiPercentValue);
 			}
 			
-			//List<Map<String, ?>> keywordBilan = ((PropertyObjectListValue)$treatmentTaxo.results.get("read1").get("keywordBilan")).value;
-			
-			List<Map<String, ?>> keywordBRemove = new ArrayList<Map<String, ?>>(); 
-			for(Map<String, ?> keywordOne : keywordBilan){
+//			List<Map<String, ?>> keywordBilan = ((PropertyObjectListValue)$treatmentTaxo.results.get("read1").get("keywordBilan")).value;
+
+//			List<Map<String, ?>> keywordBRemove = new ArrayList<Map<String, ?>>(); 
+//			for(Map<String, ?> keywordOne : keywordBilan){
+			List<Map<String, Object>> keywordBRemove = new ArrayList<Map<String, Object>>(); 
+			for(Map<String, Object> keywordOne : keywordBilan){
 				String keywordValue = (String)keywordOne.get("keyword");
 				if(keywordValue.equals("Fungi")){
 					Logger.debug("keywordValue = "+keywordValue);
@@ -208,7 +230,7 @@ rule "Set state to Avalaible from Finished Transfert CCRT"
 	no-loop
 	when
 		$nextState : State(code=="F-TF")
-		$project : Project(bioinformaticParameters!=null, bioinformaticParameters.fgGroup!=null)
+		$project : Project(bioinformaticParameters!=null, bioinformaticParameters.fgGroup!=null, !StringUtils.isBlank(bioinformaticParameters.fgGroup))
 	then
 		Logger.debug("State F-TF to A");
 		$nextState.code="A";

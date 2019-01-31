@@ -1,23 +1,19 @@
 package services.instance.sample;
 
-import java.sql.SQLException;
+import javax.inject.Inject;
 
-import com.mongodb.MongoException;
-
-import models.utils.dao.DAOException;
-import services.ncbi.TaxonomyServices;
-import rules.services.RulesException;
+import fr.cea.ig.play.migration.NGLContext;
 import scala.concurrent.duration.FiniteDuration;
+import services.ncbi.TaxonomyServices;
 
-public class UpdateSampleNCBITaxonCNG extends AbstractUpdateSampleNCBITaxon{
+public class UpdateSampleNCBITaxonCNG extends AbstractUpdateSampleNCBITaxon {
 
+	@Inject
 	public UpdateSampleNCBITaxonCNG(FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super("UpdateSampleNCBI", durationFromStart, durationFromNextIteration);
-
+			                        FiniteDuration durationFromNextIteration, 
+			                        NGLContext ctx, 
+			                        TaxonomyServices taxonomyServices) {
+		super("UpdateSampleNCBI", durationFromStart, durationFromNextIteration, ctx, taxonomyServices);
 	}
 
-	
-
-	
 }

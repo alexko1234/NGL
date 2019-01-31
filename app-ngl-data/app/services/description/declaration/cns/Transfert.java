@@ -1,6 +1,9 @@
 package services.description.declaration.cns;
 
-import static services.description.DescriptionFactory.*;
+import static services.description.DescriptionFactory.newExperimentType;
+import static services.description.DescriptionFactory.newExperimentTypeNode;
+import static services.description.DescriptionFactory.newPropertiesDefinition;
+import static services.description.DescriptionFactory.newValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +32,7 @@ public class Transfert extends AbstractDeclaration {
 
 	@Override
 	protected List<ExperimentType> getExperimentTypeCommon() {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		List<ExperimentType> l = new ArrayList<>();
 
 		l.add(newExperimentType("Aliquot","aliquoting",null,10100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),
@@ -49,7 +52,7 @@ public class Transfert extends AbstractDeclaration {
 		
 		l.add(newExperimentType("Normalisation","normalisation",null,10400,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionNormalisation(),
-				getInstrumentUsedTypes("biomek-fx","hand"),"OneToOne", 
+				getInstrumentUsedTypes("biomek-fx","brand-lhs","hand"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(newExperimentType("Dilution","dilution",null,10450,
@@ -93,7 +96,7 @@ public class Transfert extends AbstractDeclaration {
 
 	@Override
 	protected List<ExperimentType> getExperimentTypePROD() {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		List<ExperimentType> l = new ArrayList<>();
 
 		return l;
 	}
@@ -149,7 +152,7 @@ public class Transfert extends AbstractDeclaration {
 
 	@Override
 	protected List<ProcessType> getProcessTypeCommon() {
-		List<ProcessType> l = new ArrayList<ProcessType>();
+		List<ProcessType> l = new ArrayList<>();
 		
 		
 		l.add(DescriptionFactory.newProcessType("Transfert puis satellites", "transfert-qc-purif", 
@@ -192,10 +195,13 @@ public class Transfert extends AbstractDeclaration {
 	
 	
 	private static List<PropertyDefinition> getPropertyDefinitionNormalisation() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Label de travail", "workName", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, false, null, null, 
 				"single", 100, true, null,null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Conc. max theorique", "maximumConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),null,null,"single", 18, false, null,null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Mode calcul", "computeMode", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null, 
 				Arrays.asList(newValue("fixeCfVi", "Volume à engager fixe"), newValue("fixeCfVf", "Volume final fixe")), "single", 19, true, null,null));
@@ -204,14 +210,15 @@ public class Transfert extends AbstractDeclaration {
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 20, true, null,null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Volume tampon", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 21, true, null,null));
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 21, false, null,null));
+		
 		
 
 		return propertyDefinitions;
 	}
 	
 	private static List<PropertyDefinition> getPropertyDefinitionPlateTubeToPlate() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Label de travail", "workName", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, false, "F", null, 
 				"single", 100, true, null,null));
@@ -221,7 +228,7 @@ public class Transfert extends AbstractDeclaration {
 	
 	
 	private static List<PropertyDefinition> getPropertyDefinitionDilution() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Label de travail", "workName", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, true, "F", null, 
 				"single", 100, true, null,null));
@@ -241,7 +248,7 @@ public class Transfert extends AbstractDeclaration {
 	}
 	
 	private static List<PropertyDefinition> getPropertyAliquoting() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",10, false));
 		
@@ -249,7 +256,7 @@ public class Transfert extends AbstractDeclaration {
 	}
 	
 	private static List<PropertyDefinition> getPropertyDefinitionPoolTube() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		//InputContainer
 		
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 

@@ -5,20 +5,14 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.instance.PropertyValue;
+import controllers.instruments.io.utils.AbstractInput;
+import controllers.instruments.io.utils.InputHelper;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.InputContainerUsed;
-import models.laboratory.parameter.index.Index;
-import play.Logger;
 import validation.ContextValidation;
-import validation.utils.ValidationHelper;
-import controllers.instruments.io.utils.AbstractInput;
-import controllers.instruments.io.utils.InputHelper;
 
 public class Input extends AbstractInput {
 	
@@ -53,10 +47,11 @@ public class Input extends AbstractInput {
 	public Experiment importFile(Experiment experiment,PropertyFileValue pfv, ContextValidation contextValidation) throws Exception {	
 			
 		// hashMap  pour stocker les concentrations fichier 
-		Map<String,SpectramaxData> dataMap = new HashMap<String,SpectramaxData>(0);
+		Map<String,SpectramaxData> dataMap = new HashMap<>(0);
 		
 		// charset detection (N. Wiart)
-		byte[] ibuf = pfv.value;
+//		byte[] ibuf = pfv.value;
+		byte[] ibuf = pfv.byteValue();
 		String charset = "UTF-8"; //par defaut, convient aussi pour de l'ASCII pur
 		
 		// si le fichier commence par les 2 bytes ff/fe  alors le fichier est encodé en UTF-16 little endian

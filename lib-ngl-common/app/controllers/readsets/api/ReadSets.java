@@ -1,7 +1,5 @@
 package controllers.readsets.api;
 
-import static play.data.Form.form;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -12,23 +10,27 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections.CollectionUtils;
+import javax.inject.Inject;
+
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
 
+import com.google.inject.Provider;
 import com.mongodb.BasicDBObject;
 
-import akka.actor.ActorRef;
-import akka.actor.Props;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBDatatableResponseChunks;
-import fr.cea.ig.MongoDBResponseChunks;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.mongo.MongoStreamer;
+import fr.cea.ig.play.IGBodyParsers;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -40,59 +42,69 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
-import play.Logger;
-import play.Play;
 import play.data.Form;
 import play.i18n.Lang;
-import play.libs.Akka;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
-import rules.services.RulesActor6;
-import rules.services.RulesMessage;
+import rules.services.LazyRules6Actor;
 import validation.ContextValidation;
 import validation.run.instance.ReadSetValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableForm;
-import workflows.run.Workflows;
+import workflows.readset.ReadSetWorkflows;
 
+// TODO: cleanup
 
-
-public class ReadSets extends ReadSetsController{
-	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-
-	final static Form<ReadSet> readSetForm = form(ReadSet.class);
-	//final static Form<ReadSetsSearchForm> searchForm = form(ReadSetsSearchForm.class);
-	final static Form<ReadSetValuation> valuationForm = form(ReadSetValuation.class);
-	final static Form<State> stateForm = form(State.class);
-
-	final static Form<ReadSetBatchElement> batchElementForm = form(ReadSetBatchElement.class);
-	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
+public class ReadSets extends ReadSetsController {
+	
+	private static final play.Logger.ALogger logger = play.Logger.of(ReadSets.class);
+	
 	final static List<String> authorizedUpdateFields = Arrays.asList("code", "path","location","properties");
-	final static List<String> defaultKeys =  Arrays.asList("code", "typeCode", "runCode", "runTypeCode", "laneNumber", "projectCode", "sampleCode", "runSequencingStartDate", "state", "productionValuation", "bioinformaticValuation", "properties","location");
+	final static List<String> defaultKeys            = Arrays.asList("code", "typeCode", "runCode", "runTypeCode", "laneNumber", "projectCode", "sampleCode", "runSequencingStartDate", "state", "productionValuation", "bioinformaticValuation", "properties","location");
 
+	private final Form<ReadSet>              readSetForm;      // = form(ReadSet.class);
+	private final Form<ReadSetValuation>     valuationForm;    // = form(ReadSetValuation.class);
+	private final Form<State>                stateForm;        // = form(State.class);
+	private final Form<ReadSetBatchElement>  batchElementForm; // = form(ReadSetBatchElement.class);
+	private final Form<QueryFieldsForm>      updateForm;       // = form(QueryFieldsForm.class);
+	private final Provider<ReadSetWorkflows> workflows;
+	private final LazyRules6Actor rulesActor;
+	
+	@Inject
+	public ReadSets(NGLContext ctx, Provider<ReadSetWorkflows> workflows) {
+		readSetForm      = ctx.form(ReadSet.class);
+		valuationForm    = ctx.form(ReadSetValuation.class);
+		stateForm        = ctx.form(State.class);
+		batchElementForm = ctx.form(ReadSetBatchElement.class);
+		updateForm       = ctx.form(QueryFieldsForm.class);
+		rulesActor       = ctx.rules6Actor(); 
+		this.workflows   = workflows;
+	}
+	
 	@Permission(value={"reading"})
-	public static Result list() {
-		//Form<ReadSetsSearchForm> filledForm = filledFormQueryString(searchForm, ReadSetsSearchForm.class);
-		//ReadSetsSearchForm form = filledForm.get();
-
+	public Result list() {
 		ReadSetsSearchForm form = filledFormQueryString(ReadSetsSearchForm.class);
-		//Logger.debug("form = "+form);
-
 		Query q = getQuery(form);		
 		BasicDBObject keys = getKeys(updateForm(form));
 
-		if(form.datatable){			
+		if (form.reporting && !form.aggregate) {
+			//return nativeMongoDBQQuery(form);
+			String jsonKeys = getJSONKeys(updateForm(form));
+			return nativeMongoDBQQuery(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class,jsonKeys);
+		}else if(form.reporting && form.aggregate){
+			return nativeMongoDBAggregate(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class);
+		}else if (form.datatable) {			
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);				
-			return ok(new MongoDBDatatableResponseChunks<ReadSet>(results)).as("application/json");			
-		}else if(form.count){
+			return MongoStreamer.okStreamUDT(results);
+		} else if(form.count) {
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);							
 			int count = results.count();
-			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			Map<String, Integer> m = new HashMap<>(1);
 			m.put("result", count);
 			return ok(Json.toJson(m));
-		}else if(form.list){
+		} else if(form.list) {
 			keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("code", 1);
@@ -102,19 +114,19 @@ public class ReadSets extends ReadSetsController{
 			return ok(Json.toJson(toListObjects(results.toList())));
 		}else {
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);	
-			return ok(new MongoDBResponseChunks<ReadSet>(results)).as("application/json");	
+			return MongoStreamer.okStream(results);
 		}
 	}
 
-	private static List<ListObject> toListObjects(List<ReadSet> readSets){
-		List<ListObject> jo = new ArrayList<ListObject>();
+	private List<ListObject> toListObjects(List<ReadSet> readSets){
+		List<ListObject> jo = new ArrayList<>();
 		for(ReadSet r: readSets){
 			jo.add(new ListObject(r.code, r.code));
 		}
 		return jo;
 	}
 
-	private static DatatableForm updateForm(ReadSetsSearchForm form) {
+	private DatatableForm updateForm(ReadSetsSearchForm form) {
 		if(form.includes.contains("default")){
 			form.includes.remove("default");
 			form.includes.addAll(defaultKeys);
@@ -122,8 +134,8 @@ public class ReadSets extends ReadSetsController{
 		return form;
 	}
 
-	private static Query getQuery(ReadSetsSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+	private Query getQuery(ReadSetsSearchForm form) {
+		List<Query> queries = new ArrayList<>();
 		Query query = null;
 
 		if (StringUtils.isNotBlank(form.typeCode)) { //all
@@ -186,6 +198,17 @@ public class ReadSets extends ReadSetsController{
 
 		if(null != form.toDate){
 			queries.add(DBQuery.lessThanEquals("runSequencingStartDate", form.toDate));
+		}
+		
+		if(null != form.fromEvalDate && null != form.toEvalDate){
+			queries.add(DBQuery.or(
+					DBQuery.and(DBQuery.greaterThanEquals("productionValuation.date", form.fromEvalDate),DBQuery.lessThan("productionValuation.date", (DateUtils.addDays(form.toEvalDate,1)))),
+					DBQuery.and(DBQuery.greaterThanEquals("bioinformaticValuation.date", form.fromEvalDate),DBQuery.lessThan("bioinformaticValuation.date", (DateUtils.addDays(form.toEvalDate,1))))
+			));
+		}else if(null != form.fromEvalDate && null == form.toEvalDate){
+			queries.add(DBQuery.or(DBQuery.greaterThanEquals("productionValuation.date", form.fromEvalDate),DBQuery.greaterThanEquals("bioinformaticValuation.date", form.fromEvalDate)));
+		}else if(null != form.toEvalDate && null == form.fromEvalDate){
+			queries.add(DBQuery.or(DBQuery.lessThan("productionValuation.date", (DateUtils.addDays(form.toEvalDate,1))),DBQuery.lessThan("bioinformaticValuation.date", (DateUtils.addDays(form.toEvalDate,1)))));
 		}
 		
 		if(StringUtils.isNotBlank(form.location)){
@@ -295,7 +318,7 @@ public class ReadSets extends ReadSetsController{
 	}
 
 	@Permission(value={"reading"})
-	public static Result get(String readSetCode) {
+	public Result get(String readSetCode) {
 		DatatableForm form = filledFormQueryString(DatatableForm.class);
 		ReadSet readSet =  getReadSet(readSetCode, form.includes.toArray(new String[0]));		
 		if(readSet != null) {
@@ -307,7 +330,7 @@ public class ReadSets extends ReadSetsController{
 	}
 
 	@Permission(value={"reading"})
-	public static Result head(String readSetCode) {
+	public Result head(String readSetCode) {
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode)){			
 			return ok();					
 		}else{
@@ -316,16 +339,16 @@ public class ReadSets extends ReadSetsController{
 	}
 
 	@Permission(value={"writing"})
-	public static Result save(){
+	public Result save() {
 
 		Form<ReadSet> filledForm = getFilledForm(readSetForm, ReadSet.class);
 		ReadSet readSetInput = filledForm.get();
 
-		if (null == readSetInput._id) { 
+		if (readSetInput._id == null) { 
 			readSetInput.traceInformation = new TraceInformation();
 			readSetInput.traceInformation.setTraceInformation(getCurrentUser());
 
-			if(null == readSetInput.state){
+			if (readSetInput.state == null) {
 				readSetInput.state = new State();
 			}
 			readSetInput.state.code = "N";
@@ -334,33 +357,28 @@ public class ReadSets extends ReadSetsController{
 			readSetInput.submissionState = new State("NONE", getCurrentUser());
 			readSetInput.submissionState.date = new Date();	
 
-
 			//hack to simplify ngsrg => move to workflow but workflow not call here !!!
-			if(null != readSetInput.runCode && (null == readSetInput.runSequencingStartDate || null == readSetInput.runTypeCode)){
+			if (readSetInput.runCode != null && (readSetInput.runSequencingStartDate == null || readSetInput.runTypeCode == null)) {
 				updateReadSet(readSetInput);
-
 			}
-
 		} else {
 			return badRequest("use PUT method to update the run");
 		}
 
-
-
-
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		
 		ReadSetsSaveForm readSetsSaveForm = filledFormQueryString(ReadSetsSaveForm.class);
-		if(readSetsSaveForm.external!=null)
+		if (readSetsSaveForm.external != null)
 			ctxVal.putObject("external", readSetsSaveForm.external);
 		else
 			ctxVal.putObject("external", false);
 
 		//Apply rules before validation
-		Workflows.applyReadSetPreStateRules(ctxVal, readSetInput);
+		workflows.get().applyPreStateRules(ctxVal, readSetInput, readSetInput.state);
 		
 		ctxVal.setCreationMode();
-		readSetInput.validate(ctxVal);	
+		readSetInput.validate(ctxVal);
 
 		if (!ctxVal.hasErrors()) {
 			readSetInput = MongoDBDAO.save(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSetInput);
@@ -380,11 +398,11 @@ public class ReadSets extends ReadSetsController{
 
 			return ok(Json.toJson(readSetInput));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
-	private static void updateReadSet(ReadSet readSetInput) {
+	private void updateReadSet(ReadSet readSetInput) {
 		BasicDBObject keys = new BasicDBObject();
 		keys.put("_id", 0);//Don't need the _id field
 		keys.put("sequencingStartDate", 1);
@@ -396,13 +414,12 @@ public class ReadSets extends ReadSetsController{
 
 
 	@Permission(value={"writing"})
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
-	public static Result update(String readSetCode){
+	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
+	public Result update(String readSetCode){
 		ReadSet readSet =  getReadSet(readSetCode);
 		if(readSet == null) {
 			return badRequest("ReadSet with code "+readSetCode+" does not exist");
 		}
-
 		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
 		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
 
@@ -414,14 +431,15 @@ public class ReadSets extends ReadSetsController{
 				if(null != readSetInput.traceInformation){
 					readSetInput.traceInformation.setTraceInformation(getCurrentUser());
 				}else{
-					Logger.error("traceInformation is null !!");
+					logger.error("traceInformation is null !!");
 				}
 
 				if(!readSet.state.code.equals(readSetInput.state.code)){
 					return badRequest("you cannot change the state code. Please used the state url ! ");
 				}
 
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+//				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 				ctxVal.setUpdateMode();
 				readSetInput.validate(ctxVal);
 
@@ -437,14 +455,15 @@ public class ReadSets extends ReadSetsController{
 							DBUpdate.push("sampleCodes", readSetInput.sampleCode));
 
 					return ok(Json.toJson(readSetInput));
-				}else {
-					return badRequest(filledForm.errorsAsJson());			
+				} else {
+					return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 				}
 			}else{
 				return badRequest("readset code are not the same");
 			}
-		}else{ //update only some authorized properties
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+		} else { //update only some authorized properties
+//			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
@@ -454,7 +473,7 @@ public class ReadSets extends ReadSetsController{
 				ReadSetValidationHelper.validateCode(readSetInput, InstanceConstants.READSET_ILLUMINA_COLL_NAME, ctxVal);
 			}
 
-			if(!filledForm.hasErrors()){
+			if (!ctxVal.hasErrors()) {
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 						DBQuery.and(DBQuery.is("code", readSetCode)), 
 						getBuilder(readSetInput, queryFieldsForm.fields, ReadSet.class).set("traceInformation", getUpdateTraceInformation(readSet)));
@@ -471,14 +490,14 @@ public class ReadSets extends ReadSetsController{
 					readSetCode = readSetInput.code;											
 				}
 				return ok(Json.toJson(getReadSet(readSetCode)));
-			}else{
-				return badRequest(filledForm.errorsAsJson());
+			} else {
+				return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 			}			
 		}
 	}
 
 	@Permission(value={"writing"}) 
-	public static Result delete(String readSetCode) { 
+	public Result delete(String readSetCode) { 
 		ReadSet readSet = getReadSet(readSetCode);
 		if (readSet == null) {
 			return badRequest("Readset with code "+readSetCode+" does not exist !");
@@ -510,7 +529,7 @@ public class ReadSets extends ReadSetsController{
 
 
 	@Permission(value={"writing"})
-	public static Result deleteByRunCode(String runCode) {
+	public Result deleteByRunCode(String runCode) {
 		Run run  = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runCode);
 		if (run==null) {
 			return badRequest();
@@ -532,7 +551,7 @@ public class ReadSets extends ReadSetsController{
 	}
 
 	@Permission(value={"writing"})
-	public static Result state(String code){
+	public Result state(String code){
 		ReadSet readSet = getReadSet(code);
 		if(readSet == null){
 			return badRequest();
@@ -541,17 +560,18 @@ public class ReadSets extends ReadSetsController{
 		State state = filledForm.get();
 		state.date = new Date();
 		state.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
-		Workflows.setReadSetState(ctxVal, readSet, state);
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
+		workflows.get().setState(ctxVal, readSet, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getReadSet(code)));
-		}else {
-			return badRequest(filledForm.errorsAsJson());
+		} else {
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
 	@Permission(value={"writing"})
-	public static Result stateBatch(){
+	public Result stateBatch(){
 		List<Form<ReadSetBatchElement>> filledForms =  getFilledFormList(batchElementForm, ReadSetBatchElement.class);
 
 		final String user = getCurrentUser();
@@ -566,8 +586,9 @@ public class ReadSets extends ReadSetsController{
 						State state = element.data.state;
 						state.date = new Date();
 						state.user = user;
-						ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
-						Workflows.setReadSetState(ctxVal, readSet, state);
+//						ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+						ContextValidation ctxVal = new ContextValidation(user, filledForm);
+						workflows.get().setState(ctxVal, readSet, state);
 						if (!ctxVal.hasErrors()) {
 							return new DatatableBatchResponseElement(OK, getReadSet(readSet.code), element.index);
 						}else {
@@ -582,32 +603,33 @@ public class ReadSets extends ReadSetsController{
 	}
 
 	@Permission(value={"writing"})
-	public static Result valuation(String code){
+	public Result valuation(String code){
 		ReadSet readSet = getReadSet(code);
 		if(readSet == null){
 			return badRequest();
 		}
 		Form<ReadSetValuation> filledForm =  getFilledForm(valuationForm, ReadSetValuation.class);
 		ReadSetValuation valuations = filledForm.get();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm);
 		ctxVal.setUpdateMode();
 		manageValidation(readSet, valuations.productionValuation, valuations.bioinformaticValuation, ctxVal);
-		if(!ctxVal.hasErrors()) {
+		if (!ctxVal.hasErrors()) {
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 					DBQuery.and(DBQuery.is("code", code)),
 					DBUpdate.set("productionValuation", valuations.productionValuation)
 					.set("bioinformaticValuation", valuations.bioinformaticValuation)
 					.set("traceInformation", getUpdateTraceInformation(readSet)));			
 			readSet = getReadSet(code);
-			Workflows.nextReadSetState(ctxVal, readSet);
+			workflows.get().nextState(ctxVal, readSet);
 			return ok(Json.toJson(readSet));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
 	@Permission(value={"writing"})
-	public static Result valuationBatch(){
+	public Result valuationBatch(){
 		List<Form<ReadSetBatchElement>> filledForms =  getFilledFormList(batchElementForm, ReadSetBatchElement.class);
 
 		final String user = getCurrentUser();
@@ -617,8 +639,9 @@ public class ReadSets extends ReadSetsController{
 				.map(filledForm->{
 					ReadSetBatchElement element = filledForm.get();
 					ReadSet readSet = getReadSet(element.data.code);
-					if(null != readSet){
-						ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+					if (readSet != null) {
+//						ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+						ContextValidation ctxVal = new ContextValidation(user, filledForm);
 						ctxVal.setUpdateMode();
 						manageValidation(readSet, element.data.productionValuation, element.data.bioinformaticValuation, ctxVal);				
 						if (!ctxVal.hasErrors()) {
@@ -628,7 +651,7 @@ public class ReadSets extends ReadSetsController{
 									.set("bioinformaticValuation", element.data.bioinformaticValuation)
 									.set("traceInformation", getUpdateTraceInformation(readSet,user)));							
 							readSet = getReadSet(readSet.code);
-							Workflows.nextReadSetState(ctxVal, readSet);
+							workflows.get().nextState(ctxVal, readSet);
 							return new DatatableBatchResponseElement(OK, readSet, element.index);
 						}else {
 							return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);
@@ -643,35 +666,34 @@ public class ReadSets extends ReadSetsController{
 	}
 
 	@Permission(value={"writing"})
-	public static Result properties(String code){
+	public Result properties(String code){
 		ReadSet readSet = getReadSet(code);
 		if(readSet == null){
 			return badRequest();
 		}
 
 		Form<ReadSet> filledForm = getFilledForm(readSetForm, ReadSet.class);
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 
 		Map<String, PropertyValue> properties = filledForm.get().properties;
 		ctxVal.setUpdateMode();
 		ReadSetValidationHelper.validateReadSetType(readSet.typeCode, properties, ctxVal);
 
-		if(!ctxVal.hasErrors()){
+		
+		if (!ctxVal.hasErrors()) {
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 					DBQuery.and(DBQuery.is("code", code)),
 					DBUpdate.set("properties", properties)
 					.set("traceInformation", getUpdateTraceInformation(readSet)));								
-
-		}
-		if (!filledForm.hasErrors()) {
 			return ok(Json.toJson(getReadSet(code)));		
 		} else {
-			return badRequest(filledForm.errorsAsJson());			
-		}		
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
+		}
 	}
 
 	@Permission(value={"writing"})
-	public static Result propertiesBatch(){
+	public Result propertiesBatch() {
 		List<Form<ReadSetBatchElement>> filledForms =  getFilledFormList(batchElementForm, ReadSetBatchElement.class);
 
 
@@ -682,22 +704,23 @@ public class ReadSets extends ReadSetsController{
 				.map(filledForm->{
 					ReadSetBatchElement element = filledForm.get();
 					ReadSet readSet = getReadSet(element.data.code);
-					if(null != readSet){
-						ContextValidation ctxVal = new ContextValidation(user, filledForm.errors()); 
+					if (readSet != null) {
+//						ContextValidation ctxVal = new ContextValidation(user, filledForm.errors()); 
+						ContextValidation ctxVal = new ContextValidation(user, filledForm); 
 						Map<String, PropertyValue> properties = element.data.properties;
 						ctxVal.setUpdateMode();
 						ReadSetValidationHelper.validateReadSetType(readSet.typeCode, properties, ctxVal);
 
-						if(!ctxVal.hasErrors()){
+						if (!ctxVal.hasErrors()) {
 							MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 									DBQuery.and(DBQuery.is("code", readSet.code)),
 									DBUpdate.set("properties", element.data.properties)
 									.set("traceInformation", getUpdateTraceInformation(readSet, user)));								
 							return new DatatableBatchResponseElement(OK, getReadSet(readSet.code), element.index);
-						}else {
+						} else {
 							return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);
 						}
-					}else {
+					} else {
 						return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
 					}
 				}).collect(Collectors.toList());
@@ -705,8 +728,7 @@ public class ReadSets extends ReadSetsController{
 		return ok(Json.toJson(response));
 	}
 
-
-	private static void manageValidation(ReadSet readSet, Valuation productionVal, Valuation bioinfoVal, ContextValidation ctxVal) {
+	private void manageValidation(ReadSet readSet, Valuation productionVal, Valuation bioinfoVal, ContextValidation ctxVal) {
 		if (productionVal.valid != readSet.productionValuation.valid) {
 			productionVal.date = new Date();
 			productionVal.user = ctxVal.getUser();
@@ -719,9 +741,7 @@ public class ReadSets extends ReadSetsController{
 		}
 	}
 
-
-
-	private static String findRegExpFromStringList(Set<String> searchList) {
+	private String findRegExpFromStringList(Set<String> searchList) {
 		String regex = ".*("; 
 		for (String itemList : searchList) {
 			regex += itemList + "|"; 
@@ -732,15 +752,12 @@ public class ReadSets extends ReadSetsController{
 	}
 
 	@Permission(value={"writing"})
-	public static Result applyRules(String code, String rulesCode){
+	public Result applyRules(String code, String rulesCode){
 		ReadSet readSet = getReadSet(code);
-		if(readSet != null){
-			//Send run fact			
-			// Outside of an actor and if no reply is needed the second argument can be null
-			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),rulesCode, readSet),null);
-		}else
+		if (readSet != null) {
+			rulesActor.tellMessage(rulesCode, readSet);
+		} else
 			return badRequest();
-
 		return ok();
 	}
 

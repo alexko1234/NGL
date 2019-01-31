@@ -129,7 +129,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','$filter
 			"choiceInList" : true,
 			"listStyle" : 'bt-select',
 			"possibleValues" : 'lists.getValuations()',
-			"position" : 30,
+			"position" : 530,
 			"extraHeaders" : {0 : Messages("experiments.inputs")}
 		});
 		
@@ -146,7 +146,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','$filter
 			"possibleValues" : [{code:"TRUE", name:Messages("containers.table.valuationqc.copyToInput.value.TRUE")}, 
 								{code:"FALSE", name:Messages("containers.table.valuationqc.copyToInput.value.FALSE")},
 								{code:"UNSET", name:Messages("containers.table.valuationqc.copyToInput.value.UNSET")}],
-			"position" : 30.1,
+			"position" : 531,
 			"extraHeaders" : {0 : Messages("experiments.inputs")}
 		});
 		
@@ -158,7 +158,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','$filter
 			"edit" : true,
 			"hide" : true,
 			"type" : "text",			
-			"position" : 31,
+			"position" : 532,
 			"extraHeaders" : {0 : Messages("experiments.inputs")}
 		});
 		columns.push({
@@ -176,9 +176,9 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','$filter
 		// !! en mode creation $scope.experiment.atomicTransfertMethod n'est pas encore chargé=> passer par Basket ( ajouter mainService dans le controller )
 		var tmp = [];
 		if(!$scope.isCreationMode()){
-			var tmp = $scope.$eval("atomicTransfertMethods|flatArray:'inputContainerUseds'|getArray:'locationOnContainerSupport.categoryCode'|unique",$scope.experiment);			
+			tmp = $scope.$eval("atomicTransfertMethods|flatArray:'inputContainerUseds'|getArray:'locationOnContainerSupport.categoryCode'|unique",$scope.experiment);			
 		}else{
-			var tmp = $scope.$eval("getBasket().get()|getArray:'support.categoryCode'|unique",mainService);
+			tmp = $scope.$eval("getBasket().get()|getArray:'support.categoryCode'|unique",mainService);
 		}
 		var supportCategoryCode = undefined;
 		if(tmp.length === 1){
@@ -382,7 +382,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','$filter
 			if(angular.isNumber(result) && !isNaN(result)){
 				quantity = {};
 				quantity.value = Math.round(result*10)/10;
-				quantity.unit = (concentration.unit === 'nM')?'nmol':'ng';
+				quantity.unit = (concentration.unit === 'nM')?'fmol':'ng';
 				return quantity;
 			}
 		}

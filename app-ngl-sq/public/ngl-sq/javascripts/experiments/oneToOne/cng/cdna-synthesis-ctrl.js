@@ -12,7 +12,6 @@ angular.module('home').controller('cDNASynthesisCtrlCNG',['$scope', '$parse', 'a
 								 "edit":false,
 								 "hide":true,
 					        	 "type":"text",
-					        	 "mergeCells" : true,
 					        	 "position":1,
 					        	 "extraHeaders":{0:Messages("experiments.inputs")}
 					         },
@@ -23,7 +22,6 @@ angular.module('home').controller('cDNASynthesisCtrlCNG',['$scope', '$parse', 'a
 					 			"order":true,
 					 			"hide":true,
 					 			"type":"text",
-					 			 "mergeCells" : true,
 					 			"position":2,
 					 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 					        	 "extraHeaders":{0:Messages("experiments.inputs")}
@@ -34,7 +32,6 @@ angular.module('home').controller('cDNASynthesisCtrlCNG',['$scope', '$parse', 'a
 					 			"order":true,
 					 			"hide":true,
 					 			"type":"text",
-					 			"mergeCells" : true,
 					 			"position":3,
 					 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 					        	 "extraHeaders":{0:Messages("experiments.inputs")}
@@ -46,8 +43,7 @@ angular.module('home').controller('cDNASynthesisCtrlCNG',['$scope', '$parse', 'a
 								 "edit":false,
 								 "hide":true,
 					        	 "type":"text",
-					        	 "mergeCells" : true,
-					 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
+					        	 "render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
 					        	 "position":4,
 					        	 "extraHeaders":{0:Messages("experiments.inputs")}
 					         },

@@ -1,5 +1,7 @@
 @(e:models.laboratory.experiment.instance.Experiment, containers: List[models.laboratory.container.instance.Container], tagModel: controllers.instruments.io.utils.TagModel)
 @import java.lang.Boolean; var jnt=true;
+@import java.lang.String; var analyse="";
+@import java.util.Arrays; val analyseAligne=Array("illumina_qc", "illumina_rnaseq", "methylseq");
 @import controllers.instruments.io.utils._;
 
 @for(etm <- e.atomicTransfertMethods.sortWith(_.line < _.line)){
@@ -7,12 +9,13 @@
 	
 		@for((k,cs) <- c.contents.groupBy(_.projectCode)){
 			@for((key1,cos1) <- cs.groupBy(CsvHelper.getContentProcessProperties(_,"analyseType", e))){
+				@(analyse=CsvHelper.getContentProcessProperties(cos1.toList.head, "analyseType", e))
 				@for((key2,cos2) <- cos1.groupBy(CsvHelper.getContentProcessProperties(_,"Run_Name"))){
 					@for((key3,cos3) <- cos2.groupBy(CsvHelper.getContentProcessProperties(_,"reference_genome", e))){
 						@for((key,cos) <- cos3.groupBy(CsvHelper.getContentProcessProperties(_,"reference_transcriptome", e))){
 						
 							@*** Si Amplicon ou 16S et différents tailles d'insert -- créeér 1 ligne par taille d'insert ***@
-							@if(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e) == "Amplicon" || CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e) == "16S"){
+							@if( analyse == "Amplicon" || analyse == "16S"){
 							
 								@for((keybis,cosbis) <- cos.groupBy(OutputHelper.getContentProperty(_,"taille_insert"))){
 								
@@ -42,7 +45,7 @@
 											***@--reference-genome @(CsvHelper.getContentProcessProperties(cosbis.toList.head, "reference_genome", e) )@***
 										***@} @***
 										***@@if(jnt){@***
-											***@@if(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e) == "16S"){--assignation-databank '/save/ng6/TODO/HiSeqIndexedGenomes/new_struct/ncbi_16S/blast/16SMicrobial' } @***
+											***@@if(analyse == "16S"){--assignation-databank '/save/ng6/TODO/HiSeqIndexedGenomes/new_struct/ncbi_16S/blast/16SMicrobial' } @***
 											***@--min-overlap  @if(OutputHelper.getInstrumentProperty(e,"nbCyclesRead1").asInstanceOf[Integer]+OutputHelper.getInstrumentProperty(e,"nbCyclesRead2").asInstanceOf[Integer]-2-OutputHelper.getContentProperty(cosbis.toList.head,"taille_insert").toInt-30 > 10){@***
 												***@@(OutputHelper.getInstrumentProperty(e,"nbCyclesRead1").asInstanceOf[Integer]+OutputHelper.getInstrumentProperty(e,"nbCyclesRead2").asInstanceOf[Integer]-2-OutputHelper.getContentProperty(cosbis.toList.head,"taille_insert").toInt-30)}else{10} @***
 											***@--max-overlap @(OutputHelper.getInstrumentProperty(e,"nbCyclesRead1").asInstanceOf[Integer]+OutputHelper.getInstrumentProperty(e,"nbCyclesRead2").asInstanceOf[Integer]-2-OutputHelper.getContentProperty(cosbis.toList.head,"taille_insert").toInt+20) @***
@@ -51,13 +54,18 @@
 										***@@for(co <- cosbis.toList.sortWith(_.sampleCode < _.sampleCode)){@***
 											***@ select-sample-id=@(CsvHelper.contentName(co))@***
 										***@} @***
-										***@lane=@(etm.line) --project-name @(cosbis.toList.head.projectCode) --admin-login CTD
+										***@lane=@(etm.line) --project-name @(cosbis.toList.head.projectCode) --admin-login CTD @***
+										***@@if(analyseAligne.contains(CsvHelper.getFromAnalyseType(analyse))){@***
+											***@--align-subset-reads @***
+										***@}@***
+										si plus d'une librairie dans le pool
+										***@@if(cosbis.toList.length > 1){--keep all}
 										
 									}
 									
 							}else{
 							
-									python3.4 /usr/local/bioinfo/src/nG6/bin/ng6_cli.py @(CsvHelper.getFromAnalyseType(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e))) @***
+									python3.4 /usr/local/bioinfo/src/nG6/bin/ng6_cli.py @(CsvHelper.getFromAnalyseType(analyse)) @***
 									***@--date '@(CsvHelper.getRunDate(e))' @***
 									***@--data-nature @if(OutputHelper.getContentProperty(cos.toList.head, "Type_librairie")){@(OutputHelper.getContentProperty(cos.toList.head,"Type_librairie"))}else{'-'} @***
 									***@--sequencer '@(CsvHelper.getInstrumentName(e.instrument.code))' @***
@@ -70,28 +78,33 @@
 										***@- Insert :@***
 										***@@for(co <- cos.toList.sortWith(_.sampleCode < _.sampleCode)){@***
 													***@@if(cos.toList.sortWith(_.sampleCode < _.sampleCode).head != co){, } @***
-													***@@if(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e).split("10X").length > 0 ){@***
+													***@@if(analyse.split("10X").length > 1 ){@***
 														***@@(OutputHelper.getContentProperty(co,"taille_insert"))pb for Sample @(CsvHelper.contentName(co))-1 , @(OutputHelper.getContentProperty(co,"taille_insert"))pb for Sample @(CsvHelper.contentName(co))-2 , @(OutputHelper.getContentProperty(co,"taille_insert"))pb for Sample @(CsvHelper.contentName(co))-3 , @(OutputHelper.getContentProperty(co,"taille_insert"))pb for Sample @(CsvHelper.contentName(co))-4 @***
 													***@}else{@(OutputHelper.getContentProperty(co,"taille_insert"))pb for Sample @(CsvHelper.contentName(co))}@***
 										***@}@***
 									***@.} [C] @***
 									***@@(c.concentration.value)pM' @***
-									***@@if((CsvHelper.getContentProcessProperties(c.contents.toList.head, "store_bam", e) != null && CsvHelper.getContentProcessProperties(c.contents.toList.head, "store_bam", e) != "non") || (CsvHelper.getFromAnalyseType(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e)) == "methylseq")){}else{ --delete-bam} @***
-									***@@if(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e).split("10X").length < 1 && (c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cos.toList.head, "reference_transcriptome", e)) != null)){@***
+									***@@if((CsvHelper.getContentProcessProperties(c.contents.toList.head, "store_bam", e) != null && CsvHelper.getContentProcessProperties(c.contents.toList.head, "store_bam", e) != "non") || (CsvHelper.getFromAnalyseType(analyse) == "methylseq")){}else{ --delete-bam} @***
+									***@@if(analyse.split("10X").length < 2 && (c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cos.toList.head, "reference_transcriptome", e)) != null)){@***
 										***@--reference-transcriptome @(CsvHelper.getContentProcessProperties(cos.toList.head, "reference_transcriptome", e))} @***
-									***@@if(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e).split("10X").length < 1 && (c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cos.toList.head, "reference_genome", e)) != null)){@***
-										***@@if(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e) == "Bisulfite"){--control-genome /save/ng6/TODO/HiSeqIndexedGenomes/new_struct/pUC19/genome/bismark_bowtie2/pUC19.fa}@***
+									***@@if(analyse.split("10X").length < 2 && (c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cos.toList.head, "reference_genome", e)) != null)){@***
+										***@@if(analyse == "Bisulfite"){--control-genome /save/ng6/TODO/HiSeqIndexedGenomes/new_struct/pUC19/genome/bismark_bowtie2/pUC19.fa}@***
 										***@ --reference-genome @(CsvHelper.getContentProcessProperties(cos.toList.head, "reference_genome", e))@***
 									***@} @***									
 									***@--casava directory=#CASAVA_DIRECTORY# @***
 									***@@for(co <- cos.toList.sortWith(_.sampleCode < _.sampleCode)){@***
-										***@@if(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e).split("10X").length > 0){@***
+										***@@if(analyse.split("10X").length > 1){@***
 										***@select-sample-id=@(CsvHelper.contentName(co))-1 select-sample-id=@(CsvHelper.contentName(co))-2 select-sample-id=@(CsvHelper.contentName(co))-3 select-sample-id=@(CsvHelper.contentName(co))-4 @***
 										***@}else{@***
 											***@select-sample-id=@(CsvHelper.contentName(co)) @***
 										***@}@***
 									***@} @***
-									***@lane=@(etm.line) --project-name @(cos.toList.head.projectCode) --admin-login CTD
+									***@lane=@(etm.line) --project-name @(cos.toList.head.projectCode) --admin-login CTD @***
+									***@@if(analyseAligne.contains(CsvHelper.getFromAnalyseType(analyse))){@***
+										***@--align-subset-reads @***
+									***@}@***
+									si plus d'une librairie dans le pool
+									***@@if(cos.toList.length > 1){--keep all}
 								
 							}
 							

@@ -23,7 +23,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				withoutSelect : true,
 				columnMode : true,
 				lineMode : function(line){
-					if((line.state.code === "N")||(line.state.code === "U-SUB"))
+					if((line.state.code === "NONE")||(line.state.code === "N"))
 						return true;
 					else 
 						return false;
@@ -82,13 +82,13 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 					edit:false,
 					choiceInList:false  
 				},
-				/*{property:"centerProjectName",
+				{property:"centerProjectName",
 			        	header: Messages("study.centerProjectName"),
 			        	type :"text",		    	  	
 			        	order:false,
-			        	edit:false,
+			        	edit:true,
 			        	choiceInList:false  
-			        },*/
+			    },
 				{property:"projectCodes",
 					header: Messages("study.projectCodes"),
 					type :"text",		    	  	
@@ -217,7 +217,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 					edit:true,
 					editTemplate:"<textarea class='form-control' #ng-model rows='1'></textarea>",
 					choiceInList:false
-				},
+				},				
 				{property:"clone",
 					header: Messages("sample.clone"),
 					type :"text",	
@@ -231,29 +231,22 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 					type :"int",
 					hide:true,
 					order:false,
-					edit:true,
+					edit:false,
 					choiceInList:false
 				},
-				{property:"classification",
-					header: Messages("sample.classification"),
-					type :"text",		    	  	
-					order:false,
-					edit:true,
-					choiceInList:false
-				},
-				{property:"commonName",
+				/*{property:"commonName",
 					header: Messages("sample.commonName"),
 					type :"text",		    	  	
 					hide:true,
 					order:false,
-					edit:true,
+					edit:false,
 					choiceInList:false
-				},
+				},*/
 				{property:"scientificName",
 					header: Messages("sample.scientificName"),
 					type :"text",		    	  	
 					order:false,
-					edit:true,
+					edit:false,
 					choiceInList:false
 				},
 				{property:"state.code",
@@ -615,7 +608,8 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				var queries = [];
 				for (var i = 0; i < 6 && $scope.submission.refSampleCodes.length > 0; i++) {
 					var subSampleCodes = $scope.submission.refSampleCodes.splice(0, nbElementByBatch);
-					queries.push( $http.get(jsRoutes.controllers.sra.samples.api.Samples.list().url, {params: {listSampleCodes:subSampleCodes}}) );
+					//queries.push( $http.get(jsRoutes.controllers.sra.samples.api.Samples.list().url, {params: {listSampleCodes:subSampleCodes}}) );
+					queries.push( $http.get(jsRoutes.controllers.sra.samples.api.Samples.list().url, {params: {codes:subSampleCodes}}) );
 				}
 				$q.all(queries).then(function(results) {
 					var allData = [];
@@ -635,7 +629,8 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			}
 
 			//Get samples
-			/*$http.get(jsRoutes.controllers.sra.samples.api.Samples.list().url, {params: {listSampleCodes:$scope.submission.refSampleCodes}}).success(function(data)
+			//$http.get(jsRoutes.controllers.sra.samples.api.Samples.list().url, {params: {listSampleCodes:$scope.submission.refSampleCodes}}).success(function(data)
+			/*$http.get(jsRoutes.controllers.sra.samples.api.Samples.list().url, {params: {codes:$scope.submission.refSampleCodes}}).success(function(data)
 					{
 					$scope.samples = data;
 
@@ -652,14 +647,16 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				var queries = [];
 				for (var i = 0; i < 6 && $scope.submission.experimentCodes.length > 0; i++) {
 					var subExperimentCodes = $scope.submission.experimentCodes.splice(0, nbElementByBatch);
-					queries.push( $http.get(jsRoutes.controllers.sra.experiments.api.Experiments.list().url, {params: {listExperimentCodes:subExperimentCodes}}) );
+					//queries.push( $http.get(jsRoutes.controllers.sra.experiments.api.Experiments.list().url, { params : { listExperimentCodes : subExperimentCodes } }) );
+					queries.push( $http.get(jsRoutes.controllers.sra.experiments.api.Experiments.list().url, { params : { codes : subExperimentCodes } }) );
 				}
 				$q.all(queries).then(function(results) {
 					var allData = [];
 					results.forEach(function(result){
 						allData = allData.concat(result.data);
 					});
-
+                    console.log("XXXXXXXXXXXXXXXXXXXXXx");
+                    
 					$scope.experiments = allData;
 					//Init datatable
 					$scope.experimentDT = datatable(experimentsDTConfig);

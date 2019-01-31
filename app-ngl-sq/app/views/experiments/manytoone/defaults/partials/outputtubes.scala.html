@@ -1,7 +1,12 @@
+@this(ctx : fr.cea.ig.play.migration.NGLContext)
+
 @()
+
+@CNG = @{ "CNG" == ctx.config().getInstitute() }
+
 <!-- work with atmDragAndDrop2 -->
 <table class="table" >
-<thead>
+	<thead>
 		<tr ng-if="!atmService.data.isAllATMViewClose">
 			<th colspan="{{11 + inputContainerProperties.length}}">
 				@Messages("experiments.inputs")
@@ -84,7 +89,8 @@
 			</th>
 		</tr>
 		
-		@if("CNG" == play.Play.application().configuration().getString("institute")){
+		@* @if("CNG" == play.Play.application().configuration().getString("institute")){ *@
+		@if(CNG){
 		<!-- 27/10/2016 TR pour CNG uniquement-->
 		<tr ng-if="!atmService.data.isAllATMViewClose">
 			<th colspan="11"></th> <!--  DIFFERENT DE outputplates-->
@@ -271,7 +277,8 @@
 						</div>
 					</div>	
 				</td>
-				@if("CNG" == play.Play.application().configuration().getString("institute")){
+				@* @if("CNG" == play.Play.application().configuration().getString("institute")){ *@
+				@if(CNG){
 				<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">	
 					<div ng-switch on="mainService.isEditMode()">						
 						<p class="form-control-static" ng-switch-when="false" ng-bind="atm.outputContainerUseds[0].locationOnContainerSupport.code" />						 
@@ -352,5 +359,5 @@
 					</div>						
 				</td>												
 		</tr>					
-</tbody>	
+	</tbody>	
 </table>

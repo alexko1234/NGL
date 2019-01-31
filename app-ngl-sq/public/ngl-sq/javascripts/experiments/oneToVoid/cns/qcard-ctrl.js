@@ -37,13 +37,25 @@ angular.module('home').controller('OneToVoidQcardCNSCtrl',['$scope', '$parse','$
 		"order" : false,
 		"hide" : true,
 		"type" : "text",
-		"position" : 7,
+		"position" : 7.1,
 		"extraHeaders" : {
 			0 : Messages("experiments.inputs")
 		}
 
 	});
 	
+	columns.push({
+		"header" : Messages("containers.table.volume") + " (µL)",
+		"property" : "inputContainerUsed.volume.value",
+		"order" : true,
+		"edit" : false,
+		"hide" : true,
+		"type" : "number",
+		"position" : 7.05,
+		"extraHeaders" : {
+			0 : Messages("experiments.inputs")
+		}
+	});
 	
 	$scope.atmService.data.setColumnsConfig(columns);
 

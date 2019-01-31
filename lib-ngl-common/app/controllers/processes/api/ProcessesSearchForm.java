@@ -2,13 +2,14 @@ package controllers.processes.api;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Set;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import controllers.ListForm;
 
-public class ProcessesSearchForm extends ListForm{
+public class ProcessesSearchForm extends ListForm {
+	
 	public String typeCode;
 	public List<String> typeCodes;
 	public String categoryCode;
@@ -43,9 +44,10 @@ public class ProcessesSearchForm extends ListForm{
 	public String code;
 	public List<String> codes;
 	public String codeRegex;
-	public Map<String, List<String>> properties = new HashMap<String, List<String>>();
+	public Map<String, List<String>> properties = new HashMap<>();
 	public String fromSupportCode;
-	public Map<String, List<String>> sampleOnInputContainerProperties = new HashMap<String, List<String>>();
+	public Map<String, List<String>> sampleOnInputContainerProperties = new HashMap<>();
+	
 	@Override
 	public String toString() {
 		return "ProcessesSearchForm [typeCode=" + typeCode + ", categoryCode="

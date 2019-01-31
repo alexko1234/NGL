@@ -1,4 +1,7 @@
+@this()
+
 @()
+
 		<div ng-model="atmService.data.inputContainers">
 			<div class="panel panel-primary"  style="border-style:dashed">				
 			<div class="panel-body" ng-if="atmService.data.inputContainers.length==0">		
@@ -26,6 +29,9 @@
 					</th>
 					<th>
 						@Messages("containers.table.sampleCodes")
+					</th>
+					<th>
+						@Messages("containers.table.libProcessTypeCodes")
 					</th>
 					<th>
 						@Messages("containers.table.tags")
@@ -63,7 +69,9 @@
 						<div list-resize='container.sampleCodes' list-resize-min-size='3'>
 						
 					</td>
-																
+					<td>
+						<div list-resize='container.contents | getArray:"properties.libProcessTypeCode.value"| unique' list-resize-min-size='5' below vertical>					
+					</td>									
 					<td>
 						<div list-resize='container.contents | getArray:"properties.tag.value"| unique' list-resize-min-size='5' below vertical>																
 					</td>					

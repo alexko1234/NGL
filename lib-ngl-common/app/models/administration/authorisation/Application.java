@@ -2,9 +2,10 @@ package models.administration.authorisation;
 
 import models.utils.Model;
 
-
-public class Application extends Model<Application>{
-	public String label;
+// There is no associated DAO so we expect this class to not
+// be used.
+public abstract class Application extends Model<Application> {
 	
+	public String label;
 	
 }

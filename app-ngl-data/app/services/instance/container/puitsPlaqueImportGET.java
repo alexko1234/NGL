@@ -3,13 +3,15 @@ package services.instance.container;
 import java.sql.SQLException;
 
 
+
+import fr.cea.ig.play.migration.NGLContext;
 import models.utils.dao.DAOException;
 import scala.concurrent.duration.FiniteDuration;
 import play.Logger;
 public class puitsPlaqueImportGET extends ContainerImportGET {
 
-	public puitsPlaqueImportGET(FiniteDuration durationFromStart,FiniteDuration durationFromNextIteration) {
-		super("Container well GET", durationFromStart, durationFromNextIteration);
+	public puitsPlaqueImportGET(FiniteDuration durationFromStart,FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super("Container well GET", durationFromStart, durationFromNextIteration,ctx);
 	}
 
 	@Override 
@@ -51,7 +53,7 @@ public class puitsPlaqueImportGET extends ContainerImportGET {
 //				+ "AND tob.object_barcode = 'GENO43136:B4' "
 				//Import_dans_NGL is TRUE
 				+ "AND tclo.caracteristique_id ="+ play.Play.application().configuration().getString("caracteristiqueEsitoulImportDansNglVrai"); //vrai 
-			Logger.debug("puitsPlaqueImportGET : " + SQLContainer);
+			Logger.debug("puitsPlaqueImportGET");
 			createContainers(contextError,SQLContainer,"well","IW-P",null,null);
 			//contextError.setUpdateMode();
 	}

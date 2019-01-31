@@ -18,6 +18,6 @@ public class BarcodePosition  {
 
 	public boolean barcodeBottom;
 
-	public boolean is2d;
+	public boolean twoDimension;
 
 }

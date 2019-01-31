@@ -1,6 +1,8 @@
-package models.laboratory.reagent.description;
+// Seems pretty much unused
 
-public class Provider {
-	
-
-}
+//package models.laboratory.reagent.description;
+//
+//public class Provider {
+//	
+//
+//}

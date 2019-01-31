@@ -1,11 +1,12 @@
 package services.instance.resolution;
 
+import static fr.cea.ig.play.IGGlobals.configuration;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.typesafe.config.ConfigFactory;
-
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.resolutions.instance.Resolution;
@@ -14,11 +15,10 @@ import models.laboratory.resolutions.instance.ResolutionConfiguration;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
-import play.Logger;
-import play.Logger.ALogger;
+//import play.Logger;
+//import play.Logger.ALogger;
 import services.instance.InstanceFactory;
 import validation.ContextValidation;
-import fr.cea.ig.MongoDBDAO;
 
 /**
  * Create Resolutions : for more flexibility, these data are created in a specific collection (in MongoDB) 
@@ -29,25 +29,36 @@ import fr.cea.ig.MongoDBDAO;
  */
 public class ResolutionService {
 	
-
-	private static final ALogger logger = Logger.of("ResolutionService");
+	private static final play.Logger.ALogger logger = play.Logger.of(ResolutionService.class);
+	
 	private static HashMap<String, ResolutionCategory> resolutionCategories; 
 	
-	// FDS 15/01 reecriture...
-	public static void main(ContextValidation ctx) {	
-		
-		String inst=play.Play.application().configuration().getString("institute");
-		
-		if ( inst.equals("CNS") || inst.equals("CNG") || inst.equals("TEST") ) {
-			Logger.info("Create and save "+inst+ " resolution categories ...");
-			
+//	public static void main(ContextValidation ctx) {			
+//		String inst=play.Play.application().configuration().getString("institute");
+//		if ( inst.equals("CNS") || inst.equals("CNG") || inst.equals("TEST") ) {
+//			Logger.info("Create and save "+inst+ " resolution categories ...");
+//			saveResolutions(ctx, inst);
+//			Logger.info(inst+" Resolution collection creation is done!");
+//		}
+//		else {
+//			Logger.error("You need to specify only one institute !");
+//		}
+//		ctx.displayErrors(logger);
+//	}
+	
+	public static void main(ContextValidation ctx) {			
+		String inst = configuration().getString("institute");
+		switch (inst) {
+		case "CNS"  :
+		case "CNG"  :
+		case "TEST" :
+			logger.info("Create and save "+inst+ " resolution categories ...");
 			saveResolutions(ctx, inst);
-			Logger.info(inst+" Resolution collection creation is done!");
+			logger.info(inst+" Resolution collection creation is done!");
+			break;
+		default  :
+			logger.error("You need to specify only one institute !");
 		}
-		else {
-			Logger.error("You need to specify only one institute !");
-		}
-		
 		ctx.displayErrors(logger);
 	}
 	
@@ -88,14 +99,13 @@ public class ResolutionService {
 			resolutionCategories = createResolutionCategoriesCNS();
 			
 			createExperimentResolution(ctx); 
-			createProcessResolutionCNS(ctx); // on met CNG ou CNS???
+			createProcessResolutionCNS(ctx); // CNS???
 		}
 	}
 
-
 	// FDS 20/01 retour aux 2 methodes initiales, mais correction pour CNG: ajout    resoCategories.put("Default",...
 	public static HashMap<String, ResolutionCategory> createResolutionCategoriesCNG(){	
-		HashMap<String, ResolutionCategory> resoCategories = new HashMap<String, ResolutionCategory>();
+		HashMap<String, ResolutionCategory> resoCategories = new HashMap<>();
 		
 		//Run
 		resoCategories.put("SAV", new ResolutionCategory("Problème qualité : SAV", (short) 10)); //10 for CNG only
@@ -124,10 +134,9 @@ public class ResolutionService {
 		
 		return resoCategories;
 	}
-	
 
 	public static HashMap<String, ResolutionCategory> createResolutionCategoriesCNS(){	
-		HashMap<String, ResolutionCategory> resoCategories = new HashMap<String, ResolutionCategory>();
+		HashMap<String, ResolutionCategory> resoCategories = new HashMap<>();
 		//Run
 		resoCategories.put("PbM", new ResolutionCategory("Problème machine", (short) 20));
 		resoCategories.put("PbR", new ResolutionCategory("Problème réactifs", (short) 30)); 
@@ -161,12 +170,10 @@ public class ResolutionService {
 		return resoCategories;
 	}
 
-
-	
 	/* sub-methods */
 	
 	public static void createRunResolutionCNG(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		// FDS 16/01: rendre moins verbeux avec variables XXrC
 		
@@ -259,7 +266,8 @@ public class ResolutionService {
 		r.code = "runReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Run";
-		ArrayList<String> al = new ArrayList<String>();
+		
+		ArrayList<String> al = new ArrayList<>();
 		al.add("RHS2000");
 		al.add("RHS2500");
 		al.add("RHS2500R");
@@ -267,16 +275,15 @@ public class ResolutionService {
 		al.add("RHSX");
 		al.add("RMISEQ");
 		al.add("RNEXTSEQ500");
+		al.add("RNVS6000");  // NGL-1730 ajout 14/12/2017
 		r.typeCodes = al;
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "runReso");
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME,r,ctx, false);
 	}
 	
-	
-	
 	public static void createReadSetResolutionCNG(ContextValidation ctx) {	
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		// FDS 16/01 rendre moins verbeux avec variables XXrC
 
@@ -320,18 +327,17 @@ public class ResolutionService {
 		r.code = "readSetReso";
 		r.resolutions = l;
 		r.objectTypeCode = "ReadSet";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("default-readset");
 		al.add("rsillumina");		
 		r.typeCodes = al;
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "readSetReso");
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME,r,ctx, false);
-	}
-	
+	}	
 	
 	public static void createRunResolutionCNS(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		// FDS 16/01 rendre moins verbeux avec variables XXrC
 		
@@ -402,7 +408,7 @@ public class ResolutionService {
 		r.code = "runReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Run";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("RHS2000");
 		al.add("RHS2500");
 		al.add("RHS2500R");
@@ -414,16 +420,17 @@ public class ResolutionService {
 		al.add("RMKI");
 		al.add("RMKIB");
 		al.add("RHS4000");
+		al.add("RNVS6000");
+		al.add("RPROMETHION");
 		
 		r.typeCodes = al;
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "runReso");
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME,r,ctx, false);
-	}
-	
+	}	
 	
 	public static void createReadSetResolutionCNS(ContextValidation ctx) {	
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 
 		// FDS 16/01 rendre moins verbeux avec variables XXrC
 		
@@ -489,7 +496,7 @@ public class ResolutionService {
 		r.code = "readSetReso";
 		r.resolutions = l;
 		r.objectTypeCode = "ReadSet";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("default-readset");
 		al.add("rsillumina");
 		al.add("rsnanopore");
@@ -498,11 +505,10 @@ public class ResolutionService {
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "readSetReso");
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME,r,ctx, false);
-	}
-	
+	}	
 	
 	public static void createAnalysisResolutionCNS(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		// FDS 16/01 rendre moins verbeux avec variables XXrC
 
@@ -546,7 +552,7 @@ public class ResolutionService {
 		r.code = "analysisReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Analysis";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("BPA");
 		r.typeCodes = al;
 		
@@ -561,31 +567,32 @@ public class ResolutionService {
 		r.code = "experimentReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
-		ArrayList<String> al = new ArrayList<String>(); 
+		ArrayList<String> al = new ArrayList<>(); 
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class,r.code);
-		List<String> typeCodes=MongoDBDAO.getCollection(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class).distinct("typeCodes");
-		
+		// JacksonDBCollection.distinct return type is a raw List
+		@SuppressWarnings("unchecked")
+		List<String> typeCodes = 
+				MongoDBDAO.getCollection(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class)
+				          .distinct("typeCodes");
 		try {
-			List<ExperimentType> expTypes=ExperimentType.find.findAll();
-			for(ExperimentType expType:expTypes){
-				if(typeCodes == null || !typeCodes.contains(expType.code)){
-					Logger.debug("Add experimentType default resolution "+ expType.code);
+			List<ExperimentType> expTypes = ExperimentType.find.findAll();
+			for (ExperimentType expType : expTypes) {
+				if (typeCodes == null || !typeCodes.contains(expType.code)) {
+					logger.debug("Add experimentType default resolution "+ expType.code);
 					al.add(expType.code);
 				}	
 			}
 		} catch (DAOException e) {
-			Logger.error("Creation Resolution for ExperimentType error "+e.getMessage());
+			logger.error("Creation Resolution for ExperimentType error " + e.getMessage());
 		}
-		
 		r.typeCodes = al;
 		ctx.setCreationMode();
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
-	}
-	
+	}	
 
 	public static void createOpgenDepotResolutionCNS(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		l.addAll(getDefaultResolutionCNS());
 		
@@ -597,7 +604,7 @@ public class ResolutionService {
 		r.code = "expODReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("void-opgen-depot");
 		al.add("opgen-depot");		
 		r.typeCodes = al;
@@ -607,7 +614,7 @@ public class ResolutionService {
 	}
 	
 	public static void createIlluminaPrepFCDepotResolutionCNG(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		l.addAll(getDefaultResolutionCNS());
 		
@@ -617,7 +624,7 @@ public class ResolutionService {
 		r.code = "expIPDReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("ext-to-prepa-flowcell");
 		al.add("prepa-flowcell");		
 		al.add("ext-to-prepa-fc-ordered"); //FDS ajout 10/11/2015  -- JIRA NGL-838
@@ -630,7 +637,7 @@ public class ResolutionService {
 	}
 	
 	public static void createIlluminaPrepFCDepotResolutionCNS(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		l.addAll(getDefaultResolutionCNS());
 		
@@ -640,7 +647,7 @@ public class ResolutionService {
 		r.code = "expIPDReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("ext-to-prepa-flowcell");
 		al.add("prepa-flowcell");	
 		al.add("prepa-fc-ordered");	
@@ -652,7 +659,7 @@ public class ResolutionService {
 	}
 	
 	private static void createIryPreparationNLRSResolutionCNS(ContextValidation ctx) {
-	List<Resolution> l = new ArrayList<Resolution>();
+	List<Resolution> l = new ArrayList<>();
 		
 		l.addAll(getDefaultResolutionCNS());
 		
@@ -665,8 +672,9 @@ public class ResolutionService {
 		r.code = "expIrysPrepNLRSReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("irys-nlrs-prep");
+		al.add("bionano-dls-prep");
 		r.typeCodes = al;
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
@@ -674,7 +682,7 @@ public class ResolutionService {
 	}
 	
 	private static void createDepotBionanoResolutionCNS(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		l.addAll(getDefaultResolutionCNS());
 		
@@ -682,13 +690,12 @@ public class ResolutionService {
 		l.add(InstanceFactory.newResolution("Problème passage des molécules région pillar", "echec-pillarRegion", resolutionCategories.get("Default"), (short) 5));
 		l.add(InstanceFactory.newResolution("Labelling incorrect", "echec-labeling", resolutionCategories.get("Default"), (short) 6));
 		l.add(InstanceFactory.newResolution("Utilisation du NanoAnalyzer", "nanoAnalyzer", resolutionCategories.get("Default"), (short) 7));
-		
-		
+			
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "expDepotBionanoReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("bionano-depot");
 		r.typeCodes = al;
 		
@@ -696,9 +703,8 @@ public class ResolutionService {
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);	
 	}
 	
-	
 	private static void createSamplePrepResolutionCNS(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		l.addAll(getDefaultResolutionCNS());	
 		l.add(InstanceFactory.newResolution("Tube cassé dans cryobroyeur", "broken-tube-in-freezer-mill", resolutionCategories.get("Default"), (short) 4));
@@ -709,15 +715,15 @@ public class ResolutionService {
 		r.code = "expExtractionDNARNAReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("dna-rna-extraction");
+		
 		r.typeCodes = al;
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
 		
-		
-		l = new ArrayList<Resolution>();
+		l = new ArrayList<>();
 
 		l.addAll(getDefaultResolutionCNS());	
 
@@ -725,16 +731,16 @@ public class ResolutionService {
 		r.code = "expBroyageReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
-		al = new ArrayList<String>();
+		al = new ArrayList<>();
 		al.add("grinding");
 		r.typeCodes = al;
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
-		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
-		
+		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);	
 	}
+	
 	private static void createGelMigrationResolutionCNS(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		l.addAll(getDefaultResolutionCNS());	
 		l.add(InstanceFactory.newResolution("Tâche de faible poids moléculaire", "low-molecular-weight-spot", resolutionCategories.get("Default"), (short) 4));
@@ -748,18 +754,17 @@ public class ResolutionService {
 		r.code = "expGelMigrationReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("gel-migration");
 		r.typeCodes = al;
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
 	}
-
 	
-	// FDS 05/02/2016 -- JIRA NGL-894 experience ey processus X5
+	// FDS 05/02/2016 -- JIRA NGL-894 experience processus X5
 	private static void createPrepPcrFreeResolutionCNG(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		l.addAll(getDefaultResolutionCNS());
 		
@@ -770,7 +775,7 @@ public class ResolutionService {
 		r.code = "expPrepPcrFreeReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("prep-pcr-free"); 
 		r.typeCodes = al;
 		
@@ -779,10 +784,9 @@ public class ResolutionService {
 	}
 	
 	private static void createQCMiseqResolutionCNG(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		l.addAll(getDefaultResolutionCNS());
-		
 
 		l.add(InstanceFactory.newResolution("Run Miseq invalide : résultats non importés", "invalid-miseq-run", resolutionCategories.get("Default"), (short) 4));
 		
@@ -790,7 +794,7 @@ public class ResolutionService {
 		r.code = "expMiseqQCReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		al.add("miseq-qc"); 
 		r.typeCodes = al;
 		
@@ -800,7 +804,7 @@ public class ResolutionService {
 	
 	// FDS 23/11/2016 NGL-1158: renommage pour separation des resolutions de Processus entre CNG et CNS
 	public static void createProcessResolutionCNS(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		l.add(InstanceFactory.newResolution("Déroulement correct","correct", resolutionCategories.get("Default"), (short) 1));
 		l.add(InstanceFactory.newResolution("Standby","standby", resolutionCategories.get("Default"), (short) 2));
@@ -822,45 +826,32 @@ public class ResolutionService {
 		
 		l.add(InstanceFactory.newResolution("Processus partiel (MUST BE REPLACE)","processus-partiel", resolutionCategories.get("Default"), (short) 18));
 		l.add(InstanceFactory.newResolution("Arrêt - erreur déclaration","stop-pb-declaration", resolutionCategories.get("Default"), (short) 19));
-		
-		
-			/* OLD*/
-			/*
-			l.add(InstanceFactory.newResolution("Déroulement correct","correct", resolutionCategories.get("Default"), (short) 1));
-			l.add(InstanceFactory.newResolution("Processus partiel","processus-partiel", resolutionCategories.get("Default"), (short) 2));
-			l.add(InstanceFactory.newResolution("Arrêt - abandon","stop-abandon", resolutionCategories.get("Default"), (short) 3));
-			l.add(InstanceFactory.newResolution("Arrêt - à ré-extraire","stop-reextraire", resolutionCategories.get("Default"), (short) 4));
-			l.add(InstanceFactory.newResolution("Arrêt - à ré-amplifier","stop-reamplifier", resolutionCategories.get("Default"), (short) 5));
-			l.add(InstanceFactory.newResolution("Arrêt - à re-synthétiser","stop-resynthétiser", resolutionCategories.get("Default"), (short) 6));
-			l.add(InstanceFactory.newResolution("Arrêt - à re-fragmenter","stop-refragmenter", resolutionCategories.get("Default"), (short) 7));
-			*/
-		
+		l.add(InstanceFactory.newResolution("Arrêt - Rendement trop faible","stop-pb-yield-too-low", resolutionCategories.get("Default"), (short) 20));	
+	l.add(InstanceFactory.newResolution("Arrêt - pour séquençage Sanger","stop-seq-sanger", resolutionCategories.get("Default"), (short) 21));		l.add(InstanceFactory.newResolution("Arrêt - erreur manip","stop-pb-experiment", resolutionCategories.get("Default"), (short) 21));	
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "processReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Process";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		
 		try {
 			List<ProcessType> processTypes=ProcessType.find.findAll();
 			for(ProcessType processType:processTypes){
-					Logger.debug("Add processType default resolution "+ processType.code);
+					logger.debug("Add processType default resolution "+ processType.code);
 					al.add(processType.code);
 			}
 		} catch (DAOException e) {
-			Logger.error("Creation Resolution for Process Type error "+e.getMessage());
+			logger.error("Creation Resolution for Process Type error "+e.getMessage());
 		}
-		
 		r.typeCodes = al;
-		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
 	}
 	
 	// FDS 23/11/2016 NGL-1158: creation pour separation des resolutions de Processus entre CNG et CNS
 	public static void createProcessResolutionCNG(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 
 		// pour l'instant les 2 premières ne sont pas demandées...
 		//l.add(InstanceFactory.newResolution("Déroulement correct","correct", resolutionCategories.get("Default"), (short) 1));
@@ -879,18 +870,17 @@ public class ResolutionService {
 		r.code = "processReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Process";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 		
 		try {
 			List<ProcessType> processTypes=ProcessType.find.findAll();
-			for(ProcessType processType:processTypes){
-					Logger.debug("Add processType default resolution "+ processType.code);
+			for (ProcessType processType:processTypes) {
+					logger.debug("Add processType default resolution "+ processType.code);
 					al.add(processType.code);
 			}
 		} catch (DAOException e) {
-			Logger.error("Creation Resolution for Process Type error "+e.getMessage());
+			logger.error("Creation Resolution for Process Type error "+e.getMessage());
 		}
-		
 		r.typeCodes = al;
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
@@ -898,7 +888,7 @@ public class ResolutionService {
 	}
 	
 	public static List<Resolution> getDefaultResolutionCNS(){
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 		
 		l.add(InstanceFactory.newResolution("Déroulement correct",	"correct", resolutionCategories.get("Default"), (short) 1));
 		l.add(InstanceFactory.newResolution("Problème signalé en commentaire", "pb-commentaire", resolutionCategories.get("Default"), (short) 2));
@@ -907,9 +897,8 @@ public class ResolutionService {
 		return l;
 	}
 	
-	
 	public static void createContainerResolutionCNG(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 
 		l.add(InstanceFactory.newResolution("Epuisé","empty", resolutionCategories.get("Default"), (short) 2));
 		l.add(InstanceFactory.newResolution("Renvoyé collaborateur","return-collab", resolutionCategories.get("Default"), (short) 3));
@@ -923,13 +912,13 @@ public class ResolutionService {
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
 	}
 	
-	
 	public static void createContainerResolutionCNS(ContextValidation ctx) {
-		List<Resolution> l = new ArrayList<Resolution>();
+		List<Resolution> l = new ArrayList<>();
 
 		l.add(InstanceFactory.newResolution("Sauvegarde prod","prod-backup", resolutionCategories.get("Default"), (short) 1));
 		l.add(InstanceFactory.newResolution("Epuisé","empty", resolutionCategories.get("Default"), (short) 2));
-		l.add(InstanceFactory.newResolution("Renvoyé collaborateur","return-collab", resolutionCategories.get("Default"), (short) 3));
+		l.add(InstanceFactory.newResolution("Jeté","trash", resolutionCategories.get("Default"), (short) 3));
+		l.add(InstanceFactory.newResolution("Renvoyé collaborateur","return-collab", resolutionCategories.get("Default"), (short) 4));
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "containerReso";

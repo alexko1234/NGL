@@ -1,6 +1,7 @@
 package services.instance.container;
 
 
+import java.awt.geom.Area;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.sql.DataSource;
 
@@ -26,6 +28,7 @@ import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.container.instance.StorageHistory;
+import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.Run;
 import models.laboratory.sample.instance.Sample;
 import models.util.DataMappingGET;
@@ -42,16 +45,20 @@ import controllers.MongoCommonController;
 import play.Logger;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataGET;
+import services.instance.ImportDataUtilGET;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.migration.NGLContext;
+
+import com.typesafe.config.ConfigFactory;
 
 public abstract class ContainerImportGET extends AbstractImportDataGET {
 	
 	public static Comment updateComment = new Comment("Container est mis à jour", InstanceHelpers.getUser());
 	
 	public ContainerImportGET(String name,FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super(name,durationFromStart, durationFromNextIteration);
+			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super(name, durationFromStart, durationFromNextIteration, ctx);
 	}
 
 	public static Boolean saveSampleFromContainer(ContextValidation contextError,Container container,String sqlContent, Container containerDB) throws SQLException, DAOException{
@@ -60,7 +67,8 @@ public abstract class ContainerImportGET extends AbstractImportDataGET {
 		Sample newSample =null; //sample in Mongo
 		List<String> refLibraryProjectCodes = null; // list of projects from reference library in e-SiToul
 		String rootKeyName=null;
-			
+		Set<String> libNames = new HashSet<>();	//
+		
 			//récuperer des contents
 			List<Content> contents;
 			Logger.debug("ContainerImportGET - saveSampleFromContainer - container.code =  " + container.code);
@@ -68,23 +76,39 @@ public abstract class ContainerImportGET extends AbstractImportDataGET {
 			//si sql pour ce type de container
 			if(sqlContent!=null){	
 				Logger.debug("ContainerImportGET - saveSampleFromContainer - sqlContent n'est pas null pour container.code =  " + container.code);
-				container.contents.clear();
-				contents = new ArrayList<Content>(limsServices.findContentsFromContainer(sqlContent,container.code));	
+				contents = new ArrayList<Content>(limsServices.findContentsFromContainer(sqlContent,container.code));
+				if (!contents.isEmpty()){
+					container.contents.clear();
+				}else{
+					Logger.error("Pool dans " + container.code + " n'a pas de contents valides.");
+					return false;
+				}
+				
 			}else{
 				Logger.debug("ContainerImportGET - saveSampleFromContainer - qlContent est null pour container.code =  " + container.code);
 				contents = new ArrayList<Content>(container.contents);
 			}	
 			
 			Logger.debug("ContainerImportGET - saveSampleFromContainer - " + contents.size());
-							
+			
+			//test a presence of all necessary elements
 			for(Content smplUsd : contents){
+				//Logger.debug("FOR " + smplUsd.sampleCode + " - " + smplUsd.properties.get("Nom_echantillon_collaborateur").value);
 				//si l'un des contents n'a pas tout les infos requis - stop
 				if(smplUsd.properties.isEmpty()){
-					Logger.error("Container " + container.code + " n'a pas été importé");
+					Logger.error("Container " + container.code + " n'a pas été importé, car il manque des propriétés de "  + container.code);
 					return false;
-				//si l'index non renceigné - assigner valeur "NoIndex"
-				}else if(smplUsd.properties.get("Nom_echantillon_collaborateur") == null){
-					Logger.error("Container " + container.code + " n'a pas été importé, car " + smplUsd.sampleCode +" n'a pas de Nom_echantillon_collaborateur");
+				//si le Nom_echantillon_collaborateur non renceigné ou n'est pas conforme - stop
+				}else if(smplUsd.properties.get("Nom_echantillon_collaborateur") == null || ImportDataUtilGET.Checkname((String) smplUsd.properties.get("Nom_echantillon_collaborateur").value)){
+					Logger.error("Container " + container.code + " n'a pas été importé, car " + smplUsd.sampleCode +" n'a pas de Nom_echantillon_collaborateur ou celui-ci contien les caracteres non autorisés");
+					return false;
+				//si le Nom_echantillon_collaborateur est en double - stop
+				}else if(!libNames.add((String) smplUsd.properties.get("Nom_echantillon_collaborateur").value)){
+					Logger.error("Container " + container.code + " n'a pas été importé, car le nom " + smplUsd.properties.get("Nom_echantillon_collaborateur").value +" est en double");
+					return false;
+				//si projet n'existe pas dans Mongo
+				}else if(smplUsd.projectCode == null || !MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, smplUsd.projectCode)){
+					Logger.error("Container " + container.code + " n'a pas été importé, car le projet " + smplUsd.projectCode + " n'existe pas dans Mongo");
 					return false;
 				//si l'index non renceigné - assigner valeur "NoIndex"
 				}else if(smplUsd.properties.get("tag") == null){
@@ -93,95 +117,94 @@ public abstract class ContainerImportGET extends AbstractImportDataGET {
 				}
 			}
 							
-				container.sampleCodes.clear();
-				for(Content sampleUsed : contents){
+			container.sampleCodes.clear();
+			for(Content sampleUsed : contents){
+				
+				Logger.debug("ContainerImportGET - saveSampleFromContainer - /.sampleCode =  " + sampleUsed.sampleCode);
+				/* Sample content not in MongoDB */
+				if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sampleUsed.sampleCode)){
 					
-					Logger.debug("ContainerImportGET - saveSampleFromContainer - /.sampleCode =  " + sampleUsed.sampleCode);
-					/* Sample content not in MongoDB */
-					if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sampleUsed.sampleCode)){
-						
-						Logger.debug("ContainerImportGET - saveSampleFromContainer - "+ sampleUsed.sampleCode +" n'existe pas dans mongoDB");
-						rootKeyName="sample["+sampleUsed.sampleCode+"]";
-						contextError.addKeyToRootKeyName(rootKeyName);
-						
-						Logger.debug("ContainerImportGET - saveSampleFromContainer - avant limsServices.findSampleToCreate  " + sampleUsed.sampleCode);
-						sample = limsServices.findSampleToCreate(contextError,sampleUsed.sampleCode);
-						
-						Logger.debug("ContainerImportGET - saveSampleFromContainer - apres limsServices.findSampleToCreate  " + sample);
-						if(sample!=null){
-							newSample =(Sample) InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,contextError,true);
-							sampleUsed.referenceCollab=newSample.referenceCollab;
-						}
-						
-						contextError.removeKeyFromRootKeyName(rootKeyName);
-						
-					}else {	
-						/* Find sample in Mongodb */
-						Logger.debug("ContainerImportGET - saveSampleFromContainer - "+ sampleUsed.sampleCode + " existe dans mongoDB");
-						newSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, sampleUsed.sampleCode);
-						
-						Logger.debug("ContainerImportGET - saveSampleFromContainer - "+ newSample.referenceCollab);
-						sampleUsed.referenceCollab = newSample.referenceCollab;
-						
-						/*
-						 * check if container to update
-						 * update sample projects list by corresponding library projects list from Barcode
-						 */
-						
-						refLibraryProjectCodes = limsServices.findProjectsForBarcode(sampleUsed.sampleCode);
-						if (!refLibraryProjectCodes.isEmpty()){
-						Logger.debug("ContainerImportGET - saveSampleFromContainer project to update for sample " + newSample.code);
-							MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME,  Sample.class, 
-									DBQuery.is("code", newSample.code),
-									DBUpdate.set("projectCodes", refLibraryProjectCodes));
-						}
-						
-					}	
-					sampleUsed.percentage = 100.0 / contents.size();
-					
-					Logger.debug("ContainerImportGET - saveSampleFromContainer " + sampleUsed.sampleCode);
-						
-					rootKeyName="container["+container.code+"]";
+					Logger.debug("ContainerImportGET - saveSampleFromContainer - "+ sampleUsed.sampleCode +" n'existe pas dans mongoDB");
+					rootKeyName="sample["+sampleUsed.sampleCode+"]";
 					contextError.addKeyToRootKeyName(rootKeyName);
-
-					/* Error : No sample, remove container from list to create */
-					if(newSample==null){
-//						containers.remove(container);
-						Logger.error("Container " + container.code + " n'a pas été importé. Sample "
-								+ newSample.referenceCollab + " na pas pu être créer");
-						contextError.addErrors("sample","error.codeNotExist", sampleUsed.sampleCode);
-						return false;
-					}else{
-						/* From sample, add content in container */
-						container.contents.remove(sampleUsed);
-						Logger.debug("ContainerImportGET - saveSampleFromContainer - container.code = " + container.code + ", newSample.sampleCode = " + newSample+ ", sampleUsed.sampleCode = " + sampleUsed.sampleCode );
-						ContainerHelper.addContent(container, newSample, sampleUsed);
-						Logger.debug("ContainerImportGET - saveSampleFromContainer - After addContent = " + container.code + ", newSample.sampleCode = " + newSample+ ", sampleUsed.sampleCode = " + sampleUsed.sampleCode );
+					
+					Logger.debug("ContainerImportGET - saveSampleFromContainer - avant limsServices.findSampleToCreate  " + sampleUsed.sampleCode);
+					sample = limsServices.findSampleToCreate(contextError,sampleUsed.sampleCode);
+					
+					Logger.debug("ContainerImportGET - saveSampleFromContainer - apres limsServices.findSampleToCreate  " + sample);
+					if(sample!=null){
+						newSample =(Sample) InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,contextError,true);
+						sampleUsed.referenceCollab=newSample.referenceCollab;
 					}
+					
+					contextError.removeKeyFromRootKeyName(rootKeyName);
+					
+				}else {	
+					/* Find sample in Mongodb */
+					Logger.debug("ContainerImportGET - saveSampleFromContainer - "+ sampleUsed.sampleCode + " existe dans mongoDB");
+					newSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, sampleUsed.sampleCode);
+					
+					Logger.debug("ContainerImportGET - saveSampleFromContainer - "+ newSample.referenceCollab);
+					sampleUsed.referenceCollab = (String) sampleUsed.properties.get("Nom_echantillon_collaborateur").value;
+					
+					/*
+					 * check if container to update
+					 * update sample projects list by corresponding library projects list from Barcode
+					 */
+					
+					refLibraryProjectCodes = limsServices.findProjectsForBarcode(sampleUsed.sampleCode);
+					if (!refLibraryProjectCodes.isEmpty()){
+					Logger.debug("ContainerImportGET - saveSampleFromContainer project to update for sample " + newSample.code);
+						MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME,  Sample.class, 
+								DBQuery.is("code", newSample.code),
+								DBUpdate.set("projectCodes", refLibraryProjectCodes));
+					}
+					
+				}	
+				sampleUsed.percentage = 100.0 / contents.size();
+				
+				Logger.debug("ContainerImportGET - saveSampleFromContainer " + sampleUsed.sampleCode);
+					
+				rootKeyName="container["+container.code+"]";
+				contextError.addKeyToRootKeyName(rootKeyName);
 
-					//si container est mis à jour - mettre à jour les contents
-					if(containerDB != null){
-						//update contents
-						for(Content ctDB : containerDB.contents){
-							for(Content nContent : container.contents){
-								if (nContent.sampleCode.equals(ctDB.sampleCode)){
-									UpdateContent(nContent, ctDB);
-								}
+				/* Error : No sample, remove container from list to create */
+				if(newSample==null){
+//						containers.remove(container);
+					Logger.error("Container " + container.code + " n'a pas été importé. Sample " + newSample.referenceCollab + " na pas pu être créer");
+					contextError.addErrors("sample","error.codeNotExist", sampleUsed.sampleCode);
+					return false;
+				}else{
+					/* From sample, add content in container */
+					container.contents.remove(sampleUsed);
+					Logger.debug("ContainerImportGET - saveSampleFromContainer - container.code = " + container.code + ", newSample.sampleCode = " + newSample+ ", sampleUsed.sampleCode = " + sampleUsed.sampleCode );
+					ContainerHelper.addContent(container, newSample, sampleUsed);
+					Logger.debug("ContainerImportGET - saveSampleFromContainer - After addContent = " + container.code + ", newSample.sampleCode = " + newSample+ ", sampleUsed.sampleCode = " + sampleUsed.sampleCode );
+				}
+
+				//si container est mis à jour - mettre à jour les contents
+				if(containerDB != null){
+					//update contents
+					for(Content ctDB : containerDB.contents){
+						for(Content nContent : container.contents){
+							if (nContent.sampleCode.equals(ctDB.sampleCode)){
+								UpdateContent(nContent, ctDB);
 							}
 						}
 					}
-					Logger.debug("ContainerImportGET - saveSampleFromContainer - after apdate " + contents.size());
-					
-					if(container.contents.get(0).processProperties != null){
-						Logger.debug("ContainerImportGET - saveSampleFromContainer befaur return " + container.contents.get(0).processProperties.size());
-					}
-
-					Logger.debug("ContainerImportGET - saveSampleFromContainer - after addContent " + contents.size() + " contents " + contents.get(0).percentage);
-					
-					container.sampleCodes.add(sampleUsed.sampleCode);
-					contextError.removeKeyFromRootKeyName(rootKeyName); 
-		
 				}
+				Logger.debug("ContainerImportGET - saveSampleFromContainer - after apdate " + contents.size());
+				
+				if(container.contents.get(0).processProperties != null){
+					Logger.debug("ContainerImportGET - saveSampleFromContainer befaur return " + container.contents.get(0).processProperties.size());
+				}
+
+				Logger.debug("ContainerImportGET - saveSampleFromContainer - after addContent " + contents.size() + " contents " + contents.get(0).percentage);
+				
+				container.sampleCodes.add(sampleUsed.sampleCode);
+				contextError.removeKeyFromRootKeyName(rootKeyName); 
+	
+			}
 			return true;
 	}
 
@@ -272,7 +295,8 @@ public abstract class ContainerImportGET extends AbstractImportDataGET {
 		Logger.debug("ContainerImportGET - createContainers, avant ContainerImportGET.deleteContainerAndContainerSupport");
 		ContainerImportGET.deleteContainerAndContainerSupport(containers);
 		
-		Map<String,PropertyValue<String>> propertiesContainerSupports=new HashMap<String, PropertyValue<String>>();
+//		Map<String,PropertyValue<String>> propertiesContainerSupports=new HashMap<String, PropertyValue<String>>();
+		Map<String,PropertyValue> propertiesContainerSupports=new HashMap<>();
 		for(Container container : containers){
 						
 			if(!propertiesContainerSupports.containsKey(container.support) && container.properties.get("sequencingProgramType")!=null){
@@ -291,16 +315,18 @@ public abstract class ContainerImportGET extends AbstractImportDataGET {
 			ContainerHelper.createSupportFromContainers(allContainersToSupport,propertiesContainerSupports, contextError);
 		Logger.debug("ContainerImportGET - createContainers, après ContainerHelper.createSupportFromContainers");
 			
-/* ACTIVER POUR PROD !!!
+		/* ACTIVE POUR PROD !!!
  		*
  		* créer ou retrouver dans e-SItoul characteristicDateImportNGL avec la date du jour
  		* et récuperer son id
  		*/
 		Integer characteristicDateImportNGLid = null;
-		if(! containers.isEmpty()){
+//		Logger.debug("ngl.env 1 : " + ConfigFactory.load().getString("ngl.env") + ", " + ConfigFactory.load().getString("caracteristicstypeEsitoul.DateImportNgl"));
+		if(! containers.isEmpty() && "PROD".equals(ConfigFactory.load().getString("ngl.env"))){
+//			Logger.debug("ngl.env 2 : " + ConfigFactory.load().getString("ngl.env"));
 			//if container list don't empty get|create characteristic id to associate
-			Logger.debug("Before  createCaracteristicDateImportNGL " + play.Play.application().configuration().getString("caracteristicstypeEsitoul.DateImportNgl"));
-			characteristicDateImportNGLid = limsServices.createCaracteristicDateImportNGL(Integer.parseInt(play.Play.application().configuration().getString("caracteristicstypeEsitoul.DateImportNgl")));
+			Logger.debug("Before  createCaracteristicDateImportNGL " + ConfigFactory.load().getString("caracteristicstypeEsitoul.DateImportNgl"));
+			characteristicDateImportNGLid = limsServices.createCaracteristicDateImportNGL(Integer.parseInt(ConfigFactory.load().getString("caracteristicstypeEsitoul.DateImportNgl")));
 		}
 		
 		for(Container container:containers){
@@ -311,12 +337,13 @@ public abstract class ContainerImportGET extends AbstractImportDataGET {
 			Container result=(Container) InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME,container, contextError,true);
 			Logger.debug("ContainerImportGET - createContainers, après InstanceHelpers.save avec sampleCodes= " + container.sampleCodes);
 
-/*
- * ACTIVER POUR PROD !!!
+			/*
+			 * ACTIVE POUR PROD !!!
 			* si container a été bien créé
 			* lier characteristicDateImportNGL au container		
 			*/		
-			if(result!=null){
+			if(result!=null  && "PROD".equals(ConfigFactory.load().getString("ngl.env"))){
+//				Logger.debug("ngl.env 3 : " + ConfigFactory.load().getString("ngl.env"));
 				/* container model in NGL don't keep an barcodeid from e-sitoul barre-code 
 				 * so, barcode string is used for create new link with characteristic Date_Import_NGL
 				 */
@@ -559,7 +586,8 @@ public abstract class ContainerImportGET extends AbstractImportDataGET {
 				}
 			}
 		}
-		
+		ctNew.sampleTypeCode = DataMappingGET.getSampleTypeFromLims(ctNew.properties.get("type_echantillon").value.toString());
+		ctNew.sampleCategoryCode = ctNew.sampleTypeCode;
 		if (ctDB.processProperties != null){
 			ctNew.processProperties = ctDB.processProperties;
 			Logger.debug("ContainerImportGET UpdateContent add processProperties to : " + ctNew.sampleCode);

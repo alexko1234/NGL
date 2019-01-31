@@ -13,13 +13,15 @@ import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataGET;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.migration.NGLContext;
+import play.Logger;
 
 public class IndexImportGET extends AbstractImportDataGET{
 
 	public IndexImportGET(FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
+			FiniteDuration durationFromNextIteration, NGLContext ctx) {
 		
-		super("IndexImportGET",durationFromStart, durationFromNextIteration);
+		super("IndexImportGET",durationFromStart, durationFromNextIteration, ctx);
 	}
 
 	@Override
@@ -38,6 +40,7 @@ public class IndexImportGET extends AbstractImportDataGET{
 			if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.PARAMETER_COLL_NAME, Index.class, index.code)){
 				MongoDBDAO.deleteByCode(InstanceConstants.PARAMETER_COLL_NAME, Index.class, index.code);
 			}
+			Logger.debug("IndexImportGET " + index.shortName);
 		}
 	
 		InstanceHelpers.save(InstanceConstants.PARAMETER_COLL_NAME,indexs,contextValidation);

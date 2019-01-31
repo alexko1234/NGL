@@ -1,61 +1,68 @@
 package controllers.projects.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+//import static fr.cea.ig.play.IGGlobals.form;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
+
+import com.mongodb.BasicDBObject;
+
+import controllers.DocumentController;
+import controllers.QueryFieldsForm;
+import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.instance.UmbrellaProject;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
-import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Controller;
-
-import com.mongodb.BasicDBObject;
-
-import play.Logger;
+//import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
-import controllers.DocumentController;
-import controllers.QueryFieldsForm;
-import fr.cea.ig.MongoDBResult;
 
 /**
  * Controller around Project object
  *
  */
-@Controller
+// @Controller
 public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(UmbrellaProjects.class);
 	
-	final static Form<UmbrellaProjectsSearchForm> searchForm = form(UmbrellaProjectsSearchForm.class); 
-	final static Form<UmbrellaProject> projectForm = form(UmbrellaProject.class);
-	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
+	private final /*static*/ Form<UmbrellaProjectsSearchForm> searchForm; // = form(UmbrellaProjectsSearchForm.class); 
+//	private final /*static*/ Form<UmbrellaProject> projectForm; // = form(UmbrellaProject.class);
+	private final /*static*/ Form<QueryFieldsForm> updateForm; // = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("keep");
 	
-	public UmbrellaProjects() {
-		super(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class);		
+	@Inject
+	public UmbrellaProjects(NGLContext ctx) {
+		super(ctx,InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class);		
+		searchForm = ctx.form(UmbrellaProjectsSearchForm.class); 
+//		projectForm = ctx.form(UmbrellaProject.class);
+		updateForm = ctx.form(QueryFieldsForm.class);
 	}
 
-
-	public Result list(){
+	public Result list() {
 		Form<UmbrellaProjectsSearchForm> filledForm = filledFormQueryString(searchForm, UmbrellaProjectsSearchForm.class);
 		UmbrellaProjectsSearchForm form = filledForm.get();
 		Query q = getQuery(form);
 		BasicDBObject keys = getKeys(form);
-		if(form.datatable){			
+		if (form.datatable) {			
 			MongoDBResult<UmbrellaProject> results = mongoDBFinder(form, q, keys);			
 			List<UmbrellaProject> umbrellaProjects = results.toList();
-			return ok(Json.toJson(new DatatableResponse<UmbrellaProject>(umbrellaProjects, results.count())));
+			return ok(Json.toJson(new DatatableResponse<>(umbrellaProjects, results.count())));
 		} else if (form.list) {
 			keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
@@ -75,10 +82,8 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 		}
 	}
 
-	
-
 	private List<ListObject> toListObjects(List<UmbrellaProject> proj) {
-		List<ListObject> lo = new ArrayList<ListObject>();
+		List<ListObject> lo = new ArrayList<>();
 		for (UmbrellaProject p : proj) {
 			lo.add(new ListObject(p.code, p.name));
 		}
@@ -86,7 +91,7 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 	}
 	
 	private Query getQuery(UmbrellaProjectsSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		Query query = null;
 		
 		if (CollectionUtils.isNotEmpty(form.projectCodes)) {
@@ -106,70 +111,71 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 		Form<UmbrellaProject> filledForm = getMainFilledForm();
 		UmbrellaProject projectInput = filledForm.get();
 
-		if (null == projectInput._id) { 
+		if (projectInput._id == null) { 
 			projectInput.traceInformation = new TraceInformation();
 			projectInput.traceInformation.setTraceInformation(getCurrentUser());			
 		} else {
 			return badRequest("use PUT method to update the project");
 		}
 
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 
 		ctxVal.setCreationMode();
 		projectInput.validate(ctxVal);
-
 		if (!ctxVal.hasErrors()) {
 			projectInput = saveObject(projectInput);
 			return ok(Json.toJson(projectInput));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
-
 	public Result update(String code) {
 		UmbrellaProject objectInDB = getObject(code);
-		if (objectInDB == null) {
+		if (objectInDB == null)
 			return badRequest("ProjectUmbrella with code "+code+" not exist");
-		}
 
 		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
 		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
 		Form<UmbrellaProject> filledForm = getMainFilledForm();
 		UmbrellaProject projectInput = filledForm.get();
-		
-		if(queryFieldsForm.fields == null){
+		if (queryFieldsForm.fields == null) {
 			if (code.equals(projectInput.code)) {
-				if(null != projectInput.traceInformation){
+				if (projectInput.traceInformation != null) {
 					projectInput.traceInformation.setTraceInformation(getCurrentUser());
-				}else{
-					Logger.error("traceInformation is null !!");
+				} else {
+					logger.error("traceInformation is null !!");
 				}
-				
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+//				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 				ctxVal.setUpdateMode();
 				projectInput.validate(ctxVal);
 				if (!ctxVal.hasErrors()) {
 					updateObject(projectInput);
 					return ok(Json.toJson(projectInput));
-				}else {
-					return badRequest(filledForm.errorsAsJson());
+				} else {
+					// return badRequest(filledForm.errors-AsJson());
+					return badRequest(errorsAsJson(ctxVal.getErrors()));
 				}
-				
-			}else{
+			} else {
 				return badRequest("Project codes are not the same");
 			}	
-		}else{
-			//warning no validation !!!
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+		} else {
+			// warning no validation !!!
+//			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
-			if(!filledForm.hasErrors()){
+			// if(!filledForm.hasErrors()){
+			if (!ctxVal.hasErrors()) {
 				updateObject(DBQuery.and(DBQuery.is("code", code)), 
 						getBuilder(projectInput, queryFieldsForm.fields).set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 				return ok(Json.toJson(getObject(code)));
-			}else{
-				return badRequest(filledForm.errorsAsJson());
+			} else {
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}			
 		}
 	}

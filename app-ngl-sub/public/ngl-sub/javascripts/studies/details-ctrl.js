@@ -230,7 +230,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			        	order:true
 					},
 					 {property:"state.code",
-					     "filter":"codes:'state'",
+					      "filter":"codes:'state'",
 			        	  header: Messages("experiment.state"),
 			        	  type :"text",		    	  	
 			        	  order:true,
@@ -324,11 +324,11 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 	// si on declare dans le controlleur :
 	
 	
-	var init = function(){
+	var init = function(userName){
 		$scope.mainService = mainService;
 		$scope.messages = messages();
 
-		$scope.isReleasable=false;
+		$scope.isReleasable = function(userName) { return false; }; // fonction qui renvoie toujours false
 		// si on souhaite affichage bouton si on vient du menu release :
 		//$scope.release=$scope.mainService.get("release");
 		
@@ -347,21 +347,24 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 		// On compare les date :
 		// $scope.study.releaseDate correspond à la date de release exprimée en milliseconde ecoulées depuis 01/01/1970 (Date Epoch) 
 		// Date.now() correspond à la date courante exprimee en ms depuis Epoch
-		if ( !$scope.study.releaseDate) {
+		/*if ($scope.study.traceInformation.createUser!=userName) {
 			$scope.isReleasable = false;
+			console.log("utilisateur" + userName + "!= createur" + $scope.study.traceInformation.createUser);
+		} else */if ( !$scope.study.releaseDate) {
+			//$scope.isReleasable = function(userName){return false;}; // isReleasable est une fonction
 			console.log("study.releaseDate non renseigné");
 		} else {		
 			if ( $scope.study.state.code != "F-SUB"){
 				console.log("study.state.code avec status different de F-SUB : "+$scope.study.state.code);
-				$scope.isReleasable = false;
+				//$scope.isReleasable = function(userName){return false;};
 			} else {
 				console.log("study.releaseDate" + $scope.study.releaseDate);
 				console.log("Date.now" + Date.now());
 				if ($scope.study.releaseDate > Date.now()){
-					$scope.isReleasable = true;
+					$scope.isReleasable = function(userName){return $scope.study.traceInformation.createUser==userName;};
 					console.log("donnée confidentielle");
 				} else {
-					$scope.isReleasable = false;
+					//$scope.isReleasable = function(userName){return false;};// return false && $scope.study.traceInformation.createUser==userName;
 					console.log("donnée publique");
 				}
 			}
@@ -420,6 +423,8 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 	$scope.userRelease = function(){
 		$scope.messages.clear();
 		console.log("je suis dans le bouton studies.details-ctrl.js.userRelease");
+		
+		/*Partie faites maintenant en passant par createFromStudy
 		var state = angular.copy($scope.study.state);
 		state.code = "IW-SUB-R";
 		$http.put(jsRoutes.controllers.sra.studies.api.Studies.updateState($scope.study.code).url, state)
@@ -432,6 +437,21 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				$scope.messages.addDetails(data);
 				$scope.messages.setError("release");	
 			});	
+		  */                    
+		 $http.put(jsRoutes.controllers.sra.submissions.api.Submissions.createFromStudy($scope.study.code).url)
+			.success(function(data){
+		   		$scope.messages.clazz="alert alert-success";
+				$scope.messages.text=Messages('studies.msg.release.success');
+				$scope.messages.open();
+			})
+			.error(function(data){
+				$scope.messages.addDetails(data);
+				$scope.messages.setError("release");	
+			});	
+		 
+		 
+		 
+		 
 	};
 	
 	$scope.cancel = function(){

@@ -2,32 +2,41 @@ package models.laboratory.common.description.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import javax.sql.DataSource;
+
+import org.springframework.jdbc.core.SqlParameter;
 
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.State;
 import models.laboratory.common.description.StateHierarchy;
 import models.utils.dao.DAOException;
+import models.utils.dao.MappingSqlQueryFactory;
+import models.utils.dao.NGLMappingSqlQuery;
 
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.object.MappingSqlQuery;
+//public class StateHierarchyMappingQuery extends MappingSqlQuery<StateHierarchy> {
+public class StateHierarchyMappingQuery extends NGLMappingSqlQuery<StateHierarchy> {
 
-public class StateHierarchyMappingQuery extends MappingSqlQuery<StateHierarchy>{
-
-	public StateHierarchyMappingQuery() {
-		super();
-	}
+	public static final MappingSqlQueryFactory<StateHierarchy> factory = (d,s,ps) -> new StateHierarchyMappingQuery(d,s,ps);
 	
-	public StateHierarchyMappingQuery(DataSource ds, String sql,SqlParameter sqlParameter) {
-		super(ds,sql);
-		if(sqlParameter!=null)
-			super.declareParameter(sqlParameter);
-		compile();
+//	public StateHierarchyMappingQuery() {
+//		super();
+//	}
+	
+//	public StateHierarchyMappingQuery(DataSource ds, String sql,SqlParameter sqlParameter) {
+//		super(ds,sql);
+//		if (sqlParameter != null)
+////			super.declareParameter(sqlParameter);
+//			declareParameter(sqlParameter);
+//		compile();
+//	}
+
+	public StateHierarchyMappingQuery(DataSource ds, String sql, SqlParameter... sqlParameters) {
+		super(ds,sql,sqlParameters);
 	}
 	
 	@Override
-	protected StateHierarchy mapRow(ResultSet rs, int rowNum)
-			throws SQLException {
+	protected StateHierarchy mapRow(ResultSet rs, int rowNum) throws SQLException {
 		
 		StateHierarchy stateHierarchy = new StateHierarchy();
 		
@@ -63,11 +72,7 @@ public class StateHierarchyMappingQuery extends MappingSqlQuery<StateHierarchy>{
 		} catch (DAOException e) {
 			throw new SQLException(e);
 		}
-		stateHierarchy.objectTypeCode=ot.code;
-		
-		
-		
-		
+		stateHierarchy.objectTypeCode = ot.code;
 		return stateHierarchy;
 	}
 

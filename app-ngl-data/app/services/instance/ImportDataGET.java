@@ -4,7 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import fr.cea.ig.play.migration.NGLContext;
 import models.Constants;
+import models.utils.InstanceHelpers;
+//import models.utils.play;
 import scala.concurrent.duration.Duration;
 import services.instance.container.PoolImportGET;
 //import services.instance.container.BanqueAmpliImportGET;
@@ -26,13 +30,15 @@ import services.instance.container.puitsPlaqueImportGET;
 //import services.instance.sample.UpdateSampleGET;
 //import services.instance.resolution.ResolutionService;
 import play.data.validation.ValidationError;
-import play.Logger;
+//import play.Logger;
 import validation.ContextValidation;
 
 public class ImportDataGET{
 
-	public ImportDataGET(){
-		Logger.debug("ImportDataGET");
+	public static final play.Logger.ALogger logger = play.Logger.of(ImportDataGET.class);
+	
+	public ImportDataGET(NGLContext ctx){
+		logger.error("ImportDataGET");
 /*
  * 		ResolutionService
  * 		Créé dans la collection mongo (ngl_common.ResolutionConfiguration) les résolutions à indiquer à la fin d'expérience 
@@ -51,16 +57,17 @@ public class ImportDataGET{
 //			Logger.error(e.getMessage(), e);
 //		}
 
-		new ProjectImportGET(Duration.create(1,TimeUnit.SECONDS),Duration.create(60,TimeUnit.MINUTES)); 
-		//Import Index
-		new IndexImportGET(Duration.create(1,TimeUnit.SECONDS),Duration.create(24,TimeUnit.HOURS)); 
+		new ProjectImportGET(Duration.create(1,TimeUnit.SECONDS),Duration.create(24,TimeUnit.HOURS), ctx); 
+//		//Import Index
+		new IndexImportGET(Duration.create(1,TimeUnit.SECONDS),Duration.create(24,TimeUnit.HOURS), ctx); 
+		
+		new UserImportGET(Duration.create(1,TimeUnit.SECONDS),Duration.create(24,TimeUnit.HOURS), ctx);
  
 		//Update/Create Container
-		new TubeImportGET(Duration.create(3,TimeUnit.SECONDS),Duration.create(60,TimeUnit.MINUTES)); 
-		//new SampleImportGET(Duration.create(10,TimeUnit.SECONDS),Duration.create(60,TimeUnit.MINUTES));
-		new puitsPlaqueImportGET(Duration.create(7,TimeUnit.SECONDS),Duration.create(60,TimeUnit.MINUTES));
-		new PoolImportGET(Duration.create(10,TimeUnit.SECONDS),Duration.create(60,TimeUnit.MINUTES));
-		new UserImportGET(Duration.create(50,TimeUnit.SECONDS),Duration.create(24,TimeUnit.MINUTES));
+		new TubeImportGET(Duration.create(5,TimeUnit.SECONDS),Duration.create(15,TimeUnit.MINUTES),ctx); 
+//		//new SampleImportGET(Duration.create(10,TimeUnit.SECONDS),Duration.create(15,TimeUnit.MINUTES));
+		new puitsPlaqueImportGET(Duration.create(10,TimeUnit.SECONDS),Duration.create(15,TimeUnit.MINUTES), ctx);
+		new PoolImportGET(Duration.create(15,TimeUnit.SECONDS),Duration.create(15,TimeUnit.MINUTES),ctx);
 	}
 
 }

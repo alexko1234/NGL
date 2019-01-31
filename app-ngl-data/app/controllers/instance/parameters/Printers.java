@@ -1,34 +1,43 @@
 package controllers.instance.parameters;
 
+import static fr.cea.ig.play.IGGlobals.configuration;
+
 import models.Constants;
-import play.Logger;
-import play.Logger.ALogger;
+//import play.Logger;
+//import play.Logger.ALogger;
 import play.libs.Json;
+import play.mvc.Controller;
 import play.mvc.Result;
 import services.instance.parameter.PrinterCNS;
-import services.instance.protocol.ProtocolServiceCNG;
-import services.instance.protocol.ProtocolServiceCNS;
+//import services.instance.protocol.ProtocolServiceCNG;
+//import services.instance.protocol.ProtocolServiceCNS;
 import validation.ContextValidation;
-import controllers.CommonController;
 
-public class Printers extends CommonController {
+//import javax.inject.Inject;
+
+//import controllers.CommonController;
+//import controllers.NGLBaseController;
+// import fr.cea.ig.play.migration.NGLContext;
+
+public class Printers extends Controller { // extends NGLBaseController { //CommonController {
 	
-	public static ALogger logger= Logger.of("Printers");
+	public static final play.Logger.ALogger logger = play.Logger.of(Printers.class);
 		
-	public static Result save(){
+//	@Inject
+//	public Printers(NGLContext ctx) {
+//		super(ctx);
+//	}
+	
+	public Result save(){
 		ContextValidation ctx = new ContextValidation(Constants.NGL_DATA_USER);
 		ctx.setCreationMode();
 		try {
-//			if (play.Play.application().configuration().getString("institute").equals("CNS")){
-//				PrinterCNS.main(ctx);
-//			}else if(play.Play.application().configuration().getString("institute").equals("CNG")){
-//			}else
 			if(play.Play.application().configuration().getString("institute").equals("GET")){
 				
 			}else{
-				Logger.error("You need to specify only one institute ! Now, it's "+ play.Play.application().configuration().getString("institute"));
+				logger.error("You need to specify only one institute ! Now, it's "+ play.Play.application().configuration().getString("institute"));
+
 			}
-			
 			if (ctx.hasErrors()) {
 				ctx.displayErrors(logger);
 				return badRequest(Json.toJson(ctx.errors));
@@ -36,9 +45,10 @@ public class Printers extends CommonController {
 				return ok();
 			}
 		} catch (Exception e) {
-			Logger.error(e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 			return internalServerError(e.getMessage());
 		}	
 	}
+	
 }
 

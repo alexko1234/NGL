@@ -23,45 +23,46 @@ public class ImportDataUtil {
 	}
 
 	/**
-	 * Get the duration for a specific time (hour and minute)
-	 * 
-	 * @param hour
-	 * @param minutes
-	 * @return
+	 * Get the duration for a specific time (hour and minute).
+	 * @param hour    hours
+	 * @param minutes minutes
+	 * @return        duration
 	 */
 	public static FiniteDuration getDurationInMillinsBefore(int hour, int minutes) {
 		Calendar c = Calendar.getInstance();
 		
-		if(c.get(Calendar.HOUR_OF_DAY) > hour){
+		if (c.get(Calendar.HOUR_OF_DAY) > hour) {
 			int day = c.get(Calendar.DAY_OF_YEAR) + 1;
 			c.set(Calendar.DAY_OF_YEAR, day);
 			c.set(Calendar.HOUR_OF_DAY, hour);
 			c.set(Calendar.MINUTE, minutes);			
-		}else{
+		} else {
 			c.set(Calendar.HOUR_OF_DAY, hour);
 			c.set(Calendar.MINUTE, minutes);		
 		}
-		
-		
-		
 		return Duration.create(c.getTimeInMillis() - System.currentTimeMillis(),TimeUnit.MILLISECONDS);
 	}
 	
+	// TODO: fix comment, "with specified minute" but the argument name is hour. 
 	/**
 	 * Get the duration for next time with specific minute.
-	 * @param minutes
-	 * @return
+	 * @param hour hour
+	 * @return     duration
 	 */
-	public static FiniteDuration getDurationForNextHour(int minutes) {
+	public static FiniteDuration getDurationForNextHour(int hour) {
 		Calendar c = Calendar.getInstance();
-		if(c.get(Calendar.MINUTE) > minutes){
-			int hour = c.get(Calendar.HOUR_OF_DAY) + 1;
+		if (c.get(Calendar.MINUTE) > hour) {
+			hour = c.get(Calendar.HOUR_OF_DAY) + 1;
 			c.set(Calendar.HOUR_OF_DAY, hour);
-			c.set(Calendar.MINUTE, minutes);			
-		}else{
-			c.set(Calendar.MINUTE, minutes);			
+			c.set(Calendar.MINUTE, hour);			
+		} else {
+			c.set(Calendar.MINUTE, hour);			
 		}
 		return Duration.create(c.getTimeInMillis() - System.currentTimeMillis(),TimeUnit.MILLISECONDS);
+	}
+
+	public static FiniteDuration getDurationForNextSeconds(Integer nbSeconds) {
+		return Duration.create(nbSeconds,TimeUnit.SECONDS);
 	}
 
 }

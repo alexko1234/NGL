@@ -4,13 +4,14 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import models.laboratory.common.description.CodeLabel;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import models.laboratory.common.description.CodeLabel;
+@SuppressWarnings("deprecation")
 @Repository
 public class CodeLabelDAO {
 
@@ -20,7 +21,7 @@ public class CodeLabelDAO {
 	@Autowired
 	@Qualifier("ngl")
 	public void setDataSource(DataSource dataSource) {
-		this.dataSource=dataSource;
+		this.dataSource = dataSource;
 		jdbcTemplate = new SimpleJdbcTemplate(dataSource);   		
 	}
 	
@@ -50,7 +51,8 @@ public class CodeLabelDAO {
 						"union all "+
 						"select distinct 'experiment_cat' as table_name, code, name as label from experiment_category "
 						;
-		BeanPropertyRowMapper<CodeLabel> mapper = new BeanPropertyRowMapper<CodeLabel>(CodeLabel.class);
+		BeanPropertyRowMapper<CodeLabel> mapper = new BeanPropertyRowMapper<>(CodeLabel.class);
 		return this.jdbcTemplate.query(sql, mapper);
 	}
+	
 }

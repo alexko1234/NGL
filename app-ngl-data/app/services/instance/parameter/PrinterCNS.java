@@ -37,7 +37,7 @@ public class PrinterCNS {
 	}	
 	
 	public static void savePrinters(ContextValidation ctx){		
-		List<BBP11> lp = new ArrayList<BBP11>();
+		List<BBP11> lp = new ArrayList<>();
 		if(ConfigFactory.load().getString("ngl.env").equals("UAT") 
 				|| ConfigFactory.load().getString("ngl.env").equals("DEV")){
 			
@@ -83,6 +83,10 @@ public class PrinterCNS {
 						newBarcodePosition("2","6cm code barre en dessus",712,"A25,42,0,2,2,1,N","B75,0,0,1B,2,2,39,N",false, false)						
 						)));
 		lp.add(newBBP11("BBP10", "bureau Karine / Corinne","bbp10.tx.local",9100,"2","15","1",true, 
+				Arrays.asList(
+						newBarcodePosition("1","CB 2D TUBE",298,"A100,30,0,2,1,1,N","b20,30,A,d4",true, true)
+						)));
+		lp.add(newBBP11("BBP11", "Extraction / tube","bbp11.tx.local",9100,"2","15","1",true, 
 				Arrays.asList(
 						newBarcodePosition("1","CB 2D TUBE",298,"A100,30,0,2,1,1,N","b20,30,A,d4",true, true)
 						)));

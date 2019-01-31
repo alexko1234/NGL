@@ -72,6 +72,8 @@ import fr.cea.ig.MongoDBDAO;
 @Repository
 public class LimsGETDAO{
 
+//	private static final play.Logger.ALogger logger = play.Logger.of(LimsGETDAO.class);
+
 	public JdbcTemplate jdbcTemplate;
 
 	public static final String LIMS_CODE="limsCode";
@@ -272,7 +274,7 @@ public class LimsGETDAO{
 					}
 					sample.categoryCode=sampleType.category.code;
 					sample.typeCode=sampleTypeCode;
-					Logger.debug("ContainerImportGET - createContainerFromResultSet, type_echantillon , sampleType.category.code : " + sampleType.category.code);
+					Logger.debug("LimsGETDAO - createContainerFromResultSet, type_echantillon , sampleType.category.code : " + sampleType.category.code);
 				}
 				
 				sample.projectCodes=new HashSet<String>();
@@ -290,7 +292,7 @@ public class LimsGETDAO{
 				
 				sample.properties = new HashMap<String, PropertyValue>();
 
-				Logger.debug("LimsGETDAO - findSampleToCreate - Properties sample "+sample.properties.containsKey("taxonSize"));
+//				Logger.debug("LimsGETDAO - findSampleToCreate - Properties sample "+sample.properties.containsKey("taxonSize"));
 
 
 				sample.importTypeCode="default-import";
@@ -513,7 +515,7 @@ public HashMap<String, PropertyValue> getCaracteristiquesForContainer(int barcod
 			
 		}else if (!row.get("unite").toString().equals("indéfini")){
 			caracteristiques.put(row.get("intitule").toString(), new PropertySingleValue(row.get("valeur").toString(), row.get("unite").toString()));
-//			Logger.debug("Index " + row.get("intitule").toString()+ ", " + row.get("valeur").toString() + ", " + row.get("unite").toString());
+//			logger.debug("Index " + row.get("intitule").toString()+ ", " + row.get("valeur").toString() + ", " + row.get("unite").toString());
 		}else{
 			caracteristiques.put(row.get("intitule").toString(), new PropertySingleValue(row.get("valeur").toString()));
 		}
@@ -524,7 +526,7 @@ public HashMap<String, PropertyValue> getCaracteristiquesForContainer(int barcod
 
 	public List<Project> findProjectToCreate(final ContextValidation contextError) throws SQLException, DAOException {
 
-		String sql_query = "SELECT DISTINCT * FROM project";
+		String sql_query = "SELECT DISTINCT prt.projectid, prt.ident, prt.name, prt.description, prt.avancement, prt.creationdate, prt.project_level, prt.in_france_genomique, prt.intitule_programme, prt.name_contact, prt.tel_contact, prt.type_projet, ppl.ident as user FROM project prt inner join people ppl on prt.last_modification_by = ppl.userid where avancement != 'Terminé' ORDER BY prt.ident ASC";
 		
 		List<Project> results = this.jdbcTemplate.query(sql_query,new Object[]{} ,new RowMapper<Project>() {
 
@@ -579,7 +581,8 @@ public HashMap<String, PropertyValue> getCaracteristiquesForContainer(int barcod
 //					project.state.code = "IP";	
 //				}
 
-				project.state.user = InstanceHelpers.getUser();
+				project.state.user = rs.getString("user");
+//				project.state.user = InstanceHelpers.getUser();
 				project.state.date = new Date();
 
 				project.bioinformaticParameters = new BioinformaticParameters();

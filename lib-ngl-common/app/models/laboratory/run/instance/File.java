@@ -14,14 +14,14 @@ import validation.utils.ValidationHelper;
 
 public class File implements IValidation {
 
-	//concatenation de flotseqname + flotseqext
-	public String fullname;
-	public String extension;
-	public Boolean usable = Boolean.FALSE;
-	public String typeCode; //id du type de fichier
+	// concatenation de flotseqname + flotseqext
+	public String  fullname;
+	public String  extension;
+	public Boolean usable    = Boolean.FALSE;
+	public String  typeCode; // id du type de fichier
 	@JsonIgnore
-	public State state; //TODO remove later
-	public Map<String, PropertyValue> properties = new HashMap<String, PropertyValue>();
+	public State   state;    // TODO : remove later
+	public Map<String, PropertyValue> properties = new HashMap<>(); // <String, PropertyValue>();
 
 	/*
 	asciiEncoding	encodage ascii du fichier
@@ -32,9 +32,26 @@ public class File implements IValidation {
 	public void validate(ContextValidation contextValidation) {
 		FileValidationHelper.validateFileFullName(this.fullname, contextValidation);
 		ValidationHelper.required(contextValidation, this.extension, "extension");
-		ValidationHelper.required(contextValidation, this.typeCode, "typeCode");
-		ValidationHelper.required(contextValidation, this.usable, "usable");
+		ValidationHelper.required(contextValidation, this.typeCode,  "typeCode");
+		ValidationHelper.required(contextValidation, this.usable,    "usable");
 		FileValidationHelper.validateFileProperties(this.properties, contextValidation);		
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder b = new StringBuilder();
+		b.append("{File fullname:")
+		 .append(fullname)
+		 .append (" extension:")
+		 .append(" typecode:")
+		 .append(typeCode);
+		for (Map.Entry<String,PropertyValue> e : properties.entrySet())
+			b.append(' ')
+			 .append(e.getKey())
+			 .append(':')
+			 .append(e.getValue());
+		b.append('}');
+		return b.toString();
+	}
+	
 }

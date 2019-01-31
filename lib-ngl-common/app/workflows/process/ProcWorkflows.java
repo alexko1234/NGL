@@ -1,57 +1,71 @@
 package workflows.process;
 
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
+import static validation.common.instance.CommonValidationHelper.OBJECT_IN_DB;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+
+import com.google.inject.Provider;
 
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.State;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
-import play.Logger;
 import validation.ContextValidation;
 import validation.processes.instance.ProcessValidationHelper;
 import workflows.Workflows;
-@Service
+
+@Singleton
 public class ProcWorkflows extends Workflows<Process> {
 
-	//public static ProcWorkflows instance = new ProcWorkflows();
+	private static final play.Logger.ALogger logger = play.Logger.of(ProcWorkflows.class);
 	
-	@Autowired
-	ProcWorkflowHelper procWorkflowsHelper;
+	
+	private final Provider<ProcWorkflowHelper> procWorkflowsHelper;
+	
+	@Inject
+	public ProcWorkflows(Provider<ProcWorkflowHelper> procWorkflowsHelper) {
+		this.procWorkflowsHelper = procWorkflowsHelper;
+	}
 	
 	@Override
 	public void applyPreStateRules(ContextValidation validation,
 			Process process, State nextState) {
 		process.traceInformation = updateTraceInformation(process.traceInformation, nextState); 			
-		
+		if("N".equals(nextState.code)){
+			procWorkflowsHelper.get().updateSampleOnContainer(validation ,process);			
+		}
 	}
 
 	@Override
-	public void applyPreValidateCurrentStateRules(ContextValidation validation, Process object) {
-		// TODO Auto-generated method stub		
+	public void applyPreValidateCurrentStateRules(ContextValidation validation, Process process) {
+		Process dbProcess = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, process.code);
+		validation.putObject(OBJECT_IN_DB, dbProcess);
 	}
 	
 	@Override
 	public void applyPostValidateCurrentStateRules(ContextValidation validation, Process process) {
-		procWorkflowsHelper.updateContentProcessPropertiesAttribute(validation, process);
-		procWorkflowsHelper.updateContentPropertiesWithContentProcessProperties(validation, process);
+		if(!"IW-C".equals(process.state.code)){
+			procWorkflowsHelper.get().updateContentProcessPropertiesAttribute(validation, process);
+			procWorkflowsHelper.get().updateContentPropertiesWithContentProcessProperties(validation, process);
+		}else if("IW-C".equals(process.state.code)){
+			nextState(validation, process);
+		}
 	}
 	
 	@Override
 	public void applySuccessPostStateRules(ContextValidation validation, Process process) {
 		if("N".equals(process.state.code)){
-			procWorkflowsHelper.updateInputContainerToStartProcess(validation, process);			
+			procWorkflowsHelper.get().updateInputContainerToStartProcess(validation, process);			
 		}
 	}
 
 	@Override
 	public void applyErrorPostStateRules(ContextValidation validation, Process process, State nextState) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -68,7 +82,7 @@ public class ProcWorkflows extends Workflows<Process> {
 			//process.validate(contextValidation); //in comment because no field are state dependant maybe state of container			
 			if(!currentCtxValidation.hasErrors()){
 				boolean goBack = goBack(process.state, nextState);
-				if(goBack)Logger.debug(process.code+" : back to the workflow. "+process.state.code +" -> "+nextState.code);		
+				if (goBack) logger.debug("{} : back to the workflow. {} -> {}", process.code, process.state.code, nextState.code);
 				
 				process.state = updateHistoricalNextState(process.state, nextState);
 				
@@ -78,7 +92,7 @@ public class ProcWorkflows extends Workflows<Process> {
 				
 				applySuccessPostStateRules(currentCtxValidation, process);
 				nextState(currentCtxValidation, process);
-			}else{
+			} else {
 				applyErrorPostStateRules(currentCtxValidation, process, nextState);
 			}
 		}
@@ -89,8 +103,11 @@ public class ProcWorkflows extends Workflows<Process> {
 
 	@Override
 	public void nextState(ContextValidation contextValidation, Process process) {
-		// TODO Auto-generated method stub
-		
+		State nextState = cloneState(process.state, contextValidation.getUser());
+		if("IW-C".equals(process.state.code) && process.inputContainerCode != null){
+			nextState.code = "N";
+		}
+		setState(contextValidation, process, nextState);
 	}
 
 }

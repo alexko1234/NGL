@@ -5,6 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.stereotype.Repository;
+
 import models.laboratory.common.description.Institute;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentQueryParams;
@@ -12,26 +18,25 @@ import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.stereotype.Repository;
-
-import play.Logger;
+// import play.Logger;
 
 @Repository
-public class InstrumentDAO extends AbstractDAOMapping<Instrument>{
+public class InstrumentDAO extends AbstractDAOMapping<Instrument> {
 
+//	protected InstrumentDAO() {
+//		super("instrument", Instrument.class, InstrumentMappingQuery.class,
+//				"SELECT distinct t.id, t.short_name, t.name, t.code, t.active, t.path, t.fk_instrument_used_type FROM instrument as t "+DAOHelpers.getInstrumentSQLForInstitute("t"),
+//				true);				
+//	}
 	protected InstrumentDAO() {
-		super("instrument", Instrument.class, InstrumentMappingQuery.class,
+		super("instrument", Instrument.class, InstrumentMappingQuery.factory,
 				"SELECT distinct t.id, t.short_name, t.name, t.code, t.active, t.path, t.fk_instrument_used_type FROM instrument as t "+DAOHelpers.getInstrumentSQLForInstitute("t"),
 				true);				
 	}
 	
 	@Override
 	public long save(Instrument instrument) throws DAOException {
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", instrument.name);
         parameters.put("short_name", instrument.shortName);
         parameters.put("code", instrument.code);
@@ -42,25 +47,28 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument>{
         instrument.id = newId;
         
         insertInstitutes(instrument.institutes, instrument.id, false);
-        
         return instrument.id;
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public void update(Instrument instrument) throws DAOException {
 		String sql = "UPDATE instrument SET code=?, short_name=?, name=?, active=?, path=? WHERE id=?";
-		jdbcTemplate.update(sql, instrument.code, instrument.shortName, instrument.name, instrument.active, instrument.path, instrument.id);
-	}
-	/**
-	 * Update all fields but not active and code
-	 * @param instrument
-	 * @throws DAOException
-	 */
-	public void updateByCode(Instrument instrument) throws DAOException {
-		String sql = "UPDATE instrument SET short_name=?, name=?, path=? WHERE code=?";
-		jdbcTemplate.update(sql, instrument.shortName, instrument.name, instrument.path, instrument.code);
+		jdbcTemplate.update(sql, instrument.code, instrument.shortName, instrument.name, instrument.active, instrument.path, instrument.id);		
 	}
 	
+	/*
+	 * Update all fields but not active and code
+	 * @param instrument
+	 */
+	// * @throws DAOException
+	@SuppressWarnings("deprecation")
+	public void updateByCode(Instrument instrument) throws DAOException {
+		String sql = "UPDATE instrument SET short_name=?, name=?, path=? WHERE code=?";
+		jdbcTemplate.update(sql, instrument.shortName, instrument.name, instrument.path, instrument.code);		
+	}
+	
+	@SuppressWarnings("deprecation")
 	private void insertInstitutes(List<Institute> institutes, Long instrumentId, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
 			removeInstitutes(instrumentId);
@@ -77,14 +85,16 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument>{
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void removeInstitutes( long instrumentId) {
 		String sql = "DELETE FROM instrument_institute WHERE fk_instrument=?";
 		jdbcTemplate.update(sql, instrumentId);
 	}
 	
 	
+	@Override
 	public void remove(Instrument instrument) throws DAOException {
-		if(null == instrument){
+		if (instrument == null) {
 			throw new IllegalArgumentException("instrument is null");
 		}
 		
@@ -102,6 +112,7 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument>{
 		try {
 			try {
 				String sql = "select distinct(t.code) as code FROM instrument as t "+DAOHelpers.getInstrumentSQLForInstitute("t")+" WHERE t.code=?";
+				@SuppressWarnings("deprecation")
 				String returnCode =  this.jdbcTemplate.queryForObject(sql, String.class, code);
 				if (returnCode != null) {
 					return Boolean.TRUE;

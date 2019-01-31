@@ -1,11 +1,14 @@
 package controllers.sra.experiments.api;
 
-import static play.data.Form.form;
+//import static play.data.Form.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
+import javax.inject.Inject;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -13,6 +16,7 @@ import org.mongojack.DBQuery.Query;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.migration.NGLContext;
 import models.sra.submit.common.instance.Submission;
 import models.sra.submit.sra.instance.Experiment;
 import models.sra.submit.sra.instance.ReadSpec;
@@ -23,15 +27,17 @@ import play.mvc.Result;
 
 public class ExperimentsReadSpecs extends DocumentController<Experiment> {
 
-	final static Form<ExperimentsSearchForm> experimentsSearchForm = form(ExperimentsSearchForm.class);
+	final /*static*/ Form<ExperimentsSearchForm> experimentsSearchForm;// = form(ExperimentsSearchForm.class);
 	
-	public ExperimentsReadSpecs() {
-		super(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class);
+	@Inject
+	public ExperimentsReadSpecs(NGLContext ctx) {
+		super(ctx,InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class);
+		experimentsSearchForm = ctx.form(ExperimentsSearchForm.class);
 	}
 
 	public Result list()
 	{
-		List<ReadSpec> allReadSpecs = new ArrayList<ReadSpec>();
+		List<ReadSpec> allReadSpecs = new ArrayList<>();
 		Form<ExperimentsSearchForm> form = filledFormQueryString(experimentsSearchForm, ExperimentsSearchForm.class);
 		ExperimentsSearchForm formExp = form.get();
 		Query query = getQuery(formExp);
@@ -45,7 +51,7 @@ public class ExperimentsReadSpecs extends DocumentController<Experiment> {
 	}
 	
 	private Query getQuery(ExperimentsSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		Query query = null;
 		
 		if (StringUtils.isNotBlank(form.submissionCode)) {
@@ -56,10 +62,10 @@ public class ExperimentsReadSpecs extends DocumentController<Experiment> {
 			}
 		}
 		
-		if(StringUtils.isNotBlank(form.experimentCode)){
-			queries.add(DBQuery.is("code", form.experimentCode));
-		}else if (CollectionUtils.isNotEmpty(form.listExperimentCodes)) { //all
-			queries.add(DBQuery.in("code", form.listExperimentCodes));
+		if(StringUtils.isNotBlank(form.code)){
+			queries.add(DBQuery.is("code", form.code));
+		}else if (CollectionUtils.isNotEmpty(form.codes)) { //all
+			queries.add(DBQuery.in("code", form.codes));
 		}
 		
 		// ajout pour interface release study :

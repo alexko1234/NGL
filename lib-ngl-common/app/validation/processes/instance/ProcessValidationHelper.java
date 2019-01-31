@@ -8,6 +8,7 @@ import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
@@ -15,7 +16,7 @@ import models.laboratory.processes.instance.SampleOnInputContainer;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.mongojack.DBQuery;
 
 import fr.cea.ig.MongoDBDAO;
@@ -29,20 +30,18 @@ import validation.utils.ValidationHelper;
 public class ProcessValidationHelper extends CommonValidationHelper {
 
 	public static void validateProcessType(String typeCode,
-			Map<String, PropertyValue> properties,
-			ContextValidation contextValidation) {
-		ProcessType processType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ProcessType.find,true);
-		if(processType!=null){
+			                               Map<String, PropertyValue> properties,
+			                               ContextValidation contextValidation) {
+		ProcessType processType = BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ProcessType.find,true);
+		if (processType != null) {
 			contextValidation.addKeyToRootKeyName("properties");
 			ValidationHelper.validateProperties(contextValidation, properties, processType.getPropertiesDefinitionDefaultLevel());
 			contextValidation.removeKeyFromRootKeyName("properties");
 		}
-		
 	}
 
 	public static void validateProcessCategory(String categoryCode, ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "categoryCode", ProcessCategory.find,false);
-		
 	}
 
 	public static void validateCurrentExperimentTypeCode(String currentExperimentTypeCode,
@@ -66,22 +65,37 @@ public class ProcessValidationHelper extends CommonValidationHelper {
 	}
 	
 	public static void validateSampleOnInputContainer(SampleOnInputContainer soic, ContextValidation contextValidation ){				
-		if(ValidationHelper.required(contextValidation, soic, "sampleOnInputContainer")){		
+		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
+		
+		
+		if(!"IW-C".equals(stateCode) && ValidationHelper.required(contextValidation, soic, "sampleOnInputContainer")){		
 			contextValidation.addKeyToRootKeyName("sampleOnInputContainer");
 			soic.validate(contextValidation);
 			contextValidation.removeKeyFromRootKeyName("sampleOnInputContainer");
 		}
 	}
-
-	public static void validateContainerCode(String containerCode, ContextValidation contextValidation, String propertyName) {
-		
-		Container c = BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, containerCode, propertyName, Container.class,InstanceConstants.CONTAINER_COLL_NAME, true);
-		
+	public static void validateContainerSupportCode (String containerSupportCode, ContextValidation contextValidation, String propertyName) {
 		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
-		if("N".equals(stateCode) && contextValidation.isCreationMode()){
-			if(null != c && !"IW-P".equals(c.state.code)){
+		if(!"IW-C".equals(stateCode)){
+			BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, containerSupportCode, propertyName, ContainerSupport.class,InstanceConstants.CONTAINER_SUPPORT_COLL_NAME);
+		}
+	}
+	public static void validateContainerCode(String containerCode, ContextValidation contextValidation, String propertyName) {
+		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
+		
+		if ("N".equals(stateCode) && contextValidation.isCreationMode()) {
+			Container c = BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, containerCode, propertyName, Container.class,InstanceConstants.CONTAINER_COLL_NAME, true);
+			if (c != null && !"IW-P".equals(c.state.code)){
 				contextValidation.addErrors("inputContainerCode", ValidationConstants.ERROR_BADSTATE_MSG, c.state.code);
 			}
+		} else if("IW-C".equals(stateCode) && contextValidation.isUpdateMode() && containerCode != null) {
+			Container c = BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, containerCode, propertyName, Container.class,InstanceConstants.CONTAINER_COLL_NAME, true);
+			if (c != null && !"IW-P".equals(c.state.code)){
+				contextValidation.addErrors("inputContainerCode", ValidationConstants.ERROR_BADSTATE_MSG, c.state.code);
+			}
+		} else if(!"IW-C".equals(stateCode)){
+//			Container c = 
+					BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, containerCode, propertyName, Container.class,InstanceConstants.CONTAINER_COLL_NAME, true);			
 		}
 	}
 	
@@ -111,7 +125,7 @@ public class ProcessValidationHelper extends CommonValidationHelper {
 					contextValidation.addErrors("outputContainerCodes."+container.code, ValidationConstants.ERROR_BADSTATE_MSG, container.state.code);
 				}
 			}
-		}
-				
+		}	
 	}
+	
 }

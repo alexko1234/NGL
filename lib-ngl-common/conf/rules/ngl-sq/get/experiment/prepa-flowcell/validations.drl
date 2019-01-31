@@ -65,3 +65,26 @@ rule "type sequencage catch"
 	    $contextValidation.addErrors("container",	"error.validationexp.typesequensage", $value,$code);
 end
 
+rule "run_name container into new fc"
+    @nglSQ( validations )
+	dialect "java"
+	salience 900
+	no-loop
+    when
+	    $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-flowcell" || $typeCode=="prepa-fc-ordered", $stateCode : state.code, $stateCode=="N")
+	    $atomicTransfert: ManyToOneContainer($inputContainers : inputContainerUseds)
+		$container : InputContainerUsed( $contents : contents,$contents!=null,$contents.size()>1) from $inputContainers
+		$content : Content($code : sampleCode) from $contents
+		$contextValidation:ContextValidation()
+    then
+    	if(!$content.processProperties.containsKey("Run_Name")){
+	    	Logger.debug($code + " dans " + $container.code + " n'a pas de Run_Name");
+	    	$contextValidation.addErrors("content",	"error.validationexp.runName", $code,$container.code);
+	    } 	
+end
+
+/*
+additional rules :
+
+		rule "reference-genome for bisulfite" dans prepa-fc-ordered/validation.drl
+*/

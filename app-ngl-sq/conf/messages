@@ -282,13 +282,18 @@ search.tab.addcolumns = Colonnes supplémentaires
 #processes
 processes.title = Processus
 processes.menu = Processus
-processes.menu.creation = Création
+processes.menu.new-from-containers = Création à partir de containers
+processes.menu.new-from-samples = Création avec des échantillons
+processes.menu.assign-to-container = Assigner processus aux containers
 processes.menu.state = Changement d''Etat
 processes.menu.search = Rechercher
 processes.menu.remove = Suppression
 processes.tabs.search = Recherche Processus
 processes.tabs.state = Changement d''Etat Processus
-processes.tabs.create = Création Processus
+processes.tabs.create = Création processus
+processes.tabs.create.new-from-containers  = Création processus depuis des containers
+processes.tabs.create.new-from-samples  = Création processus depuis des échantillons
+processes.tabs.assign-to-container  = Assigner processus aux containers
 processes.tabs.remove = Suppression Processus
 processes.create = Créé un processus
 processes.save = Sauvegarder
@@ -339,6 +344,8 @@ processes.table.sampleOnInputContainer.volume = Volume
 processes.table.sampleOnInputContainer.concentration = Concentration
 processes.table.sampleOnInputContainer.unit.volume = Unité de volume
 processes.table.sampleOnInputContainer.unit.concentration = Unité de concentration
+processes.table.availableProcesses = Sélectionnez un processus ?
+
 
 processes.select.processType = Type processus
 processes.select.processCategory = Catégorie processus
@@ -358,10 +365,12 @@ experiments.title.reagents = Réactifs
 experiments.tabs.search = Recherche Expérience
 experiments.tabs.create = Création Expérience
 experiments.tabs.reagents = Recherche Réactif
+experiments.tabs.graph = Chemin des Expériences
 experiments.table.reagents = Réactifs Utilisés
 experiments.menu.reagents = Reporting Réactifs
 experiments.menu.creation = Création
 experiments.menu.search = Rechercher
+experiments.menu.graph = Chemin des Expériences
 experiments.menu.purification = Créer une Purification
 experiments.menu.qualitycontrol = Créer un Contrôle qualité
 experiments.menu.transfert = Créer un Transfert
@@ -409,6 +418,8 @@ experiments.modifyBy = Modifié par
 experiment.comments = Commentaires
 
 experiment.title.delete = Suppression de l''expérience
+experiment.title.saveAdmin = Sauvegarde globale par un admin
+experiment.question.saveAdmin =  Êtes-vous certain de vouloir sauvegarder l''expérience  et propager les valeurs des propriétés contents ?
 experiment.question.delete = Êtes-vous certain de vouloir supprimer l''expérience ?
 experiment.question.delete.yes = Oui
 experiment.question.delete.no = Non
@@ -418,7 +429,7 @@ experiments.outputs = Container(s) en sortie(s)
 experiments.outputContainerSupportCode= Code support en sortie
 experiments.outputContainerSupportStorageCode= Stockage support en sortie
 experiments.instrumentFile = Fichier de l''instrument
-experiments.startColumnTagPlate = Colonne de début de la plaque d''index
+experiments.startColumnTagPlate = Select. une plaque d''index et la colonne de début
 
 experiments.calculation.sheet = Feuille de calcul
 experiments.src_dest.sheet = Source / Destination
@@ -523,9 +534,11 @@ experiments.input.error.only-tubes = Seuls des tubes peuvent entrer dans cette e
 experiments.input.error.only-tubes-or-strips = Seuls des tubes ou des strips peuvent entrer dans cette expérience
 experiments.input.error.only-plates = Seules des plaques peuvent entrer dans cette expérience
 experiments.input.error.only-1-plate= Une seule plaque peut entrer dans cette expérience
-experiments.input.error.must-be-same-out = Les categories de container en entrée et en sortie doivent être les même
+experiments.input.error.must-be-same-out = Les categories de container en entrée et en sortie doivent être les mêmes
+experiments.output.error.must-have-inputConc = Impossible de noter une concentration en sortie si la concentration en entrée est nulle!
 experiments.input.error.maxContainers=Maximum {0} container(s) en entrée
 experiments.input.error.maxSupports=Maximum {0} support(s) en entrée
+experiments.input.warn.unquantifiableSample= Présence d'échantillons avec conc nulle en entrée. Présence d'echantillon(s) non quantifiable(s) ou oubli quantif?
 
 experiments.output.error.maxSupports=Maximum {0} support(s) en sortie
 experiments.output.error.minSupports=Minimum {0} support(s) en sortie
@@ -555,6 +568,7 @@ button.newexperiment = Créer une expérience
 #property_definition list object
 property_definition.loadingReport = Bilan chargement
 property_definition.qcFlowcell = QC Flowcell
+
 property_definition.Date_realisation_Fragment_Analyzer = Fragment Analyzer le
 property_definition.Type_librairie = Type de librairie
 property_definition.taille_insert = Taille d'insert
@@ -567,6 +581,10 @@ property_definition.Nom_pool_sequencage = Nom pool
 property_definition.Nom_echantillon_collaborateur = Nom librairie
 property_definition.Import_dans_NGL = Import dans NGL
 
+
+
+property_definition.tagPcrBlank1SampleCode = Code éch. témoin négatif PCR (1)
+property_definition.tagPcrBlank2SampleCode = Code éch. témoin négatif PCR (2)
 
 
 #baskets
@@ -586,6 +604,17 @@ limsdao.error.emptymapping =Pas de correspondance avec les paramètres suivants 
 #initialdata
 initialdata.error.sampleNotExist=Le container {0} 
 
+# schema-processus CNG
+docs.schema-processus.chromiumWG=Schéma processus Chromium WG
+docs.schema-processus.ExpSatellites=Schéma processus Exp satellites uniquement
+docs.schema-processus.RNAseq=Schéma processus RNAseq
+docs.schema-processus.WGNANO=Schéma processus WG NANO
+docs.schema-processus.WGPCRfree=Schéma processus WG PCR free
+docs.schema-processus.Capture=Schémas processus CAPTURE
+docs.schema-processus.LibSeqIllumina=Schémas processus Librairies pour séquençage Illumina
+docs.schema-processus.repriseNorm=Schémas processus reprise débutant par Normalisation
+docs.schema-processus.sequencing=Schémas processus Séquençage
+
 docs.illumina=Séquençage Illumina
 docs.nanopore=Séquençage Nanopore
 docs.opticalmapping.opgen=Optical mapping Opgen
@@ -594,7 +623,7 @@ docs.sample_prep=Prep. Ech > Extraction ADN-ARN
 docs.bank.metabarcoding=Banque > MetaBarcoding
 docs.bank.metatranscriptomique=Banque > MetaTranscriptomique
 docs.bank.metabargenomique=Banque > MetaGenomique
-				
+docs.processes.schema = Schémas processus (nov 2017)				
 
 #button
 button.search = Rechercher
@@ -611,9 +640,12 @@ button.print = Imprimer
 button.delete = Supprimer
 button.exportCSV = Export CSV
 button.dispatch= Orientation des containers
+button.validate.warning.content = Sauvegarder et déclencher une mise à jour en cascade des propriétés contents
 
-#select
-select.wrongStartColumnTagPlate= Colonne de début de la plaque d''index incorrecte
+#select pour choix de colonne de plaque d'index
+select.msg.error.wrongStartColumn.tagPlate= La colonne {0} ne permet pas d'attribuer un index à chaque puit de librairie
+select.msg.error.emptyStartColumn.tagPlate= La colonne {0} de la plaque d''index ''{1}'' est vide
+select.msg.error.notEnoughTags.tagPlate= La plaque d''index ''{0}'' ne contient pas assez d''index pour cette expérience
 
 date.format= dd/MM/yyyy
 date.format.french= jj/mm/aaaa
@@ -629,7 +661,7 @@ experiments.msg.import.success = Import réussi, merci de vérifier puis de sauv
 experiments.msg.import.sheet.missing = L''onglet ''{0}'' est manquant
 experiments.msg.import.header-label.missing = ligne {0}: Champ d''entête ou label ''{1}'' manquant
 experiments.msg.import.value.missing = ligne {0}: Valeur ''{1}'' manquante
-experiments.msg.import.value.unexpected= ligne {0}: La valeur de ''{1}'': ''{2}''  n''est pas celle attendue: ''{3}'' 
+experiments.msg.import.value.unexpected= ligne {0}: La valeur de ''{1}'': ''{2}'' n''est pas celle attendue: ''{3}'' 
 experiments.msg.import.position.unkwown = ligne {0}: La position ''{1}'' ne correspond pas à un format de plaque connu
 experiments.msg.import.position.outofbonds = ligne {0}: La position ''{1}'' ne correspond pas au format {2}-puits
 experiments.msg.import.position.duplicate = ligne {0}: La position ''{1}'' est dupliquée; 

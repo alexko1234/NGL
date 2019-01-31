@@ -1,15 +1,14 @@
 package models.laboratory.experiment.instance;
 
-import play.Logger;
 import models.laboratory.container.description.ContainerSupportCategory;
 import validation.ContextValidation;
 import validation.experiment.instance.AtomicTransfertMethodValidationHelper;
 
-public class OneToOneContainer extends AtomicTransfertMethod{
+public class OneToOneContainer extends AtomicTransfertMethod {
 
-	public OneToOneContainer(){
-		super();
-	}
+//	public OneToOneContainer(){
+//		super();
+//	}
 
 	@Override
 	public void updateOutputCodeIfNeeded(ContainerSupportCategory outputCsc, String supportCode) {
@@ -57,6 +56,7 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 			});
 		}
 	}
+	
 	@Override
 	public void removeOutputContainerCode(){
 		outputContainerUseds.forEach(ocu -> ocu.code = null);
@@ -64,15 +64,15 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		long t0 = System.currentTimeMillis();
+//		long t0 = System.currentTimeMillis();
 		super.validate(contextValidation);
-		long t1 = System.currentTimeMillis();
+//		long t1 = System.currentTimeMillis();
 		AtomicTransfertMethodValidationHelper.validateOneInputContainer(inputContainerUseds, contextValidation);
-		long t2 = System.currentTimeMillis();
+//		long t2 = System.currentTimeMillis();
 		AtomicTransfertMethodValidationHelper.validateOneOutputContainer(outputContainerUseds, contextValidation);
-		long t3 = System.currentTimeMillis();
+//		long t3 = System.currentTimeMillis();
 		AtomicTransfertMethodValidationHelper.validateOutputContainers(contextValidation, outputContainerUseds);
-		long t4 = System.currentTimeMillis();
+//		long t4 = System.currentTimeMillis();
 		/*
 		Logger.debug("ATMOneTOOne validate \n "
 				+"1 = "+(t1-t0)+" ms\n"

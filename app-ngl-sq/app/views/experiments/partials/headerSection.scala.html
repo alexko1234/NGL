@@ -1,10 +1,18 @@
+@this(config: fr.cea.ig.ngl.NGLConfig)
+
 @()
+
 @import play.mvc.Http.Context
 @import controllers.authorisation.PermissionHelper
+
+@user            = @{ fr.cea.ig.authentication.Authentication.getUser(Context.current().session()) }
+@writePermission = @{ PermissionHelper.checkPermission(user, "writing") }
+@adminPermission = @{ PermissionHelper.checkPermission(user, "admin")   }
+
 <div class="row">
 	<div class="col-md-12 col-lg-12">
 		<div class="page-header">	
-			@if(PermissionHelper.checkPermission(Context.current().request().username(), "writing")){
+			@if(writePermission){
 			<div class="btn-toolbar pull-right">
 			
 					<div class="btn-group " id="experiment_action" ng-if="getNbAvailableAdditionnalButtons() > 1">
@@ -19,8 +27,7 @@
 					</div>
 					<button ng-if="getNbAvailableAdditionnalButtons() === 1" ng-repeat="button in getAdditionnalButtons() track by $index" class="btn btn-default" ng-show="button.isShow()"  ng-click="button.click()" ng-disabled="button.isDisabled()" ng-bind="button.label"></button>
 				 	
-				 	
-				 	@if(play.Play.application().configuration().getBoolean("ngl.printing.cb", java.lang.Boolean.FALSE)){
+				 	@if(config.getBoolean("ngl.printing.cb", java.lang.Boolean.FALSE)){
 					<button class="btn btn-default" ng-click="openPrintTagsPage()" ng-if="isInProgressState() || isFinishState()" title="@Messages("button.tag.printing")"><i class="fa fa-tags" ></i></button>
 					}
 				
@@ -49,8 +56,10 @@
 			 	
 			 		<button class="btn btn-default" data-toggle="modal" data-target="#commentModal" title="@Messages("experiment.button.addComment")"><i class="fa fa-comment"></i></button>
 			 		
-			 		<button class="btn btn-default" ng-if="isExperimentDeleteAvailable('@Context.current().request().username()')" ng-click="askDeleteExperiment()" data-toggle="tooltip" title="@Messages("button.delete")" ><i class="fa fa-trash"></i></button>
-				 	
+			 		<button class="btn btn-default" ng-if="isExperimentDeleteAvailable('@user')" ng-click="askDeleteExperiment()" data-toggle="tooltip" title="@Messages("button.delete")" ><i class="fa fa-trash"></i></button>
+				 	@if(adminPermission){
+				 		<button class="btn btn-danger" ng-if="isFinishState() && isEditModeAvailable()" ng-disabled="isSaveInProgress()" ng-click="askSaveAdmin()" data-toggle="tooltip" title="@Messages("button.validate.warning.content")" ><i class="fa fa-save"></i></button>				 	
+			 		}
 			 	}
 			 				 					
 			</div>	

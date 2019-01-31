@@ -1,6 +1,6 @@
 "use strict";
  
-angular.module('home', ['ngRoute','ultimateDataTableServices','basketServices', 'commonsServices','valuationServices','ui.bootstrap','atomicTransfereServices','dragndropServices','ngl-sq.experimentsServices'], 
+angular.module('home', ['ngRoute','ultimateDataTableServices','basketServices', 'commonsServices','valuationServices','ui.bootstrap','atomicTransfereServices','dragndropServices','ngl-sq.experimentsServices','tools'], 
 		function($routeProvider, $locationProvider) {
 	
 	$routeProvider.when('/experiments/new/home', {
@@ -16,6 +16,11 @@ angular.module('home', ['ngRoute','ultimateDataTableServices','basketServices', 
 	$routeProvider.when('/experiments/reagents/home', {
 		templateUrl : function(params){return jsRoutes.controllers.experiments.tpl.Experiments.search("reagents").url},
 		controller : 'SearchReagentsCtrl'
+	});
+	
+	$routeProvider.when('/experiments/graph/home', {
+		templateUrl : function(params){return jsRoutes.controllers.experiments.tpl.Experiments.graph().url},
+		controller : 'SearchGraphCtrl'
 	});
 	
 	$routeProvider.when('/experiments/:code', {

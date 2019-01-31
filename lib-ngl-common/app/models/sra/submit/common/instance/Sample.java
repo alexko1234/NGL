@@ -6,12 +6,13 @@ import org.apache.commons.lang3.StringUtils;
 
 import models.laboratory.common.description.ObjectType;
 import models.utils.InstanceConstants;
-import play.Logger;
+//import play.Logger;
 import validation.ContextValidation;
 import validation.sra.SraValidationHelper;
 
 public class Sample extends AbstractSample {
-
+	private static final play.Logger.ALogger logger = play.Logger.of(Sample.class);
+	
 	// SampleType
 	//public String alias;         // required mais remplacé par code herité de DBObject
 	public String projectCode;     // required pour nos stats //Reference code de la collection project NGL  
@@ -27,6 +28,7 @@ public class Sample extends AbstractSample {
 	public Date releaseDate;         // required, date de mise à disposition en public par l'EBI
 	//public State state; //= new State();// Reference sur "models.laboratory.common.instance.state" mis dans AbstractSample
 	//public TraceInformation traceInformation = new TraceInformation(); champs mis dans AbstractSample
+	public Date firstSubmissionDate;        
 
 	public Sample() {
 		super(AbstractSample.sampleType);
@@ -35,11 +37,13 @@ public class Sample extends AbstractSample {
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		Logger.info("Validate sample");
+		logger.info("Validate sample");
 		//Logger.info("ok dans Sample.validate\n");
 		contextValidation.addKeyToRootKeyName("sample");
 		SraValidationHelper.validateId(this, contextValidation);
-		
+		SraValidationHelper.validateFreeText(contextValidation,"description", this.description);
+		SraValidationHelper.validateFreeText(contextValidation,"title", this.title);
+		SraValidationHelper.validateFreeText(contextValidation,"anonymizedName", this.anonymizedName);
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
 		//SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code");
 		SraValidationHelper.validateState(ObjectType.CODE.SRASubmission, this.state, contextValidation);
@@ -58,7 +62,7 @@ public class Sample extends AbstractSample {
 			contextValidation.addErrors("sample non evaluable ", "avec type de contexte de validation " + contextValidation.getContextObjects().get("type"));	
 		}
 		contextValidation.removeKeyFromRootKeyName("sample");
-		//System.out.println("sortie de sample.validate pour " + this.code);
+		logger.debug("sortie de sample.validate pour {}", this.code);
 	}
 
 

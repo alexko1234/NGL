@@ -5,18 +5,16 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import validation.ContextValidation;
-import validation.common.instance.CommonValidationHelper;
-import validation.reagent.instance.BoxValidationHelper;
-import validation.reagent.instance.KitValidationHelper;
-import validation.utils.ValidationHelper;
-
 import models.laboratory.common.description.State;
 import models.laboratory.common.instance.Comment;
 import models.utils.InstanceConstants;
+import validation.ContextValidation;
+import validation.reagent.instance.BoxValidationHelper;
+import validation.utils.ValidationHelper;
 
 
-public class Box extends AbstractDeclaration{
+public class Box extends AbstractDeclaration {
+	
 	public String catalogCode;
 	
 	public String kitCode;

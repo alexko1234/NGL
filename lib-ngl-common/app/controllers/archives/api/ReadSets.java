@@ -1,8 +1,6 @@
 package controllers.archives.api;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -13,62 +11,62 @@ import com.mongodb.BasicDBObject;
 
 import controllers.CommonController;
 import controllers.authorisation.Permission;
+import controllers.history.UserHistory;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBDatatableResponseChunks;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.mongo.MongoStreamer;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
-import play.Logger;
 import play.mvc.Result;
+import play.mvc.With;
+
 /**
  * Controller that manage the readset archive
+ * 
  * @author galbini
  *
  */
-public class ReadSets extends CommonController{
-/**
-	 *
-	 * @param archive : default 2
+public class ReadSets extends CommonController {
+	
+	private static final play.Logger.ALogger logger = play.Logger.of(ReadSets.class);
+	
+	/*
+	 * @param archive default 2
 	 * @return
 	 */
-	 
+	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 	@Permission(value={"reading"})
-	public static Result list(){
+	public Result list(){
 
 		BasicDBObject keys = new BasicDBObject();
-		keys.put("treatments", 0);
-		
+		keys.put("treatments", 0);		
 		Integer archive = getArchiveValue();
-		List<Archive> archives = new ArrayList<Archive>();
+//		List<Archive> archives = new ArrayList<Archive>();
 		MongoDBResult<ReadSet> results =  MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, getQuery(archive), keys);		
-		return ok(new MongoDBDatatableResponseChunks<ReadSet>(results, r -> convertToArchive(archive, r))).as("application/json");		
+		return MongoStreamer.okStreamUDT(results, r -> { return convertToArchive(archive, r); });
 	}
 
-
-	private static Archive convertToArchive(Integer archive, ReadSet readSet) {
+	private Archive convertToArchive(Integer archive, ReadSet readSet) {
 		if (readSet != null) {
-			if ( (archive.intValue() == 0) ||
-					(archive.intValue() == 1 && readSet.archiveId != null) ||
-					(archive.intValue() == 2 && readSet.archiveId == null) ) {
+			if ( (archive.intValue() == 0) 
+					|| (archive.intValue() == 1 && readSet.archiveId != null) 
+					|| (archive.intValue() == 2 && readSet.archiveId == null) ) {
 				return createArchive(readSet);
 			}
 		}
 		return null;
 	}
 
-
-
-	private static Integer getArchiveValue() {
+	private Integer getArchiveValue() {
 		try {
 			return Integer.valueOf(request().queryString().get("archive")[0]);
-
-		} catch(Exception e) {
-			Logger.error(e.getMessage());
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 			return 2; // default value;
 		}
 	}
 
-	private static Query getQuery(Integer archive) {
+	private Query getQuery(Integer archive) {
 		Query query = null;
 		if (archive.intValue() == 0) { //all
 			query = DBQuery.is("dispatch", true);
@@ -80,7 +78,7 @@ public class ReadSets extends CommonController{
 		return query;
 	}
 
-	private static Archive createArchive(ReadSet readset) {
+	private Archive createArchive(ReadSet readset) {
 		Archive archive =  new Archive();
 		archive.runCode=readset.runCode;
 		archive.projectCode=readset.projectCode;
@@ -92,8 +90,9 @@ public class ReadSets extends CommonController{
 		return archive;
 	}
 
-	@Permission(value={"writing"})	//@Permission(value={"archiving"})
-	public static Result save(String readSetCode) {
+	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
+	@Permission(value={"writing"})	
+	public Result save(String readSetCode) {
 		JsonNode json = request().body().asJson();
 		String archiveId = json.get("archiveId").asText();		
 		if (archiveId != null) {
@@ -116,9 +115,10 @@ public class ReadSets extends CommonController{
 			return badRequest();
 		}
 	}
-
+	
+	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 	@Permission(value={"writing"})
-	public static Result delete(Integer i){
+	public Result delete(Integer i){
 		
 		if(i % 2 == 0){
 			return notFound();

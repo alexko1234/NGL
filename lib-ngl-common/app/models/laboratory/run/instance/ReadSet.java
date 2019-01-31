@@ -19,7 +19,7 @@ import validation.run.instance.ReadSetValidationHelper;
 import validation.run.instance.TreatmentValidationHelper;
 import validation.utils.ValidationHelper;
 
-public class ReadSet extends DBObject implements IValidation{
+public class ReadSet extends DBObject implements IValidation {
 
 	public String typeCode;
 	
@@ -43,13 +43,16 @@ public class ReadSet extends DBObject implements IValidation{
 	public String archiveId;
 	public Date archiveDate;
 	public TraceInformation traceInformation;
-	public Map<String,Treatment> treatments = new HashMap<String,Treatment>();
-	public Map<String, PropertyValue> properties= new HashMap<String, PropertyValue>();
+	public Map<String,Treatment> treatments = new HashMap<>();
+	public Map<String, PropertyValue> properties = new HashMap<>(); // <String, PropertyValue>();
 	
 	public List<File> files;
 	
 	//insert after ngsrg
 	public SampleOnContainer sampleOnContainer;
+	public Date releaseDate; 
+	public Date submissionDate; 
+
 	
 	//TODO BA Ref !!!!
 	
@@ -101,7 +104,7 @@ public class ReadSet extends DBObject implements IValidation{
 		contextValidation.putObject("level", Level.CODE.ReadSet);
 		TreatmentValidationHelper.validationTreatments(this.treatments, contextValidation);
 		FileValidationHelper.validationFiles(this.files, contextValidation);
-		if(contextValidation.getContextObjects().containsKey("external") && (Boolean)contextValidation.getContextObjects().get("external")){
+		if (contextValidation.getContextObjects().containsKey("external") && (Boolean)contextValidation.getContextObjects().get("external")) {
 			ReadSetValidationHelper.validateSampleOnContainer(sampleOnContainer, contextValidation);
 		}
 	}

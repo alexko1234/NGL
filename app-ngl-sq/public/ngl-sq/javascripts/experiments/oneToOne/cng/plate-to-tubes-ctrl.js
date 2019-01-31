@@ -313,7 +313,10 @@ angular.module('home').controller('CNGPlateToTubesCtrl',['$scope' ,'$http','$par
 	$scope.copyVolumeInToOut = function(){
 		var data = $scope.atmService.data.displayResult;		
 		data.forEach(function(value){
-			value.data.outputContainerUsed.volume = value.data.inputContainerUsed.volume;
+			//21/12/2017 ne copier que si non null!!
+			if ( null !== value.data.inputContainerUsed.volume) { 
+				value.data.outputContainerUsed.volume = value.data.inputContainerUsed.volume;
+			}
 		})		
 	};
 	

@@ -4,42 +4,35 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.mongojack.DBQuery;
+
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.run.description.ReadSetType;
-import models.laboratory.run.description.RunType;
 import models.laboratory.run.description.TreatmentCategory;
-import models.laboratory.run.description.TreatmentContext;
 import models.laboratory.run.description.TreatmentType;
 import models.laboratory.run.description.TreatmentTypeContext;
 import models.laboratory.run.instance.Analysis;
-import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
-
-import org.mongojack.DBQuery;
-
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
-import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
-import fr.cea.ig.MongoDBDAO;
-
-
 
 public class TreatmentValidationHelper extends CommonValidationHelper {
+	
 	private static Level.CODE getLevelFromContext(ContextValidation contextValidation) {
 		return getObjectFromContext("level", Level.CODE.class, contextValidation);
 	}
 	
 	public static void validationTreatments(Map<String, Treatment> treatments, ContextValidation contextValidation) {
 		if(null != treatments){
-			List<String> trNames = new ArrayList<String>();
+			List<String> trNames = new ArrayList<>();
 			contextValidation.addKeyToRootKeyName("treatments");
 			for(Treatment t:treatments.values()){
 				contextValidation.addKeyToRootKeyName(t.code);

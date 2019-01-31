@@ -3,13 +3,14 @@ package services.instance.container;
 import java.sql.SQLException;
 import java.util.Calendar;
 
+import fr.cea.ig.play.migration.NGLContext;
 import models.utils.dao.DAOException;
 import scala.concurrent.duration.FiniteDuration;
 import play.Logger;
 public class TubeImportGET extends ContainerImportGET {
 
-	public TubeImportGET(FiniteDuration durationFromStart,FiniteDuration durationFromNextIteration) {
-		super("Container Tube GET", durationFromStart, durationFromNextIteration);
+	public TubeImportGET(FiniteDuration durationFromStart,FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super("Container Tube GET", durationFromStart, durationFromNextIteration, ctx);
 	}
 
 	@Override 
@@ -50,7 +51,7 @@ public class TubeImportGET extends ContainerImportGET {
 				+ 										"AND tclo.caracteristique_id != "+play.Play.application().configuration().getString("caracteristiqueEsitoulDateImportNglIndefini")+")) "
 				//Import_dans_NGL is TRUE
 				+ "AND tclo.caracteristique_id ="+ play.Play.application().configuration().getString("caracteristiqueEsitoulImportDansNglVrai"); //vrai 
-			Logger.debug("TubeImportGET : " + SQLContainer);
+			Logger.debug("TubeImportGET");
 			createContainers(contextError,SQLContainer,"tube","IW-P",null,null);
 			
 			//contextError.setUpdateMode();

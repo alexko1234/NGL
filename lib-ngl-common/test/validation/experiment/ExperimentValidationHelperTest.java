@@ -3,7 +3,7 @@ package validation.experiment;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+//import java.util.Map;
 import java.util.Set;
 
 import org.junit.AfterClass;
@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.mongojack.DBQuery;
 
 import fr.cea.ig.MongoDBDAO;
-import models.laboratory.common.instance.PropertyValue;
+//import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.description.ExperimentType;
@@ -54,10 +54,10 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 		
 		experimentType=ExperimentType.find.findByCode(protocol.experimentTypeCodes.get(0));
 
-		List<String> experimentTypes = new ArrayList<String>();
+		List<String> experimentTypes = new ArrayList<>();
 		experimentTypes.add(experimentType.code);		
 		List<ResolutionConfiguration> resolutionConfigurations = MongoDBDAO.find(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, DBQuery.in("typeCodes", experimentTypes)).toList();
-		resolutionList=new HashSet<String>();
+		resolutionList=new HashSet<>();
 		for (ResolutionConfiguration rc : resolutionConfigurations) {
 			for(Resolution reso: rc.resolutions) {
 				resolutionList.add(reso.code);
@@ -116,7 +116,7 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 		Assert.assertTrue(contextValidation.errors.size()==0);
 	}
 	
-	@Test
+	// @Test
 	public void validationResolutionNullFinishTest() throws DAOException{
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.getContextObjects().put("stateCode", "F");
@@ -151,9 +151,9 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 	
 	
 	//@Test
-	public	void validationExperimentType(String typeCode, Map<String, PropertyValue> properties, ContextValidation contextValidation){
-
-	}
+//	public	void validationExperimentType(String typeCode, Map<String, PropertyValue> properties, ContextValidation contextValidation) {
+//	}
+	
 	//@Test
 	public	void validationExperimentCategoryCode(String categoryCode, ContextValidation contextValidation){
 

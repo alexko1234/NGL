@@ -3,18 +3,12 @@ package models.dao;
 
 import java.util.List;
 
+import org.junit.Assert;
+
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.State;
 import models.utils.dao.DAOException;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-
-import play.api.modules.spring.Spring;
 import utils.AbstractTests;
-
 
 /**
  * Test sur base vide avec dump.sql
@@ -22,10 +16,8 @@ import utils.AbstractTests;
  *
  */
 
-public class SpringTest extends AbstractTests{
+public class SpringTest extends AbstractTests {
 
-
-	
 	private void checkObjectType(ObjectType type)
 	{
 		Assert.assertNotNull(type);
@@ -41,8 +33,6 @@ public class SpringTest extends AbstractTests{
 		ObjectType type = ObjectType.find.findByCode("Experiment");
 		checkObjectType(type);
 	}
-
-
 
 	//@Test
 	public void testAllTypes() throws DAOException
@@ -74,6 +64,4 @@ public class SpringTest extends AbstractTests{
 		}
 	}
 	
-	
-
 }

@@ -1,5 +1,5 @@
-angular.module('home').controller('CNSPlatesToPlateCtrl',['$scope' ,'$http','$parse', 'atmToSingleDatatable',
-                                                       function($scope, $http,$parse,atmToSingleDatatable) {
+angular.module('home').controller('CNSPlatesToPlateCtrl',['$scope' ,'$http','$parse', 'atmToSingleDatatable', 'helpers',
+                                                       function($scope, $http,$parse,atmToSingleDatatable, helpers) {
 	var datatableConfig = {
 			name:$scope.experiment.typeCode.toUpperCase(),
 			columns:[			  
@@ -322,6 +322,7 @@ angular.module('home').controller('CNSPlatesToPlateCtrl',['$scope' ,'$http','$pa
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
+		helpers.computeQuantity($scope.experiment);
 		updateATM($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
@@ -362,7 +363,9 @@ angular.module('home').controller('CNSPlatesToPlateCtrl',['$scope' ,'$http','$pa
 			value.data.outputContainerUsed.volume = value.data.inputContainerUsed.volume;
 		})		
 	};
+
 	
+
 	$scope.$watch("experiment.instrument.outContainerSupportCategoryCode", function(){
 		$scope.experiment.instrument.outContainerSupportCategoryCode = "96-well-plate";
 	});
@@ -398,36 +401,8 @@ angular.module('home').controller('CNSPlatesToPlateCtrl',['$scope' ,'$http','$pa
 	}
 	
 	var generateSampleSheetPlateToPlate = function(){
-		generateSampleSheet($scope.experiment.typeCode)
+		$scope.fileUtils.generateSampleSheet({type:$scope.experiment.typeCode})
 	}
-	
-	var generateSampleSheet = function(type){
-		$scope.messages.clear();
-		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url+"?type="+type,{})
-		.success(function(data, status, headers, config) {
-			var header = headers("Content-disposition");
-			var filepath = header.split("filename=")[1];
-			
-			var filename = filepath.split(/\/|\\/);
-			filename = filename[filename.length-1];
-			if(data!=null){
-				$scope.messages.clazz="alert alert-success";
-				$scope.messages.text=Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath;
-				$scope.messages.showDetails = false;
-				$scope.messages.open();	
-				
-				var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
-				saveAs(blob, filename);
-			}
-		})
-		.error(function(data, status, headers, config) {
-			$scope.messages.clazz = "alert alert-danger";
-			$scope.messages.text = Messages('experiments.msg.generateSampleSheet.error');
-			$scope.messages.setDetails(data);
-			$scope.messages.showDetails = true;
-			$scope.messages.open();				
-		});
-	};
 
 	
 	$scope.setAdditionnalButtons([{

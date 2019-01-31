@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.commons.lang3.StringUtils;
@@ -16,17 +15,18 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-import play.Logger;
-import services.io.ExcelHelper;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.reception.instance.ReceptionConfiguration;
+import play.Logger;
+import services.io.ExcelHelper;
 import validation.ContextValidation;
 
 public class ExcelFileService extends FileService {
 	
 	public ExcelFileService(ReceptionConfiguration configuration,
-			PropertyFileValue fileValue, ContextValidation contextValidation) {
-		super(configuration, fileValue, contextValidation);		
+			PropertyFileValue fileValue, ContextValidation contextValidation, NGLContext ctx) {
+		super(configuration, fileValue, contextValidation, ctx);		
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class ExcelFileService extends FileService {
 	 */
 	private Map<Integer, String> convertRow(Row row) {
 		Iterator<Cell> iti = row.cellIterator();
-		Map<Integer, String> rowMap = new TreeMap<Integer, String>();
+		Map<Integer, String> rowMap = new TreeMap<>();
 		boolean isBlankLine = true;
 		while(iti.hasNext()){
 			Cell cell = iti.next();
@@ -93,7 +93,8 @@ public class ExcelFileService extends FileService {
 	}
 
 	private Sheet getSheet(Integer sheetNumber) throws IOException, InvalidFormatException {
-		InputStream is = new ByteArrayInputStream(fileValue.value);
+//		InputStream is = new ByteArrayInputStream(fileValue.value);
+		InputStream is = new ByteArrayInputStream(fileValue.byteValue());
 		Workbook wb = WorkbookFactory.create(is);
 		Sheet sheet = wb.getSheetAt(sheetNumber);
 		return sheet;

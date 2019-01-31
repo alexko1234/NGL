@@ -1,34 +1,43 @@
 package controllers.processes.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
+import javax.inject.Inject;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-
-
+import controllers.APICommonController;
+//import controllers.CommonController;
+import controllers.authorisation.Permission;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.processes.description.ProcessType;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
-import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import play.mvc.Results;
 import views.components.datatable.DatatableResponse;
-import controllers.CommonController;
-import controllers.authorisation.Permission;
 
-public class ProcessTypes extends CommonController{
+public class ProcessTypes extends APICommonController<ProcessTypesSearchForm> {//CommonController{
+
+	private static final play.Logger.ALogger logger = play.Logger.of(ProcessCategories.class);
 	
-	final static Form<ProcessTypesSearchForm> processTypeForm = form(ProcessTypesSearchForm.class);
+	private final /*static*/ Form<ProcessTypesSearchForm> processTypeForm;// = form(ProcessTypesSearchForm.class);
+	
+	@Inject
+	public ProcessTypes(NGLContext ctx) {
+		super(ctx, ProcessTypesSearchForm.class);
+		processTypeForm = ctx.form(ProcessTypesSearchForm.class);
+	}
 	
 	@Permission(value={"reading"})
-	public static Result list() throws DAOException{
+	public /*static*/ Result list() throws DAOException{
 		Form<ProcessTypesSearchForm> processTypeFilledForm = filledFormQueryString(processTypeForm,ProcessTypesSearchForm.class);
 		ProcessTypesSearchForm processTypesSearch = processTypeFilledForm.get();
 		
@@ -45,9 +54,9 @@ public class ProcessTypes extends CommonController{
 				processTypes = ProcessType.find.findAllLight();
 			}
 			if(processTypesSearch.datatable){
-				return ok(Json.toJson(new DatatableResponse<ProcessType>(processTypes, processTypes.size()))); 
+				return ok(Json.toJson(new DatatableResponse<>(processTypes, processTypes.size()))); 
 			}else if(processTypesSearch.list){
-				List<ListObject> lop = new ArrayList<ListObject>();
+				List<ListObject> lop = new ArrayList<>();
 				for(ProcessType et:processTypes){
 					if(null == processTypesSearch.isActive){
 						lop.add(new ListObject(et.code, et.name));
@@ -61,14 +70,14 @@ public class ProcessTypes extends CommonController{
 			}else{
 				return Results.ok(Json.toJson(processTypes));
 			}
-		}catch (DAOException e) {
-			Logger.error("DAO error: "+e.getMessage(),e);
+		} catch (DAOException e) {
+			logger.error("DAO error: "+e.getMessage(),e);
 			return  Results.internalServerError(e.getMessage());
 		}	
 	}
 	
 	@Permission(value={"reading"})
-	public static Result get(String code) throws DAOException{		 
+	public /*static*/ Result get(String code) throws DAOException{		 
 			ProcessType processType = ProcessType.find.findByCode(code);
 			if(processType!=null){
 				return ok(Json.toJson(processType));

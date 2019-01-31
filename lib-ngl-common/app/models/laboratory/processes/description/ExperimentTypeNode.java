@@ -6,33 +6,39 @@ import java.util.List;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.dao.ExperimentTypeNodeDAO;
 import models.utils.Model;
+import models.utils.dao.AbstractDAO;
 
-public class ExperimentTypeNode extends Model<ExperimentTypeNode>{
+public class ExperimentTypeNode extends Model<ExperimentTypeNode> {
+
+//	public static final Finder<ExperimentTypeNode> find = new Finder<ExperimentTypeNode>(ExperimentTypeNodeDAO.class.getName());
+	public static final Finder<ExperimentTypeNode,ExperimentTypeNodeDAO> find = new Finder<>(ExperimentTypeNodeDAO.class);
 
 	//Possibility to do purification
-	public boolean doPurification=Boolean.FALSE;
-	public boolean mandatoryPurification=Boolean.FALSE;
+	public boolean doPurification = false; // Boolean.FALSE;
+	public boolean mandatoryPurification = false; // Boolean.FALSE;
 	
 	//Possibility to do quality control
-	public boolean doQualityControl=Boolean.FALSE;
-	public boolean mandatoryQualityControl=Boolean.FALSE;
+	public boolean doQualityControl = false; // Boolean.FALSE;
+	public boolean mandatoryQualityControl = false; // Boolean.FALSE;
 
 	//Possibility to do transfert
-	public boolean doTransfert=Boolean.FALSE;
-	public boolean mandatoryTransfert=Boolean.FALSE;
+	public boolean doTransfert = false; // Boolean.FALSE;
+	public boolean mandatoryTransfert = false; // Boolean.FALSE;
 
 	public ExperimentType experimentType;
-	public List<ExperimentTypeNode> previousExperimentType=new ArrayList<ExperimentTypeNode>();;
-	public List<ExperimentType> possibleQualityControlTypes=new ArrayList<ExperimentType>();
-	public List<ExperimentType> possiblePurificationTypes=new ArrayList<ExperimentType>();
-	public List<ExperimentType> possibleTransferts=new ArrayList<ExperimentType>();
-	
-	
-	public static Finder<ExperimentTypeNode> find = new Finder<ExperimentTypeNode>(ExperimentTypeNodeDAO.class.getName());
+	public List<ExperimentTypeNode> previousExperimentTypeNodes = new ArrayList<>();
+	public List<ExperimentType> previousExperimentTypes;
+	public List<ExperimentType> possibleQualityControlTypes     = new ArrayList<>();
+	public List<ExperimentType> possiblePurificationTypes       = new ArrayList<>();
+	public List<ExperimentType> possibleTransferts              = new ArrayList<>();
 	
 	public ExperimentTypeNode() {
 		super(ExperimentTypeNodeDAO.class.getName());
 	}
 
-	
+	@Override
+	protected Class<? extends AbstractDAO<ExperimentTypeNode>> daoClass() {
+		return ExperimentTypeNodeDAO.class;
+	}
+
 }

@@ -26,6 +26,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
+
 import fr.genoscope.lis.devsi.birds.api.device.JSONDevice;
 import fr.genoscope.lis.devsi.birds.api.entity.ResourceProperties;
 import fr.genoscope.lis.devsi.birds.api.exception.BirdsException;
@@ -39,7 +42,8 @@ import fr.genoscope.lis.devsi.birds.impl.properties.ProjectProperties;
 public class SubmissionServices implements ISubmissionServices{
 
 	private static Logger log = Logger.getLogger(SubmissionServices.class);
-
+	
+	
 	//TODO
 	@Override
 	public Set<ResourceProperties> getRawDataResources(String submissionCode)
@@ -61,17 +65,17 @@ public class SubmissionServices implements ISubmissionServices{
 		IXMLServices xmlServices = XMLServicesFactory.getInstance();
 		File studyFile = null;
 		// si on est dans soumission de données :
-		if (studyCode!=null && !studyCode.equals("") && !studyCode.equals("null")) {	
+		if (SRAFilesUtil.isNotNullValue(studyCode)) {	
 			studyFile = new File(submissionDirectory + File.separator + ProjectProperties.getProperty("xmlStudies"));
 			xmlServices.writeStudyXml(studyFile, studyCode);
 		}
 		File sampleFile = null;
-		if (sampleCodes!=null && !sampleCodes.equals("") && !sampleCodes.equals("null")){
+		if (SRAFilesUtil.isNotNullValue(sampleCodes)){
 			sampleFile = new File(submissionDirectory + File.separator + ProjectProperties.getProperty("xmlSamples"));
 			xmlServices.writeSampleXml(sampleFile, sampleCodes); 
 		}
 		File experimentFile = null;
-		if (experimentCodes!=null && !experimentCodes.equals("") && !experimentCodes.equals("null")){
+		if (SRAFilesUtil.isNotNullValue(experimentCodes)){
 			log.debug("Create experiment file");
 			experimentFile = new File(submissionDirectory + File.separator + ProjectProperties.getProperty("xmlExperiments"));
 			xmlServices.writeExperimentXml(experimentFile, experimentCodes); 
@@ -79,7 +83,7 @@ public class SubmissionServices implements ISubmissionServices{
 			log.debug("experimentCodes==0 ??????????");
 		}
 		File runFile = null;
-		if (runCodes!=null && !runCodes.equals("") && !runCodes.equals("null")){
+		if (SRAFilesUtil.isNotNullValue(runCodes)){
 			log.debug("create run file");
 			runFile = new File(submissionDirectory + File.separator + ProjectProperties.getProperty("xmlRuns"));
 			xmlServices.writeRunXml(runFile, runCodes); 
@@ -124,7 +128,7 @@ public class SubmissionServices implements ISubmissionServices{
 	{
 		File submissionFile = new File(submissionDirectory + File.separator +"submission.xml");
 
-		if(studyCode==null || (studyCode!=null && studyCode.equals(""))){
+		if(studyCode==null || !SRAFilesUtil.isNotNullValue(studyCode)){
 			throw new BirdsException("Impossible de faire la soumission pour release " + submissionCode + " sans studyCode");
 
 		}
@@ -258,7 +262,7 @@ public class SubmissionServices implements ISubmissionServices{
 		sujet = "Probleme parsing fichier des AC : ";
 		message = "Pour la soumission " + submissionCode + ", le fichier des AC "+ ebiFileName + "\n";
 
-		if (ebiSubmissionCode==null || (ebiSubmissionCode!=null && ebiSubmissionCode.equals(""))) {
+		if (ebiSubmissionCode==null || !SRAFilesUtil.isNotNullValue(ebiSubmissionCode)) {
 			//System.out.println("Pas de Recuperation de ebiSubmissionCode");
 			message += "- ne contient pas ebiSubmissionCode \n";
 			error = true;
@@ -269,13 +273,13 @@ public class SubmissionServices implements ISubmissionServices{
 			error = true;
 		}
 		// Verifier que le nombre d'ac recuperés dans le fichier est bien celui attendu pour l'objet submission:
-		if (studyCode== null || (studyCode!=null && studyCode.equals(""))) {
-			if (studyAc== null || (studyAc!=null && studyAc.equals(""))) {
+		if (studyCode== null || !SRAFilesUtil.isNotNullValue(studyCode)) {
+			if (studyAc== null || !SRAFilesUtil.isNotNullValue(studyAc)) {
 				//System.out.println("studyAc attendu non trouvé pour " + submission.studyCode);
 				message += "- ne contient pas de valeur pour le studyCode " + studyCode+"\n";
 			}
 		}
-		if (sampleCodes != null && !sampleCodes.equals("")){
+		if (SRAFilesUtil.isNotNullValue(sampleCodes)){
 			String[] tabSampleCodes = sampleCodes.split(",");
 			for (int i = 0; i < tabSampleCodes.length ; i++) {
 				String sampleCode = tabSampleCodes[i].replaceAll("\"", "");
@@ -287,7 +291,7 @@ public class SubmissionServices implements ISubmissionServices{
 				}	
 			}
 		}
-		if (experimentCodes != null && !experimentCodes.equals("")){
+		if (SRAFilesUtil.isNotNullValue(experimentCodes)){
 			String[] tabExperimentCodes = experimentCodes.split(",");
 			for (int i = 0; i < tabExperimentCodes.length ; i++) {
 				String experimentCode = tabExperimentCodes[i].replaceAll("\"", "");
@@ -298,7 +302,7 @@ public class SubmissionServices implements ISubmissionServices{
 				}	
 			}
 		}
-		if (runCodes != null && !runCodes.equals("")){
+		if (SRAFilesUtil.isNotNullValue(runCodes)){
 			String[] tabRunCodes = runCodes.split(",");
 			for (int i = 0; i < tabRunCodes.length ; i++) {
 				String runCode = tabRunCodes[i].replaceAll("\"", "");
@@ -324,11 +328,11 @@ public class SubmissionServices implements ISubmissionServices{
 		message = "Liste des AC attribues pour la soumission "  + submissionCode + " en mode confidentiel jusqu'au : " + release_date +" \n\n";
 
 		message += "submissionCode = " + submissionCode + ",   AC = "+ submissionAc + "\n";  
-		updateSubmissionAC(submissionCode, submissionAc, date);
+		updateSubmissionAC(submissionCode, submissionAc);
 		
-		if (ebiStudyCode!=null && !ebiStudyCode.equals("")) {	
+		if (SRAFilesUtil.isNotNullValue(ebiStudyCode)) {	
 			message += "studyCode = " + ebiStudyCode + ",   AC = "+ studyAc + "\n";  
-			updateStudyAC(ebiStudyCode, studyAc, studyExtId, date, release_date);
+			updateStudyAC(ebiStudyCode, studyAc, studyExtId);
 		}
 		for(Entry<String, String> entry : mapSamples.entrySet()) {
 			String code = entry.getKey();
@@ -358,36 +362,31 @@ public class SubmissionServices implements ISubmissionServices{
 		return ebiSuccess;
 	}
 
-	private void updateSubmissionAC(String code, String accession, Date date) throws FatalException, JSONDeviceException
+	private void updateSubmissionAC(String code, String accession) throws FatalException, JSONDeviceException
 	{
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		String dateToInsert = formatter.format(date);
 		//Update submission acNumber and date
 		JSONDevice jsonDevice = new JSONDevice();
-		String submission = "{\"code\":\""+code+"\",\"accession\":\""+accession+"\",\"submissionDate\":\""+dateToInsert+"\"}";
+		String submission = "{\"code\":\""+code+"\",\"accession\":\""+accession+"\"}";
 		//Call PUT update with submission modified
-		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/sra/submissions/"+code+"?fields=accession&fields=submissionDate");
+		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/sra/submissions/"+code+"?fields=accession");
 		log.debug("with JSON "+submission);
-		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+code+"?fields=accession&fields=submissionDate", submission,"bot");
+		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+code+"?fields=accession", submission,"bot");
 	}
 
-	private void updateStudyAC(String code, String accession, String externalId, Date firstSubmissionDate,Date releaseDate) throws FatalException, JSONDeviceException
+	private void updateStudyAC(String code, String accession, String externalId) throws FatalException, JSONDeviceException
 	{
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		String firstSubDateToInsert = formatter.format(firstSubmissionDate);
-		String releaseDateToInsert = formatter.format(releaseDate);
 		JSONDevice jsonDevice = new JSONDevice();
-		String study = "{\"code\":\""+code+"\",\"accession\":\""+accession+"\",\"firstSubmissionDate\":\""+firstSubDateToInsert+"\",\"releaseDate\":\""+releaseDateToInsert+"\"}";
+		String study = "{\"code\":\""+code+"\",\"accession\":\""+accession+"\"}";
 		//Call PUT update with submission modified
-		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/sra/studies/internal/"+code+"?fields=accession&fields=firstSubmissionDate&fields=releaseDate");
+		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/sra/studies/internal/"+code+"?fields=accession");
 		log.debug("with JSON "+study);
-		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/studies/internal/"+code+"?fields=accession&fields=firstSubmissionDate&fields=releaseDate", study,"bot");
+		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/studies/internal/"+code+"?fields=accession", study,"bot");
 	}
 
 	private void updateSampleAC(String code, String accession, String externalId) throws FatalException, JSONDeviceException
 	{
 		JSONDevice jsonDevice = new JSONDevice();
-		String sample = "{\"code\":\""+code+"\",\"accession\":\""+accession+"\",\"externalId\":\""+externalId+"\"}";
+		String sample = "{\"code\":\""+StringEscapeUtils.escapeHtml(code)+"\",\"accession\":\""+accession+"\",\"externalId\":\""+externalId+"\"}";
 		//Call PUT update with submission modified
 		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/api/sra/samples/internal/"+code+"?fields=accession&fields=externalId");
 		log.debug("with JSON "+sample);
@@ -504,7 +503,7 @@ public class SubmissionServices implements ISubmissionServices{
 			e.printStackTrace();
 		} 
 
-		if (studyAccession!=null && !studyAccession.equals("")){
+		if (SRAFilesUtil.isNotNullValue(studyAccession)){
 			if(studyAccession.equals(accessionStudy)) {
 				log.debug("studyAccession :'"+ studyAccession + "' ==  study.accession :'" +  accessionStudy +"'");
 				ebiSuccess = true;

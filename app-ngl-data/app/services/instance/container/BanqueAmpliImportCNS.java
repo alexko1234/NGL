@@ -2,16 +2,20 @@ package services.instance.container;
 
 import java.sql.SQLException;
 
+import javax.inject.Inject;
+
 import com.mongodb.MongoException;
 
+import fr.cea.ig.play.migration.NGLContext;
 import models.utils.dao.DAOException;
 import rules.services.RulesException;
 import scala.concurrent.duration.FiniteDuration;
 
 public class BanqueAmpliImportCNS extends ContainerImportCNS {
 
-	public BanqueAmpliImportCNS( FiniteDuration durationFromStart, FiniteDuration durationFromNextIteration) {
-		super("Container Banque Amplifie", durationFromStart, durationFromNextIteration);
+	@Inject
+	public BanqueAmpliImportCNS( FiniteDuration durationFromStart, FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super("Container Banque Amplifie", durationFromStart, durationFromNextIteration, ctx);
 		
 	}
 

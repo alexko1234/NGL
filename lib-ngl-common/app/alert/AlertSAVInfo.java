@@ -37,16 +37,16 @@ public class AlertSAVInfo implements Serializable{
 	public AlertSAVInfo(String runCode) {
 		super();
 		this.runCode = runCode;
-		this.allResults = new HashMap<String, Map<String,Map<String,Map<String,String>>>>();
-		this.cyclesErrRatedResults = new HashMap<String, String>();
+		this.allResults = new HashMap<>();
+		this.cyclesErrRatedResults = new HashMap<>();
 		flagEvaluate=false;
 	}
 	
 	public void putData(String read, String numberLane, String codeAlert, Map<String, String> value)
 	{
-		Map<String, Map<String, Map<String,String>>> mapLane = new HashMap<String, Map<String,Map<String,String>>>();
-		Map<String, Map<String,String>> mapAlert = new HashMap<String, Map<String,String>>();
-		Map<String,String> values = new HashMap<String,String>();
+		Map<String, Map<String, Map<String,String>>> mapLane = new HashMap<>();
+		Map<String, Map<String,String>> mapAlert = new HashMap<>();
+		Map<String,String> values = new HashMap<>();
 		if(allResults.containsKey(read)){
 			mapLane = allResults.get(read);
 			if(mapLane.containsKey(numberLane)){
@@ -62,14 +62,12 @@ public class AlertSAVInfo implements Serializable{
 		allResults.put(read, mapLane);
 	}
 	
-	public void putCyclesErrRated(String lane, String result)
-	{
+	public void putCyclesErrRated(String lane, String result) {
 		cyclesErrRatedResults.put(lane, result);
 	}
 
-	public List<Alert> convertToAlert(String ruleName)
-	{
-		List<Alert> alerts = new ArrayList<Alert>();
+	public List<Alert> convertToAlert(String ruleName) {
+		List<Alert> alerts = new ArrayList<>();
 		
 		for(String keyRead : allResults.keySet()){
 			Map<String, Map<String, Map<String,String>>> mapLane = allResults.get(keyRead);
@@ -80,10 +78,10 @@ public class AlertSAVInfo implements Serializable{
 				//Rule name
 				alert.ruleName=ruleName;
 				//Map propertiesAlert
-				alert.propertiesAlert = new HashMap<String,List<String>>();
+				alert.propertiesAlert = new HashMap<>();
 				Map<String, Map<String,String>> mapAlert = mapLane.get(keyLane);
 				for(String keyAlert : mapAlert.keySet()){
-					alert.propertiesAlert.put(keyAlert, new ArrayList<String>(mapAlert.get(keyAlert).keySet()));
+					alert.propertiesAlert.put(keyAlert, new ArrayList<>(mapAlert.get(keyAlert).keySet()));
 				}
 				alerts.add(alert);
 			}
@@ -117,6 +115,7 @@ public class AlertSAVInfo implements Serializable{
 		this.flagEvaluate = flagEvaluate;
 	}
 
+	@Override
 	public String toString()
 	{
 		String message = "<p><strong>Run "+runCode+"</strong></p>";
@@ -127,7 +126,7 @@ public class AlertSAVInfo implements Serializable{
 			message+="<TABLE BORDER=\"1\"><TR><TH> Lane </TH><TH> <font COLOR=\"#FF0000\">"+alertBAD+"</font> </TH> <TH><font COLOR=\"#0000FF\"> "+alertFLAG+" </TH></TR> ";
 
 			//Tri keyLane
-			List<String> sortedKeyLanes = new ArrayList<String>(mapLane.keySet());
+			List<String> sortedKeyLanes = new ArrayList<>(mapLane.keySet());
 			Collections.sort(sortedKeyLanes);
 			for(String keyLane : sortedKeyLanes){
 				message+="<TR>";
@@ -138,7 +137,7 @@ public class AlertSAVInfo implements Serializable{
 				message+="<TD>";
 				if(mapAlert.containsKey(alertBAD)){
 					Map<String,String> valuesBad = mapAlert.get(alertBAD);
-					List<String> sortedKeyValueBad = new ArrayList<String>(valuesBad.keySet());
+					List<String> sortedKeyValueBad = new ArrayList<>(valuesBad.keySet());
 					Collections.sort(sortedKeyValueBad);
 					message+="<ul>";
 					for(String keyValue : sortedKeyValueBad){
@@ -154,7 +153,7 @@ public class AlertSAVInfo implements Serializable{
 				message+="<TD>";
 				if(mapAlert.containsKey(alertFLAG)){
 					Map<String,String> valuesFlag = mapAlert.get(alertFLAG);
-					List<String> sortedKeyValueFlag = new ArrayList<String>(valuesFlag.keySet());
+					List<String> sortedKeyValueFlag = new ArrayList<>(valuesFlag.keySet());
 					Collections.sort(sortedKeyValueFlag);
 					message+="<ul>"; 
 					for(String keyValue : sortedKeyValueFlag){

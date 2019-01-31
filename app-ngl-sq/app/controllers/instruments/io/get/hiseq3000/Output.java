@@ -7,7 +7,9 @@ import java.util.List;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.instance.Experiment;
+import models.utils.code.DefaultCodeImpl;
 import validation.ContextValidation;
+//import controllers.instruments.io.get.cbotinterne.play;
 import controllers.instruments.io.get.hiseq3000.tpl.txt.sampleSheet_HS3000_IEM;
 import controllers.instruments.io.get.hiseq3000.tpl.txt.sampleSheet_HS3000_10x;
 import controllers.instruments.io.get.hiseq3000.tpl.txt.sampleSheet_HS3000_jFlow;
@@ -16,10 +18,12 @@ import controllers.instruments.io.utils.CsvHelper;
 import controllers.instruments.io.utils.File;
 import controllers.instruments.io.utils.OutputHelper;
 import controllers.instruments.io.utils.TagModel;
-import play.Logger;
+//import play.Logger;
 
 //set output file .csv
 public class Output extends AbstractOutput {
+	
+	private static final play.Logger.ALogger logger = play.Logger.of(Output.class);
 	
 	@Override
 	public File generateFile(Experiment experiment, ContextValidation contextValidation) {
@@ -28,15 +32,15 @@ public class Output extends AbstractOutput {
 		
 		//get var type from url ?
 		ftype = (String)contextValidation.getObject("fType");		
-		Logger.debug("Output- ftype : "+ ftype);
+		logger.debug("Output- ftype : "+ ftype);
 		
 		//get container
 		List<Container> containers = OutputHelper.getInputContainersFromExperiment(experiment);
-		Logger.debug("Output- containers : "+ containers.size());
+		logger.debug("Output- containers : "+ containers.size());
 		//get tag type
 //		TagModel tagModel = OutputHelper.getTagModel(containers);
 		TagModel tagModel = CsvHelper.getTagModel(containers);
-		Logger.debug("Output- tagModel : "+ tagModel.tagType);
+		logger.debug("Output- tagModel : "+ tagModel.tagType);
 		
 		//call output template by type
 		if ("10x".equals(ftype)){
@@ -45,7 +49,7 @@ public class Output extends AbstractOutput {
 		
 		if ("IEM".equals(ftype)){
 			List<String> contentDoubleName = CsvHelper.contentDubleName(containers);
-			Logger.debug("nom echantillon repeté - " + contentDoubleName.size());
+			logger.debug("nom echantillon repeté - " + contentDoubleName.size());
 				content = OutputHelper.format(sampleSheet_HS3000_IEM.render(experiment,containers,contentDoubleName,tagModel).body());	
 		}
 		

@@ -16,6 +16,7 @@ import java.util.Iterator;
 import javax.sql.DataSource;
 
 
+
 import models.administration.authorisation.User;
 import models.laboratory.container.instance.Container;
 import models.utils.dao.AbstractDAOMapping;
@@ -23,9 +24,11 @@ import models.utils.dao.DAOException;
 //import rules.services.RulesException;
 import scala.concurrent.duration.FiniteDuration;
 import play.Logger;
+
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
+import fr.cea.ig.play.migration.NGLContext;
 import play.api.modules.spring.Spring;
 import services.instance.AbstractImportData;
 import services.instance.AbstractImportDataGET;
@@ -35,8 +38,8 @@ import models.administration.authorisation.User;
 
 public class UserImportGET extends AbstractImportDataGET{
 	
-	public UserImportGET(FiniteDuration durationFromStart,FiniteDuration durationFromNextIteration) {
-		super("UserImportGET", durationFromStart, durationFromNextIteration);
+	public UserImportGET(FiniteDuration durationFromStart,FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super("UserImportGET", durationFromStart, durationFromNextIteration, ctx);
 	}
 	@Override
 	public void runImport() throws SQLException, DAOException{

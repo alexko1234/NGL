@@ -1,23 +1,17 @@
 package models.laboratory.reagent.utils;
 
-import org.apache.commons.lang3.StringUtils;
-
-import models.sra.submit.util.SraCodeHelper;
-import models.utils.CodeHelper;
 import models.utils.code.DefaultCodeImpl;
 
 public class ReagentCodeHelper extends DefaultCodeImpl{
 	
-	public ReagentCodeHelper()
-	{}
+//	public ReagentCodeHelper()
+//	{}
 	
-    private static class SingletonHolder
-	{
+    private static class SingletonHolder {
 		private final static ReagentCodeHelper instance = new ReagentCodeHelper();
 	}
     
-	public static ReagentCodeHelper getInstance()
-	{			
+	public static ReagentCodeHelper getInstance() {			
 		return SingletonHolder.instance;
 	}
 
@@ -48,4 +42,5 @@ public class ReagentCodeHelper extends DefaultCodeImpl{
 	public synchronized String generateReagentCode() {
 		return generateBarCode();
 	}
+	
 }

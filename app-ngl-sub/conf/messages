@@ -8,12 +8,15 @@ studies.menu.release = Release
 studies.page.title=Study
 study.create.success= Sauvegarde du study reussie
 studies.msg.save.success=Study crée
-create.placeholder.studiesTitle= * Title du study
+create.placeholder.studiesTitle= * Titre du study
 create.placeholder.projectCodes= * Choisir au moins un code projet
 release.placeholder.projectCodes= * Choisir au moins un code projet
 consultation.placeholder.projectCodes= Choisir un code projet
-consultation.placeholder.studyAccessions= Pattern AC study ou liste ACs
-consultation.placeholder.studyCodes= Pattern code study ou liste codes
+consultation.placeholder.studyCodes= Pattern code study ou liste codes 
+consultation.placeholder.studyAccessions= Pattern numéros d'accession study (ERP...) ou liste numéros d'accession
+consultation.placeholder.studyExternalIds=Pattern identifiants PRJEB ou liste identifiants PRJEB
+
+
 create.placeholder.abstract= * Donner un Abstract
 create.placeholder.description= * Donner une description
 create.placeholder.existingStudyType= * Choisir un type de study
@@ -21,7 +24,7 @@ studies.menu.consultation = Recherche
 study.code=Code
 study.projectCode=ProjectCode
 study.state.code=State
-study.accession=Numeros d'accession
+study.accession=Numéros d accession
 study.releaseDate=ReleaseDate
 study.centerName=CenterName
 study.centerProjectName=CenterProjectName
@@ -29,20 +32,23 @@ study.title=Titre
 study.studyAbstract=StudyAbstract
 study.description=Description
 study.bioProjectId=BioProjectId
+study.externalId=BioProjectId
 study.existingStudyType=ExistingStudyType
 studies.tabs.sample=Sample
 studies.tabs.experiment=Experiment
 studies.tabs.run=Run
 studies.tabs.rawData=RawData
-studies.msg.details-release=Objets liés au study :
-studies.msg.details-release-1=Study :
-studies.msg.details.states=state :
+studies.msg.details-release=Objets liés au study 
+studies.msg.details-release-1=Study 
+studies.msg.details.states=state 
 studies.msg.release.success=Demande de release du study enregistrée
-study.state=Etat :
-study.abstract=Resumé :
-study.description=Description
+study.state=Etat 
+study.abstract=Résumé 
+study.description=Déscription 
 study.projectCodes=Codes projets
-
+study.public=Publique
+study.private=Privé
+study.status=Statut 
 #Configuration
 configurations.menu = Configurations
 configurations.menu.create = Création
@@ -61,6 +67,7 @@ create.placeholder.strategyStudy= * strategyStudy
 configurations.msg.consultation=Recherche des configurations
 configuration.code=Code
 configuration.projectCode=ProjectCode
+configuration.projectCodes=ProjectCodes
 configuration.state.code=State
 configuration.librarySource=LibrarySource
 configuration.libraryConstructionProtocol=LibraryConstructionProtocol
@@ -100,18 +107,18 @@ submissions.msg.details=Détail de la soumission
 submissions.msg.consultation=Recherche des soumission
 submissions.code=Code
 submissions.state=Etat
+submissions.accession=Numeros d'accession
 submissions.creationDate=Date de création
-userFileReadSet=userFileReadSet :
-userFileExperiments=userFileExperiments :
-userFileCloneToAc= * userFileCloneToAc :
-
+userFileReadSet=Fichier des readsets :
+userFileExperiments=Fichier des experiments :
+userFileCloneToAc=Fichier Clones - AC :
 consultation.placeholder.state= Choisir l'état de la soumission
 
 #RUN
 
 run.experiment.code=Code experiment
 run.code=Code 
-run.accession=Numeros d'accession 
+run.accession=Numéros d'accession 
 run.date=Date
 
 #RAW DATA
@@ -119,28 +126,36 @@ rawData.relatifName=Nom du fichier
 
 #SAMPLE 
 sample.code=Code
-sample.accession=Numeros d'accession
+sample.accession=Numéros d'accession
+sample.externalId=identifiant de type SAME
 sample.projectCode=Code projet
+sample.anonymizedName=Nom anonyme
 sample.state=Etat
-sample.title=Title
-sample.description=Description
+sample.state.code=Etat
+sample.title=Titre
+sample.description=Déscription
 sample.clone=Clone
-sample.taxonId= * Taxon Id
-#EBI label
-sample.commonName=Common Name
-sample.scientificName= * Scientific Name
-sample.anonymizedName=Anonymized Name
+
+sample.taxonId= * identifiant du taxon
+sample.commonName=Nom commun
+sample.scientificName=* Nom scientifique
 sample.classification=Classification
+samples.menu=Sample
+samples.menu.consultation=Recherche
+samples.page.title=Sample
+consultation.placeholder.sampleCodes= Pattern code sample ou liste codes 
+consultation.placeholder.sampleAccessions= Pattern numéros d'accession sample (ERS...) ou liste numéros d'accession
+consultation.placeholder.sampleExternalIds=Pattern identifiants SAME ou liste identifiants SAME
 
 
 #EXPERIMENT
 experiment.code=Code
-experiment.accession=Numeros d'accession
+experiment.accession=Numéros d'accession
 experiment.projectCode=Code projet
 experiment.state=Etat
 experiment.sampleCode=Code Sample
 experiment.studyCode=Code Study
-experiment.title=Title
+experiment.title=Titre
 #EBI label
 experiment.librarySelection= * Library_Selection
 experiment.libraryStrategy= * Library_Strategy
@@ -154,6 +169,11 @@ experiment.typePlatform= * Type Platform
 experiment.instrumentModel= * Instrument_Model
 experiment.lastBaseCoord=Last Base Coordonée
 experiment.spotLength=SpotLength
+experiments.menu=Experiment
+experiments.menu.consultation=Recherche
+experiments.page.title=Experiments
+consultation.placeholder.experimentCodes= Pattern code experiment ou liste codes 
+consultation.placeholder.experimentAccessions= Pattern numéros d'accession experiment (ERS...) ou liste numéros d'accession
 
 documentation.menu=Aide
 documentation.page.title=Documentation
@@ -188,3 +208,7 @@ authentification.dropdown_list.profile=Profil
 authentification.dropdown_list.signout=Deconnexion
 
 date.format=dd/MM/yyyy
+
+
+
+

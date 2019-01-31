@@ -58,7 +58,7 @@
 						
 		@column(){
 			@views.html.helper.columnLabelValue(Messages("runs.type")){
-				<p class="form-control-static">{{run.typeCode}}</p>
+				<p class="form-control-static">{{run.typeCode|codes:'type'}}</p>
 			}
 			
 			@views.html.helper.columnLabelValue(Messages("runs.containerSupportCode")){

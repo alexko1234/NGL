@@ -9,14 +9,16 @@ import java.lang.annotation.Target;
 
 import play.mvc.With;
 
-/**
+/*
  * Exemple:
- *	 @Permission(value={"54ki2"},teams={"THETEAM"})
+ *	 {@literal @}Permission(value={"54ki2"},teams={"THETEAM"})
  * 	
  * 
  * 	@author ydeshayes
  * 	@author michieli
  */
+
+// TODO: possibly add AuthenticateAction (tbd) to @With
 
 @With(PermissionAction.class)
 @Retention(RetentionPolicy.RUNTIME)
@@ -28,3 +30,4 @@ public @interface Permission {
 //	String[] teams() default "";//the teams
 //	boolean  allPermissions() default false;//need to have all the permission(true) or just one(false) 
 }
+

@@ -1,60 +1,52 @@
 package controllers.resources;
-/**											
- * Plugin Play Resource Server
- *
- * @author ydeshayes
- *
- * Variables in application.conf:
- *		devResourceServerUrl = "url of the dev resource server"
- *		prodResourceServerUrl = "uurl of the prod resource server"
- *	    modeResourceServer = "prod" or "debug"
- */
 
-
-import play.Application;
+// import play.Application;
+import com.typesafe.config.Config;
 import play.Logger;
-import play.Plugin;
+// import play.Play;
+// import play.Plugin;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+// import fr.cea.ig.authentication.AuthenticatePlugin;
 
-public class AssetPlugin extends Plugin {
+@Singleton
+public class AssetPlugin { // extends play.Plugin {
 
+	/**
+	 * Logger.
+	 */
+	private static final Logger.ALogger logger = Logger.of(AssetPlugin.class);
+
+	/**
+	 * Application.conf key for assets server.
+	 */ 
 	private static final String ASSET_URL = "asset.url";
+
+	/**
+	 * Global definition of the assets server url.
+	 */
+	private static String url; 
 	
-	private Application app;
-
-	public static String url;
-	public static boolean loadOk = false;
-	public static String errorMessage = "";
-
-
-	public AssetPlugin(Application app)
-	{
-		super();
-		this.app = app;
+	@Inject
+	// public AssetPlugin(Application app)	{
+	public AssetPlugin(Config config) {
+		// rl = app.configuration().getString(ASSET_URL);
+		if (config.hasPath(ASSET_URL)) {
+			url = config.getString(ASSET_URL);
+			logger.info("using asset url '{}'",url);
+		} else {
+			url = "notConfigured";
+			logger.error("no asset url at {} in configuration",ASSET_URL);
+		}
 	}
 
-
-	 public void onStart() {
-		 if(pluginVarVerif() == true)
-		 {
-			url = app.configuration().getString(ASSET_URL);
-			Logger.info("Asset URL = "+url);
-		 }
-		 else
-			Logger.error("Asset Error = "+errorMessage);
-	 }
-
-
-	 private boolean pluginVarVerif() {
-			if(app.configuration().getString(ASSET_URL)==null) {
-				errorMessage += "Error: missing argument "+ASSET_URL+" in application.conf";
-				return false;
-			}
-			
-			loadOk = true;
-			return true;
+	public static String getServer() {
+		if (url == null) {
+			logger.warn("accessing url that has not been initialized");
+			return "assetPathNotSet";
 		}
-		
-	public static String getServer(){
+		logger.debug("getServer() : " + url); 
 		return url;
 	}
+
 }

@@ -1,10 +1,13 @@
 package models.laboratory.common.description.dao;
 
-
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.stereotype.Repository;
 
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.ObjectType.CODE;
@@ -14,24 +17,21 @@ import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.stereotype.Repository;
-
-import play.Logger;
-
 @Repository
-public class StateDAO extends AbstractDAOMapping<State>{
+public class StateDAO extends AbstractDAOMapping<State> {
 
+//	protected StateDAO() {
+//		super("state", State.class,StateMappingQuery.class, 
+//				"SELECT t.id, t.name,t.code,t.active,t.position,t.fk_state_category, t.display, t.functionnal_group " +
+//				"FROM state as t ", true);
+//	}
 	protected StateDAO() {
-		super("state", State.class,StateMappingQuery.class, 
+		super("state", State.class,StateMappingQuery.factory, 
 				"SELECT t.id, t.name,t.code,t.active,t.position,t.fk_state_category, t.display, t.functionnal_group " +
 				"FROM state as t ", true);
 	}
-
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public void remove(State state) throws DAOException	{
 	 	//Remove list state for common_info_type
@@ -46,7 +46,7 @@ public class StateDAO extends AbstractDAOMapping<State>{
 
 	@Override
 	public long save(State state) throws DAOException {
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("code", state.code);
 		parameters.put("name", state.name);
 		parameters.put("active", state.active);
@@ -63,11 +63,8 @@ public class StateDAO extends AbstractDAOMapping<State>{
 		return state.id;
 	}
 
-
-	
-	
-	private void insertObjectTypes(List<ObjectType> objectTypes, Long id,
-			boolean deleteBefore) throws DAOException {
+	@SuppressWarnings("deprecation")
+	private void insertObjectTypes(List<ObjectType> objectTypes, Long id, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
 			removeObjectTypes(id);
 		}
@@ -82,23 +79,26 @@ public class StateDAO extends AbstractDAOMapping<State>{
 		}				
 	}
 
+	@SuppressWarnings("deprecation")
 	private void removeObjectTypes(Long id) {
 		String sql = "DELETE FROM state_object_type WHERE fk_state=?";
 		jdbcTemplate.update(sql, id);
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public void update(State state) throws DAOException {
 		String sql = "UPDATE state SET code=?, name=?, active=?, position=?, fk_state_category=?, display=?, functionnal_group=? WHERE id=?";
 		jdbcTemplate.update(sql, state.code, state.name, state.active, state.position, state.id, state.category.id, state.display, state.functionnalGroup);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public List<ListObject> findAllForContainerList(){
 		String sql = "SELECT t.code, t.name FROM state t"+
 				" inner join state_object_type sot on sot.fk_state = t.id" +
 				" inner join object_type o on o.id = sot.fk_object_type WHERE o.code = ? ";
 		
-		BeanPropertyRowMapper<ListObject> mapper = new BeanPropertyRowMapper<ListObject>(ListObject.class);
+		BeanPropertyRowMapper<ListObject> mapper = new BeanPropertyRowMapper<>(ListObject.class);
 		return this.jdbcTemplate.query(sql, mapper, ObjectType.CODE.Container.name());
 	}
 

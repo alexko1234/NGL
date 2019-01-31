@@ -4,9 +4,17 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+
+import fr.cea.ig.MongoDBDAO;
 import models.sra.submit.common.instance.Sample;
 import models.sra.submit.common.instance.Study;
 import models.sra.submit.common.instance.Submission;
@@ -18,37 +26,29 @@ import models.sra.submit.util.SraException;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-
-import fr.cea.ig.MongoDBDAO;
-
-import org.apache.commons.lang3.StringUtils;
-
-import play.Logger;
+//import play.Logger;
+//class ReadSpec_2 extends ReadSpec {
+//	
+//}
 
 public class XmlServices {
 
-	
+	private static final play.Logger.ALogger logger = play.Logger.of(XmlServices.class);
 
 	public static Submission writeAllXml(String submissionCode) throws IOException, SraException {
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
 		String resultDirectory = submission.submissionDirectory;
-		System.out.println("resultDirectory = " + resultDirectory);
+//		System.out.println("resultDirectory = " + resultDirectory);
+		logger.debug("resultDirectory = " + resultDirectory);
 		return writeAllXml(submissionCode, resultDirectory);
 	}
-	
-/*	public static void writeAllXml(String submissionCode, String resultDirectory, Boolean release) throws IOException, SraException {
-		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
-		writeAllXml(submissionCode, resultDirectory);
-	}
-	*/	
-	
+
 	public static Submission writeAllXml(String submissionCode, String resultDirectory) throws IOException, SraException {
 		System.out.println("creation des fichiers xml pour l'ensemble de la soumission "+ submissionCode);
 		System.out.println("resultDirectory = " + resultDirectory);
 		// Recuperer l'objet submission:
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
+		System.out.println ("Recuperation de la submission" + submission.code);
 		// si on est dans soumission de données :
 		if (!submission.release) {
 			if (StringUtils.isNotBlank(submission.studyCode)) {	
@@ -64,14 +64,14 @@ public class XmlServices {
 				writeExperimentXml(submission, experimentFile); 
 			} else {
 				System.out.println("experimentCodes==0 ??????????");
-				Logger.debug("experimentCodes==0 ??????????");
+				logger.debug("experimentCodes==0 ??????????");
 			}
 			if (submission.runCodes.size() != 0){
 				File runFile = new File(resultDirectory + File.separator + VariableSRA.xmlRuns);
 				writeRunXml(submission, runFile); 
 			} else {
 				System.out.println("runCodes==0 ??????????");
-				Logger.debug("runCodes==0 ??????????");
+				logger.debug("runCodes==0 ??????????");
 			}
 		
 			File submissionFile = new File(resultDirectory + File.separator + VariableSRA.xmlSubmission);
@@ -88,7 +88,6 @@ public class XmlServices {
 	
 		return submission;
 	}
-	
 
 	public static void writeStudyXml (Submission submission, File outputFile) throws IOException, SraException {	
 		if (submission == null) {
@@ -101,7 +100,6 @@ public class XmlServices {
 		if (StringUtils.isNotBlank(submission.studyCode)) {	
 			System.out.println("Creation du fichier " + outputFile);
 			// ouvrir fichier en ecriture
-			BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile));
 			String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
 			chaine = chaine + "<STUDY_SET>\n";
 			String studyCode = submission.studyCode;
@@ -121,7 +119,7 @@ public class XmlServices {
 			chaine = chaine + ">\n";
 			chaine = chaine + "    <DESCRIPTOR>\n";
 			chaine = chaine + "      <STUDY_TITLE>" + study.title + "</STUDY_TITLE>\n";
-			chaine = chaine + "      <STUDY_TYPE existing_study_type=\""+ VariableSRA.mapExistingStudyType.get(study.existingStudyType.toLowerCase()) +"\"/>\n";
+			chaine = chaine + "      <STUDY_TYPE existing_study_type=\""+ VariableSRA.mapExistingStudyType().get(study.existingStudyType.toLowerCase()) +"\"/>\n";
 			chaine = chaine + "      <STUDY_ABSTRACT>" + study.studyAbstract + "</STUDY_ABSTRACT>\n";
 			chaine = chaine + "      <CENTER_PROJECT_NAME>" + study.centerProjectName+"</CENTER_PROJECT_NAME>\n"; 
 			//if (study.bioProjectId != 0) {
@@ -140,18 +138,21 @@ public class XmlServices {
 			chaine = chaine + "    </DESCRIPTOR>\n";
 			chaine = chaine + "  </STUDY>\n";
 			chaine = chaine + "</STUDY_SET>\n";
-			output_buffer.write(chaine);
-			output_buffer.close();
+			
+			try (BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile))) {
+				output_buffer.write(chaine);
+			}
+			
+			// output_buffer.close();
 			submission.xmlStudys = outputFile.getName();
 		} // end if		
 	} // end writeStudyXml
 	   
 	
 	public static void writeSampleXml (Submission submission, File outputFile) throws IOException, SraException {
-		System.out.println("sample = "  + submission.sampleCodes.get(0));
-		if (submission == null) {
+		if (submission == null)
 			return;
-		}
+		System.out.println("sample = "  + submission.sampleCodes.get(0));
 		// Si demande de release pas d'ecriture de sample.
 		if (submission.release) {
 			return;
@@ -159,7 +160,6 @@ public class XmlServices {
 		if (! submission.sampleCodes.isEmpty()) {	
 			// ouvrir fichier en ecriture
 			System.out.println("Creation du fichier " + outputFile);
-			BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile));
 
 			String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
 			chaine = chaine + "<SAMPLE_SET>\n";
@@ -197,16 +197,25 @@ public class XmlServices {
 				if (StringUtils.isNotBlank(sample.description)) {
 					chaine = chaine + "      <DESCRIPTION>" + sample.description + "</DESCRIPTION>\n";
 				}
+				if (StringUtils.isNotBlank(sample.clone)) {
+					chaine = chaine + "      <SAMPLE_ATTRIBUTES>\n";
+					chaine = chaine + "      	<SAMPLE_ATTRIBUTE>\n";
+					chaine = chaine + "      		<TAG>Clone</TAG>\n";
+					chaine = chaine + "      		<VALUE>" + sample.clone + "</VALUE>\n";
+					chaine = chaine + "      	</SAMPLE_ATTRIBUTE>\n";
+					chaine = chaine + "      </SAMPLE_ATTRIBUTES>\n";
+				}
 				chaine = chaine + "  </SAMPLE>\n";
 			}
 			chaine = chaine + "</SAMPLE_SET>\n";
-			output_buffer.write(chaine);
-			output_buffer.close();
+			
+			try (BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile))) {
+				output_buffer.write(chaine);
+			} 
+			
 			submission.xmlSamples = outputFile.getName();
 		}
 	}
-	
-	
 	
 	
 	public static void writeExperimentXml (Submission submission, File outputFile) throws IOException, SraException {
@@ -217,99 +226,138 @@ public class XmlServices {
 		if (submission.release) {
 			return;
 		}
-		if (! submission.experimentCodes.isEmpty()) {	
-			// ouvrir fichier en ecriture
-			System.out.println("Creation du fichier " + outputFile);
-			BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile));
-			String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
-			chaine = chaine + "<EXPERIMENT_SET>\n";
-			for (String experimentCode : submission.experimentCodes){
-				// Recuperer objet experiment dans la base :
-				Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, experimentCode);
-				//output_buffer.write("//\n");
-				System.out.println("Ecriture de experiment " + experimentCode);
-				if (experiment == null){
-					throw new SraException("experiment impossible à recuperer dans base :"+ experimentCode);
-				}
-				chaine = chaine + "  <EXPERIMENT alias=\"" + experimentCode + "\" center_name=\"" + VariableSRA.centerName + "\"";
-				if (StringUtils.isNotBlank(experiment.accession)) {
-					chaine = chaine + " accession=\"" + experiment.accession + "\" ";	
-				}
-				chaine = chaine + ">\n";
-				// Les champs title et libraryName sont considerés comme obligatoires
-				chaine = chaine + "    <TITLE>" + experiment.title + "</TITLE>\n";
-				chaine = chaine + "    <STUDY_REF ";
-				//if (StringUtils.isNotBlank(experiment.studyCode) && (experiment.studyCode.startsWith("external"))) { 
-				if (StringUtils.isNotBlank(experiment.studyCode)) { 
+		// Pas de creation de fichier experiment.xml si aucun experiment à soumettre:
+		if (submission.experimentCodes.isEmpty()) {
+			return;
+		}
+		writeSimpleExperimentXml(submission.experimentCodes, outputFile);
+		submission.xmlExperiments = outputFile.getName();
+	}
+	
+	public static void writeSimpleExperimentXml (List<String> experimentsCodes, File outputFile) throws IOException, SraException {
+		// ouvrir fichier en ecriture
+		System.out.println("Creation du fichier " + outputFile);
+		String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
+		chaine = chaine + "<EXPERIMENT_SET>\n";
+		for (String experimentCode : experimentsCodes){
+			// Recuperer objet experiment dans la base :
+			Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, experimentCode);
+			//output_buffer.write("//\n");
+			System.out.println("Ecriture de experiment " + experimentCode);
+			if (experiment == null){
+				throw new SraException("experiment impossible à recuperer dans base :"+ experimentCode);
+			}
+			chaine = chaine + "  <EXPERIMENT alias=\"" + experimentCode + "\" center_name=\"" + VariableSRA.centerName + "\"";
+			if (StringUtils.isNotBlank(experiment.accession)) {
+				chaine = chaine + " accession=\"" + experiment.accession + "\" ";	
+			}
+			chaine = chaine + ">\n";
+			// Les champs title et libraryName sont considerés comme obligatoires
+			chaine = chaine + "    <TITLE>" + experiment.title + "</TITLE>\n";
+			chaine = chaine + "    <STUDY_REF ";
+			//if (StringUtils.isNotBlank(experiment.studyCode) && (experiment.studyCode.startsWith("external"))) { 
+			if (StringUtils.isNotBlank(experiment.studyCode)) { 
+				if (! experiment.studyCode.startsWith("external")){
 					chaine = chaine + " refname=\"" + experiment.studyCode +"\"";
 				}
-				if (StringUtils.isNotBlank(experiment.studyAccession)){
-					chaine = chaine + " accession=\"" + experiment.studyAccession + "\"";
-				}
-				chaine = chaine + "/>\n"; 
-				
-				chaine = chaine + "      <DESIGN>\n";
-				chaine = chaine + "        <DESIGN_DESCRIPTION></DESIGN_DESCRIPTION>\n";
-				chaine = chaine + "          <SAMPLE_DESCRIPTOR  ";
-				//if (StringUtils.isNotBlank(experiment.sampleCode) && (experiment.sampleCode.startsWith("external"))) {
-				if (StringUtils.isNotBlank(experiment.sampleCode)){
+			}
+			if (StringUtils.isNotBlank(experiment.studyAccession)){
+				chaine = chaine + " accession=\"" + experiment.studyAccession + "\"";
+			}
+			chaine = chaine + "/>\n"; 
+
+			chaine = chaine + "      <DESIGN>\n";
+			chaine = chaine + "        <DESIGN_DESCRIPTION></DESIGN_DESCRIPTION>\n";
+			chaine = chaine + "          <SAMPLE_DESCRIPTOR  ";
+			//if (StringUtils.isNotBlank(experiment.sampleCode) && (experiment.sampleCode.startsWith("external"))) {
+			if (StringUtils.isNotBlank(experiment.sampleCode)){
+				// Ecrire le nom du sample uniquement si sample Genoscope car nom "bidon" pour les samples externe
+				if (! experiment.sampleCode.startsWith("external")){
 					chaine = chaine+  "refname=\"" + experiment.sampleCode + "\"";
 				}
-				if (StringUtils.isNotBlank(experiment.sampleAccession)){
-					chaine = chaine + " accession=\""+experiment.sampleAccession + "\"";
-				}
-				chaine = chaine + "/>\n";
-				
-				chaine = chaine + "          <LIBRARY_DESCRIPTOR>\n";
-				chaine = chaine + "            <LIBRARY_NAME>" + experiment.libraryName + "</LIBRARY_NAME>\n";
-				chaine = chaine + "            <LIBRARY_STRATEGY>"+ VariableSRA.mapLibraryStrategy.get(experiment.libraryStrategy.toLowerCase()) + "</LIBRARY_STRATEGY>\n";
-				chaine = chaine + "            <LIBRARY_SOURCE>" + VariableSRA.mapLibrarySource.get(experiment.librarySource.toLowerCase()) + "</LIBRARY_SOURCE>\n";
-				chaine = chaine + "            <LIBRARY_SELECTION>" + VariableSRA.mapLibrarySelection.get(experiment.librarySelection.toLowerCase()) + "</LIBRARY_SELECTION>\n";
-				chaine = chaine + "            <LIBRARY_LAYOUT>\n";
-				
-				chaine = chaine + "              <"+ VariableSRA.mapLibraryLayout.get(experiment.libraryLayout.toLowerCase());	
-				if("PAIRED".equalsIgnoreCase(experiment.libraryLayout)) {
-					chaine = chaine + " NOMINAL_LENGTH=\"" + experiment.libraryLayoutNominalLength + "\"";
-				}
-				chaine = chaine + " />\n";
-
-				chaine = chaine + "            </LIBRARY_LAYOUT>\n";
-				if (StringUtils.isBlank(experiment.libraryConstructionProtocol)){
-					chaine = chaine + "            <LIBRARY_CONSTRUCTION_PROTOCOL>none provided</LIBRARY_CONSTRUCTION_PROTOCOL>\n";
-				} else {
-					chaine = chaine + "            <LIBRARY_CONSTRUCTION_PROTOCOL>"+experiment.libraryConstructionProtocol+"</LIBRARY_CONSTRUCTION_PROTOCOL>\n";
-				}
-				chaine = chaine + "          </LIBRARY_DESCRIPTOR>\n";
-				if (! "OXFORD_NANOPORE".equalsIgnoreCase(experiment.typePlatform)) {
-					chaine = chaine + "          <SPOT_DESCRIPTOR>\n";
-					chaine = chaine + "            <SPOT_DECODE_SPEC>\n";
-					chaine = chaine + "              <SPOT_LENGTH>"+experiment.spotLength+"</SPOT_LENGTH>\n";
-					for (ReadSpec readSpec: experiment.readSpecs) {
-						chaine = chaine + "              <READ_SPEC>\n";
-						chaine = chaine + "                <READ_INDEX>"+readSpec.readIndex+"</READ_INDEX>\n";
-						chaine = chaine + "                <READ_LABEL>"+readSpec.readLabel+"</READ_LABEL>\n";
-						chaine = chaine + "                <READ_CLASS>"+readSpec.readClass+"</READ_CLASS>\n";
-						chaine = chaine + "                <READ_TYPE>"+readSpec.readType+"</READ_TYPE>\n";
-						chaine = chaine + "                <BASE_COORD>" + readSpec.baseCoord + "</BASE_COORD>\n";
-						chaine = chaine + "              </READ_SPEC>\n";
-					}
-					chaine = chaine + "            </SPOT_DECODE_SPEC>\n";
-					chaine = chaine + "          </SPOT_DESCRIPTOR>\n";
-				}
-				chaine = chaine + "      </DESIGN>\n";
-				chaine = chaine + "      <PLATFORM>\n";
-				chaine = chaine + "        <" + VariableSRA.mapTypePlatform.get(experiment.typePlatform.toLowerCase()) + ">\n";
-				chaine = chaine + "          <INSTRUMENT_MODEL>" + VariableSRA.mapInstrumentModel.get(experiment.instrumentModel.toLowerCase()) + "</INSTRUMENT_MODEL>\n";
-				chaine = chaine + "        </" + VariableSRA.mapTypePlatform.get(experiment.typePlatform.toLowerCase()) + ">\n";
-				chaine = chaine + "      </PLATFORM>\n";
-				chaine = chaine + "  </EXPERIMENT>\n";
 			}
-			chaine = chaine + "</EXPERIMENT_SET>\n";
-			output_buffer.write(chaine);
-			output_buffer.close();
-			submission.xmlExperiments = outputFile.getName();
+			if (StringUtils.isNotBlank(experiment.sampleAccession)){
+				chaine = chaine + " accession=\""+experiment.sampleAccession + "\"";
+			}
+			chaine = chaine + "/>\n";
+
+			chaine = chaine + "          <LIBRARY_DESCRIPTOR>\n";
+			chaine = chaine + "            <LIBRARY_NAME>" + experiment.libraryName + "</LIBRARY_NAME>\n";
+			chaine = chaine + "            <LIBRARY_STRATEGY>"+ VariableSRA.mapLibraryStrategy().get(experiment.libraryStrategy.toLowerCase()) + "</LIBRARY_STRATEGY>\n";
+			chaine = chaine + "            <LIBRARY_SOURCE>" + VariableSRA.mapLibrarySource().get(experiment.librarySource.toLowerCase()) + "</LIBRARY_SOURCE>\n";
+			chaine = chaine + "            <LIBRARY_SELECTION>" + VariableSRA.mapLibrarySelection().get(experiment.librarySelection.toLowerCase()) + "</LIBRARY_SELECTION>\n";
+			chaine = chaine + "            <LIBRARY_LAYOUT>\n";
+
+			chaine = chaine + "              <"+ VariableSRA.mapLibraryLayout().get(experiment.libraryLayout.toLowerCase());	
+			if("PAIRED".equalsIgnoreCase(experiment.libraryLayout)) {
+				chaine = chaine + " NOMINAL_LENGTH=\"" + experiment.libraryLayoutNominalLength + "\"";
+			}
+			chaine = chaine + " />\n";
+
+			chaine = chaine + "            </LIBRARY_LAYOUT>\n";
+			if (StringUtils.isBlank(experiment.libraryConstructionProtocol)){
+				chaine = chaine + "            <LIBRARY_CONSTRUCTION_PROTOCOL>none provided</LIBRARY_CONSTRUCTION_PROTOCOL>\n";
+			} else {
+				chaine = chaine + "            <LIBRARY_CONSTRUCTION_PROTOCOL>"+experiment.libraryConstructionProtocol+"</LIBRARY_CONSTRUCTION_PROTOCOL>\n";
+			}
+			chaine = chaine + "          </LIBRARY_DESCRIPTOR>\n";
+			if (! "OXFORD_NANOPORE".equalsIgnoreCase(experiment.typePlatform)) {
+				chaine = chaine + "          <SPOT_DESCRIPTOR>\n";
+				chaine = chaine + "            <SPOT_DECODE_SPEC>\n";
+				chaine = chaine + "              <SPOT_LENGTH>"+experiment.spotLength+"</SPOT_LENGTH>\n";
+				//for (ReadSpec readSpec: experiment.readSpecs) {
+
+//				Exemple sans passer par des lambda:
+//				Comparator< ? extends ReadSpec> x; // n'importe quel type qui etend ReadSpec 
+//				Comparator< ? super ReadSpec> y;// n'importe quel type qui est une super class de ReadSpec 
+				List <ReadSpec> list = new ArrayList<> (experiment.readSpecs);
+				Collections.sort(list, new Comparator <ReadSpec>() {
+					@Override
+					public int compare(ReadSpec o1, ReadSpec o2) {
+						return new Integer(o1.readIndex).compareTo(new Integer(o2.readIndex));
+					}});	
+//				List <ReadSpec_2> list_2 = new ArrayList<> ();
+//				Collections.sort(list_2, new Comparator <ReadSpec_2>() {
+//					@Override
+//					public int compare(ReadSpec_2 o1, ReadSpec_2 o2) {
+//						return new Integer(o1.readIndex).compareTo(new Integer(o2.readIndex));
+//					}});	
+//				Collections.sort(list_2, new Comparator <ReadSpec>() {
+//					@Override
+//					public int compare(ReadSpec o1, ReadSpec o2) {
+//						return new Integer(o1.readIndex).compareTo(new Integer(o2.readIndex));
+//					}});	
+//				
+//              Exemple avec lambda (demande d'avoir une seule methode compare
+				experiment.readSpecs.sort((a,b)->Integer.compare(a.readIndex, b.readIndex)); // Trie la liste par readIndex.
+				for (ReadSpec readSpec: experiment.readSpecs) {
+					chaine = chaine + "              <READ_SPEC>\n";
+					chaine = chaine + "                <READ_INDEX>"+readSpec.readIndex+"</READ_INDEX>\n";
+					chaine = chaine + "                <READ_LABEL>"+readSpec.readLabel+"</READ_LABEL>\n";
+					chaine = chaine + "                <READ_CLASS>"+readSpec.readClass+"</READ_CLASS>\n";
+					chaine = chaine + "                <READ_TYPE>"+readSpec.readType+"</READ_TYPE>\n";
+					chaine = chaine + "                <BASE_COORD>" + readSpec.baseCoord + "</BASE_COORD>\n";
+					chaine = chaine + "              </READ_SPEC>\n";
+				}
+				chaine = chaine + "            </SPOT_DECODE_SPEC>\n";
+				chaine = chaine + "          </SPOT_DESCRIPTOR>\n";
+			}
+			chaine = chaine + "      </DESIGN>\n";
+			chaine = chaine + "      <PLATFORM>\n";
+			chaine = chaine + "        <" + VariableSRA.mapTypePlatform().get(experiment.typePlatform.toLowerCase()) + ">\n";
+			chaine = chaine + "          <INSTRUMENT_MODEL>" + VariableSRA.mapInstrumentModel().get(experiment.instrumentModel.toLowerCase()) + "</INSTRUMENT_MODEL>\n";
+			chaine = chaine + "        </" + VariableSRA.mapTypePlatform().get(experiment.typePlatform.toLowerCase()) + ">\n";
+			chaine = chaine + "      </PLATFORM>\n";
+			chaine = chaine + "  </EXPERIMENT>\n";
 		}
+		chaine = chaine + "</EXPERIMENT_SET>\n";
+		
+		try (BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile))) {
+			output_buffer.write(chaine);
+		}
+		//output_buffer.close();
 	}
+	
 	public static void writeRunXml (Submission submission, File outputFile) throws IOException, SraException {
 		if (submission == null) {
 			return;
@@ -324,7 +372,6 @@ public class XmlServices {
 		if (! submission.experimentCodes.isEmpty()) {	
 			// ouvrir fichier en ecriture
 			System.out.println("Creation du fichier " + outputFile);
-			BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile));
 			String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
 			chaine = chaine + "<RUN_SET>\n";
 			for (String experimentCode : submission.experimentCodes){
@@ -368,8 +415,12 @@ public class XmlServices {
 				chaine = chaine + "  </RUN>\n";
 				}
 				chaine = chaine + "</RUN_SET>\n";
-				output_buffer.write(chaine);
-				output_buffer.close();
+				
+				try (BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile))) {
+					output_buffer.write(chaine);
+				}
+				// output_buffer.close();
+				
 				submission.xmlRuns = outputFile.getName();
 			}
 		}

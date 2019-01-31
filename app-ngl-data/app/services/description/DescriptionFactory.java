@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import models.laboratory.common.description.AbstractCategory;
-import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
@@ -48,7 +47,7 @@ import play.Logger;
 
 public class DescriptionFactory {
 
-	/**
+	/*
 	 * 
 	 * @param classCat
 	 * @param name
@@ -118,7 +117,7 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -129,7 +128,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, String propertyValueType) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
@@ -143,7 +143,7 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -155,7 +155,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest a fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, String propertyValueType, int displayOrder) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
@@ -170,8 +171,7 @@ public class DescriptionFactory {
 		return pd;
 	}
 
-	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -183,7 +183,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest a fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, String propertyValueType, int displayOrder, String defaultValue) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
@@ -199,7 +200,7 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -211,7 +212,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest a fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, String propertyValueType, String defaultValue) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
@@ -225,7 +227,9 @@ public class DescriptionFactory {
 		pd.defaultValue=defaultValue;
 		return pd;
 	}
-	@Deprecated
+	
+	// TODO: suggest a fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, Boolean editable,  String propertyValueType, int displayOrder) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
@@ -241,7 +245,7 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -252,7 +256,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest a fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, List<Value> values, String defaultValue, String propertyValueType) {
 		
 		PropertyDefinition pd = new PropertyDefinition();		
@@ -270,7 +275,7 @@ public class DescriptionFactory {
 	}
 
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -282,9 +287,9 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest a fix 
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, List<Value> values, String defaultValue, String propertyValueType, int displayOrder) {
-		
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
 		pd.code = code;
@@ -299,9 +304,8 @@ public class DescriptionFactory {
 		pd.displayOrder=displayOrder;
 		return pd;
 	}
-
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -312,7 +316,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest a fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, List<Value> values, String propertyValueType) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
@@ -327,7 +332,7 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -339,7 +344,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, List<Value> values, String propertyValueType, int displayOrder) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
@@ -355,7 +361,7 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -369,7 +375,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest a fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required,
 			MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit, String propertyValueType) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
@@ -388,7 +395,7 @@ public class DescriptionFactory {
 	}
 
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -404,7 +411,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, 
 			List<Value> values, MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit, String propertyValueType, int displayOrder) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
@@ -427,7 +435,7 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -444,7 +452,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	@Deprecated
+	// TODO: suggest fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, 
 			List<Value> values, String defaultValue, MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit, String propertyValueType, int displayOrder) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
@@ -467,9 +476,21 @@ public class DescriptionFactory {
 		pd.displayOrder=displayOrder;
 		return pd;
 	}
-	@Deprecated
-	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, 
-			List<Value> values, MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit, String propertyValueType, int displayOrder, Boolean editable) throws DAOException{
+	
+	// TODO: propose fix
+	// @Deprecated
+	public static PropertyDefinition newPropertiesDefinition(String name, 
+			                                                 String code, 
+			                                                 List<Level> levels, 
+			                                                 Class<?> type, 
+			                                                 Boolean required, 
+			                                                 List<Value> values, 
+			                                                 MeasureCategory measureCategory, 
+			                                                 MeasureUnit displayMeasureUnit, 
+			                                                 MeasureUnit saveMeasureUnit, 
+			                                                 String propertyValueType, 
+			                                                 int displayOrder, 
+			                                                 Boolean editable) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
 		pd.code = code;
@@ -478,7 +499,7 @@ public class DescriptionFactory {
 		pd.valueType = type.getName();
 		pd.required = required;
 		pd.choiceInList = false;
-		if(values!=null){ 
+		if (values!=null) { 
 			pd.choiceInList=true;
 			pd.possibleValues = values;
 		}
@@ -491,7 +512,8 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
-	@Deprecated
+	// TODO: suggest fix
+	// @Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, 
 			List<Value> values, MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit,
 			String propertyValueType, int displayOrder, Boolean editable,String defaultValue, String displayFormat) throws DAOException{
@@ -519,14 +541,13 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
-
-	/**
+	/*
 	 * 
 	 * @param codes
 	 * @return
 	 */
 	public static List<Value> newValues(String...codes) {
-		List<Value> l = new ArrayList<Value>(codes.length);
+		List<Value> l = new ArrayList<>(codes.length);
 		for(String v : codes){
 			Value value = new Value();
 			value.value = v;
@@ -552,15 +573,14 @@ public class DescriptionFactory {
 		return value;
 	}
 	
-	
-	/**
+	/*
 	 * 
 	 * @param defaultValue
 	 * @param code
 	 * @return
 	 */
 	public static List<Value> newValuesWithDefault(String defaultValue, String...code) {
-		List<Value> l = new ArrayList<Value>(code.length);
+		List<Value> l = new ArrayList<>(code.length);
 		for(String v : code){
 			Value value = new Value();
 			value.value = v;
@@ -576,7 +596,7 @@ public class DescriptionFactory {
 		return l;
 	}
 
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -589,7 +609,7 @@ public class DescriptionFactory {
 		return l;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param code
 	 * @return
@@ -602,7 +622,7 @@ public class DescriptionFactory {
 		return l;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param code
 	 * @param generic
@@ -621,25 +641,25 @@ public class DescriptionFactory {
 		return l;
 	}
 	
-	/**
-	 * 
-	 * @param code
-	 * @param states
-	 * @return
-	 */
-	public static CommonInfoType setStatesToCommonInfoType(String code, List<State> states) {
-		CommonInfoType cit = new CommonInfoType();
-		try {
-			cit = CommonInfoType.find.findByCode(code);
-		} catch (DAOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		cit.states = states;
-		return cit;
-	}
+//	/*
+//	 * 
+//	 * @param code
+//	 * @param states
+//	 * @return
+//	 */
+//	public static CommonInfoType setStatesToCommonInfoType(String code, List<State> states) {
+//		CommonInfoType cit = new CommonInfoType();
+//		try {
+//			cit = CommonInfoType.find.findByCode(code);
+//		} catch (DAOException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+//		cit.states = states;
+//		return cit;
+//	}
 	
-	/**
+	/*
 	 * 
 	 * @param code
 	 * @param value
@@ -659,7 +679,7 @@ public class DescriptionFactory {
 	}
 
 	
-	/**
+	/*
 	 * define institute
 	 * @param name
 	 * @param code
@@ -672,7 +692,7 @@ public class DescriptionFactory {
 			return i;
 		}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -689,7 +709,7 @@ public class DescriptionFactory {
 		return s;
 	}
 
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -722,7 +742,7 @@ public class DescriptionFactory {
 		return sh;
 	}
 
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -743,7 +763,7 @@ public class DescriptionFactory {
 
 	
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -787,7 +807,7 @@ public class DescriptionFactory {
 		return newExperimentType(name, code, shortCode, displayOrder, category, propertiesDefinitions, instrumentUsedTypes, atomicTransfertMethod, true, institutes);
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param code
 	 * @param experimentType
@@ -814,7 +834,7 @@ public class DescriptionFactory {
 		etn.possiblePurificationTypes = purifTypes;
 		etn.possibleQualityControlTypes = qcTypes;
 		etn.possibleTransferts=transfertTypes;
-		etn.previousExperimentType = previousExp;
+		etn.previousExperimentTypeNodes = previousExp;
 		
 		if(ExperimentCategory.CODE.voidprocess.name().equals(experimentType.category.code)){
 			etn.doPurification = true;
@@ -825,7 +845,7 @@ public class DescriptionFactory {
 		return etn;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param code
 	 * @param experimentType
@@ -840,7 +860,7 @@ public class DescriptionFactory {
 		return newExperimentTypeNode(code, experimentType, mandatoryPurif, mandatoryQC, false, previousExp, purifTypes, qcTypes, null);
 	}
 
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -851,7 +871,7 @@ public class DescriptionFactory {
 		return ic;
 	}
 
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -880,7 +900,7 @@ public class DescriptionFactory {
 		return iut; 
 	}
 
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -922,7 +942,7 @@ public class DescriptionFactory {
 		return pt;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -944,7 +964,7 @@ public class DescriptionFactory {
 		return st;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -966,7 +986,7 @@ public class DescriptionFactory {
 		return it;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -988,7 +1008,7 @@ public class DescriptionFactory {
 		return pt;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -1010,7 +1030,7 @@ public class DescriptionFactory {
 		return rt;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -1033,7 +1053,7 @@ public class DescriptionFactory {
 		return rt;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -1060,7 +1080,7 @@ public class DescriptionFactory {
 		return rt;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -1074,7 +1094,7 @@ public class DescriptionFactory {
 		return tc;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -1101,28 +1121,28 @@ public class DescriptionFactory {
 		return tt;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param codes
 	 * @return
 	 * @throws DAOException
 	 */
 	public static List<Institute> getInstitutes(Constants.CODE...codes) throws DAOException {
-		List<Institute> institutes = new ArrayList<Institute>();
+		List<Institute> institutes = new ArrayList<>();
 		for(Constants.CODE code : codes){
 			institutes.add(Institute.find.findByCode(code.name()));
 		}
 		return institutes;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param codes
 	 * @return
 	 * @throws DAOException
 	 */
 	public static List<State> getStates(String...codes) throws DAOException {
-		List<State> states = new ArrayList<State>();
+		List<State> states = new ArrayList<>();
 		for(String code: codes){
 			states.add(State.find.findByCode(code));
 		}
@@ -1130,14 +1150,14 @@ public class DescriptionFactory {
 	}
 
 
-	/**
+	/*
 	 * 
 	 * @param codes
 	 * @return
 	 * @throws DAOException
 	 */
 	public static List<ObjectType> getObjectTypes(String...codes) throws DAOException {
-		List<ObjectType> objectTypes = new ArrayList<ObjectType>();
+		List<ObjectType> objectTypes = new ArrayList<>();
 		for(String code: codes){
 			objectTypes.add(ObjectType.find.findByCode(code));
 		}
@@ -1146,7 +1166,7 @@ public class DescriptionFactory {
 	
 	
 	public static HashMap<ObjectType, State> getHierarchies(String...hierarchies)  throws DAOException {
-		HashMap<ObjectType, State> hm = new HashMap<ObjectType, State>();
+		HashMap<ObjectType, State> hm = new HashMap<>();
 		for (String hierarchy: hierarchies) {
 			String str[]=hierarchy.split(":");
 			String objectTypeCode = str[0];

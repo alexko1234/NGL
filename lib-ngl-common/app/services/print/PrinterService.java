@@ -20,6 +20,9 @@ import play.Logger;
 import validation.ContextValidation;
 import validation.utils.ValidationConstants;
 
+
+// TODO: use class specific logger
+
 @Service
 public class PrinterService {
 
@@ -79,8 +82,9 @@ public class PrinterService {
 	    String barcodeCommand = configuration.barcodeCommand;
 	    //logger.debug("Impression de deux lignes : " + lignes[0] + ", " + lignes[1]);
 	   
-	    if(configuration.is2d){
-		    printCommand.append(labelCommand).append(",\"").append(label.label).append("\"\n");
+	    if(configuration.twoDimension){
+		    if(label.barcode.equals(label.label))label.label="";
+	    	printCommand.append(labelCommand).append(",\"").append(label.label).append("\"\n");
 		    printCommand.append(labelCommand.replace("3", "7")).append(",\"").append(label.barcode).append("\"\n");
 		    printCommand.append(barcodeCommand).append(",\"").append(label.barcode).append('\"'); 
 	    }else{

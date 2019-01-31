@@ -1,10 +1,11 @@
+@this(menu_ : menu)
 @()
 
 @scripts() = {
     	<script src="@controllers.main.tpl.routes.Main.jsCodes" type="text/javascript" charset="utf-8"></script>
 		<script src="@routes.Assets.at("ngl-sq/javascripts/containerSupports/scanner/app.js")" type="text/javascript" charset="utf-8"></script>
-		<script src="@routes.Assets.at("ngl-common/javascripts/services/commons.js")" type="text/javascript" charset="utf-8"></script>
-    	<script src="@routes.Assets.at("ngl-common/javascripts/services/list-resize.js")" type="text/javascript" charset="utf-8"></script>
+		<script src="@routes.Assets.at("lib/ngl-common/ngl-common/javascripts/services/commons.js")" type="text/javascript" charset="utf-8"></script>
+    	<script src="@routes.Assets.at("lib/ngl-common/ngl-common/javascripts/services/list-resize.js")" type="text/javascript" charset="utf-8"></script>
 		<script src="@routes.Assets.at("ngl-sq/javascripts/containerSupports/scanner/search-ctrl.js")" type="text/javascript" charset="utf-8"></script>
 		<script src="@routes.Assets.at("ngl-sq/javascripts/containerSupports/scanner/services.js")" type="text/javascript" charset="utf-8"></script> 
 		<script src="@controllers.containers.tpl.routes.ContainerSupports.javascriptRoutes" type="text/javascript" charset="utf-8"></script>
@@ -15,7 +16,7 @@
 }
 
 
-@views.html.main("containerSupports.scanner.title", menu("containerSupports.scanner"), scripts,css){
+@views.html.main("containerSupports.scanner.title", menu_("containerSupports.scanner"), scripts,css){
 <div class="row scanner"  ng-controller="SearchScan" ng-app="home">
 	<div class="col-xs-12">
 	

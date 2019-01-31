@@ -1,18 +1,21 @@
 package controllers.readsets.api;
 
+import javax.inject.Inject;
+
 import org.mongojack.DBQuery;
 
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.run.instance.ReadSet;
-import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import controllers.CommonController;
-import controllers.NGLControllerHelper;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
 
 public class ReadSetsController extends CommonController {
 
+	@Inject
+	public ReadSetsController() {
+	}
+	
 	protected static ReadSet getReadSet(String code) {
 		ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, code);
 		return readSet;
@@ -23,10 +26,9 @@ public class ReadSetsController extends CommonController {
 		return readSet;
 	}
 
+	
 	protected static TraceInformation getUpdateTraceInformation(ReadSet readSet) {
-		TraceInformation ti = readSet.traceInformation;
-		ti.setTraceInformation(getCurrentUser());
-		return ti;
+		return getUpdateTraceInformation(readSet,getCurrentUser());
 	}
 
 	protected static TraceInformation getUpdateTraceInformation(ReadSet readSet, String user) {
@@ -34,4 +36,5 @@ public class ReadSetsController extends CommonController {
 		ti.setTraceInformation(user);
 		return ti;
 	}
+	
 }

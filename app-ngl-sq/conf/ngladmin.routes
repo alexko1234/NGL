@@ -6,8 +6,8 @@ GET		/tpl/supports/js-routes							controllers.admin.supports.tpl.Supports.javas
 
 
 
-GET		/api/ngl-objects								@controllers.admin.supports.api.NGLObjects.list()
-PUT		/api/ngl-objects/:code							@controllers.admin.supports.api.NGLObjects.update(code:java.lang.String)
+GET		/api/ngl-objects								controllers.admin.supports.api.NGLObjects.list()
+PUT		/api/ngl-objects/:code							controllers.admin.supports.api.NGLObjects.update(code:java.lang.String)
 
 
 

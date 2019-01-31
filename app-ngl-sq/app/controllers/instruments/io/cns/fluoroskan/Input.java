@@ -2,28 +2,43 @@ package controllers.instruments.io.cns.fluoroskan;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+//<<<<<<< HEAD
+//import java.util.HashMap;
+//import java.util.Map;
+//
+//import models.laboratory.common.instance.property.PropertyFileValue;
+//import models.laboratory.common.instance.property.PropertySingleValue;
+//import models.laboratory.experiment.instance.Experiment;
+//
+//=======
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import models.laboratory.common.instance.property.PropertyFileValue;
-import models.laboratory.common.instance.property.PropertySingleValue;
-import models.laboratory.experiment.instance.Experiment;
-
+//>>>>>>> V2.0.2
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-import validation.ContextValidation;
+//<<<<<<< HEAD
+//=======
 import controllers.instruments.io.utils.AbstractInput;
+import models.laboratory.common.instance.property.PropertyFileValue;
+import models.laboratory.common.instance.property.PropertySingleValue;
+import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.InputContainerUsed;
+import play.Logger;
+//>>>>>>> V2.0.2
+import validation.ContextValidation;
 
 import play.Logger;
 
 public class Input extends AbstractInput {
 
 	@Override
-	public Experiment importFile(Experiment experiment,PropertyFileValue pfv,
-			ContextValidation contextValidation) throws Exception {		
-		InputStream is = new ByteArrayInputStream(pfv.value);
+	public Experiment importFile(Experiment experiment,PropertyFileValue pfv, ContextValidation contextValidation) throws Exception {		
+//		InputStream is = new ByteArrayInputStream(pfv.value);
+		InputStream is = new ByteArrayInputStream(pfv.byteValue());
 		
 		Workbook wb = WorkbookFactory.create(is);
 		Sheet sheet = wb.getSheetAt(0);
@@ -60,6 +75,10 @@ public class Input extends AbstractInput {
 					codePropertiesConcDil="concentrationDilHS2";
 					codePropertiesConcFinal="concentrationHS2";
 					codePropertiesDilFactor="dilutionFactorHS2";
+				}else if(typeQC.equals("HS3")){
+					codePropertiesConcDil="concentrationDilHS3";
+					codePropertiesConcFinal="concentrationHS3";
+					codePropertiesDilFactor="dilutionFactorHS3";
 				}else{
 					contextValidation.addErrors("Erreur gamme", "Code gamme non géré : "+typeQC);	
 				}
@@ -69,8 +88,13 @@ public class Input extends AbstractInput {
 			final String codePropertiesConcDilf = codePropertiesConcDil ;
 			final String codePropertiesConcFinalf = codePropertiesConcFinal ;
 			final String codePropertiesDilFactorf = codePropertiesDilFactor ;
-
-			Map<String,Double> results = new HashMap<String,Double>(0);
+//<<<<<<< HEAD
+//
+//			Map<String,Double> results = new HashMap<String,Double>(0);
+//=======
+			
+			Map<String,Double> results = new HashMap<>(0);
+//>>>>>>> V2.0.2
 			String[] lines = new String[]{"A","B","C","D","E","F","G","H"};
 			//line
 			for(int i = 17; i < 25; i++){
@@ -103,6 +127,25 @@ public class Input extends AbstractInput {
 		return experiment;
 	}
 
+//<<<<<<< HEAD
+//=======
+	private void computeFinalConcentration(InputContainerUsed icu, PropertySingleValue concentrationDil,
+			String codePropertiesDilFactor, String codePropertiesConcFinal) {
+		PropertySingleValue dilutionFactor = getPSV(icu,codePropertiesDilFactor);
+		if(null != dilutionFactor.value){
+			Integer dilFactor = Integer.valueOf(dilutionFactor.value.toString().split("/",2)[1].trim());
+			if(null != dilFactor){
+				PropertySingleValue finalConcentration = getPSV(icu,codePropertiesConcFinal);
+				finalConcentration.unit = concentrationDil.unit;
+				//finalConcentration.value = new BigDecimal(dilFactor * (Double)concentrationDil.value).setScale(2, RoundingMode.HALF_UP);	
+				finalConcentration.value = new BigDecimal((dilFactor * (Double)concentrationDil.value));	
+			}else{
+				Logger.warn("dilfactor is null after convertion"+dilutionFactor.value);
+			}
+		}
+	}
+
+//>>>>>>> V2.0.2
 	
 	
 	

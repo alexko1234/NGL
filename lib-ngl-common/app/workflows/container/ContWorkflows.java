@@ -1,60 +1,64 @@
 package workflows.container;
 
+import static validation.common.instance.CommonValidationHelper.FIELD_PREVIOUS_STATE_CODE;
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
-import static validation.common.instance.CommonValidationHelper.*;
+import static validation.common.instance.CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+
+import com.google.inject.Provider;
+
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.experiment.description.ExperimentCategory;
-import models.utils.InstanceConstants;
 import models.laboratory.processes.instance.Process;
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import play.Logger;
-import play.Play;
-import play.libs.Akka;
-import rules.services.RulesActor6;
-import rules.services.RulesMessage;
+import models.utils.InstanceConstants;
+import rules.services.LazyRules6Actor;
 import validation.ContextValidation;
 import validation.container.instance.ContainerValidationHelper;
 import workflows.Workflows;
 import workflows.process.ProcWorkflows;
-import akka.actor.ActorRef;
-import akka.actor.Props;
-import fr.cea.ig.MongoDBDAO;
-@Service
+
+@Singleton
 public class ContWorkflows extends Workflows<Container> {
 
-	@Autowired
-	ContSupportWorkflows contSupportWorkflows;
-	@Autowired
-	ProcWorkflows procSupportWorkflows;
+	
+	private final LazyRules6Actor rulesActor;
+	private final Provider<ContSupportWorkflows> contSupportWorkflows;
+	private final ProcWorkflows        procSupportWorkflows;
+	
+	@Inject
+	public ContWorkflows(NGLContext ctx, Provider<ContSupportWorkflows> contSupportWorkflows, ProcWorkflows procSupportWorkflows) {
+		rulesActor                = ctx.rules6Actor();
+		this.contSupportWorkflows = contSupportWorkflows;
+		this.procSupportWorkflows = procSupportWorkflows;
+	}
+	
+	private static final play.Logger.ALogger logger = play.Logger.of(ContWorkflows.class);
 	
 	@Override
-	public void applyPreStateRules(ContextValidation validation,
-			Container exp, State nextState) {
-		// TODO Auto-generated method stub
-		
+	public void applyPreStateRules(ContextValidation validation, Container exp, State nextState) {
 	}
 
 	@Override
 	public void applyPreValidateCurrentStateRules(ContextValidation validation, Container object) {
-		// TODO Auto-generated method stub		
 	}
 	
 	@Override
 	public void applyPostValidateCurrentStateRules(ContextValidation validation, Container object) {
-		// TODO Auto-generated method stub		
 	}
 	
 	@Override
-	public void applySuccessPostStateRules(ContextValidation validation,
-			Container container) {
-		//purg when pass to IS, UA or IW-P
-		if("IS".equals(container.state.code) || "UA".equals(container.state.code) || "IW-P".equals(container.state.code)){
+	public void applySuccessPostStateRules(ContextValidation validation, Container container) {
+		// purg when pass to IS, UA or IW-P
+		if ("IS".equals(container.state.code) || "UA".equals(container.state.code) || "IW-P".equals(container.state.code)) {
 			
 			//TODO GA improve the extraction of fromTransformationTypeCodes
 
@@ -64,7 +68,7 @@ public class ContWorkflows extends Workflows<Container> {
 					container.fromTransformationTypeCodes = null;
 				}
 			} else if (null != container.fromTransformationTypeCodes && container.fromTransformationTypeCodes.size() > 1) {
-				Logger.error("several fromTransformationTypeCodes not managed");
+				logger.error("several fromTransformationTypeCodes not managed");
 			}
 			//put all process to F when pass container A-* to IS, UA or IW-P
 			String previousStateCode = (String)validation.getObject(FIELD_PREVIOUS_STATE_CODE);
@@ -100,20 +104,20 @@ public class ContWorkflows extends Workflows<Container> {
 			*/		
 		}
 		
-		if(Boolean.TRUE.equals(validation.getObject(FIELD_UPDATE_CONTAINER_SUPPORT_STATE))){
+		if (Boolean.TRUE.equals(validation.getObject(FIELD_UPDATE_CONTAINER_SUPPORT_STATE))) {
 			ContainerSupport containerSupport = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,container.support.code);
-			contSupportWorkflows.setStateFromContainers(validation, containerSupport);
+			contSupportWorkflows.get().setStateFromContainers(validation, containerSupport);
 		}
 		callWorkflowRules(validation,container);
 		
 		if(validation.hasErrors()){
-			Logger.error("Problem on ContWorkflow.applySuccessPostStateRules : "+validation.errors.toString());
+			logger.error("Problem on ContWorkflow.applySuccessPostStateRules : "+validation.errors.toString());
 		}
 	}
-	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	
 
-	public static void callWorkflowRules(ContextValidation validation, Container container) {
-		rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", container, validation),null);
+	public void callWorkflowRules(ContextValidation validation, Container container) {
+		rulesActor.tellMessage("workflow", container, validation);
 	}
 	
 	@Override
@@ -121,20 +125,21 @@ public class ContWorkflows extends Workflows<Container> {
 			Container container, State nextState) {
 		// TODO Auto-generated method stub
 		if(validation.hasErrors()){
-			Logger.error("Problem on ContWorkflow.applyErrorPostStateRules : "+validation.errors.toString());
+			logger.error("Problem on ContWorkflow.applyErrorPostStateRules : "+validation.errors.toString());
 		}
 	}
 
 	@Override
 	public void setState(ContextValidation contextValidation, Container container,
 			State nextState) {
-		
+//		logger.debug("setState " + container.categoryCode + " nextState - " + nextState.code);
 		ContextValidation currentCtxValidation = new ContextValidation(contextValidation.getUser());
 		currentCtxValidation.setContextObjects(contextValidation.getContextObjects());
 		currentCtxValidation.setUpdateMode();
 		
 		ContainerValidationHelper.validateNextState(container, nextState, currentCtxValidation);
-		if(!currentCtxValidation.hasErrors() && !nextState.code.equals(container.state.code)){
+		if (!currentCtxValidation.hasErrors() && !nextState.code.equals(container.state.code)) {
+//			logger.debug("setState if() " + container.code);
 			applyPreStateRules(currentCtxValidation, container, nextState);
 			currentCtxValidation.putObject(FIELD_PREVIOUS_STATE_CODE , container.state.code);
 			currentCtxValidation.putObject(FIELD_STATE_CODE , nextState.code);
@@ -142,7 +147,8 @@ public class ContWorkflows extends Workflows<Container> {
 			//container.validate(currentCtxValidation); //in comment because no field are state dependant
 			if(!currentCtxValidation.hasErrors()){
 				boolean goBack = goBack(container.state, nextState);
-				if(goBack)Logger.debug(container.code+" : back to the workflow. "+container.state.code +" -> "+nextState.code);		
+				// if (goBack) logger.debug(container.code+" : back to the workflow. "+container.state.code +" -> "+nextState.code);
+				if (goBack) logger.debug("{} : back to the workflow. {} -> {}", container.code, container.state.code, nextState.code);
 				
 				container.state = updateHistoricalNextState(container.state, nextState);
 				
@@ -152,11 +158,13 @@ public class ContWorkflows extends Workflows<Container> {
 				
 				applySuccessPostStateRules(currentCtxValidation, container);
 				nextState(currentCtxValidation, container);
-			}else{
+			} else {
 				applyErrorPostStateRules(currentCtxValidation, container, nextState);
 			}
 		}
+//		logger.debug("setState");
 		if(currentCtxValidation.hasErrors()){
+//			logger.debug("setState error");
 			contextValidation.addErrors(currentCtxValidation.errors);
 		}
 		
@@ -164,26 +172,25 @@ public class ContWorkflows extends Workflows<Container> {
 
 	@Override
 	public void nextState(ContextValidation contextValidation, Container object) {
-		// TODO Auto-generated method stub
-		
 	}
 
-	/**
+	/*
 	 * Return the available container state for a experiment category code
 	 * @param categoryCode
 	 * @return
 	 */
 	public String getContainerStateFromExperimentCategory(String categoryCode) {
 		String nextContainerState=null;
-		if(categoryCode.equals(ExperimentCategory.CODE.transformation.name())){
-			nextContainerState="A-TM";
-		}else if(categoryCode.equals(ExperimentCategory.CODE.transfert.name())){
-			nextContainerState="A-TF";
-		}else if(categoryCode.equals(ExperimentCategory.CODE.qualitycontrol.name())){
-			nextContainerState="A-QC";
-		}else if(categoryCode.equals(ExperimentCategory.CODE.purification.name())){
-			nextContainerState="A-PF";
+		if (categoryCode.equals(ExperimentCategory.CODE.transformation.name())) {
+			nextContainerState = "A-TM";
+		} else if (categoryCode.equals(ExperimentCategory.CODE.transfert.name())) {
+			nextContainerState = "A-TF";
+		} else if (categoryCode.equals(ExperimentCategory.CODE.qualitycontrol.name())) {
+			nextContainerState = "A-QC";
+		} else if (categoryCode.equals(ExperimentCategory.CODE.purification.name())) {
+			nextContainerState = "A-PF";
 		}
 		return nextContainerState;
 	}
+	
 }

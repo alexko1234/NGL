@@ -35,7 +35,7 @@ public abstract class AbstractTreatmentService {
 	public abstract void saveTreatmentCategory(Map<String, List<ValidationError>> errors) throws DAOException;
 		
 	public static List<PropertyDefinition> getReadSetPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		// just readset level
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Useful sequences","usefulSequences", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Useful bases","usefulBases", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "single"));
@@ -45,7 +45,7 @@ public abstract class AbstractTreatmentService {
 
 	
 	public static List<PropertyDefinition> getSAVPropertyDefinitionsV2() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Density","clusterDensity",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("+/-","clusterDensityStd",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Cluster PF","clusterPFPerc",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Double.class, true, "single"));
@@ -82,7 +82,7 @@ public abstract class AbstractTreatmentService {
 	}
 	
 	public static List<PropertyDefinition> getNGSRGIlluminaPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		//Run level
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Position flowcell","flowcellPosition", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb cycles","nbCycle", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, true, "single"));
@@ -97,6 +97,8 @@ public abstract class AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Integer.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version RTA","rtaVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb clusters (total)","nbClusterTotal", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, true, "single"));
+		
+		
 		//Lane & ReadSet level
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb clusters","nbCluster", LevelService.getLevels(Level.CODE.Lane, Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "single"));
 		// Lane level
@@ -107,6 +109,8 @@ public abstract class AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases (filtre Illumina + interne)","nbBaseInternalAndIlluminaFilter", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences (filtre Illumina + interne)","nbClusterInternalAndIlluminaFilter", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Perte","seqLossPercent", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Double.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% puits occupés","occupiedPatternedWellPercentage", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Double.class, false, "single"));
+
 		// ReadSet level
 		// nbCluster define in the lane level for the 2 levels
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% >= Q30","Q30", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "single"));
@@ -132,12 +136,12 @@ public abstract class AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Trimming adaptateurs par ngs-rg","casavaAdapterTrimming", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Boolean.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases après trimming","nbBaseAfterTrim", LevelService.getLevels(Level.CODE.Run, Level.CODE.Lane, Level.CODE.ReadSet, Level.CODE.Default), Long.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% bases trimmées","percentBaseTrim", LevelService.getLevels(Level.CODE.Run, Level.CODE.Lane, Level.CODE.ReadSet, Level.CODE.Default), Double.class, false, "single"));
-
+		
 		return propertyDefinitions;
 	}
 
 	public static List<PropertyDefinition> getNGSRGNanoporePropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		//Run level
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Occupation des pores","poreOccupancy", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Activité des pores","poreOccupancyTime", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
@@ -209,7 +213,7 @@ public abstract class AbstractTreatmentService {
 	}
 	
 	public static List<PropertyDefinition> getReadQualityNanoporePropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
 		//TODO a valider propriétés communes nanopore ngsrg/read quality
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases 1D forward","1DForward.nbBases", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
@@ -298,7 +302,7 @@ public abstract class AbstractTreatmentService {
 	
 	public static List<PropertyDefinition> getTopIndexPropertyDefinitions()
 	{
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sequence index inconnu","unknownIndex.sequence",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), String.class, false, "object_list"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("pourcentage index inconnu","unknownIndex.percent",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Double.class, false, "object_list"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nom index inconnu","unknownIndex.name",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), String.class, false, "object_list"));
@@ -316,7 +320,7 @@ public abstract class AbstractTreatmentService {
 	
 	public static List<PropertyDefinition> getChromiumPropertyDefinitions()
 	{
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version logiciel","softwareVersion",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), String.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Barcode exact match","barcodeExactMatchRatio",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Barcode Q30","barcodeQ30BaseRatio",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
@@ -330,7 +334,7 @@ public abstract class AbstractTreatmentService {
 	}
 	
 	public static List<PropertyDefinition> getReadQualityPropertyDefinitions() throws DAOException{
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Sample input","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Quality scores for each read position","qualScore",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "img"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Distribution of nucleotids for each read position","nuclDistribution",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "img"));
@@ -392,7 +396,7 @@ public abstract class AbstractTreatmentService {
 	}
 
 	public static List<PropertyDefinition> getDuplicatesPropertyDefinitions() throws DAOException{
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Sample input","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("estimation lectures dupliquées","estimateDuplicatedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("estimation % lectures dupliquées","estimateDuplicatedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Double.class, true, "single"));
@@ -404,7 +408,7 @@ public abstract class AbstractTreatmentService {
 	}
 	
 	public static List<PropertyDefinition> getMappingPropertyDefinitions() throws DAOException{
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version Logiciel","softwareVersion",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), String.class, false,
 				DescriptionFactory.newValues("bwa_aln", "bwa_mem"),"single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Sample input","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
@@ -431,6 +435,11 @@ public abstract class AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Reference","reference",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), String.class, true, "single"));
 		//21-07-2014
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Errors position in reads","errorPosition",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "img"));	
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb Forward aligned reads","forwardAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, false, "single"));	
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb Reverse aligned reads","reverseAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, false, "single"));	
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Forward aligned reads / Non-chimeric aligned reads","forwardAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, false, "single"));	
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Reverse aligned reads / Non-chimeric aligned reads","reverseAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, false, "single"));	
 
 		return propertyDefinitions;		
 	}
@@ -438,7 +447,7 @@ public abstract class AbstractTreatmentService {
 	
 	public static List<PropertyDefinition> getMappingNanoporePropertyDefinitions() throws DAOException
 	{
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences prises aléatoirement","inputNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases","inputNbBases",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "single"));
@@ -511,11 +520,20 @@ public abstract class AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% identité (read) vs quality (read)","identityPercentVsReadQuality",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Image.class, true, "img"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% identité (read) vs longueur alignée (read)","identityPercentVsReadAlignedLength",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Image.class, false, "img"));
 
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Chimeric aligned reads","chimericAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Non-chimeric aligned reads","nonChimericAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% chimeric aligned reads","chimericAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% non-chimeric aligned reads","nonChimericAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb Forward aligned reads","forwardAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, false, "single"));	
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb Reverse aligned reads","reverseAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, false, "single"));	
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Forward aligned reads / Non-chimeric aligned reads","forwardAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, false, "single"));	
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Reverse aligned reads / Non-chimeric aligned reads","reverseAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, false, "single"));	
+
 		return propertyDefinitions;	
 	}
 	
 	public static List<PropertyDefinition> getTrimmingPropertyDefinitions() throws DAOException{
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Size range","sizeRange",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), String.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Reads input","readsInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Reads output","readsOutput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, true, "single"));
@@ -532,9 +550,44 @@ public abstract class AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("stored singleton","storedSingleton",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Single), Long.class, true, "single"));
 		return propertyDefinitions;		
 	}
+
+	public static List<PropertyDefinition> getTrimmingNanoporePropertyDefinitions()
+	{
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb input reads","inputNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb input bases","inputNbBases",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb output reads","outputNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb output bases","outputNbBases",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb trimmed reads","trimmedNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb trimmed bases","trimmedNbBases",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb start trimmed reads","trimmedStartNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb start trimmed bases","trimmedStartNbBases",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb end trimmed reads","trimmedEndNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb end trimmed bases","trimmedEndNbBases",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb both trimmed reads","trimmedBothNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb both trimmed bases","trimmedBothNbBases",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb short reads","shortNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb short bases","shortNbBases",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Inside reads","insideMatchNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Inside bases","insideMatchNbBases",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Curve known adapters start","curveKnownAdaptersStart",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Image.class, false, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Curve known adapters end","curveKnownAdaptersEnd",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Image.class, false, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Hist known adapters start","histKnownAdaptersStart",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Image.class, false, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Hist known adapters end","histKnownAdaptersEnd",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Image.class, false, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Hist inside match","histInsideMatch",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Image.class, false, "img"));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cont. adaptateur sequence name","adapterConta.seqName",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), String.class, false, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cont. adaptateur nb trim read","adapterConta.trimNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cont. adaptateur nb trim start reads","adapterConta.trimStartNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cont. adaptateur nb trim end reads","adapterConta.trimEndNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cont. adaptateur nb trim both reads","adapterConta.trimBothNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "object_list"));
+		
+		return propertyDefinitions;	
+	}
 	
 	public static List<PropertyDefinition> getFirstBaseReportPropertyDefinitions() throws DAOException{
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cluster Density (K/mm²)", "clusterDensityTop",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1), Double.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("A Intensity", "intensityATop",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1), Double.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("C Intensity", "intensityCTop",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1), Double.class, true, "single"));
@@ -557,7 +610,7 @@ public abstract class AbstractTreatmentService {
 	}
 	
 	public static List<PropertyDefinition> getContaminationPropertyDefinitions() throws DAOException{
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Reads input","readsInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Pairs, Level.CODE.Single), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Removed reads","removedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Pairs, Level.CODE.Single), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Remaining reads","remainingReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Pairs, Level.CODE.Single), Long.class, true, "single"));
@@ -567,7 +620,7 @@ public abstract class AbstractTreatmentService {
 	}
 
 	public static List<PropertyDefinition> getTaxonomyPropertyDefinitions() throws DAOException{
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Logiciel","software",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, false,
 				DescriptionFactory.newValues("kraken","megablast_megan"),"single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Sample input","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Long.class, true, "single"));
@@ -603,8 +656,8 @@ public abstract class AbstractTreatmentService {
 	
 	public List<PropertyDefinition> getMinknowMetrichorPropertyDefinitions() throws DAOException {
 
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version MinKNOW","minKnowVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.ReadSet, Level.CODE.Default), String.class, false, "single","1.7.14"));
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version MinKNOW","minKnowVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.ReadSet, Level.CODE.Default), String.class, false, "single","18.1.6.0"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version Metrichor","metrichorVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.ReadSet, Level.CODE.Default), String.class, false, "single","2.45.3"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nom workflow","metrichorWorkflowName", LevelService.getLevels(Level.CODE.Run, Level.CODE.ReadSet, Level.CODE.Default), String.class, false, "single","1D Basecalling RNN for LSK108"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version workflow","metrichorWorkflowVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.ReadSet, Level.CODE.Default), String.class, false, "single","1.107"));
@@ -625,8 +678,8 @@ public abstract class AbstractTreatmentService {
 	
 	public List<PropertyDefinition> getMinknowBaseCallingPropertyDefinitions() throws DAOException {
 
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version MinKNOW","minKnowVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.ReadSet, Level.CODE.Default), String.class, false, "single","1.7.14"));
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version MinKNOW","minKnowVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.ReadSet, Level.CODE.Default), String.class, false, "single","18.1.6.0"));
 		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version Metrichor","metrichorVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, false, "single","2.45.3"));
 		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nom workflow","metrichorWorkflowName", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, false, "single","1D Basecalling RNN for LSK108"));
 		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version workflow","metrichorWorkflowVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, false, "single","1.107"));

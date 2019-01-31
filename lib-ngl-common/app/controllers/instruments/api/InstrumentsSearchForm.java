@@ -2,10 +2,8 @@ package controllers.instruments.api;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
-
-import models.laboratory.instrument.description.InstrumentQueryParams;
 import controllers.ListForm;
+import models.laboratory.instrument.description.InstrumentQueryParams;
 
 public class InstrumentsSearchForm extends ListForm {
 	
@@ -20,7 +18,7 @@ public class InstrumentsSearchForm extends ListForm {
 	
 	public Boolean active;
 	
-	public InstrumentQueryParams getInstrumentsQueryParams(){
+	public InstrumentQueryParams getInstrumentsQueryParams() {
 		InstrumentQueryParams instrumentQueryParams = new InstrumentQueryParams();
 		instrumentQueryParams.typeCode = typeCode;
 		instrumentQueryParams.typeCodes = typeCodes;

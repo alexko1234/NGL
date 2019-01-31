@@ -7,7 +7,7 @@ import validation.container.instance.ContainerSupportValidationHelper;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
+// This link : {@link models.laboratory.container.instance.LocationOnContainerSupport}
 
 /**
  * 
@@ -16,26 +16,30 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * 
  * If container category is  tube, the position is (column,line)=(1,1) and support category is 'VIDE'
  * 
- * A support intance defines by unique supportCode /line/column, a supportCode (ex barCode) can be referenced in many container.support 
+ * A support instance defines by unique supportCode /line/column, a supportCode (ex barCode) can be referenced in many container.support 
  * 
  * @author mhaquell
  *
  */
 public class LocationOnContainerSupport implements IValidation {
 	
-
+	/**
+	 * Container code.
+	 */
 	public String code;
 		
+	/**
+	 * Support category (type of container support) ({@link models.laboratory.container.description ContainerSupportCategory}).
+	 */
 	public String categoryCode;
 
+	
 	public String storageCode;
 	
-	// Container Position in support
+	// Container coordinates in support
 	public String column;
 	public String line;
 	
-
-
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {
@@ -43,6 +47,5 @@ public class LocationOnContainerSupport implements IValidation {
 		ContainerSupportValidationHelper.validateUniqueContainerSupportCodePosition(this, contextValidation);
 		ContainerSupportValidationHelper.validateContainerSupportCategoryCode(categoryCode, contextValidation);		
 	}
-
 
 }

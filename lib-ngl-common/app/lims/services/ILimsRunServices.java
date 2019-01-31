@@ -1,7 +1,5 @@
 package lims.services;
 
-
-import java.sql.SQLException;
 import java.util.List;
 
 import lims.models.experiment.ContainerSupport;
@@ -11,8 +9,6 @@ import mail.MailServiceException;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.sample.instance.Sample;
-import models.utils.dao.DAOException;
-import validation.ContextValidation;
 
 /**
  * Common interface to extract data from CNS or CNG Lims

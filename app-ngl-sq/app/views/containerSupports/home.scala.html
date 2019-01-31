@@ -1,3 +1,4 @@
+@this(menu_ : menu)
 @(code : String)
 
 @import models.laboratory.common.description.ObjectType
@@ -7,14 +8,14 @@
      <script src="@controllers.main.tpl.routes.Main.jsPermissions" type="text/javascript" charset="utf-8"></script>
      <script src="@controllers.main.tpl.routes.Main.jsPrintTag" type="text/javascript" charset="utf-8"></script>
      
-     <script src="@routes.Assets.at("datatable/javascripts/services/ultimate-datatable.js")" type="text/javascript" charset="utf-8"></script>    
+     <script src="@routes.Assets.at("lib/datatable/datatable/javascripts/services/ultimate-datatable.js")" type="text/javascript" charset="utf-8"></script>    
 	<script src="@routes.Assets.at("ngl-sq/javascripts/containerSupports/app.js")" type="text/javascript" charset="utf-8"></script>  	
-	<script src="@routes.Assets.at("ngl-common/javascripts/services/commons.js")" type="text/javascript" charset="utf-8"></script> 
-	<script src="@routes.Assets.at("ngl-common/javascripts/services/bt-input.js")" type="text/javascript" charset="utf-8"></script> 
+	<script src="@routes.Assets.at("lib/ngl-common/ngl-common/javascripts/services/commons.js")" type="text/javascript" charset="utf-8"></script> 
+	<script src="@routes.Assets.at("lib/ngl-common/ngl-common/javascripts/services/bt-input.js")" type="text/javascript" charset="utf-8"></script> 
 	
-	<script src="@routes.Assets.at("ngl-common/javascripts/services/list-resize.js")" type="text/javascript" charset="utf-8"></script> 
-    <script src="@routes.Assets.at("ngl-common/javascripts/controllers/mainctrl.js")" type="text/javascript" charset="utf-8"></script>
-	<script src="@routes.Assets.at("ngl-common/javascripts/services/basket.js")" type="text/javascript" charset="utf-8"></script>  
+	<script src="@routes.Assets.at("lib/ngl-common/ngl-common/javascripts/services/list-resize.js")" type="text/javascript" charset="utf-8"></script> 
+    <script src="@routes.Assets.at("lib/lib-frameworkweb/ngl-common/javascripts/controllers/mainctrl.js")" type="text/javascript" charset="utf-8"></script>
+	<script src="@routes.Assets.at("lib/ngl-common/ngl-common/javascripts/services/basket.js")" type="text/javascript" charset="utf-8"></script>  
 	<script src="@routes.Assets.at("ngl-sq/javascripts/containerSupports/services.js")" type="text/javascript" charset="utf-8"></script>
 	<script src="@routes.Assets.at("ngl-sq/javascripts/containerSupports/search-ctrl.js")" type="text/javascript" charset="utf-8"></script>
 	<script src="@routes.Assets.at("ngl-sq/javascripts/containerSupports/details-ctrl.js")" type="text/javascript" charset="utf-8"></script>
@@ -27,4 +28,4 @@
 }
 
 
-@views.html.main("containerSupports.title", menu("containerSupports."+code), scripts,css)(views.html.contents.lefttabs())
+@views.html.main("containerSupports.title", menu_("containerSupports."+code), scripts,css)(views.html.contents.lefttabs())

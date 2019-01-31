@@ -5,24 +5,22 @@ package controllers.instruments.io.cng.epmotion;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import play.Logger;
-import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.InputContainerUsed;
-import models.laboratory.experiment.instance.OutputContainerUsed;
-import validation.ContextValidation;
-
-import controllers.instruments.io.cng.epmotion.tpl.txt.*;
+import controllers.instruments.io.cng.epmotion.tpl.txt.sampleSheet_1;
 import controllers.instruments.io.utils.AbstractOutput;
 import controllers.instruments.io.utils.File;
 import controllers.instruments.io.utils.OutputHelper;
+import models.laboratory.experiment.instance.Experiment;
+import validation.ContextValidation;
 
 public class Output extends AbstractOutput {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(Output.class);
+	
 	@Override
 	public File generateFile(Experiment experiment,ContextValidation contextValidation) throws Exception {
 		String FDStestparam="when specs ready";// test passage parametre a la feuille de route...
 		
-		Logger.info("generation feuille de route Epimotion / exp="+ experiment.typeCode );
+		logger.info("generation feuille de route Epimotion / exp="+ experiment.typeCode );
 		String content = OutputHelper.format(sampleSheet_1.render(experiment, FDStestparam).body());
 		
 		File file = new File(getFileName(experiment)+".csv", content);
@@ -37,4 +35,5 @@ public class Output extends AbstractOutput {
 		// return experiment.typeCode.toUpperCase()+"_"+experiment.atomicTransfertMethods.get(0).outputContainerUseds.get(0).locationOnContainerSupport.code+"_"+sdf.format(new Date());
 		return experiment.typeCode.toUpperCase()+"_"+experiment.atomicTransfertMethods.get(0).inputContainerUseds.get(0).locationOnContainerSupport.code+"_"+sdf.format(new Date());
 	}
+	
 }

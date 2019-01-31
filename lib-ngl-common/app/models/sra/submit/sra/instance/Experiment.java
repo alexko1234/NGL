@@ -1,10 +1,12 @@
 package models.sra.submit.sra.instance;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import fr.cea.ig.DBObject;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
@@ -14,8 +16,6 @@ import validation.ContextValidation;
 import validation.IValidation;
 import validation.sra.SraValidationHelper;
 import validation.utils.ValidationHelper;
-import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBDAO;
 
 // todo : ajouter  libraryName dans la validation
 
@@ -47,7 +47,7 @@ public class Experiment extends DBObject implements IValidation {
 	public String sampleAccession = null;
 	public String studyAccession = null;
 	public String readSetCode = null;
-	public List<ReadSpec> readSpecs = new ArrayList<ReadSpec>();
+	public List<ReadSpec> readSpecs = new ArrayList<>();
 	public Run run = null; // le run est rattache à l'experiment
 	public State state = new State(); // Reference sur "models.laboratory.common.instance.state" 
 							 // pour gerer les differents etats de l'objet.
@@ -55,6 +55,8 @@ public class Experiment extends DBObject implements IValidation {
 	public String adminComment; // commentaire privé "reprise historique"				
 	public TraceInformation traceInformation = new TraceInformation();// .Reference sur "models.laboratory.common.instance.TraceInformation" 
 		// pour loguer les dernieres modifications utilisateurs
+	public Date releaseDate; 
+	public Date firstSubmissionDate; 
 
 	// ajouter instrumentModel et libraryName.
 
@@ -63,21 +65,22 @@ public class Experiment extends DBObject implements IValidation {
 		contextValidation.addKeyToRootKeyName("experiment");
 		// Verifier que status est bien rensigne, et si != new alors libraryName renseigné :
 		//System.out.println("Dans exp.validate, stateCode =" +state.code);
+		SraValidationHelper.validateFreeText(contextValidation,"title", this.title);
 		SraValidationHelper.validateState(ObjectType.CODE.SRASubmission, this.state, contextValidation);
 		ValidationHelper.required(contextValidation, this.libraryName , "libraryName");
 		// Verifer que projectCode est bien renseigné et qu'il existe bien dans lims :
 		SraValidationHelper.validateProjectCode(this.projectCode, contextValidation);
 		ValidationHelper.required(contextValidation, this.title , "title");
         // Verifer que librarySelection libraryStrategy librarySource et libraryLayout sont bien renseignés avec bonne valeur :		
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySelection, VariableSRA.mapLibrarySelection, "librarySelection");
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryStrategy, VariableSRA.mapLibraryStrategy, "libraryStrategy");
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySource, VariableSRA.mapLibrarySource, "librarySource");
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayout, VariableSRA.mapLibraryLayout, "libraryLayout"); // single ou paired
+		SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySelection, VariableSRA.mapLibrarySelection(), "librarySelection");
+		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryStrategy, VariableSRA.mapLibraryStrategy(), "libraryStrategy");
+		SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySource, VariableSRA.mapLibrarySource(), "librarySource");
+		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayout, VariableSRA.mapLibraryLayout(), "libraryLayout"); // single ou paired
 
 		//ValidationHelper.required(contextValidation, this.libraryName , "libraryName");
 		//ValidationHelper.required(contextValidation, this.libraryConstructionProtocol , "libraryConstructionProtocol");
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.typePlatform, VariableSRA.mapTypePlatform, "typePlatform");
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.instrumentModel, VariableSRA.mapInstrumentModel, "instrumentModel");
+		SraValidationHelper.requiredAndConstraint(contextValidation, this.typePlatform, VariableSRA.mapTypePlatform(), "typePlatform");
+		SraValidationHelper.requiredAndConstraint(contextValidation, this.instrumentModel, VariableSRA.mapInstrumentModel(), "instrumentModel");
 		if (this.sampleAccession == null) {
 			ValidationHelper.required(contextValidation, this.sampleCode , "sampleCode");
 		}
@@ -96,7 +99,7 @@ public class Experiment extends DBObject implements IValidation {
 				// Verifer que lastBaseCoord est bien renseigné ssi Illumina et paired:
 				ValidationHelper.required(contextValidation, this.lastBaseCoord , "lastBaseCoord");	
 				ValidationHelper.required(contextValidation, this.libraryLayoutNominalLength , "libraryLayoutNominalLength");
-				SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayoutOrientation, VariableSRA.mapLibraryLayoutOrientation, "libraryLayoutOrientation");
+				SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayoutOrientation, VariableSRA.mapLibraryLayoutOrientation(), "libraryLayoutOrientation");
 			}
 		}
 		// Si nanopore pas de readspec et pas spotLength, lastBasecoord, et libraryLayoutNominalLength

@@ -1,6 +1,7 @@
 package controllers.sra.studies.api;
 
-import static play.data.Form.form;
+//import static play.data.Form.form;
+// import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -8,15 +9,19 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.apache.commons.collections.CollectionUtils;
+import javax.inject.Inject;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
 import controllers.DocumentController;
+// import controllers.sra.configurations.api.Configurations;
 //import models.sra.submit.util.VariableSRA;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.migration.NGLContext;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.sra.submit.common.instance.AbstractStudy;
@@ -25,36 +30,48 @@ import models.sra.submit.util.SraCodeHelper;
 import models.sra.submit.util.SraException;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
-import play.Logger;
-import play.api.modules.spring.Spring;
+//import play.Logger;
+//import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import services.SubmissionServices;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
-import workflows.sra.study.StudyWorkflows;
+//import workflows.sra.study.StudyWorkflows;
 
 
-public class Studies extends DocumentController<AbstractStudy>{
+public class Studies extends DocumentController<AbstractStudy> {
+	
+	private static final play.Logger.ALogger logger = play.Logger.of(Studies.class);
 
-	final static Form<AbstractStudy> studyForm = form(AbstractStudy.class);
-	final static Form<StudiesSearchForm> studiesSearchForm = form(StudiesSearchForm.class);
-	final StudyWorkflows studyWorkflows = Spring.getBeanOfType(StudyWorkflows.class);
-	final static Form<State> stateForm = form(State.class);
+	// final static Form<AbstractStudy> studyForm = form(AbstractStudy.class);
+	// final static Form<StudiesSearchForm> studiesSearchForm = form(StudiesSearchForm.class);
+	// final StudyWorkflows studyWorkflows = Spring.get BeanOfType(StudyWorkflows.class);
+	// final static Form<State> stateForm = form(State.class);
+	
+	private final Form<AbstractStudy>     studyForm;
+	private final Form<StudiesSearchForm> studiesSearchForm;
+//	private final Form<State>             stateForm;
+//	private final StudyWorkflows          studyWorkflows;
+	private final SubmissionServices      submissionServices;
 
-	public Studies() {
-		super(InstanceConstants.SRA_STUDY_COLL_NAME, AbstractStudy.class);
+	@Inject
+	public Studies(NGLContext ctx, SubmissionServices submissionServices) {
+		super(ctx,InstanceConstants.SRA_STUDY_COLL_NAME, AbstractStudy.class);
+		studyForm               = ctx.form(AbstractStudy.class);
+		studiesSearchForm       = ctx.form(StudiesSearchForm.class);
+//		stateForm               = ctx.form(State.class);		
+//		this.studyWorkflows     = studyWorkflows;
+		this.submissionServices = submissionServices;
 	}
-
-
 	public Result release(String studyCode) throws SraException {
 		String user = this.getCurrentUser();
 		System.out.println("Dans Studies.java.release ");
 		ContextValidation contextValidation = new ContextValidation(user);
-		SubmissionServices submissionServices = new SubmissionServices();
-		Form<AbstractStudy> filledForm = getFilledForm(studyForm, AbstractStudy.class);
-		AbstractStudy userStudy = filledForm.get();	
+		// SubmissionServices submissionServices = new SubmissionServices();
+//		Form<AbstractStudy> filledForm = getFilledForm(studyForm, AbstractStudy.class);
+//		AbstractStudy userStudy = filledForm.get();	
 		Study study = null;
 		try {
 			String submissionCode = submissionServices.initReleaseSubmission(studyCode, contextValidation);
@@ -62,25 +79,28 @@ public class Studies extends DocumentController<AbstractStudy>{
 			// creer le repertoire de soumission
 			study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, studyCode);
 		} catch (SraException e) {
-			filledForm.reject("release pour studyCode : "+ studyCode, e.getMessage());
-			Logger.debug("filled form "+filledForm.errorsAsJson());
-			return badRequest(filledForm.errorsAsJson());
+//			filledForm.reject("release pour studyCode : "+ studyCode, e.getMessage());
+			contextValidation.addError("release pour studyCode : "+ studyCode, e.getMessage());
+			// Logger.debug("filled form "+filledForm.errors-AsJson());
+			logger.debug("filled form "+errorsAsJson(contextValidation.getErrors()));
+			//return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
 		}
 		return ok(Json.toJson(study));
 	}
-
 
 	public Result save() {
 		Form<AbstractStudy> filledForm = getFilledForm(studyForm, AbstractStudy.class);
 		AbstractStudy userStudy = filledForm.get();
 
-		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm);
 		contextValidation.setCreationMode();	
 		if (userStudy._id == null) {
 			userStudy.traceInformation = new TraceInformation(); 
 			userStudy.traceInformation.setTraceInformation(getCurrentUser());
-			userStudy.state = new State("N", getCurrentUser());
-			if (userStudy instanceof Study){
+			userStudy.state = new State("NONE", getCurrentUser());
+			if (userStudy instanceof Study) {
 				((Study)userStudy).centerName=VariableSRA.centerName;
 				((Study)userStudy).centerProjectName = "";
 				for (String projectCode: ((Study)userStudy).projectCodes) {
@@ -92,7 +112,6 @@ public class Studies extends DocumentController<AbstractStudy>{
 				if (StringUtils.isNotBlank(((Study)userStudy).centerProjectName)){
 					((Study)userStudy).centerProjectName = ((Study)userStudy).centerProjectName.replaceFirst("_", "");
 				}
-
 				try {
 					((Study)userStudy).code = SraCodeHelper.getInstance().generateStudyCode(((Study)userStudy).projectCodes);
 				} catch (SraException e) {
@@ -103,17 +122,20 @@ public class Studies extends DocumentController<AbstractStudy>{
 			contextValidation.getContextObjects().put("type", "sra");
 			userStudy.validate(contextValidation);
 			//Logger.info("utilisateur = "+getCurrentUser());	
-			if(contextValidation.errors.size()==0) {
+			// if(contextValidation.errors.size()==0) {
+			if (!contextValidation.hasErrors()) {
 				MongoDBDAO.save(InstanceConstants.SRA_STUDY_COLL_NAME, userStudy);
 			} else {
-				return badRequest(filledForm.errorsAsJson());
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(contextValidation.getErrors()));
 			}
 		} else {
 			//return badRequest("study with id " + userStudy._id + " already exist");
-			filledForm.reject("Study_id "+userStudy._id, "study with id " + userStudy._id + " already exist");  // si solution filledForm.reject
-			return badRequest(filledForm.errorsAsJson());
+//			filledForm.reject("Study_id "+userStudy._id, "study with id " + userStudy._id + " already exist");  // si solution filledForm.reject
+//			return badRequest(filledForm.errorsAsJson( )); // legit
+			contextValidation.addError("Study_id "+userStudy._id, "study with id " + userStudy._id + " already exist");  // si solution filledForm.reject
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
 		}
-
 		return ok(Json.toJson(userStudy.code));
 	}
 
@@ -132,15 +154,13 @@ public class Studies extends DocumentController<AbstractStudy>{
 		Query query = getQuery(studiesSearchForm);
 		MongoDBResult<AbstractStudy> results = mongoDBFinder(studiesSearchForm, query);				
 		List<AbstractStudy> studiesList = results.toList();
-		if(studiesSearchForm.datatable){
-			return ok(Json.toJson(new DatatableResponse<AbstractStudy>(studiesList, studiesList.size())));
-		}else{
-			return ok(Json.toJson(studiesList));
-		}
+		if (studiesSearchForm.datatable)
+			return ok(Json.toJson(new DatatableResponse<>(studiesList, studiesList.size())));
+		return ok(Json.toJson(studiesList));
 	}	
 
 	private Query getQuery(StudiesSearchForm form) {
-		List<Query> queries = new ArrayList<Query>();
+		List<Query> queries = new ArrayList<>();
 		Query query = null;
 
 		if (CollectionUtils.isNotEmpty(form.projCodes)) { //
@@ -199,14 +219,14 @@ public class Studies extends DocumentController<AbstractStudy>{
 
 	public Result update(String code) {
 		AbstractStudy study = getObject(code);
-
 		Form<AbstractStudy> filledForm = getFilledForm(studyForm, AbstractStudy.class);
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
-
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm); 	
 		if (study == null) {
 			//return badRequest("Study with code "+code+" not exist");
 			ctxVal.addErrors("study ", " not exist");
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 		AbstractStudy studyInput = filledForm.get();
 
@@ -216,48 +236,51 @@ public class Studies extends DocumentController<AbstractStudy>{
 			studyInput.traceInformation.setTraceInformation(getCurrentUser());
 			studyInput.validate(ctxVal);
 			if (!ctxVal.hasErrors()) {
-				Logger.info("Update study state "+studyInput.state.code);
+				logger.info("Update study state "+studyInput.state.code);
 				MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, studyInput);
 				return ok(Json.toJson(studyInput));
-			}else {
-				return badRequest(filledForm.errorsAsJson());
+			} else {
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}
 		} else {
 			//return badRequest("study code are not the same");
-			ctxVal.addErrors("study " + code, "study code  " + code + " and studyInput.code "+ studyInput.code + "are not the same");
-			return badRequest(filledForm.errorsAsJson());
+			ctxVal.addErrors("study " + code, "study code  " + code + " and studyInput.code "+ studyInput.code + " are not the same");
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}	
 
 	}
 
-	public Result updateState(String code){
-		//Get Submission from DB 
-		Study study = getStudy(code); 
-		Form<State> filledForm = getFilledForm(stateForm, State.class);
-		State state = filledForm.get();
-		state.date = new Date();
-		state.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
-		if (study == null) {
-			//return badRequest("Submission with code "+code+" not exist");
-			ctxVal.addErrors("study " + code,  " not exist in database");	
-			return badRequest(filledForm.errorsAsJson());
-		}
-		Logger.debug("Controller studies set state for "+study.code);
-		studyWorkflows.setState(ctxVal, study, state);
-		if (!ctxVal.hasErrors()) {
-			return ok(Json.toJson(getObject(code)));
-		}else {
-			return badRequest(filledForm.errorsAsJson());
-		}
-	}
 
-	private Study getStudy(String code)
-	{
-		Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, code);
-		return study;
-	}
+//	public Result updateState(String code) {
+//		//Get Submission from DB 
+//		Study study = getStudy(code); 
+//		Form<State> filledForm = getFilledForm(stateForm, State.class);
+//		State state = filledForm.get();
+//		state.date = new Date();
+//		state.user = getCurrentUser();
+//		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+//		if (study == null) {
+//			//return badRequest("Submission with code "+code+" not exist");
+//			ctxVal.addErrors("study " + code,  " not exist in database");	
+//			// return badRequest(filledForm.errors-AsJson());
+//			return badRequest(errorsAsJson(ctxVal.getErrors()));
+//		}
+//		logger.debug("Controller studies set state for "+study.code);
+//		studyWorkflows.setState(ctxVal, study, state);
+//		if (!ctxVal.hasErrors()) {
+//			return ok(Json.toJson(getObject(code)));
+//		} else {
+//			//return badRequest(filledForm.errors-AsJson());
+//			return badRequest(errorsAsJson(ctxVal.getErrors()));
+//		}
+//	}
 
+//	private Study getStudy(String code)	{
+//		Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, code);
+//		return study;
+//	}
 
 	/*	public Result release(String code) {
 		//Get Submission from DB 
@@ -268,7 +291,7 @@ public class Studies extends DocumentController<AbstractStudy>{
 		if (study == null) {
 			//return badRequest("Study with code "+code+" not exist");
 			ctxVal.addErrors("study ", " not exist");
-			return badRequest(filledForm.errorsAsJson());
+			return badRequest(filledForm.errors-AsJson());
 		}
 		AbstractStudy studyInput = filledForm.get();
 		if (code.equals(studyInput.code)) {	
@@ -277,17 +300,17 @@ public class Studies extends DocumentController<AbstractStudy>{
 			studyInput.traceInformation.setTraceInformation(getCurrentUser());
 			studyInput.validate(ctxVal);
 			if (!ctxVal.hasErrors()) {
-				Logger.info("Update study state "+studyInput.state.code);
+				logger.info("Update study state "+studyInput.state.code);
 				MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, studyInput);
 				return ok(Json.toJson(studyInput));
 			}else {
-				return badRequest(filledForm.errorsAsJson());
+				return badRequest(filledForm.errors-AsJson());
 			}
 		} else {
 			//return badRequest("study code are not the same");
 			ctxVal.addErrors("study " + code, "study code  " + code + " and studyInput.code "+ studyInput.code + "are not the same");
-			return badRequest(filledForm.errorsAsJson());
+			return badRequest(filledForm.errors-AsJson());
 		}	
 	}
-	 */
+	*/
 }

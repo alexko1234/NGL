@@ -1,57 +1,143 @@
 package models.sra.submit.util;
 
+import static fr.cea.ig.play.IGGlobals.configuration;
 
-
-import java.util.HashMap;
 import java.util.Map;
 
-import play.Play;
+import org.apache.commons.lang3.StringUtils;
 
-public interface VariableSRA {
-	SraParameter sraParam = new SraParameter();
-	
+import fr.cea.ig.ngl.utils.HashMapBuilder;
 
-	static final String centerName = Play.application().configuration().getString("centerName");
-	static final String laboratoryName = Play.application().configuration().getString("laboratoryName");
-	static final String submissionRootDirectory = Play.application().configuration().getString("submissionRootDirectory");
-	static final String defaultLibraryConstructionProtocol = Play.application().configuration().getString("defaultLibraryConstructionProtocol");
-	static final String admin = Play.application().configuration().getString("admin");
-	static final String xmlSubmission = Play.application().configuration().getString("xmlSubmission");
-	static final String xmlStudies = Play.application().configuration().getString("xmlStudies");
-	static final String xmlSamples = Play.application().configuration().getString("xmlSamples");
-	static final String xmlExperiments = Play.application().configuration().getString("xmlExperiments");
-	static final String xmlRuns = Play.application().configuration().getString("xmlRuns");
+public abstract class VariableSRA {
 	
-	static final Map<String, String> mapCenterName = sraParam.getParameter("centerName");
-	static final Map<String, String> mapLaboratoryName = sraParam.getParameter("laboratoryName");
-	static final Map<String, String> mapLibProcessTypeCodeVal_orientation = sraParam.getParameter("libProcessTypeCodeValue_orientation");
-	static final Map<String, String> mapTypeReadset = sraParam.getParameter("typeReadset"); 
-	static final Map<String, String> mapExistingStudyType = sraParam.getParameter("existingStudyType");
-	static final Map<String, String> mapLibraryLayoutOrientation = sraParam.getParameter("libraryLayoutOrientation");
-	static final Map<String, String> mapLibrarySource = sraParam.getParameter("librarySource");
-	static final Map<String, String> mapLibraryStrategy = sraParam.getParameter("libraryStrategy");
-	static final Map<String, String> mapLibrarySelection = sraParam.getParameter("librarySelection");
-	static final Map<String, String> mapTypePlatform = sraParam.getParameter("typePlatform");
-	static final Map<String, String> mapLibraryLayout = sraParam.getParameter("libraryLayout");
-	static final Map<String, String> mapInstrumentModel = sraParam.getParameter("instrumentModel"); 
-	static final Map<String, String> mapAnalysisFileType =  sraParam.getParameter("analysisFileType"); 
+	private static final play.Logger.ALogger logger = play.Logger.of(VariableSRA.class);
+	//public static final SraParameter sraParam = new SraParameter();
+	
+	public static final String centerName;
+	public static final String laboratoryName;
+	public static final String submissionRootDirectory;
+	public static final String defaultLibraryConstructionProtocol;
+	public static final String admin;
+	public static final String xmlSubmission;
+	public static final String xmlStudies;
+	public static final String xmlSamples;
+	public static final String xmlExperiments;
+	public static final String xmlRuns;
+	
+	public static final Map<String, String> mapCenterName() {
+		return SraParameter.getParameter("centerName");
+	}
+	
+	public static final Map<String, String> mapLaboratoryName() {
+		return SraParameter.getParameter("laboratoryName");
+	}
+	
+	public static final Map<String, String> mapLibProcessTypeCodeVal_orientation() {
+		return SraParameter.getParameter("libProcessTypeCodeValue_orientation");
+	}
+	
+	public static final Map<String, String> mapTypeReadset() { 
+		return SraParameter.getParameter("typeReadset");
+	}
+	
+	public static final Map<String, String> mapExistingStudyType() {
+		return SraParameter.getParameter("existingStudyType");
+	}
+	
+	public static final Map<String, String> mapLibraryLayoutOrientation() {
+		return SraParameter.getParameter("libraryLayoutOrientation");
+	}
+	
+	public static final Map<String, String> mapLibrarySource() {
+		return SraParameter.getParameter("librarySource");
+	}
+	
+	public static final Map<String, String> mapLibraryStrategy() {
+		return SraParameter.getParameter("libraryStrategy");
+	}
+	
+	public static final Map<String, String> mapLibrarySelection() {
+		return SraParameter.getParameter("librarySelection");
+	}
+	
+	public static final Map<String, String> mapTypePlatform() {
+		return  SraParameter.getParameter("typePlatform");
+	}
+	
+	public static final Map<String, String> mapLibraryLayout() {
+		return SraParameter.getParameter("libraryLayout");
+	}
+	
+	public static final Map<String, String> mapInstrumentModel() {
+		return SraParameter.getParameter("instrumentModel"); 
+	}
+	
+	public static final Map<String, String> mapAnalysisFileType() {
+		return SraParameter.getParameter("analysisFileType"); 
+	}
 
-	static final Map<String, String> mapStrategySample =  new HashMap<String, String>() {
-		{
-			put("strategy_external_sample", "strategy_external_sample"); // Si pas de sample à creer parce que fournis par les collaborateurs
-			put("strategy_sample_taxon", "strategy_sample_taxon"); // si sample specifique par code_projet et taxon
-			put("strategy_sample_clone", "strategy_sample_clone"); // si sample specifique par code_projet et clone
-		}
-	};
+//	public static final Map<String, String> mapStrategySample = new HashMap<String, String>() {
+//		{
+//			put("strategy_external_sample", "strategy_external_sample"); // Si pas de sample à creer parce que fournis par les collaborateurs
+//			put("strategy_sample_taxon",    "strategy_sample_taxon");    // si sample specifique par code_projet et taxon
+//			put("strategy_sample_clone",    "strategy_sample_clone");    // si sample specifique par code_projet et clone
+//		}
+//	};
+//	
+//	public static final Map<String, String> mapStrategyStudy = new HashMap<String, String>() {
+//		{
+//			put("strategy_external_study", "strategy_external_study"); // Si pas de study à creer parce que fournis par les collaborateurs
+//			put("strategy_internal_study", "strategy_internal_study"); 
+//		}
+//	};	
+//
 	
-	static final Map<String, String> mapStrategyStudy =  new HashMap<String, String>() {
-		{
-			put("strategy_external_study", "strategy_external_study"); // Si pas de study à creer parce que fournis par les collaborateurs
-			put("strategy_internal_study", "strategy_internal_study"); 
-		}
-	};	
+	private static String getString(String key) {
+		String result = configuration().getString(key);
+		if (StringUtils.isBlank(result))
+			logger.error("Absence dans la config play de la cle '{}'", key);
+		return result;
+	}
+	
+	public static final Map<String, String> mapStrategySample = 
+			new HashMapBuilder<String,String>()
+				.put("strategy_external_sample", "strategy_external_sample") // Si pas de sample à creer parce que fournis par les collaborateurs
+				.put("strategy_sample_taxon",    "strategy_sample_taxon")    // si sample specifique par code_projet et taxon
+				.put("strategy_sample_clone",    "strategy_sample_clone")    // si sample specifique par code_projet et clone
+				.asMap();
+	
+	public static final Map<String, String> mapStrategyStudy = 
+			new HashMapBuilder<String,String>()
+				.put("strategy_external_study", "strategy_external_study") // Si pas de study à creer parce que fournis par les collaborateurs
+				.put("strategy_internal_study", "strategy_internal_study")
+				.asMap();
 		
-	
-};
+//	static {
+//		Configuration conf      = Play.application().configuration();
+//		centerName              = getString(conf, "centerName");
+//		laboratoryName          = getString(conf, "laboratoryName");
+//		submissionRootDirectory = getString(conf, "submissionRootDirectory");
+//		defaultLibraryConstructionProtocol = getString(conf, "defaultLibraryConstructionProtocol");
+//		admin                   = getString(conf, "admin");
+//		xmlSubmission           = getString(conf, "xmlSubmission");
+//		xmlStudies              = getString(conf, "xmlStudies");
+//		xmlSamples              = getString(conf, "xmlSamples");
+//		xmlExperiments          = getString(conf, "xmlExperiments");
+//		xmlRuns                 = getString(conf, "xmlRuns");
+//	}
+	static {
+		centerName              = getString("centerName");
+		laboratoryName          = getString("laboratoryName");
+		submissionRootDirectory = getString("submissionRootDirectory");
+		defaultLibraryConstructionProtocol = getString("defaultLibraryConstructionProtocol");
+		admin                   = getString("admin");
+		xmlSubmission           = getString("xmlSubmission");
+		xmlStudies              = getString("xmlStudies");
+		xmlSamples              = getString("xmlSamples");
+		xmlExperiments          = getString("xmlExperiments");
+		xmlRuns                 = getString("xmlRuns");
+	}
+
+}
 
 

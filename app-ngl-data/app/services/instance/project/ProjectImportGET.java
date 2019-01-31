@@ -11,13 +11,14 @@ import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataGET;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.migration.NGLContext;
 import play.Logger;
 
 public class ProjectImportGET extends AbstractImportDataGET{
 
 	public ProjectImportGET(FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super("Project GET",durationFromStart, durationFromNextIteration);
+			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super("Project GET",durationFromStart, durationFromNextIteration, ctx);
 	}
 
 	@Override
@@ -27,7 +28,7 @@ public class ProjectImportGET extends AbstractImportDataGET{
 
 	
 	public static void createProjet(ContextValidation contextValidation) throws SQLException, DAOException{
-		Logger.debug("ProjectImportGET - createProjet : Récupération des projets");	
+//		Logger.debug("ProjectImportGET - createProjet : Récupération des projets");	
 		List<Project> projects = limsServices.findProjectToCreate(contextValidation) ;
 		
 		for(Project project:projects){
@@ -43,6 +44,8 @@ public class ProjectImportGET extends AbstractImportDataGET{
 			}
 		}
 	
+		Logger.debug(projects.size() + " projets to import");
+		
 		//InstanceHelpers.save(InstanceConstants.PROJECT_COLL_NAME,projects,contextValidation);
 		
 	}

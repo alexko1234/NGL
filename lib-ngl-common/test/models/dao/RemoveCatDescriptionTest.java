@@ -1,5 +1,6 @@
 package models.dao;
 
+import org.junit.Assert;
 
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.StateCategory;
@@ -13,25 +14,16 @@ import models.laboratory.sample.description.ImportCategory;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.dao.SampleCategoryDAO;
 import models.utils.dao.DAOException;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import play.api.modules.spring.Spring;
 import utils.AbstractTests;
-
 
 /**
  * Test sur base vide avec dump.sql
  * @author ejacoby
  *
  */
+public class RemoveCatDescriptionTest extends AbstractTests {
 
-public class RemoveCatDescriptionTest extends AbstractTests{
-	
-	
-
-	
 	//@Test
 	public void removeContainerSupportCategory() throws DAOException
 	{
@@ -49,8 +41,6 @@ public class RemoveCatDescriptionTest extends AbstractTests{
 		containerSupportCategory = ContainerSupportCategory.find.findByCode("support6");
 		containerSupportCategory.remove();
 	}
-
-	
 
 	//@Test
 	public void removeInstrumentCategory() throws DAOException
@@ -84,9 +74,7 @@ public class RemoveCatDescriptionTest extends AbstractTests{
 		stateCategory.remove();
 		Assert.assertNull(StateCategory.find.findByCode("catState1"));
 	}
-	
-	
-	
+		
 	//@Test
 	public void removeExperimentCategory() throws DAOException
 	{

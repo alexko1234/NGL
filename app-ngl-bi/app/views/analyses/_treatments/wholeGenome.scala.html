@@ -16,6 +16,7 @@
 			<th>@Messages("analyses.treatments.wholeGenome.Q1Coverage")</th>
 			<th>@Messages("analyses.treatments.wholeGenome.iqr")</th>
 			<th>@Messages("analyses.treatments.wholeGenome.outlierPercent")</th>
+			<th>@Messages("analyses.treatments.wholeGenome.duplicatedReadsPercent")</th>
 			<th>@Messages("analyses.treatments.wholeGenome.humanReferenceGenome")</th>
 			<th>@Messages("analyses.treatments.wholeGenome.pipelineVersion")</th>
 		</tr>
@@ -32,6 +33,7 @@
 			<td>{{analysis.treatments[treatments.getTreatment().code].pairs.q1Coverage.value | number:2}}</td>
 			<td>{{analysis.treatments[treatments.getTreatment().code].pairs.iqr.value | number:2}}</td>
 			<td>{{analysis.treatments[treatments.getTreatment().code].pairs.outlierPercent.value | number:2}}</td>
+			<td>{{analysis.treatments[treatments.getTreatment().code].pairs.duplicatedReadsPercent.value | number:2}}</td>
 			<td>{{analysis.treatments[treatments.getTreatment().code].pairs.humanReferenceGenome.value}}</td>
 			<td>{{analysis.treatments[treatments.getTreatment().code].pairs.pipelineVersion.value}}</td>
 		

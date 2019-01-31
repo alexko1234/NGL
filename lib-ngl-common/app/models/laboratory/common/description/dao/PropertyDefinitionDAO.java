@@ -15,21 +15,28 @@ import models.laboratory.common.description.Value;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
-import play.Logger;
+//import play.Logger;
 import play.api.modules.spring.Spring;
 
 @Repository
-public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition>{
+public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition> {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(PropertyDefinitionDAO.class);
+	
+//	protected PropertyDefinitionDAO() {
+//		super("property_definition", PropertyDefinition.class, PropertyDefinitionMappingQuery.class,
+//				"SELECT id,code,name,required,required_state,editable,active,type,display_format,display_order,default_value,description,"
+//						+ "choice_in_list,fk_measure_category, property_value_type,fk_save_measure_unit,fk_display_measure_unit,fk_common_info_type "
+//						+" FROM property_definition as t",true);
+//	}
 	protected PropertyDefinitionDAO() {
-		super("property_definition", PropertyDefinition.class, PropertyDefinitionMappingQuery.class,
+		super("property_definition", PropertyDefinition.class, PropertyDefinitionMappingQuery.factory,
 				"SELECT id,code,name,required,required_state,editable,active,type,display_format,display_order,default_value,description,"
 						+ "choice_in_list,fk_measure_category, property_value_type,fk_save_measure_unit,fk_display_measure_unit,fk_common_info_type "
 						+" FROM property_definition as t",true);
 	}
 
-	public List<PropertyDefinition> findByCommonInfoType(long idCommonInfoType)
-	{
+	public List<PropertyDefinition> findByCommonInfoType(long idCommonInfoType)	{
 		String sql = sqlCommon+" WHERE fk_common_info_type = ? ";
 		PropertyDefinitionMappingQuery propertyDefinitionMappingQuery=new PropertyDefinitionMappingQuery(dataSource, sql, new SqlParameter("fk_common_info_type",Type.LONG));
 		return propertyDefinitionMappingQuery.execute(idCommonInfoType);
@@ -40,8 +47,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		throw new DAOException("Must be inserted with commonInfoType id");
 	}
 
-	public PropertyDefinition findUnique(String code, Level.CODE levelCode){
-
+	public PropertyDefinition findUnique(String code, Level.CODE levelCode) {
 		String sql = 
 				"select pd.code, pd.type, pd.property_value_type, "
 						+ " case when count(distinct pd.choice_in_list) = 1 then pd.choice_in_list"
@@ -56,12 +62,10 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 						+" group by pd.code, pd.type, pd.property_value_type";
 		PropertyDefinitionMappingQuery propertyDefinitionMappingQuery=new PropertyDefinitionMappingQuery(dataSource, sql, true, new SqlParameter("l.code",Types.VARCHAR), new SqlParameter("pd.code",Types.VARCHAR));
 		List<PropertyDefinition> l = propertyDefinitionMappingQuery.execute(levelCode.toString(), code);
-
-
-		if(l.size() == 1){
+		if (l.size() == 1) {
 			return l.get(0);
-		}else{
-			Logger.error("PropertyDefinition findUnique query return more than one result or zero result: "+sql+" / "+code+" / "+levelCode);
+		} else {
+			logger.error("PropertyDefinition findUnique query return more than one result or zero result: "+sql+" / "+code+" / "+levelCode);
 			return null;
 		}		
 	}
@@ -109,7 +113,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 			throw new DAOException("level does not exist or level.id is null) !! - "+propertyDefinition.code);
 		}
 		//Create propertyDefinition
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("code", propertyDefinition.code);
 		parameters.put("name", propertyDefinition.name);
 		parameters.put("description", propertyDefinition.description);
@@ -154,8 +158,8 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		return propertyDefinition;
 	}
 
-
-
+	@SuppressWarnings("deprecation")
+	@Override
 	public void update(PropertyDefinition propertyDefinition) throws DAOException
 	{
 		String sql = "UPDATE property_definition SET name=?, description=?, required=?, editable=?, " +
@@ -196,6 +200,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		insertPropertyDefinitionLevel(propertyDefinition.levels, propertyDefinition.id, true);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void insertValues(List<Value> values, Long id, boolean deleteBefore) {
 		//Add values list
 		if(deleteBefore){
@@ -211,6 +216,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 	}
 
 
+	@SuppressWarnings("deprecation")
 	private void insertPropertyDefinitionLevel(List<Level> levels, Long id, boolean deleteBefore)  throws DAOException {
 		if(deleteBefore){
 			removePropertyDefinitionLevel(id);
@@ -227,19 +233,21 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 	}
 
 
+	@SuppressWarnings("deprecation")
 	private void removePropertyDefinitionLevel(Long id) {
 		String sqlState = "DELETE FROM property_definition_level WHERE fk_property_definition_id=?";
 		jdbcTemplate.update(sqlState, id);
 	}
 
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void remove(PropertyDefinition propertyDefinition) throws DAOException {
 		//Delete value
 		String sqlState = "DELETE FROM value WHERE property_definition_id=?";
 		jdbcTemplate.update(sqlState, propertyDefinition.id);
 		//Delete levels
-		Logger.debug("Delete levels");
+		logger.debug("Delete levels");
 		removePropertyDefinitionLevel(propertyDefinition.id);
 		//Delete property_definition
 		super.remove(propertyDefinition);

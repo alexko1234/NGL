@@ -1,22 +1,26 @@
 package controllers;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+//import static fr.cea.ig.play.IGGlobals.form;
+
 import org.mongojack.DBQuery.Query;
 import models.laboratory.common.instance.TraceInformation;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import fr.cea.ig.DBObject;
+import fr.cea.ig.play.migration.NGLContext;
 
 public abstract class SubDocumentController<T extends DBObject, V> extends MongoCommonController<T> {
 
 	protected Class<V> subType;
-	protected final Form<V> subForm = form(subType);
+	protected final Form<V> subForm;// = form(subType);
 	
-	public SubDocumentController(String collectionName,
+	public SubDocumentController(NGLContext ctx, String collectionName,
 			Class<T> type, Class<V> subType) {
-		super(collectionName, type);
+		super(ctx,collectionName, type);
 		this.subType = subType;
+		this.subForm = ctx.form(subType);
 	}
 
 	protected TraceInformation getUpdateTraceInformation(TraceInformation ti) {

@@ -1,37 +1,37 @@
 package services.instance.protocol;
 
-import static services.instance.InstanceFactory.*;
+import static services.instance.InstanceFactory.newPSV;
+import static services.instance.InstanceFactory.newProtocol;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.mongojack.DBQuery;
 
-import com.typesafe.config.ConfigFactory;
-
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.protocol.instance.Protocol;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
-import play.Logger;
 import services.instance.InstanceFactory;
 import validation.ContextValidation;
 
 public class ProtocolServiceCNG {	
 
+	private static final play.Logger.ALogger logger = play.Logger.of(ProtocolServiceCNG.class);
+	
 	private final static String institute = "CNG";
+	
 	public static void main(ContextValidation ctx) {	
 
-		Logger.info("Start to create protocols collection for "+institute+"...");
-		Logger.info("Remove protocol");
+		logger.info("Start to create protocols collection for "+institute+"...");
+		logger.info("Remove protocol");
 		removeProtocols(ctx);
-		Logger.info("Save protocols ...");
+		logger.info("Save protocols ...");
 		saveProtocols(ctx);
-		Logger.info(institute+" Protocols collection creation is done!");
+		logger.info(institute+" Protocols collection creation is done!");
 	}
 	
 	private static void removeProtocols(ContextValidation ctx) {
@@ -39,7 +39,7 @@ public class ProtocolServiceCNG {
 	}
 
 	public static void saveProtocols(ContextValidation ctx){		
-		List<Protocol> lp = new ArrayList<Protocol>();
+		List<Protocol> lp = new ArrayList<>();
 		
 		//----------Experiences de transformation-------------------------------------
 		lp.add(newProtocol("PrepFC_CBot_ptr_sox139_1","PrepFC_CBot_ptr_sox139_1","","1","production", 
@@ -79,14 +79,18 @@ public class ProtocolServiceCNG {
 
 		// 12/12/2016 protocoles pour RNA
 		lp.add(newProtocol("2a-ill-ssmrna-010616","2A_ILL_ssmRNA_010616","?","1","production", 
-				InstanceFactory.setExperimentTypeCodes( "library-prep",
-							                            "pcr-and-purification")));
-			
+				InstanceFactory.setExperimentTypeCodes("library-prep",
+													   "pcr-and-purification")));
 		// 05/12/2016 library-prep
 		lp.add(newProtocol("2a-ill-sstotalrna-170816","2A_ILL_ssTotalRNA_170816","?","1","production", 
+				InstanceFactory.setExperimentTypeCodes("library-prep",
+													   "pcr-and-purification")));
+		
+		// 29/11/2017 NGL-1717 ajout "Truseq RNA v2"
+		lp.add(newProtocol("truseq-rna-v2","Truseq RNA v2","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes( "library-prep",
-													    "pcr-and-purification")));						
-
+							                            "pcr-and-purification")));	
+						
 		// 26/09/2016 ajout protocole "normalisation" dédié a l'experience lib-normalization"; 19/07/2017 ajout additional-normalization
 		lp.add(newProtocol("normalization","normalisation","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes("lib-normalization",
@@ -179,7 +183,21 @@ public class ProtocolServiceCNG {
 						                               "pcr-and-indexing",
 						                               "fluo-quantification",
 						                               "labchip-migration-profile")));  
-
+		
+		/* OOps trop tot... pas pour la 2.1.2 attendre
+		// 06/04/2018 ajout protocoles pour smallRNASeq
+		lp.add(newProtocol("nebnext-small-rna-library-prep","NEBNext Small RNA Library Prep","?","1","production", 
+				InstanceFactory.setExperimentTypeCodes("small-rnaseq-lib-prep")));
+		
+		lp.add(newProtocol("qiaseq-mirna-library-prep","QIAseq miRNA Library Prep","?","1","production", 
+				InstanceFactory.setExperimentTypeCodes("small-rnaseq-lib-prep")));
+		
+		// 09/04/2018 ajout protocoles pour BisSeq
+		lp.add(newProtocol("nugen-ovation-ultralow-methyl-seq-system-1-96","NUGEN Ovation Ultralow Methyl-Seq System 1-96","?","1","production", 
+				InstanceFactory.setExperimentTypeCodes("bisseq-lib-prep")));
+		
+		*/
+		
 		//------------Experiences de Control Qualité------------------------------
 		lp.add(newProtocol("7-sop-miseq","7_SOP_Miseq","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes("miseq-qc")));
@@ -206,7 +224,7 @@ public class ProtocolServiceCNG {
 		
 		for(Protocol protocole:lp){
 			InstanceHelpers.save(InstanceConstants.PROTOCOL_COLL_NAME, protocole,ctx);
-			Logger.debug("protocol '"+protocole.name + "' saved..." );
+			logger.debug("protocol '"+protocole.name + "' saved..." );
 		}
 	}
 	
@@ -216,15 +234,12 @@ public class ProtocolServiceCNG {
 	strandOrientation	?	?	reverse	reverse	forward	reverse
 	cDNAsynthesisType	?	?	?	?	?	?
 	 */
-		@SafeVarargs
-		private static Map<String, PropertyValue> concatMap(
-				Map<String, PropertyValue>...map) {
-			Map<String, PropertyValue> mapFinal = new HashMap<String, PropertyValue>(map.length);
-			for(int i = 0 ; i < map.length; i++){
-				mapFinal.putAll(map[i]);
-			}
-			return mapFinal;
-		}
-	
-	
+	@SafeVarargs
+	private static Map<String, PropertyValue> concatMap(Map<String, PropertyValue>... map) {
+		Map<String, PropertyValue> mapFinal = new HashMap<>(map.length); // <String, PropertyValue<?>>(map.length);
+		for (int i = 0 ; i < map.length; i++)
+			mapFinal.putAll(map[i]);
+		return mapFinal;
+	}
+		
 }

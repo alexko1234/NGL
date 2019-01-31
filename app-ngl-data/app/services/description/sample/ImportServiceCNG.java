@@ -1,6 +1,8 @@
 package services.description.sample;
 
-import static services.description.DescriptionFactory.*;
+import static services.description.DescriptionFactory.newImportType;
+import static services.description.DescriptionFactory.newPropertiesDefinition;
+import static services.description.DescriptionFactory.newValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,9 +10,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
-import models.laboratory.common.description.MeasureCategory;
-import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
 import models.laboratory.sample.description.ImportCategory;
@@ -21,86 +22,109 @@ import play.data.validation.ValidationError;
 import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
-import services.description.common.MeasureService;
 
 public class ImportServiceCNG extends AbstractImportService {
 
 
+	@Override
 	public  void saveImportCategories(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<ImportCategory> l = new ArrayList<ImportCategory>();
+		List<ImportCategory> l = new ArrayList<>();
 		l.add(saveImportCategory("Sample Import", "sample-import"));
 		DAOHelpers.saveModels(ImportCategory.class, l, errors);
 	}
 	
+	@Override
 	public void saveImportTypes(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<ImportType> l = new ArrayList<ImportType>();
-		l.add(newImportType("Defaut", "default-import", ImportCategory.find.findByCode("sample-import"), getSampleCNGPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
+		List<ImportType> l = new ArrayList<>();
+		List<Institute> CNG = getInstitutes(Constants.CODE.CNG); // 28/03/2018 
 		
-		l.add(newImportType("Import aliquots tubes", "tube-from-bank-reception", ImportCategory.find.findByCode("sample-import"), getBankReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
-		l.add(newImportType("Import aliquots plaques", "plate-from-bank-reception", ImportCategory.find.findByCode("sample-import"), getBankReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
+		//pour import automatique depuis la base Solexa
+		l.add(newImportType("Defaut", "default-import", ImportCategory.find.findByCode("sample-import"), getSampleCNGPropertyDefinitions(), CNG));
 		
+		//pour import depuis le fichier LIMS ModulBio
+		l.add(newImportType("Import aliquots tubes",   "tube-from-bank-reception",  ImportCategory.find.findByCode("sample-import"), getBankReceptionPropertyDefinitions(), CNG));
+		l.add(newImportType("Import aliquots plaques", "plate-from-bank-reception", ImportCategory.find.findByCode("sample-import"), getBankReceptionPropertyDefinitions(), CNG));
+		
+		//pour import de librairies de collaborateurs externes
 		// FDS 20/06/2017 NGL-1472
-		// A PREVOIR ??? l.add(newImportType("Import librairies non indexées",     "library-reception",     ImportCategory.find.findByCode("sample-import"), getLibraryReceptionPropertyDefinitions(false,false), getInstitutes(Constants.CODE.CNG)));
-		l.add(newImportType("Import librairies indexées (non poolées)", "library-idx-reception",ImportCategory.find.findByCode("sample-import"), getLibraryReceptionPropertyDefinitions(true,false), getInstitutes(Constants.CODE.CNG)));
-		// A PREVOIR !!! l.add(newImportType("Import librairies indexées (poolées)", "library-idx-pool-reception",ImportCategory.find.findByCode("sample-import"), getLibraryReceptionPropertyDefinitions(true,true), getInstitutes(Constants.CODE.CNG)));
+		l.add(newImportType("Import librairies indexées (non poolées)", "library-idx-reception",ImportCategory.find.findByCode("sample-import"), getLibraryReceptionPropertyDefinitions(true), CNG));
+		// FDS 22/11/2017 NGL-1703
+		l.add(newImportType("Import librairies indexées (poolées)", "library-idx-pool-reception",ImportCategory.find.findByCode("sample-import"), getLibraryReceptionPropertyDefinitions(true), CNG));
+		// FDS 05/03/2018 NGL-1907 
+		l.add(newImportType("Import librairies (poolées) SANS démultiplexage", "no-demultiplexing-lib-pool-reception",ImportCategory.find.findByCode("sample-import"), getLibraryNodemultiplexReceptionPropertyDefinitions(),CNG));
 		
 		// GA/FDS 14/06/2017 CONTOURNEMENT de la creation des libProcessTypecodes dans NGLBI ce qui pose des problemes dans le cas ISOPROD
 		// creer un ImportType bidon pour declarer la propriété libProcessTypecodes et sa liste de valeurs...
-		l.add(newImportType("Import bidon", "import-bidon", ImportCategory.find.findByCode("sample-import"), getLibProcessTypecodePropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
+		l.add(newImportType("Import bidon", "import-bidon", ImportCategory.find.findByCode("sample-import"), getLibProcessTypecodePropertyDefinitions(), CNG));
 		
 		DAOHelpers.saveModels(ImportType.class, l, errors);
 	}
 
 	private static List<PropertyDefinition> getBankReceptionPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Gender", "gender", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
-				Arrays.asList(newValue("0","unknown"),newValue("1","male"),newValue("2","female")), null,null,null,"single", 17, false, null,null));		
+				Arrays.asList(newValue("0","unknown"),newValue("1","male"),newValue("2","female")), null,null,null,"single", 17, false, null,null));	
+		
+		// FDS 14/03/2017 NGL-1776 ajout propriété bankIntegrityNumber venant du LIMS Modulbio . pas necessaire de mettre (Level.CODE.Container)=> voir GA...
+		propertyDefinitions.add(newPropertiesDefinition("Bank Integrity Number", "bankIntegrityNumber", LevelService.getLevels(Level.CODE.Content), Double.class, false, null, 
+				null, null, null, null,"single", 18, false, null,null));	
+	
+		// FDS 14/03/2017 NGL-1903 prise en compte du la colonne "Organisme" du fichier importé (copie depuis getLibraryReceptionPropertyDefinitions...)
+		propertyDefinitions.add(newPropertiesDefinition("Nom organisme / collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				null, null,null,null,"single", 19, false, null,null));
+		
 		return propertyDefinitions;
 	}
 	
-	
 	private static List<PropertyDefinition> getSampleCNGPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", LevelService.getLevels(Level.CODE.Sample),Integer.class, true, "single"));
 		return propertyDefinitions;
 	}
 	
 	// FDS 20/06/2017 NGL-1472
-	private List<PropertyDefinition> getLibraryReceptionPropertyDefinitions ( boolean isIndexed, boolean isPooled) {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+	private static List<PropertyDefinition> getLibraryReceptionPropertyDefinitions (boolean isIndexed) throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		
-		// propriétés communes 
+		// propriétés communes Librairies
 		propertyDefinitions.add(newPropertiesDefinition("Gender", "gender", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
-				Arrays.asList(newValue("0","unknown"),newValue("1","male"),newValue("2","female")), null,null,null,"single", 17, false, null,null));
+				Arrays.asList(newValue("0","unknown"),newValue("1","male"),newValue("2","female")), null,null,null,"single", 1, false, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, false, null, 
-				null, "single", 1, false, null, null));	
-		// essai ajout getExtLibProcessTypecodes
-		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Content), String.class, true, null, getExtLibProcessTypecodesValues(), 
-				null,null,null,"single", 5, false, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Nom scientifique collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
-				null, null,null,null,"single", 17, false, null,null));		
+				null, "single", 2, false, null, null));	
+		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
+				getExtLibProcessTypecodesValues(), null, null, null,"single", 3, false, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Nom organisme / collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				null, null,null,null,"single", 4, false, null,null));		
 			
-		// librairies indexees
+		// propriétés pour librairies indexees
 		if (isIndexed) {
-		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
-				null, null,null,null,"single", 3, false, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
-				getTagCategories(), null,null,null,"single", 4, false, null,null));	
-		
-			/* librairies poolées....plus tard ???
-			if (isPooled) {
-	           // propiété "% au sein du pool" a définir 
-			}
-			 */
+			propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
+					null, null,null,null,"single", 5, false, null,null));
+			propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
+					getTagCategories(), null,null,null,"single", 6, false, null,null));	
 		}
-		// pas de else: normalement les librairies non indexees et poolees n'existent pas...
 		
 		return propertyDefinitions;
 	}
 	
+	//FDS 05/03/2018 NGL-1907 cas du projet PALEO: librairie indexees et poolees mais on l'Equipe Joe ne doit pas faire le demultiplexage.
+	private static List<PropertyDefinition> getLibraryNodemultiplexReceptionPropertyDefinitions() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
+		
+		// propriétés communes Librairies (sauf index)
+		propertyDefinitions.addAll(getLibraryReceptionPropertyDefinitions(false));
+		
+		// 2eme spec 1 seule propriété dans laquelle seront concatenees les valeurs...   
+		propertyDefinitions.add(newPropertiesDefinition("Séquence index attendus", "expectedSequences", LevelService.getLevels(Level.CODE.Content), String.class, true, null, null, 
+				null,null,null,"single", 10, false, null, null));
+		
+		return propertyDefinitions;
+	}
+	
+	
 	// FDS 20/06/2017 ajouté pour NGL-1472
 	private static List<Value> getTagCategories(){
-		List<Value> values = new ArrayList<Value>();
+		List<Value> values = new ArrayList<>();
 		values.add(DescriptionFactory.newValue("SINGLE-INDEX", "SINGLE-INDEX"));
 		values.add(DescriptionFactory.newValue("DUAL-INDEX", "DUAL-INDEX"));
 		values.add(DescriptionFactory.newValue("MID", "MID"));
@@ -110,18 +134,18 @@ public class ImportServiceCNG extends AbstractImportService {
 	
 	// GA/FDS 14/06/2017 (reprise dans RunServiceCNG.java )
 	private static List<PropertyDefinition> getLibProcessTypecodePropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Type processus banque","libProcessTypeCode",LevelService.getLevels(Level.CODE.Content), String.class, false, getLibProcessTypeCodeValues(), "single"));
 	
 		return propertyDefinitions;
 	}
 	
+	// import automatique depuis Ancien LIMS
 	private static List<Value> getLibProcessTypeCodeValues(){
-        List<Value> values = new ArrayList<Value>();
+        List<Value> values = new ArrayList<>();
         
          // codes for Captures
          // ajout (DefCapxxx) tant que NGL-1569 pas resolu (stocker le path des fichier definition capture)
-   
          values.add(DescriptionFactory.newValue("CA","CA - DefCap008_Rg"));
          values.add(DescriptionFactory.newValue("CB","CB - DefCap005_Ex"));
          values.add(DescriptionFactory.newValue("CC","CC - DefCap006_Ex"));
@@ -150,15 +174,19 @@ public class ImportServiceCNG extends AbstractImportService {
          values.add(DescriptionFactory.newValue("CAA","CAA - Agilent : V6+UTR (DefCap023)")); // !! aussi dans ProcessServiceCNG / getCaptureLibProcessTypeCodeValues
          values.add(DescriptionFactory.newValue("CAB","CAB - DefCap024"));
          values.add(DescriptionFactory.newValue("CAC","CAC - Agilent : V6+Cosmic (DefCap025)")); // !! aussi dans ProcessServiceCNG / getCaptureLibProcessTypeCodeValues
-         values.add(DescriptionFactory.newValue("CAD","CAD - Nimblegen : MedExome (DefCap026)"));
-         values.add(DescriptionFactory.newValue("CAE","CAE - Nimblegen : MedExome+Mitome (DefCap027)"));
+         values.add(DescriptionFactory.newValue("CAD","CAD - Roche-Nimblegen : MedExome (DefCap026)"));// !! aussi dans ProcessServiceCNG / getCaptureLibProcessTypeCodeValues
+         values.add(DescriptionFactory.newValue("CAE","CAE - Roche-Nimblegen : MedExome+Mitome (DefCap027)"));
          values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028)")); // NGL-1584 ajout
+         values.add(DescriptionFactory.newValue("CAG","CAG - SureSelectXTcustom(PRME) (DefCap029)"));  // NGL-2040 ajout
+         
          // codes for DNA sequencing
          values.add(DescriptionFactory.newValue("DA","DA - DNASeq"));
          values.add(DescriptionFactory.newValue("DB","DB - MatePairSeq"));
          values.add(DescriptionFactory.newValue("DC","DC - Dnase-ISeq"));
          values.add(DescriptionFactory.newValue("DD","DD - PCR-NANO DNASeq")); // !! aussi dans ProcessServiceCNG / getX5WgNanoLibProcessTypeCodeValues()
          values.add(DescriptionFactory.newValue("DE","DE - Chromium WG"));     // !! aussi dans ProcessServiceCNG / getWgChromiumLibProcessTypeCodeValues()
+         values.add(DescriptionFactory.newValue("DF","DF - Ancient DNASeq"));  // ajout 22/11/2017 NGL-1712
+         values.add(DescriptionFactory.newValue("DG","DG - cfDNASeq"));  // NGL-1981 ajout
          
          // codes for various sequencing
          values.add(DescriptionFactory.newValue("FA","FA - MeDipSeq"));
@@ -170,6 +198,8 @@ public class ImportServiceCNG extends AbstractImportService {
          values.add(DescriptionFactory.newValue("FG","FG - GROSeq"));
          values.add(DescriptionFactory.newValue("FH","FH - oxBisSeq"));
          values.add(DescriptionFactory.newValue("FI","FI - ATACSeq"));
+         values.add(DescriptionFactory.newValue("FJ","FJ - RRBSeq")); // SUPSQCNG-497: ajout 06/11/2017 car manquant
+         values.add(DescriptionFactory.newValue("FK","FK - QMPSeq ")); // NGL-2039 ajout
          values.add(DescriptionFactory.newValue("HIC","HIC - HiC"));
          
          // codes for RNA sequencing
@@ -187,9 +217,9 @@ public class ImportServiceCNG extends AbstractImportService {
         return values;
     } 
 	
-	
+	// import depuis fichiers
 	private static List<Value> getExtLibProcessTypecodesValues(){
-        List<Value> values = new ArrayList<Value>();
+        List<Value> values = new ArrayList<>();
         
         // 04/07/2017 restreindre la possibilite d'erreur: autoriser uniquement librariries externes RNA
         values.add(DescriptionFactory.newValue("RA","RA - RNASeq"));
@@ -207,9 +237,12 @@ public class ImportServiceCNG extends AbstractImportService {
         values.add(DescriptionFactory.newValue("DC","DC - Dnase-ISeq"));
         values.add(DescriptionFactory.newValue("DD","DD - PCR-NANO DNASeq"));
         values.add(DescriptionFactory.newValue("DE","DE - Chromium WG"));      
+        values.add(DescriptionFactory.newValue("DF","DF - Ancient DNASeq"));  // ajout 22/11/2017 NGL-1712
+        values.add(DescriptionFactory.newValue("DG","DG - cfDNASeq"));  // NGL-1981 ajout
         
         // 04/10/2017 ajout des codes pour import Capture
-        values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028")); // NGL-1584 ajout
+        values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028)"));// NGL-1584 ajout
+        values.add(DescriptionFactory.newValue("CAD","CAD - Roche-NimbleGen : MedExome (DefCap026)"));// ajout 28/02/2018
 
         return values;
 	}

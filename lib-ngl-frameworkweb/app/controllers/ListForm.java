@@ -12,6 +12,6 @@ public class ListForm extends DatatableForm {
 
 	public boolean reporting = Boolean.FALSE;
 	public String reportingQuery;
-	
-	
+	public boolean aggregate = Boolean.FALSE;
+
 }

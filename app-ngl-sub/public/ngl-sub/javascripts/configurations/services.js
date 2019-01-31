@@ -8,6 +8,7 @@
 		var initListService = function(){
 			if(!isInit){
 				createService.lists.refresh.projects();
+				
 				$http.get(jsRoutes.controllers.sra.api.Variables.list().url, {params:{type:'strategySample'}})
 				.success(function(data) {
 					// initialisation de la variable createService.sraVariables.strategySample utilisée dans create.scala.html
@@ -178,7 +179,7 @@ var getColumns = function(){
 		if(!isInit){
 			consultationService.lists.refresh.projects();
 			//lists.refresh.states({objectTypeCode:"SRASubmission"});
-			
+			/*
 			$http.get(jsRoutes.controllers.sra.api.Variables.get('strategySample').url)
 				.success(function(data) {
 					// initialisation de la variable sraVariables.strategySample utilisée dans consultation.scala.html
@@ -201,7 +202,7 @@ var getColumns = function(){
 			.success(function(data) {
 				consultationService.sraVariables.librarySource = data;																					
 			});
-			
+			*/
 			isInit=true;
 		}
 	};
