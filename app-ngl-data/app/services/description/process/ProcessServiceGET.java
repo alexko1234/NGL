@@ -71,8 +71,8 @@ public class ProcessServiceGET extends AbstractProcessService {
 				null,
 				Arrays.asList(
 						getPET("ext-to-rtl",-1),
-						getPET("dil-lib",0)),
-				getExperimentTypes("dil-lib").get(0), 		//first experiment type
+						getPET("dilution",0)),
+				getExperimentTypes("dilution").get(0), 		//first experiment type
 				getExperimentTypes("ext-to-rtl").get(0),  	//last  experiment type
 				getExperimentTypes("ext-to-rtl").get(0), 	//void  experiment type
 			

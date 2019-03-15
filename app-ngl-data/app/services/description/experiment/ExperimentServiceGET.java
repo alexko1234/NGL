@@ -217,9 +217,9 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 			
 			// 04/10/2017 NGL-1589: plaque->plaque, tubes->plaque, plaque-> tube, tube->tube => utiliser robot
 			
-			l.add(newExperimentType("Dilution","dil-lib",null,1000,
+			l.add(newExperimentType("Dilution","dilution",null,1000,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
-					null,
+					getPropertyDefinitionDilution(),
 					getInstrumentUsedTypes("hand"),   
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.GET)));
@@ -230,7 +230,7 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 					"ManyToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 			
-//			l.add(newExperimentType("Dénaturation-dilution","denat-dil-lib",null,1000,
+//			l.add(newExperimentType("Dénaturation-dilution","denat-dilution",null,1000,
 //					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 //					getPropertyDefinitionsDenatDilLibCNG(),
 //					getInstrumentUsedTypes("hand","epmotion"),   // 16/10/2017  remplacer janus par EpMotion
@@ -305,7 +305,7 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 		
 //		newExperimentTypeNode("qpcr-quantification",getExperimentTypes("qpcr-quantification").get(0),
 //				false,false,false,
-//				getExperimentTypeNodes("ext-to-rtl","pool-tube","qpcr-quantification","dil-lib"), // previous nodes
+//				getExperimentTypeNodes("ext-to-rtl","pool-tube","qpcr-quantification","dilution"), // previous nodes
 //				null,	// pas de purif
 //				null,	//qc
 //				null	// transfert
@@ -313,14 +313,14 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 //		
 //		newExperimentTypeNode("pool-tube",getExperimentTypes("pool-tube").get(0),
 //				false,false,false,
-//				getExperimentTypeNodes("ext-to-rtl","pool-tube","qpcr-quantification","dil-lib"), // previous nodes
+//				getExperimentTypeNodes("ext-to-rtl","pool-tube","qpcr-quantification","dilution"), // previous nodes
 //				null,	// pas de purif
 //				null,	//qc
 //				null	// transfert
 //				).save();		
 		
 		
-		newExperimentTypeNode("dil-lib",getExperimentTypes("dil-lib").get(0),
+		newExperimentTypeNode("dilution",getExperimentTypes("dilution").get(0),
 				false,false,false,
 				getExperimentTypeNodes("ext-to-rtl"), // previous nodes
 				null, 										// pas de purif
@@ -868,32 +868,41 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 		propertyDefinitions.add(newPropertiesDefinition("Label de travail", "workName", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, false, null, null, 
 				"single", 30, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Nom pool", "Nom_pool_sequencage", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, false, null, null, 
-				"single", 30, true, null,null));
-		
-		
+				"single", 31, true, null,null));
+			
+			
 		return propertyDefinitions;
 	}	
 	
-	private static List<PropertyDefinition> getPropertyDefinitionNormalisation() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
-		//InputContainer
-		propertyDefinitions.add(newPropertiesDefinition("Label de travail", "workName", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, false, null, null, 
-				"single", 100, true, null,null));
-		
-		propertyDefinitions.add(newPropertiesDefinition("Conc. max theorique", "maximumConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),null,null,"single", 18, false, null,null));
-		
-		propertyDefinitions.add(newPropertiesDefinition("Mode calcul", "computeMode", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null, 
-				Arrays.asList(newValue("fixeCfVi", "Volume à engager fixe"), newValue("fixeCfVf", "Volume final fixe")), "single", 19, true, null,null));
-		
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 20, true, null,null));
-		
-		propertyDefinitions.add(newPropertiesDefinition("Volume tampon", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 21, false, null,null));
-		
+	private static List<PropertyDefinition>getPropertyDefinitionDilution(){
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+			propertyDefinitions.add(newPropertiesDefinition("Dilution", "dilution", 
+					LevelService.getLevels(Level.CODE.ContainerOut), 
+					String.class, false, null, null, 
+					"single", 20, true, null,null));
 		return propertyDefinitions;
 	}
+	
+//	private static List<PropertyDefinition> getPropertyDefinitionNormalisation() throws DAOException {
+//		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
+//		//InputContainer
+//		propertyDefinitions.add(newPropertiesDefinition("Label de travail", "workName", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, false, null, null, 
+//				"single", 100, true, null,null));
+//		
+//		propertyDefinitions.add(newPropertiesDefinition("Conc. max theorique", "maximumConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+//				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),null,null,"single", 18, false, null,null));
+//		
+//		propertyDefinitions.add(newPropertiesDefinition("Mode calcul", "computeMode", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null, 
+//				Arrays.asList(newValue("fixeCfVi", "Volume à engager fixe"), newValue("fixeCfVf", "Volume final fixe")), "single", 19, true, null,null));
+//		
+//		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
+//				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 20, true, null,null));
+//		
+//		propertyDefinitions.add(newPropertiesDefinition("Volume tampon", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
+//				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 21, false, null,null));
+//		
+//		return propertyDefinitions;
+//	}
 	
 //	private List<PropertyDefinition> getPropertyDefinitionsExternalQC() {
 //		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();

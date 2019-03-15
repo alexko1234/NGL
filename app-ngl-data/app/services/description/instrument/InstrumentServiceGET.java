@@ -70,8 +70,8 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 				getInstruments(
 						createInstrument("hand", "Main", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.GET))
 				),
-				getContainerSupportCategories(new String[]{"tube","96-well-plate","384-well-plate"}),
-				getContainerSupportCategories(new String[]{"tube","96-well-plate","384-well-plate"}), 
+				getContainerSupportCategories(new String[]{"tube","96-well-plate"}),
+				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
 		
@@ -80,7 +80,7 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 		l.add(newInstrumentUsedType("cBot", "cBot", InstrumentCategory.find.findByCode("cbot"), getCBotProperties(), 
 				getInstruments(
 						createInstrument("cBot1", "cBot-1", null, true, "/save/devcrgs/src/NGL_Feuille_route/cBot-1", DescriptionFactory.getInstitutes(Constants.CODE.GET))),
-				getContainerSupportCategories(new String[]{"tube","96-well-plate","384-well-plate"}), getContainerSupportCategories(new String[]{"flowcell-8"}), 
+				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), getContainerSupportCategories(new String[]{"flowcell-8"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
 		

@@ -43,7 +43,7 @@ public class ProtocolServiceGET {
 		
 		lp.add(newProtocol("FAA_MO_MiSeq_240316.pdf","FAA_MO_MiSeq_240316.pdf","path5","1","production", InstanceFactory.setExperimentTypeCodes("prepa-flowcell","illumina-depot")));
 
-		lp.add(newProtocol("null","-","path1","1","production", InstanceFactory.setExperimentTypeCodes("dil-lib")));
+		lp.add(newProtocol("null","-","path1","1","production", InstanceFactory.setExperimentTypeCodes("dilution")));
 		
 //		lp.add(newProtocol("RPG_MO_Hiseq2000 et HiSeq2500_050416.pdf","RPG_MO_Hiseq2000 et HiSeq2500_050416.pdf","path7","1","production", InstanceFactory.setExperimentTypeCodes("prepa-flowcell", "illumina-depot")));
 		
