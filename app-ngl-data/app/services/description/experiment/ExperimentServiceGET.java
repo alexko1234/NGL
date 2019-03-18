@@ -302,22 +302,7 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 		
 		
 		// FDS 06/06/2017: NGL-1447 => le noeud doit etre declaré pour les process commencant par un qc
-		
-//		newExperimentTypeNode("qpcr-quantification",getExperimentTypes("qpcr-quantification").get(0),
-//				false,false,false,
-//				getExperimentTypeNodes("ext-to-rtl","pool-tube","qpcr-quantification","dilution"), // previous nodes
-//				null,	// pas de purif
-//				null,	//qc
-//				null	// transfert
-//				).save();
-//		
-//		newExperimentTypeNode("pool-tube",getExperimentTypes("pool-tube").get(0),
-//				false,false,false,
-//				getExperimentTypeNodes("ext-to-rtl","pool-tube","qpcr-quantification","dilution"), // previous nodes
-//				null,	// pas de purif
-//				null,	//qc
-//				null	// transfert
-//				).save();		
+			
 		
 		
 		newExperimentTypeNode("dilution",getExperimentTypes("dilution").get(0),
@@ -328,6 +313,13 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 				getExperimentTypes("pool-tube") 			// transfert
 				).save();
 		
+		newExperimentTypeNode("pool-tube",getExperimentTypes("pool-tube").get(0),
+				false,false,false,
+				getExperimentTypeNodes("dilution"), // previous nodes
+				null,	// pas de purif
+				getExperimentTypes("qpcr-quantification"),	//qc
+				getExperimentTypes("pool-tube") 			// transfert
+				).save();	
 		
 //		//newExperimentTypeNode("ext-to-opgen-depot", getExperimentTypes("ext-to-opgen-depot").get(0), false, false, null, null, null).save();
 		
@@ -862,15 +854,22 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 	private static List<PropertyDefinition> getPropertyDefinitionPoolTube() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		//InputContainer
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",8, false));
-		
-		propertyDefinitions.add(newPropertiesDefinition("Label de travail", "workName", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, false, null, null, 
-				"single", 30, true, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Nom pool", "Nom_pool_sequencage", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, false, null, null, 
-				"single", 31, true, null,null));
-			
-			
+//		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",8, false));
+//		
+//		propertyDefinitions.add(newPropertiesDefinition("Label de travail", "workName", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, false, null, null, 
+//				"single", 30, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Qté finale dans pool", "qte_finale_lib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "fmol"),MeasureUnit.find.findByCode( "fmol"),"single",21, true,"20","2"));
+		propertyDefinitions.add(newPropertiesDefinition("Vol. lib pour pool", "vol_finale_lib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µl"),MeasureUnit.find.findByCode( "µl"),"single",22, false,null,"2"));
+		propertyDefinitions.add(newPropertiesDefinition("Nom pool", "Nom_pool_sequencage", LevelService.getLevels(Level.CODE.ContainerOut, Level.CODE.Content), String.class, false, null, null, 
+				"single", 23, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Run name", "Run_Name",LevelService.getLevels(Level.CODE.ContainerOut, Level.CODE.Content), String.class, false,null,null, 
+				null, null, "single", 24,true,null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Vol. pool", "vol_finale_pool", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null,null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µl"),MeasureUnit.find.findByCode( "µl"),"single",25, true,null,"2"));
+						
 		return propertyDefinitions;
 	}	
 	
