@@ -118,6 +118,7 @@ containers.table.projectCodes = Projet(s)
 containers.table.projectCode = Projet
 containers.table.sampleCodes = Echantillon(s)
 containers.table.sampleCode = Echantillon
+containers.table.sampleName = Nom Echantillon
 containers.table.nomPool = Nom pool sequencage
 containers.table.sampleCodes.length = Nb d''échantillons
 containers.table.fromTransformationTypeCodes = Issu du type d''expérience

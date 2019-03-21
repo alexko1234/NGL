@@ -1,0 +1,27 @@
+//created on: Mar 15, 2019
+package rules
+
+rule "set Type de run"
+    @nglSQ( calculations )
+	dialect "java"
+	salience 200
+	no-loop
+	when
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="nanopore-depot", $stateCode : state.code, $stateCode=="IP", $experimentProp: experimentProperties);
+    	$atomicTransfert: ManyToOneContainer(inputContainerUseds!=null, $inputContainerUseds:inputContainerUseds);
+    	
+    then
+   		PropertySingleValue value;
+   		
+   		if($inputContainerUseds.size() > 1){
+   			value = new PropertySingleValue("MTPLX");
+	   	} else {
+   			value = new PropertySingleValue("SPLX");
+	   	}
+	   	
+	   	if($experimentProp.get("runType") != null){
+	   		$experimentProp.remove("runType");
+	   	}
+	   	$experimentProp.put("runType",value);
+	   	
+    end

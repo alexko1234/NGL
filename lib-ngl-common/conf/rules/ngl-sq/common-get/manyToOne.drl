@@ -124,6 +124,7 @@ rule "For Tag vide same sample"
 	salience 400
 	no-loop
     when
+    	$experiment:Experiment($typeCode:typeCode,$typeCode!="nanopore-depot");
     	   $contentInfo1 : ContentInfo($tag :tag, $tag=="VIDE",$sampleCode :sampleCode,$position:position,$containerCode1:containerCode)
            $contentInfo2 : ContentInfo(this != $contentInfo1, tag == $tag, position==$position, sampleCode!=$sampleCode,$containerCode2:containerCode)
            $contextValidation:ContextValidation()

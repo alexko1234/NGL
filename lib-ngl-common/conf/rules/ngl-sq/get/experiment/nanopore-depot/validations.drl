@@ -1,0 +1,143 @@
+//created on: Feb 12, 2019
+package rules
+
+rule "barcode non null si multiplex"
+    @nglSQ( validations )
+	dialect "java"
+	salience 1000
+	no-loop
+    when
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="nanopore-depot", $stateCode : state.code, $stateCode=="IP", $experimentProp: experimentProperties)
+		$atomicTransfert: ManyToOneContainer(inputContainerUseds!=null, $inputContainerUseds:inputContainerUseds,$inputContainerUseds.size() > 1)
+		InputContainerUsed( $experimentProperties : experimentProperties) from $inputContainerUseds
+		$contextValidation:ContextValidation()
+		eval($experimentProperties == null)
+		//eval($experimentProp.get("kit") == null)
+		
+    then
+    	if($experimentProperties == null){
+	    	$contextValidation.addErrors("Container","error.validationexp.nanoporedepot.containerin","");
+	    }
+	    /*if($experimentProp.get("kit") == null){
+	    	$contextValidation.addErrors("Experiment","error.validationexp.nanoporedepot.experiment","");
+	    }*/
+    
+	end
+
+rule "emplacement FC non null"
+    @nglSQ( validations )
+	dialect "java"
+	salience 2000
+	no-loop
+    when
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="nanopore-depot", $stateCode : state.code, $stateCode=="IP", $instrumentProperties: instrumentProperties, $instrumentProperties != null)
+		$contextValidation:ContextValidation()
+		eval($instrumentProperties.get("empl_FC") == null)
+		
+	then
+	    $contextValidation.addErrors("Instrument","error.validationexp.nanoporedepot.instrument","");
+    
+	end
+
+rule "containerOut properties non null"
+    @nglSQ( validations )
+	dialect "java"
+	salience 2000
+	no-loop
+    when
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="nanopore-depot", $stateCode : state.code, $stateCode=="IP")
+		$atomicTransfert: ManyToOneContainer()
+		OutputContainerUsed( $experimentPropertiesOut : experimentProperties, $experimentPropertiesOut == null) from $atomicTransfert.outputContainerUseds
+		$contextValidation:ContextValidation()
+		
+	then
+	    $contextValidation.addErrors("Container","error.validationexp.nanoporedepot.containerout","");
+    
+	end
+
+rule "tous les containerOut properties non null"
+    @nglSQ( validations )
+	dialect "java"
+	salience 2000
+	no-loop
+    when
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="nanopore-depot", $stateCode : state.code, $stateCode=="IP")
+		$atomicTransfert: ManyToOneContainer()
+		OutputContainerUsed( $experimentPropertiesOut : experimentProperties, $experimentPropertiesOut != null) from $atomicTransfert.outputContainerUseds
+		$contextValidation:ContextValidation()
+		eval($experimentPropertiesOut.get("ADN_volume") == null || $experimentPropertiesOut.get("quant_ADN_charge") == null || $experimentPropertiesOut.get("nb_pores_QC") == null || $experimentPropertiesOut.get("nb_pores_QC_G1") == null || $experimentPropertiesOut.get("nb_pores_QC_G2") == null || $experimentPropertiesOut.get("nb_pores_QC_G3") == null || $experimentPropertiesOut.get("nb_pores_QC_G4") == null || $experimentPropertiesOut.get("nb_pores_depot") == null || $experimentPropertiesOut.get("pores_G1") == null || $experimentPropertiesOut.get("pores_G2") == null || $experimentPropertiesOut.get("pores_G3") == null || $experimentPropertiesOut.get("pores_G4") == null)
+		
+	then
+		$contextValidation.addErrors("Container","error.validationexp.nanoporedepot.containerout","");
+    	
+	end
+
+rule "tag unique et non null si MTPLX"
+    @nglSQ( validations )
+	dialect "java"
+	salience 200
+	no-loop
+    when
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="nanopore-depot", $stateCode : state.code, $stateCode=="N");
+		$atomicTransfert: ManyToOneContainer(inputContainerUseds!=null, $inputContainerUseds:inputContainerUseds);
+		$contextValidation:ContextValidation()
+		
+	 then
+		Integer size = $inputContainerUseds.size();
+		InputContainerUsed container;
+		String tag;
+		String sequence;
+		Map<String, String> tagMap = new HashMap<String, String>();
+		
+		if(size > 1){
+			for(int n = 0; n<size; n++){
+				container = (InputContainerUsed) $inputContainerUseds.get(n);
+				if(container.experimentProperties.get("tag") != null) {
+					tag = (String) container.experimentProperties.get("tag").value;
+					if(tagMap.containsKey(tag)){
+						$contextValidation.addErrors("Container","error.validationexp.nanoporedepot.containerin.tag", tag, container.code, tagMap.get(tag));
+					}else{
+						tagMap.put(tag, container.code);
+					}
+					//Index index=MongoDBDAO.findOne(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.is("code", tag));
+					/* if(index != null){
+						sequence = index.sequence;
+						if(tagMap.containsKey(sequence)){
+							$contextValidation.addErrors("Container","error.validationexp.nanoporedepot.containerin.tag", sequence, container.code, tagMap.get(sequence));
+						}else{
+							tagMap.put(sequence, container.code);
+						}
+					else{
+						$contextValidation.addErrors("Container","error.validationexp.nanoporedepot.containerin.tagnotexist", container.code);
+					} */
+				} else {
+					$contextValidation.addErrors("Container","error.validationexp.nanoporedepot.containerin.tagnull", container.code);
+				}
+			}
+		}
+    end
+
+/*rule "move tag from inputContainerUsed to inputContainerUsed"
+    @nglSQ( calculations )
+	dialect "java"
+	salience 200
+	no-loop
+    when
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="nanopore-depot");
+		$atomicTransfert: ManyToOneContainer(inputContainerUseds!=null, $inputContainerUseds:inputContainerUseds);
+		InputContainerUsed( $experimentProperties : experimentProperties, $experimentProperties!=null, $experimentProperties.get("tag") != null, $contents : contents, $contents!=null) from $inputContainerUseds;
+		$tag : PropertyValue() from $experimentProperties.get("tag")
+		$content : Content($properties:properties) from $contents;
+		
+	 then
+        Logger.debug("rule set tag : " + $tag.value);
+   		PropertySingleValue value = new PropertySingleValue($tag.value);
+   		
+   		if($properties.get("tag") != null){
+	   		$properties.remove("tag");
+	   	}
+	   	$properties.put("tag",value);
+	   	
+	   	Logger.debug("rule set tag END : " + $properties.get("tag"));
+   		update($experiment);
+    end*/

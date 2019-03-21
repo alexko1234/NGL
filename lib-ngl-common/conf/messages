@@ -226,6 +226,13 @@ error.validationexp.runName = "{0} dans {1} n''a pas de Run_Name"
 error.validationexp.referencegenome = "{0} dans {1} pour l''analyse Bisulfite n''a pas de genome de reference"
 error.validationexp.typesequensage = "Le {0}, indiqué comme type de sequencage pour {1} n''est pas compatible à ce type d''experience"
 
+error.validationexp.nanoporedepot.containerin.tagnull = "Le tag du container {0} ne peut pas être null dans une expérience multiplexe"
+error.validationexp.nanoporedepot.containerin.tagnotexist = "Le tag du container {0} n'est pas retrouvé dans la base de données"
+error.validationexp.nanoporedepot.containerin.tag = "Le tag {0} du container {1} est la même que celui du container {2}"
+error.validationexp.nanoporedepot.containerout = "Tous les champs compris dans ''Container(s) en sortie(s)'' doivent etre remplis"
+error.validationexp.nanoporedepot.experiment = "Le champs ''Kit'' doit etre complete si le run est multiplex"
+error.validationexp.nanoporedepot.instrument = "Le champs ''Emplacement FC'' doit etre complete"
+
 error.receptionfile.taxonCode.diff = "Le code taxon est différent du sample parent {0} <> {1}"
 error.receptionfile.referenceCollab.diff = "La réf. collaborateur est différente du sample parent {0} <> {1}"
 
@@ -293,6 +300,8 @@ error.rawData.activate.CNS.archive = Le fichier {0} n''existe pas sur les disque
 error.rawData.activate.CNS.notArchive = Le fichier {0} n''existe pas sur les disques et Projet {1} avec archive=false et localisation du readset {2} au CNS
 error.rawData.activate.location=localisation inconnue {0} pour le fichier {1}
 error.rawData.activate.md5=valeur de md5=null alors que donnée deja zippée pour {0}
+
+
 
 
 #>>>>>>> V2.0.2
