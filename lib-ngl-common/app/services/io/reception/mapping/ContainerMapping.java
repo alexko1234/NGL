@@ -109,7 +109,8 @@ public class ContainerMapping extends Mapping<Container> {
 					container.support.line = container.support.line.toUpperCase();
 					container.support.column = container.support.column.toUpperCase();
 					
-					code=container.support.code+"_"+container.support.line+container.support.column;
+					//code=container.support.code+"_"+container.support.line+container.support.column;
+					code=container.support.code+":"+container.support.line+container.support.column;
 				}
 			}
 		}
