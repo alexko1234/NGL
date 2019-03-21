@@ -1,35 +1,44 @@
 angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filter','atmToDragNDrop2','mainService',
                                                                function($scope, $parse, $filter, atmToDragNDrop,mainService) {
-	
+	console.log("in GETXToTubesCtrl");
 	// NGL-1055: name explicite pour fichier CSV exporté
 	// NGL-1055: mettre getArray et codes:'' dans filter et pas dans render
 	var datatableConfig = {		
 			name: $scope.experiment.typeCode.toUpperCase(),
-			columns:[   					
-					
+			columns:[
 			         {
-			        	 "header":Messages("containers.table.supportCategoryCode"),
-			        	 "property":"inputContainer.support.categoryCode",
-			        	 "filter":"codes:'container_support_cat'",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":2,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },	
-			         {
-			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
-			        	 "property":"inputContainer.fromTransformationTypeCodes",
-			        	 "filter":"unique | codes:'type'",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			 			 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "position":3,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			 			"header" : Messages("containers.table.supportCode"),
+			 			"property" : "inputContainer.support.code",
+			 			"order" : true,
+			 			"edit" : false,
+			 			"hide" : true,
+			 			"type" : "text",
+			 			"position" : 1,
+			 			"extraHeaders" : {0 : Messages("experiments.inputs")}
 			         },
+//			         {
+//			        	 "header":Messages("containers.table.supportCategoryCode"),
+//			        	 "property":"inputContainer.support.categoryCode",
+//			        	 "filter":"codes:'container_support_cat'",
+//			        	 "order":true,
+//						 "edit":false,
+//						 "hide":true,
+//			        	 "type":"text",
+//			        	 "position":2,
+//			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+//			         },	
+//			         {
+//			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
+//			        	 "property":"inputContainer.fromTransformationTypeCodes",
+//			        	 "filter":"unique | codes:'type'",
+//			        	 "order":true,
+//						 "edit":false,
+//						 "hide":true,
+//			        	 "type":"text",
+//			 			 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+//			        	 "position":3,
+//			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+//			         },
 			         {
 			        	"header":Messages("containers.table.projectCodes"),
 			 			"property": "inputContainer.projectCodes",
@@ -40,27 +49,39 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			            "extraHeaders":{0:Messages("experiments.inputs")}
 				     },
+//				     {
+//			        	"header":Messages("containers.table.sampleCodes"),
+//			 			"property": "inputContainer.sampleCodes",
+//			 			"order":true,
+//			 			"hide":true,
+//			 			"type":"text",
+//			 			"position":5,
+//			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+//			        	"extraHeaders":{0:Messages("experiments.inputs")}
+//				     },                                          
 				     {
-			        	"header":Messages("containers.table.sampleCodes"),
-			 			"property": "inputContainer.sampleCodes",
-			 			"order":true,
-			 			"hide":true,
-			 			"type":"text",
-			 			"position":5,
-			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	"extraHeaders":{0:Messages("experiments.inputs")}
+				    	 "header":Messages("property_definition.Nom_echantillon_collaborateur"),
+				    	 "property": "inputContainer.contents",
+				    	 "filter": "getArray:'referenceCollab'| unique",
+//                   	"filter": "getArray:'properties.Nom_echantillon_collaborateur.value'| unique",
+				    	 "order":true,
+				    	 "hide":true,
+				    	 "type":"text",
+				    	 "position":5,
+				    	 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+				    	 "extraHeaders":{0:Messages("experiments.inputs")}
 				     },
-			         {
-				 		"header":Messages("containers.table.libProcessType"),
-				 		"property": "inputContainer.contents",
-				 		"filter": "getArray:'properties.libProcessTypeCode.value'| unique",
-				 		"order":false,
-				 		"hide":true,
-				 		"type":"text",
-				 		"position":6,
-				 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-				 		"extraHeaders": {0:Messages("experiments.inputs")}	 						 			
-				 	},
+//			         {
+//				 		"header":Messages("containers.table.libProcessType"),
+//				 		"property": "inputContainer.contents",
+//				 		"filter": "getArray:'properties.libProcessTypeCode.value'| unique",
+//				 		"order":false,
+//				 		"hide":true,
+//				 		"type":"text",
+//				 		"position":6,
+//				 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+//				 		"extraHeaders": {0:Messages("experiments.inputs")}	 						 			
+//				 	},
 			        {
 				        "header":Messages("containers.table.tags"),
 				 		"property": "inputContainer.contents",
@@ -68,7 +89,7 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 				 		"order":true,
 				 		"hide":true,
 				 		"type":"text",
-				 		"position":7,
+				 		"position":6,
 				 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 				        "extraHeaders":{0:Messages("experiments.inputs")}
 				     },		
@@ -102,17 +123,17 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 			        	 "position":10,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },	        
-			         {
-			        	 "header":Messages("containers.table.state.code"),
-			        	 "property":"inputContainer.state.code",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-						 "filter":"codes:'state'",
-			        	 "position":11,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
+//			         {
+//			        	 "header":Messages("containers.table.state.code"),
+//			        	 "property":"inputContainer.state.code",
+//			        	 "order":true,
+//						 "edit":false,
+//						 "hide":true,
+//			        	 "type":"text",
+//						 "filter":"codes:'state'",
+//			        	 "position":11,
+//			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+//			         },
 			         {
 			        	 "header":Messages("containers.table.percentageInsidePool"),
 			        	 "property":"inputContainerUsed.percentage",
@@ -163,20 +184,20 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 			        	 "position":400,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
-			         {
-			        	 "header":Messages("containers.table.stateCode"),
-			        	 "property":"outputContainer.state.code | codes:'state'",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-						 "type":"text",
-			        	 "position":500,
-			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         }
+//			         {
+//			        	 "header":Messages("containers.table.stateCode"),
+//			        	 "property":"outputContainer.state.code | codes:'state'",
+//			        	 "order":true,
+//						 "edit":false,
+//						 "hide":true,
+//						 "type":"text",
+//			        	 "position":500,
+//			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+//			         }
 			         ],
 			compact:true,
 			pagination:{
-				active:false
+				active:true
 			},		
 			search:{
 				active:false
@@ -203,12 +224,13 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 	        	active:true 
 	        },
 			select:{
-				active:false,
+				active:true,
 				showButton:true,
-				isSelectAll:false
+				isSelectAll:true
 			},
 			edit:{
-				active: false,
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				byDefault : true,
 				columnMode:true
 			},
 			messages:{
@@ -216,10 +238,10 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 				columnMode:true
 			},
 			exportCSV:{
-				active:true,
-				showButton:true,
-				delimiter:";",
-				start:false
+				active:false,
+//				showButton:true,
+//				delimiter:";",
+//				start:false
 			},
 			extraHeaders:{
 				number:2,
@@ -247,18 +269,6 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 	
 	if(supportCategoryCode === "96-well-plate"){
 		datatableConfig.columns.push({
-			"header" : Messages("containers.table.supportCode"),
-			"property" : "inputContainer.support.code",
-			"order" : true,
-			"edit" : false,
-			"hide" : true,
-			"type" : "text",
-			"position" : 1,
-			"extraHeaders" : {
-				0 : Messages("experiments.inputs")
-			}
-		});
-		datatableConfig.columns.push({
 			"header" : Messages("containers.table.support.line"),
 			"property" : "inputContainer.support.line",
 			"order" : true,
@@ -283,19 +293,19 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 			}
 		});
 
-	} else {
-		datatableConfig.columns.push({
-			"header" : Messages("containers.table.code"),
-			"property" : "inputContainer.code",
-			"order" : true,
-			"edit" : false,
-			"hide" : true,
-			"type" : "text",
-			"position" : 1,
-			"extraHeaders" : {
-				0 : Messages("experiments.inputs")
-			}
-		});
+//	} else {
+//		datatableConfig.columns.push({
+//			"header" : Messages("containers.table.code"),
+//			"property" : "inputContainer.code",
+//			"order" : true,
+//			"edit" : false,
+//			"hide" : true,
+//			"type" : "text",
+//			"position" : 1,
+//			"extraHeaders" : {
+//				0 : Messages("experiments.inputs")
+//			}
+//		});
 		
 		datatableConfig.order.by = 'inputContainer.sampleCodes';
 	}
