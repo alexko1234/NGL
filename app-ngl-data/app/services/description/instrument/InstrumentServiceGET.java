@@ -15,6 +15,7 @@ import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.common.description.Value;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
@@ -250,9 +251,18 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 
 //		l.add(newInstrumentUsedType("Eppendorf MiniSpin plus", "eppendorf-mini-spin-plus", InstrumentCategory.find.findByCode("centrifuge"), getNanoporeFragmentationProperties(),  getInstrumentEppendorfMiniSpinPlus()
 //				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Constants.CODE.GET)));
-				
-//		l.add(newInstrumentUsedType("MinION", "minION", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeDepotProperties(),getInstrumentMinIon() 
-//				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Constants.CODE.GET)));
+		
+		l.add(newInstrumentUsedType("GridION", "GridION", InstrumentCategory.find.findByCode("nanopore-sequencer"), getGridIonProperties(),
+				getInstruments(
+						createInstrument("GRIDION_3", "GridION GXB01176", null, true, "/save/devcrgs/src/NGL_Feuille_route/GridION", DescriptionFactory.getInstitutes(Constants.CODE.GET))), 
+				getContainerSupportCategories(new String[]{"tube","96-well-plate","384-well-plate"}), getContainerSupportCategories(new String[]{"flowcell_R9-4-1_gd_RevD","flowcell_R9-4-1_gd","flowcell_R9-5_gd"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
+		
+		l.add(newInstrumentUsedType("PromethION", "PromethION", InstrumentCategory.find.findByCode("nanopore-sequencer"), getPromethIonProperties(),
+				getInstruments(
+						createInstrument("PROMETHION", "PromethION PCT0078", null, true, "/save/devcrgs/src/NGL_Feuille_route/PromethION", DescriptionFactory.getInstitutes(Constants.CODE.GET))), 
+				getContainerSupportCategories(new String[]{"tube","96-well-plate","384-well-plate"}), getContainerSupportCategories(new String[]{"flowcell_R9-4-1_pt_RevD"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
 //		l.add(newInstrumentUsedType("Mk1", "mk1", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeDepotProperties(),getInstrumentMKI() 
 //				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Constants.CODE.GET)));
@@ -298,18 +308,116 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 		return propertyDefinitions;
 	}
 
-
-	private static List<PropertyDefinition> getNanoporeDepotProperties() throws DAOException {
+	
+	private static List<PropertyDefinition> getGridIonProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-        propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
-        propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",200));
-        //Liste a definir
-        propertyDefinitions.add(newPropertiesDefinition("Numero PC", "pcNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",300));
-       // propertyDefinitions.add(newPropertiesDefinition("Version MinKNOW", "minKnowVersion",LevelService.getLevels(Level.CODE.Instrument),String.class,false,"single",400));
-	//	propertyDefinitions.add(newPropertiesDefinition("Version Metrichor", "metrichorVersion",LevelService.getLevels(Level.CODE.Instrument),String.class,false,"single",500));
-	//	propertyDefinitions.add(newPropertiesDefinition("Metrichor run ID", "metrichorRunId",LevelService.getLevels(Level.CODE.Instrument),String.class,false,"single",600));
-
+//		propertyDefinitions = getNanoporeProperties();
+		
+		propertyDefinitions.add(newPropertiesDefinition("Code Flowcell valide", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
+        propertyDefinitions.add(newPropertiesDefinition("Emplacement FC","empl_FC", LevelService.getLevels(Level.CODE.Instrument), String.class, false, 
+        		DescriptionFactory.newValues("X1","X2","X3","X4","X5"), null, "single",101));
+        
 		return propertyDefinitions;
+	}
+	
+	// à décommenter
+	private static List<PropertyDefinition> getPromethIonProperties() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+//		propertyDefinitions = getNanoporeProperties();
+		
+		propertyDefinitions.add(newPropertiesDefinition("Code Flowcell valide", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
+        propertyDefinitions.add(newPropertiesDefinition("Emplacement FC","empl_FC", LevelService.getLevels(Level.CODE.Instrument), String.class, false, 
+        		getPromethionPosition(),
+        		null, "single",101));
+        
+		return propertyDefinitions;
+	}
+	
+
+
+//	private static List<PropertyDefinition> getNanoporeProperties() throws DAOException {
+//		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+//        propertyDefinitions.add(newPropertiesDefinition("Code Flowcell valide", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
+////        propertyDefinitions.add(newPropertiesDefinition("Emplacement FC","empl_FC", LevelService.getLevels(Level.CODE.Instrument), String.class, false,"single",101));
+//        
+//        propertyDefinitions.add(newPropertiesDefinition("Nb de pores actifs à la réception","nb_pores_actifs_reception", LevelService.getLevels(Level.CODE.Instrument), Integer.class, false,"single",102));
+//        propertyDefinitions.add(newPropertiesDefinition("Nb de pores actifs au dépôt","nb_pores_actifs", LevelService.getLevels(Level.CODE.Instrument), Integer.class, false,"single",103));
+//        propertyDefinitions.add(newPropertiesDefinition("Nb pores G1","pores_G1", LevelService.getLevels(Level.CODE.Instrument), Integer.class, false,"single",104));
+//        propertyDefinitions.add(newPropertiesDefinition("Nb pores G2","pores_G2", LevelService.getLevels(Level.CODE.Instrument), Integer.class, false,"single",105));
+//        propertyDefinitions.add(newPropertiesDefinition("Nb pores G3","pores_G3", LevelService.getLevels(Level.CODE.Instrument), Integer.class, false,"single",106));
+//        propertyDefinitions.add(newPropertiesDefinition("Nb pores G4","pores_G4", LevelService.getLevels(Level.CODE.Instrument), Integer.class, false,"single",107));
+//        
+//		return propertyDefinitions;
+//	}
+	// piqué au CNS
+//	private static List<PropertyDefinition> getPromethIONProperties() throws DAOException {
+//		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
+//        
+//		
+//		propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.ContainerOut),String.class, true, null, 
+//	        		null, "single", 48, true, null, null));
+//	       
+//        propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content),String.class, true, null, 
+//        		null, "single", 49, true, "R9.4-spot-on", null));
+//        
+//        propertyDefinitions.add(newPropertiesDefinition("Position", "position", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, null, 
+//        		getPromethionPosition(), "single", 50, true, null, null));
+//        
+//		return propertyDefinitions;
+//	}
+	
+	// piqué au CNS
+	private static List<Value> getPromethionPosition() {
+		List<Value> values = new ArrayList<>();
+		values.add(DescriptionFactory.newValue("PH_p-101_0","pl1_A1-D1"));  
+		values.add(DescriptionFactory.newValue("PH_p-101_2","pl1_A2-D2"));  
+		values.add(DescriptionFactory.newValue("PH_p-105_0","pl1_A3-D3"));  
+		values.add(DescriptionFactory.newValue("PH_p-105_2","pl1_A4-D4"));  
+		values.add(DescriptionFactory.newValue("PH_p-109_0","pl1_A5-D5"));  
+		values.add(DescriptionFactory.newValue("PH_p-109_2","pl1_A6-D6")); 
+		values.add(DescriptionFactory.newValue("PH_p-101_1","pl1_E1-H1")); 
+		values.add(DescriptionFactory.newValue("PH_p-101_3","pl1_E2-H2")); 
+		values.add(DescriptionFactory.newValue("PH_p-105_1","pl1_E3-H3")); 
+		values.add(DescriptionFactory.newValue("PH_p-105_3","pl1_E4-H4")); 
+		values.add(DescriptionFactory.newValue("PH_p-109_1","pl1_E5-H5")); 
+		values.add(DescriptionFactory.newValue("PH_p-109_3","pl1_E6-H6")); 
+		values.add(DescriptionFactory.newValue("PH_p-102_0","pl1_A7-D7")); 
+		values.add(DescriptionFactory.newValue("PH_p-102_2","pl1_A8-D8")); 
+		values.add(DescriptionFactory.newValue("PH_p-106_0","pl1_A9-D9")); 
+		values.add(DescriptionFactory.newValue("PH_p-106_2","pl1_A10-D10")); 
+		values.add(DescriptionFactory.newValue("PH_p-110_0","pl1_A11-D11")); 
+		values.add(DescriptionFactory.newValue("PH_p-110_2","pl1_A12-D12")); 
+		values.add(DescriptionFactory.newValue("PH_p-102_1","pl1_E7-H7")); 
+		values.add(DescriptionFactory.newValue("PH_p-102_3","pl1_E8-H8")); 
+		values.add(DescriptionFactory.newValue("PH_p-106_1","pl1_E9-H9")); 
+		values.add(DescriptionFactory.newValue("PH_p-106_3","pl1_E10-H10")); 
+		values.add(DescriptionFactory.newValue("PH_p-110_1","pl1_E11-H11")); 
+		values.add(DescriptionFactory.newValue("PH_p-110_3","pl1_E12-H12")); 
+		values.add(DescriptionFactory.newValue("PH_p-103_0","pl2_A1-D1")); 
+		values.add(DescriptionFactory.newValue("PH_p-103_2","pl2_A2-D2")); 
+		values.add(DescriptionFactory.newValue("PH_p-107_0","pl2_A3-D3")); 
+		values.add(DescriptionFactory.newValue("PH_p-107_2","pl2_A4-D4")); 
+		values.add(DescriptionFactory.newValue("PH_p-111_0","pl2_A5-D5")); 
+		values.add(DescriptionFactory.newValue("PH_p-111_2","pl2_A6-D6")); 
+		values.add(DescriptionFactory.newValue("PH_p-103_1","pl2_E1-H1")); 
+		values.add(DescriptionFactory.newValue("PH_p-103_3","pl2_E2-H2")); 
+		values.add(DescriptionFactory.newValue("PH_p-107_1","pl2_E3-H3")); 
+		values.add(DescriptionFactory.newValue("PH_p-107_3","pl2_E4-H4")); 
+		values.add(DescriptionFactory.newValue("PH_p-111_1","pl2_E5-H5")); 
+		values.add(DescriptionFactory.newValue("PH_p-111_3","pl2_E6-H6")); 
+		values.add(DescriptionFactory.newValue("PH_p-104_0","pl2_A7-D7")); 
+		values.add(DescriptionFactory.newValue("PH_p-104_2","pl2_A8-D8")); 
+		values.add(DescriptionFactory.newValue("PH_p-108_0","pl2_A9-D9")); 
+		values.add(DescriptionFactory.newValue("PH_p-108_2","pl2_A10-D10")); 
+		values.add(DescriptionFactory.newValue("PH_p-112_0","pl2_A11-D11")); 
+		values.add(DescriptionFactory.newValue("PH_p-112_2","pl2_A12-D12")); 
+		values.add(DescriptionFactory.newValue("PH_p-104_1","pl2_E7-H7")); 
+		values.add(DescriptionFactory.newValue("PH_p-104_3","pl2_E8-H8")); 
+		values.add(DescriptionFactory.newValue("PH_p-108_1","pl2_E9-H9")); 
+		values.add(DescriptionFactory.newValue("PH_p-108_3","pl2_E10-H10")); 
+		values.add(DescriptionFactory.newValue("PH_p-112_1","pl2_E11-H11")); 
+		values.add(DescriptionFactory.newValue("PH_p-112_3","pl2_E12-H12")); 	
+		return values;
 	}
 
 

@@ -78,6 +78,13 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 				"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
+		l.add(newExperimentType("Ext depot Nanopore", "ext-to-nanopore-depot",null, -1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
+				null,
+				null,
+				"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
+		
 //		l.add(newExperimentType("Ext to qPCR","ext-to-qpcr",null,-1,
 //				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), 
 //				null,  
@@ -136,6 +143,14 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 				getPropertyDefinitionsIlluminaDepot(),
 				getInstrumentUsedTypes("MISEQ","HISEQ3000", "NOVASEQ6000"), 
 				"OneToVoid", 
+				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
+		
+		l.add(newExperimentType("Depot Nanopore", "nanopore-depot",null, 1401,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+				getPropertyDefinitionsNanoporeDepot(),
+				//getInstrumentUsedTypes("MinION","GridION", "PromethION"),
+				getInstrumentUsedTypes("GridION", "PromethION"),
+				"ManyToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 
 //		l.add(newExperimentType("Depot NovaSeq", "novaseq-depot",null, 1400,
@@ -239,6 +254,15 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 				null, null, null
 				).save();
 		
+		newExperimentTypeNode("ext-to-nanopore-depot",getExperimentTypes("ext-to-nanopore-depot").get(0),
+				false,false,false,
+				//getExperimentTypeNodes("prepa-fc-ordered","prepa-flowcell"), // previous nodes
+				null,
+				null,
+				null, // pas qc
+				null  // pas tranfert
+				).save();
+		
 //		newExperimentTypeNode("ext-to-prepa-fc-ordered", getExperimentTypes("ext-to-prepa-fc-ordered").get(0), 
 //				false, false, false, 
 //				null, // no previous nodes
@@ -263,14 +287,14 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 				getExperimentTypeNodes("ext-to-prepa-flowcell"),
 				null,null,null
 				).save();
-		Logger.debug("Before saving prepa-fc-ordered");
+//		Logger.debug("Before saving prepa-fc-ordered");
 		//preparation flowcells ordonnées (HiSeq3000, NovaSeq...)
 		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),
 				false, false, false,
 				getExperimentTypeNodes("ext-to-prepa-flowcell"),
 				null, null, null
 				).save();
-		Logger.debug("After saving prepa-fc-ordered");
+//		Logger.debug("After saving prepa-fc-ordered");
 //		newExperimentTypeNode("prepa-fc-ns",getExperimentTypes("prepa-fc-ns").get(0),
 //				false, false, false,
 //				getExperimentTypeNodes("ext-to-prepa-flowcell"),
@@ -280,6 +304,14 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),
 				false,false,false,
 				getExperimentTypeNodes("prepa-fc-ordered","prepa-flowcell"), // previous nodes
+				null,
+				null, // pas qc
+				null  // pas tranfert
+				).save();
+		
+		newExperimentTypeNode("nanopore-depot",getExperimentTypes("nanopore-depot").get(0),
+				false,false,false,
+				getExperimentTypeNodes("ext-to-nanopore-depot"), // previous nodes
 				null,
 				null, // pas qc
 				null  // pas tranfert
@@ -419,15 +451,129 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 //	}
 
 
-
 	
-//	private static List<PropertyDefinition> getPropertyAliquoting() throws DAOException {
-//		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-//		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null
-//				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µl"),MeasureUnit.find.findByCode( "µl"), "single",10, false));
+	private static List<PropertyDefinition> getPropertyDefinitionsNanoporeDepot() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		// Infos générales
+		
+		
+		// FFPE + End Prep
+//		propertyDefinitions.add(newPropertiesDefinition("Quantité", "quantite", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode( "fmol"), MeasureUnit.find.findByCode( "fmol"), "single",19, true, "160", null));
+		
+//		propertyDefinitions.add(newPropertiesDefinition("Taille moy. ADN","dna_average_size", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Integer.class, false, null, 
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode( "pb"), MeasureUnit.find.findByCode( "pb"), "single",20, true)); 
+		
+//		propertyDefinitions.add(newPropertiesDefinition("Input requis","input_required", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode( "ng"), MeasureUnit.find.findByCode( "ng"), "single",21, false));
 //		
-//		return propertyDefinitions;
-//	}
+//		propertyDefinitions.add(newPropertiesDefinition("Input réel","input_real", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode( "ng"), MeasureUnit.find.findByCode( "ng"), "single",22, true)); 
+		
+//		propertyDefinitions.add(newPropertiesDefinition("[C] Qubit","qubit_concentration", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Double.class, true, null, 
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"), MeasureUnit.find.findByCode( "ng/µl"),"single",23, true));
+		
+//		propertyDefinitions.add(newPropertiesDefinition("Vol. requis","volume_required", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, false, null,
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode( "µL"),"single",24, false));
+//		
+//		propertyDefinitions.add(newPropertiesDefinition("Vol. EB à raj.","EB_volume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, false, null,
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode( "µL"),"single",25, false));
+		
+//		propertyDefinitions.add(newPropertiesDefinition("Tube éthanol","ethanol_tube", LevelService.getLevels(Level.CODE.Experiment), Integer.class, false, 
+//				DescriptionFactory.newValues("15","50"), null, null, null,"single", 26, true)); 
+//		
+//		propertyDefinitions.add(newPropertiesDefinition("Vol. éthanol","ethanol_volume", LevelService.getLevels(Level.CODE.Experiment),Double.class, true, null,
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode( "µL"),"single",27, false));
+		
+		// Purification 1X
+//		propertyDefinitions.add(newPropertiesDefinition("Purif_1X: Vol.","volume_purif_1X", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, false, null,
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode( "µL"),"single",28, true));
+//		
+//		propertyDefinitions.add(newPropertiesDefinition("Purif_1X: [C] Qubit","qubit_concentration_purif_1X", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"), MeasureUnit.find.findByCode( "ng/µl"),"single",29, true));
+//		
+//		propertyDefinitions.add(newPropertiesDefinition("Purif_1X: Quant. ADN total","quant_ADN_total_purif_1X", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode( "ng"), MeasureUnit.find.findByCode( "ng"), "single",30, false));
+//		
+//		propertyDefinitions.add(newPropertiesDefinition("Purif_1X: % récup.","pourcent_recup_purif_1X", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null ,null,null, "single",31, false));
+//		
+//		propertyDefinitions.add(newPropertiesDefinition("Purif_1X: Fmols purif 1X", "quant_purif_1X", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode( "fmol"), MeasureUnit.find.findByCode( "fmol"), "single",32, false));
+		
+//		propertyDefinitions.add(newPropertiesDefinition("NB tubes","nb_tubes_purif_1X", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",33, true));
+//		
+//		propertyDefinitions.add(newPropertiesDefinition("Vol. Qubit","qubit_volume_purif_1X", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null,
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode( "µL"),"single",34, false));
+		
+		// Ligation, purification 0.4X
+//		propertyDefinitions.add(newPropertiesDefinition("Purif_0.4X: Vol.","volume_purif_04X", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, false, null,
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode( "µL"),"single",35, true));
+//		
+//		propertyDefinitions.add(newPropertiesDefinition("Purif_0.4X: [C] Qubit","qubit_concentration_purif_04X", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"), MeasureUnit.find.findByCode( "ng/µl"),"single",36, true));
+//		
+//		propertyDefinitions.add(newPropertiesDefinition("Purif_0.4X: Quant. ADN total","quant_ADN_total_purif_04X", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode( "ng"), MeasureUnit.find.findByCode( "ng"), "single",37, false));
+//		
+//		propertyDefinitions.add(newPropertiesDefinition("Purif_0.4X: % récup.","pourcent_recup_purif_04X", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null ,null,null, "single",38, false));
+//		
+//		propertyDefinitions.add(newPropertiesDefinition("Purif_0.4X: Fmols purif 0.4X", "quant_purif_04X", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode( "fmol"), MeasureUnit.find.findByCode( "fmol"), "single",39, false));
+		
+//		propertyDefinitions.add(newPropertiesDefinition("NB tubes","nb_tubes_purif_0.4X", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",40, true));
+//		
+//		propertyDefinitions.add(newPropertiesDefinition("Vol. Qubit","qubit_volume_purif_0.4X", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null,
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode( "µL"),"single",41, false));
+		
+		// Infos manip
+//		propertyDefinitions.add(newPropertiesDefinition("Megaruptor","megaruptor", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, null ,null,null, "single",42, true));
+//		
+//		propertyDefinitions.add(newPropertiesDefinition("Sizing","sizing", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, null ,null,null, "single",43, true));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Tag","tag", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), String.class, false, null, null ,null,null, "single",45, true));
+		
+		// Flowcell input
+//		propertyDefinitions.add(newPropertiesDefinition("Fmols", "quant_flowcell", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null,
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode( "fmol"), MeasureUnit.find.findByCode( "fmol"), "single",45, true, "30", null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Vol._ADN","ADN_volume", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, false, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode( "µL"),"single",46, true));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Qtt_ADN chargé","quant_ADN_charge", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode( "ng"), MeasureUnit.find.findByCode( "ng"), "single",47, true));
+		
+//		propertyDefinitions.add(newPropertiesDefinition("%récup global","pourcent_recup_global", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null, null, null, null, "single", 48, false));
+//		
+//		propertyDefinitions.add(newPropertiesDefinition("Vol. à_raj.","volume_rajout", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, false, null,
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode( "µL"),"single",49, false));
+		
+		// QC de la FC
+//		propertyDefinitions.add(newPropertiesDefinition("Emplacement FC","empl_FC", LevelService.getLevels(Level.CODE.ContainerOut), String.class, false, null, null ,null,null, "single",50, true));
+		propertyDefinitions.add(newPropertiesDefinition("QC nb pores total","nb_pores_QC", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",51, true));
+		propertyDefinitions.add(newPropertiesDefinition("QC nb pores total G1","nb_pores_QC_G1", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",52, true));
+		propertyDefinitions.add(newPropertiesDefinition("QC nb pores total G2","nb_pores_QC_G2", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",53, true));
+		propertyDefinitions.add(newPropertiesDefinition("QC nb pores total G3","nb_pores_QC_G3", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",54, true));
+		propertyDefinitions.add(newPropertiesDefinition("QC nb pores total G4","nb_pores_QC_G4", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",55, true));
+		propertyDefinitions.add(newPropertiesDefinition("Nb pores actifs au dépôt","nb_pores_depot", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",56, true));
+		propertyDefinitions.add(newPropertiesDefinition("Nb pores G1","pores_G1", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",57, true));
+		propertyDefinitions.add(newPropertiesDefinition("Nb pores G2","pores_G2", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",58, true));
+		propertyDefinitions.add(newPropertiesDefinition("Nb pores G3","pores_G3", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",59, true));
+		propertyDefinitions.add(newPropertiesDefinition("Nb pores G4","pores_G4", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",60, true));
+		
+		// Run start Date
+		propertyDefinitions.add(newPropertiesDefinition("Date de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, true, "single"));
+		
+		// Simplex ou multiplex -> renseigné avec les drools
+		propertyDefinitions.add(newPropertiesDefinition("Type de run", "runType", LevelService.getLevels(Level.CODE.Experiment), String.class, false, false, "single", 61));
+
+		//propertyDefinitions.add(newPropertiesDefinition("Kit","kit", LevelService.getLevels(Level.CODE.Experiment), String.class, false, "single"));
+		
+		// Run name
+//		propertyDefinitions.add(newPropertiesDefinition("Nom du run", "nom_run", LevelService.getLevels(Level.CODE.Experiment), String.class, false, "single", "--"));
+		
+		return propertyDefinitions;
+	}
 	
 //	private static List<PropertyDefinition> getPropertyFragmentationNanopore() throws DAOException {
 //		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
@@ -474,6 +620,67 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 //		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb pores actifs à réception","qcFlowcell.preLoadingNbActivePores",LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, "object_list",701));
 //		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb pores actifs lors du dépôt","qcFlowcell.postLoadingNbActivePores",LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, "object_list",702));
 //		
+//		return propertyDefinitions;
+//	}
+	
+	// piqué au CNG/S
+//	private static List<PropertyDefinition> getPropertyDepotNanopore() throws DAOException {
+//		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
+//		
+//		//Experiments
+//		propertyDefinitions.add(newPropertiesDefinition(
+//				"Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class,true, null,null,
+//				"single",300,true,null,null));
+//		
+//		//Containers IN
+//		// Unite a verifier
+//		//1er tableau
+//		propertyDefinitions.add(newPropertiesDefinition(
+//				"Quantité déposée","loadingQuantity",LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content), Double.class,true, "N", null,  
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),
+//				MeasureUnit.find.findByCode("ng"),
+//				MeasureUnit.find.findByCode("ng"),
+//				"single",8,false, null,"1"));
+//		
+//		//2eme tableau
+//		propertyDefinitions.add(newPropertiesDefinition(
+//				"Date creation","loadingReport.creationDate",LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), Date.class,false, null,null, 
+//				"object_list",600,true,null,null));
+//		
+//		propertyDefinitions.add(newPropertiesDefinition(
+//				"Heure dépot","loadingReport.hour",LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), String.class,false, null,null,
+//				"object_list",601,true,null,null));
+//		
+//		propertyDefinitions.add(newPropertiesDefinition(
+//				"Temps","loadingReport.time",LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), Long.class,false,null,null, 
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_TIME),
+//				MeasureUnit.find.findByCode("h"),
+//				MeasureUnit.find.findByCode("h"),
+//				"object_list",602,true, null, null));
+//		
+//		propertyDefinitions.add(newPropertiesDefinition(
+//				"Volume","loadingReport.volume",LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), Double.class,false, null, null, 
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),
+//				MeasureUnit.find.findByCode("µL"),
+//				MeasureUnit.find.findByCode("µL"),
+//				"object_list",603,true, null, null));
+//		
+//		//Containers OUT
+//		//3ème tableau	
+//		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition(
+//				"Groupe","qcFlowcell.group",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class,false, null,null, 
+//				"object_list",700,false,null,null));
+//		
+//		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition(
+//				"Nb total pores actifs à réception","qcFlowcell.preLoadingNbActivePores",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), 
+//				Integer.class, false,null,null, 
+//				"object_list",701,true, null,null));
+//		
+//		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition(
+//				"Nb total pores actifs lors du dépôt","qcFlowcell.postLoadingNbActivePores",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), 
+//				Integer.class,false,null,null, 
+//				"object_list",702,true, null,null));
+//
 //		return propertyDefinitions;
 //	}
 

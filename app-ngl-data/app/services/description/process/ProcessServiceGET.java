@@ -99,6 +99,23 @@ public class ProcessServiceGET extends AbstractProcessService {
 				
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
+//		//"Sequençage Nanopore"
+		l.add(DescriptionFactory.newProcessType("Run Nanopore", "nanopore-run", ProcessCategory.find.findByCode("sequencing"), 4,
+				
+				getPropertyDefinitionsNanoporeDepot(), 
+				Arrays.asList(
+						getPET("ext-to-nanopore-depot",-1),
+						//getPET("solution-stock",-1),
+						//getPET("prepa-flowcell",0),
+						//getPET("prepa-fc-ordered",0),
+						getPET("nanopore-depot",0)),
+				
+				getExperimentTypes("nanopore-depot").get(0), //first experiment type
+				getExperimentTypes("nanopore-depot").get(0),		//last  experiment type
+				getExperimentTypes("ext-to-nanopore-depot").get(0), //void  experiment type
+				
+				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
+		
 //		//"Sequençage NovaSeq"
 //		l.add(DescriptionFactory.newProcessType("Run NovaSeq", "novaseq-run", ProcessCategory.find.findByCode("sequencing"), 3,
 //				
@@ -169,6 +186,21 @@ public class ProcessServiceGET extends AbstractProcessService {
 		return propertyDefinitions;
 	}
 	
+	private static List<PropertyDefinition> getPropertyDefinitionsNanoporeDepot() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Espèce", "species",
+						LevelService.getLevels(Level.CODE.Process, Level.CODE.Container),String.class, false,"single",100));
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Nom run", "nom_run", 
+						LevelService.getLevels(Level.CODE.Process, Level.CODE.Container), String.class, false,null,null, null, null, "single", 200,true,null, null));
+//		propertyDefinitions.add(
+//				DescriptionFactory.newPropertiesDefinition("Tag", "Tag",
+//						LevelService.getLevels(Level.CODE.Process, Level.CODE.Container),String.class, false,"single",300));
+		return propertyDefinitions;
+	}
+	
 //	private static List<PropertyDefinition> getPropertyDefinitionsNovaSeqDepot() throws DAOException {
 //		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 //
@@ -235,8 +267,13 @@ public class ProcessServiceGET extends AbstractProcessService {
 		values.add(DescriptionFactory.newValue("Miseq", "Miseq"));
 		values.add(DescriptionFactory.newValue("Hiseq 3000", "Hiseq 3000"));
 		values.add(DescriptionFactory.newValue("NovaSeq 6000", "NovaSeq 6000"));
+		//values.add(DescriptionFactory.newValue("MinION", "MinION"));
 		return values;	
 	}
+	
+
+//	values.add(DescriptionFactory.newValue("GridION", "GridION"));
+//	values.add(DescriptionFactory.newValue("PromethION", "PromethION"));
 	
 	
 //	private static List<ProcessExperimentType> getExperimentTypes(String...codes) throws DAOException {
