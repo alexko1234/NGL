@@ -230,8 +230,9 @@ error.validationexp.nanoporedepot.containerin.tagnull = "Le tag du container {0}
 error.validationexp.nanoporedepot.containerin.tagnotexist = "Le tag du container {0} n'est pas retrouvé dans la base de données"
 error.validationexp.nanoporedepot.containerin.tag = "Le tag {0} du container {1} est la même que celui du container {2}"
 error.validationexp.nanoporedepot.containerout = "Tous les champs compris dans ''Container(s) en sortie(s)'' doivent etre remplis"
-error.validationexp.nanoporedepot.experiment = "Le champs ''Kit'' doit etre complete si le run est multiplex"
+error.validationexp.nanoporedepot.experiment = "Le champs ''Sample ID'' doit etre complete"
 error.validationexp.nanoporedepot.instrument = "Le champs ''Emplacement FC'' doit etre complete"
+error.validationexp.nanoporedepot.reagent = "Un reactif doit etre selectionne"
 
 error.receptionfile.taxonCode.diff = "Le code taxon est différent du sample parent {0} <> {1}"
 error.receptionfile.referenceCollab.diff = "La réf. collaborateur est différente du sample parent {0} <> {1}"

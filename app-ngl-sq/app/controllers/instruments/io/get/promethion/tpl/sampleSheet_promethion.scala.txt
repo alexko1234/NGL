@@ -2,21 +2,24 @@
 
 @import controllers.instruments.io.utils._;
 
-MachineName;@(e.instrument.code);
-DepotDate;@(CsvHelper.getRunDate(e));
-RunType;@(e.experimentProperties.get("runType").value);
-ProjectName;@for(projet <- e.projectCodes){@(projet),};
-CodeFC;@(OutputHelper.getInstrumentProperty(e, "containerSupportCode"));
-LocationFC;@(OutputHelper.getInstrumentProperty(e, "empl_FC"));
-Species;@(e.atomicTransfertMethods.get(0).inputContainerUseds.get(0).contents.get(0).processProperties.get("species").value);
+@RUNTYPE = @{"MTPLX" == e.experimentProperties.get("runType").value}
+
+MachineName;@(CsvHelper.getInstrumentName(e.instrument.code))
+DepotDate;@(CsvHelper.getRunDate(e))
+RunType;@(e.experimentProperties.get("runType").value)
+ProjectName;@for(projet <- e.projectCodes){@(projet),}
+SampleID;@(e.experimentProperties.get("sampleID").value)
+CodeFC;@(OutputHelper.getInstrumentProperty(e, "containerSupportCode"))
+LocationFC;@(OutputHelper.getInstrumentProperty(e, "empl_FC"))
+@if(RUNTYPE){
+	Kit;@(CsvHelper.getKitName(e.reagents.get(0).kitCatalogCode))
+}
 ;
-Sample;Tag;
+Sample;Tag;Species
 @for(etm <- e.atomicTransfertMethods.sortWith(_.line < _.line)){
 	@for(inputContainerUsed <- etm.inputContainerUseds.sortWith(_.code < _.code)){
 		@for(content <- inputContainerUsed.contents.sortWith(_.sampleCode < _.sampleCode)){
-			@if(e.experimentProperties.get("runType").value=="MTPLX"){
-				@(content.sampleCode);@(OutputHelper.getExperimentProperty(inputContainerUsed, "tag"));
-			}
+			@(content.sampleCode);@if(RUNTYPE){@(OutputHelper.getExperimentProperty(inputContainerUsed, "tag"))};@(content.processProperties.get("species").value)
 		}
 	}
 }
