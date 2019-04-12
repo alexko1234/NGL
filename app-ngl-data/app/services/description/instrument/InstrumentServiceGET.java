@@ -315,20 +315,19 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 		
 		propertyDefinitions.add(newPropertiesDefinition("Code Flowcell valide", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
         propertyDefinitions.add(newPropertiesDefinition("Emplacement FC","empl_FC", LevelService.getLevels(Level.CODE.Instrument), String.class, false, 
-        		DescriptionFactory.newValues("X1","X2","X3","X4","X5"), null, "single",101));
+//        		DescriptionFactory.newValues("X1","X2","X3","X4","X5"), null, "single",101));
+        		DescriptionFactory.newValues("GA10000","GA20000","GA30000","GA40000","GA50000"), null, "single",101));
         
 		return propertyDefinitions;
 	}
 	
-	// à décommenter
 	private static List<PropertyDefinition> getPromethIonProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 //		propertyDefinitions = getNanoporeProperties();
 		
 		propertyDefinitions.add(newPropertiesDefinition("Code Flowcell valide", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
-        propertyDefinitions.add(newPropertiesDefinition("Emplacement FC","empl_FC", LevelService.getLevels(Level.CODE.Instrument), String.class, false, 
-        		getPromethionPosition(),
-        		null, "single",101));
+        propertyDefinitions.add(newPropertiesDefinition("Emplacement FC","empl_FC", LevelService.getLevels(Level.CODE.Instrument), String.class, false, "IP",
+        		getPromethionPosition(), null, null, null, "single", 101, true, null, "1"));
         
 		return propertyDefinitions;
 	}
@@ -368,55 +367,55 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 	
 	// piqué au CNS
 	private static List<Value> getPromethionPosition() {
-		List<Value> values = new ArrayList<>();
-		values.add(DescriptionFactory.newValue("PH_p-101_0","pl1_A1-D1"));  
-		values.add(DescriptionFactory.newValue("PH_p-101_2","pl1_A2-D2"));  
-		values.add(DescriptionFactory.newValue("PH_p-105_0","pl1_A3-D3"));  
-		values.add(DescriptionFactory.newValue("PH_p-105_2","pl1_A4-D4"));  
-		values.add(DescriptionFactory.newValue("PH_p-109_0","pl1_A5-D5"));  
-		values.add(DescriptionFactory.newValue("PH_p-109_2","pl1_A6-D6")); 
-		values.add(DescriptionFactory.newValue("PH_p-101_1","pl1_E1-H1")); 
-		values.add(DescriptionFactory.newValue("PH_p-101_3","pl1_E2-H2")); 
-		values.add(DescriptionFactory.newValue("PH_p-105_1","pl1_E3-H3")); 
-		values.add(DescriptionFactory.newValue("PH_p-105_3","pl1_E4-H4")); 
-		values.add(DescriptionFactory.newValue("PH_p-109_1","pl1_E5-H5")); 
-		values.add(DescriptionFactory.newValue("PH_p-109_3","pl1_E6-H6")); 
-		values.add(DescriptionFactory.newValue("PH_p-102_0","pl1_A7-D7")); 
-		values.add(DescriptionFactory.newValue("PH_p-102_2","pl1_A8-D8")); 
-		values.add(DescriptionFactory.newValue("PH_p-106_0","pl1_A9-D9")); 
-		values.add(DescriptionFactory.newValue("PH_p-106_2","pl1_A10-D10")); 
-		values.add(DescriptionFactory.newValue("PH_p-110_0","pl1_A11-D11")); 
-		values.add(DescriptionFactory.newValue("PH_p-110_2","pl1_A12-D12")); 
-		values.add(DescriptionFactory.newValue("PH_p-102_1","pl1_E7-H7")); 
-		values.add(DescriptionFactory.newValue("PH_p-102_3","pl1_E8-H8")); 
-		values.add(DescriptionFactory.newValue("PH_p-106_1","pl1_E9-H9")); 
-		values.add(DescriptionFactory.newValue("PH_p-106_3","pl1_E10-H10")); 
-		values.add(DescriptionFactory.newValue("PH_p-110_1","pl1_E11-H11")); 
-		values.add(DescriptionFactory.newValue("PH_p-110_3","pl1_E12-H12")); 
-		values.add(DescriptionFactory.newValue("PH_p-103_0","pl2_A1-D1")); 
-		values.add(DescriptionFactory.newValue("PH_p-103_2","pl2_A2-D2")); 
-		values.add(DescriptionFactory.newValue("PH_p-107_0","pl2_A3-D3")); 
-		values.add(DescriptionFactory.newValue("PH_p-107_2","pl2_A4-D4")); 
-		values.add(DescriptionFactory.newValue("PH_p-111_0","pl2_A5-D5")); 
-		values.add(DescriptionFactory.newValue("PH_p-111_2","pl2_A6-D6")); 
-		values.add(DescriptionFactory.newValue("PH_p-103_1","pl2_E1-H1")); 
-		values.add(DescriptionFactory.newValue("PH_p-103_3","pl2_E2-H2")); 
-		values.add(DescriptionFactory.newValue("PH_p-107_1","pl2_E3-H3")); 
-		values.add(DescriptionFactory.newValue("PH_p-107_3","pl2_E4-H4")); 
-		values.add(DescriptionFactory.newValue("PH_p-111_1","pl2_E5-H5")); 
-		values.add(DescriptionFactory.newValue("PH_p-111_3","pl2_E6-H6")); 
-		values.add(DescriptionFactory.newValue("PH_p-104_0","pl2_A7-D7")); 
-		values.add(DescriptionFactory.newValue("PH_p-104_2","pl2_A8-D8")); 
-		values.add(DescriptionFactory.newValue("PH_p-108_0","pl2_A9-D9")); 
-		values.add(DescriptionFactory.newValue("PH_p-108_2","pl2_A10-D10")); 
-		values.add(DescriptionFactory.newValue("PH_p-112_0","pl2_A11-D11")); 
-		values.add(DescriptionFactory.newValue("PH_p-112_2","pl2_A12-D12")); 
-		values.add(DescriptionFactory.newValue("PH_p-104_1","pl2_E7-H7")); 
-		values.add(DescriptionFactory.newValue("PH_p-104_3","pl2_E8-H8")); 
-		values.add(DescriptionFactory.newValue("PH_p-108_1","pl2_E9-H9")); 
-		values.add(DescriptionFactory.newValue("PH_p-108_3","pl2_E10-H10")); 
-		values.add(DescriptionFactory.newValue("PH_p-112_1","pl2_E11-H11")); 
-		values.add(DescriptionFactory.newValue("PH_p-112_3","pl2_E12-H12")); 	
+		List<Value> values = new ArrayList<>();		
+		values.add(DescriptionFactory.newValue("1-A1-D1","1-A1-D1"));  
+		values.add(DescriptionFactory.newValue("1-A2-D2","1-A2-D2"));  
+		values.add(DescriptionFactory.newValue("1-A3-D3","1-A3-D3"));  
+		values.add(DescriptionFactory.newValue("1-A4-D4","1-A4-D4"));  
+		values.add(DescriptionFactory.newValue("1-A5-D5","1-A5-D5"));  
+		values.add(DescriptionFactory.newValue("1-A6-D6","1-A6-D6")); 
+		values.add(DescriptionFactory.newValue("1-E1-H1","1-E1-H1")); 
+		values.add(DescriptionFactory.newValue("1-E2-H2","1-E2-H2")); 
+		values.add(DescriptionFactory.newValue("1-E3-H3","1-E3-H3")); 
+		values.add(DescriptionFactory.newValue("1-E4-H4","1-E4-H4")); 
+		values.add(DescriptionFactory.newValue("1-E5-H5","1-E5-H5")); 
+		values.add(DescriptionFactory.newValue("1-E6-H6","1-E6-H6")); 
+		values.add(DescriptionFactory.newValue("1-A7-D7","1-A7-D7")); 
+		values.add(DescriptionFactory.newValue("1-A8-D8","1-A8-D8")); 
+		values.add(DescriptionFactory.newValue("1-A9-D9","1-A9-D9")); 
+		values.add(DescriptionFactory.newValue("1-A10-D10","1-A10-D10")); 
+		values.add(DescriptionFactory.newValue("1-A11-D11","1-A11-D11")); 
+		values.add(DescriptionFactory.newValue("1-A12-D12","1-A12-D12")); 
+		values.add(DescriptionFactory.newValue("1-E7-H7","1-E7-H7")); 
+		values.add(DescriptionFactory.newValue("1-E8-H8","1-E8-H8")); 
+		values.add(DescriptionFactory.newValue("1-E9-H9","1-E9-H9")); 
+		values.add(DescriptionFactory.newValue("1-E10-H10","1-E10-H10")); 
+		values.add(DescriptionFactory.newValue("1-E11-H11","1-E11-H11")); 
+		values.add(DescriptionFactory.newValue("1-E12-H12","1-E12-H12")); 
+		values.add(DescriptionFactory.newValue("2-A1-D1","2-A1-D1")); 
+		values.add(DescriptionFactory.newValue("2-A2-D2","2-A2-D2")); 
+		values.add(DescriptionFactory.newValue("2-A3-D3","2-A3-D3")); 
+		values.add(DescriptionFactory.newValue("2-A4-D4","2-A4-D4")); 
+		values.add(DescriptionFactory.newValue("2-A5-D5","2-A5-D5")); 
+		values.add(DescriptionFactory.newValue("2-A6-D6","2-A6-D6")); 
+		values.add(DescriptionFactory.newValue("2-E1-H1","2-E1-H1")); 
+		values.add(DescriptionFactory.newValue("2-E2-H2","2-E2-H2")); 
+		values.add(DescriptionFactory.newValue("2-E3-H3","2-E3-H3")); 
+		values.add(DescriptionFactory.newValue("2-E4-H4","2-E4-H4")); 
+		values.add(DescriptionFactory.newValue("2-E5-H5","2-E5-H5")); 
+		values.add(DescriptionFactory.newValue("2-E6-H6","2-E6-H6")); 
+		values.add(DescriptionFactory.newValue("2-A7-D7","2-A7-D7")); 
+		values.add(DescriptionFactory.newValue("2-A8-D8","2-A8-D8")); 
+		values.add(DescriptionFactory.newValue("2-A9-D9","2-A9-D9")); 
+		values.add(DescriptionFactory.newValue("2-A10-D10","2-A10-D10")); 
+		values.add(DescriptionFactory.newValue("2-A11-D11","2-A11-D11")); 
+		values.add(DescriptionFactory.newValue("2-A12-D12","2-A12-D12")); 
+		values.add(DescriptionFactory.newValue("2-E7-H7","2-E7-H7")); 
+		values.add(DescriptionFactory.newValue("2-E8-H8","2-E8-H8")); 
+		values.add(DescriptionFactory.newValue("2-E9-H9","2-E9-H9")); 
+		values.add(DescriptionFactory.newValue("2-E10-H10","2-E10-H10")); 
+		values.add(DescriptionFactory.newValue("2-E11-H11","2-E11-H11")); 
+		values.add(DescriptionFactory.newValue("2-E12-H12","2-E12-H12")); 
 		return values;
 	}
 
