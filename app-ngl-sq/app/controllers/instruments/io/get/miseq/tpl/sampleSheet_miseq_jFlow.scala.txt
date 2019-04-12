@@ -42,7 +42,7 @@
 										***@--reference-genome @(CsvHelper.getContentProcessProperties(cosbis.toList.head, "reference_genome", e) )@***
 									***@} @***
 									***@@if(jnt){@***
-										***@@if(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e) == "16S"){--assignation-databank '/save/ng6/TODO/HiSeqIndexedGenomes/new_struct/ncbi_16S/blast/16SMicrobial' } @***
+										***@@if(CsvHelper.getContentProcessProperties(cos.toList.head, "analyseType", e) == "16S"){--assignation-databank '/save/ng6/TODO/HiSeqIndexedGenomes/new_struct/ncbi_16S/240319_release/16SMicrobial' } @***
 										***@--min-overlap  @if(OutputHelper.getInstrumentProperty(e,"nbCyclesRead1").asInstanceOf[Integer]+OutputHelper.getInstrumentProperty(e,"nbCyclesRead2").asInstanceOf[Integer]-2-OutputHelper.getContentProperty(cosbis.toList.head,"taille_insert").toInt-30 > 10){@***
 											***@@(OutputHelper.getInstrumentProperty(e,"nbCyclesRead1").asInstanceOf[Integer]+OutputHelper.getInstrumentProperty(e,"nbCyclesRead2").asInstanceOf[Integer]-2-OutputHelper.getContentProperty(cosbis.toList.head,"taille_insert").toInt-30)}else{10} @***
 										***@--max-overlap @(OutputHelper.getInstrumentProperty(e,"nbCyclesRead1").asInstanceOf[Integer]+OutputHelper.getInstrumentProperty(e,"nbCyclesRead2").asInstanceOf[Integer]-2-OutputHelper.getContentProperty(cosbis.toList.head,"taille_insert").toInt+20) @***
