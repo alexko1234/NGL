@@ -23,13 +23,19 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
+import models.laboratory.experiment.instance.AbstractContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.parameter.index.Index;
+import models.laboratory.reagent.description.KitCatalog;
+import models.utils.InstanceConstants;
 import models.utils.code.DefaultCodeImpl;
 //import models.utils.code.play;
 import models.utils.dao.DAOException;
-//import play.Logger;
+import fr.cea.ig.MongoDBDAO;
+import org.mongojack.DBQuery;
+import play.Logger;
 //import play.Play;
 
 // used to help to set export files
@@ -133,6 +139,22 @@ public class CsvHelper {
 		Instrument instrument =  Instrument.find.findByCode(code);
 		if (instrument != null) {
 			return checkName(instrument.name);
+		}else{
+			return "-";
+		}
+	}
+	
+	/**
+	 * get reagent kit name by code
+	 * 
+	 * @param code
+	 * @return
+	 */
+	public static String getKitName(String code){
+		Logger.debug("kit code : " + code);
+		KitCatalog kitCat =  MongoDBDAO.findOne(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class, DBQuery.is("code",code));
+		if (kitCat != null) {
+			return checkName(kitCat.name);
 		}else{
 			return "-";
 		}

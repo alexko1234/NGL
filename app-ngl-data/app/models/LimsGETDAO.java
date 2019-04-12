@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -28,6 +29,7 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.parameter.index.IlluminaIndex;
 import models.laboratory.parameter.index.Index;
+import models.laboratory.parameter.index.NanoporeIndex;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.project.instance.BioinformaticParameters;
@@ -87,6 +89,9 @@ public class LimsGETDAO{
 	protected static final String IMPORT_CATEGORY_CODE="sample-import";
 	protected static final String RUN_TYPE_CODE = "ngsrg-illumina";
 	protected static final String READSET_DEFAULT_CODE = "default-readset";
+	protected static final String ILLUMINA = "Illumina";
+	protected static final String NANOPORE = "Oxford Nanopore Technologies";
+	protected static final String[] PROVIDER = new String[] {ILLUMINA, NANOPORE};
 
 	@Autowired
 	@Qualifier("esitoul")
@@ -1067,31 +1072,40 @@ public HashMap<String, PropertyValue> getCaracteristiquesForContainer(int barcod
 
 	}
 
-	
-	public List<Index> findIndexIlluminaToCreate(final ContextValidation contextError)throws SQLException {
-		String indexSQLQuery ="SELECT t.code as tag_code, t.name as tag_name,t.category as tag_category, t.sequence as tag_sequence, p.name as provider_name from ngl_tag as t inner join provider p on p.providerid = t.provider_id";
-		List<Index> results = this.jdbcTemplate.query(indexSQLQuery 
-				,new RowMapper<Index>() {
-					@SuppressWarnings("rawtypes")
-					public Index mapRow(ResultSet rs, int rowNum) throws SQLException {
-						Index index=new IlluminaIndex();
-						index.code=rs.getString("tag_code");
-						index.name=rs.getString("tag_code");
-						index.shortName=rs.getString("tag_code");
-						index.categoryCode=rs.getString("tag_category");
-						index.sequence=rs.getString("tag_sequence");
-						index.supplierName=new HashMap<String, String>();
-						index.supplierName.put(rs.getString("provider_name"),rs.getString("tag_code"));
-						index.traceInformation=new TraceInformation();
-						InstanceHelpers.updateTraceInformation(index.traceInformation, "ngl-data");
-						return index;
-					}
-				});
+
+	public List<Index> findIndexToCreate(final ContextValidation contextError)throws SQLException {
+		List<Index> results = new ArrayList<Index>();
+		for(final String provider : PROVIDER) {
+			String indexSQLQuery ="SELECT t.code as tag_code, t.name as tag_name,t.category as tag_category, t.sequence as tag_sequence, p.name as provider_name from ngl_tag as t inner join provider p on p.providerid = t.provider_id where p.name = '" + provider + "'";
+			Logger.debug("SQL index : " + indexSQLQuery);
+			List<Index> result = this.jdbcTemplate.query(indexSQLQuery 
+					,new RowMapper<Index>() {
+						@SuppressWarnings("rawtypes")
+						public Index mapRow(ResultSet rs, int rowNum) throws SQLException {
+							Index index;
+							if (provider.equals(NANOPORE)){
+								index=new NanoporeIndex();
+							}else{
+								index=new IlluminaIndex();
+								
+							}
+							index.code=rs.getString("tag_code");
+							index.name=rs.getString("tag_code");
+							index.shortName=rs.getString("tag_code");
+							index.categoryCode=rs.getString("tag_category");
+							index.sequence=rs.getString("tag_sequence");
+							index.supplierName=new HashMap<String, String>();
+							index.supplierName.put(rs.getString("provider_name"),rs.getString("tag_code"));
+							index.traceInformation=new TraceInformation();
+							InstanceHelpers.updateTraceInformation(index.traceInformation, "ngl-data");
+							return index;
+						}
+					});	
+			results.addAll(result);
+		}
 		return results;
 
 	}
-
-
 
 	public List<String> findSampleUpdated(List<String> sampleCodes) {
 		String sql="select code=rtrim(prsco)+'_'+rtrim(adnnom) from Materiel m, Useadn u where u.adnco=m.adnco and ";

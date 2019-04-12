@@ -44,6 +44,8 @@ import validation.ContextValidation;
 import validation.IValidation;
 import workflows.container.ContentHelper;
 
+import play.Logger;
+
 public class InstanceHelpers {
 
 	public static final play.Logger.ALogger logger = play.Logger.of(InstanceHelpers.class);
@@ -162,8 +164,9 @@ public class InstanceHelpers {
 			                                                     Map<String, PropertyValue> propertiesOutPut) {
 		// TODO: fix as it i is a meaningless creation and could as well return
 		//       immediately without doing anything.
-		if (propertiesOutPut == null) 
+		if (propertiesOutPut == null) {
 			propertiesOutPut = new HashMap<>(); // <String, PropertyValue>();
+		}
 		for (PropertyDefinition propertyDefinition : propertyDefinitions) {
 			PropertyValue propertyValue = propertiesInput.get(propertyDefinition.code);
 			if (propertyValue != null) {
@@ -215,7 +218,7 @@ public class InstanceHelpers {
 //=======
 //>>>>>>> V2.0.2
 		if (obj != null) {
-			logger.debug("InstanceHelpers.save obj != null");
+			logger.debug("InstanceHelpers.save obj != null"); 
 			obj.validate(localContextError);
 			logger.debug("InstanceHelpers.save obj != null after validate");
 		} else {

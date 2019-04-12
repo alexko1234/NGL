@@ -537,11 +537,11 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 //		propertyDefinitions.add(newPropertiesDefinition("Fmols", "quant_flowcell", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null,
 //				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode( "fmol"), MeasureUnit.find.findByCode( "fmol"), "single",45, true, "30", null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Vol._ADN","ADN_volume", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, false, null,
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode( "µL"),"single",46, true));
+		propertyDefinitions.add(newPropertiesDefinition("Vol._ADN","ADN_volume", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, false, "IP", null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode( "µL"),"single",46, true, null, "1"));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Qtt_ADN chargé","quant_ADN_charge", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null,
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode( "ng"), MeasureUnit.find.findByCode( "ng"), "single",47, true));
+		propertyDefinitions.add(newPropertiesDefinition("Qtt_ADN chargé","quant_ADN_charge", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, "IP", null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode( "ng"), MeasureUnit.find.findByCode( "ng"), "single",47, true, null, "1"));
 		
 //		propertyDefinitions.add(newPropertiesDefinition("%récup global","pourcent_recup_global", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null, null, null, null, "single", 48, false));
 //		
@@ -566,14 +566,32 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 		
 		// Simplex ou multiplex -> renseigné avec les drools
 		propertyDefinitions.add(newPropertiesDefinition("Type de run", "runType", LevelService.getLevels(Level.CODE.Experiment), String.class, false, false, "single", 61));
-
-		//propertyDefinitions.add(newPropertiesDefinition("Kit","kit", LevelService.getLevels(Level.CODE.Experiment), String.class, false, "single"));
+//		propertyDefinitions.add(newPropertiesDefinition("Kit","kit", LevelService.getLevels(Level.CODE.Experiment), String.class, false, getKitList(),"single")); // ajouter la liste des kits possibles
+		
+		//Sample ID
+		propertyDefinitions.add(newPropertiesDefinition("Sample ID", "sampleID", LevelService.getLevels(Level.CODE.Experiment), String.class, false, "single"));
 		
 		// Run name
 //		propertyDefinitions.add(newPropertiesDefinition("Nom du run", "nom_run", LevelService.getLevels(Level.CODE.Experiment), String.class, false, "single", "--"));
 		
 		return propertyDefinitions;
 	}
+	
+//	private static List<Value> getKitList() {
+//		List<Value> values = new ArrayList<>();
+//		values.add(DescriptionFactory.newValue("RBK001","RBK001"));
+//		values.add(DescriptionFactory.newValue("RBK004","RBK004"));
+//		values.add(DescriptionFactory.newValue("NBD103/NBD104","NBD103/NBD104"));
+//		values.add(DescriptionFactory.newValue("NBD114","NBD114"));
+//		values.add(DescriptionFactory.newValue("NBD104/NBD114","NBD104/NBD114"));
+//		values.add(DescriptionFactory.newValue("PBC001","PBC001"));
+//		values.add(DescriptionFactory.newValue("PBC096","PBC096"));
+//		values.add(DescriptionFactory.newValue("RPB004/RLB001","RPB004/RLB001"));
+//		values.add(DescriptionFactory.newValue("PBK004/LWB001","PBK004/LWB001"));
+//		values.add(DescriptionFactory.newValue("RAB204","RAB204"));
+//		values.add(DescriptionFactory.newValue("VMK001","VMK001"));
+//		return values;
+//	}
 	
 //	private static List<PropertyDefinition> getPropertyFragmentationNanopore() throws DAOException {
 //		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();

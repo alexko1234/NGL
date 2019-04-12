@@ -32,15 +32,14 @@ public class IndexImportGET extends AbstractImportDataGET{
 	
 	public static void createIndex(LimsGETDAO limsServices,ContextValidation contextValidation) throws SQLException, DAOException{
 
-		
-	List<Index> indexs = limsServices.findIndexIlluminaToCreate(contextValidation) ;
+		List<Index> indexs = limsServices.findIndexToCreate(contextValidation) ;
 	
 		for(Index index:indexs){
 	
 			if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.PARAMETER_COLL_NAME, Index.class, index.code)){
 				MongoDBDAO.deleteByCode(InstanceConstants.PARAMETER_COLL_NAME, Index.class, index.code);
 			}
-			Logger.debug("IndexImportGET " + index.shortName);
+			Logger.debug("IndexImportGET " + index.shortName + " - " + InstanceConstants.PARAMETER_COLL_NAME);
 		}
 	
 		InstanceHelpers.save(InstanceConstants.PARAMETER_COLL_NAME,indexs,contextValidation);
