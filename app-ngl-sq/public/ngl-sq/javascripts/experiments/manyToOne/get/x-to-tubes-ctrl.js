@@ -6,16 +6,6 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 	var datatableConfig = {		
 			name: $scope.experiment.typeCode.toUpperCase(),
 			columns:[
-			         {
-			 			"header" : Messages("containers.table.supportCode"),
-			 			"property" : "inputContainer.support.code",
-			 			"order" : true,
-			 			"edit" : false,
-			 			"hide" : true,
-			 			"type" : "text",
-			 			"position" : 1,
-			 			"extraHeaders" : {0 : Messages("experiments.inputs")}
-			         },
 //			         {
 //			        	 "header":Messages("containers.table.supportCategoryCode"),
 //			        	 "property":"inputContainer.support.categoryCode",
@@ -100,7 +90,7 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":8,
+			        	 "position":7,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 					 {
@@ -110,7 +100,7 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":9,
+			        	 "position":8,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
@@ -120,7 +110,7 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":10,
+			        	 "position":8.5,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },	        
 //			         {
@@ -141,8 +131,19 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":12,
+			        	 "position":9,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
+			         //out
+			         {
+			        	 "header":Messages("containers.table.volume")+" (µL)",
+			        	 "property":"outputContainerUsed.volume.value",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+						 "type":"number",
+			        	 "position":50,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
 			        	 "header":Messages("containers.table.concentration"),
@@ -151,7 +152,7 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 						 "edit":false,
 						 "hide":true,
 						 "type":"number",
-			        	 "position":50,
+			        	 "position":51,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
@@ -161,29 +162,29 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 						 "edit":false,
 						 "hide":true,
 						 "type":"text",
-			        	 "position":50.5,
+			        	 "position":51.5,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
-			        	 "header":Messages("containers.table.volume")+" (µL)",
-			        	 "property":"outputContainerUsed.volume.value",
+			        	 "header":Messages("containers.table.storageCode"),
+			        	 "property":"outputContainerUsed.locationOnContainerSupport.code",
 			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-						 "type":"number",
-			        	 "position":51,
-			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         },
-			         {
-			        	 "header":Messages("containers.table.code"),
-			        	 "property":"outputContainerUsed.code",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-						 "type":"text",
+						 "edit":true,
+						 "hide":false,
+			        	 "type":"text",
 			        	 "position":400,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         },
+				     }
+//			         {
+//			        	 "header":Messages("containers.table.code"),
+//			        	 "property":"outputContainerUsed.code",
+//			        	 "order":true,
+//						 "edit":false,
+//						 "hide":true,
+//						 "type":"text",
+//			        	 "position":400,
+//			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+//			         },
 //			         {
 //			        	 "header":Messages("containers.table.stateCode"),
 //			        	 "property":"outputContainer.state.code | codes:'state'",
@@ -238,10 +239,10 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 				columnMode:true
 			},
 			exportCSV:{
-				active:false,
-//				showButton:true,
-//				delimiter:";",
-//				start:false
+				active:true,
+				showButton:true,
+				delimiter:";",
+				start:false
 			},
 			extraHeaders:{
 				number:2,
@@ -249,6 +250,10 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 			}
 	};	
 	
+	/*
+	 * si containers in sont des tubes ou mixte -> afficher - container.code
+	 * si suelement plaque -> affichage - support.code + ligne + colonne
+	 */
 	var tmp = [];
 	if(!$scope.isCreationMode()){
 		tmp = $scope.$eval("atomicTransfertMethods|flatArray:'inputContainerUseds'|getArray:'locationOnContainerSupport.categoryCode'|unique",$scope.experiment);			
@@ -268,6 +273,18 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 	
 	
 	if(supportCategoryCode === "96-well-plate"){
+		datatableConfig.columns.push({
+			"header" : Messages("containers.table.supportCode"),
+			"property" : "inputContainer.support.code",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 1,
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
+			}
+		});
 		datatableConfig.columns.push({
 			"header" : Messages("containers.table.support.line"),
 			"property" : "inputContainer.support.line",
@@ -293,21 +310,69 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 			}
 		});
 
-//	} else {
-//		datatableConfig.columns.push({
-//			"header" : Messages("containers.table.code"),
-//			"property" : "inputContainer.code",
-//			"order" : true,
-//			"edit" : false,
-//			"hide" : true,
-//			"type" : "text",
-//			"position" : 1,
-//			"extraHeaders" : {
-//				0 : Messages("experiments.inputs")
-//			}
-//		});
+	} else {
+		datatableConfig.columns.push({
+			"header" : Messages("containers.table.code"),
+			"property" : "inputContainer.code",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 1,
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
+			}
+		});
 		
 		datatableConfig.order.by = 'inputContainer.sampleCodes';
+	}
+	
+	
+	//affichage des colonnes size si pas null
+	if($scope.experiment.atomicTransfertMethods){
+		sizeIN = false;
+		sizeOUT = false;
+		$scope.experiment.atomicTransfertMethods.forEach(function(atm){
+			console.log();
+//			atm.inputContainers.forEach(function(inputContainer){
+//				if(null === inputContainer.size  || undefined === inputContainer.size || undefined === inputContainer.size.value ||  null === inputContainer.size.value){
+//					sizeIN = true;
+//				}
+//			});
+//			atm.outputContainers.forEach(function(outputContainer){
+//				if(null === outputContainer.size  || undefined === outputContainer.size || undefined === outputContainer.size.value ||  null === outputContainer.size.value){
+//					sizeOUT = true;
+//				}
+//			});
+//			
+		});
+			
+		if(sizeIN){
+			datatableConfig.columns.push({
+				"header" : Messages("containers.table.size"),
+				"property": "inputContainerUsed.size.value",
+				"order" : true,
+				"edit" : false,
+				"hide" : true,
+				"type" : "number",
+				"position" :7.5,
+				"extraHeaders" : {
+					0 : Messages("experiments.inputs")
+				}
+			});
+		}
+		if(sizeOUT){			
+			datatableConfig.columns.push({
+				"header" : Messages("containers.table.size"),
+				"property": "outputContainerUsed.size.value",
+				"order" : true,
+				"edit" : false,
+				"hide" : true,
+				"type" : "number",
+				"position" :50.5,
+				"extraHeaders" : {0 : Messages("experiments.outputs")}
+			});
+		}
 	}
 	
 	
@@ -365,6 +430,7 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 		console.log("call event save on x-to-tubes");
 		
 		if($scope.atmService.data.atm.length === 0){
+			console.log("call event save on x-to-tubes if");
 			$scope.$emit('childSavedError', callbackFunction);
 			
 		    $scope.messages.clazz = "alert alert-danger";
@@ -373,8 +439,11 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 			$scope.messages.open();   
 	
 		} else {	
-			$scope.atmService.viewToExperiment($scope.experiment, false);
+//			console.log("inputContainerUsed 1 : " + JSON.stringify($scope.experiment.atomicTransfertMethods[0].inputContainerUseds[0].experimentProperties));
+			$scope.atmService.viewToExperiment($scope.experiment, true);
+//			console.log("inputContainerUsed 2 : " + JSON.stringify($scope.experiment.atomicTransfertMethods[0].inputContainerUseds[0].experimentProperties));
 			$scope.$emit('childSaved', callbackFunction);
+//			console.log("inputContainerUsed 3 : " + JSON.stringify($scope.experiment.atomicTransfertMethods[0].inputContainerUseds[0].experimentProperties));
 	    } 
 	});
 	
@@ -425,36 +494,6 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 			outputContainerUseds:new Array(0)
 		};
 	};
-	
-	/* 03/05/2017 NGL-1197
-	   26/09/2017 suppression car ajouté par erreur ????
-	 
-	$scope.copyVolumeToEngaged = function(index){
-		if (index){
-			copyVolumeAtm(index);
-		}else {
-			var atm=$scope.atmService.data.atm;
-			for (index = 0; index < atm.length; ++index) {
-				copyVolumeAtm(index);
-			}
-		}
-	}
-	
-	copyVolumeAtm = function (idx){
-		 $scope.atmService.data.atm[idx].inputContainerUseds.forEach(function(icu){
-				console.log('ATM '+ idx+ ':copy InputContainerUsed.volume =>  inputContainerUsed.experimentProperties.inputVolume.value');
-				var properties = {}; 
-				icu.experimentProperties=properties;
-				//icu.experimentProperties.inputVolume=icu.volume; // probleme les 2 champs deviennent liés...
-				//essai angular.copy...OUI!!!
-				var vol=angular.copy(icu.volume); 
-				// 04/05/2017 attention, copier seulement si propriété présente !!!
-				if ( vol ){
-				  icu.experimentProperties.inputVolume=vol;
-		 		}
-			});
-	}
-    */
 	
 	//defined default output unit
 	atmService.defaultOutputUnit = {

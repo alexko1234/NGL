@@ -13,6 +13,38 @@ rule "Debug pool-tube"
 		Logger.debug("Rules annotation @nglSQ(calculations) pool-tube");    
 end
 
+
+rule "InputVolume"
+    @nglSQ( calculations )
+	dialect "java"
+	salience 900
+	no-loop
+    when
+		$experiment:Experiment($typeCode:typeCode,$typeCode=="pool-tube")
+		$atomicTransfert: ManyToOneContainer($inputContainerUseds : inputContainerUseds, $inputContainerUseds!=null , $outputContainerUsed: outputContainerUseds, $outputContainerUsed!=null )
+	then
+		Integer in;
+		Double libV;
+		Double poolV = 0.0;
+		PropertySingleValue volumelib;
+		Logger.debug("Cou-cou");
+		for(in = 0; in<$inputContainerUseds.size(); in++){
+			InputContainerUsed inputContainerUsed = (InputContainerUsed) $inputContainerUseds.get(in);
+			if(inputContainerUsed.concentration!=null && inputContainerUsed.experimentProperties != null && inputContainerUsed.experimentProperties.get("qte_finale_lib")!=null){
+				libV = convertPVToDouble(inputContainerUsed.experimentProperties.get("qte_finale_lib"))/convertPVToDouble(inputContainerUsed.concentration);
+				volumelib = new PropertySingleValue(libV,inputContainerUsed.concentration.unit);
+				if(inputContainerUsed.experimentProperties.get("vol_finale_lib") != null){
+		   			inputContainerUsed.experimentProperties.remove("vol_finale_lib");
+		   		} 
+		   		inputContainerUsed.experimentProperties.put("vol_finale_lib",volumelib);  
+				poolV = poolV + libV;
+				Logger.debug("InputVolume calculation - " + volumelib.value + " pour " + inputContainerUsed.code + " -> total : " + poolV);
+			}
+		}
+        //Logger.debug("InputVolume calculation - " + $inputContainerUseds.size());
+	end
+
+/*
 rule "InputVolume"
     @nglSQ( calculations )
 	dialect "java"
@@ -76,7 +108,7 @@ end
     	Logger.debug("Same concentrations in  Pool-tube");
     	$contextValidation.addErrors("pool-tube","error.validationexp.sameconcentration",$code, value);
 end
-*/
+/
 
 
 rule "more than one inputContainer"
@@ -109,3 +141,4 @@ rule "Volume not null in pool-tube outputContainer"
     	Logger.debug("Volume not null in pool-tube outputContainer");
     	$contextValidation.addErrors("pool-tube","error.validationexp.outputvolumenotnull.light");    	      
 end
+*/

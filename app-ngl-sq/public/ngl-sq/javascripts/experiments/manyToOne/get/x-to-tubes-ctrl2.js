@@ -1,4 +1,4 @@
-angular.module('home').controller('GETXToTubesCtrl2',['$scope', '$http','$parse',
+angular.module('home').controller('GETXToTubesCtrlpool',['$scope', '$http','$parse',
                                                                function($scope, $http,$parse) {
 	$scope.atmService.updateOutputConcentration = function(atm){
 		
@@ -6,6 +6,9 @@ angular.module('home').controller('GETXToTubesCtrl2',['$scope', '$http','$parse'
 		// ne pas faire l'update si déjà renseigné
 			var concentration = undefined;
 			var unit = undefined;
+			
+			/*TODO
+			 * 
 			var isSame = true;
 			for(var i=0;i<atm.inputContainerUseds.length;i++){
 				if(atm.inputContainerUseds[i].concentration !== null 
@@ -32,13 +35,15 @@ angular.module('home').controller('GETXToTubesCtrl2',['$scope', '$http','$parse'
 						|| atm.outputContainerUseds[0].concentration.value === undefined)){
 				atm.outputContainerUseds[0].concentration = angular.copy(atm.inputContainerUseds[0].concentration);				
 			}
+			*/
 		}
 
 	};
 	
-	$scope.showSrcDest = function(){
-		return ($scope.experiment.typeCode !== 'pool' || ($scope.experiment.typeCode === 'pool' && $scope.experiment.instrument.typeCode !== 'biomek-fx'));
-	}
+//	???
+//	$scope.showSrcDest = function(){
+//		return ($scope.experiment.typeCode !== 'pool' || ($scope.experiment.typeCode === 'pool' && $scope.experiment.instrument.typeCode !== 'biomek-fx'));
+//	}
 	
 	$scope.update = function(atm, containerUsed, propertyName){
 		console.log("update "+propertyName);
@@ -98,6 +103,7 @@ angular.module('home').controller('GETXToTubesCtrl2',['$scope', '$http','$parse'
 		
 		atm.inputContainerUseds.forEach(function(icu){
 			var inputVolume = getterInputVolume(icu);
+			console.log("computeBufferVolume : " + inputVolume + " - " + inputVolumeTotal);
 			if(null === inputVolume  || undefined === inputVolume || undefined === inputVolume.value ||  null === inputVolume.value){
 				inputVolumeTotal = undefined;
 			}else if(inputVolumeTotal !== undefined){
@@ -108,6 +114,7 @@ angular.module('home').controller('GETXToTubesCtrl2',['$scope', '$http','$parse'
 		var outputVolume  = $parse("outputContainerUseds[0].volume")(atm);
 		
 		if(outputVolume && outputVolume.value && inputVolumeTotal){
+			console.log("outputVolume : " + outputVolume);
 			var bufferVolume = {value : undefined, unit : 'µL'};
 			var result = outputVolume.value - inputVolumeTotal;
 			
@@ -116,11 +123,12 @@ angular.module('home').controller('GETXToTubesCtrl2',['$scope', '$http','$parse'
 			}else{
 				bufferVolume.value = undefined;
 			}	
-			
+			console.log("bufferVolume : " + bufferVolume.value);
 			$parse("outputContainerUseds[0].experimentProperties.bufferVolume").assign(atm, bufferVolume);
 		}
 	}
 	
+	//appelé par le bouton 'maj size'
 	$scope.computeInSizeToOut= function(){
 		
 		console.log("Compute out size");
@@ -145,6 +153,8 @@ angular.module('home').controller('GETXToTubesCtrl2',['$scope', '$http','$parse'
 		$scope.atmService.data.updateDatatable();
 	}
 
+	//add buttons
+	
 	if($scope.atmService.inputContainerSupportCategoryCode !== "tube"){
 		$scope.setAdditionnalButtons([{
 			isDisabled : function(){return $scope.isNewState();} ,
@@ -168,32 +178,32 @@ angular.module('home').controller('GETXToTubesCtrl2',['$scope', '$http','$parse'
 	
 
 	var columns = $scope.atmService.$atmToSingleDatatable.data.getColumnsConfig();
-	columns.push({
-		"header" : Messages("containers.table.size"),
-		"property": "inputContainerUsed.size.value",
-		"order" : true,
-		"edit" : false,
-		"hide" : true,
-		"type" : "number",
-		"position" :7.5,
-		"extraHeaders" : {
-			0 : Messages("experiments.inputs")
-		}
-	});
-	
-	
-	columns.push({
-		"header" : Messages("containers.table.size"),
-		"property": "outputContainerUsed.size.value",
-		"order" : true,
-		"edit" : false,
-		"hide" : true,
-		"type" : "number",
-		"position" :100,
-		"extraHeaders" : {
-			0 : Messages("experiments.outputs")
-		}
-	});
+//	columns.push({
+//		"header" : Messages("containers.table.size"),
+//		"property": "inputContainerUsed.size.value",
+//		"order" : true,
+//		"edit" : false,
+//		"hide" : true,
+//		"type" : "number",
+//		"position" :7.5,
+//		"extraHeaders" : {
+//			0 : Messages("experiments.inputs")
+//		}
+//	});
+//	
+//	
+//	columns.push({
+//		"header" : Messages("containers.table.size"),
+//		"property": "outputContainerUsed.size.value",
+//		"order" : true,
+//		"edit" : false,
+//		"hide" : true,
+//		"type" : "number",
+//		"position" :100,
+//		"extraHeaders" : {
+//			0 : Messages("experiments.outputs")
+//		}
+//	});
 	$scope.atmService.$atmToSingleDatatable.data.setColumnsConfig(columns);
 	
 	
