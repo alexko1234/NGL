@@ -2,14 +2,29 @@
 
 <ul class="nav nav-tabs margin-bottom-5" role="tablist">
   <li class="active"><a href="" role="tab" data-target="#tube" data-toggle="tab" ng-click="atmService.data.updateFromDatatable()">@Messages("experiments.flowcell.design")</a></li>
-  <li ng-if="isRoadMapAvailable"><a href="" role="tab"  data-target="#roadmap" data-toggle="tab" ng-click="atmService.data.updateDatatable(); getONTindexes()">@Messages("experiments.calculation.sheet")</a></li> 			
+  <li ng-if="isRoadMapAvailable"><a href="" role="tab"  data-target="#roadmap" data-toggle="tab" ng-click="atmService.data.updateDatatable(); getONTindexes(); getFCpositions();">@Messages("experiments.calculation.sheet")</a></li> 			
 </ul>
 
 <div class="tab-content"  >
+	<!-- Bouton 
+	<div class="col-md-2 col-lg-2">
+         <div class="page-header">
+            <button class="btn btn-default btn-lg btn-block" ng-click="createNewATM()"> ng-disabled="!atmService.data.isSelectInputContainers()"
+                            <i class="fa fa-sign-in fa-2x"></i>
+            </button>
+         </div>  
+         <button ng-repeat="supportCode in atmService.data.inputContainerSupports" type="button" 
+                         ng-class="atmService.data.getPlateBtnClass(supportCode)" 
+                         ng-click="atmService.data.setCurrentSupportCode(supportCode)">
+                         {{supportCode}}
+         </button>
+    </div> -->
+
 	<div class="tab-pane active" id="tube">	
 		<div class="row">
 		<div class="col-md-12 col-lg-12">
 		<div class="row">
+		
 		
 <!-- InputContainers table 1-->
 		<div class="col-md-12 col-lg-5" droppable drop-fn="atmService.data.drop" ng-model="atmService.data.inputContainers"  ng-if="mainService.isEditMode()">
@@ -105,50 +120,57 @@
 			<table class="table" >
 	<!-- line 1 title-->
 			<thead>
-			<tr>
-			<th>
-			</th>
-			<th>
-				<button ng-click="hideRowAll()"  ng-if="isAllOpen" class="btn btn-default btn-xs"><i class="fa fa-eye-slash"></i></button>
-				<button ng-click="showRowAll()"  ng-if="!isAllOpen" class="btn btn-default btn-xs"><i class="fa fa-eye"></i></button>							
-			</th>
-			
-			<th ng-if="isAllOpen">
-				@Messages("containers.table.projectCode")
-			</th>
-			<th ng-if="isAllOpen">
-				@Messages("containers.table.code")
-			</th>
-			<td ng-if="isAllOpen">
-                @Messages("containers.table.nomPool")
-            </td>
-			<th ng-if="isAllOpen">
-				@Messages("containers.table.percentage")
-			</th>
-			<th ng-if="isAllOpen" class="sampleCodeAndTags">
-				@Messages("containers.table.sampleCodeAndTags")
-			</th>			
-			<th ng-if="isAllOpen">
-				@Messages("containers.table.sampleTypes")
-			</th>
-		<!-- 
-			<th ng-if="isAllOpen">
-				@Messages("containers.table.libProcessTypeCodes")
-			</th>
-			<th  ng-if="isAllOpen"
-				ng-repeat="property in outputContainerProperties track by $index">
-				{{property.name}}<span ng-if="property.displayMeasureValue"> ({{property.displayMeasureValue.value}})</span>
-			</th>
-			<th ng-if="!isAllOpen" colspan="{{5 + outputContainerProperties.length}}"></th>
+			<tr ng-if="atmService.data.isAllATMViewClose">
+				<th colspan="8">
+					@Messages("experiments.inputs")
+				</th>
 			</tr>
-		-->
-			<th ng-if="!isAllOpen" colspan="{{5}}"></th>
+			<tr ng-if="!atmService.data.isAllATMViewClose">
+				<th>
+				</th>
+				<th>
+					<!-- <button ng-click="atmService.data.hideAllATM()"  ng-if="!atmService.data.isAllATMViewClose" class="btn btn-default btn-xs"><i class="fa fa-eye-slash"></i></button>
+	                <button ng-click="atmService.data.showAllATM()"  ng-if="atmService.data.isAllATMViewClose" class="btn btn-default btn-xs"><i class="fa fa-eye"></i></button> -->
+					<button ng-click="hideRowAll()"  ng-if="isAllOpen" class="btn btn-default btn-xs"><i class="fa fa-eye-slash"></i></button>
+					<button ng-click="showRowAll()"  ng-if="!isAllOpen" class="btn btn-default btn-xs"><i class="fa fa-eye"></i></button>						
+				</th>
+				
+				<th ng-if="isAllOpen">
+					@Messages("containers.table.projectCode")
+				</th>
+				<th ng-if="isAllOpen">
+					@Messages("containers.table.code")
+				</th>
+				<td ng-if="isAllOpen">
+	                @Messages("containers.table.nomPool")
+	            </td>
+				<th ng-if="isAllOpen">
+					@Messages("containers.table.percentage")
+				</th>
+				<th ng-if="isAllOpen" class="sampleCodeAndTags">
+					@Messages("containers.table.sampleCodeAndTags")
+				</th>			
+				<th ng-if="isAllOpen">
+					@Messages("containers.table.sampleTypes")
+				</th>
+			<!-- 
+				<th ng-if="isAllOpen">
+					@Messages("containers.table.libProcessTypeCodes")
+				</th>
+				<th  ng-if="isAllOpen"
+					ng-repeat="property in outputContainerProperties track by $index">
+					{{property.name}}<span ng-if="property.displayMeasureValue"> ({{property.displayMeasureValue.value}})</span>
+				</th>
+				<th ng-if="!isAllOpen" colspan="{{5 + outputContainerProperties.length}}"></th>
+				</tr>
+			-->
+				<!-- <th ng-if="!isAllOpen" colspan="{{5}}"></th> -->
 			</tr>
 			
 			</thead>
 	<!-- line 2 -->
-		<!-- 
-			<tbody ng-if="isAllOpen && mainService.isEditMode()">
+		
+			<!-- <tbody ng-if="isAllOpen && mainService.isEditMode()">
 			<tr>
 			<th colspan="7"></th>
 			<th ng-repeat="property in outputContainerProperties track by $index">
@@ -159,18 +181,26 @@
 						/>							
 			</th>
 			</tr>
-			</tbody>	
-		 -->	
+			</tbody>	-->
+		 	
 	<!-- line 3+ -->		
-			<tbody ng-repeat="atm in atmService.data.atm | orderBy:'line' track by $index" ng-model="atm.inputContainerUseds" 
+			<!-- <tbody ng-repeat="atm in atmService.data.atm  | orderBy:'viewIndex' track by $index" 
+					droppable drop-fn="atmService.data.drop"
+					ng-model="atm.inputContainerUseds" 
+				ng-switch="atmService.data.getATMViewMode(atm, $index)">  -->
+			 <tbody ng-repeat="atm in atmService.data.atm | orderBy:'line' track by $index" 
+				ng-model="atm.inputContainerUseds" 
 				droppable drop-fn="atmService.data.drop" 
-				ng-switch="getDisplayMode(atm, $index)">
+				ng-switch="getDisplayMode(atm, $index)"> 
+		<!-- créer une fonction qui ajoute automatiquement les containers dans le containerOut qui vient d'être créé ?? -->
 		<!-- v1 -->	
 				<tr ng-switch-when="empty">
 					<td>			
 						<span class="label label-black" ng-bind="atm.line"></span>
+						<!-- <span class="label label-black" ng-bind="'ATM ' + atm.viewIndex"></span> -->
 					</td>
 					<td> 
+						<!-- <button class="btn btn-default btn-xs"  ng-click="toggleRow(atm.viewIndex - 1)" ng-switch="rows[$index]"> -->
 						<button class="btn btn-default btn-xs"  ng-click="toggleRow(atm.line - 1)" ng-switch="rows[$index]">
 							<i ng-switch-when="true" class="fa fa-eye-slash"></i>
 							<i ng-switch-when="false" class="fa fa-eye"></i>
@@ -182,11 +212,13 @@
 		<!-- v2 -->		
 				<tr ng-switch-when="compact" >	
 					<td class="compactColumn">
+						<!-- <span class="label label-black" ng-bind="'ATM ' + atm.viewIndex"></span> -->
 						<span class="label label-black" ng-bind="atm.line"></span>
 					</td >
-					<td class="compactColumn"> 					
+					<td class="compactColumn"> 				
 						<button class="btn btn-default btn-xs"  ng-click="toggleRow(atm.line - 1)">
-							<!--  i class="fa fa-eye-slash"></i-->
+						<!-- <button class="btn btn-default btn-xs"  ng-click="toggleRow(atm.viewIndex - 1)"> -->
+							<!-- <i class="fa fa-eye-slash"></i> -->
 							<i class="fa fa-eye"></i>
 						</button>			
 					</td>	
@@ -205,10 +237,11 @@
 							ng-model="inputContainer" draggable drag="dragInProgress">	
 				<!-- nbr line -->
 						<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">
-							<span class="form-control-static label label-black" ng-bind="atm.line"></span>
+							<span class="form-control-static label label-black" ng-bind="'ATM ' + atm.viewIndex"></span>
 						</td>
 				<!-- bt eye -->
 						<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">
+							<!-- <button class="btn btn-default btn-xs"  ng-click="toggleRow(atm.viewIndex - 1)"> -->
 							<button class="btn btn-default btn-xs"  ng-click="toggleRow(atm.line - 1)">
 								<i class="fa fa-eye-slash"></i>
 								<!-- i class="fa fa-eye"></i-->
@@ -244,10 +277,10 @@
 						<td>
 							<div list-resize='inputContainer.contents | getArray:"sampleTypeCode"| unique | codes:"type"' list-resize-min-size='1' below vertical>
 						</td> 
-					<!-- 
+					
 						<td>
 							<div list-resize='inputContainer.contents | getArray:"properties.Type_librairie.value"| unique ' list-resize-min-size='1' below vertical>
-					
+					<!--
 						</td>	
 						<td ng-repeat="property in outputContainerProperties track by $index" 
 							ng-if="$parent.$index === 0"
@@ -266,7 +299,7 @@
 							</div>								 
 								 				
 						</td>
-					 -->											
+						-->									
 					</tr>					
 			</tbody>	
 			</table>

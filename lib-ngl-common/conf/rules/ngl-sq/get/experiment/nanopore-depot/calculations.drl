@@ -7,8 +7,9 @@ rule "set Type de run"
 	salience 200
 	no-loop
 	when
-    	$experiment:Experiment($typeCode:typeCode,$typeCode=="nanopore-depot", $stateCode : state.code, $stateCode=="IP", $experimentProp: experimentProperties);
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="nanopore-depot", $stateCode : state.code, $stateCode=="N", $experimentProp: experimentProperties);
     	$atomicTransfert: ManyToOneContainer(inputContainerUseds!=null, $inputContainerUseds:inputContainerUseds);
+		OutputContainerUsed( $experimentPropertiesOut : experimentProperties, $experimentPropertiesOut != null) from $atomicTransfert.outputContainerUseds
     	
     then
    		PropertySingleValue value;
@@ -19,9 +20,9 @@ rule "set Type de run"
    			value = new PropertySingleValue("SPLX");
 	   	}
 	   	
-	   	if($experimentProp.get("runType") != null){
-	   		$experimentProp.remove("runType");
+	   	if($experimentPropertiesOut.get("runType") != null){
+	   		$experimentPropertiesOut.remove("runType");
 	   	}
-	   	$experimentProp.put("runType",value);
+	   	$experimentPropertiesOut.put("runType",value);
 	   	
     end

@@ -72,13 +72,13 @@ public class ContainerService {
 //		l.add(newContainerSupportCategory("Irys Chip", "irys-chip-2", 2, 1, 1, ContainerCategory.find.findByCode("irys-fc")));
 		l.add(newContainerSupportCategory("Autre", "other", 1, 1, 1, ContainerCategory.find.findByCode("other")));
 		// FC GridIon
-//		l.add(newContainerSupportCategory("Flowcell GridIon", "flowcell_gd", 1, 1, 1, ContainerCategory.find.findByCode("lane")));
-		l.add(newContainerSupportCategory("Flowcell R9.4.1 GridIon RevD", "flowcell_R9-4-1_gd_RevD", 1, 1, 1, ContainerCategory.find.findByCode("lane")));
-		l.add(newContainerSupportCategory("Flowcell R9.4.1 GridIon", "flowcell_R9-4-1_gd", 1, 1, 1, ContainerCategory.find.findByCode("lane")));
-		l.add(newContainerSupportCategory("Flowcell R9.5 GridIon", "flowcell_R9-5_gd", 1, 1, 1, ContainerCategory.find.findByCode("lane")));
+		l.add(newContainerSupportCategory("Flowcell GridIon", "flowcell_gd", 5, 1, 5, ContainerCategory.find.findByCode("lane")));
+		//l.add(newContainerSupportCategory("Flowcell R9.4.1 GridIon RevD", "flowcell_R9-4-1_gd_RevD", 1, 1, 1, ContainerCategory.find.findByCode("lane")));
+		//l.add(newContainerSupportCategory("Flowcell R9.4.1 GridIon", "flowcell_R9-4-1_gd", 1, 1, 1, ContainerCategory.find.findByCode("lane")));
+		//l.add(newContainerSupportCategory("Flowcell R9.5 GridIon", "flowcell_R9-5_gd", 1, 1, 1, ContainerCategory.find.findByCode("lane")));
 		// FC PromethIon
-//		l.add(newContainerSupportCategory("Flowcell PromethIon", "flowcell_pt", 1, 1, 1, ContainerCategory.find.findByCode("lane")));
-		l.add(newContainerSupportCategory("Flowcell R9.4.1 PromethIon RevD", "flowcell_R9-4-1_pt_RevD", 1, 1, 1, ContainerCategory.find.findByCode("lane")));
+		l.add(newContainerSupportCategory("Flowcell PromethIon", "flowcell_pt", 24, 1, 24, ContainerCategory.find.findByCode("lane")));
+		//l.add(newContainerSupportCategory("Flowcell R9.4.1 PromethIon RevD", "flowcell_R9-4-1_pt_RevD", 1, 1, 1, ContainerCategory.find.findByCode("lane")));
 		DAOHelpers.saveModels(ContainerSupportCategory.class, l, errors);
 	}
 	

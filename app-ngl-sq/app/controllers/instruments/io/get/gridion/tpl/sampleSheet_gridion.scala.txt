@@ -1,25 +1,27 @@
-@(e:models.laboratory.experiment.instance.Experiment, containers: List[models.laboratory.container.instance.Container])
+@(e:models.laboratory.experiment.instance.Experiment, containers: List[models.laboratory.container.instance.Container], codeContainerOut:String)
 
 @import controllers.instruments.io.utils._;
+@import models.laboratory.reagent.description.KitCatalog;
 
-@RUNTYPE = @{"MTPLX" == e.experimentProperties.get("runType").value}
-
-MachineName;@(CsvHelper.getInstrumentName(e.instrument.code))
-DepotDate;@(CsvHelper.getRunDate(e))
-RunType;@(e.experimentProperties.get("runType").value)
-ProjectName;@for(projet <- e.projectCodes){@(projet),}
-SampleID;@(e.experimentProperties.get("sampleID").value)
-CodeFC;@(OutputHelper.getInstrumentProperty(e, "containerSupportCode"))
-LocationFC;@(OutputHelper.getInstrumentProperty(e, "empl_FC"))
-@if(RUNTYPE){
-	Kit;@(CsvHelper.getKitName(e.reagents.get(0).kitCatalogCode))
-}
-;
-Sample;Tag;Species
 @for(etm <- e.atomicTransfertMethods.sortWith(_.line < _.line)){
-	@for(inputContainerUsed <- etm.inputContainerUseds.sortWith(_.code < _.code)){
-		@for(content <- inputContainerUsed.contents.sortWith(_.sampleCode < _.sampleCode)){
-			@(content.sampleCode);@if(RUNTYPE){@(OutputHelper.getExperimentProperty(inputContainerUsed, "tag"))};@(content.processProperties.get("species").value)
+	@for(outputContainerUsed <- etm.outputContainerUseds.sortWith(_.code < _.code)){	
+		@if(outputContainerUsed.code == codeContainerOut){	
+			MachineName;@(CsvHelper.getInstrumentName(e.instrument.code))
+			DepotDate;@(CsvHelper.getRunDate(e))
+			RunType;@(outputContainerUsed.experimentProperties.get("runType").value)
+			ProjectName;@for(content <- outputContainerUsed.contents.sortWith(_.sampleCode < _.sampleCode)){@(content.projectCode),}
+			MinknowSampleID;@(outputContainerUsed.experimentProperties.get("sampleID").value)
+			CodeFC;@(outputContainerUsed.code)
+			LocationFC;@(outputContainerUsed.experimentProperties.get("empl_FC").value)
+			@if({"MTPLX" == outputContainerUsed.experimentProperties.get("runType").value}){
+				Kit;@for(reagent <- e.reagents.sortWith(_.kitCatalogCode < _.kitCatalogCode)){@for(kit <- CsvHelper.getKitList(reagent.kitCatalogCode)){@if((kit.name).toLowerCase().contains("barcoding")){@(kit.providerRefName)},}}
+			}
+			Sample;Tag;Species
+			@for(inputContainerUsed <- etm.inputContainerUseds.sortWith(_.code < _.code)){
+				@for(content <- inputContainerUsed.contents.sortWith(_.sampleCode < _.sampleCode)){
+					@(content.referenceCollab);@if({"MTPLX" == outputContainerUsed.experimentProperties.get("runType").value}){@(OutputHelper.getExperimentProperty(inputContainerUsed, "tag"))};@(content.processProperties.get("species").value)
+				}
+			}
 		}
 	}
 }

@@ -531,17 +531,37 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 //		
 //		propertyDefinitions.add(newPropertiesDefinition("Sizing","sizing", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, null ,null,null, "single",43, true));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Tag","tag", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), String.class, false, null, null ,null,null, "single",45, true));
+		propertyDefinitions.add(newPropertiesDefinition("Tag","tag", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), String.class, false, null, null ,null,null, "single",39, true));
 		
 		// Flowcell input
 //		propertyDefinitions.add(newPropertiesDefinition("Fmols", "quant_flowcell", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null,
 //				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode( "fmol"), MeasureUnit.find.findByCode( "fmol"), "single",45, true, "30", null));
+
+//		propertyDefinitions.add(newPropertiesDefinition("Kit","kit", LevelService.getLevels(Level.CODE.Experiment), String.class, false, getKitList(),"single")); // ajouter la liste des kits possibles
+		
+		// Simplex ou multiplex -> renseigné avec les drools
+		propertyDefinitions.add(newPropertiesDefinition("Type de run", "runType", LevelService.getLevels(Level.CODE.ContainerOut), String.class, false, false, "single", 45));
+		
+		//Sample ID
+		propertyDefinitions.add(newPropertiesDefinition("Sample ID", "sampleID", LevelService.getLevels(Level.CODE.ContainerOut), String.class, false, "single", 46));
+		
+		//Code FC -> à appeler dans le tableau du début dans javascript 
+		//propertyDefinitions.add(newPropertiesDefinition("Code Flowcell valide", "containerSupportCode", LevelService.getLevels(Level.CODE.ContainerOut),String.class, true, "single",48));
+        
+		//Type de FC
+		propertyDefinitions.add(newPropertiesDefinition("Type FC","type_FC", LevelService.getLevels(Level.CODE.ContainerOut), String.class, false, null, null ,null,null, "single",47, true));
+		
+		//Emplacement FC
+		propertyDefinitions.add(newPropertiesDefinition("Emp. FC","empl_FC", LevelService.getLevels(Level.CODE.ContainerOut), String.class, false, null, null ,null,null, "single",49, true));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Vol._ADN","ADN_volume", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, false, "IP", null,
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode( "µL"),"single",46, true, null, "1"));
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode( "µL"),"single",50, true, null, "1"));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Qtt_ADN chargé","quant_ADN_charge", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, "IP", null,
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode( "ng"), MeasureUnit.find.findByCode( "ng"), "single",47, true, null, "1"));
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode( "ng"), MeasureUnit.find.findByCode( "ng"), "single",51, true, null, "1"));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Chargement","chargement", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, "IP", null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode( "fmol"), MeasureUnit.find.findByCode( "fmol"), "single",52, true, null, "1"));
 		
 //		propertyDefinitions.add(newPropertiesDefinition("%récup global","pourcent_recup_global", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null, null, null, null, "single", 48, false));
 //		
@@ -550,31 +570,77 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 		
 		// QC de la FC
 //		propertyDefinitions.add(newPropertiesDefinition("Emplacement FC","empl_FC", LevelService.getLevels(Level.CODE.ContainerOut), String.class, false, null, null ,null,null, "single",50, true));
-		propertyDefinitions.add(newPropertiesDefinition("QC nb pores total","nb_pores_QC", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",51, true));
-		propertyDefinitions.add(newPropertiesDefinition("QC nb pores total G1","nb_pores_QC_G1", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",52, true));
-		propertyDefinitions.add(newPropertiesDefinition("QC nb pores total G2","nb_pores_QC_G2", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",53, true));
-		propertyDefinitions.add(newPropertiesDefinition("QC nb pores total G3","nb_pores_QC_G3", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",54, true));
-		propertyDefinitions.add(newPropertiesDefinition("QC nb pores total G4","nb_pores_QC_G4", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",55, true));
-		propertyDefinitions.add(newPropertiesDefinition("Nb pores actifs au dépôt","nb_pores_depot", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",56, true));
-		propertyDefinitions.add(newPropertiesDefinition("Nb pores G1","pores_G1", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",57, true));
-		propertyDefinitions.add(newPropertiesDefinition("Nb pores G2","pores_G2", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",58, true));
-		propertyDefinitions.add(newPropertiesDefinition("Nb pores G3","pores_G3", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",59, true));
-		propertyDefinitions.add(newPropertiesDefinition("Nb pores G4","pores_G4", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",60, true));
+		propertyDefinitions.add(newPropertiesDefinition("QC nb pores total","nb_pores_QC", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",53, true));
+		//propertyDefinitions.add(newPropertiesDefinition("QC nb pores total G1","nb_pores_QC_G1", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",54, true));
+		//propertyDefinitions.add(newPropertiesDefinition("QC nb pores total G2","nb_pores_QC_G2", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",55, true));
+		//propertyDefinitions.add(newPropertiesDefinition("QC nb pores total G3","nb_pores_QC_G3", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",56, true));
+		//propertyDefinitions.add(newPropertiesDefinition("QC nb pores total G4","nb_pores_QC_G4", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",57, true));
+		propertyDefinitions.add(newPropertiesDefinition("Nb pores actifs au dépôt","nb_pores_depot", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",58, true));
+		//propertyDefinitions.add(newPropertiesDefinition("Nb pores G1","pores_G1", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",59, true));
+		//propertyDefinitions.add(newPropertiesDefinition("Nb pores G2","pores_G2", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",60, true));
+		//propertyDefinitions.add(newPropertiesDefinition("Nb pores G3","pores_G3", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",61, true));
+		//propertyDefinitions.add(newPropertiesDefinition("Nb pores G4","pores_G4", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null, null ,null,null, "single",62, true));
 		
 		// Run start Date
 		propertyDefinitions.add(newPropertiesDefinition("Date de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, true, "single"));
-		
-		// Simplex ou multiplex -> renseigné avec les drools
-		propertyDefinitions.add(newPropertiesDefinition("Type de run", "runType", LevelService.getLevels(Level.CODE.Experiment), String.class, false, false, "single", 61));
-//		propertyDefinitions.add(newPropertiesDefinition("Kit","kit", LevelService.getLevels(Level.CODE.Experiment), String.class, false, getKitList(),"single")); // ajouter la liste des kits possibles
-		
-		//Sample ID
-		propertyDefinitions.add(newPropertiesDefinition("Sample ID", "sampleID", LevelService.getLevels(Level.CODE.Experiment), String.class, false, "single"));
 		
 		// Run name
 //		propertyDefinitions.add(newPropertiesDefinition("Nom du run", "nom_run", LevelService.getLevels(Level.CODE.Experiment), String.class, false, "single", "--"));
 		
 		return propertyDefinitions;
+	}
+	
+	private static List<Value> getPromethionPosition() {
+		List<Value> values = new ArrayList<>();		
+		values.add(DescriptionFactory.newValue("1-A1-D1","1-A1-D1"));  
+		//values.add(DescriptionFactory.newValue("1-A2-D2","1-A2-D2"));  
+		values.add(DescriptionFactory.newValue("1-A3-D3","1-A3-D3"));  
+		//values.add(DescriptionFactory.newValue("1-A4-D4","1-A4-D4"));  
+		values.add(DescriptionFactory.newValue("1-A5-D5","1-A5-D5"));  
+		//values.add(DescriptionFactory.newValue("1-A6-D6","1-A6-D6")); 
+		values.add(DescriptionFactory.newValue("1-E1-H1","1-E1-H1")); 
+		//values.add(DescriptionFactory.newValue("1-E2-H2","1-E2-H2")); 
+		values.add(DescriptionFactory.newValue("1-E3-H3","1-E3-H3")); 
+		//values.add(DescriptionFactory.newValue("1-E4-H4","1-E4-H4")); 
+		values.add(DescriptionFactory.newValue("1-E5-H5","1-E5-H5")); 
+		//values.add(DescriptionFactory.newValue("1-E6-H6","1-E6-H6")); 
+		values.add(DescriptionFactory.newValue("1-A7-D7","1-A7-D7")); 
+		//values.add(DescriptionFactory.newValue("1-A8-D8","1-A8-D8")); 
+		values.add(DescriptionFactory.newValue("1-A9-D9","1-A9-D9")); 
+		//values.add(DescriptionFactory.newValue("1-A10-D10","1-A10-D10")); 
+		values.add(DescriptionFactory.newValue("1-A11-D11","1-A11-D11")); 
+		//values.add(DescriptionFactory.newValue("1-A12-D12","1-A12-D12")); 
+		values.add(DescriptionFactory.newValue("1-E7-H7","1-E7-H7")); 
+		//values.add(DescriptionFactory.newValue("1-E8-H8","1-E8-H8")); 
+		values.add(DescriptionFactory.newValue("1-E9-H9","1-E9-H9")); 
+		//values.add(DescriptionFactory.newValue("1-E10-H10","1-E10-H10")); 
+		values.add(DescriptionFactory.newValue("1-E11-H11","1-E11-H11")); 
+		//values.add(DescriptionFactory.newValue("1-E12-H12","1-E12-H12")); 
+		values.add(DescriptionFactory.newValue("2-A1-D1","2-A1-D1")); 
+		//values.add(DescriptionFactory.newValue("2-A2-D2","2-A2-D2")); 
+		values.add(DescriptionFactory.newValue("2-A3-D3","2-A3-D3")); 
+		//values.add(DescriptionFactory.newValue("2-A4-D4","2-A4-D4")); 
+		values.add(DescriptionFactory.newValue("2-A5-D5","2-A5-D5")); 
+		//values.add(DescriptionFactory.newValue("2-A6-D6","2-A6-D6")); 
+		values.add(DescriptionFactory.newValue("2-E1-H1","2-E1-H1")); 
+		//values.add(DescriptionFactory.newValue("2-E2-H2","2-E2-H2")); 
+		values.add(DescriptionFactory.newValue("2-E3-H3","2-E3-H3")); 
+		//values.add(DescriptionFactory.newValue("2-E4-H4","2-E4-H4")); 
+		values.add(DescriptionFactory.newValue("2-E5-H5","2-E5-H5")); 
+		//values.add(DescriptionFactory.newValue("2-E6-H6","2-E6-H6")); 
+		values.add(DescriptionFactory.newValue("2-A7-D7","2-A7-D7")); 
+		//values.add(DescriptionFactory.newValue("2-A8-D8","2-A8-D8")); 
+		values.add(DescriptionFactory.newValue("2-A9-D9","2-A9-D9")); 
+		//values.add(DescriptionFactory.newValue("2-A10-D10","2-A10-D10")); 
+		values.add(DescriptionFactory.newValue("2-A11-D11","2-A11-D11")); 
+		//values.add(DescriptionFactory.newValue("2-A12-D12","2-A12-D12")); 
+		values.add(DescriptionFactory.newValue("2-E7-H7","2-E7-H7")); 
+		//values.add(DescriptionFactory.newValue("2-E8-H8","2-E8-H8")); 
+		values.add(DescriptionFactory.newValue("2-E9-H9","2-E9-H9")); 
+		//values.add(DescriptionFactory.newValue("2-E10-H10","2-E10-H10")); 
+		values.add(DescriptionFactory.newValue("2-E11-H11","2-E11-H11")); 
+		//values.add(DescriptionFactory.newValue("2-E12-H12","2-E12-H12")); 
+		return values;
 	}
 	
 //	private static List<Value> getKitList() {

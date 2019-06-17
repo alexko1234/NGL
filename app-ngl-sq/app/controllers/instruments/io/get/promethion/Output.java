@@ -25,15 +25,19 @@ public class Output extends AbstractOutput {
 	
 	@Override
 	public File generateFile(Experiment experiment, ContextValidation contextValidation) {
-		String ftype = null;
+		String codeContainerOut = null;
 		String content = null;
 		String filename =null;
+		
+		//get codeContainerOut from url
+		codeContainerOut = (String)contextValidation.getObject("outputCode");
+		logger.debug("Output- codeContainerOut : "+ codeContainerOut);
 		
 		//get container
 		List<Container> containers = OutputHelper.getInputContainersFromExperiment(experiment);
 		logger.debug("Output- containers : "+ containers.size());
 		
-		content = '\ufeff' + OutputHelper.format(sampleSheet_promethion.render(experiment,containers).body());
+		content = '\ufeff' + OutputHelper.format(sampleSheet_promethion.render(experiment,containers,codeContainerOut).body());
 
 		//set file name
 		filename = OutputHelper.getInstrumentPath(experiment.instrument.code)+(new SimpleDateFormat("yyyyMMdd")).format(new Date()) + "_" + experiment.instrument.code + "_" + containers.get(0).support.code + ".csv";

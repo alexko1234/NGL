@@ -1,41 +1,19 @@
 //created on: Feb 12, 2019
 package rules
-
-rule "barcode non null si multiplex"
+	
+rule "kit (reagent) non null"
     @nglSQ( validations )
 	dialect "java"
 	salience 1000
 	no-loop
     when
-    	$experiment:Experiment($typeCode:typeCode,$typeCode=="nanopore-depot", $stateCode : state.code, $stateCode=="IP", $experimentProp: experimentProperties)
-		$atomicTransfert: ManyToOneContainer(inputContainerUseds!=null, $inputContainerUseds:inputContainerUseds,$inputContainerUseds.size() > 1)
-		InputContainerUsed( $experimentProperties : experimentProperties) from $inputContainerUseds
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="nanopore-depot", $stateCode : state.code, $stateCode!="N", $reagents: reagents)
+    	/*$atomicTransfert: ManyToOneContainer(inputContainerUseds!=null, $inputContainerUseds:inputContainerUseds, $inputContainerUseds.size() > 1);*/
 		$contextValidation:ContextValidation()
-		eval($experimentProperties == null)
-		//eval($experimentProp.get("kit") == null)
+		eval($reagents.size() == 0)
 		
     then
-    	if($experimentProperties == null){
-	    	$contextValidation.addErrors("Container","error.validationexp.nanoporedepot.containerin","");
-	    }
-	    /*if($experimentProp.get("kit") == null){
-	    	$contextValidation.addErrors("Experiment","error.validationexp.nanoporedepot.experiment","");
-	    }*/
-    
-	end
-
-rule "emplacement FC non null"
-    @nglSQ( validations )
-	dialect "java"
-	salience 2000
-	no-loop
-    when
-    	$experiment:Experiment($typeCode:typeCode,$typeCode=="nanopore-depot", $stateCode : state.code, $stateCode=="IP", $instrumentProperties: instrumentProperties, $instrumentProperties != null)
-		$contextValidation:ContextValidation()
-		eval($instrumentProperties.get("empl_FC") == null)
-		
-	then
-	    $contextValidation.addErrors("Instrument","error.validationexp.nanoporedepot.instrument","");
+	    $contextValidation.addErrors("Experiment","error.validationexp.nanoporedepot.reagent","");
     
 	end
 
@@ -65,7 +43,7 @@ rule "tous les containerOut properties non null"
 		$atomicTransfert: ManyToOneContainer()
 		OutputContainerUsed( $experimentPropertiesOut : experimentProperties, $experimentPropertiesOut != null) from $atomicTransfert.outputContainerUseds
 		$contextValidation:ContextValidation()
-		eval($experimentPropertiesOut.get("ADN_volume") == null || $experimentPropertiesOut.get("quant_ADN_charge") == null || $experimentPropertiesOut.get("nb_pores_QC") == null || $experimentPropertiesOut.get("nb_pores_QC_G1") == null || $experimentPropertiesOut.get("nb_pores_QC_G2") == null || $experimentPropertiesOut.get("nb_pores_QC_G3") == null || $experimentPropertiesOut.get("nb_pores_QC_G4") == null || $experimentPropertiesOut.get("nb_pores_depot") == null || $experimentPropertiesOut.get("pores_G1") == null || $experimentPropertiesOut.get("pores_G2") == null || $experimentPropertiesOut.get("pores_G3") == null || $experimentPropertiesOut.get("pores_G4") == null)
+		eval($experimentPropertiesOut.get("runType") == null || $experimentPropertiesOut.get("sampleID") == null || $experimentPropertiesOut.get("type_FC") == null || $experimentPropertiesOut.get("empl_FC") == null || $experimentPropertiesOut.get("ADN_volume") == null || $experimentPropertiesOut.get("quant_ADN_charge") == null || $experimentPropertiesOut.get("chargement") == null || $experimentPropertiesOut.get("nb_pores_QC") == null || $experimentPropertiesOut.get("nb_pores_depot") == null)
 		
 	then
 		$contextValidation.addErrors("Container","error.validationexp.nanoporedepot.containerout","");
@@ -79,65 +57,75 @@ rule "tag unique et non null si MTPLX"
 	no-loop
     when
     	$experiment:Experiment($typeCode:typeCode,$typeCode=="nanopore-depot", $stateCode : state.code, $stateCode=="N");
-		$atomicTransfert: ManyToOneContainer(inputContainerUseds!=null, $inputContainerUseds:inputContainerUseds);
+		$atomicTransfert: ManyToOneContainer(inputContainerUseds!=null, $inputContainerUseds:inputContainerUseds, $inputContainerUseds.size() > 1);
 		$contextValidation:ContextValidation()
 		
 	 then
-		Integer size = $inputContainerUseds.size();
+	 	Integer size = $inputContainerUseds.size();
 		InputContainerUsed container;
 		String tag;
-		String sequence;
 		Map<String, String> tagMap = new HashMap<String, String>();
-		
-		if(size > 1){
-			for(int n = 0; n<size; n++){
-				container = (InputContainerUsed) $inputContainerUseds.get(n);
-				if(container.experimentProperties.get("tag") != null) {
-					tag = (String) container.experimentProperties.get("tag").value;
-					if(tagMap.containsKey(tag)){
-						$contextValidation.addErrors("Container","error.validationexp.nanoporedepot.containerin.tag", tag, container.code, tagMap.get(tag));
-					}else{
-						tagMap.put(tag, container.code);
-					}
-					//Index index=MongoDBDAO.findOne(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.is("code", tag));
-					/* if(index != null){
-						sequence = index.sequence;
-						if(tagMap.containsKey(sequence)){
-							$contextValidation.addErrors("Container","error.validationexp.nanoporedepot.containerin.tag", sequence, container.code, tagMap.get(sequence));
-						}else{
-							tagMap.put(sequence, container.code);
-						}
-					else{
-						$contextValidation.addErrors("Container","error.validationexp.nanoporedepot.containerin.tagnotexist", container.code);
-					} */
-				} else {
-					$contextValidation.addErrors("Container","error.validationexp.nanoporedepot.containerin.tagnull", container.code);
+
+		for(int n = 0; n<size; n++){
+			container = (InputContainerUsed) $inputContainerUseds.get(n);
+			if(container.experimentProperties != null && container.experimentProperties.get("tag") != null) {
+				tag = (String) container.experimentProperties.get("tag").value;
+				if(tagMap.containsKey(tag)){
+					$contextValidation.addErrors("Container","error.validationexp.nanoporedepot.containerin.tag", tag, container.code, tagMap.get(tag));
+				}else{
+					tagMap.put(tag, container.code);
 				}
+			} else {
+				$contextValidation.addErrors("Container","error.validationexp.nanoporedepot.containerin.tagnull", container.code);
 			}
 		}
     end
 
-/*rule "move tag from inputContainerUsed to inputContainerUsed"
-    @nglSQ( calculations )
+rule "tag null si SPLX"
+    @nglSQ( validations )
 	dialect "java"
 	salience 200
 	no-loop
     when
-    	$experiment:Experiment($typeCode:typeCode,$typeCode=="nanopore-depot");
-		$atomicTransfert: ManyToOneContainer(inputContainerUseds!=null, $inputContainerUseds:inputContainerUseds);
-		InputContainerUsed( $experimentProperties : experimentProperties, $experimentProperties!=null, $experimentProperties.get("tag") != null, $contents : contents, $contents!=null) from $inputContainerUseds;
-		$tag : PropertyValue() from $experimentProperties.get("tag")
-		$content : Content($properties:properties) from $contents;
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="nanopore-depot", $stateCode : state.code, $stateCode=="N")
+		$atomicTransfert: ManyToOneContainer(inputContainerUseds!=null, $inputContainerUseds:inputContainerUseds, $inputContainerUseds.size() < 2);
+		$contextValidation:ContextValidation()
+		
+	then
+	 
+	 	Integer size = $inputContainerUseds.size();
+		InputContainerUsed container;
+		
+		for(int n = 0; n<size; n++){
+			container = (InputContainerUsed) $inputContainerUseds.get(n);
+			if(container.experimentProperties != null && container.experimentProperties.get("tag") != null) {
+				$contextValidation.addErrors("Container","error.validationexp.nanoporedepot.containerin.tagmustnotexist", container.code);
+			}
+		}
+    end
+    
+rule "emplacement FC unique par ATM"
+    @nglSQ( validations )
+	dialect "java"
+	salience 200
+	no-loop
+    when
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="nanopore-depot", $stateCode : state.code, $stateCode!="F");
+		$contextValidation:ContextValidation()
 		
 	 then
-        Logger.debug("rule set tag : " + $tag.value);
-   		PropertySingleValue value = new PropertySingleValue($tag.value);
-   		
-   		if($properties.get("tag") != null){
-	   		$properties.remove("tag");
-	   	}
-	   	$properties.put("tag",value);
-	   	
-	   	Logger.debug("rule set tag END : " + $properties.get("tag"));
-   		update($experiment);
-    end*/
+	 	Map<String, String> empMap = new HashMap<String, String>();
+	 	
+	 	for(AtomicTransfertMethod atomic : $experiment.atomicTransfertMethods){   
+	 		for(OutputContainerUsed output : atomic.outputContainerUseds){  
+	 			if(output.experimentProperties.get("empl_FC") != null){
+		    		String empFC = (String) output.experimentProperties.get("empl_FC").value;
+		    		if(empMap.containsKey(empFC)){
+						$contextValidation.addErrors("Container","error.validationexp.nanoporedepot.containerin.empFC", empFC, output.code, empMap.get(empFC));
+					}else{
+						empMap.put(empFC, output.code);
+					}
+		    	}
+	    	}
+		}
+    end

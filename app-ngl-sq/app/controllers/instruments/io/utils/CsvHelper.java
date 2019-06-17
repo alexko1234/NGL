@@ -150,13 +150,14 @@ public class CsvHelper {
 	 * @param code
 	 * @return
 	 */
-	public static String getKitName(String code){
+	public static List<KitCatalog> getKitList(String code){
 		Logger.debug("kit code : " + code);
-		KitCatalog kitCat =  MongoDBDAO.findOne(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class, DBQuery.is("code",code));
-		if (kitCat != null) {
-			return checkName(kitCat.name);
+		List<KitCatalog> kitCats =  MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class, DBQuery.is("code",code)).toList();
+		if (kitCats != null) {
+			//return checkName(kitCat.name);
+			return kitCats;
 		}else{
-			return "-";
+			return null;
 		}
 	}
 	
