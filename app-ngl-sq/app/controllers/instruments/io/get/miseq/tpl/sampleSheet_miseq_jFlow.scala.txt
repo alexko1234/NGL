@@ -26,6 +26,7 @@
 									***@--data-nature @if(OutputHelper.getContentProperty(cosbis.toList.head, "Type_librairie")){'@(OutputHelper.getContentProperty(cosbis.toList.head,"Type_librairie"))'}else{'-'} @***
 									***@--sequencer '@(CsvHelper.getInstrumentName(e.instrument.code))' --name '@if(OutputHelper.getContentProperty(cosbis.toList.head,"Run_Name")!=""){@(CsvHelper.checkName(OutputHelper.getContentProperty(cosbis.toList.head,"Run_Name")))}else{@(CsvHelper.checkName(OutputHelper.getContentProperty(cosbis.toList.head,"Nom_pool_sequencage")))}' @***
 									***@--type 'Lane 1' @***
+									***@--project-name @(cosbis.toList.head.projectCode) @***
 									***@--species @if(c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cosbis.toList.head, "species", e)) != null){'@(CsvHelper.getContentProcessProperties(cosbis.toList.head, "species",e))'}else{'-'} @***
 									***@--description 'Adapter type : @(CsvHelper.getHiseqAdapter(cosbis.toList.head)) @***
 									si "taille_insert" est renceigné
@@ -51,7 +52,7 @@
 									***@@for(co <- cosbis.toList.sortWith(_.sampleCode < _.sampleCode)){@***
 										***@ select-sample-id=@(CsvHelper.contentName(co))@***
 									***@} @***
-									***@lane=@(etm.line) --project-name @(cosbis.toList.head.projectCode) --admin-login CTD
+									***@lane=@(etm.line) --admin-login CTD
 									
 								}
 								
@@ -63,6 +64,7 @@
 								***@--sequencer '@(CsvHelper.getInstrumentName(e.instrument.code))' @***
 								***@--name '@if(OutputHelper.getContentProperty(cos.toList.head,"Run_Name")!=""){@(CsvHelper.checkName(OutputHelper.getContentProperty(cos.toList.head,"Run_Name")))}else{@(CsvHelper.checkName(OutputHelper.getContentProperty(cos.toList.head,"Nom_pool_sequencage")))}' @***
 								***@--type 'Lane 1' @***
+								***@--project-name @(cos.toList.head.projectCode) @***
 								***@--species @if(c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cos.toList.head, "species", e)) != null){'@(CsvHelper.getContentProcessProperties(cos.toList.head, "species",e))'}else{'-'} @***
 								***@--description 'Adapter type : @(CsvHelper.getHiseqAdapter(cos.toList.head)) @***
 								si "taille_insert" est renceigné
@@ -90,7 +92,7 @@
 										***@select-sample-id=@(CsvHelper.contentName(co)) @***
 									***@}@***
 								***@} @***
-								***@lane=@(etm.line) --project-name @(cos.toList.head.projectCode) --admin-login CTD
+								***@lane=@(etm.line) --admin-login CTD
 									
 							}
 							
