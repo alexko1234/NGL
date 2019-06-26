@@ -47,6 +47,7 @@ public class ImportServiceGET extends AbstractImportService {
 		//import échantillons via fichiers
 //		l.add(newImportType("Reception d'ADN", "dna-reception", ImportCategory.find.findByCode("sample-import"), getDNAReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.GET)));    
 		l.add(newImportType("Import 10x", "import10x", ImportCategory.find.findByCode("sample-import"), get10xReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.GET)));    
+		l.add(newImportType("Import RTL", "importRTL", ImportCategory.find.findByCode("sample-import"), getRTLReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.GET)));    
 
 		
 		DAOHelpers.saveModels(ImportType.class, l, errors);
@@ -60,6 +61,15 @@ public class ImportServiceGET extends AbstractImportService {
 	       
 	        return propertyDefinitions;
 	} 
+	
+
+	private static List<PropertyDefinition> getRTLReceptionPropertyDefinitions() throws DAOException {
+	        List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+	        propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null, null));
+	        propertyDefinitions.add(newPropertiesDefinition("Nom scientifique collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, null, null,null,null,"single", 17, false, null,null));   
+	       
+	        return propertyDefinitions;
+	}
 
 //	private static List<PropertyDefinition> getDNAReceptionPropertyDefinitions() throws DAOException {
 //	        List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();

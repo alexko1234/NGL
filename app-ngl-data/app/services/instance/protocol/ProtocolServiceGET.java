@@ -42,12 +42,14 @@ public class ProtocolServiceGET {
 		List<Protocol> lp = new ArrayList<Protocol>();
 		
 		lp.add(newProtocol("FAA_MO_MiSeq_240316.pdf","FAA_MO_MiSeq_240316.pdf","path5","1","production", InstanceFactory.setExperimentTypeCodes("prepa-flowcell","illumina-depot")));
-		
+
+		lp.add(newProtocol("dilution","DILUTION","path1","1","production", InstanceFactory.setExperimentTypeCodes("dilution")));
+		lp.add(newProtocol("pool_tube","POOL","path7","1","production", InstanceFactory.setExperimentTypeCodes("pool-tube")));
 //		lp.add(newProtocol("RPG_MO_Hiseq2000 et HiSeq2500_050416.pdf","RPG_MO_Hiseq2000 et HiSeq2500_050416.pdf","path7","1","production", InstanceFactory.setExperimentTypeCodes("prepa-flowcell", "illumina-depot")));
 		
 		lp.add(newProtocol("RPG_MO_Hiseq3000_250316.pdf","RPG_MO_Hiseq3000_250316.pdf","path8","1","production", InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered", "illumina-depot")));
 		lp.add(newProtocol("RPG_MO_NovaSeq6000_200618.pdf","RPG_MO_NovaSeq6000_200618.pdf","path8","1","production", InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered", "illumina-depot")));
-//		lp.add(newProtocol("QPCR","QPCR","path8","1","production", InstanceFactory.setExperimentTypeCodes("qpcr-quantification")));
+		lp.add(newProtocol("RPG_MO_QPCR","RPG_MO_Automatisation_qPCR_Illumina-NGS_100918.pdf","path8","1","production", InstanceFactory.setExperimentTypeCodes("qpcr-quantification")));
 //		lp.add(newProtocol("solution_stock","solution_stock","path3","1","production", InstanceFactory.setExperimentTypeCodes("solution-stock")));
 //		lp.add(newProtocol("pooling","pooling","path7","1","production", InstanceFactory.setExperimentTypeCodes("pool-tube","pool-x-to-tubes")));
 		

@@ -108,8 +108,9 @@ public class ContainerMapping extends Mapping<Container> {
 				}else if(csc.nbLine > 1 && csc.nbColumn > 1){
 					container.support.line = container.support.line.toUpperCase();
 					container.support.column = container.support.column.toUpperCase();
-					
-					code=container.support.code+"_"+container.support.line+container.support.column;
+
+					code=container.support.code+":"+container.support.line+container.support.column;
+//					code=container.support.code+"_"+container.support.line+container.support.column;
 				}
 			}
 		}

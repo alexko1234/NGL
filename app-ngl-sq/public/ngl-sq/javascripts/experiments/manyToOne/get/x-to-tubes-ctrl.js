@@ -1,119 +1,511 @@
-angular.module('home').controller('GETPlatesToTubesCtrl',['$scope', '$http','$parse',
-                                                               function($scope, $http,$parse) {
-	$scope.atmService.updateOutputConcentration = function(atm){
+angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filter','atmToDragNDrop2','mainService',
+                                                               function($scope, $parse, $filter, atmToDragNDrop,mainService) {
+	console.log("in GETXToTubesCtrl");
+	// NGL-1055: name explicite pour fichier CSV exporté
+	// NGL-1055: mettre getArray et codes:'' dans filter et pas dans render
+	var datatableConfig = {		
+			name: $scope.experiment.typeCode.toUpperCase(),
+			columns:[
+//			         {
+//			        	 "header":Messages("containers.table.supportCategoryCode"),
+//			        	 "property":"inputContainer.support.categoryCode",
+//			        	 "filter":"codes:'container_support_cat'",
+//			        	 "order":true,
+//						 "edit":false,
+//						 "hide":true,
+//			        	 "type":"text",
+//			        	 "position":2,
+//			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+//			         },	
+//			         {
+//			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
+//			        	 "property":"inputContainer.fromTransformationTypeCodes",
+//			        	 "filter":"unique | codes:'type'",
+//			        	 "order":true,
+//						 "edit":false,
+//						 "hide":true,
+//			        	 "type":"text",
+//			 			 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+//			        	 "position":3,
+//			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+//			         },
+			         {
+			        	"header":Messages("containers.table.projectCodes"),
+			 			"property": "inputContainer.projectCodes",
+			 			"order":false,
+			 			"hide":true,
+			 			"type":"text",
+			 			"position":4,
+			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+			            "extraHeaders":{0:Messages("experiments.inputs")}
+				     },
+//				     {
+//			        	"header":Messages("containers.table.sampleCodes"),
+//			 			"property": "inputContainer.sampleCodes",
+//			 			"order":true,
+//			 			"hide":true,
+//			 			"type":"text",
+//			 			"position":5,
+//			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+//			        	"extraHeaders":{0:Messages("experiments.inputs")}
+//				     },                                          
+				     {
+				    	 "header":Messages("property_definition.Nom_echantillon_collaborateur"),
+				    	 "property": "inputContainer.contents",
+				    	 "filter": "getArray:'referenceCollab'| unique",
+//                   	"filter": "getArray:'properties.Nom_echantillon_collaborateur.value'| unique",
+				    	 "order":true,
+				    	 "hide":true,
+				    	 "type":"text",
+				    	 "position":5,
+				    	 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+				    	 "extraHeaders":{0:Messages("experiments.inputs")}
+				     },
+//			         {
+//				 		"header":Messages("containers.table.libProcessType"),
+//				 		"property": "inputContainer.contents",
+//				 		"filter": "getArray:'properties.libProcessTypeCode.value'| unique",
+//				 		"order":false,
+//				 		"hide":true,
+//				 		"type":"text",
+//				 		"position":6,
+//				 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+//				 		"extraHeaders": {0:Messages("experiments.inputs")}	 						 			
+//				 	},
+			        {
+				        "header":Messages("containers.table.tags"),
+				 		"property": "inputContainer.contents",
+				 		"filter": "getArray:'properties.tag.value'| unique",
+				 		"order":true,
+				 		"hide":true,
+				 		"type":"text",
+				 		"position":6,
+				 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+				        "extraHeaders":{0:Messages("experiments.inputs")}
+				     },		
+				     {
+			        	 "header":Messages("containers.table.volume") + " (µL)",
+			        	 "property":"inputContainerUsed.volume.value",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":7,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
+					 {
+			        	 "header":Messages("containers.table.concentration"),
+			        	 "property":"inputContainerUsed.concentration.value",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":8,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
+			         {
+			        	 "header":Messages("containers.table.concentration.unit"),
+			        	 "property":"inputContainerUsed.concentration.unit",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":8.5,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },	        
+//			         {
+//			        	 "header":Messages("containers.table.state.code"),
+//			        	 "property":"inputContainer.state.code",
+//			        	 "order":true,
+//						 "edit":false,
+//						 "hide":true,
+//			        	 "type":"text",
+//						 "filter":"codes:'state'",
+//			        	 "position":11,
+//			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+//			         },
+			         {
+			        	 "header":Messages("containers.table.percentageInsidePool"),
+			        	 "property":"inputContainerUsed.percentage",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":9,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
+			         //out
+			         {
+			        	 "header":Messages("containers.table.volume")+" (µL)",
+			        	 "property":"outputContainerUsed.volume.value",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+						 "type":"number",
+			        	 "position":50,
+			        	 "mergeCells" : true,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         },
+			         {
+			        	 "header":Messages("containers.table.concentration"),
+			        	 "property":"outputContainerUsed.concentration.value",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+						 "type":"number",
+			        	 "position":51,
+			        	 "mergeCells" : true,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         },
+			         {
+			        	 "header":Messages("containers.table.concentration.unit"),
+			        	 "property":"outputContainerUsed.concentration.unit",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+						 "type":"text",
+			        	 "position":51.5,
+			        	 "mergeCells" : true,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         },
+			         {
+			        	 "header":Messages("containers.table.storageCode"),
+			        	 "property":"outputContainerUsed.locationOnContainerSupport.code",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":false,
+			        	 "type":"text",
+			        	 "position":400,
+			        	 "mergeCells" : true,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+				     }
+//			         {
+//			        	 "header":Messages("containers.table.code"),
+//			        	 "property":"outputContainerUsed.code",
+//			        	 "order":true,
+//						 "edit":false,
+//						 "hide":true,
+//						 "type":"text",
+//			        	 "position":400,
+//			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+//			         },
+//			         {
+//			        	 "header":Messages("containers.table.stateCode"),
+//			        	 "property":"outputContainer.state.code | codes:'state'",
+//			        	 "order":true,
+//						 "edit":false,
+//						 "hide":true,
+//						 "type":"text",
+//			        	 "position":500,
+//			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+//			         }
+			         ],
+			compact:true,
+			pagination:{
+				active:true
+			},		
+			search:{
+				active:false
+			},
+			order:{
+				mode:'local', //or 
+				active:true,
+				by:"inputContainer.support.code"
+			},
+			remove:{
+				active:false,
+			},
+			save:{
+				active:true,
+				withoutEdit: true,
+				mode:'local',
+				changeClass:false,
+				showButton:false
+			},
+			hide:{
+				active:true
+			},
+			mergeCells:{
+	        	active:true 
+	        },
+			select:{
+				active:true,
+				showButton:true,
+				isSelectAll:true
+			},
+			edit:{
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				byDefault : true,
+				columnMode:true
+			},
+			messages:{
+				active:false,
+				columnMode:true
+			},
+			exportCSV:{
+				active:true,
+				showButton:true,
+				delimiter:";",
+				start:false
+			},
+			extraHeaders:{
+				number:2,
+				dynamic:true,
+			}
+	};	
+	
+	/*
+	 * si containers in sont des tubes ou mixte -> afficher - container.code
+	 * si suelement plaque -> affichage - support.code + ligne + colonne
+	 */
+	var tmp = [];
+	if(!$scope.isCreationMode()){
+		tmp = $scope.$eval("atomicTransfertMethods|flatArray:'inputContainerUseds'|getArray:'locationOnContainerSupport.categoryCode'|unique",$scope.experiment);			
+	}else{
+		tmp = $scope.$eval("getBasket().get()|getArray:'support.categoryCode'|unique",mainService);
+	}
+	var supportCategoryCode = undefined;
+	if(tmp.length === 1){
+		supportCategoryCode=tmp[0];
+		$scope.supportCategoryCode = supportCategoryCode;
+	}else{
+		supportCategoryCode="mixte";
+		$scope.supportCategoryCode = "tube";
+	}
 		
-		if(atm){
-		// ne pas faire l'update si déjà renseigné
-			var concentration = undefined;
-			var unit = undefined;
-			var isSame = true;
-			for(var i=0;i<atm.inputContainerUseds.length;i++){
-				if(atm.inputContainerUseds[i].concentration !== null 
-						&& atm.inputContainerUseds[i].concentration !== undefined){
-					if(concentration === undefined && unit === undefined){
-						concentration = atm.inputContainerUseds[i].concentration.value;
-						unit = atm.inputContainerUseds[i].concentration.unit;
-					}else{
-						if(concentration !== atm.inputContainerUseds[i].concentration.value 
-								|| unit !== atm.inputContainerUseds[i].concentration.unit){
-							isSame = false;
-							break;
-						}
-					}
-				}
+	console.log("supportCategoryCode : "+supportCategoryCode);
+	
+	
+	if(supportCategoryCode === "96-well-plate"){
+		datatableConfig.columns.push({
+			"header" : Messages("containers.table.supportCode"),
+			"property" : "inputContainer.support.code",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 1,
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
 			}
-			if(isSame 
-					&& (atm.outputContainerUseds[0].concentration === null
-							|| atm.outputContainerUseds[0].concentration.value === null
-						|| atm.outputContainerUseds[0].concentration === undefined
-						|| atm.outputContainerUseds[0].concentration.value === undefined)){
-				atm.outputContainerUseds[0].concentration = angular.copy(atm.inputContainerUseds[0].concentration);				
+		});
+		datatableConfig.columns.push({
+			"header" : Messages("containers.table.support.line"),
+			"property" : "inputContainer.support.line",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 1.1,
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
 			}
-		}
+		});
+		datatableConfig.columns.push({
+			"header" : Messages("containers.table.support.column"),
+			"property" : "inputContainer.support.column*1",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "number",
+			"position" : 1.2,
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
+			}
+		});
 
-	};
-	
-	$scope.update = function(atm, containerUsed, propertyName){
-		console.log("update "+propertyName);
-		if(propertyName === 'outputContainerUseds[0].concentration.value' ||
-				propertyName === 'outputContainerUseds[0].concentration.unit' ||
-				propertyName === 'outputContainerUseds[0].volume.value'){
-			console.log("compute all input volume");
-			
-			angular.forEach(atm.inputContainerUseds, function(inputContainerUsed){
-				computeInputVolume(inputContainerUsed, atm);
-			});
-			
-		}else if(propertyName.match(/inputContainerUseds\[\d\].percentage/) != null){
-			console.log("compute one input volume");
-			computeInputVolume(containerUsed, atm);
-		}
+	} else {
+		datatableConfig.columns.push({
+			"header" : Messages("containers.table.code"),
+			"property" : "inputContainer.code",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 1,
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
+			}
+		});
 		
+		datatableConfig.order.by = 'inputContainer.sampleCodes';
 	}
 	
-	var computeInputVolume = function(inputContainerUsed, atm){
-		var getter = $parse("experimentProperties.inputVolume");
-		var inputVolume = getter(inputContainerUsed);
-		if(null === inputVolume  || undefined === inputVolume){
-			inputVolume = {value : undefined, unit : 'µl'};
-		}
-		//we compute only if empty
-		
-		var compute = {
-			inputPercentage : $parse("percentage")(inputContainerUsed),
-			inputConc : $parse("concentration")(inputContainerUsed),
-			outputConc : $parse("outputContainerUseds[0].concentration")(atm),
-			outputVol : $parse("outputContainerUseds[0].volume")(atm)
-		
-		};
-		if($parse("(outputConc.unit ===  inputConc.unit)")(compute)){
-			var result = $parse("(inputPercentage * outputConc.value *  outputVol.value) / (inputConc.value * 100)")(compute);
-			console.log("result = "+result);
-			if(angular.isNumber(result) && !isNaN(result)){
-				inputVolume.value = result;				
-			}else{
-				inputVolume.value = undefined;
-			}	
-			getter.assign(inputContainerUsed, inputVolume);
-		}else{
-			inputVolume.value = undefined;
-			getter.assign(inputContainerUsed, inputVolume);
-		}
-		
-	}
 	
-	var generateSampleSheet = function(){
-		$scope.fileUtils.generateSampleSheet({"":""});
-//		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
-//		.success(function(data, status, headers, config) {
-//			var header = headers("Content-disposition");
-//			var filepath = header.split("filename=")[1];
+	//affichage des colonnes size si pas null
+	if($scope.experiment.atomicTransfertMethods){
+		sizeIN = false;
+		sizeOUT = false;
+		$scope.experiment.atomicTransfertMethods.forEach(function(atm){
+			console.log();
+//			atm.inputContainers.forEach(function(inputContainer){
+//				if(null === inputContainer.size  || undefined === inputContainer.size || undefined === inputContainer.size.value ||  null === inputContainer.size.value){
+//					sizeIN = true;
+//				}
+//			});
+//			atm.outputContainers.forEach(function(outputContainer){
+//				if(null === outputContainer.size  || undefined === outputContainer.size || undefined === outputContainer.size.value ||  null === outputContainer.size.value){
+//					sizeOUT = true;
+//				}
+//			});
 //			
-//			var filename = filepath.split(/\/|\\/);
-//			filename = filename[filename.length-1];
-//			if(data!=null){
-//				$scope.messages.clazz="alert alert-success";
-//				$scope.messages.text=Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath;
-//				$scope.messages.showDetails = false;
-//				$scope.messages.open();	
-//				
-//				var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
-//				saveAs(blob, filename);
-//			}
-//		})
-//		.error(function(data, status, headers, config) {
-//			$scope.messages.clazz = "alert alert-danger";
-//			$scope.messages.text = Messages('experiments.msg.generateSampleSheet.error');
-//			$scope.messages.showDetails = false;
-//			$scope.messages.open();				
-//		});
+		});
+			
+		if(sizeIN){
+			datatableConfig.columns.push({
+				"header" : Messages("containers.table.size"),
+				"property": "inputContainerUsed.size.value",
+				"order" : true,
+				"edit" : false,
+				"hide" : true,
+				"type" : "number",
+				"position" :7.5,
+				"extraHeaders" : {
+					0 : Messages("experiments.inputs")
+				}
+			});
+		}
+		if(sizeOUT){			
+			datatableConfig.columns.push({
+				"header" : Messages("containers.table.size"),
+				"property": "outputContainerUsed.size.value",
+				"order" : true,
+				"edit" : false,
+				"hide" : true,
+				"type" : "number",
+				"position" :50.5,
+				"extraHeaders" : {0 : Messages("experiments.outputs")}
+			});
+		}
+	}
+	
+	
+	$scope.drop = function(e, data, ngModel, alreadyInTheModel, fromModel) {
+		//capture the number of the atomicTransfertMethod
+		if(!alreadyInTheModel){
+			$scope.atmService.data.updateDatatable();
+		
+		}
 	};
-
-	$scope.setAdditionnalButtons([{
-		isDisabled : function(){return $scope.isNewState();} ,
-		isShow:function(){return !$scope.isNewState();},
-		click:generateSampleSheet,
-		label:Messages("experiments.sampleSheet")
-	}]);
+	
+	// FDS: renommer getOutputContainers car donne une liste de containers et pas de containerSupports, !! contient des doublons 
+	$scope.getOutputContainers = function(){
+		var outputContainers = [];
+		if($scope.experiment.atomicTransfertMethods){
+			$scope.experiment.atomicTransfertMethods.forEach(function(atm){
+				this.push(atm.outputContainerUseds[0]);
+				
+			}, outputContainers);
+		}
+		return outputContainers;
+	}
+	
+	// FDS : liste de containerSupports sans doublons
+	$scope.getDistinctOutputContainerSupports = function(){
+		var outputContainerSupports = [];
+		if($scope.experiment.atomicTransfertMethods){
+			var unique = {};
+			$scope.experiment.atomicTransfertMethods.forEach(function(atm){
+				
+				if (!unique[atm.outputContainerUseds[0].locationOnContainerSupport.code]) {
+				    this.push(atm.outputContainerUseds[0].locationOnContainerSupport);
+				    unique[atm.outputContainerUseds[0].locationOnContainerSupport.code] = true;
+				}
+			}, outputContainerSupports);
+		}
+		return outputContainerSupports;
+	}
+	
+	$scope.getInputContainerSupports = function(){
+		var inputContainerSupports = [];
+		if($scope.experiment.atomicTransfertMethods){
+			inputContainerSupports = $scope.experiment.inputContainerSupportCodes;
+		}
+		return inputContainerSupports;
+	}
+	
+	$scope.isEditMode = function(){
+		return ($scope.$parent.isEditMode() && $scope.isNewState());
+	};
+	
+	// fdsantos 28/09/2017 :NGL-1601 ne pas sauvegarder une experience vide.
+	//  !!! ATTENTION COMMUN CNS/CNG !!!
+	$scope.$on('save', function(e, callbackFunction) {
+		console.log("call event save on x-to-tubes");
+		console.log("inputContainerUsed 1 : " + JSON.stringify($scope.experiment.atomicTransfertMethods[0]));
+		if($scope.atmService.data.atm.length === 0){
+			console.log("call event save on x-to-tubes if");
+			$scope.$emit('childSavedError', callbackFunction);
+			
+		    $scope.messages.clazz = "alert alert-danger";
+		    $scope.messages.text = Messages("experiments.msg.nocontainer.save.error");
+		    $scope.messages.showDetails = false;
+			$scope.messages.open();   
+	
+		} else {	
+//			console.log("inputContainerUsed 1 : " + JSON.stringify($scope.experiment.atomicTransfertMethods[0].inputContainerUseds[0].experimentProperties));
+			$scope.atmService.viewToExperiment($scope.experiment, true);
+//			console.log("inputContainerUsed 2 : " + JSON.stringify($scope.experiment.atomicTransfertMethods[0].inputContainerUseds[0].experimentProperties));
+			$scope.$emit('childSaved', callbackFunction);
+//			console.log("inputContainerUsed 3 : " + JSON.stringify($scope.experiment.atomicTransfertMethods[0].inputContainerUseds[0].experimentProperties));
+	    } 
+	});
+	
+	$scope.$on('refresh', function(e) {
+		console.log("call event refresh on x-to-tubes");		
+		$scope.atmService.refreshViewFromExperiment($scope.experiment);
+		$scope.$emit('viewRefeshed');
+	});
+	
+	
+	$scope.$on('cancel', function(e) {
+		console.log("call event cancel");
+		
+	});
+	
+	$scope.$on('activeEditMode', function(e) {
+		console.log("call event activeEditMode");
+	});
+	
+	$scope.inputContainerProperties = $filter('filter')($scope.experimentType.propertiesDefinitions, 'ContainerIn');
+	$scope.outputContainerProperties = $filter('filter')($scope.experimentType.propertiesDefinitions, 'ContainerOut');
+	
+	
+	var atmService = atmToDragNDrop($scope, 0, datatableConfig);
+	
+	atmService.inputContainerSupportCategoryCode = $scope.experiment.instrument.inContainerSupportCategoryCode;
+	atmService.outputContainerSupportCategoryCode = $scope.experiment.instrument.outContainerSupportCategoryCode;
+	
+	
+	// 19/10/2016 version de Guillaume pour gerer les cas tubes ou 96-well-plate
+	// 27/10/2016 bug vu par JG: au CNS pool generique tube=> tube : line et column sont undefined
+	atmService.newAtomicTransfertMethod =  function(line, column){
+		var getLine = function(line){
+			//TEST correction FDS
+			if ($scope.experiment.instrument.outContainerSupportCategoryCode === "tube"){
+				return 1; // ligne et colonne=1 pour un tube
+			} else {
+				return undefined;
+			}			
+		}
+		var getColumn=getLine;
+		
+		return {
+			class:"ManyToOne",
+			line:getLine(line), 
+			column:getColumn(column), 				
+			inputContainerUseds:new Array(0), 
+			outputContainerUseds:new Array(0)
+		};
+	};
+	
+	//defined default output unit
+	atmService.defaultOutputUnit = {
+			volume : "µL",				
+	}
+	
+	atmService.experimentToView($scope.experiment, $scope.experimentType);
+	
+	$scope.atmService = atmService;
 	
 }]);

@@ -36,7 +36,7 @@ public class ProcessServiceGET extends AbstractProcessService {
 	public void saveProcessCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ProcessCategory> l = new ArrayList<ProcessCategory>();
 //		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Banque", "library"));
-//		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Sequencage", "pre-sequencing"));
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Sequencage", "pre-sequencing"));
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Sequençage", "sequencing"));	
 		// Processus permet accéder aux experiments satellites en dehors tout autre processus
 //		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Satellites", "satellites"));	
@@ -67,16 +67,16 @@ public class ProcessServiceGET extends AbstractProcessService {
 
 		
 		//"Satellites"
-//		l.add(DescriptionFactory.newProcessType("QC / TF / Purif", "qc-transfert-purif", ProcessCategory.find.findByCode("satellites"), 2,
-//				
-//				null,
-//				Arrays.asList(getPET("ext-to-qc-transfert-purif",-1)), 
-//				
-//				getExperimentTypes("fluo-quantification").get(0), 
-//				getExperimentTypes("ext-to-qc-transfert-purif").get(0), 
-//				getExperimentTypes("ext-to-qc-transfert-purif").get(0), 
-//			
-//				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
+		l.add(DescriptionFactory.newProcessType("RTL", "rtl", ProcessCategory.find.findByCode("pre-sequencing"),2,
+				null,
+				Arrays.asList(
+						getPET("ext-to-rtl",-1),
+						getPET("dilution",0)),
+				getExperimentTypes("dilution").get(0), 		//first experiment type
+				getExperimentTypes("ext-to-rtl").get(0),  	//last  experiment type
+				getExperimentTypes("ext-to-rtl").get(0), 	//void  experiment type
+			
+				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
 //		l.add(DescriptionFactory.newProcessType("Normalisation", "normalisation-process", ProcessCategory.find.findByCode("pre-sequencing"), getPropertyDefinitionsQPCRQuantification(), Arrays.asList(getPET("solution-stock",0)), 
 //					getExperimentTypes("solution-stock").get(0), getExperimentTypes("solution-stock").get(0), getExperimentTypes("ext-to-solution-stock").get(0), DescriptionFactory.getInstitutes(Constants.CODE.GET)));
@@ -87,7 +87,6 @@ public class ProcessServiceGET extends AbstractProcessService {
 				getPropertyDefinitionsIlluminaDepot() , 
 				Arrays.asList(
 						getPET("ext-to-prepa-flowcell",-1),
-//						getPET("solution-stock",-1),
 						getPET("prepa-flowcell",0),
 						getPET("prepa-fc-ordered",0),
 						getPET("illumina-depot",1)),
@@ -99,20 +98,6 @@ public class ProcessServiceGET extends AbstractProcessService {
 				
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
-//		//"Sequençage NovaSeq"
-//		l.add(DescriptionFactory.newProcessType("Run NovaSeq", "novaseq-run", ProcessCategory.find.findByCode("sequencing"), 3,
-//				
-//				getPropertyDefinitionsNovaSeqDepot() , 
-//				Arrays.asList(
-//						getPET("ext-to-prepa-flowcell",-1),
-//						getPET("prepa-fc-ns",0),
-//						getPET("novaseq-depot",1)),
-//						
-//				getExperimentTypes("prepa-fc-ns").get(0), 
-//				getExperimentTypes("novaseq-depot").get(0),
-//				getExperimentTypes("ext-to-prepa-flowcell").get(0), 
-//				
-//				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
 		DAOHelpers.saveModels(ProcessType.class, l, errors);
 	}

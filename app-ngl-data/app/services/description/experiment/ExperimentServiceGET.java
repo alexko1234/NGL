@@ -3,10 +3,12 @@ package services.description.experiment;
 import static services.description.DescriptionFactory.newExperimentType;
 import static services.description.DescriptionFactory.newExperimentTypeNode;
 import static services.description.DescriptionFactory.newPropertiesDefinition;
+import static services.description.DescriptionFactory.newValue;
 
 import java.awt.Image;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -78,12 +80,12 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 				"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
-//		l.add(newExperimentType("Ext to qPCR","ext-to-qpcr",null,-1,
-//				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), 
-//				null,  
-//				null,
-//				"OneToOne", 
-//				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
+		l.add(newExperimentType("Ext to RTL","ext-to-rtl",null,-1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), 
+				null,  
+				null,
+				"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
 //		l.add(newExperimentType("Ext to Solution-stock","ext-to-solution-stock",null,-1,
 //				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
@@ -116,6 +118,7 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 				getInstrumentUsedTypes("cBot-interne","cBot"), 
 				"ManyToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
+		
 		//preparation flowcells ordonnées (HiSeq3000, NovaSeq...)
 		l.add(newExperimentType("Prep. flowcell ordonnée", "prepa-fc-ordered",null,1200, 
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
@@ -123,28 +126,13 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 				getInstrumentUsedTypes("cBot", "cBot-interne-novaseq"), 
 				"ManyToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
-//		
-//		l.add(newExperimentType("Prep. flowcell NovaSeq", "prepa-fc-ns",null,1200, 
-//				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
-//				getPropertyDefinitionsPrepaflowcellOrdered(),
-//				getInstrumentUsedTypes("cBot-interne-novaseq"), 
-//				"ManyToOne", 
-//				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
 		l.add(newExperimentType("Depot Illumina", "illumina-depot",null, 1400,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 				getPropertyDefinitionsIlluminaDepot(),
 				getInstrumentUsedTypes("MISEQ","HISEQ3000", "NOVASEQ6000"), 
 				"OneToVoid", 
-				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
-
-//		l.add(newExperimentType("Depot NovaSeq", "novaseq-depot",null, 1400,
-//				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
-//				getPropertyDefinitionsNovaSeqDepot(),
-//				getInstrumentUsedTypes("NOVASEQ"), 
-//				"OneToVoid", 
-//				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
-		
+				DescriptionFactory.getInstitutes(Constants.CODE.GET)));		
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 
@@ -170,9 +158,16 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 //					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
 //					null,"OneToOne", 
 //					DescriptionFactory.getInstitutes(Constants.CODE.GET)));
-//			
-//			//quality control
-//
+			
+		
+			//quality control
+
+			l.add(newExperimentType("Quantification qPCR","qpcr-quantification",null,850,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsQPCR(), 
+					getInstrumentUsedTypes("EVO150/QS6"),"OneToVoid", 
+					DescriptionFactory.getInstitutes(Constants.CODE.GET)));
+
+			
 //			//purif
 //			l.add(newExperimentType("Ampure Non Ampli","ampure-na",null,-1,
 //					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()),
@@ -203,17 +198,45 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 //					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
 //					getInstrumentUsedTypes("qubit"),"OneToVoid", 
 //					DescriptionFactory.getInstitutes(Constants.CODE.GET)));
-//			
-//			l.add(newExperimentType("Quantification qPCR","qPCR-quantification",null,850,
-//					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsQPCR(), 
-//					getInstrumentUsedTypes("ABI7900HT","QS6"),"OneToVoid", 
-//					DescriptionFactory.getInstitutes(Constants.CODE.GET)));
-//
-//			l.add(newExperimentType("Pool Tube","pool-tube",null,1200,
-//					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
-//					getInstrumentUsedTypes("hand","tecan-evo-150","tecan-evo-200"),"ManyToOne", 
-//					DescriptionFactory.getInstitutes(Constants.CODE.GET)));
-//
+			
+			
+//			l.add(newExperimentType("Normalisation+Pooling","normalization-and-pooling",null,800,
+//					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+//					getPropertyDefinitionsNormalizationAndPooling(), 
+//					getInstrumentUsedTypes("hand","janus","epmotion"),
+//					"ManyToOne", 
+//					GET));	
+//		
+//			l.add(newExperimentType("Librairie normalisée","lib-normalization",null,900,
+//					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
+//					getPropertyDefinitionsLibNormalization(),
+//					getInstrumentUsedTypes("hand","janus"), 
+//					"OneToOne", 
+//					GET));				
+			
+			
+			// 04/10/2017 NGL-1589: plaque->plaque, tubes->plaque, plaque-> tube, tube->tube => utiliser robot
+			
+			l.add(newExperimentType("Dilution","dilution",null,1000,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
+					getPropertyDefinitionDilution(),
+					getInstrumentUsedTypes("hand"),   
+					"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.GET)));
+
+			l.add(newExperimentType("Pool Tube","pool-tube",null,1200,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
+					getInstrumentUsedTypes("hand","tecan-evo-150","tecan-evo-200"),
+					"ManyToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.GET)));
+			
+//			l.add(newExperimentType("Dénaturation-dilution","denat-dilution",null,1000,
+//					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
+//					getPropertyDefinitionsDenatDilLibCNG(),
+//					getInstrumentUsedTypes("hand","epmotion"),   // 16/10/2017  remplacer janus par EpMotion
+//					"OneToOne", 
+//					GET));
+
 //			l.add(newExperimentType("Pool x => tubes","pool-x-to-tubes",null,1,
 //					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
 //					getInstrumentUsedTypes("tecan-evo-150"),"ManyToOne", 
@@ -232,18 +255,73 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 
 	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 
-		//newExperimentTypeNode("ext-to-opgen-depot", getExperimentTypes("ext-to-opgen-depot").get(0), false, false, null, null, null).save();
+		//entrée dans le processus
+		
 		newExperimentTypeNode("ext-to-prepa-flowcell", getExperimentTypes("ext-to-prepa-flowcell").get(0), 
 				false, false, false, //satellites
 				null,  // no previous nodes
 				null, null, null
 				).save();
 		
-//		newExperimentTypeNode("ext-to-prepa-fc-ordered", getExperimentTypes("ext-to-prepa-fc-ordered").get(0), 
-//				false, false, false, 
-//				null, // no previous nodes
-//				null, null, null
-//				).save();
+		newExperimentTypeNode("ext-to-rtl", getExperimentTypes("ext-to-rtl").get(0), 
+				false, false, false, 
+				null, 										//pas d'exigences d'entrée
+				null, 										// pas de purif
+				getExperimentTypes("qpcr-quantification"), 	//qc
+				getExperimentTypes("pool-tube") 			// transfert
+				).save();	
+			 
+		
+		//preparation flowcells non ordonnées (MiSeq)
+		
+		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),
+				false,false,false,
+				getExperimentTypeNodes("ext-to-prepa-flowcell"), // previous nodes
+				null, // pas de purif
+				null, // pas qc
+				null  // pas tranfert
+				).save();
+
+
+		//preparation flowcells ordonnées (HiSeq3000, NovaSeq...)
+		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),
+				false, false, false,
+				getExperimentTypeNodes("ext-to-prepa-flowcell"), // previous nodes
+				null, // pas de purif
+				null, // pas qc
+				null  // pas tranfert
+				).save();
+
+		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),
+				false,false,false,
+				getExperimentTypeNodes("prepa-fc-ordered","prepa-flowcell"), // previous nodes
+				null, // pas de purif
+				null, // pas qc
+				null  // pas tranfert
+				).save();
+		
+		
+		// FDS 06/06/2017: NGL-1447 => le noeud doit etre declaré pour les process commencant par un qc
+			
+		
+		
+		newExperimentTypeNode("dilution",getExperimentTypes("dilution").get(0),
+				false,false,false,
+				getExperimentTypeNodes("ext-to-rtl"), // previous nodes
+				null, 										// pas de purif
+				getExperimentTypes("qpcr-quantification"),	//qc
+				getExperimentTypes("pool-tube") 			// transfert
+				).save();
+		
+		newExperimentTypeNode("pool-tube",getExperimentTypes("pool-tube").get(0),
+				false,false,false,
+				getExperimentTypeNodes("dilution"), // previous nodes
+				null,	// pas de purif
+				getExperimentTypes("qpcr-quantification"),	//qc
+				getExperimentTypes("pool-tube") 			// transfert
+				).save();	
+		
+//		//newExperimentTypeNode("ext-to-opgen-depot", getExperimentTypes("ext-to-opgen-depot").get(0), false, false, null, null, null).save();
 		
 //		newExperimentTypeNode("ext-to-qpcr", getExperimentTypes("ext-to-qpcr").get(0), 
 //				false, false, false, //satellites
@@ -256,34 +334,7 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 //				null,  // no previous nodes
 //				null, null, null
 //				).save();		
-//		 
-		//preparation flowcells non ordonnées (MiSeq)
-		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),
-				false,false,false,
-				getExperimentTypeNodes("ext-to-prepa-flowcell"),
-				null,null,null
-				).save();
-		Logger.debug("Before saving prepa-fc-ordered");
-		//preparation flowcells ordonnées (HiSeq3000, NovaSeq...)
-		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),
-				false, false, false,
-				getExperimentTypeNodes("ext-to-prepa-flowcell"),
-				null, null, null
-				).save();
-		Logger.debug("After saving prepa-fc-ordered");
-//		newExperimentTypeNode("prepa-fc-ns",getExperimentTypes("prepa-fc-ns").get(0),
-//				false, false, false,
-//				getExperimentTypeNodes("ext-to-prepa-flowcell"),
-//				null, null, null
-//				).save();
-
-		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),
-				false,false,false,
-				getExperimentTypeNodes("prepa-fc-ordered","prepa-flowcell"), // previous nodes
-				null,
-				null, // pas qc
-				null  // pas tranfert
-				).save();
+//	
 
 //		newExperimentTypeNode("novaseq-depot",getExperimentTypes("novaseq-depot").get(0),
 //				false,false,false,
@@ -315,24 +366,28 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 	
 //		newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,getExperimentTypeNodes("sizing","amplification"),null,null,getExperimentTypes("pool-tube", "pool-x-to-tubes")).save();
 		
+	
+
+		
 		Logger.debug("ExperimentServiceGET saveExperimentTypeNodes ");
 			
 	}
 
 	
-//	private List<PropertyDefinition> getPropertyDefinitionsQPCR() {
-//		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-//		
-//		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
-//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode( "nM"), MeasureUnit.find.findByCode("nM"),
-//				"single", 11, true, null, "2"));		
-//		
-//		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
-//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("ng/µl"), MeasureUnit.find.findByCode("ng/µl"),
-//				"single", 12, true, null, "2"));		
-//		
-//		return propertyDefinitions;
-//	}
+	
+	private List<PropertyDefinition> getPropertyDefinitionsQPCR() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode( "nM"), MeasureUnit.find.findByCode("nM"),
+				"single", 11, true, null, "2"));		
+		
+		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("ng/µl"), MeasureUnit.find.findByCode("ng/µl"),
+				"single", 12, true, null, "2"));		
+		
+		return propertyDefinitions;
+	}
 
 
 //	private List<PropertyDefinition> getPropertyDefinitionDepotBionano() throws DAOException {
@@ -725,48 +780,7 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 //        values.add(DescriptionFactory.newValue("0.2","0.2"));
 //        return values;
 //	}
-	
-	
-	private static List<Value> getAnalyseType(){
-        List<Value> analyseType = new ArrayList<Value>();
-        analyseType.add(DescriptionFactory.newValue("Amplicon","Amplicon"));
-        analyseType.add(DescriptionFactory.newValue("Bisulfite","Bisulfite"));
-        analyseType.add(DescriptionFactory.newValue("DNA","DNA"));
-        analyseType.add(DescriptionFactory.newValue("DNA-MP","DNA-MP"));
-        analyseType.add(DescriptionFactory.newValue("RAD-Seq","RAD-Seq"));
-        analyseType.add(DescriptionFactory.newValue("RNA","RNA"));
-        analyseType.add(DescriptionFactory.newValue("10X-DeNovo","10X-DeNovo"));
-        analyseType.add(DescriptionFactory.newValue("10X-WGS","10X-WGS"));
-        analyseType.add(DescriptionFactory.newValue("10X-SingleCell","10X-SingleCell"));
-        analyseType.add(DescriptionFactory.newValue("16S","16S"));
-        return analyseType;
-	}
 
-    protected static List<Value> getLibrairieType(){
-            List<Value> values = new ArrayList<Value>();
-            values.add(DescriptionFactory.newValue("Amplicon","Amplicon"));
-            values.add(DescriptionFactory.newValue("Bisulfite-DNA","Bisulfite-DNA"));
-            values.add(DescriptionFactory.newValue("ChIP-Seq","ChIP-Seq"));
-            values.add(DescriptionFactory.newValue("DNA","DNA"));
-            values.add(DescriptionFactory.newValue("DNA-MP","DNA-MP"));
-            values.add(DescriptionFactory.newValue("MeDIP-Seq","MeDIP-Seq"));
-            values.add(DescriptionFactory.newValue("RAD-Seq","RAD-Seq"));
-            values.add(DescriptionFactory.newValue("ReadyToLoad","ReadyToLoad"));
-            values.add(DescriptionFactory.newValue("RNA","RNA"));
-            values.add(DescriptionFactory.newValue("RNA-Stranded","RNA-Stranded"));
-            values.add(DescriptionFactory.newValue("10X","10X"));
-            values.add(DescriptionFactory.newValue("16S","16S"));
-            return values;
-    }
-
-	protected static List<Value> getTagCategories(){
-		List<Value> values = new ArrayList<Value>();
-		values.add(DescriptionFactory.newValue("SINGLE-INDEX", "SINGLE-INDEX"));	
-		values.add(DescriptionFactory.newValue("DUAL-INDEX", "DUAL-INDEX"));	
-		values.add(DescriptionFactory.newValue("NO-INDEX", "NO-INDEX"));
-		values.add(DescriptionFactory.newValue("10X", "10X"));
-		return values;	
-	}
 	
 //	private static List<PropertyDefinition> getPropertyDefinitionsLibIndexing() throws DAOException {
 //		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
@@ -837,19 +851,52 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 		return propertyDefinitions; 
 	}
 	
-//	private static List<PropertyDefinition> getPropertyDefinitionPoolTube() throws DAOException {
-//		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+	private static List<PropertyDefinition> getPropertyDefinitionPoolTube() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		//InputContainer
+		propertyDefinitions.add(newPropertiesDefinition("Qté finale dans pool", "qte_finale_lib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "fmol"),MeasureUnit.find.findByCode( "fmol"),"single",21, true,"20","2"));
+		propertyDefinitions.add(newPropertiesDefinition("Vol. lib pour pool", "vol_finale_lib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µl"),MeasureUnit.find.findByCode( "µl"),"single",22, false,null,"2"));
+		propertyDefinitions.add(newPropertiesDefinition("Nom pool", "Nom_pool_sequencage", LevelService.getLevels(Level.CODE.ContainerOut, Level.CODE.Content), String.class, false, null, null, 
+				"single", 23, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Run name", "Run_Name",LevelService.getLevels(Level.CODE.ContainerOut, Level.CODE.Content), String.class, false,null,null, 
+				null, null, "single", 24,true,null, null));
+//		propertyDefinitions.add(newPropertiesDefinition("Vol. pool", "vol_finale_pool", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null,null,
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µl"),MeasureUnit.find.findByCode( "µl"),"single",25, true,null,"2"));
+						
+		return propertyDefinitions;
+	}	
+	
+	private static List<PropertyDefinition>getPropertyDefinitionDilution(){
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+			propertyDefinitions.add(newPropertiesDefinition("Dilution", "dilution", 
+					LevelService.getLevels(Level.CODE.ContainerOut), 
+					String.class, false, null, null, 
+					"single", 20, true, null,null));
+		return propertyDefinitions;
+	}
+	
+//	private static List<PropertyDefinition> getPropertyDefinitionNormalisation() throws DAOException {
+//		List<PropertyDefinition> propertyDefinitions = new ArrayList<>();
 //		//InputContainer
-//		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
-//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",8, false));
-//		
 //		propertyDefinitions.add(newPropertiesDefinition("Label de travail", "workName", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, false, null, null, 
-//				"single", 30, true, null,null));
+//				"single", 100, true, null,null));
 //		
+//		propertyDefinitions.add(newPropertiesDefinition("Conc. max theorique", "maximumConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+//				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),null,null,"single", 18, false, null,null));
+//		
+//		propertyDefinitions.add(newPropertiesDefinition("Mode calcul", "computeMode", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null, 
+//				Arrays.asList(newValue("fixeCfVi", "Volume à engager fixe"), newValue("fixeCfVf", "Volume final fixe")), "single", 19, true, null,null));
+//		
+//		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
+//				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 20, true, null,null));
+//		
+//		propertyDefinitions.add(newPropertiesDefinition("Volume tampon", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
+//				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 21, false, null,null));
 //		
 //		return propertyDefinitions;
-//	}	
-	
+//	}
 	
 //	private List<PropertyDefinition> getPropertyDefinitionsExternalQC() {
 //		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
@@ -874,4 +921,46 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 //		
 //	}
 
+	
+	
+	private static List<Value> getAnalyseType(){
+        List<Value> analyseType = new ArrayList<Value>();
+        analyseType.add(DescriptionFactory.newValue("Amplicon","Amplicon"));
+        analyseType.add(DescriptionFactory.newValue("Bisulfite","Bisulfite"));
+        analyseType.add(DescriptionFactory.newValue("DNA","DNA"));
+        analyseType.add(DescriptionFactory.newValue("DNA-MP","DNA-MP"));
+        analyseType.add(DescriptionFactory.newValue("RAD-Seq","RAD-Seq"));
+        analyseType.add(DescriptionFactory.newValue("RNA","RNA"));
+        analyseType.add(DescriptionFactory.newValue("10X-DeNovo","10X-DeNovo"));
+        analyseType.add(DescriptionFactory.newValue("10X-WGS","10X-WGS"));
+        analyseType.add(DescriptionFactory.newValue("10X-SingleCell","10X-SingleCell"));
+        analyseType.add(DescriptionFactory.newValue("16S","16S"));
+        return analyseType;
+	}
+
+    protected static List<Value> getLibrairieType(){
+            List<Value> values = new ArrayList<Value>();
+            values.add(DescriptionFactory.newValue("Amplicon","Amplicon"));
+            values.add(DescriptionFactory.newValue("Bisulfite-DNA","Bisulfite-DNA"));
+            values.add(DescriptionFactory.newValue("ChIP-Seq","ChIP-Seq"));
+            values.add(DescriptionFactory.newValue("DNA","DNA"));
+            values.add(DescriptionFactory.newValue("DNA-MP","DNA-MP"));
+            values.add(DescriptionFactory.newValue("MeDIP-Seq","MeDIP-Seq"));
+            values.add(DescriptionFactory.newValue("RAD-Seq","RAD-Seq"));
+            values.add(DescriptionFactory.newValue("ReadyToLoad","ReadyToLoad"));
+            values.add(DescriptionFactory.newValue("RNA","RNA"));
+            values.add(DescriptionFactory.newValue("RNA-Stranded","RNA-Stranded"));
+            values.add(DescriptionFactory.newValue("10X","10X"));
+            values.add(DescriptionFactory.newValue("16S","16S"));
+            return values;
+    }
+
+	protected static List<Value> getTagCategories(){
+		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("SINGLE-INDEX", "SINGLE-INDEX"));	
+		values.add(DescriptionFactory.newValue("DUAL-INDEX", "DUAL-INDEX"));	
+		values.add(DescriptionFactory.newValue("NO-INDEX", "NO-INDEX"));
+		values.add(DescriptionFactory.newValue("10X", "10X"));
+		return values;	
+	}
 }

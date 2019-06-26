@@ -1,4 +1,4 @@
-@this(ctx : fr.cea.ig.play.migration.NGLContext, inputtubes_ : inputtubes, outputtubes_ : outputtubes, inputplates_ : inputplates)
+@this(ctx : fr.cea.ig.play.migration.NGLContext, inputtubes_ : inputtubes, outputtubes_ : getoutputtubes, inputplates_ : getinputplates)
 
 @()
 
@@ -49,7 +49,7 @@
 			<!-- onglets -->
 			<li class="active"><a href="" role="tab" data-target="#plate" data-toggle="tab">@Messages("experiments.tube.design")</a></li>
 			<li><a href="" role="tab"  data-target="#roadmap" data-toggle="tab" ng-click="atmService.data.updateDatatable()">@Messages("experiments.calculation.sheet")</a></li>
-			<li ng-if="showSrcDest()"><a href="" role="tab"  data-target="#src_dest" data-toggle="tab">@Messages("experiments.src_dest.sheet")</a></li>
+			<!-- <li ng-if="showSrcDest()"><a href="" role="tab"  data-target="#src_dest" data-toggle="tab">@Messages("experiments.src_dest.sheet")</a></li> -->
 		</ul>
 		<div class="tab-content">
 			<!-- div contents by onglet -->

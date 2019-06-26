@@ -662,7 +662,8 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 						}
 						var sampleCodeAndTags = [];
 						angular.forEach(containerUsed.contents, function(content){
-							var value = content.projectCode+" / "+content.sampleCode;
+//							var value = content.projectCode+" / "+content.sampleCode;
+							var value = content.projectCode+" / "+content.referenceCollab;
 							
 							if(content.properties && content.properties.libProcessTypeCode){
 								value = value +" / "+content.properties.libProcessTypeCode.value;

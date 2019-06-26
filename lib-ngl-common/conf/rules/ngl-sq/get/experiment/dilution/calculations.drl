@@ -1,0 +1,33 @@
+/*package rules
+
+declare InputSupport
+	code : String
+	categoryCode : String
+end
+
+
+rule "set concentration"
+	@nglSQ( calculations )
+	dialect "java"
+	salience 100
+	no-loop
+    when
+    	$experiment:Experiment($typeCode:typeCode == "dilution", $stateCode : state.code, $stateCode=="N")
+    	$atomicTransfert: OneToOneContainer()
+    	InputContainerUsed($concentrationIN:concentration) from $atomicTransfert.inputContainerUseds
+    	OutputContainerUsed($experimentProperties:experimentProperties, $experimentProperties!=null, $concentrationOUT:concentration) from $atomicTransfert.outputContainerUseds
+    	$dilution: PropertyValue($dil:value, $dil!=null, $dil matches "([0-9]+)[\\/]([0-9]+)") from $experimentProperties.get("dilution")
+    	    
+    then
+    	if($concentrationIN != null && $concentrationIN.value != null){
+			PropertySingleValue value;
+    		String d = (String) $dil;
+			Logger.debug("dilution : " + convertPVToDouble($concentrationIN) + "/" + d.split("/")[1] + "*" + d.split("/")[0] + "=" + (convertPVToDouble($concentrationIN)/Integer.parseInt(d.split("/")[1])*Integer.parseInt(d.split("/")[0])));
+    		
+			value = new PropertySingleValue(Math.round(convertPVToDouble($concentrationIN)/Integer.parseInt(d.split("/")[1])*Integer.parseInt(d.split("/")[0])),$concentrationIN.unit);
+	    	
+	    	$concentrationOUT = value;
+    	}
+    	update($experiment);
+    end*/
+	

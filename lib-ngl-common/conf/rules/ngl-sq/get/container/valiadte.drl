@@ -1,0 +1,90 @@
+package rules
+
+rule "new sequence"
+	@nglSQ( validations )
+	dialect "java"
+	salience 1000
+	no-loop
+	when
+		$container : Container($contents:contents, $contents != null)
+		$content : Content($code:sampleCode, $properties : properties, $properties != null) from $contents
+		$sequence : PropertyValue($seq:value, $seq matches ".*[^ATCG-].*") from $properties.get("sequence") 
+		$contextValidation : ContextValidation()
+		eval(null == $properties.get("tag"))
+	then
+		
+		$contextValidation.addErrors("Sequence","error.receptionfile.customSequence",$seq,$code);
+	end
+
+
+rule "custom tags"
+	@nglSQ( validations )
+	dialect "java"
+	salience 900
+	no-loop
+	when
+		$container : Container($contents:contents, $contents != null)
+		$content : Content($properties : properties, $properties != null) from $contents
+		$sequence : PropertyValue() from $properties.get("sequence") 
+		$contextValidation : ContextValidation($errors:errors)
+		eval(null == $properties.get("tag"))
+	then
+	
+		Logger.debug("errors - " + $errors.size());
+		if($errors.size()==0){
+			String seq = $sequence.value.toString().trim();
+			String indexName = "Custom_";
+			
+			//find Custom by sequence
+			Index index = MongoDBDAO.findOne(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.is("sequence", seq).regex("shortName",Pattern.compile(indexName)));
+			
+						
+			//if sequence is not found into custom tags
+			if(null == index){
+			
+				//count custom number now
+				Integer nbCustom = MongoDBDAO.find(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.regex("shortName",Pattern.compile(indexName))).size();
+				nbCustom++;
+				
+				//test than new custom not exist
+				index = MongoDBDAO.findOne(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.is("shortName",indexName + nbCustom.toString()));
+				while(index != null){
+					nbCustom++;
+					index = MongoDBDAO.findOne(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.is("shortName",indexName + nbCustom.toString()));
+				}
+				Logger.debug("New index to : " + nbCustom);
+				indexName = indexName + nbCustom.toString();
+				
+				index = new IlluminaIndex();
+				index.code = indexName;
+				index.name = indexName;
+				index.shortName = indexName;
+				
+				if(seq.split("-").length > 1){
+					index.categoryCode = "DUAL-INDEX";
+				}else{
+					index.categoryCode = "SINGLE-INDEX";
+				}
+				
+				index.sequence = seq;
+				index.supplierName=new HashMap<>();
+				index.supplierName.put("INCONNU",indexName);
+				index.traceInformation=new TraceInformation();
+				InstanceHelpers.updateTraceInformation(index.traceInformation, $contextValidation.getUser());
+			
+				InstanceHelpers.save(InstanceConstants.PARAMETER_COLL_NAME,index,$contextValidation);
+				
+			}
+			
+			if(null != index){
+				Logger.debug("Content " + seq + " - " + index.shortName);
+				PropertySingleValue value = new PropertySingleValue(index.shortName);
+	   			$properties.put("tag",value);
+	   			$properties.remove("sequence");
+			}else{
+				$contextValidation.addErrors("Content","error.receptionfile.customTag",$content.sampleCode);
+			}
+			//$contextValidation.addErrors("Content","error.receptionfile.customTag",$content.sampleCode);
+		}
+				
+	end	

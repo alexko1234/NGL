@@ -229,6 +229,9 @@ error.validationexp.typesequensage = "Le {0}, indiqué comme type de sequencage 
 error.receptionfile.taxonCode.diff = "Le code taxon est différent du sample parent {0} <> {1}"
 error.receptionfile.referenceCollab.diff = "La réf. collaborateur est différente du sample parent {0} <> {1}"
 
+error.receptionfile.customSequence = "Sequence {0} de la librairie {1} n'est pas valide"
+error.receptionfile.customTag = "Custom n''a pas pu etre associe au content {0}"
+
 #directive messages
 msg.details = [détails]
 msg.success.save = Sauvegarde réussie.

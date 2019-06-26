@@ -1,8 +1,33 @@
 package services.io;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+
+import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.parameter.index.IlluminaIndex;
+import models.laboratory.parameter.index.Index;
+import models.utils.InstanceConstants;
+import models.utils.InstanceHelpers;
+
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
+
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.mongo.DBQueryBuilder;
+import fr.cea.ig.MongoDBResult;
+
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+import org.mongojack.DBCursor;
+
+import validation.ContextValidation;
+import fr.cea.ig.MongoDBResult.Sort;
+
+import java.util.regex.Pattern;
+
+import play.Logger;
 
 public class ExcelHelper {
 	
@@ -102,5 +127,5 @@ public class ExcelHelper {
 			return null;
 		}
 	}
-	
+
 }
