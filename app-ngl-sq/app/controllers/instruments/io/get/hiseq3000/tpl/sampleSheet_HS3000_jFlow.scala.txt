@@ -29,6 +29,7 @@
 										***@--data-nature @if(OutputHelper.getContentProperty(cosbis.toList.head, "Type_librairie")){'@(OutputHelper.getContentProperty(cosbis.toList.head,"Type_librairie"))'}else{'-'} @***
 										***@--sequencer '@(CsvHelper.getInstrumentName(e.instrument.code))' --name '@if(OutputHelper.getContentProperty(cosbis.toList.head,"Run_Name")!=""){@(CsvHelper.checkName(OutputHelper.getContentProperty(cosbis.toList.head,"Run_Name")))}else{@(CsvHelper.checkName(OutputHelper.getContentProperty(cosbis.toList.head,"Nom_pool_sequencage")))}' @***
 										***@--type 'Lane 1' @***
+										***@--project-name @(cosbis.toList.head.projectCode) @***
 										***@--species @if(c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cosbis.toList.head, "species", e)) != null){'@(CsvHelper.getContentProcessProperties(cosbis.toList.head, "species",e))'}else{'-'} @***
 										***@--description 'Adapter type : @(CsvHelper.getHiseqAdapter(cosbis.toList.head)) @***
 										si "taille_insert" est renceigné
@@ -45,7 +46,7 @@
 											***@--reference-genome @(CsvHelper.getContentProcessProperties(cosbis.toList.head, "reference_genome", e) )@***
 										***@} @***
 										***@@if(jnt){@***
-											***@@if(analyse == "16S"){--assignation-databank '/save/ng6/TODO/HiSeqIndexedGenomes/new_struct/ncbi_16S/blast/16SMicrobial' } @***
+											***@@if(analyse == "16S"){--assignation-databank '/save/ng6/TODO/HiSeqIndexedGenomes/new_struct/ncbi_16S/240319_release/16SMicrobial' } @***
 											***@--min-overlap  @if(OutputHelper.getInstrumentProperty(e,"nbCyclesRead1").asInstanceOf[Integer]+OutputHelper.getInstrumentProperty(e,"nbCyclesRead2").asInstanceOf[Integer]-2-OutputHelper.getContentProperty(cosbis.toList.head,"taille_insert").toInt-30 > 10){@***
 												***@@(OutputHelper.getInstrumentProperty(e,"nbCyclesRead1").asInstanceOf[Integer]+OutputHelper.getInstrumentProperty(e,"nbCyclesRead2").asInstanceOf[Integer]-2-OutputHelper.getContentProperty(cosbis.toList.head,"taille_insert").toInt-30)}else{10} @***
 											***@--max-overlap @(OutputHelper.getInstrumentProperty(e,"nbCyclesRead1").asInstanceOf[Integer]+OutputHelper.getInstrumentProperty(e,"nbCyclesRead2").asInstanceOf[Integer]-2-OutputHelper.getContentProperty(cosbis.toList.head,"taille_insert").toInt+20) @***
@@ -54,7 +55,7 @@
 										***@@for(co <- cosbis.toList.sortWith(_.sampleCode < _.sampleCode)){@***
 											***@ select-sample-id=@(CsvHelper.contentName(co))@***
 										***@} @***
-										***@lane=@(etm.line) --project-name @(cosbis.toList.head.projectCode) --admin-login CTD @***
+										***@lane=@(etm.line) --admin-login CTD @***
 										***@@if(analyseAligne.contains(CsvHelper.getFromAnalyseType(analyse))){@***
 											***@--align-subset-reads @***
 										***@}@***
@@ -71,6 +72,7 @@
 									***@--sequencer '@(CsvHelper.getInstrumentName(e.instrument.code))' @***
 									***@--name '@if(OutputHelper.getContentProperty(cos.toList.head,"Run_Name")!=""){@(CsvHelper.checkName(OutputHelper.getContentProperty(cos.toList.head,"Run_Name")))}else{@(CsvHelper.checkName(OutputHelper.getContentProperty(cos.toList.head,"Nom_pool_sequencage")))}' @***
 									***@--type '@if(e.instrument.inContainerSupportCategoryCode == "flowcell-1"){1/1 Flowcell}else{ 1/8 Flowcell} - Lane@(etm.line)' @***
+									***@--project-name @(cos.toList.head.projectCode) @***
 									***@--species @if(c.experimentProperties != null && (CsvHelper.getContentProcessProperties(cos.toList.head, "species", e)) != null){'@(CsvHelper.getContentProcessProperties(cos.toList.head, "species",e))'}else{'-'} @***
 									***@--description 'Adapter type : @(CsvHelper.getHiseqAdapter(cos.toList.head)) @***
 									si "taille_insert" est renceigné
@@ -99,7 +101,7 @@
 											***@select-sample-id=@(CsvHelper.contentName(co)) @***
 										***@}@***
 									***@} @***
-									***@lane=@(etm.line) --project-name @(cos.toList.head.projectCode) --admin-login CTD @***
+									***@lane=@(etm.line) --admin-login CTD @***
 									***@@if(analyseAligne.contains(CsvHelper.getFromAnalyseType(analyse))){@***
 										***@--align-subset-reads @***
 									***@}@***
