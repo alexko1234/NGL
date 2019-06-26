@@ -854,11 +854,6 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 	private static List<PropertyDefinition> getPropertyDefinitionPoolTube() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		//InputContainer
-//		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
-//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",8, false));
-//		
-//		propertyDefinitions.add(newPropertiesDefinition("Label de travail", "workName", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, false, null, null, 
-//				"single", 30, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Qté finale dans pool", "qte_finale_lib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,null,
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "fmol"),MeasureUnit.find.findByCode( "fmol"),"single",21, true,"20","2"));
 		propertyDefinitions.add(newPropertiesDefinition("Vol. lib pour pool", "vol_finale_lib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,null,
@@ -867,8 +862,8 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 				"single", 23, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Run name", "Run_Name",LevelService.getLevels(Level.CODE.ContainerOut, Level.CODE.Content), String.class, false,null,null, 
 				null, null, "single", 24,true,null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Vol. pool", "vol_finale_pool", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null,null,
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µl"),MeasureUnit.find.findByCode( "µl"),"single",25, true,null,"2"));
+//		propertyDefinitions.add(newPropertiesDefinition("Vol. pool", "vol_finale_pool", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null,null,
+//				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µl"),MeasureUnit.find.findByCode( "µl"),"single",25, true,null,"2"));
 						
 		return propertyDefinitions;
 	}	

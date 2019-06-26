@@ -143,6 +143,7 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 						 "hide":true,
 						 "type":"number",
 			        	 "position":50,
+			        	 "mergeCells" : true,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
@@ -153,6 +154,7 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 						 "hide":true,
 						 "type":"number",
 			        	 "position":51,
+			        	 "mergeCells" : true,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
@@ -163,6 +165,7 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 						 "hide":true,
 						 "type":"text",
 			        	 "position":51.5,
+			        	 "mergeCells" : true,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
@@ -173,6 +176,7 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 						 "hide":false,
 			        	 "type":"text",
 			        	 "position":400,
+			        	 "mergeCells" : true,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 				     }
 //			         {
@@ -428,7 +432,7 @@ angular.module('home').controller('GETXToTubesCtrl',['$scope', '$parse', '$filte
 	//  !!! ATTENTION COMMUN CNS/CNG !!!
 	$scope.$on('save', function(e, callbackFunction) {
 		console.log("call event save on x-to-tubes");
-		
+		console.log("inputContainerUsed 1 : " + JSON.stringify($scope.experiment.atomicTransfertMethods[0]));
 		if($scope.atmService.data.atm.length === 0){
 			console.log("call event save on x-to-tubes if");
 			$scope.$emit('childSavedError', callbackFunction);

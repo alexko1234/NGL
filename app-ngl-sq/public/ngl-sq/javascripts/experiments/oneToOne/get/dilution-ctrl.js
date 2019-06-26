@@ -36,7 +36,7 @@ angular.module('home').controller('DilutionCtrlGET',['$scope' ,'$http','$parse',
 				        	 "extraHeaders":{0:Messages("experiments.inputs")}
 					  },
 					 {
-			        	 "header" : function(){return Messages("Concentration fournie") + " (ng)"},
+			        	 "header" : function(){return Messages("Concentration fournie") + " (nM)"},
 			 			 "property": "inputContainerUsed.concentration.value",
 			 			 "order":true,
 						 "edit":false,
@@ -55,7 +55,7 @@ angular.module('home').controller('DilutionCtrlGET',['$scope' ,'$http','$parse',
 				 			"extraHeaders":{0:Messages("experiments.inputs")}			 						 			
 				 	 },	
 			         {
-			        	 "header":Messages("Concentration estimée") + " (ng)",
+			        	 "header":Messages("Concentration estimée") + " (nM)",
 			        	 "property":"outputContainerUsed.concentration.value",
 			        	 "order":true,
 						 "edit":true,
@@ -134,7 +134,7 @@ angular.module('home').controller('DilutionCtrlGET',['$scope' ,'$http','$parse',
 	};
 
 	var updateATM = function(experiment){
-		console.log("outputContainerUseds : " + JSON.stringify(experiment.atomicTransfertMethods));
+		//console.log("outputContainerUseds : " + JSON.stringify(experiment.atomicTransfertMethods));
 		experiment.atomicTransfertMethods.forEach(function(atm){
 			if(experiment.instrument.outContainerSupportCategoryCode!=="tube"){
 					atm.line = atm.outputContainerUseds[0].locationOnContainerSupport.line;
@@ -298,22 +298,21 @@ angular.module('home').controller('DilutionCtrlGET',['$scope' ,'$http','$parse',
 	 */
 	var updateConcentration = function(experiment){
 		if($scope.experiment.state.code == "N"){
-			console.log("updateConcentration");
 			for(var j = 0 ; j < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; j++){
 				var atm = experiment.atomicTransfertMethods[j];
 				var concentration = undefined;
 				var inputContainerUsed = atm.inputContainerUseds[0];
 				var outputContainerUsed = atm.outputContainerUseds[0];
-				if (inputContainerUsed.concentration!=null && outputContainerUsed.experimentProperties!=null && outputContainerUsed.experimentProperties.dilution!=null && outputContainerUsed.experimentProperties.dilution.value.match("^([0-9]+[\/][0-9]+)$")!=null){
+				if (inputContainerUsed.concentration!=null && inputContainerUsed.concentration.value!=null && outputContainerUsed.experimentProperties!=null && outputContainerUsed.experimentProperties.dilution!=null && outputContainerUsed.experimentProperties.dilution.value.match("^([0-9]+[\/][0-9]+)$")!=null){
 					var x = parseInt(outputContainerUsed.experimentProperties.dilution.value.split("/")[0]);
 					var y = parseInt(outputContainerUsed.experimentProperties.dilution.value.split("/")[1]);
 					concentration = inputContainerUsed.concentration.value/y*x;
 					atm.outputContainerUseds[0].concentration.value = concentration;
 					atm.outputContainerUseds[0].concentration.unit = "ng";
-				}
+				}//if
 			}//for
 		}
-	};
+	}
 		
 
 	
