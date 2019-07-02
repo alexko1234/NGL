@@ -1,5 +1,5 @@
-angular.module('home').controller('GETNanoporeDepotCtrl',['$scope', '$parse', '$filter','$http', 'atmToDragNDrop','datatable',
-                                                               function($scope, $parse, $filter,$http, atmToDragNDrop, datatable) {
+angular.module('home').controller('GETNanoporeDepotCtrl',['$scope', '$parse', '$filter','$http', 'atmToDragNDrop','datatable', 'atmToSingleDatatable',
+                                                               function($scope, $parse, $filter,$http, atmToDragNDrop, datatable, atmToSingleDatatable) {
 	
 	$scope.isRoadMapAvailable = true;
 	
@@ -8,6 +8,17 @@ angular.module('home').controller('GETNanoporeDepotCtrl',['$scope', '$parse', '$
 	var datatableConfig = {
 			name: $scope.experiment.typeCode.toUpperCase(),
 			columns:[  
+					{
+						 "header":Messages("containers.table.support.number"),
+						 "property":"atomicTransfertMethod.line",
+						 "order":true,
+						 "edit":false,
+						 "hide":true,
+						 "type":"text",
+						 "position":0,
+						 "mergeCells":true,
+						 "extraHeaders":{0:Messages("experiments.inputs")}
+					},
 //					 {
 //			        	 "header":Messages("containers.table.sampleCodes"),
 //			        	 "property":"inputContainerUsed.contents[0].properties.Nom_echantillon_collaborateur.value",
@@ -18,6 +29,7 @@ angular.module('home').controller('GETNanoporeDepotCtrl',['$scope', '$parse', '$
 //			        	 "position":1,
 //			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 //			         },	
+
 			         {
 					        "header":Messages("property_definition.Nom_echantillon_collaborateur"),
 		                     "property": "inputContainer.contents",
@@ -26,7 +38,7 @@ angular.module('home').controller('GETNanoporeDepotCtrl',['$scope', '$parse', '$
 		                     "order":true,
 		                     "hide":true,
 		                     "type":"text",
-		                     "position":3,
+		                     "position":1,
 		                     "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			                "extraHeaders":{0:Messages("experiments.inputs")}
 			           },
@@ -158,16 +170,16 @@ angular.module('home').controller('GETNanoporeDepotCtrl',['$scope', '$parse', '$
 //			        	 "position":45,
 //			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 //			         },
-//			         {
-//			        	 "header":Messages("containers.table.code"),
-//			        	 "property":"outputContainerUsed.code",
-//			        	 "order":true,
-//						 "edit":false,
-//						 "hide":true,
-//						 "type":"text",
-//			        	 "position":400,
-//			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-//			         },		         					 
+			         {
+			        	 "header":Messages("containers.table.code"),
+			        	 "property":"outputContainerUsed.code",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":true,
+						 "type":"text",
+			        	 "position":40,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         },		         					 
 //					 {
 //			        	 "header":Messages("containers.table.concentration"),
 //			        	 "property":"outputContainerUsed.concentration.value",
@@ -209,7 +221,8 @@ angular.module('home').controller('GETNanoporeDepotCtrl',['$scope', '$parse', '$
 			order:{
 				mode:'local', //or 
 				active:true,
-				by:"atomicTransfertMethod.line"
+//				by:"atomicTransfertMethod.line"
+				by:"atomicTransfertMethod.viewIndex"
 			},
 			remove:{
 				active:false,
@@ -220,9 +233,9 @@ angular.module('home').controller('GETNanoporeDepotCtrl',['$scope', '$parse', '$
 				mode:'local',
 				showButton:false,
 				changeClass:false,
-				callback:function(datatable){
-					copyFlowcellCodeToDT(datatable);
-				}
+//				callback:function(datatable){
+//					copyFlowcellCodeToDT(datatable);
+//				}
 			},
 			hide:{
 				active:true
@@ -232,7 +245,7 @@ angular.module('home').controller('GETNanoporeDepotCtrl',['$scope', '$parse', '$
 	        },
 			
 			edit:{
-				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
 	        	byDefault : true,
 				columnMode:true
 			},
@@ -252,16 +265,7 @@ angular.module('home').controller('GETNanoporeDepotCtrl',['$scope', '$parse', '$
 			}
 			
 	};	
-		
-	/*
-	 * processProperties dans experimentProperties
-	 */
-//	var processToExperiment = function(experiment){
-//		console.log("processToExperiment " + JSON.stringify());
-//	}
-//	processToExperiment($scope.experiment);
-	
-	
+				
 	/*
 	 * affiche processProperties
 	 */
@@ -329,204 +333,40 @@ angular.module('home').controller('GETNanoporeDepotCtrl',['$scope', '$parse', '$
 		}
 	}
 
-	
-	/*
-	 * préremplir valeurs par defaut
-	 */
-//	var defaultValue = function(){
-////		console.log("defaultValue experiment " + JSON.stringify($scope.experiment));
-////		console.log("defaultValue experiment " + JSON.stringify($scope.atmService.data.atm));
-//		if($scope.experiment.atomicTransfertMethods == false && $scope.experiment.instrument.typeCode == "cBot-interne-novaseq"){
-////			console.log("defaultValue experiment " + JSON.stringify($scope.experimentType));
-//			if(undefined != $scope.experiment.instrumentProperties.workflow){
-//				console.log($scope.experiment.instrumentProperties.workflow.value);
-//				for (var val = 0; val < $scope.experimentType.propertiesDefinitions.length; val++) {
-//					valueName = $scope.experimentType.propertiesDefinitions[val].code;
-//					if($scope.experiment.instrumentProperties.workflow.value == "XP" && $scope.experiment.instrument.outContainerSupportCategoryCode == "flowcell-4-s4" && defValXPs4.get(valueName) != undefined){
-//						console.log(valueName + " : " + defValXPs4.get(valueName));
-//						$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[val],defValXPs4.get(valueName));
-//					}else if ($scope.experiment.instrumentProperties.workflow.value == "XP" && $scope.experiment.instrument.outContainerSupportCategoryCode == "flowcell-2-s1" && defValXPs1.get(valueName) != undefined){
-//						console.log(valueName + " : " + defValXPs1.get(valueName));
-//						$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[val],defValXPs1.get(valueName));
-//					}else if($scope.experiment.instrumentProperties.workflow.value == "Standard" && $scope.experiment.instrument.outContainerSupportCategoryCode == "flowcell-4-s4" && defValSTs4.get(valueName) != undefined){
-//						console.log(valueName + " : " + defValSTs4.get(valueName));
-//						$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[val],defValSTs4.get(valueName));
-//					}else if ($scope.experiment.instrumentProperties.workflow.value == "Standard" && $scope.experiment.instrument.outContainerSupportCategoryCode == "flowcell-2-s1" && defValSTs1.get(valueName) != undefined){
-//						console.log(valueName + " : " + defValSTs1.get(valueName));
-//						$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[val],defValSTs1.get(valueName));
-//					}
-//				} //for
-//			} // if workflow
-//		} //if "cBot-interne-novaseq"
-//	}
-//	
-//	defaultValue();
-	
-//	var wf ="";
-//	$scope.workflow = function() {
-//		if(undefined != $scope.experiment.instrumentProperties.workflow && wf != $scope.experiment.instrumentProperties.workflow.value){
-//			wf = $scope.experiment.instrumentProperties.workflow.value;
-//			console.log("coucou");
-//			setDefaultValues;//met à jour les valeurs par defaut par rapport au type de la fc et à la workflow A REMPLASSER PAR RECHARGER
-//		}
-//		return wf;
-//	}
-//	wfWach =function(){
-//		console.log("wfWach");
-//		if ($scope.experiment.atomicTransfertMethods == false && $scope.experiment.state.code == "N" && $scope.experiment.instrument.typeCode == "cBot-interne-novaseq"){
-//			$scope.$watch($scope.workflow, console.log("ok"));
-//		}
-//	}
-//	wfWach();
-	
-//	var setDefaultValues = function(){
-//		if(undefined != $scope.experiment.instrumentProperties.workflow){
-//			console.log($scope.experiment.instrumentProperties.workflow.value);
-//			//choisir liste des valeurs à utilisé
-//			if($scope.experiment.instrumentProperties.workflow.value == "XP" && $scope.experiment.instrument.outContainerSupportCategoryCode == "flowcell-4-s4"){
-//				valueToUse = defValXPs4;
-//			}else if ($scope.experiment.instrumentProperties.workflow.value == "XP" && $scope.experiment.instrument.outContainerSupportCategoryCode == "flowcell-2-s1"){
-//				valueToUse = defValXPs1;
-//			}else if($scope.experiment.instrumentProperties.workflow.value == "Standard" && $scope.experiment.instrument.outContainerSupportCategoryCode == "flowcell-4-s4"){
-//				valueToUse = defValSTs4;
-//			}else if ($scope.experiment.instrumentProperties.workflow.value == "Standard" && $scope.experiment.instrument.outContainerSupportCategoryCode == "flowcell-2-s1"){
-//				valueToUse = defValSTs1;
-//			}
-//			//appliquer les valeurs
-//			for(var j = 0 ; j < $scope.experiment.atomicTransfertMethods.length ; j++){
-////				var atm = $scope.experiment.atomicTransfertMethods[j];
-//				var atm = $scope.atmService.data.atm[j];
-////				console.log(JSON.stringify(atm));
-//				for (var i = 0; i < atm.inputContainerUseds.length; i++) {
-////					console.log("experimentProperties 0 : " + JSON.stringify(atm.inputContainerUseds[i].experimentProperties));
-//					for ( var val in atm.inputContainerUseds[i].experimentProperties) {
-//						var value = valueToUse.get(val);
-//						$parse(val).assign(atm.inputContainerUseds[i].experimentProperties, value);
-//						console.log("setDefaultValues " + val + ":" + value);	
-//					} //experimentProperties					
-//					console.log("experimentProperties " + JSON.stringify($scope.atmService.data.atm[j].inputContainerUseds[i].experimentProperties));
-//				} //inputContainerUseds
-//			} //atm
-//			
-//			$scope.atmService.data.updateDatatable();
-////			$scope.atmService.refreshViewFromExperiment($scope.experiment);
-//		} // if workflow
-//	}
-//	
-//	//récupère la bonne valeur de workflow du début
-//	var wf = "";
-//	var setwf = function(){
-//		if(undefined != $scope.experiment.instrumentProperties.workflow){
-//			wf = $scope.experiment.instrumentProperties.workflow.value;
-//		}
-//	}
-//	setwf();
-//	$scope.workflow = function() {
-//		if($scope.experiment.atomicTransfertMethods != undefined && undefined != $scope.experiment.instrumentProperties.workflow && wf != $scope.experiment.instrumentProperties.workflow.value){
-//			wf = $scope.experiment.instrumentProperties.workflow.value;
-//			setDefaultValues();//remet les valeurs par defaut dans les containers
-////			$scope.atmService.data.updateDatatable();
-//			console.log("coucou");
-//		}
-//		return wf;
-//	}
-//	wfWach =function(){
-//		console.log("wfWach");
-//		if ($scope.experiment.state.code != "F" && $scope.experiment.instrument.typeCode == "cBot-interne-novaseq"){
-//			$scope.$watch($scope.workflow, console.log("ok"));
-//		}
-//	}
-//	wfWach();
-	
 	$scope.$on('save', function(e, callbackFunction) {	
-		console.log("call event save on nanopore-depot");
+		//console.log("call event save on nanopore-depot");
 //		validateProcessProperties($scope.experiment);
 		$scope.atmService.viewToExperiment($scope.experiment);
 //		$scope.updateConcentration($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 //		addReagents();
-//		generateRunName($scope.experiment);
-		//generateRunName();
-		console.log("experiment : " + JSON.stringify($scope.experiment));
-		//console.log("experimentProperties 2 " + JSON.stringify($scope.atmService.data.atm[0]));
 	});
 
 	
-	var copyFlowcellCodeToDT = function(datatable){
-		console.log("copyFlowcellCodeToDT");
-		var dataMain = datatable.getData();
-		//copy flowcell code to output code
-		var codeFlowcell = $parse("instrumentProperties.containerSupportCode.value")($scope.experiment);
-		if(null != codeFlowcell && undefined != codeFlowcell){
-			for(var i = 0; i < dataMain.length; i++){
-				var atm = dataMain[i].atomicTransfertMethod;
-				var containerCode = codeFlowcell;
-				if($scope.rows.length > 1){ //other than flowcell 1
-					containerCode = codeFlowcell+"_"+atm.line;
-				}
-				$parse('outputContainerUsed.code').assign(dataMain[i],containerCode);
-				$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[i],codeFlowcell);
-			}				
-			//datatable.setData(dataMain);
-		}
-		
-	}
-	
-	
-	
-//	var validateProcessProperties = function(experiment) {
-//		console.log("validateProcessProperties");
-//		if(experiment.state.code === "N"){
-//			for(var j = 0 ; j < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; j++){
-//				var atm = experiment.atomicTransfertMethods[j];
-//				var concentration = undefined;
-//				for(var i=0;i < atm.inputContainerUseds.length;i++){
-//					var inputContainerUsed = atm.inputContainerUseds[i];
-//					for(var cn=0;cn < inputContainerUsed.contents.length;cn++){
-//						var content = inputContainerUsed.contents[cn];
-////						console.log("validateProcessProperties " + JSON.stringify(inputContainerUsed));
-//						if(content.processProperties){
-//							console.log("validateProcessProperties OK " + JSON.stringify(content.processProperties));							
-//						}else{
-//							console.log("validateProcessProperties KO " + JSON.stringify(content));
-//
-//				    		$scope.messages.clazz = "alert alert-danger";
-//				    		$scope.messages.text = Messages("Pas de processProperties pour " + content.sampleCode);
-//				    		$scope.messages.showDetails = false;
-//				    		$scope.messages.open();	
-//						}
-//					}
+//	var copyFlowcellCodeToDT = function(datatable){
+//		//console.log("copyFlowcellCodeToDT");
+//		var dataMain = datatable.getData();
+//		//console.log("dataMain : " + JSON.stringify(dataMain));
+//		//copy flowcell code to output code
+//		var codeFlowcell = $parse("instrumentProperties.containerSupportCode.value")($scope.experiment);
+//		console.log("codeFlowcell : " + codeFlowcell);
+//		if(null != codeFlowcell && undefined != codeFlowcell){
+//			console.log("dans le if");
+//			for(var i = 0; i < dataMain.length; i++){
+//				var atm = dataMain[i].atomicTransfertMethod;
+//				var containerCode = codeFlowcell;
+//				if($scope.rows.length > 1){ //other than flowcell 1
+//					containerCode = codeFlowcell+"_"+atm.line;
 //				}
-//			}			
+//				console.log("dataMain apres : " + JSON.stringify(dataMain[i]) + " , containerCode : " + containerCode);
+//				$parse('outputContainerUsed.code').assign(dataMain[i],containerCode);
+//				$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[i],codeFlowcell);
+//			}				
+//			//datatable.setData(dataMain);
 //		}
 //		
 //	}
 	
-	
-	/**
-	 * Update concentration of output
-	 */
-//	$scope.updateConcentration = function(experiment){
-//		for(var j = 0 ; j < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; j++){
-//			var atm = experiment.atomicTransfertMethods[j];
-//			var concentration = undefined;
-//			for(var i=0;i < atm.inputContainerUseds.length;i++){
-//				var inputContainerUsed = atm.inputContainerUseds[i];
-//				if(inputContainerUsed.experimentProperties && inputContainerUsed.experimentProperties.finalVolume && inputContainerUsed.experimentProperties.phixVolume){
-//					concentration = (inputContainerUsed.experimentProperties.finalConcentration1.value /(((inputContainerUsed.experimentProperties.finalVolume.value + inputContainerUsed.experimentProperties.phixVolume.value)/ (inputContainerUsed.experimentProperties.finalVolume.value + inputContainerUsed.experimentProperties.phixVolume.value))*( inputContainerUsed.experimentProperties.echPhix.value + inputContainerUsed.experimentProperties.NaOHVolume.value + inputContainerUsed.experimentProperties.trisHCLVolume.value  +  inputContainerUsed.experimentProperties.masterEPXVolume.value )/ inputContainerUsed.experimentProperties.echPhix.value ))*1000;
-//					console.log("Concentration = (" + inputContainerUsed.experimentProperties.finalConcentration1.value + "/(((" + inputContainerUsed.experimentProperties.finalVolume.value + " + " + inputContainerUsed.experimentProperties.phixVolume.value + ")/(" + inputContainerUsed.experimentProperties.finalVolume.value + " + " + inputContainerUsed.experimentProperties.phixVolume.value + "))*(" + inputContainerUsed.experimentProperties.echPhix.value + " + " + inputContainerUsed.experimentProperties.NaOHVolume.value + " + " + inputContainerUsed.experimentProperties.trisHCLVolume.value  + " + " +  inputContainerUsed.experimentProperties.masterEPXVolume.value + ")/" + inputContainerUsed.experimentProperties.echPhix.value + "))*1000= " + concentration);
-////					console.log(JSON.stringify(inputContainerUsed.experimentProperties));
-//					if (!atm.outputContainerUseds[0].concentration){
-//						var setter = $parse("atm.outputContainerUseds[0].concentration.value").assign;
-//						setter(atm, concentration);
-//					}
-//					atm.outputContainerUseds[0].concentration.value = Math.round(concentration);
-//					atm.outputContainerUseds[0].concentration.unit = "pM";
-//					
-//				}
-//			}
-//		}
-//	};
 	
 //	// Generate run name automatically
 //	var generateRunName = function(experiment){
@@ -535,71 +375,14 @@ angular.module('home').controller('GETNanoporeDepotCtrl',['$scope', '$parse', '$
 //		// Insérer les règles de construction du nom du run
 //		$scope.experiment.experimentProperties.nom_run.value = "nom de run";
 //	};
-	
-//add reagents into new experiment
-//	var addReagents = function() {
-//		
-//		if($parse('experiment.state.code')($scope) === "N" && $scope.experiment.reagents.length === 0 && $parse('experiment.instrumentProperties.sequencingProgramType')($scope)){
-//			 var lectureType = $scope.experiment.instrumentProperties.sequencingProgramType.value;
-//	//		 console.log("Type lectures : " + JSON.stringify($scope.experiment.instrumentProperties));
-//			 console.log("Exp.state : " + $parse('experiment.state.code')($scope) + ", type lecture : " + lectureType);
-//			 if (lectureType === "PE"){
-//				 var ReagentUseds = [
-//				                     {
-//				                         "kitCatalogCode": "24SA5FUL0",
-//				                         "boxCatalogCode": "24SB1MUK4",
-//				                         "reagentCatalogCode": "24SB2EOEC" 
-//				                      },
-//				                       {
-//				                         "kitCatalogCode": "24SA5FUL0",
-//				                         "boxCatalogCode": "24SC2HEKT" 
-//				                      },
-//				                       {
-//				                         "kitCatalogCode": "24SA5FUL0",
-//				                         "boxCatalogCode": "24SC2JW11" 
-//				                      },
-//				                      {
-//				                          "kitCatalogCode": "26K91I1IF",
-//				                          "boxCatalogCode": "26K91I25Z" 
-//				                       } 
-//				                    ];
-//				 
-//			 }
-//			 else if(lectureType === "SR"){
-//				 var ReagentUseds = [
-//				                  {
-//			                         "kitCatalogCode": "24SC16VM8",
-//			                         "boxCatalogCode": "24SC19ECW",
-//			                         "reagentCatalogCode": "24SC1VKL2" 
-//			                      },
-//			                       {
-//			                         "kitCatalogCode": "24SC16VM8",
-//			                         "boxCatalogCode": "24SC1F18X" 
-//			                      },
-//			                       {
-//			                         "kitCatalogCode": "24SC16VM8",
-//			                         "boxCatalogCode": "24SC1HQNY" 
-//			                      },
-//			                      {
-//			                          "kitCatalogCode": "26K91I1IF",
-//			                          "boxCatalogCode": "26K91I25Z" 
-//			                       } 
-//			                    ];
-//			 }
-//			 
-//			 $scope.experiment.reagents = ReagentUseds;
-//			 $scope.$emit('askRefreshReagents');
-//		 }
-//	
-//    }
-	
+
 	
 	$scope.$on('refresh', function(e) {
-		console.log("call event refresh");
+		//console.log("test longueur refresh : " + JSON.stringify($scope.atmService.data.atm[0].inputContainerUseds.length));
 		
 		var dtConfig = $scope.atmService.data.$atmToSingleDatatable.data.getConfig();
 
-		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
 		dtConfig.edit.byDefault = false;
 		$scope.atmService.data.$atmToSingleDatatable.data.setConfig(dtConfig);
 //		$scope.atmService.viewToExperiment($scope.experiment);
@@ -610,24 +393,23 @@ angular.module('home').controller('GETNanoporeDepotCtrl',['$scope', '$parse', '$
 	
 	
 	$scope.$on('cancel', function(e) {
-		console.log("call event cancel");
 		$scope.atmService.data.$atmToSingleDatatable.data.cancel();
-				
 	});
 	
 		
 	$scope.$on('activeEditMode', function(e) {
 //		validateProcessProperties($scope.experiment);
-		console.log("call event activeEditMode");
+		//console.log("call event activeEditMode");
 		$scope.atmService.data.$atmToSingleDatatable.data.selectAll(true);
-		console.log("call event activeEditMode - selectAll");
+		//console.log("call event activeEditMode - selectAll");
 		$scope.atmService.data.$atmToSingleDatatable.data.setEdit();
-		console.log("call event activeEditMode - setEdit");
+		//console.log("call event activeEditMode - setEdit");
+		//console.log("test longueur active : " + JSON.stringify($scope.atmService.data.atm[0].inputContainerUseds.length));
 	});
 		
 	//To display sample and tag in one cell
 	$scope.getSampleAndTags = function(container){
-		console.log("getSampleAndTags");
+//		console.log("getSampleAndTags");
 		var sampleCodeAndTags = [];
 		angular.forEach(container.contents, function(content){
 			if(content.properties.tag != undefined && content.sampleCode != undefined){
@@ -638,19 +420,18 @@ angular.module('home').controller('GETNanoporeDepotCtrl',['$scope', '$parse', '$
 	};
 
 	$scope.getDisplayMode = function(atm, rowIndex){
-		console.log("getDisplayMode");
 		if(atm && atm.inputContainerUseds && atm.inputContainerUseds.length === 0){
 			return "empty";
 		}else if(atm && atm.inputContainerUseds && atm.inputContainerUseds.length > 0 && $scope.rows[rowIndex]){
 			return "open";
 		}else{
-			return "compact";
-		}		
+//			return "compact";
+			return "open";
+		}
 	};
 	
 	$scope.isAllOpen = true;
 	if(!$scope.isCreationMode()){
-		console.log("isCreationMode");
 		$scope.isAllOpen = false;
 	}
 	
@@ -659,10 +440,7 @@ angular.module('home').controller('GETNanoporeDepotCtrl',['$scope', '$parse', '$
 	var cscCode = $parse('experiment.instrument.outContainerSupportCategoryCode')($scope);
 	$scope.rows = [];
 	var laneCount = 0;
-	console.log("cscCode");
 	if(cscCode !== undefined){
-//		laneCount = Number(cscCode.split("-",2)[1]);
-//		laneCount = cscCode;
 		laneCount = 1;
 		$scope.rows = new Array(laneCount);
 		for(var i = 0; i < laneCount; i++){
@@ -671,7 +449,6 @@ angular.module('home').controller('GETNanoporeDepotCtrl',['$scope', '$parse', '$
 	}
 	
 	$scope.hideRowAll = function(){
-		console.log("hideRowAll");
 		for (var i=0; i<$scope.rows.length;i++){	
 			$scope.rows[i] = false;
 		}	    
@@ -679,7 +456,6 @@ angular.module('home').controller('GETNanoporeDepotCtrl',['$scope', '$parse', '$
 	};
 
 	$scope.showRowAll = function(){
-		console.log("showRowAll");
 		for (var i=0; i<$scope.rows.length;i++){	
 			$scope.rows[i] = true;
 		}	    
@@ -687,20 +463,19 @@ angular.module('home').controller('GETNanoporeDepotCtrl',['$scope', '$parse', '$
 	};
 	
 	$scope.toggleRow = function(rowIndex){
-		console.log("toggleRow");
 		$scope.rows[rowIndex] = !$scope.rows[rowIndex];
 	};
 	
 	
 	//init global ContainerOut Properties outside datatable
 	$scope.outputContainerProperties = $filter('filter')($scope.experimentType.propertiesDefinitions, 'ContainerOut');
-	console.log("outputContainerProperties");
 	$scope.outputContainerValues = {};
 	
 	$scope.updateAllOutputContainerProperty = function(property){
-		console.log("updateAllOutputContainerProperty");
+		//console.log("updateAllOutputContainerProperty");
 		var value = $scope.outputContainerValues[property.code];
 		var setter = $parse("outputContainerUseds[0].experimentProperties."+property.code+".value").assign;
+		//console.log("setter : " + setter);
 		for(var i = 0 ; i < $scope.atmService.data.atm.length ; i++){
 			var atm = $scope.atmService.data.atm[i];
 			if(atm.inputContainerUseds.length > 0){
@@ -711,23 +486,43 @@ angular.module('home').controller('GETNanoporeDepotCtrl',['$scope', '$parse', '$
 	};
 	
 	$scope.changeValueOnFlowcellDesign = function(){
-		console.log("changeValueOnFlowcellDesign");
 		$scope.atmService.data.updateDatatable();
 	};
 	
 	
 	//init atmService
-	var laneCount = 1;
+	var cscCode = $parse('experiment.instrument.outContainerSupportCategoryCode')($scope);
+	$scope.rows = [];
+	var laneCount = 0;
+	if(cscCode !== undefined){
+		switch(cscCode){
+			case "flowcell_gd" : 
+				laneCount = "5";
+				break;
+			case "flowcell_pt" :
+				laneCount = "24";
+				break;
+			default:
+				console.log("Problème de nom de FC");
+		}
+		$scope.rows = new Array(laneCount);
+		for(var i = 0; i < laneCount; i++){
+			$scope.rows[i] = $scope.isAllOpen;
+		}	
+	}
+	
 	var atmService = atmToDragNDrop($scope, laneCount, datatableConfig);
+	
 	//defined new atomictransfertMethod
+	//var atmsNbr = 0;	
 	atmService.newAtomicTransfertMethod = function(line){
-		console.log("newAtomicTransfertMethod");
 		return {
 			class:"ManyToOne",
 			line:line, 
 			column:"1", 				
 			inputContainerUseds:new Array(0), 
-			outputContainerUseds:new Array(0)
+			outputContainerUseds:new Array(0),
+			//viewIndex: atmsNbr+1
 		};		
 	};
 	
@@ -737,22 +532,194 @@ angular.module('home').controller('GETNanoporeDepotCtrl',['$scope', '$parse', '$
 			concentration:"nM"
 	}
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
-	console.log("experimentToView");
 	
 	$scope.atmService = atmService;
-	console.log("atmService");
 	
+	// tester comment récupérer le nombre de containers en entrée
+	//console.log("test longueur : " + JSON.stringify($scope.atmService));
 	
+	//Récupérer la liste des emplacements et types FC en fonction de la machine
+	$scope.getFCpositions = function() {
+		$http.get(jsRoutes.controllers.commons.api.Parameters.list().url,{params:{typeCode:"map-parameter"}})
+		//$http.get(jsRoutes.controllers.commons.api.Parameters.get("map-parameter", "GridionPositionList").url,{params:{typeCode:"map-parameter"}})
+		   .success(function(data, status, headers, config) {
+		    var positions = [];
+		    var FCtypes = [];
+		    data.forEach(function(mapParameter){
+			    if($scope.experiment.instrument.typeCode == "GridION") {
+			    	if (mapParameter.code.indexOf("GridionPosition") !== -1){
+				    	for (var value in mapParameter.map){
+				    		positions.push({"code":value,"name":value});
+				    	}
+			    	}
+			    	else if(mapParameter.code.indexOf("GridionFCtypes") !== -1){
+			    		for (var types in mapParameter.map){
+			    			FCtypes.push({"code":mapParameter.map[types],"name":mapParameter.map[types]});
+				    	}
+			    	}
+				}
+			    else if ($scope.experiment.instrument.typeCode == "PromethION") {
+			    	if(mapParameter.code.indexOf("PromethionPosition") !== -1){
+				    	for (var value in mapParameter.map){
+				    		positions.push({"code":value,"name":value});
+				    	}
+				    }
+			    	else if(mapParameter.code.indexOf("PromethionFCtypes") !== -1){
+			    		for (var types in mapParameter.map){
+			    			FCtypes.push({"code":mapParameter.map[types],"name":mapParameter.map[types]});
+				    	}
+			    	}
+			    }
+		    });
+		    var columns = $scope.atmService.$atmToSingleDatatable.data.getColumnsConfig();
+		    columns.forEach(function(tab){
+		    	if(tab.header === "Emp. FC"){
+		    		//console.log("tabTag : " + JSON.stringify(tab.header));
+		    		tab.possibleValues = positions;
+		    		tab.choiceInList=true;
+		    	}
+		    	else if(tab.header === "Type FC"){
+		    		//console.log("tabTag : " + JSON.stringify(tab.header));
+		    		tab.possibleValues = FCtypes;
+		    		tab.choiceInList=true;
+		    	}
+		    });
+		    $scope.atmService.$atmToSingleDatatable.data.setColumnsConfig(columns);
+		    	
+		    });
+		};
 	
+	// Récupération de la liste des tags ONT
+	$scope.getONTindexes = function() {
+		//console.log("test longueur : " + JSON.stringify($scope.atmService.data.atm[0].inputContainerUseds.length));
+		var atm = $scope.atmService.data.atm;
+		for(var size = 0 ; size < atm.length ; size++){
+			if(JSON.stringify(atm[size].inputContainerUseds.length) > 1 ){
+				$http.get(jsRoutes.controllers.commons.api.Parameters.list().url,{params:{typeCode:"index-nanopore-sequencing"}})
+			    .success(function(data, status, headers, config) {
+			    	var tags = [];
+			    	data.forEach(function(tag){
+			    		tags.push({"code":tag.code,"name":tag.name}); 
+					});
+			    	//console.log(tags);
+			    	var columns = $scope.atmService.$atmToSingleDatatable.data.getColumnsConfig();
+			    	columns.forEach(function(tab){
+			    		if(tab.header === "Tag"){
+			    			//console.log("tabTag : " + JSON.stringify(tab.header));
+			    			tab.possibleValues = tags;
+			    			tab.choiceInList=true;
+			    		}
+			    	});
+			    	$scope.atmService.$atmToSingleDatatable.data.setColumnsConfig(columns);
+			    	
+			    });
+			}
+//			else{
+//		    	var columns = $scope.atmService.$atmToSingleDatatable.data.getColumnsConfig();
+//		    	columns.forEach(function(tab){
+//		    		if(tab.header === "Tag"){
+//		    			//console.log("tabTag : " + JSON.stringify(tab.header));
+//		    			tab.edit=false;
+//		    		}
+//		    	});
+//		    	$scope.atmService.$atmToSingleDatatable.data.setColumnsConfig(columns);
+//				
+//			}
+		}
+	};
+	
+//	$scope.createNewATM = function(){
+////		var atmService = atmToSingleDatatable($scope, datatableConfig);
+////		var atmsNbr = $scope.atmService.data.atm.length;
+//		if ($scope.atmService.data !== undefined){
+//			atmsNbr = $scope.atmService.data.atm.length;
+//		}
+//		$scope.atmService.data.atm.push(
+//			{
+//				class:"ManyToOne",
+//				line:"1", 
+//				column:"1", 				
+//				inputContainerUseds:new Array(0), 
+//				outputContainerUseds:new Array(0),
+//				viewIndex: atmsNbr+1
+//			}
+//		);
+		
+//		atmService.newAtomicTransfertMethod;
+//		atmService.experimentToView($scope.experiment, $scope.experimentType);
+//		console.log("service : " + JSON.stringify($scope.atmService.data.atm));
+//		console.log("experiment : " + JSON.stringify($scope.experiment));
+//		$scope.atmService.data.$atmToSingleDatatable.data.setConfig(dtConfig);
+		//$scope.atmService.data.addNewAtomicTransfertMethodsInDatatable();
+		
+//		atmService.addNewAtomicTransfertMethodsInDatatable = function(){
+//			if(null != mainService.getBasket() && null != mainService.getBasket().get() && this.isAddNew){
+//				$that = this;
+//				
+//				var type = $that.newAtomicTransfertMethod().class;
+//				
+//				$that.$commonATM.loadInputContainerFromBasket(mainService.getBasket().get())
+//					.then(function(containers) {								
+//						var allData = [], i = 0;
+//						
+//						if($that.data.getData() !== undefined && $that.data.getData().length > 0){
+//							allData = $that.data.getData();
+//							i = allData.length;
+//						}
+//						
+//						angular.forEach(containers, function(container){
+//							var tmpLine = {};
+//							tmpLine.atomicTransfertMethod = $that.newAtomicTransfertMethod(container.support.line, container.support.column);
+//							tmpLine.atomicIndex=i++;
+//								
+//							tmpLine.inputContainer = container;
+//							tmpLine.inputContainerUsed = $that.$commonATM.convertContainerToInputContainerUsed(tmpLine.inputContainer);
+//							
+//							for(var j = 0; j < $scope.experimentType.sampleTypes.length ; j++){
+//								var line = {};
+//								line.atomicTransfertMethod = tmpLine.atomicTransfertMethod;
+//								line.atomicIndex = tmpLine.atomicIndex;
+//								line.inputContainer = tmpLine.inputContainer;
+//								line.inputContainerUsed = tmpLine.inputContainerUsed;
+//								line.outputContainerUsed = $that.$commonATM.newOutputContainerUsed($that.defaultOutputUnit,$that.defaultOutputValue,line.atomicTransfertMethod.line,
+//										line.atomicTransfertMethod.column,line.inputContainer);
+//								
+//								var value = $scope.experimentType.sampleTypes[j].code;
+//								var setter = $parse("experimentProperties.sampleTypeCode.value").assign;
+//								setter(line.outputContainerUsed, value);
+//								
+//								line.outputContainer = undefined;
+//								allData.push(line);
+//							}						
+//						});
+//						
+//						allData = $filter('orderBy')(allData,'inputContainer.support.code');
+//						$that.data.setData(allData, allData.length);											
+//				});
+//			}					
+//		};
+//	};
 	
 	/////////////////////
-
+	var generateSampleSheetPerATM = function(){
+		var atm = $scope.atmService.data.atm;
+		for(var atmsize = 0 ; atmsize < atm.length ; atmsize++){
+			for(var outputsize = 0 ; outputsize < atm[atmsize].outputContainerUseds.length ; outputsize++){
+				outputContainerUsed = atm[atmsize].outputContainerUseds[outputsize];
+				if(outputContainerUsed.code !== undefined){
+					console.log("nb atm : " + outputContainerUsed.code);
+					generateSampleSheet(outputContainerUsed.code);
+				}
+			}
+		}
+	}
 	
-	var generateSampleSheet = function(){	
+	
+	var generateSampleSheet = function(outputCode){	
 		console.log("sample sheet");
-		$scope.fileUtils.generateSampleSheet({"":""});	
+		$scope.fileUtils.generateSampleSheet({"outputCode":outputCode});	
 //		$scope.messages.clear();
-		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
+		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{'outputCode':outputCode})
 		.success(function(data, status, headers, config) {
 			var header = headers("Content-disposition");
 			var filepath = header.split("filename=")[1];
@@ -777,13 +744,58 @@ angular.module('home').controller('GETNanoporeDepotCtrl',['$scope', '$parse', '$
 			$scope.messages.open();				
 		});
 	};
-
+	
+	var allPropertiesGood;
+	$scope.displaySampleSheet = function () {
+//		// Vérifier si toutes les propriétés sont renseignées avant d'afficher le bouton "Feuille de route"
+		allPropertiesGood = false;
+		
+//		// emplacement FC
+//		if (($parse("instrumentProperties.empl_FC.value")($scope.experiment)) === undefined){
+//			allPropertiesGood = true;
+//		}
+//		// sampleID
+//		if (($parse("experimentProperties.sampleID.value")($scope.experiment)) === undefined){
+//			allPropertiesGood = true;
+//		}
+		
+		// properties containerOut
+//		if ($scope.atmService.data.atm[0].outputContainerUseds[0].experimentProperties === null){
+//			allPropertiesGood = true;
+//		}
+		// comment faire pour afficher la liste de toutes les propriétés quand elles ne sont pas renseignées ?
+		// containerOut properties (marche pas) $parse("outputContainerUseds[0].experimentProperties."+property.code+".value").assign; ?
+		
+		// reagents
+		if ($scope.experiment.reagents.length === 0){
+			//console.log("taille reactif : " + $scope.experiment.reagents.length);
+			allPropertiesGood = true;
+		}
+		
+		//console.log("allPropertiesGood : " + allPropertiesGood);
+		return allPropertiesGood;
+	}
+	
 	$scope.setAdditionnalButtons([{
-		isDisabled : function(){return $scope.isCreationMode();},
+//		isDisabled : function(){return $scope.isCreationMode();},		
+		isDisabled : function(){
+			if ($parse('experiment.state.code')($scope) === "N"){
+				return true;
+			}
+			else {
+				if ($scope.displaySampleSheet()){
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+		},
 		isShow:function(){return true},
-		click:generateSampleSheet,
+		click:generateSampleSheetPerATM,
 		label:Messages("experiments.fdr")
 	}]);
+	
 
 	if ($parse('experiment.state.code')($scope) === "N" && !$scope.mainService.isEditMode()){
 		console.log("final if");

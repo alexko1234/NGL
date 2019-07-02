@@ -116,9 +116,9 @@ rule "emplacement FC unique par ATM"
 	 then
 	 	Map<String, String> empMap = new HashMap<String, String>();
 	 	
-	 	for(AtomicTransfertMethod atomic : $experiment.atomicTransfertMethods){   
-	 		for(OutputContainerUsed output : atomic.outputContainerUseds){  
-	 			if(output.experimentProperties.get("empl_FC") != null){
+	 	for(AtomicTransfertMethod atomic : $experiment.atomicTransfertMethods){
+	 		for(OutputContainerUsed output : atomic.outputContainerUseds){
+	 			if(output.experimentProperties != null && output.experimentProperties.get("empl_FC") != null) {
 		    		String empFC = (String) output.experimentProperties.get("empl_FC").value;
 		    		if(empMap.containsKey(empFC)){
 						$contextValidation.addErrors("Container","error.validationexp.nanoporedepot.containerin.empFC", empFC, output.code, empMap.get(empFC));
